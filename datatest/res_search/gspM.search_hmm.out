@@ -1,0 +1,70 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/gspM.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/gspM.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspM_tcoffee_aln  [M=134]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    1.5e-46  157.1   9.7      2e-46  156.7   6.7    1.2  1  PSAE001c01_031320 C ATG TGA 3475956 3476480 Valid xcpZ 525 _
+    8.9e-44  148.1   3.2    1.1e-43  147.8   2.2    1.1  1  PSAE001c01_006930 D ATG TGA 741335 741928 Valid PA0684 594 _
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_031320  C ATG TGA 3475956 3476480 Valid xcpZ 525 _PA3095_NP_251785.1_ PA3095 1 3475956 3476480 | general s
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  156.7   6.7   4.8e-50     2e-46       1     134 []      23     155 ..      23     155 .. 0.99
+
+  Alignments for each domain:
+  == domain 1    score: 156.7 bits;  conditional E-value: 4.8e-50
+   gspM_tcoffee_aln   1 fwrqrapRervlLavggaaLllviaylvlwePleerietaqaeldelraqlaelkaqaaearelaAaaksatlsgaalqdvleasasdaGla 92 
+                        +wr++++R+r++L+++ga+Lllv++yl+lw+P+e+++++a+++++e+ra +a++++qa+++r+++Aaa++a++++aalq +++asa++aGl+
+  PSAE001c01_031320  23 RWRGLPARDRLALLWLGAFLLLVVLYLALWRPAERHLQSARQYFTEQRALHAYIQQQAPNVRQADAAAPQAQIDPAALQGMVTASAAQAGLS 114
+                        6******************************************************************************************* PP
+
+   gspM_tcoffee_aln  93 iarlaadvggavqvqlaavsfeallkWlerlrealalkvtea 134
+                        ++rl+++ +gavqv+l++++f++ll+Wle+l+ + +++v+ea
+  PSAE001c01_031320 115 VERLDNEGEGAVQVALQPAPFAKLLPWLEQLNGQ-GVQVAEA 155
+                        **********************************.****996 PP
+
+>> PSAE001c01_006930  D ATG TGA 741335 741928 Valid PA0684 594 _NP_249375.1_ PA0684 1 741335 741928 | type II secretion 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  147.8   2.2   2.7e-47   1.1e-43       1     134 []      28     157 ..      28     157 .. 0.99
+
+  Alignments for each domain:
+  == domain 1    score: 147.8 bits;  conditional E-value: 2.7e-47
+   gspM_tcoffee_aln   1 fwrqrapRervlLavggaaLllviaylvlwePleerietaqaeldelraqlaelkaqaaearelaAaaksatlsgaalqdvleasasdaGla 92 
+                        +wrq+apRer++La+gg+aL+l+++++v+++P+ +rie++qael++lraq+a++++++   re++A++ ++tlsg+a+++++++s++d+Gl+
+  PSAE001c01_006930  28 YWRQLAPRERKILAGGGLALCLALTWQVFVDPPLARIEHWQAELPRLRAQAAAVDGVL---REVEALR-GPTLSGTADAEAIRRSLRDQGLD 115
+                        8*******************************************************99...79*****.*********************** PP
+
+   gspM_tcoffee_aln  93 iarlaadvggavqvqlaavsfeallkWlerlrealalkvtea 134
+                         ++l+a+++g++q+++a+vs+eall+Wl+r+++al+l+v+ea
+  PSAE001c01_006930 116 GFQLDAPQPGQWQLDFASVSGEALLRWLARSPAALRLSVSEA 157
+                        ***************************************996 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (134 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       832  (0.099856); expected 166.6 (0.02)
+Passed bias filter:                      418  (0.050168); expected 166.6 (0.02)
+Passed Vit filter:                        45  (0.00540086); expected 8.3 (0.001)
+Passed Fwd filter:                         3  (0.000360058); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.15u 0.01s 00:00:00.16 Elapsed: 00:00:00.05
+# Mc/sec: 7843.27
+//

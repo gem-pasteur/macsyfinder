@@ -1,0 +1,87 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/gspC.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/gspC.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspC_tcoffee_aln  [M=76]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    1.5e-25   87.8   0.0    2.3e-25   87.2   0.0    1.3  1  PSAE001c01_031410 D ATG TGA 3483642 3484349 Valid xcpP 708 _
+    2.9e-20   70.9   0.7      4e-20   70.5   0.5    1.2  1  PSAE001c01_006880 D ATG TGA 737677 738108 Valid PA0679 432 _
+    1.1e-08   33.8   0.0    1.8e-08   33.1   0.0    1.4  1  PSAE001c01_018910 D ATG TAG 2028454 2028981 Valid xphA 528 _
+  ------ inclusion threshold ------
+      0.016   14.1   0.1      0.092   11.6   0.1    2.0  1  PSAE001c01_013970 D ATG TAG 1498338 1498829 Valid PA1381 492
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_031410  D ATG TGA 3483642 3484349 Valid xcpP 708 _PA3104_NP_251794.1_ PA3104 1 3483642 3484349 | secretion
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   87.2   0.0   1.1e-28   2.3e-25       1      76 []      85     163 ..      85     163 .. 0.96
+
+  Alignments for each domain:
+  == domain 1    score: 87.2 bits;  conditional E-value: 1.1e-28
+   gspC_tcoffee_aln   1 lFgae..ggaaqpastkldlvLaGivvg.spretsAiisreggeqkayrlGealapgaklreinkdsVvlernGalerl 76 
+                        lFg++  +++a+p++t+ldlvL+G++v+ +p+ +sAii+r+g+++++y++G+++++g+kl+++++d+V+l+r+G+le+l
+  PSAE001c01_031410  85 LFGTSaqDPNAPPPATNLDLVLKGSFVQsDPKLSSAIIQRQGDKPHRYAVGGEISDGVKLHAVYRDRVELQRGGRLESL 163
+                        899998888*******************667*********************************************986 PP
+
+>> PSAE001c01_006880  D ATG TGA 737677 738108 Valid PA0679 432 _NP_249370.1_ PA0679 1 737677 738108 | hypothetical prote
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   70.5   0.5   1.9e-23     4e-20      10      76 .]      61     126 ..      51     126 .. 0.95
+
+  Alignments for each domain:
+  == domain 1    score: 70.5 bits;  conditional E-value: 1.9e-23
+   gspC_tcoffee_aln  10 qpastkldlvLaGivvgspretsAiisreggeqkayrlGealapgaklreinkdsVvlernGalerl 76 
+                        +++s++++++LaG+++g+p +++Ai+s++g++++ayr Ge la++ak+r+i++d+V++e+nG+++r+
+  PSAE001c01_006880  61 AAPSGEVEVQLAGLISGGP-AAIAILSVNGAPAQAYREGEVLARAAKVRRIEADAVLIEQNGEVRRV 126
+                        468****************.*********************************************97 PP
+
+>> PSAE001c01_018910  D ATG TAG 2028454 2028981 Valid xphA 528 _PA1867_NP_250558.1_ PA1867 1 2028454 2028981 | XphA  (tr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   33.1   0.0   8.6e-12   1.8e-08       1      76 []      84     160 ..      84     160 .. 0.82
+
+  Alignments for each domain:
+  == domain 1    score: 33.1 bits;  conditional E-value: 8.6e-12
+   gspC_tcoffee_aln   1 lFgae.ggaaqpastkldlvLaGivvgsp.retsAiisreggeqkayrlGealapgaklreinkdsVvlernGalerl 76 
+                        lFg++  +  ++a  +l l+L   ++  + ++++A+i+++ g+ +++  G ++ pg++l ++ +d+Vvl+ +G  erl
+  PSAE001c01_018910  84 LFGGApSPRGATAGERLQLRLLACFLARReDRSAALIAVA-GRSQRFLPGAEVRPGTVLLAVHRDHVVLRDQGYEERL 160
+                        6888755555566677888888888886658999999966.57789***************************99997 PP
+
+>> PSAE001c01_013970  D ATG TAG 1498338 1498829 Valid PA1381 492 _NP_250072.1_ PA1381 1 1498338 1498829 | hypothetical p
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.6   0.1   4.4e-05     0.092      16      64 ..      92     140 ..      64     150 .. 0.84
+
+  Alignments for each domain:
+  == domain 1    score: 11.6 bits;  conditional E-value: 4.4e-05
+   gspC_tcoffee_aln  16 ldlvLaGivvgspretsAiisregg.eqkayrlGealapgaklreinkds 64 
+                        +d  L+Giv+++ ++ +A+++     + +++++G +l +g  l++i ++ 
+  PSAE001c01_013970  92 VDWLLRGIVRDE-GGIFALVAKSAEgPLRRFAAGATLPGGERLESITEQG 140
+                        67789******9.589999986554499*****************98765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (76 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       186  (0.0223236); expected 166.6 (0.02)
+Passed bias filter:                      158  (0.018963); expected 166.6 (0.02)
+Passed Vit filter:                        14  (0.00168027); expected 8.3 (0.001)
+Passed Fwd filter:                         4  (0.000480077); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.08u 0.01s 00:00:00.09 Elapsed: 00:00:00.04
+# Mc/sec: 5560.53
+//

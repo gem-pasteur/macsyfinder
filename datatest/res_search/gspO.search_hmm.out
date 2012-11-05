@@ -1,0 +1,57 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/gspO.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/gspO.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspO_tcoffee_aln  [M=233]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    5.8e-63  211.5   6.3    7.3e-63  211.2   4.4    1.1  1  PSAE001c01_045820 D ATG TGA 5072695 5073567 Valid pilD 873 _
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_045820  D ATG TGA 5072695 5073567 Valid pilD 873 _PA4528_NP_253218.1_ PA4528 1 5072695 5073567 | type 4 pr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  211.2   4.4   8.8e-67   7.3e-63       1     226 [.      27     274 ..      27     285 .. 0.90
+
+  Alignments for each domain:
+  == domain 1    score: 211.2 bits;  conditional E-value: 8.8e-67
+   gspO_tcoffee_aln   1 sfvnvviyrlpa....................ledkialalsrsavdtcqkklavrdlvPLvsflvlkgrCrdcqakiskryPlve.ltalv 71 
+                        sf+nvv++rlp                      +    l l++sa++ c ++++  +++PLvs+l+l g+C +c+a+i kryPlve  tal 
+  PSAE001c01_045820  27 SFLNVVVHRLPKmmernwkaearealglepepKQATYNLVLPNSACPRCGHEIRPWENIPLVSYLALGGKCSSCKAAIGKRYPLVElATALL 118
+                        7****************************99999999*************************************************333332 PP
+
+   gspO_tcoffee_aln  72 illasllafe..sgvilavlllsafllalsvidlehqlLPdkltlpllwlGliaaaqigevdlqdavvGavvGfgalylvaWlvklvlrkeg 161
+                             + +    +  ++a+lll++ lla+s id +hqlLPd+l lpllwlGlia+      +l da+ Gav G+ +l++v Wl klv++keg
+  PSAE001c01_045820 119 S--GYVAWHFgfTWQAGAMLLLTWGLLAMSLIDADHQLLPDVLVLPLLWLGLIANHFGLFASLDDALFGAVFGYLSLWSVFWLFKLVTGKEG 208
+                        2..223343301345789999**********************************8888899****************************** PP
+
+   gspO_tcoffee_aln 162 lGmGdvkLlaalGaWvGwqsLPsvlliasvaGlsyaivstllrrr.gtttlpfGpfLalGalltll 226
+                        +G+Gd+kLla lGaW Gwq LP  +l++s+ G +  ++   lr   + t +pfGp+La+ ++++ll
+  PSAE001c01_045820 209 MGYGDFKLLAMLGAWGGWQILPLTILLSSLVGAILGVIMLRLRNAeSGTPIPFGPYLAIAGWIALL 274
+                        *************************************9955555568899*************986 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (233 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       416  (0.049928); expected 166.6 (0.02)
+Passed bias filter:                      166  (0.0199232); expected 166.6 (0.02)
+Passed Vit filter:                        14  (0.00168027); expected 8.3 (0.001)
+Passed Fwd filter:                         1  (0.000120019); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.16u 0.01s 00:00:00.17 Elapsed: 00:00:00.06
+# Mc/sec: 11364.94
+//

@@ -1,0 +1,87 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/gspL.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/gspL.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspL_tcoffee_aln  [M=254]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    9.3e-61  205.0  21.9    1.6e-58  197.6  15.2    2.3  1  PSAE001c01_031330 C ATG TGA 3476482 3477630 Valid xcpY 1149 
+    2.5e-50  170.8  13.1    2.5e-50  170.8   9.1    1.8  2  PSAE001c01_006920 D TTG TAA 740203 741348 Valid PA0683 1146 
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_031330  C ATG TGA 3476482 3477630 Valid xcpY 1149 _PA3096_NP_251786.1_ PA3096 1 3476482 3477630 | general 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  197.6  15.2   3.9e-62   1.6e-58       1     254 []      49     277 ..      49     277 .. 0.95
+
+  Alignments for each domain:
+  == domain 1    score: 197.6 bits;  conditional E-value: 3.9e-62
+   gspL_tcoffee_aln   1 LvvPgedvllrelaLPplkraklrqalpllledelaqdaqdlhiavgpaaadgrrlvavieraklaalldavqeaglrpervlpapllLPle 92 
+                        L++P+e+v++++++LP++k+++lrq+lp+++e++la+d++++h+a+gpa+adgr++v++++r++laa+l+ +++ag++p+++++++ +LP e
+  PSAE001c01_031330  49 LYLPVEAVTACAVNLPTQKARWLRQSLPFAVEEQLADDVEQMHLALGPALADGRHRVFAVQRTWLAAWLALAEGAGKAPASLHVDADCLPGE 140
+                        89****************************************************************************************** PP
+
+   gspL_tcoffee_aln  93 adAalaavetdaraLlrgas...lAlaldaeeaelalatqvaPepaf.....aPag.....eaaaaPavealaeapqelpalpslasalald 171
+                         ++ +   ++++r+Ll g++   lA+++  e++ ++++++ +P++af     aP++     ++a++P+v        +l+++p l       
+  PSAE001c01_031330 141 GSCLF---WLEERWLLGGSGavrLACGS--EDWPVLRDSCPPPQRAFaaqevAPLEgvevqALAGNPHV--------WLSEQP-L------- 211
+                        ****7...***********96667****..****************98888888888888777888888........777777.4....... PP
+
+   gspL_tcoffee_aln 172 eaaaltgaavaraalagridLlqgeFapararaqwgrwRlplalavllllllviganiqawklsreadslqaqaaellqqafP 254
+                                           dL+q+eFa++++++qw+rwR +l l+ l+l+l+++++ +qaw+l+re+d+++aq+ael++q+fP
+  PSAE001c01_031330 212 -----------------GTDLAQAEFAARQQSSQWRRWRPLLGLVGLWLVLQWGFTLVQAWQLQREGDRYAAQSAELYRQLFP 277
+                        .................369**************************************************************9 PP
+
+>> PSAE001c01_006920  D TTG TAA 740203 741348 Valid PA0683 1146 _NP_249374.1_ PA0683 1 740203 741348 | type II secretion
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  170.8   9.1   6.1e-54   2.5e-50       2     254 .]      27     258 ..      26     258 .. 0.97
+   2 ?   -3.3   1.4      0.78   3.2e+03     113     139 ..     341     370 ..     320     378 .. 0.52
+
+  Alignments for each domain:
+  == domain 1    score: 170.8 bits;  conditional E-value: 6.1e-54
+   gspL_tcoffee_aln   2 vvPgedvllrelaLPplkrakl.rqalpl....lledelaqd..aqdlhiavgpaaadgrrlvavieraklaalldavqeaglrpervlpap 86 
+                         v+g++v+ ++++LPp++++++ ++++++    +l++++a +  ++++++a+gp+ adgr+++ ++e+++la+l++avq+ +l++++v++ap
+  PSAE001c01_006920  27 GVAGGAVP-ASARLPPGQSRTAgAACGEAcrrgELRGRGAGPrrSGAVRLAHGPRGADGRLTLEWLEASALASLEQAVQRLRLDVREVQAAP 117
+                        699*****.9************9999*999***********9999*********************************************** PP
+
+   gspL_tcoffee_aln  87 llLPleadAalaavetdaraLlrgaslAlaldaeeaelalatqvaPepafaPageaaaaPavealaeapq........elpalpsla..sal 168
+                        +lLPl++dA+ +a+e+d+++Llr++     +da+         v+P+p+             ++lae+pq        e+pa++s+a  +a+
+  PSAE001c01_006920 118 FLLPLRDDAW-VAGEWDGHLLLRRSL----SDAV---------VHPLPE-------------QGLAEVPQelrlfwlgERPAWRSAAleRAE 182
+                        **********.89*************....9899.........******.............************************999*** PP
+
+   gspL_tcoffee_aln 169 aldeaaaltg.aavaraalagridLlqgeFapararaqwgrwRlplalavllllllviganiqawklsreadslqaqaaellqqafP 254
+                        aldea +++g a++        ++L+ +  apa+ +a +g+w++pl++a+l+ll++v+g+n++a +l+++++slq+q+++++qqafP
+  PSAE001c01_006920 183 ALDEALRWSGpASP--------WGLALK--APAT-SAGNGTWKMPLFCAALALLVWVAGLNLYAGQLAEQGQSLQRQSSQRVQQAFP 258
+                        **********7775........******..9999.***************************************************9 PP
+
+  == domain 2    score: -3.3 bits;  conditional E-value: 0.78
+   gspL_tcoffee_aln 113 lAlaldaee.aelalatqvaPepaf..aPa 139
+                        ++l +da + + +++a   +P+pa   a +
+  PSAE001c01_006920 341 HGLQADASDkGWQVRAMEAPPAPAAgaADS 370
+                        444444443033446666688888443333 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (254 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       731  (0.087734); expected 166.6 (0.02)
+Passed bias filter:                      228  (0.0273644); expected 166.6 (0.02)
+Passed Vit filter:                        26  (0.0031205); expected 8.3 (0.001)
+Passed Fwd filter:                         2  (0.000240038); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.25u 0.01s 00:00:00.26 Elapsed: 00:00:00.07
+# Mc/sec: 10619.35
+//
