@@ -1,0 +1,158 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+Created on Nov 5, 2012
+
+@author: bneron
+@contact: bneron@pasteur.fr
+@organization: Institut Pasteur
+@license: license
+"""
+import sys
+import os
+import argparse
+import logging
+
+if os.environ.has_key('TXSSCAN_HOME'):
+    TXSSCAN_HOME = os.environ['TXSSCAN_HOME']
+    TXSSCAN_HOME = os.path.abspath( os.path.realpath(TXSSCAN_HOME))
+    if TXSSCAN_HOME not in sys.path:
+        sys.path.append( TXSSCAN_HOME )
+try:
+    from txsscanlib import detect_SS
+except ImportError , err:
+    msg = "cannot import txsscanlib, check you installation or your TXSSCAN_HOME variable : {0!s}".format( err )
+    sys.exit( msg )
+    
+SYST = ['T1SS', 'T2SS', 'T3SS', 'T4SS', 'T5SS', 'T6SS', 'T4P', 'Tad', 'Flagellum']
+HMMER = "hmmsearch"
+PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
+EVALUE_RES = 1
+RES_SEARCH_SUFFIX = ".search_hmm.out"
+PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
+RES_EXTRACT_SUFFIX = ".res_hmm_extract"
+
+
+def get_syst_def_file(syst):
+    return "DEF/%s.def" % syst
+
+
+parser = argparse.ArgumentParser("txsscan en une ligne")
+parser.add_argument("sequence_db",
+                    help = "aide a définir")
+parser.add_argument("systems",
+                    nargs = '+',
+                    help = "aide a définir")
+parser.add_argument('-p', '--p',
+                    action = 'store',
+                    dest = 'profile_dir',
+                    default = './profiles',
+                    help = 'the path to the profiles directory')
+parser.add_argument('-r', '--research-search',
+                    action = 'store',
+                    dest = 'research_search_dir',
+                    default = './datatest/res_search',
+                    help = 'aide a définir')
+parser.add_argument("-w", "--worker",
+                    action = 'store',
+                    dest = 'worker_nb',
+                    type = int,
+                    default = 0,
+                    help = "number of worker not yet implemented")
+parser.add_argument("-v", "--verbosityr",
+                    action = 'count',
+                    dest = 'verbosity',
+                    type = int,
+                    default = 0,
+                    help = "increse the verbosity of output (-v: -vv: -vvv:debug)")
+args = parser.parse_args()
+
+
+sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
+sh = logging.StreamHandler( sys.stderr ) 
+sh.setFormatter(sh_formatter)
+logger = logging.getLogger('txsscan')
+logger.addHandler(sh)
+
+if args.verbosity == 0:
+    logger.setLevel( logging.ERROR )
+elif args.verbosity == 1:
+    logger.setLevel( logging.WARNING )
+elif args.verbosity == 2:
+    logger.setLevel( logging.INFO )
+elif args.verbosity == 3:
+    logger.setLevel( logging.DEBUG )
+#
+systems_library = {}
+for name in args.system:
+    if name in SYST:
+        systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
+        print "{0} available".format(name)
+    outfiles = []
+    for syst_name in systems_library.keys():
+        print "\nPerforming HMMER search for {0}\n".format(syst_name)
+        #dico_syst[syst].search_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX)
+        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
+        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.3, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
+        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.3, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX, "gembase")
+        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX, "gembase")
+        
+        # Donnees Gembase
+        system = systems_library[name]
+        #return une liste de nom de fichiers
+        outies = system.detect_hmmer_genes(HMMER,
+                                         args.sequence_db,
+                                         EVALUE_RES,
+                                         args.research_search_dir,
+                                         RES_SEARCH_SUFFIX,
+                                         0.00001,
+                                         0.5,
+                                         args.research_search_dir,
+                                         RES_EXTRACT_SUFFIX,
+                                         "gembase")
+        # TEST metagenomes
+        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.00001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
+
+        #print out
+        outfiles.extend(outies)
+
+# Recuperation des hits et creation d'un fichier global de resultats?
+# Besoin de recuperer la taille du profil... Dans 
+print "\nBuilding a joint resfile"
+
+alloutlines = []
+for out in outfiles:
+    print out
+    with open(out) as fich:
+        lines = fich.readlines()
+    alloutlines.extend(lines)
+
+#print alloutlines    
+alloutlines.sort()
+
+# TMP
+infile = "datatest/joint_res_file"
+#infile="joint_res_file_Metag"
+
+with open(infile, "w") as fich:
+    fich.writelines(alloutlines)
+
+outfile = "datatest/joint_res_file.sel"
+#outfile="joint_res_file.sel_Metag"
+
+detect_SS.select_best_hit_same_id(infile, outfile, 0, 5, 1)
+
+max_gene_spacer = 15 # All except T1SS/T5SS/Flagellum
+#max_gene_spacer=5 # For T1SS
+#max_gene_spacer=25 # For flagellum 
+outclusters = "res_file_clusters_{0!d}".format(max_gene_spacer)
+#study_cluster_gembase(outfile, outclusters, max_gene_spacer, 1, 2)
+
+# A remettre pour etude dans GEmbase
+detect_SS.study_cluster_gembase(outfile, outclusters, max_gene_spacer)
+
+# A implementer : plus general !! 
+#study_cluster_ordered_data(infile, outfile, max_spacer, col_replicon_name, col_gene_position, col_hit)
+
+ 
