@@ -20,22 +20,23 @@ def is_syst_avail(syst):
 	else:
 		return False
 		
-#def get_syst_def_file(syst):
-#	return "DEF/%s.def"%syst
+def build_syst_def_file(def_dir, systname):
+	return "%s/%s.def"%(def_dir, systname)
 
 class System:
 	'''Classe definissant un SYSTEME a detecter
 	
 	'''
 	
-	def __init__(self, name, deffile, profile_dir=PROFILE_DIR, profile_suffix=PROFILE_SUFFIX):
+	#def __init__(self, name, deffile, profile_dir=PROFILE_DIR, profile_suffix=PROFILE_SUFFIX):
+	def __init__(self, name, def_dir, profile_dir=PROFILE_DIR, profile_suffix=PROFILE_SUFFIX):
 		self.name=name
-		if not os.path.exists(deffile):
+		self._deffile=build_syst_def_file(def_dir, self.name)
+		if not os.path.exists(self._deffile):
 			raise IOError, "The file %s does not exist"%deffile
 		if not os.path.exists(profile_dir):
 			raise IOError, "The directory %s does not exist"%profile_dir
-			
-		self._deffile=deffile
+		
 		self._profiledir=profile_dir
 		self._profilesuffix=profile_suffix
 		(self._listgenes, self._dicogenes)=self.init_genes_from_def_file(self._profiledir, self._profilesuffix)
@@ -47,6 +48,9 @@ class System:
 		lines="%s\nDefinition file: %s\nGenes list: %s"%(self.system, self.get_syst_def_file(), self.get_syst_genes())
 		
 		return lines
+
+	#def build_syst_def_file(self, def_dir):
+	#	return "%s/%s.def"%(def_dir, self.name)
 
 	def get_syst_def_file(self):
 		return self._deffile
@@ -63,7 +67,9 @@ class System:
 	def init_genes_from_def_file(self, profile_dir, profile_suffix):
 		genes=[]
 		dico_Genes={}
-		filename=get_syst_def_file(self.system)
+		#filename=get_syst_def_file(self.system)
+		#filename=get_syst_def_file(self.name)
+		filename=self.get_syst_def_file()
 		def_file=open(filename)
 		for l in def_file:
 			if l!='\n':
@@ -71,7 +77,8 @@ class System:
 				if not dico_Genes.has_key(gene):
 					genes.append(gene)
 					profile="%s/%s%s"%(profile_dir, gene, profile_suffix)
-					dico_Genes[gene]=Gene(gene, profile, self.system)
+					#dico_Genes[gene]=Gene(gene, profile, self.system)
+					dico_Genes[gene]=Gene(gene, profile, self.name)
 					
 		def_file.close()
 	
@@ -413,8 +420,10 @@ def study_cluster_gembase(infile, outfile, diff_pos, col_gene_name=1, col_hit=4,
 	prev_gene_list=[] # paquet 
 	prev_geneid_list=[] # paquet # new
 	prev_gene_pos_list=[] # paquet
-
-
+	
+	# New (worked fine without it till now...)
+	prev_list_core_genes_nr=[]
+	
 	for l in lines:
 		fields=l.split()
 		cur_chr=fields[col_replicon_name-1]

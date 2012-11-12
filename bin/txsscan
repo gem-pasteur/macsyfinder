@@ -34,8 +34,8 @@ PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
 RES_EXTRACT_SUFFIX = ".res_hmm_extract"
 
 
-def get_syst_def_file(def_dir, syst):
-    return "%s/%s.def" % (def_dir, syst)
+#def get_syst_def_file(def_dir, syst):
+#    return "%s/%s.def" % (def_dir, syst)
 
 
 parser = argparse.ArgumentParser("txsscan en une ligne")
@@ -91,27 +91,31 @@ elif args.verbosity == 2:
 elif args.verbosity == 3:
     logger.setLevel( logging.DEBUG )
 '''
+
+print sys.version
+
 #
 systems_library = {}
 #for name in args.system
 for name in args.systems:
     if name in SYST:
         #systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
-        systems_library.get(name, detect_SS.System(name, get_syst_def_file(args.definition_dir, name), args.profile_dir, PROFILE_SUFFIX))
-        print "{0} available".format(name)
-    outfiles = []
-    for syst_name in systems_library.keys():
-        print "\nPerforming HMMER search for {0}\n".format(syst_name)
-        #dico_syst[syst].search_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX)
-        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
-        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.3, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
-        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.3, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX, "gembase")
-        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX, "gembase")
+	# Modif SA : ligne suivante ne fonctionne pas...
+	#systems_library.get(name, detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX))
+        #print "{0} available".format(name)
+	# 
+	systems_library[name]=detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX)
+	print "{0} available".format(name)
+
+# Modif SA indentation n'etait pas bonne sortir de la boucle 
+outfiles = []
+for syst_name in systems_library.keys():
+    print "\nPerforming HMMER search for {0}\n".format(syst_name)
         
-        # Donnees Gembase
-        system = systems_library[name]
-        #return une liste de nom de fichiers
-        outies = system.detect_hmmer_genes(HMMER,
+    # Donnees Gembase
+    system = systems_library[syst_name]
+    #return une liste de nom de fichiers
+    outies = system.detect_hmmer_genes(HMMER,
                                          args.sequence_db,
                                          EVALUE_RES,
                                          args.research_search_dir,
@@ -121,11 +125,16 @@ for name in args.systems:
                                          args.research_search_dir,
                                          RES_EXTRACT_SUFFIX,
                                          "gembase")
-        # TEST metagenomes
-        #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.00001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
+					 
+    #print outies
 
-        #print out
-        outfiles.extend(outies)
+    # TEST metagenomes
+    #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.00001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
+
+    #print out
+    outfiles.extend(outies)
+	
+#print outfiles
 
 # Recuperation des hits et creation d'un fichier global de resultats?
 # Besoin de recuperer la taille du profil... Dans 
@@ -133,7 +142,7 @@ print "\nBuilding a joint resfile"
 
 alloutlines = []
 for out in outfiles:
-    print out
+    #print out
     with open(out) as fich:
         lines = fich.readlines()
     alloutlines.extend(lines)
@@ -156,7 +165,11 @@ detect_SS.select_best_hit_same_id(infile, outfile, 0, 5, 1)
 max_gene_spacer = 15 # All except T1SS/T5SS/Flagellum
 #max_gene_spacer=5 # For T1SS
 #max_gene_spacer=25 # For flagellum 
-outclusters = "res_file_clusters_{0!d}".format(max_gene_spacer)
+
+# Modif SA ligne suivante enlevee car bug: "ValueError: Unknown conversion specifier d"
+#outclusters = "res_file_clusters_{0!d}".format(max_gene_spacer)
+outclusters = "res_file_clusters_%d"%(max_gene_spacer)
+
 #study_cluster_gembase(outfile, outclusters, max_gene_spacer, 1, 2)
 
 # A remettre pour etude dans GEmbase
@@ -164,5 +177,3 @@ detect_SS.study_cluster_gembase(outfile, outclusters, max_gene_spacer)
 
 # A implementer : plus general !! 
 #study_cluster_ordered_data(infile, outfile, max_spacer, col_replicon_name, col_gene_position, col_hit)
-
- 
