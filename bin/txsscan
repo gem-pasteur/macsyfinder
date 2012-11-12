@@ -22,7 +22,7 @@ if os.environ.has_key('TXSSCAN_HOME'):
 try:
     from txsscanlib import detect_SS
 except ImportError , err:
-    msg = "cannot import txsscanlib, check you installation or your TXSSCAN_HOME variable : {0!s}".format( err )
+    msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
     
 SYST = ['T1SS', 'T2SS', 'T3SS', 'T4SS', 'T5SS', 'T6SS', 'T4P', 'Tad', 'Flagellum']
@@ -34,8 +34,8 @@ PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
 RES_EXTRACT_SUFFIX = ".res_hmm_extract"
 
 
-def get_syst_def_file(syst):
-    return "DEF/%s.def" % syst
+def get_syst_def_file(def_dir, syst):
+    return "%s/%s.def" % (def_dir, syst)
 
 
 parser = argparse.ArgumentParser("txsscan en une ligne")
@@ -44,6 +44,11 @@ parser.add_argument("sequence_db",
 parser.add_argument("systems",
                     nargs = '+',
                     help = "aide a définir")
+parser.add_argument('-d', '--d',
+                    action = 'store',
+                    dest = 'definition_dir',
+                    default = './DEF',
+                    help = 'the path to the systems definition files')
 parser.add_argument('-p', '--p',
                     action = 'store',
                     dest = 'profile_dir',
@@ -60,12 +65,12 @@ parser.add_argument("-w", "--worker",
                     type = int,
                     default = 0,
                     help = "number of worker not yet implemented")
-parser.add_argument("-v", "--verbosityr",
+parser.add_argument("-v", "--verbosity",
                     action = 'count',
                     dest = 'verbosity',
                     type = int,
                     default = 0,
-                    help = "increse the verbosity of output (-v: -vv: -vvv:debug)")
+                    help = "increase the verbosity of output (-v: -vv: -vvv:debug)")
 args = parser.parse_args()
 
 
@@ -87,7 +92,8 @@ elif args.verbosity == 3:
 systems_library = {}
 for name in args.system:
     if name in SYST:
-        systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
+        #systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
+        systems_library.get(name, detect_SS.System(name, get_syst_def_file(args.definition_dir, name), args.profile_dir, PROFILE_SUFFIX))
         print "{0} available".format(name)
     outfiles = []
     for syst_name in systems_library.keys():

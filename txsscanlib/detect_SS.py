@@ -20,8 +20,8 @@ def is_syst_avail(syst):
 	else:
 		return False
 		
-def get_syst_def_file(syst):
-	return "DEF/%s.def"%syst
+#def get_syst_def_file(syst):
+#	return "DEF/%s.def"%syst
 
 class System:
 	'''Classe definissant un SYSTEME a detecter
