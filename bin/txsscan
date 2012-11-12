@@ -65,14 +65,15 @@ parser.add_argument("-w", "--worker",
                     type = int,
                     default = 0,
                     help = "number of worker not yet implemented")
+'''
 parser.add_argument("-v", "--verbosity",
                     action = 'count',
                     dest = 'verbosity',
                     type = int,
                     default = 0,
                     help = "increase the verbosity of output (-v: -vv: -vvv:debug)")
+'''		    
 args = parser.parse_args()
-
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler( sys.stderr ) 
@@ -80,6 +81,7 @@ sh.setFormatter(sh_formatter)
 logger = logging.getLogger('txsscan')
 logger.addHandler(sh)
 
+'''
 if args.verbosity == 0:
     logger.setLevel( logging.ERROR )
 elif args.verbosity == 1:
@@ -88,9 +90,11 @@ elif args.verbosity == 2:
     logger.setLevel( logging.INFO )
 elif args.verbosity == 3:
     logger.setLevel( logging.DEBUG )
+'''
 #
 systems_library = {}
-for name in args.system:
+#for name in args.system
+for name in args.systems:
     if name in SYST:
         #systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
         systems_library.get(name, detect_SS.System(name, get_syst_def_file(args.definition_dir, name), args.profile_dir, PROFILE_SUFFIX))
