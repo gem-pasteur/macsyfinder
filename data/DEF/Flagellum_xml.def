@@ -1,6 +1,9 @@
 <system name="Flagellum"> 
   <mandatory>
-    <gene>sctJ_FLG</gene>
+    <gene>
+    <name>sctJ_FLG</name>
+    <homologs>sctJ</homologs>
+    </gene>
     <gene>sctN_FLG</gene>
     <gene>sctQ_FLG</gene>
     <gene>sctR_FLG</gene>
@@ -8,8 +11,12 @@
     <gene>sctT_FLG</gene>
     <gene>sctU_FLG</gene>
     <gene>sctV_FLG</gene>
+  </mandatory>  
   <allowed>
     <gene>flgB</gene>
     <gene>flgC</gene>
+  </allowed>
   <forbidden>
     <gene>fliE</gene>
+  </forbidden>
+</system>
