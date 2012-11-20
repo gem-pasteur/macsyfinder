@@ -15,8 +15,9 @@
   <allowed>
     <gene>flgB</gene>
     <gene>flgC</gene>
+    <gene>fliE</gene>
   </allowed>
   <forbidden>
-    <gene>fliE</gene>
+    <gene>sctC</gene>
   </forbidden>
 </system>

@@ -1,0 +1,18 @@
+<system name="T3SS"> 
+  <mandatory> 
+    <gene>sctC</gene>
+    <gene>sctJ</gene>
+    <gene>sctN</gene>
+    <gene>sctQ</gene>
+    <gene>sctR</gene>
+    <gene>sctS</gene>
+    <gene>sctT</gene>
+    <gene>sctU</gene>
+    <gene>sctV</gene>
+  </mandatory>  
+  <forbidden>
+    <gene>fliE</gene>
+    <gene>flgB</gene>
+    <gene>flgC</gene>
+  </forbidden>
+</system>
