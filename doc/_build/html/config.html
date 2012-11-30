@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>txsscan config &mdash; Txsscan 0.9a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Txsscan 0.9a1 documentation" href="index.html" />
+    <link rel="next" title="system_parser" href="system_parser.html" />
+    <link rel="prev" title="Welcome to Txsscan’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="system_parser.html" title="system_parser"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Txsscan’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-txsscanlib.config">
+<span id="txsscan-config"></span><span id="config"></span><h1>txsscan config<a class="headerlink" href="#module-txsscanlib.config" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="txsscanlib.config.Config">
+<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>e_value_sel=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse configuration files and handle the configuration according the file location precedence
+/etc/txsscan.conf &lt; ~/.txsscan.conf &lt; .txsscan.conf
+if a configuration file is given on the command line, only this file is used.
+in fine the arguments passed have the highest priority</p>
+<dl class="method">
+<dt id="txsscanlib.config.Config.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>e_value_sel=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>hmmer_exe</strong> (<em>string</em>) &#8211; the hmmsearch executabe</li>
+<li><strong>e_value_res</strong> (<em>float</em>) &#8211; à déterminer</li>
+<li><strong>e_value_sel</strong> (<em>float</em>) &#8211; à déterminer</li>
+<li><strong>def_dir</strong> (<em>string</em>) &#8211; the path to the definition directory</li>
+<li><strong>res_search_dir</strong> (<em>string</em>) &#8211; à déterminer</li>
+<li><strong>res_search_suffix</strong> (<em>string</em>) &#8211; à déterminer</li>
+<li><strong>res_extract_suffix</strong> (<em>string</em>) &#8211; à déterminer</li>
+<li><strong>profile_dir</strong> (<em>string</em>) &#8211; à déterminer</li>
+<li><strong>profile_suffix</strong> (<em>string</em>) &#8211; à déterminer</li>
+<li><strong>log_level</strong> (<em>int</em>) &#8211; the level of log output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.config.Config.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.config.Config._validate">
+<tt class="descname">_validate</tt><big>(</big><em>cmde_line_opt</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config._validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config._validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>get all configuration values and validate the values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cmde_line_opt</strong> (<em>dict</em>) &#8211; the options from the command line</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all the options for this execution</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionnary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Txsscan&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="system_parser.html"
+                        title="next chapter">system_parser</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/config.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="system_parser.html" title="system_parser"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Txsscan’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
