@@ -19,69 +19,106 @@ if os.environ.has_key('TXSSCAN_HOME'):
     TXSSCAN_HOME = os.path.abspath( os.path.realpath(TXSSCAN_HOME))
     if TXSSCAN_HOME not in sys.path:
         sys.path.append( TXSSCAN_HOME )
+
 try:
-    from txsscanlib import detect_SS
+    from txsscanlib.config import Config
 except ImportError , err:
     msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
-    
-SYST = ['T1SS', 'T2SS', 'T3SS', 'T4SS', 'T5SS', 'T6SS', 'T4P', 'Tad', 'Flagellum']
-HMMER = "hmmsearch"
-PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
-EVALUE_RES = 1
-RES_SEARCH_SUFFIX = ".search_hmm.out"
-PROFILE_SUFFIX = ".fasta-aln_edit.hmm"
-RES_EXTRACT_SUFFIX = ".res_hmm_extract"
+
+from txsscanlib import detect_SS    
 
 
 #def get_syst_def_file(def_dir, syst):
 #    return "%s/%s.def" % (def_dir, syst)
 
 
-parser = argparse.ArgumentParser("txsscan en une ligne")
+parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
 parser.add_argument("sequence_db",
                     help = "aide a définir")
 parser.add_argument("systems",
                     nargs = '+',
                     help = "aide a définir")
-parser.add_argument('-d', '--d',
+
+hmmer_options =  parser.add_argument_group(title = "hmmer options")
+hmmer_options.add_argument( '--hmmer', 
+                            action = 'store',
+                            dest = 'hmmer_exe',
+                            default = None , 
+                            help = 'hmm binary')
+
+hmmer_options.add_argument( '--e_value_search',
+                     action = 'store',
+                     dest = 'e_value_search',
+                     type = float , 
+                     default = None , 
+                     help = 'help for e_value_search')
+
+hmmer_options.add_argument('--e_value_select',
+                     action = 'store',
+                    dest = 'e_value_select',
+                    type = float,
+                    default = None , 
+                    help = 'help for e_value_select')
+
+dir_options =  parser.add_argument_group(title = "directories options", description = None)
+dir_options.add_argument('-d', '--d',
                     action = 'store',
-                    dest = 'definition_dir',
-                    default = './DEF',
+                    dest = 'def_dir',
+                    default = None ,
                     help = 'the path to the systems definition files')
-parser.add_argument('-p', '--p',
+dir_options.add_argument('-r', '--research-search',
+                    action = 'store',
+                    dest = 'res_search_dir',
+                    default = None ,
+                    help = 'aide a définir')
+dir_options.add_argument('-r', '--research-search-suffix',
+                    action = 'store',
+                    dest = 'res_search_suffix',
+                    default = None ,
+                    help = 'aide a définir')
+dir_options.add_argument('--research-extract-suffix',
+                    action = 'store',
+                    dest = 'res_extract_suffix',
+                    default = None ,
+                    help = 'aide a définir')
+dir_options.add_argument('-p', '--p',
                     action = 'store',
                     dest = 'profile_dir',
-                    default = './profiles',
+                    default = None ,
                     help = 'the path to the profiles directory')
-parser.add_argument('-r', '--research-search',
+dir_options.add_argument('--profile-suffix',
                     action = 'store',
-                    dest = 'research_search_dir',
-                    default = './datatest/res_search',
-                    help = 'aide a définir')
-parser.add_argument("-w", "--worker",
+                    dest = 'profile_suffix',
+                    default = None ,
+                    help = 'the suffix of profile files')
+
+general_options =  parser.add_argument_group(title = "general options", description = "general options")
+general_options.add_argument("-w", "--worker",
                     action = 'store',
                     dest = 'worker_nb',
                     type = int,
                     default = 0,
                     help = "number of worker not yet implemented")
-'''
-parser.add_argument("-v", "--verbosity",
-                    action = 'count',
-                    dest = 'verbosity',
-                    type = int,
-                    default = 0,
-                    help = "increase the verbosity of output (-v: -vv: -vvv:debug)")
-'''		    
+general_options.add_argument( "-v" , "--verbosity",
+                      action= "count", 
+                      dest = "verbosity", 
+                      default = None ,
+                      help = "increase the verbosity level. There is 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
+general_options.add_argument("--log",
+                    action = 'store',
+                    dest = 'log_file',
+                    default = sys.stderr ,
+                    help = "the path to log file")
 args = parser.parse_args()
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler( sys.stderr ) 
 sh.setFormatter(sh_formatter)
+
 logger = logging.getLogger('txsscan')
 logger.addHandler(sh)
 
-'''
 if args.verbosity == 0:
     logger.setLevel( logging.ERROR )
 elif args.verbosity == 1:
@@ -90,11 +127,22 @@ elif args.verbosity == 2:
     logger.setLevel( logging.INFO )
 elif args.verbosity == 3:
     logger.setLevel( logging.DEBUG )
-'''
 
-print sys.version
 
-#
+config = Config(sequence_db = args.sequence_db,
+                hmmer_exe = args.hmmer_exe,
+                e_value_res = args.e_value_res ,
+                e_value_sel = args.e_value_sel ,
+                res_search_dir = args.res_search_dir ,
+                res_search_suffix = args.res_search_suffix ,
+                profile_dir = args.profile_dir ,
+                profile_suffix = args.profile_suffix,
+                res_extract_suffix = args.res_extract_suffix ,
+                log_level = args.log_level,
+                log_file = args.log_file
+                )
+
+
 systems_library = {}
 #for name in args.system
 for name in args.systems:
@@ -104,7 +152,7 @@ for name in args.systems:
 	#systems_library.get(name, detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX))
         #print "{0} available".format(name)
 	# 
-	systems_library[name]=detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX)
+	systems_library[name]= detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX)
 	print "{0} available".format(name)
 
 # Modif SA indentation n'etait pas bonne sortir de la boucle 
