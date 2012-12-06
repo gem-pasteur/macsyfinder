@@ -6,20 +6,23 @@ Created on Nov 30, 2012
 
 import sys
 import os
-TXSSCAN_HOME = os.path.abspath( '..')
-if not TXSSCAN_HOME in sys.path: 
-    sys.path.append( os.path.abspath( '..') )
+TXSSCAN_HOME = os.path.abspath('..')
+if not TXSSCAN_HOME in sys.path:
+    sys.path.append(os.path.abspath('..') )
 
 import unittest
 
 from txsscanlib.secretion import Gene
+from txsscanlib.secretion import System
 from txsscanlib.config import Config
+
 
 class Test(unittest.TestCase):
 
 
     def setUp(self):
-        self.cfg = Config( hmmer_exe = "",
+        self.cfg = Config( sequence_db = ".",
+                           hmmer_exe = "",
                            e_value_res = 1,
                            e_value_sel = 0.5,
                            def_dir = "../data/DEF",
@@ -46,8 +49,19 @@ class Test(unittest.TestCase):
         homolog_2 = Gene( 'sctN_FLG', self.cfg)
         gene.add_homolog( homolog_2 )
         self.assertEqual( gene.get_homologs(), [homolog_1, homolog_2] )
-                         
+        
+    def test_system(self):
+        """
+        test getter/setter for system property
+        """
+        system_foo = System( "foo", self.cfg)
+        gene = Gene('sctJ_FLG' , self.cfg)
+        homolog = Gene('sctJ', self.cfg)
+        gene.add_homolog( homolog )
+        gene.system = system_foo                   
+        self.assertEqual(gene.system, system_foo)
+        for h in gene.get_homologs():
+            self.assertEqual(h.system, system_foo)
                          
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

@@ -7,13 +7,14 @@ Created on Nov 30, 2012
 import sys
 import os
 
-TXSSCAN_HOME = os.path.abspath( '..')
+TXSSCAN_HOME = os.path.abspath('..')
 if not TXSSCAN_HOME in sys.path: 
-    sys.path.append( os.path.abspath( '..') )
+    sys.path.append(os.path.abspath('..') )
 
 import unittest
 
 from txsscanlib.secretion import Profile
+from txsscanlib.secretion import Gene
 from txsscanlib.config import Config
 
 class Test(unittest.TestCase):
@@ -34,10 +35,10 @@ class Test(unittest.TestCase):
 
 
     def test_len(self):
-        profile = Profile( "abc" , self.cfg)
+        gene = Gene( "abc" , self.cfg)
+        profile = Profile( gene , self.cfg)
         self.assertEqual(len(profile), 501)
                          
                          
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

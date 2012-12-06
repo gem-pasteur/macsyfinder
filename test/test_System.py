@@ -7,9 +7,9 @@ Created on Nov 30, 2012
 import sys
 import os
 
-TXSSCAN_HOME = os.path.abspath( '..')
+TXSSCAN_HOME = os.path.abspath('..')
 if not TXSSCAN_HOME in sys.path: 
-    sys.path.append( os.path.abspath( '..') )
+    sys.path.append(os.path.abspath('..') )
 
 import unittest
 
@@ -79,5 +79,4 @@ class Test(unittest.TestCase):
         
                          
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
