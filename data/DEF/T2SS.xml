@@ -1,0 +1,44 @@
+<system>
+<gene name="gspD" presence="mandatory">
+<homologs type="aligned">
+<gene name="pilQ"/>
+</homologs>
+</gene>
+<gene name="gspE" presence="mandatory">
+<homologs type="aligned">
+<gene name="pilB"/>
+</homologs>
+</gene>
+<gene name="gspF" presence="mandatory">
+<homologs type="aligned">
+<gene name="pilC"/>
+</homologs>
+</gene>
+<gene name="gspM" presence="mandatory">
+<homologs type="aligned">
+<gene name="pilO"/>
+</homologs>
+</gene>
+<gene name="gspG" presence="mandatory">
+<homologs>
+<gene name="pilAE"/>
+</homologs>
+</gene>
+<gene name="gspH" presence="mandatory">
+<homologs>
+<gene name="gspI"/>
+<gene name="gspJ"/>
+<gene name="gspK"/>
+<gene name="pilI_pilV"/>
+</homologs>
+</gene>
+<gene name="gspC" presence="allowed"/>
+<gene name="gspN" presence="allowed"/>
+<gene name="gspL" presence="allowed"/>
+<gene name="gspO" presence="allowed">
+<homologs>
+<gene name="pilD"/>
+</homologs>
+</gene>
+<gene name="pilT_pilU" presence="forbidden"/>
+</system>
