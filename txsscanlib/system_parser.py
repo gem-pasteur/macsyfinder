@@ -49,21 +49,24 @@ class SystemParser(object):
         system = System( system_name , self.cfg)
         tree = ET.parse(path)
         root = tree.getroot()
-        mandatory_genes_nodes = root.find("mandatory")
-        for gene_node in mandatory_genes_nodes.findall("gene"):
+        genes_nodes = root.findall("gene")
+        for gene_node in genes_nodes:
+            presence = gene_node.get("presence")
+            if not presence:
+                msg = "Invalid system definition: gene without presence"
+                _log.error(msg)
+                raise SyntaxError(msg)
             gene = self._parse_gene(gene_node)
-            gene.system = system
-            system.add_mandatory_gene(gene)
-        allowed_genes_nodes = root.find("allowed")    
-        for gene_node in allowed_genes_nodes.findall("gene"):
-            gene = self._parse_gene(gene_node)
-            gene.system = system
-            system.add_allowed_gene(gene)
-        forbidden_gene_nodes = root.find("forbidden")
-        for gene_node in forbidden_gene_nodes.findall("gene"):
-            gene = self._parse_gene(gene_node)
-            gene.system = system
-            system.add_forbidden_gene(gene)
+            if presence == 'mandatory':
+                system.add_mandatory_gene(gene)
+            elif presence == 'allowed':
+               system.add_allowed_gene(gene)
+            elif presence == 'forbidden':
+               system.add_forbidden_gene(gene)
+            else:
+               msg = "Invalid system definition: presence value must be either [ mandatory, allowed, forbidden] not %s" % presence
+               _log.error(msg)
+               raise SyntaxError(msg)       
         return system
     
     def _parse_gene(self, node):
@@ -81,7 +84,7 @@ class SystemParser(object):
             msg = "Invalid system definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
-        gene = Gene( name, self.cfg )
+        gene = Gene(name, self.cfg)
         for homolog_node in node.findall("homologs/gene"):
             homolog = self._parse_gene(homolog_node)
             gene.add_homolog(homolog)

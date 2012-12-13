@@ -1,24 +1,19 @@
-<system name="Flagellum"> 
-  <mandatory>
-    <gene name="sctJ_FLG">
+<system> 
+    <gene name="sctJ_FLG" >
        <homologs>
            <gene name="sctJ"/>
        </homologs>
     </gene>
-    <gene name="sctN_FLG"/>
-    <gene name="sctQ_FLG"/>
-    <gene name="sctR_FLG"/>
-    <gene name="sctS_FLG"/>
-    <gene name="sctT_FLG"/>
-    <gene name="sctU_FLG"/>
-    <gene name="sctV_FLG"/>
-  </mandatory>  
-  <allowed>
-    <gene name="flgB"/>
-    <gene name="flgC"/>
-    <gene name="fliE"/>
-  </allowed>
-  <forbidden>
-    <gene name="sctC"/>
-  </forbidden>
+    <gene name="sctN_FLG" presence="mandatory"/>
+    <gene name="sctQ_FLG" presence="mandatory"/>
+    <gene name="sctR_FLG" presence="mandatory"/>
+    <gene name="sctS_FLG" presence="mandatory"/>
+    <gene name="sctT_FLG" presence="mandatory"/>
+    <gene name="sctU_FLG" presence="mandatory"/>
+    <gene name="sctV_FLG" presence="mandatory"/>
+    <gene name="flgB" presence="allowed"/>
+    <gene name="flgC" presence="allowed"/>
+    <gene name="fliE" presence="allowed"/>
+    <gene name="sctC" presence="forbidden"/>
 </system>
+
