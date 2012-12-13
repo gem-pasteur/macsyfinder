@@ -20,7 +20,7 @@ class Gene(object):
     """
     handle Gene of a secretion system
     """
-
+    
 
     def __init__(self, name, cfg ):
         """
@@ -32,7 +32,7 @@ class Gene(object):
         :type cfg: :class:`txsscanlib.config.Config` object
         """
         self.name = name
-        self.profile = Profile(self, cfg)# le nom du profile n'est pas deductible du nom de gene?
+        self.profile = Profile(self, cfg)
         self.homologs = []
         self._system = None
         
@@ -99,7 +99,7 @@ class Profile(object):
         self.gene = gene 
         path = os.path.join(cfg.profile_dir , self.gene.name + cfg.profile_suffix)
         if not os.path.exists(path):
-            raise Exception( "%s: No such profile" % path)
+            raise IOError( "%s: No such profile" % path)
         self.path = path
         self.len = self._len()
         self.cfg = cfg 
@@ -258,8 +258,7 @@ class System(object):
         :rtype: list of :class:`txsscanlib.secretion.Gene` object
         """
         return self._mandatory_genes
-
-
+    
     @property
     def allowed_genes(self):
         """
