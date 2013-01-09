@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>profile &mdash; Txsscan 0.9a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Txsscan 0.9a1 documentation" href="index.html" />
+    <link rel="next" title="HMM Report" href="HMMReport.html" />
+    <link rel="prev" title="gene" href="gene.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HMMReport.html" title="HMM Report"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gene.html" title="gene"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="profile">
+<span id="id1"></span><h1>profile<a class="headerlink" href="#profile" title="Permalink to this headline">¶</a></h1>
+<p>each gene is defined by a profile. a Profile must match a file in
+which is a HMM profile.</p>
+<div class="section" id="module-txsscanlib.gene">
+<span id="profile-api-reference"></span><h2>Profile API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="txsscanlib.gene.Profile">
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Profile</tt><big>(</big><em>gene</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle profile</p>
+<dl class="method">
+<dt id="txsscanlib.gene.Profile.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>gene</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Profile.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Profile.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>gene</strong> &#8211; the gene corresponding to this profile</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.Profile.__len__">
+<tt class="descname">__len__</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Profile.__len__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Profile.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the length of the HMM profile</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Profile.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.gene.Profile.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.Profile._len">
+<tt class="descname">_len</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Profile._len"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Profile._len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the HMM profile to get the length and cache it
+this private method is called at the Profile init</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.Profile.execute">
+<tt class="descname">execute</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Profile.execute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Profile.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>execute the hmmsearch with this profile</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">an HMM report</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="HMMReport.html#txsscanlib.report.HMMReport" title="txsscanlib.report.HMMReport"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.report.HMMReport</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">profile</a><ul>
+<li><a class="reference internal" href="#module-txsscanlib.gene">Profile API reference</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="gene.html"
+                        title="previous chapter">gene</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="HMMReport.html"
+                        title="next chapter">HMM Report</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/profile.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="HMMReport.html" title="HMM Report"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="gene.html" title="gene"
+             >previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
