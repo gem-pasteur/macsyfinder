@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>txsscan config &mdash; Txsscan 0.9a1 documentation</title>
+    <title>config &mdash; Txsscan 0.9a1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -54,26 +54,96 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-txsscanlib.config">
-<span id="txsscan-config"></span><span id="config"></span><h1>txsscan config<a class="headerlink" href="#module-txsscanlib.config" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="config">
+<span id="id1"></span><h1>config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h1>
+<p>Handle the all configuration options for txsscan.
+parse 3 location to find configuration files</p>
+<blockquote>
+<div><ul class="simple">
+<li>$PREFIX/etc/txsscan/txsscan.conf</li>
+<li>$(HOME)/.txsscan/txsscan.conf</li>
+<li>./txsscan.conf</li>
+</ul>
+<p>Moreover these 3 locations options can be passed on the command line.</p>
+<p>Each file can defined options, at the end all options are added. if an option is specified several times.
+The precedence rules from the less important to the more important are:
+$PREFIX/etc/txsscan/txsscan.conf &lt; $(HOME)/.txsscan/txsscan.conf &lt; ./txsscan.conf &lt; command line option</p>
+<p>the Config object provide some default values and perform some validations of the values, for instance:</p>
+<p>the configuration files must follow the python ini file syntax:
+in txsscan 4 sections are defined:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>base</strong> : all information related to the genome to study<ul>
+<li><em>file</em> : the path to the genome (<em>no default value</em>)</li>
+<li><em>ordered</em> :</li>
+</ul>
+</li>
+<li><strong>hmmer</strong><ul>
+<li><em>hmmer_exe</em> (default= <em>hmmsearch</em> )</li>
+<li><em>e_value_res</em> = (default= <em>1</em> )</li>
+<li><em>e_value_sel</em> = (default= <em>0.5</em> )</li>
+<li><em>coverage_profile</em> = (default= <em>0.5</em> )</li>
+</ul>
+</li>
+<li><strong>directories</strong><ul>
+<li><em>res_search_dir</em> = (default= <em>./datatest/res_search</em> )</li>
+<li><em>res_search_suffix</em> = (default= <em>.search_hmm.out</em> )</li>
+<li><em>profile_dir</em> = (default= <em>./profiles</em> )</li>
+<li><em>profile_suffix</em> = (default= <em>.fasta-aln_edit.hmm</em> )</li>
+<li><em>res_extract_suffix</em> = (default= <em>.res_hmm_extract</em> )</li>
+</ul>
+</li>
+<li><strong>general</strong><ul>
+<li><em>log_level</em> = (default= <em>debug</em> )</li>
+<li><em>log_file</em> =</li>
+</ul>
+</li>
+</ul>
+<p>example of a file configuration:</p>
+<div class="highlight-python"><pre>[base]
+ordered = yes
+
+[hmmer]
+hmmer_exe = hmmsearch
+e_value_res = 1
+e_value_sel = 0.5
+coverage_profile = 0.5
+
+[directories]
+res_search_dir = ./datatest/res_search
+res_search_suffix = .search_hmm.out
+profile_dir = ./profiles
+profile_suffix = .fasta-aln_edit.hmm
+res_extract_suffix = .res_hmm_extract
+
+[general]
+log_level = debug</pre>
+</div>
+</div></blockquote>
+</div></blockquote>
+<div class="section" id="module-txsscanlib.config">
+<span id="config-api-reference"></span><h2>Config API reference<a class="headerlink" href="#module-txsscanlib.config" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.config.Config">
-<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>e_value_sel=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse configuration files and handle the configuration according the file location precedence
 /etc/txsscan.conf &lt; ~/.txsscan.conf &lt; .txsscan.conf
 if a configuration file is given on the command line, only this file is used.
 in fine the arguments passed have the highest priority</p>
 <dl class="method">
 <dt id="txsscanlib.config.Config.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>e_value_sel=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sequence_db</strong> (<em>string</em>) &#8211; the path to the sequence database</li>
+<li><strong>ordered_db</strong> (<em>boolean</em>) &#8211; the genes of the db are ordered</li>
 <li><strong>hmmer_exe</strong> (<em>string</em>) &#8211; the hmmsearch executabe</li>
 <li><strong>e_value_res</strong> (<em>float</em>) &#8211; à déterminer</li>
-<li><strong>e_value_sel</strong> (<em>float</em>) &#8211; à déterminer</li>
+<li><strong>i_evalue_sel</strong> (<em>float</em>) &#8211; à déterminer</li>
+<li><strong>coverage_profile</strong> (<em>float</em>) &#8211; a déterminer</li>
 <li><strong>def_dir</strong> (<em>string</em>) &#8211; the path to the definition directory</li>
 <li><strong>res_search_dir</strong> (<em>string</em>) &#8211; à déterminer</li>
 <li><strong>res_search_suffix</strong> (<em>string</em>) &#8211; à déterminer</li>
@@ -115,6 +185,7 @@ in fine the arguments passed have the highest priority</p>
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -122,6 +193,14 @@ in fine the arguments passed have the highest priority</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">config</a><ul>
+<li><a class="reference internal" href="#module-txsscanlib.config">Config API reference</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to Txsscan&#8217;s documentation!</a></p>
