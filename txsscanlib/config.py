@@ -12,7 +12,7 @@
 import os
 import sys
 import inspect
-from ConfigParser import SafeConfigParser
+from ConfigParser import SafeConfigParser, NoSectionError
 
 _prefix_path = '$PREFIX'
 
@@ -26,14 +26,16 @@ class Config(object):
     in fine the arguments passed have the highest priority
     """
     
-    options = ('sequence_db','hmmer_exe' , 'e_value_res', 'e_value_sel', 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
+    options = ('sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                'log_level')
 
     def __init__(self, cfg_file = "",
-                sequence_db = None ,  
+                sequence_db = None ,
+                ordered_db = None,  
                 hmmer_exe = None,
                 e_value_res = None,
-                e_value_sel = None,
+                i_evalue_sel = None,
+                coverage_profile = None,
                 def_dir = None , 
                 res_search_dir = None,
                 res_search_suffix = None,
@@ -45,12 +47,16 @@ class Config(object):
         """
         :param sequence_db: the path to the sequence database
         :type sequence_db: string
+        :param ordered_db: the genes of the db are ordered
+        :type ordered_db: boolean
         :param hmmer_exe: the hmmsearch executabe
         :type hmmer_exe: string
         :param e_value_res: à déterminer
         :type  e_value_res: float
-        :param e_value_sel: à déterminer
-        :type  e_value_sel: float
+        :param i_evalue_sel: à déterminer
+        :type  i_evalue_sel: float
+        :param coverage_profile: a déterminer
+        :type coverage_profile: float
         :param def_dir: the path to the definition directory
         :type def_dir: string
         :param res_search_dir: à déterminer
@@ -73,7 +79,8 @@ class Config(object):
         self.parser = SafeConfigParser(defaults={
                                             'hmmer_exe' : 'hmmsearch',
                                             'e_value_res' : "1",
-                                            'e_value_sel' : "0.5",
+                                            'i_evalue_sel' : "0.5",
+                                            'coverage_profile' : "0.5",
                                             'def_dir': './DEF',
                                             'res_search_dir' : './datatest/res_search',
                                             'res_search_suffix' : '.search_hmm.out',
@@ -91,7 +98,7 @@ class Config(object):
 
         cmde_line_opt = {}
         for arg in args:
-            if arg in self.options and values[arg]is not None:
+            if arg in self.options and values[arg] is not None:
                 cmde_line_opt[arg] = str(values[arg])
 
         try:
@@ -141,11 +148,30 @@ class Config(object):
         :rtype: dictionnary
         """  
         options = {}
+        if 'sequence_db' in cmde_line_opt:
+            cmde_line_opt['file'] = cmde_line_opt['sequence_db']
+        
         try:
-            #hmmer_exe
-            options['sequence_db'] = self.parser.get( 'directories', 'sequence_db', vars = cmde_line_opt )    
+            try:
+               options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
+            except NoSectionError:
+                sequence_db = cmde_line_opt.get( 'sequence_db' , None )
+                if sequence_db is None:
+                    raise ValueError( "No genome sequence file specified")
+                else:
+                    options['sequence_db'] = sequence_db
             if not os.path.exists(options['sequence_db']):
                 raise ValueError( "%s: No such sequence data " % options['sequence_db'])
+            
+            if 'ordered_db' in cmde_line_opt:
+                options['ordered_db'] = cmde_line_opt['ordered_db']
+            else:
+                try:
+                    options['ordered_db'] = self.parser.getboolean( 'base', 'ordered') 
+                except NoSectionError:
+                    options['ordered_db'] = False
+            
+            options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
@@ -155,15 +181,22 @@ class Config(object):
                 raise ValueError( msg )
             
             try:
-                e_value_sel = self.parser.get('hmmer', 'e_value_sel', vars = cmde_line_opt)
-                options['e_value_sel'] = float(e_value_sel)
+                i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars = cmde_line_opt)
+                options['i_evalue_sel'] = float(i_evalue_sel)
             except ValueError:
-                msg = "Invalid value for hmmer e_value_sel :{0}: (float expected)".format(e_value_sel)
+                msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(i_evalue_sel)
                 raise ValueError( msg )
             
-            if e_value_sel > e_value_res:
-                raise ValueError( "e_value_sel (%f) must be greater than e_value_res (%f)" %( e_value_sel, e_value_res) )
-
+            if i_evalue_sel > e_value_res:
+                raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( i_evalue_sel, e_value_res) )
+            
+            try:
+                coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars = cmde_line_opt)
+                options['coverage_profile'] = float(coverage_profile)
+            except ValueError:
+                msg = "Invalid value for hmmer coverage_profile :{0}: (float expected)".format(coverage_profile)
+                raise ValueError( msg )
+            
             options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
             if not os.path.exists(options['def_dir']):
                 raise ValueError( "%s: No such definition directory" % options['def_dir'])
@@ -186,6 +219,13 @@ class Config(object):
             raise err
         return options
 
+    @property
+    def sequence_db(self):
+        return self.options['sequence_db']
+
+    @property
+    def ordered_db(self):
+        return self.options['ordered_db']
 
     @property
     def hmmer_exe(self):
@@ -196,8 +236,12 @@ class Config(object):
         return self.options['e_value_res']
 
     @property
-    def e_value_sel(self):
-        return self.options['e_value_sel']
+    def i_evalue_sel(self):
+        return self.options['i_evalue_sel']
+
+    @property
+    def coverage_profile(self):
+        return self.options['coverage_profile']
 
     @property
     def def_dir(self):

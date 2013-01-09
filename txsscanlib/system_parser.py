@@ -15,9 +15,8 @@ import xml.etree.ElementTree as ET
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
 
-from secretion import System
-from secretion import Gene
-
+from system import System
+from gene import Gene,  Homolog
 
 class SystemParser(object):
     """
@@ -60,13 +59,13 @@ class SystemParser(object):
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
             elif presence == 'allowed':
-               system.add_allowed_gene(gene)
+                system.add_allowed_gene(gene)
             elif presence == 'forbidden':
-               system.add_forbidden_gene(gene)
+                system.add_forbidden_gene(gene)
             else:
-               msg = "Invalid system definition: presence value must be either [ mandatory, allowed, forbidden] not %s" % presence
-               _log.error(msg)
-               raise SyntaxError(msg)       
+                msg = "Invalid system definition: presence value must be either [mandatory, allowed, forbidden] not %s" % presence
+                _log.error(msg)
+                raise SyntaxError(msg)       
         return system
     
     def _parse_gene(self, node):
@@ -86,7 +85,37 @@ class SystemParser(object):
             raise SyntaxError(msg)
         gene = Gene(name, self.cfg)
         for homolog_node in node.findall("homologs/gene"):
-            homolog = self._parse_gene(homolog_node)
+            homolog = self._parse_homolog(homolog_node , gene)
             gene.add_homolog(homolog)
         return gene
+    
+    def _parse_homolog(self, node, gene_ref):
+        """
+        parse a xml element gene and build the corresponding object
         
+        :param node: a node corresponding to gene element
+        :type node: :class:`xml.etree.ElementTree.Element` object 
+        :return: the gene object corresponding to the node
+        :rtype: :class:`txsscanlib.secretion.System` object 
+        """
+        
+        name = node.get("name")
+        if not name:
+            msg = "Invalid system definition: gene without name"
+            _log.error(msg)
+            raise SyntaxError(msg)
+        aligned = node.get("aligned")
+        if aligned in ("1", "true", "True"):
+            aligned = True
+        elif aligned in (None, "0" , "false" , "False"):
+            aligned = False
+        else:
+            msg = 'Invalid system definition: invalid value for attribute type for gene %s: %s allowed values are "1","true", "True","0" , "false" , "False" '% (aligned, name)
+            _log.error(msg)
+            raise SyntaxError(msg)     
+        gene = Homolog(name, self.cfg, gene_ref , aligned)
+        for homolog_node in node.findall("homologs/gene"):
+            homolog = self._parse_homolog(homolog_node , gene)
+            gene.add_homolog(homolog)
+        return gene
+    
