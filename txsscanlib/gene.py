@@ -192,7 +192,7 @@ class Profile(object):
                                stderr = err_file ,
                                close_fds = False ,
                                )
-            except OSError, err:
+            except Exception, err:
                 msg = "hmmer execution failed: command = %s : %s" % ( command , err)
                 _log.critical( msg, exc_info = True )
                 raise err
@@ -204,8 +204,8 @@ class Profile(object):
             raise RuntimeError(msg)
         self.hmm_raw_output = output_path
         if self.cfg.ordered_db:
-            return OrderedHMMReport(self.gene, output_path, err_path, hmmer.returncode, self.cfg )
+            return OrderedHMMReport(self.gene, output_path, self.cfg )
         else:
-            return UnOrderedHMMReport(self.gene, output_path, err_path, hmmer.returncode, self.cfg )
+            return UnOrderedHMMReport(self.gene, output_path, self.cfg )
 
             
