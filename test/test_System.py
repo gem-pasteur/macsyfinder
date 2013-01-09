@@ -14,8 +14,8 @@ if not TXSSCAN_HOME in sys.path:
 import unittest
 
 from txsscanlib.config import Config
-from txsscanlib.secretion import System
-from txsscanlib.secretion import Gene
+from txsscanlib.system import System
+from txsscanlib.gene import Gene
 
 class Test(unittest.TestCase):
 
@@ -23,7 +23,7 @@ class Test(unittest.TestCase):
     def setUp(self):
         self.cfg = Config( hmmer_exe = "",
                            e_value_res = 1,
-                           e_value_sel = 0.5,
+                           i_evalue_sel = 0.5,
                            def_dir = "../data/DEF",
                            res_search_dir = ".",
                            res_search_suffix = "",

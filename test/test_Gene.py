@@ -12,8 +12,8 @@ if not TXSSCAN_HOME in sys.path:
 
 import unittest
 
-from txsscanlib.secretion import Gene
-from txsscanlib.secretion import System
+from txsscanlib.gene import Gene
+from txsscanlib.system import System
 from txsscanlib.config import Config
 
 
@@ -24,7 +24,7 @@ class Test(unittest.TestCase):
         self.cfg = Config( sequence_db = ".",
                            hmmer_exe = "",
                            e_value_res = 1,
-                           e_value_sel = 0.5,
+                           i_evalue_sel = 0.5,
                            def_dir = "../data/DEF",
                            res_search_dir = ".",
                            res_search_suffix = "",
@@ -62,6 +62,17 @@ class Test(unittest.TestCase):
         self.assertEqual(gene.system, system_foo)
         for h in gene.get_homologs():
             self.assertEqual(h.system, system_foo)
-                         
+    
+    def test_str(self):
+        """
+        """
+        gene = Gene('sctJ_FLG' , self.cfg)
+        homolog = Gene( 'sctJ', self.cfg)
+        gene.add_homolog( homolog )
+        s = """name : sctJ_FLG
+    homologs: sctJ"""
+        self.assertEqual( str(gene) , s )
+        
+                 
 if __name__ == "__main__":
     unittest.main()
