@@ -1,7 +1,8 @@
 <system> 
-    <gene name="sctJ_FLG" >
+    <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
-           <gene name="sctJ"/>
+           <gene name="sctJ" />
+           <gene name="pilO" system_ref="T2SS" aligned="true"/>
        </homologs>
     </gene>
     <gene name="sctN_FLG" presence="mandatory"/>
