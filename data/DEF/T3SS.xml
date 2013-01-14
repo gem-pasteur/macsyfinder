@@ -1,0 +1,46 @@
+<system>
+    <gene name="sctC" presence="mandatory"/>
+    <gene name="sctJ" presence="mandatory">       
+        <homologs>
+    	    <gene name="sctJ_FLG" system_ref="Flagellum"/>
+        </homologs>
+    </gene>
+    <gene name="sctN" presence="mandatory">       
+    	<homologs>
+    	    <gene name="sctN_FLG" system_ref="Flagellum"/>
+    	</homologs>
+    </gene>
+    <gene name="sctQ" presence="mandatory">  
+        <homologs>
+    	    <gene name="sctQ_FLG" system_ref="Flagellum"/>
+    	</homologs>
+    </gene>
+    <gene name="sctR" presence="mandatory">    
+    	<homologs>
+            <gene name="sctR_FLG" system_ref="Flagellum"/>
+        </homologs>
+    </gene>
+    <gene name="sctS" presence="mandatory">    
+    	<homologs>
+            <gene name="sctS_FLG" system_ref="Flagellum"/>
+        </homologs>
+    </gene>
+    <gene name="sctT" presence="mandatory">    
+        <homologs>
+    	    <gene name="sctT_FLG" system_ref="Flagellum"/>
+        </homologs>
+    </gene>
+    <gene name="sctU" presence="mandatory">    
+        <homologs>
+            <gene name="sctU_FLG" system_ref="Flagellum"/>
+    	</homologs>
+    </gene>
+    <gene name="sctV" presence="mandatory">    
+    	<homologs>
+            <gene name="sctV_FLG" system_ref="Flagellum"/>
+        </homologs>
+    </gene>
+    <gene name="fliE" presence="forbidden" system_ref="Flagellum"/>
+    <gene name="flgB" presence="forbidden" system_ref="Flagellum"/>
+    <gene name="flgC" presence="forbidden" system_ref="Flagellum"/>
+</system>

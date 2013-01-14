@@ -1,8 +1,7 @@
 <system> 
     <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
-           <gene name="sctJ" />
-           <gene name="pilO" system_ref="T2SS" aligned="true"/>
+           <gene name="sctJ" system_ref="T3SS"/>
        </homologs>
     </gene>
     <gene name="sctN_FLG" presence="mandatory"/>
@@ -15,6 +14,6 @@
     <gene name="flgB" presence="allowed"/>
     <gene name="flgC" presence="allowed"/>
     <gene name="fliE" presence="allowed"/>
-    <gene name="sctC" presence="forbidden"/>
+    <gene name="sctC" presence="forbidden" system_ref="T3SS"/>
 </system>
 

@@ -1,0 +1,48 @@
+<system>
+    <gene name="pilAE" presence="mandatory">
+    	<homologs>
+    	    <gene name="gspG" system_ref="T2SS"/>
+        </homologs>
+    </gene>
+    <gene name="pilI_pilV" presence="mandatory">
+        <homologs>
+    	    <gene name="gspH" system_ref="T2SS"/>
+    	    <gene name="gspI" system_ref="T2SS"/>
+    	    <gene name="gspJ" system_ref="T2SS"/>
+    	    <gene name="gspK" system_ref="T2SS"/>
+        </homologs>
+    </gene>
+    <gene name="pilB" presence="mandatory" aligned="true">       
+        <homologs>
+    	    <gene name="gspE" system_ref="T2SS"/>
+        </homologs>
+    </gene>    
+    <gene name="pilC" presence="mandatory" aligned="true">       
+        <homologs>
+    	    <gene name="gspF" system_ref="T2SS"/>
+        </homologs>
+    </gene>    
+    <gene name="pilO" presence="mandatory" aligned="true">       
+        <homologs>
+    	    <gene name="gspM" system_ref="T2SS"/>
+        </homologs>
+    </gene>    
+    <gene name="pilQ" presence="mandatory" aligned="true">       
+        <homologs>
+    	    <gene name="gspD" system_ref="T2SS"/>
+        </homologs>
+    </gene>    
+    <gene name="pilM" presence="mandatory"/>     
+    <gene name="pilN" presence="mandatory"/> 
+    <gene name="pilP" presence="mandatory"/>      
+    <gene name="pilT_pilU" presence="mandatory"/>       
+    
+    <gene name="pilD" presence="allowed">       
+        <homologs>
+    	    <gene name="gspO" system_ref="T2SS"/>
+        </homologs>
+    </gene> 
+    <gene name="gspC" presence="forbidden" system_ref="T2SS"/> 
+    <gene name="gspN" presence="forbidden" system_ref="T2SS"/> 
+    <gene name="tadZ" presence="forbidden" system_ref="Tad"/> 
+</system>

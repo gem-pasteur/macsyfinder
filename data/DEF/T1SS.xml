@@ -1,0 +1,5 @@
+<system>
+    <gene name="abc" presence="mandatory"/>
+    <gene name="mfp" presence="mandatory"/>
+    <gene name="omf" presence="mandatory"/>
+</system>
