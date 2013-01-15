@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #===============================================================================
-# Created on Nov 30, 2012
+# Created on Jan 15, 2013
 # 
 # @author: bneron
 # @contact: user_email
@@ -18,8 +18,7 @@ if not TXSSCAN_HOME in sys.path:
 
 import unittest
 import shutil
-from txsscanlib.gene import Homolog
-from txsscanlib.gene import Gene
+from txsscanlib.system import system_factory
 from txsscanlib.system import System
 from txsscanlib.config import Config
 
@@ -44,29 +43,17 @@ class Test(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
 
-
-    def test_gene_ref(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog_1 = Homolog( gene, gene_ref)
-        self.assertEqual( homolog_1.gene_ref , gene_ref)
- 
-    def test_is_aligned(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog = Homolog( gene, gene_ref)
-        self.assertFalse( homolog.is_aligned() )
-        homolog = Homolog(gene, gene_ref, aligned = True  )
-        self.assertTrue( homolog.is_aligned() )
-
-    def test_delagation(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog = Homolog( gene, gene_ref)
-        self.assertEqual( homolog.system , system )
-
+    def test_get_system(self):
+        system_foo = system_factory.get_system("foo", self.cfg)
+        self.assertTrue( isinstance( system_foo, System ))
+        self.assertEqual( system_foo.name, "foo" )
+    
+    def test_get_uniq_object(self):
+        system_1 = system_factory.get_system("foo", self.cfg)
+        system_2 = system_factory.get_system("foo", self.cfg)
+        self.assertEqual( system_1, system_2 )
+        
+        
+                 
 if __name__ == "__main__":
     unittest.main()

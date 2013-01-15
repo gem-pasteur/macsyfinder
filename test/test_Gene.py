@@ -1,8 +1,14 @@
-'''
-Created on Nov 30, 2012
+# -*- coding: utf-8 -*-
 
-@author: bneron
-'''
+#===============================================================================
+# Created on Nov 30, 2012
+# 
+# @author: bneron
+# @contact: user_email
+# @organization: organization_name
+# @license: license
+#===============================================================================
+
 
 import sys
 import os
@@ -11,8 +17,9 @@ if not TXSSCAN_HOME in sys.path:
     sys.path.append(os.path.abspath('..') )
 
 import unittest
-
+import shutil
 from txsscanlib.gene import Gene
+from txsscanlib.gene import Homolog
 from txsscanlib.system import System
 from txsscanlib.config import Config
 
@@ -33,20 +40,29 @@ class Test(unittest.TestCase):
                            res_extract_suffix = "",
                            log_level = 30
                            )
-
+    def tearDown(self):
+        shutil.rmtree(self.cfg.working_dir)
 
     def test_add_homolog(self):
-        gene = Gene('sctJ_FLG' , self.cfg)
-        homolog = Gene( 'sctJ', self.cfg)
+        system_foo = System( "foo", self.cfg)
+        system_bar = System( "bar", self.cfg)
+        gene = Gene('sctJ_FLG', system_foo, self.cfg)
+        gene_ref = Gene('sctJ', system_bar, self.cfg)
+        homolog = Homolog( gene, gene_ref, self.cfg)
         gene.add_homolog( homolog )
         self.assertEqual(len( gene.homologs), 1)
         self.assertEqual(gene.homologs[0], homolog)
     
+    
     def test_get_homologs(self):
-        gene = Gene('sctJ_FLG' , self.cfg)
-        homolog_1 = Gene( 'sctJ', self.cfg)
+        system_foo = System( "foo", self.cfg)
+        system_bar = System( "bar", self.cfg)
+        gene = Gene('sctN', system_foo, self.cfg)
+        sctJ_FLG = Gene('sctJ_FLG', system_foo, self.cfg)
+        sctJ = Gene('sctJ', system_bar, self.cfg)
+        homolog_1 = Homolog( sctJ_FLG, gene, self.cfg)
         gene.add_homolog( homolog_1 )
-        homolog_2 = Gene( 'sctN_FLG', self.cfg)
+        homolog_2 = Homolog(sctJ, gene, self.cfg)
         gene.add_homolog( homolog_2 )
         self.assertEqual( gene.get_homologs(), [homolog_1, homolog_2] )
         
@@ -55,19 +71,18 @@ class Test(unittest.TestCase):
         test getter/setter for system property
         """
         system_foo = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG' , self.cfg)
-        homolog = Gene('sctJ', self.cfg)
-        gene.add_homolog( homolog )
-        gene.system = system_foo                   
+        gene = Gene('sctJ_FLG', system_foo, self.cfg)
         self.assertEqual(gene.system, system_foo)
-        for h in gene.get_homologs():
-            self.assertEqual(h.system, system_foo)
     
     def test_str(self):
         """
         """
-        gene = Gene('sctJ_FLG' , self.cfg)
-        homolog = Gene( 'sctJ', self.cfg)
+        system_foo = System( "foo", self.cfg)
+        gene = Gene('sctJ_FLG', system_foo, self.cfg)
+        
+        system_bar = System( "bar", self.cfg)
+        gene_homolog = Gene('sctJ', system_bar, self.cfg)
+        homolog = Homolog( gene_homolog, gene, self.cfg)
         gene.add_homolog( homolog )
         s = """name : sctJ_FLG
     homologs: sctJ"""

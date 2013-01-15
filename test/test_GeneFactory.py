@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 #===============================================================================
-# Created on Nov 30, 2012
+# Created on Jan 14, 2012
 # 
 # @author: bneron
 # @contact: user_email
@@ -18,7 +18,7 @@ if not TXSSCAN_HOME in sys.path:
 
 import unittest
 import shutil
-from txsscanlib.gene import Homolog
+from txsscanlib.gene import gene_factory
 from txsscanlib.gene import Gene
 from txsscanlib.system import System
 from txsscanlib.config import Config
@@ -44,29 +44,20 @@ class Test(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
 
-
-    def test_gene_ref(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog_1 = Homolog( gene, gene_ref)
-        self.assertEqual( homolog_1.gene_ref , gene_ref)
- 
-    def test_is_aligned(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog = Homolog( gene, gene_ref)
-        self.assertFalse( homolog.is_aligned() )
-        homolog = Homolog(gene, gene_ref, aligned = True  )
-        self.assertTrue( homolog.is_aligned() )
-
-    def test_delagation(self):
-        system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog = Homolog( gene, gene_ref)
-        self.assertEqual( homolog.system , system )
-
+    def test_get_gene(self):
+        system_foo = System( "foo", self.cfg)
+        gene_name = 'sctJ_FLG'
+        gene = gene_factory.get_gene(gene_name, system_foo, self.cfg)
+        self.assertTrue( isinstance( gene, Gene ))
+        self.assertEqual( gene.name, gene_name )
+    
+    def test_get_uniq_object(self):
+        system_foo = System( "foo", self.cfg)
+        gene1 = gene_factory.get_gene('sctJ_FLG', system_foo, self.cfg)
+        gene2 = gene_factory.get_gene('sctJ_FLG', system_foo, self.cfg)
+        self.assertEqual( gene1, gene2 )
+        
+        
+                 
 if __name__ == "__main__":
     unittest.main()
