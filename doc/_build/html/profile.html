@@ -58,6 +58,36 @@
 <span id="id1"></span><h1>profile<a class="headerlink" href="#profile" title="Permalink to this headline">¶</a></h1>
 <p>each gene is defined by a profile. a Profile must match a file in
 which is a HMM profile.</p>
+<div class="section" id="profilefactory-api-reference">
+<h2>ProfileFactory API reference<a class="headerlink" href="#profilefactory-api-reference" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><span class="target" id="module-txsscanlib.gene"></span><dl class="class">
+<dt id="txsscanlib.gene.ProfileFactory">
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">ProfileFactory</tt><a class="headerlink" href="#txsscanlib.gene.ProfileFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>build and cached all Profile objects. Profiles must not be instanciate directly.
+the profile_factory must be used. The profile_factory ensure there is only one instance
+of profile for a given name.
+To get a profile use the method get_profile. If the profile is already cached this instance is returned
+otherwise a new profile is build, cached then returned.</p>
+<dl class="method">
+<dt id="txsscanlib.gene.ProfileFactory.get_profile">
+<tt class="descname">get_profile</tt><big>(</big><em>gene</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.ProfileFactory.get_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">return profile corresponding to the name.</td>
+</tr>
+</tbody>
+</table>
+<p>If the profile already exists return it otherwise build it and return
+:rtype: <a class="reference internal" href="#txsscanlib.gene.Profile" title="txsscanlib.gene.Profile"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Profile</span></tt></a> object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+</div>
 <div class="section" id="module-txsscanlib.gene">
 <span id="profile-api-reference"></span><h2>Profile API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -139,6 +169,7 @@ this private method is called at the Profile init</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">profile</a><ul>
+<li><a class="reference internal" href="#profilefactory-api-reference">ProfileFactory API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.gene">Profile API reference</a></li>
 </ul>
 </li>
@@ -192,7 +223,7 @@ this private method is called at the Profile init</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

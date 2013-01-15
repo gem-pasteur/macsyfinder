@@ -125,14 +125,14 @@ log_level = debug</pre>
 <span id="config-api-reference"></span><h2>Config API reference<a class="headerlink" href="#module-txsscanlib.config" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.config.Config">
-<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse configuration files and handle the configuration according the file location precedence
 /etc/txsscan.conf &lt; ~/.txsscan.conf &lt; .txsscan.conf
 if a configuration file is given on the command line, only this file is used.
 in fine the arguments passed have the highest priority</p>
 <dl class="method">
 <dt id="txsscanlib.config.Config.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>ordered_db=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -151,6 +151,8 @@ in fine the arguments passed have the highest priority</p>
 <li><strong>profile_dir</strong> (<em>string</em>) &#8211; à déterminer</li>
 <li><strong>profile_suffix</strong> (<em>string</em>) &#8211; à déterminer</li>
 <li><strong>log_level</strong> (<em>int</em>) &#8211; the level of log output</li>
+<li><strong>log_file</strong> (<em>string</em>) &#8211; the path of file to write logs</li>
+<li><strong>worker_nb</strong> (<em>int</em>) &#8211; the max number of processes in parrallel</li>
 </ul>
 </td>
 </tr>
@@ -177,6 +179,208 @@ in fine the arguments passed have the highest priority</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">all the options for this execution</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionnary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.coverage_profile">
+<tt class="descname">coverage_profile</tt><a class="headerlink" href="#txsscanlib.config.Config.coverage_profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the coverage threshold to select a hit in the hmm report</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.def_dir">
+<tt class="descname">def_dir</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.def_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.def_dir" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the path to the directory where are the xml definitions of sectretion systems</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.e_value_res">
+<tt class="descname">e_value_res</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.e_value_res"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.e_value_res" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The e_value to apply for searching genes in sequences data base</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.hmmer_exe">
+<tt class="descname">hmmer_exe</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.hmmer_exe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.hmmer_exe" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the name of the binary to excute to use profiles</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.i_evalue_sel">
+<tt class="descname">i_evalue_sel</tt><a class="headerlink" href="#txsscanlib.config.Config.i_evalue_sel" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the i_evalue threshold to selct a hit in the hmm report</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.ordered_db">
+<tt class="descname">ordered_db</tt><a class="headerlink" href="#txsscanlib.config.Config.ordered_db" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the seaquence data base is ordered, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.profile_dir">
+<tt class="descname">profile_dir</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.profile_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.profile_dir" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the path to the directory where are the gene profiles</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.profile_suffix">
+<tt class="descname">profile_suffix</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.profile_suffix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.profile_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the suffix for profile files</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.res_extract_suffix">
+<tt class="descname">res_extract_suffix</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.res_extract_suffix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.res_extract_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the suffix of extract files (after HMM output parsing)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.res_search_dir">
+<tt class="descname">res_search_dir</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.res_search_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.res_search_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>:return the path to the directory where are the results of txsscan runs
+:rtype: string</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.res_search_suffix">
+<tt class="descname">res_search_suffix</tt><a class="reference internal" href="_modules/txsscanlib/config.html#Config.res_search_suffix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.res_search_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the suffix for hmm output files</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.sequence_db">
+<tt class="descname">sequence_db</tt><a class="headerlink" href="#txsscanlib.config.Config.sequence_db" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the path to the sequence database</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.worker_nb">
+<tt class="descname">worker_nb</tt><a class="headerlink" href="#txsscanlib.config.Config.worker_nb" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the maximum number of parrallel jobs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.working_dir">
+<tt class="descname">working_dir</tt><a class="headerlink" href="#txsscanlib.config.Config.working_dir" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the path of the working directory of this run</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Rtpe :</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>
@@ -249,7 +453,7 @@ in fine the arguments passed have the highest priority</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

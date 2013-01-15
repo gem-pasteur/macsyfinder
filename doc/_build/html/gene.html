@@ -58,20 +58,84 @@
 <span id="id1"></span><h1>gene<a class="headerlink" href="#gene" title="Permalink to this headline">¶</a></h1>
 <p>the Gene class represents the genes defined by a System
 each gene must have a profile (the profiles nust be stored in ... ).
-a gene may have homologs. an homologs is a Gene with 2 additional properties:</p>
+a gene may have homologs.</p>
+<blockquote>
+<div>homolog have to properties :</div></blockquote>
 <ul class="simple">
 <li>a reference gene, which is a reference toward the gene which is the homolog</li>
 <li>and if the profile is aligned on the gene reference or not.</li>
 </ul>
+<p>and is composed of a gene. All attribute/methods which are not directly implemented in
+Homolog are redireted to this gene.</p>
+<p>To optimize computation and to avoid concurrency problems when we search several systems.
+Each gene must be instanciate only one time. This is ensure by using the gene_factory.
+gene_factory is a  <a class="reference internal" href="#txsscanlib.gene.GeneFactory" title="txsscanlib.gene.GeneFactory"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.GeneFactory</span></tt></a> object.</p>
+<p>example to get a gene object:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.system</span> <span class="kn">import</span> <span class="n">system_factory</span>
+<span class="kn">from</span> <span class="nn">txsscanlib.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">txsscanlib.gene</span> <span class="kn">import</span> <span class="n">gene_factory</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
+<span class="c">#instanciation of a system</span>
+<span class="n">t2ss</span> <span class="o">=</span>  <span class="n">system_factory</span><span class="o">.</span><span class="n">get_system</span><span class="p">(</span><span class="s">&quot;T2SS&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+<span class="c">#instanciation of a gene</span>
+<span class="n">pilO</span> <span class="o">=</span> <span class="n">gene_factory</span><span class="o">.</span><span class="n">get_gene</span><span class="p">(</span><span class="s">&quot;pilO&quot;</span><span class="p">,</span> <span class="n">t2ss</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="genefactory-api-reference">
+<h2>GeneFactory API reference<a class="headerlink" href="#genefactory-api-reference" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><span class="target" id="module-txsscanlib.gene"></span><dl class="class">
+<dt id="txsscanlib.gene.GeneFactory">
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">GeneFactory</tt><a class="headerlink" href="#txsscanlib.gene.GeneFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>build and cached all genes objects. Genes must not be instanciate directly.
+the gene_factory must be used. The gene factory ensure there is only one instance
+of gene for a given name.
+To get a gene use the method get_gene. if the gene is already cached this instance is returned
+otherwise a new gen is build, cached then returned.</p>
+<dl class="attribute">
+<dt id="txsscanlib.gene.GeneFactory.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.gene.GeneFactory.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.GeneFactory.get_gene">
+<tt class="descname">get_gene</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneFactory.get_gene" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">return gene corresponding to the name.</td>
+</tr>
+</tbody>
+</table>
+<p>If the gene already exists return it otherwise build it an d returni
+:rtype: <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Don&#8217;t instanciate your own GeneFactory use the gene_factory at the top level of the module.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.gene</span> <span class="kn">import</span> <span class="n">gene_factory</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="section" id="module-txsscanlib.gene">
 <span id="gene-api-reference"></span><h2>Gene API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.gene.Gene">
-<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle Gene of a secretion system</p>
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle gene</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -79,6 +143,7 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<em>string</em>) &#8211; the name of the gene</li>
+<li><strong>system</strong> (<a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object) &#8211; the system which belongs this gene</li>
 <li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
 </ul>
 </td>
@@ -95,13 +160,13 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
 
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.add_homolog">
-<tt class="descname">add_homolog</tt><big>(</big><em>gene</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.add_homolog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.add_homolog" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_homolog</tt><big>(</big><em>homolog</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.add_homolog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.add_homolog" title="Permalink to this definition">¶</a></dt>
 <dd><p>add a homolog gene</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gene</strong> (<a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object) &#8211; homolg gene to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>homolog</strong> (<a class="reference internal" href="#txsscanlib.gene.Homolog" title="txsscanlib.gene.Homolog"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Homolog</span></tt></a> object) &#8211; homolog to add</td>
 </tr>
 </tbody>
 </table>
@@ -117,6 +182,19 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The homolgs genes</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Gene.profile">
+<tt class="descname">profile</tt><em class="property"> = None</em><a class="headerlink" href="#txsscanlib.gene.Gene.profile" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>profile</strong> &#8211; The profile HMM Profile corresponding to this gene <a class="reference internal" href="profile.html#txsscanlib.gene.Profile" title="txsscanlib.gene.Profile"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Profile</span></tt></a> object</td>
 </tr>
 </tbody>
 </table>
@@ -144,22 +222,40 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
 <span id="homolog-api-reference"></span><h2>Homolog API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.gene.Homolog">
-<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Homolog</tt><big>(</big><em>name</em>, <em>cfg</em>, <em>gene_ref</em>, <em>aligned=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Homolog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Homolog" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Homolog</tt><big>(</big><em>gene</em>, <em>gene_ref</em>, <em>aligned=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Homolog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Homolog" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle homologs</p>
 <dl class="method">
 <dt id="txsscanlib.gene.Homolog.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>cfg</em>, <em>gene_ref</em>, <em>aligned=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Homolog.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Homolog.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>gene</em>, <em>gene_ref</em>, <em>aligned=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Homolog.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Homolog.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; the name of the gene</li>
-<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object.) &#8211; the configuration</li>
+<li><strong>gene</strong> (<a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object.) &#8211; the gene</li>
 <li><strong>gene_ref</strong> (<a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object.) &#8211; the gene which this one is homolog.</li>
 <li><strong>aligned</strong> (<em>boolean</em>) &#8211; if True, this gene overlap totally the sequence of the gene reference. Otherwise it overlap partially.</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Homolog.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.gene.Homolog.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Homolog.gene">
+<tt class="descname">gene</tt><em class="property"> = None</em><a class="headerlink" href="#txsscanlib.gene.Homolog.gene" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Variables:</th><td class="field-body"><strong>gene</strong> &#8211; gene</td>
 </tr>
 </tbody>
 </table>
@@ -209,6 +305,7 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">gene</a><ul>
+<li><a class="reference internal" href="#genefactory-api-reference">GeneFactory API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.gene">Gene API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.gene">Homolog API reference</a></li>
 </ul>
@@ -263,7 +360,7 @@ a gene may have homologs. an homologs is a Gene with 2 additional properties:</p
     </div>
     <div class="footer">
         &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
