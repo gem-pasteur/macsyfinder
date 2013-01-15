@@ -14,83 +14,92 @@ import os
 import argparse
 import logging
 
-if os.environ.has_key('TXSSCAN_HOME'):
-    TXSSCAN_HOME = os.environ['TXSSCAN_HOME']
+if 'TXSSCAN_HOME' in os.environ:
+    TXSSCAN_HOME = os.environ.get('TXSSCAN_HOME')
     TXSSCAN_HOME = os.path.abspath( os.path.realpath(TXSSCAN_HOME))
     if TXSSCAN_HOME not in sys.path:
         sys.path.append( TXSSCAN_HOME )
-
 try:
     from txsscanlib.config import Config
 except ImportError , err:
     msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 
-from txsscanlib import detect_SS    
-
-
-#def get_syst_def_file(def_dir, syst):
-#    return "%s/%s.def" % (def_dir, syst)
-
+from txsscanlib.system_parser import SystemParser
+from txsscanlib.search_genes import search_genes
 
 parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
-parser.add_argument("sequence_db",
-                    help = "aide a définir")
+
 parser.add_argument("systems",
                     nargs = '+',
                     help = "aide a définir")
-
+genome_options =  parser.add_argument_group(title = "genome options")
+genome_options.add_argument("--sequence_db",
+                    action = 'store',
+                    dest = 'sequence_db',
+                    help = "aide a définir")
+genome_options.add_argument(  "--ordered" ,
+                       action = "store_true",
+                       dest = "ordered",
+                       default = False,
+                       help = 'the genes are ordered')
 hmmer_options =  parser.add_argument_group(title = "hmmer options")
 hmmer_options.add_argument( '--hmmer', 
                             action = 'store',
                             dest = 'hmmer_exe',
-                            default = None , 
+                            default = None, 
                             help = 'hmm binary')
-
 hmmer_options.add_argument( '--e_value_search',
                      action = 'store',
-                     dest = 'e_value_search',
-                     type = float , 
-                     default = None , 
-                     help = 'help for e_value_search')
+                     dest = 'e_value_res',
+                     type = float,
+                     default = None,
+                     help = 'help for e_value_res')
 
-hmmer_options.add_argument('--e_value_select',
+hmmer_options.add_argument('--i_evalue_select',
                      action = 'store',
-                    dest = 'e_value_select',
+                    dest = 'i_evalue_sel',
                     type = float,
                     default = None , 
-                    help = 'help for e_value_select')
+                    help = 'help for i_evalue_select')
+
+hmmer_options.add_argument('--coverage_profile',
+                     action = 'store',
+                    dest = 'coverage_profile',
+                    type = float,
+                    default = None , 
+                    help = 'help for coverage_profile')
 
 dir_options =  parser.add_argument_group(title = "directories options", description = None)
 dir_options.add_argument('-d', '--d',
                     action = 'store',
                     dest = 'def_dir',
-                    default = None ,
+                    default = None,
                     help = 'the path to the systems definition files')
 dir_options.add_argument('-r', '--research-search',
                     action = 'store',
                     dest = 'res_search_dir',
-                    default = None ,
+                    default = None,
                     help = 'aide a définir')
-dir_options.add_argument('-r', '--research-search-suffix',
+dir_options.add_argument( '--research-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
-                    default = None ,
+                    default = None,
                     help = 'aide a définir')
 dir_options.add_argument('--research-extract-suffix',
                     action = 'store',
                     dest = 'res_extract_suffix',
-                    default = None ,
+                    default = None,
                     help = 'aide a définir')
-dir_options.add_argument('-p', '--p',
+dir_options.add_argument('-p', '--profile_dir',
                     action = 'store',
                     dest = 'profile_dir',
-                    default = None ,
+                    default = None,
                     help = 'the path to the profiles directory')
 dir_options.add_argument('--profile-suffix',
                     action = 'store',
                     dest = 'profile_suffix',
-                    default = None ,
+                    default = None,
                     help = 'the suffix of profile files')
 
 general_options =  parser.add_argument_group(title = "general options", description = "general options")
@@ -101,127 +110,59 @@ general_options.add_argument("-w", "--worker",
                     default = 0,
                     help = "number of worker not yet implemented")
 general_options.add_argument( "-v" , "--verbosity",
-                      action= "count", 
-                      dest = "verbosity", 
-                      default = None ,
+                      action= "count",
+                      dest = "verbosity",
+                      default = 0,
                       help = "increase the verbosity level. There is 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
 general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
-                    default = sys.stderr ,
+                    default = sys.stderr,
                     help = "the path to log file")
 args = parser.parse_args()
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
-sh = logging.StreamHandler( sys.stderr ) 
+sh = logging.StreamHandler(sys.stderr)
 sh.setFormatter(sh_formatter)
 
 logger = logging.getLogger('txsscan')
 logger.addHandler(sh)
 
 if args.verbosity == 0:
-    logger.setLevel( logging.ERROR )
+    log_level = logging.ERROR
 elif args.verbosity == 1:
-    logger.setLevel( logging.WARNING )
+    log_level = logging.WARNING
 elif args.verbosity == 2:
-    logger.setLevel( logging.INFO )
+    log_level = logging.INFO
 elif args.verbosity == 3:
-    logger.setLevel( logging.DEBUG )
+    log_level = logging.DEBUG
 
+logger.setLevel(log_level)
 
 config = Config(sequence_db = args.sequence_db,
+                ordered_db = args.ordered,
                 hmmer_exe = args.hmmer_exe,
-                e_value_res = args.e_value_res ,
-                e_value_sel = args.e_value_sel ,
-                res_search_dir = args.res_search_dir ,
-                res_search_suffix = args.res_search_suffix ,
-                profile_dir = args.profile_dir ,
+                e_value_res = args.e_value_res,
+                i_evalue_sel = args.i_evalue_sel,
+                coverage_profile = args.coverage_profile,
+                res_search_dir = args.res_search_dir,
+                res_search_suffix = args.res_search_suffix,
+                profile_dir = args.profile_dir,
                 profile_suffix = args.profile_suffix,
-                res_extract_suffix = args.res_extract_suffix ,
-                log_level = args.log_level,
-                log_file = args.log_file
+                res_extract_suffix = args.res_extract_suffix,
+                log_level = log_level,
+                log_file = args.log_file,
+                worker_nb = args.worker_nb
                 )
 
+parser = SystemParser(config)
+systems = []
+for i in range( len(args.systems) ):
+    system  = parser.parse(args.systems[i])
+    systems.append(system)
+all_genes = []
+for system in systems:
+    genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
+    all_genes += genes
+search_genes(all_genes, config)
 
-systems_library = {}
-#for name in args.system
-for name in args.systems:
-    if name in SYST:
-        #systems_library.get(name, detect_SS.System(name, get_syst_def_file(name), args.profile_dir, PROFILE_SUFFIX))
-	# Modif SA : ligne suivante ne fonctionne pas...
-	#systems_library.get(name, detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX))
-        #print "{0} available".format(name)
-	# 
-	systems_library[name]= detect_SS.System(name, args.definition_dir, args.profile_dir, PROFILE_SUFFIX)
-	print "{0} available".format(name)
-
-# Modif SA indentation n'etait pas bonne sortir de la boucle 
-outfiles = []
-for syst_name in systems_library.keys():
-    print "\nPerforming HMMER search for {0}\n".format(syst_name)
-        
-    # Donnees Gembase
-    system = systems_library[syst_name]
-    #return une liste de nom de fichiers
-    outies = system.detect_hmmer_genes(HMMER,
-                                         args.sequence_db,
-                                         EVALUE_RES,
-                                         args.research_search_dir,
-                                         RES_SEARCH_SUFFIX,
-                                         0.00001,
-                                         0.5,
-                                         args.research_search_dir,
-                                         RES_EXTRACT_SUFFIX,
-                                         "gembase")
-					 
-    #print outies
-
-    # TEST metagenomes
-    #outies=dico_syst[syst].detect_hmmer_genes(HMMER, sequence_file, EVALUE_RES, RES_SEARCH_DIR, RES_SEARCH_SUFFIX, 0.00001, 0.5, RES_SEARCH_DIR, RES_EXTRACT_SUFFIX)
-
-    #print out
-    outfiles.extend(outies)
-	
-#print outfiles
-
-# Recuperation des hits et creation d'un fichier global de resultats?
-# Besoin de recuperer la taille du profil... Dans 
-print "\nBuilding a joint resfile"
-
-alloutlines = []
-for out in outfiles:
-    #print out
-    with open(out) as fich:
-        lines = fich.readlines()
-    alloutlines.extend(lines)
-
-#print alloutlines    
-alloutlines.sort()
-
-# TMP
-infile = "datatest/joint_res_file"
-#infile="joint_res_file_Metag"
-
-with open(infile, "w") as fich:
-    fich.writelines(alloutlines)
-
-outfile = "datatest/joint_res_file.sel"
-#outfile="joint_res_file.sel_Metag"
-
-detect_SS.select_best_hit_same_id(infile, outfile, 0, 5, 1)
-
-max_gene_spacer = 15 # All except T1SS/T5SS/Flagellum
-#max_gene_spacer=5 # For T1SS
-#max_gene_spacer=25 # For flagellum 
-
-# Modif SA ligne suivante enlevee car bug: "ValueError: Unknown conversion specifier d"
-#outclusters = "res_file_clusters_{0!d}".format(max_gene_spacer)
-outclusters = "res_file_clusters_%d"%(max_gene_spacer)
-
-#study_cluster_gembase(outfile, outclusters, max_gene_spacer, 1, 2)
-
-# A remettre pour etude dans GEmbase
-detect_SS.study_cluster_gembase(outfile, outclusters, max_gene_spacer)
-
-# A implementer : plus general !! 
-#study_cluster_ordered_data(infile, outfile, max_spacer, col_replicon_name, col_gene_position, col_hit)
