@@ -12,6 +12,7 @@
 import os
 import sys
 import inspect
+from time import strftime
 from ConfigParser import SafeConfigParser, NoSectionError
 
 _prefix_path = '$PREFIX'
@@ -26,8 +27,9 @@ class Config(object):
     in fine the arguments passed have the highest priority
     """
     
-    options = ('sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
-               'log_level')
+    options = ('sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+               'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
+               'log_level', 'worker_nb')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
@@ -42,7 +44,9 @@ class Config(object):
                 profile_dir = None,
                 profile_suffix = None,
                 res_extract_suffix = None,
-                log_level = None
+                log_level = None,
+                log_file = None,
+                worker_nb = None
                 ):
         """
         :param sequence_db: the path to the sequence database
@@ -71,6 +75,10 @@ class Config(object):
         :type  profile_suffix: string
         :param log_level: the level of log output
         :type log_level: int
+        :param log_file: the path of file to write logs 
+        :type log_file: string
+        :param worker_nb: the max number of processes in parrallel
+        :type worker_nb: int
         """
 
         config_files = [cfg_file] if cfg_file else [ os.path.join( _prefix_path , '/etc/txsscan/txsscan.conf'),
@@ -103,7 +111,7 @@ class Config(object):
 
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
-        except AttributeError:
+        except (AttributeError, NoSectionError):
             log_level = logging.WARNING
         else:
             try:
@@ -150,10 +158,10 @@ class Config(object):
         options = {}
         if 'sequence_db' in cmde_line_opt:
             cmde_line_opt['file'] = cmde_line_opt['sequence_db']
-        
+
         try:
             try:
-               options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
+                options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
             except NoSectionError:
                 sequence_db = cmde_line_opt.get( 'sequence_db' , None )
                 if sequence_db is None:
@@ -162,7 +170,7 @@ class Config(object):
                     options['sequence_db'] = sequence_db
             if not os.path.exists(options['sequence_db']):
                 raise ValueError( "%s: No such sequence data " % options['sequence_db'])
-            
+
             if 'ordered_db' in cmde_line_opt:
                 options['ordered_db'] = cmde_line_opt['ordered_db']
             else:
@@ -170,33 +178,33 @@ class Config(object):
                     options['ordered_db'] = self.parser.getboolean( 'base', 'ordered') 
                 except NoSectionError:
                     options['ordered_db'] = False
-            
+
             options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
-            
+
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
                 options['e_value_res'] = float(e_value_res)
             except ValueError:
                 msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(e_value_res)
                 raise ValueError( msg )
-            
+
             try:
                 i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars = cmde_line_opt)
                 options['i_evalue_sel'] = float(i_evalue_sel)
             except ValueError:
                 msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(i_evalue_sel)
                 raise ValueError( msg )
-            
+
             if i_evalue_sel > e_value_res:
                 raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( i_evalue_sel, e_value_res) )
-            
+
             try:
                 coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars = cmde_line_opt)
                 options['coverage_profile'] = float(coverage_profile)
             except ValueError:
                 msg = "Invalid value for hmmer coverage_profile :{0}: (float expected)".format(coverage_profile)
                 raise ValueError( msg )
-            
+
             options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
             if not os.path.exists(options['def_dir']):
                 raise ValueError( "%s: No such definition directory" % options['def_dir'])
@@ -204,15 +212,32 @@ class Config(object):
             options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
             if not os.path.exists(options['res_search_dir']):
                 raise ValueError( "%s: No such research search directory" % options['res_search_dir'])
-
+            if not os.access(options['res_search_dir'], os.W_OK):
+                raise ValueError("research search directory (%s) is not writable" % options['res_search_dir'])
+            
+            working_dir = os.path.join(options['res_search_dir'], "txsscan-"+strftime("%Y%m%d_%H-%M-%S"))
+            try:
+                os.mkdir(working_dir)
+            except OSError, err:
+                raise ValueError("cannot create working directory %s : %s" % ( working_dir, err ))
+            options['working_dir'] = working_dir
+            
             options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars = cmde_line_opt)
             if not os.path.exists( options['profile_dir'] ):
                 raise ValueError( "%s: No such profile directory" % options['profile_dir'])
-
+            
+            
             options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars = cmde_line_opt)
             options['res_extract_suffix'] = self.parser.get('directories', 'res_extract_suffix', vars = cmde_line_opt)
             options['profile_suffix'] = self.parser.get('directories', 'profile_suffix', vars = cmde_line_opt)
-            
+            try:
+                worker_nb = self.parser.get('general', 'worker_nb', vars = cmde_line_opt)
+                worker_nb = int(worker_nb)
+                if worker_nb > 0:
+                    options['worker_nb'] = worker_nb
+            except ValueError:
+                msg = "the number of worker must be an integer"
+                raise ValueError( msg)
 
         except ValueError, err:
             self._log.error(str(err))
@@ -221,50 +246,112 @@ class Config(object):
 
     @property
     def sequence_db(self):
+        """
+        :return: the path to the sequence database
+        :rtype: string 
+        """
         return self.options['sequence_db']
 
     @property
     def ordered_db(self):
+        """
+        :return: True if the seaquence data base is ordered, False otherwise
+        :rtype: Boolean
+        """
         return self.options['ordered_db']
 
     @property
     def hmmer_exe(self):
+        """
+        :return: the name of the binary to excute to use profiles
+        :rtype: string 
+        """
         return self.options['hmmer_exe']
 
     @property
     def e_value_res(self):
+        """
+        :return: The e_value to apply for searching genes in sequences data base
+        :rtype: float
+        """
         return self.options['e_value_res']
 
     @property
     def i_evalue_sel(self):
+        """
+        :return: the i_evalue threshold to selct a hit in the hmm report
+        :rtype: float
+        """
         return self.options['i_evalue_sel']
 
     @property
     def coverage_profile(self):
+        """
+        :return: the coverage threshold to select a hit in the hmm report
+        :rtype: float
+        """
         return self.options['coverage_profile']
 
     @property
     def def_dir(self):
+        """
+        :return: the path to the directory where are the xml definitions of sectretion systems
+        :rtype: string
+        """
         return self.options['def_dir']
 
     @property
     def res_search_dir(self):
+        """
+        :return the path to the directory where are the results of txsscan runs
+        :rtype: string
+        """
         return self.options['res_search_dir']
 
     @property
+    def working_dir(self):
+        """
+        :return: the path of the working directory of this run
+        :rtpe: string
+        """
+        return self.options['working_dir']
+
+    @property
     def res_search_suffix(self):
+        """
+        :return: the suffix for hmm output files
+        :rtype: string
+        """
         return self.options['res_search_suffix']
 
     @property
     def profile_dir(self):
+        """
+        :return: the path to the directory where are the gene profiles
+        :rtype: string
+        """
         return self.options['profile_dir']
 
     @property
     def profile_suffix(self):
+        """
+        :return: the suffix for profile files
+        :rtype: string
+        """
         return self.options['profile_suffix']
 
     @property
     def res_extract_suffix(self):
+        """
+        :return: the suffix of extract files (after HMM output parsing)
+        :rtype: string
+        """
         return self.options['res_extract_suffix']
 
-    
+    @property
+    def worker_nb(self):
+        """
+        :return: the maximum number of parrallel jobs
+        :rtype: int
+        """
+        return self.options.get('worker_nb' , None)
