@@ -115,10 +115,9 @@ class SystemParser(object):
             raise SyntaxError(msg)
         system_ref = node.get("system_ref")
         if system_ref is None:
-            msg = 'Invalid system definition: gene %s, attribute system_ref must be defined for homologs'% name
-            _log.error(msg)
-            raise SyntaxError(msg)
-        system = system_factory.get_system(system_ref, self.cfg)
+            system = gene_ref.system
+        else:
+            system = system_factory.get_system(system_ref, self.cfg)
         gene = gene_factory.get_gene(name, system, self.cfg)
         homolog = Homolog(gene, gene_ref, aligned)
         for homolog_node in node.findall("homologs/gene"):
