@@ -1,22 +1,22 @@
 <system>
     <gene name="gspD" presence="mandatory">
     	<homologs>
-    	    <gene name="pilQ" system_ref="T4P" aligned="true"/>
+    	    <gene name="pilQ" system_ref="T4P" aligned="1"/>
     	</homologs>    
     </gene>
     <gene name="gspE" presence="mandatory">
     	<homologs>
-    	    <gene name="pilB" system_ref="T4P" aligned="true"/>
+    	    <gene name="pilB" system_ref="T4P" aligned="1"/>
     	</homologs>
     </gene>
     <gene name="gspF" presence="mandatory">
     	<homologs>
-            <gene name="pilC" system_ref="T4P" aligned="true"/>
+            <gene name="pilC" system_ref="T4P" aligned="1"/>
     	</homologs>
     </gene>
     <gene name="gspM" presence="mandatory">
     	<homologs>
-            <gene name="pilO" system_ref="T4P" aligned="true"/>
+            <gene name="pilO" system_ref="T4P" aligned="1"/>
     	</homologs>
     </gene>
     <gene name="gspG" presence="mandatory">
