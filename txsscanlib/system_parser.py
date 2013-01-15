@@ -15,8 +15,9 @@ import xml.etree.ElementTree as ET
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
 
-from system import System
-from gene import Gene,  Homolog
+from system import system_factory
+from gene import gene_factory
+from gene import Homolog
 
 class SystemParser(object):
     """
@@ -42,10 +43,10 @@ class SystemParser(object):
         :return: the system corresponding to the name 
         :rtype: :class:`txsscanlib.secretion.System` object 
         """
-        path = os.path.join( self.cfg.def_dir, system_name + ".xml")
+        path = os.path.join(self.cfg.def_dir, system_name + ".xml")
         if not os.path.exists(path):
             raise Exception("%s: No such sytem definitions" % path)
-        system = System( system_name , self.cfg)
+        system = system_factory.get_system(system_name, self.cfg)
         tree = ET.parse(path)
         root = tree.getroot()
         genes_nodes = root.findall("gene")
@@ -55,7 +56,7 @@ class SystemParser(object):
                 msg = "Invalid system definition: gene without presence"
                 _log.error(msg)
                 raise SyntaxError(msg)
-            gene = self._parse_gene(gene_node)
+            gene = self._parse_gene(gene_node, system)
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
             elif presence == 'allowed':
@@ -68,7 +69,7 @@ class SystemParser(object):
                 raise SyntaxError(msg)       
         return system
     
-    def _parse_gene(self, node):
+    def _parse_gene(self, node, system):
         """
         parse a xml element gene and build the corresponding object
         
@@ -83,10 +84,9 @@ class SystemParser(object):
             msg = "Invalid system definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
-        gene = Gene(name, self.cfg)
+        gene = gene_factory.get_gene(name, system, self.cfg)
         for homolog_node in node.findall("homologs/gene"):
-            homolog = self._parse_homolog(homolog_node , gene)
-            gene.add_homolog(homolog)
+            gene.add_homolog( self._parse_homolog(homolog_node , gene) )
         return gene
     
     def _parse_homolog(self, node, gene_ref):
@@ -112,10 +112,18 @@ class SystemParser(object):
         else:
             msg = 'Invalid system definition: invalid value for attribute type for gene %s: %s allowed values are "1","true", "True","0" , "false" , "False" '% (aligned, name)
             _log.error(msg)
-            raise SyntaxError(msg)     
-        gene = Homolog(name, self.cfg, gene_ref , aligned)
+            raise SyntaxError(msg)
+        system_ref = node.get("system_ref")
+        if system_ref is None:
+            msg = 'Invalid system definition: gene %s, attribute system_ref must be defined for homologs'% name
+            _log.error(msg)
+            raise SyntaxError(msg)
+        system = system_factory.get_system(system_ref, self.cfg)
+        gene = gene_factory.get_gene(name, system, self.cfg)
+        homolog = Homolog(gene, gene_ref, aligned)
         for homolog_node in node.findall("homologs/gene"):
-            homolog = self._parse_homolog(homolog_node , gene)
-            gene.add_homolog(homolog)
-        return gene
+            h2 = self._parse_homolog(homolog_node , gene)
+            homolog.add_homolog(homolog)
+            homolog.add_homolog( self._parse_homolog(homolog_node , gene) )
+        return homolog
     

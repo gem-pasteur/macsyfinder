@@ -13,9 +13,34 @@
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
 
-import threading
 
-      
+class SystemFactory(object):
+    """
+    build and cached all systems objects. Systems must not be instanciate directly.
+    the system_factory must be used. The system factory ensure there is only one instance
+    of system for a given name.
+    To get a system use the method get_system. if the gene is already cached this instance is returned
+    otherwise a new system is build, cached then returned.
+    
+    """        
+    
+    system_bank = {}
+    
+    def get_system(self, name, cfg):
+        """
+        :return: return system corresponding to the name.
+        If the system already exists return it otherwise build it an d returni
+        :rtype: :class:`txsscanlib.system.System` object
+        """
+        if name in self.system_bank:
+            system =  self.system_bank[name]
+        else:
+            system = System(name, cfg)
+            self.system_bank[name] = system
+        return system
+        
+system_factory = SystemFactory()
+              
 class System(object):
     """
     handle a secretion system.
@@ -30,7 +55,7 @@ class System(object):
         """
         self.cfg = cfg
         self.name = name
-        self._mandatory_genes = [] #utilser des OrderedDict ?? voir dans le reste du code si on veux y acceder via le nom directement
+        self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
 
@@ -41,7 +66,6 @@ class System(object):
         :param gene: gene which are mandatory for this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
-        gene.system = self
         self._mandatory_genes.append(gene)
 
     def add_allowed_gene(self, gene):
@@ -51,7 +75,6 @@ class System(object):
         :param gene: gene which should be present in this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
-        gene.system = self
         self._allowed_genes.append(gene)
 
     def add_forbidden_gene(self, gene):
@@ -61,7 +84,6 @@ class System(object):
         :param gene: gene which must not be present in this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
-        gene.system = self
         self._forbidden_genes.append(gene)
 
     @property
@@ -88,36 +110,4 @@ class System(object):
         """
         return self._forbidden_genes
 
-    def search_genes(self, genes):
-        """
-        for each each genes use the profile to perform an HMM and parse the output
-        
-        :param genes: the genes to search in the genome
-        :type genes: list of :class:`txsscanlib.gene.Gene` objects
-        """
-        # est ce que ca doit rester une methode ou devenir une fonction
-        # dans l'etat pas besoin de rester dans system
-        # puisqu'on lui pass les genes en arguments
-        
-        #pour chaque gene   
-           ########### bloc a parallelliser  #############
-           #recuperer le profil
-           #hmmreport = lancer le hmm (execute)
-           #extraire le rapport
-           ##################### join ####################
-        
-        def worker(gene):
-            profile = gene.profile
-            report = profile.execute()
-            report.extract()
-            report.save_extract()
-            
-        for g in genes:
-            t = threading.Thread(target = worker, args = (g,))
-            t.start()
-        main_thread = threading.currentThread()    
-        for t in threading.enumerate():
-            if t is main_thread:
-                continue
-            t.join()
-            
+      

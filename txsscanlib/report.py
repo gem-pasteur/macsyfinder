@@ -16,7 +16,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 
 import abc
-
+from threading import Lock
 
 class HMMReport(object):
     """
@@ -41,6 +41,7 @@ class HMMReport(object):
         self._extract_out = None
         self.hits = []
         self.cfg = cfg
+        self._lock = Lock()
 
     @abc.abstractmethod
     def extract(self):
@@ -65,10 +66,11 @@ class HMMReport(object):
         write the string representation of the extact report in a file.
         the name of this file is the concatenation of the gene and the res_extract_suffix from config
         """
-        extract_out_name = self.gene.name + self.cfg.res_extract_suffix
-        self._extract_out = os.path.join(self.cfg.res_search_dir, extract_out_name)
-        with open(self._extract_out, 'w') as _file:
-            _file.write(str(self))
+        with self._lock:
+            extract_out_name = self.gene.name + self.cfg.res_extract_suffix
+            self._extract_out = os.path.join(self.cfg.working_dir, extract_out_name)
+            with open(self._extract_out, 'w') as _file:
+                _file.write(str(self))
 
     def best_hit(self):
         """
@@ -84,11 +86,7 @@ class UnOrderedHMMReport(HMMReport):
     handle HMM report. extract a synthetic report from the raw hmmer output
     """
 
-    def extract(self):
-        """
-        Parse the output file of hmmer compute from an ordered genes base and produced a new synthetic report file.
-        """
-        pass
+    pass
 
 
 class OrderedHMMReport(HMMReport):
@@ -133,12 +131,12 @@ class OrderedHMMReport(HMMReport):
                                                      score,
                                                      cov))
                         line = hmm_out.next()
-        self.hits.sort()
+            self.hits.sort()
 
 
 class Hit(object):
     """
-    handle hits found by HMM. the hit are instanciate by :method:`HMMReport.extract` method
+    handle hits found by HMM. the hit are instanciate by :py:meth:`HMMReport.extract` method
     """
     
     def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, coverage):
