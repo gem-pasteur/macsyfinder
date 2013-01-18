@@ -27,7 +27,7 @@ def search_genes(genes, cfg):
     worker_nb = cfg.worker_nb
     if not worker_nb:
         worker_nb = len(genes)
-    _log.error( "worker_nb = %d" % worker_nb)
+    _log.debug( "worker_nb = %d" % worker_nb)
     sema = threading.BoundedSemaphore(value = worker_nb)
 
     def worker(gene, sema):
@@ -41,6 +41,7 @@ def search_genes(genes, cfg):
     #hmmsearch and extract should be exute only once pr run
     #so I uniquify the list of geene
     genes = set(genes)
+    _log.debug( "start searching genes")
     for g in genes:
         t = threading.Thread(target = worker, args = (g, sema))
         t.start()
@@ -49,4 +50,5 @@ def search_genes(genes, cfg):
         if t is main_thread:
             continue
         t.join()
+    _log.debug( "end searching genes")
             
