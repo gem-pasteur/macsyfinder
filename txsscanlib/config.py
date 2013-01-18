@@ -16,13 +16,16 @@ from time import strftime
 from ConfigParser import SafeConfigParser, NoSectionError
 
 _prefix_path = '$PREFIX'
-
+if os.environ['TXSSCAN_HOME']:
+    _prefix_path = os.environ['TXSSCAN_HOME']
+    
+    
 import logging
 
 class Config(object):
     """
     parse configuration files and handle the configuration according the file location precedence
-    /etc/txsscan.conf < ~/.txsscan.conf < .txsscan.conf
+    /etc/txsscan/txsscan.conf < ~/.txsscan/txsscan.conf < .txsscan.conf
     if a configuration file is given on the command line, only this file is used.
     in fine the arguments passed have the highest priority
     """
@@ -84,21 +87,23 @@ class Config(object):
         config_files = [cfg_file] if cfg_file else [ os.path.join( _prefix_path , '/etc/txsscan/txsscan.conf'),
                                                      os.path.expanduser('~/.txsscan/txsscan.conf'),
                                                       '.txsscan.conf']
-        self.parser = SafeConfigParser(defaults={
-                                            'hmmer_exe' : 'hmmsearch',
-                                            'e_value_res' : "1",
-                                            'i_evalue_sel' : "0.5",
-                                            'coverage_profile' : "0.5",
-                                            'def_dir': './DEF',
-                                            'res_search_dir' : './datatest/res_search',
-                                            'res_search_suffix' : '.search_hmm.out',
-                                            'res_extract_suffix' : '.res_hmm_extract',
-                                            'profile_dir' : './profiles',
-                                            'profile_suffix' : '.fasta-aln_edit.hmm',
-                                            'log_level': 0,
-                                            'log_file': sys.stderr
-                                            },
-                                  )
+        self._defaults = {
+                          'ordered': 'False',     
+                          'hmmer_exe' : 'hmmsearch',
+                          'e_value_res' : "1",
+                          'i_evalue_sel' : "0.5",
+                          'coverage_profile' : "0.5",
+                          'def_dir': './DEF',
+                          'res_search_dir' : './datatest/res_search',
+                          'res_search_suffix' : '.search_hmm.out',
+                          'res_extract_suffix' : '.res_hmm_extract',
+                          'profile_dir' : './profiles',
+                          'profile_suffix' : '.fasta-aln_edit.hmm', 
+                          'log_level': 0,
+                          'log_file': sys.stderr,
+                          'worker_nb' : '0'
+                          }
+        self.parser = SafeConfigParser(defaults= self._defaults)
         used_files = self.parser.read(config_files)
         
         frame = inspect.currentframe()
@@ -112,7 +117,7 @@ class Config(object):
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
         except (AttributeError, NoSectionError):
-            log_level = logging.WARNING
+            log_level = logging.ERROR
         else:
             try:
                 log_level = int(log_level)
@@ -120,7 +125,7 @@ class Config(object):
                 try:
                     log_level = getattr(logging, log_level.upper())
                 except AttributeError:
-                    log_level = logging.WARNING
+                    log_level = logging.ERROR
         try:
             log_file = self.parser.get('general', 'log_file', vars = cmde_line_opt)
             try:
@@ -128,10 +133,10 @@ class Config(object):
             except Exception , err:
                 #msg = "Cannot log into %s : %s . logs will redirect to stderr" % (log_file,err)
                 log_handler = logging.StreamHandler(sys.stderr)
-        except AttributeError:
+        except AttributeError, NoSectionError:
             log_handler = logging.StreamHandler( sys.stderr )    
             
-        handler_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
+        handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
         log_handler.setFormatter(handler_formatter)
         log_handler.setLevel(log_level)
         
@@ -141,6 +146,7 @@ class Config(object):
         logger = logging.getLogger('txsscan')
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
+        
         self._log = logging.getLogger('txsscan.config')
 
         self.options = self._validate(cmde_line_opt)        
@@ -177,26 +183,39 @@ class Config(object):
                 try:
                     options['ordered_db'] = self.parser.getboolean( 'base', 'ordered') 
                 except NoSectionError:
-                    options['ordered_db'] = False
-
-            options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
-
+                    options['ordered_db'] = False if self._defaults['ordered'] == "False" else True
+            try:
+                options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'hmmer_exe' in cmde_line_opt:
+                    options['hmmer_exe'] = cmde_line_opt['hmmer_exe']
+                else:
+                    options['hmmer_exe'] = self._defaults['hmmer_exe']
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
                 options['e_value_res'] = float(e_value_res)
             except ValueError:
                 msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(e_value_res)
                 raise ValueError( msg )
-
+            except NoSectionError:
+                if 'e_value_res' in cmde_line_opt:
+                    options['e_value_res'] = cmde_line_opt['e_value_res']
+                else:
+                    options['e_value_res'] = float(self._defaults['e_value_res'])
             try:
                 i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars = cmde_line_opt)
                 options['i_evalue_sel'] = float(i_evalue_sel)
             except ValueError:
                 msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(i_evalue_sel)
                 raise ValueError( msg )
-
-            if i_evalue_sel > e_value_res:
-                raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( i_evalue_sel, e_value_res) )
+            except NoSectionError:
+                if 'i_evalue_sel' in cmde_line_opt:
+                    options['i_evalue_sel'] = cmde_line_opt['i_evalue_sel']
+                else:
+                    options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
+            
+            if options['i_evalue_sel'] > options['i_evalue_sel']:
+                raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( options['i_evalue_sel'], options['i_evalue_sel']) )
 
             try:
                 coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars = cmde_line_opt)
@@ -204,12 +223,29 @@ class Config(object):
             except ValueError:
                 msg = "Invalid value for hmmer coverage_profile :{0}: (float expected)".format(coverage_profile)
                 raise ValueError( msg )
-
-            options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'coverage_profile' in cmde_line_opt:
+                    options['coverage_profile'] = cmde_line_opt['coverage_profile']
+                else:
+                    options['coverage_profile'] = float(self._defaults['coverage_profile'])
+            
+            try:     
+                options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'def_dir' in cmde_line_opt:
+                    options['def_dir'] = cmde_line_opt['def_dir']
+                else:
+                    options['def_dir'] = self._defaults['def_dir']
             if not os.path.exists(options['def_dir']):
-                raise ValueError( "%s: No such definition directory" % options['def_dir'])
-
-            options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
+                raise ValueError( "%s: No such definition directory" % options['def_dir'])       
+           
+            try:      
+                options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'res_search_dir' in cmde_line_opt:
+                    options['res_search_dir'] = cmde_line_opt['res_search_dir']
+                else:
+                    options['res_search_dir'] = self._defaults['res_search_dir']
             if not os.path.exists(options['res_search_dir']):
                 raise ValueError( "%s: No such research search directory" % options['res_search_dir'])
             if not os.access(options['res_search_dir'], os.W_OK):
@@ -222,16 +258,45 @@ class Config(object):
                 raise ValueError("cannot create working directory %s : %s" % ( working_dir, err ))
             options['working_dir'] = working_dir
             
-            options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars = cmde_line_opt)
+            try:
+                options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'profile_dir' in cmde_line_opt:
+                    options['profile_dir'] = cmde_line_opt['profile_dir']
+                else:
+                    options['profile_dir'] = self._defaults['profile_dir']
             if not os.path.exists( options['profile_dir'] ):
                 raise ValueError( "%s: No such profile directory" % options['profile_dir'])
             
-            
-            options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars = cmde_line_opt)
-            options['res_extract_suffix'] = self.parser.get('directories', 'res_extract_suffix', vars = cmde_line_opt)
-            options['profile_suffix'] = self.parser.get('directories', 'profile_suffix', vars = cmde_line_opt)
+            try:
+                options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'res_search_suffix' in cmde_line_opt:
+                    options['res_search_suffix'] = cmde_line_opt['res_search_suffix']
+                else:
+                    options['res_search_suffix'] = self._defaults['res_search_suffix']
+            try:       
+                options['res_extract_suffix'] = self.parser.get('directories', 'res_extract_suffix', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'res_extract_suffix' in cmde_line_opt:
+                    options['res_extract_suffix'] = cmde_line_opt['res_extract_suffix']
+                else:
+                    options['res_extract_suffix'] = self._defaults['res_extract_suffix']
+            try:       
+                options['profile_suffix'] = self.parser.get('directories', 'profile_suffix', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'profile_dir' in cmde_line_opt:
+                    options['profile_suffix'] = cmde_line_opt['profile_suffix']
+                else:
+                    options['profile_suffix'] = self._defaults['profile_suffix']
             try:
                 worker_nb = self.parser.get('general', 'worker_nb', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'worker_nb' in cmde_line_opt:
+                    options['worker_nb'] = cmde_line_opt['worker_nb']
+                else:
+                    options['worker_nb'] = int(self._defaults['worker_nb'])
+            try:        
                 worker_nb = int(worker_nb)
                 if worker_nb > 0:
                     options['worker_nb'] = worker_nb
@@ -240,7 +305,7 @@ class Config(object):
                 raise ValueError( msg)
 
         except ValueError, err:
-            self._log.error(str(err))
+            self._log.error(str(err), exc_info= True)
             raise err
         return options
 

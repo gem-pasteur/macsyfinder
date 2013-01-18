@@ -100,38 +100,44 @@ class OrderedHMMReport(HMMReport):
         Parse the output file of hmmer compute from an unordered genes base 
         and produced a new synthetic report file.
         """
-        i_evalue_sel = self.cfg.i_evalue_sel
-        coverage_treshold = self.cfg.coverage_profile
-        gene_profile_lg = len(self.gene.profile)
-        with open(self._hmmer_raw_out, 'r') as hmm_out:
-            for line in hmm_out:
-                if line.startswith(">> "):
-                    fields = line.split()
-                    hit_id = line.split()[1]
-                    fields_hit = hit_id.split('_')
-                    replicon_name = fields_hit[0]
-                    position_hit = int(fields_hit[1]) / 10
-                    # skip next 2 line
-                    # the hits begins on the 3rd line
-                    for _ in range(3):
-                        line = hmm_out.next()
-                    while not line.startswith("  Alignments"):
+        with self._lock:
+            # so the extract of a given HMM output is executed only once per run
+            # if this method is called several times the first call induce the parsing of HMM out
+            # the other calls do nothing
+            if self.hits :
+                return 
+            i_evalue_sel = self.cfg.i_evalue_sel
+            coverage_treshold = self.cfg.coverage_profile
+            gene_profile_lg = len(self.gene.profile)
+            with open(self._hmmer_raw_out, 'r') as hmm_out:
+                for line in hmm_out:
+                    if line.startswith(">> "):
                         fields = line.split()
-                        if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
-                            cov = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
-                            if (cov >= coverage_treshold):
-                                i_eval = float(fields[5])
-                                score = float(fields[2])
-                                self.hits.append(Hit(self.gene,
-                                                     self.gene.system,
-                                                     hit_id,
-                                                     replicon_name,
-                                                     position_hit,
-                                                     i_eval,
-                                                     score,
-                                                     cov))
-                        line = hmm_out.next()
-            self.hits.sort()
+                        hit_id = line.split()[1]
+                        fields_hit = hit_id.split('_')
+                        replicon_name = fields_hit[0]
+                        position_hit = int(fields_hit[1]) / 10
+                        # skip next 2 line
+                        # the hits begins on the 3rd line
+                        for _ in range(3):
+                            line = hmm_out.next()
+                        while not line.startswith("  Alignments"):
+                            fields = line.split()
+                            if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
+                                cov = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
+                                if (cov >= coverage_treshold):
+                                    i_eval = float(fields[5])
+                                    score = float(fields[2])
+                                    self.hits.append(Hit(self.gene,
+                                                         self.gene.system,
+                                                         hit_id,
+                                                         replicon_name,
+                                                         position_hit,
+                                                         i_eval,
+                                                         score,
+                                                         cov))
+                            line = hmm_out.next()
+                self.hits.sort()
 
 
 class Hit(object):

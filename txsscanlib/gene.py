@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-#===============================================================================
+#====================================
 # Created on Nov 29, 2012
 # 
 # @author: bneron
 # @contact: user_email
 # @organization: organization_name
 # @license: license
-#===============================================================================
+#====================================
 
 
 import os
@@ -233,7 +233,7 @@ class Profile(object):
             # the results of HMM is cached 
             # so HMMsearch is executed only once per run
             # if this method is called several times the first call induce the execution of HMMsearch and generate a report
-            # the other calls the report is directly returned 
+            # the other calls return directly this report
             if self._report is not None:
                 return self._report
             output_path = os.path.join( self.cfg.working_dir, self.gene.name + self.cfg.res_search_suffix )
