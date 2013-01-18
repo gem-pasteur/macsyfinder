@@ -10,7 +10,8 @@
 ################################
 
 import threading
-
+import logging
+_log = logging.getLogger('txsscan.' + __name__)
 
 def search_genes(genes, cfg):
     """
@@ -26,7 +27,7 @@ def search_genes(genes, cfg):
     worker_nb = cfg.worker_nb
     if not worker_nb:
         worker_nb = len(genes)
-    print "worker_nb =", worker_nb
+    _log.error( "worker_nb = %d" % worker_nb)
     sema = threading.BoundedSemaphore(value = worker_nb)
 
     def worker(gene, sema):
@@ -35,7 +36,11 @@ def search_genes(genes, cfg):
             report = profile.execute()
             report.extract()
             report.save_extract()
-
+    #there is only one instance of gene per name but the same instance can be
+    #in all genes several times        
+    #hmmsearch and extract should be exute only once pr run
+    #so I uniquify the list of geene
+    genes = set(genes)
     for g in genes:
         t = threading.Thread(target = worker, args = (g, sema))
         t.start()
