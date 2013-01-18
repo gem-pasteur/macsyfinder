@@ -117,7 +117,7 @@ class Config(object):
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
         except (AttributeError, NoSectionError):
-            log_level = logging.WARNING
+            log_level = logging.ERROR
         else:
             try:
                 log_level = int(log_level)
@@ -125,7 +125,7 @@ class Config(object):
                 try:
                     log_level = getattr(logging, log_level.upper())
                 except AttributeError:
-                    log_level = logging.WARNING
+                    log_level = logging.ERROR
         try:
             log_file = self.parser.get('general', 'log_file', vars = cmde_line_opt)
             try:
@@ -133,10 +133,10 @@ class Config(object):
             except Exception , err:
                 #msg = "Cannot log into %s : %s . logs will redirect to stderr" % (log_file,err)
                 log_handler = logging.StreamHandler(sys.stderr)
-        except AttributeError:
+        except AttributeError, NoSectionError:
             log_handler = logging.StreamHandler( sys.stderr )    
             
-        handler_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
+        handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
         log_handler.setFormatter(handler_formatter)
         log_handler.setLevel(log_level)
         
@@ -146,6 +146,7 @@ class Config(object):
         logger = logging.getLogger('txsscan')
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
+        
         self._log = logging.getLogger('txsscan.config')
 
         self.options = self._validate(cmde_line_opt)        
