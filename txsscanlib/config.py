@@ -18,8 +18,8 @@ from ConfigParser import SafeConfigParser, NoSectionError
 _prefix_path = '$PREFIX'
 if os.environ['TXSSCAN_HOME']:
     _prefix_path = os.environ['TXSSCAN_HOME']
-    
-    
+
+
 import logging
 
 class Config(object):
@@ -30,9 +30,9 @@ class Config(object):
     in fine the arguments passed have the highest priority
     """
     
-    options = ('sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+    options = ( 'cfg_file', 'sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
-               'log_level', 'worker_nb')
+               'log_level', 'worker_nb', 'config_file')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
@@ -49,9 +49,12 @@ class Config(object):
                 res_extract_suffix = None,
                 log_level = None,
                 log_file = None,
-                worker_nb = None
+                worker_nb = None,
+                config_file = None
                 ):
         """
+        :param cfg_file: the path of txsscan configuration file to use 
+        :type cfg_file: string
         :param sequence_db: the path to the sequence database
         :type sequence_db: string
         :param ordered_db: the genes of the db are ordered
@@ -105,7 +108,7 @@ class Config(object):
                           }
         self.parser = SafeConfigParser(defaults= self._defaults)
         used_files = self.parser.read(config_files)
-        
+
         frame = inspect.currentframe()
         args, _, _, values = inspect.getargvalues(frame)
 
@@ -135,23 +138,25 @@ class Config(object):
                 log_handler = logging.StreamHandler(sys.stderr)
         except AttributeError, NoSectionError:
             log_handler = logging.StreamHandler( sys.stderr )    
-            
+
         handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
         log_handler.setFormatter(handler_formatter)
         log_handler.setLevel(log_level)
-        
+
         root = logging.getLogger()
         root.setLevel( logging.NOTSET )
-        
+
         logger = logging.getLogger('txsscan')
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
-        
+
         self._log = logging.getLogger('txsscan.config')
 
         self.options = self._validate(cmde_line_opt)        
-        
-    
+        self.options['log_level'] = log_level
+        self.options['log_file'] = log_handler.baseFilename
+
+
     def _validate(self, cmde_line_opt):
         """
         get all configuration values and validate the values
@@ -213,7 +218,7 @@ class Config(object):
                     options['i_evalue_sel'] = cmde_line_opt['i_evalue_sel']
                 else:
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
-            
+
             if options['i_evalue_sel'] > options['i_evalue_sel']:
                 raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( options['i_evalue_sel'], options['i_evalue_sel']) )
 
@@ -228,7 +233,7 @@ class Config(object):
                     options['coverage_profile'] = cmde_line_opt['coverage_profile']
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
-            
+
             try:     
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
             except NoSectionError:
@@ -238,7 +243,7 @@ class Config(object):
                     options['def_dir'] = self._defaults['def_dir']
             if not os.path.exists(options['def_dir']):
                 raise ValueError( "%s: No such definition directory" % options['def_dir'])       
-           
+
             try:      
                 options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
             except NoSectionError:
@@ -250,14 +255,14 @@ class Config(object):
                 raise ValueError( "%s: No such research search directory" % options['res_search_dir'])
             if not os.access(options['res_search_dir'], os.W_OK):
                 raise ValueError("research search directory (%s) is not writable" % options['res_search_dir'])
-            
+
             working_dir = os.path.join(options['res_search_dir'], "txsscan-"+strftime("%Y%m%d_%H-%M-%S"))
             try:
                 os.mkdir(working_dir)
             except OSError, err:
                 raise ValueError("cannot create working directory %s : %s" % ( working_dir, err ))
             options['working_dir'] = working_dir
-            
+
             try:
                 options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars = cmde_line_opt)
             except NoSectionError:
@@ -267,7 +272,7 @@ class Config(object):
                     options['profile_dir'] = self._defaults['profile_dir']
             if not os.path.exists( options['profile_dir'] ):
                 raise ValueError( "%s: No such profile directory" % options['profile_dir'])
-            
+
             try:
                 options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars = cmde_line_opt)
             except NoSectionError:
@@ -308,6 +313,26 @@ class Config(object):
             self._log.error(str(err), exc_info= True)
             raise err
         return options
+
+    def save(self, dir_path ):
+        """
+        save the configuartion used for this run in ini format file
+        """
+        parser = SafeConfigParser()
+        cfg_opts = [
+                    ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
+                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
+                    ('general', ('log_level', 'log_file', 'worker_nb'))
+                    ]
+        parser.add_section( 'base')
+        parser.set( 'base', 'file', str(self.options['sequence_db']))
+        parser.set( 'base', 'ordered', str(self.options['ordered_db']).lower())
+        for section , directives in cfg_opts:
+            parser.add_section(section)
+            for directive in directives:
+                parser.set( section, directive, str(self.options[directive]))
+        with open( dir_path, 'w') as new_cfg:
+            parser.write( new_cfg)
 
     @property
     def sequence_db(self):

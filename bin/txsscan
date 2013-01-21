@@ -119,6 +119,12 @@ general_options.add_argument("--log",
                     dest = 'log_file',
                     default = None,
                     help = "the path to log file")
+general_options.add_argument("--config",
+                    action = 'store',
+                    dest = 'cfg_file',
+                    default = None,
+                    help = "the path to a txsscan file to use")
+
 args = parser.parse_args()
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
@@ -134,7 +140,8 @@ elif args.verbosity == 2:
 elif args.verbosity == 3:
     log_level = logging.DEBUG
 
-config = Config(sequence_db = args.sequence_db,
+config = Config(cfg_file = args.cfg_file,
+                sequence_db = args.sequence_db,
                 ordered_db = args.ordered,
                 hmmer_exe = args.hmmer_exe,
                 e_value_res = args.e_value_res,
@@ -150,11 +157,12 @@ config = Config(sequence_db = args.sequence_db,
                 worker_nb = args.worker_nb
                 )
 logger = logging.getLogger('txsscan')
+config.save(os.path.join(config.working_dir, 'txsscan.conf'))
 
 parser = SystemParser(config)
 systems = []
-for i in range( len(args.systems) ):
-    system  = parser.parse(args.systems[i])
+for i in range(len(args.systems)):
+    system = parser.parse(args.systems[i])
     systems.append(system)
 all_genes = []
 for system in systems:
