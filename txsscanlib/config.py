@@ -336,11 +336,13 @@ class Config(object):
         parser.add_section( 'base')
         parser.set( 'base', 'file', str(self.options['sequence_db']))
         parser.set( 'base', 'ordered', str(self.options['ordered_db']).lower())
+                                                    
         for section , directives in cfg_opts:
             parser.add_section(section)
             for directive in directives:
                 if self.options[directive]:
-                    parser.set( section, directive, str(self.options[directive]))
+                    if directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
+                        parser.set( section, directive, str(self.options[directive]))
         with open( dir_path, 'w') as new_cfg:
             parser.write( new_cfg)
 
