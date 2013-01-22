@@ -41,7 +41,8 @@ class Test(unittest.TestCase):
                            profile_dir = "../data/profiles",
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
-                           log_level = 30
+                           log_level = 30,
+                           log_file = '/dev/null'
                            )
 
     def tearDown(self):
@@ -84,6 +85,7 @@ class Test(unittest.TestCase):
             self.assertTrue(l.find(path) != -1)
 
     def test_execute_unknown_binary(self):
+        print "self.cfg.options[log_file]", self.cfg.options['log_file']
         self.cfg.options['hmmer_exe'] = "Nimportnaoik"
         system = System("T2SS", self.cfg)
         gene = Gene("abc", system, self.cfg)
