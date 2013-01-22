@@ -33,7 +33,8 @@ class Test(unittest.TestCase):
                            profile_dir = "../data/profiles",
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
-                           log_level = 30
+                           log_level = 30,
+                           log_file = '/dev/null'
                            )
 
     def tearDown(self):
