@@ -85,7 +85,6 @@ class Test(unittest.TestCase):
             self.assertTrue(l.find(path) != -1)
 
     def test_execute_unknown_binary(self):
-        print "self.cfg.options[log_file]", self.cfg.options['log_file']
         self.cfg.options['hmmer_exe'] = "Nimportnaoik"
         system = System("T2SS", self.cfg)
         gene = Gene("abc", system, self.cfg)
