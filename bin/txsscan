@@ -119,8 +119,30 @@ general_options.add_argument("--log",
                     dest = 'log_file',
                     default = None,
                     help = "the path to log file")
-args = parser.parse_args()
+general_options.add_argument("--config",
+                    action = 'store',
+                    dest = 'cfg_file',
+                    default = None,
+                    help = "the path to a txsscan file to use")
+general_options.add_argument("--previous-run",
+                    action = 'store',
+                    dest = 'previous_run',
+                    default = None,
+                    help = """path to a previous run. Skip the step of hmmsearch. 
+(conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
+--e_value_res, --ordered, --hmmer_exe)""")
 
+args = parser.parse_args()
+if args.previous_run and (args.cfg_file or
+                          args.sequence_db or
+                          args.profile_suffix or
+                          args.profile_dir or
+                          args.res_extract_suffix or
+                          args.e_value_res or
+                          args.ordered or
+                          args.hmmer_exe):
+    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
+                          
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
 sh.setFormatter(sh_formatter)
@@ -134,7 +156,9 @@ elif args.verbosity == 2:
 elif args.verbosity == 3:
     log_level = logging.DEBUG
 
-config = Config(sequence_db = args.sequence_db,
+config = Config(previous_run = args.previous_run,
+                cfg_file = args.cfg_file,
+                sequence_db = args.sequence_db,
                 ordered_db = args.ordered,
                 hmmer_exe = args.hmmer_exe,
                 e_value_res = args.e_value_res,
@@ -150,15 +174,17 @@ config = Config(sequence_db = args.sequence_db,
                 worker_nb = args.worker_nb
                 )
 logger = logging.getLogger('txsscan')
+config.save(config.working_dir)
 
 parser = SystemParser(config)
 systems = []
-for i in range( len(args.systems) ):
-    system  = parser.parse(args.systems[i])
+for i in range(len(args.systems)):
+    system = parser.parse(args.systems[i])
     systems.append(system)
 all_genes = []
 for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
+
 search_genes(all_genes, config)
 logger.debug("FIN")

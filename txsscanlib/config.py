@@ -13,7 +13,7 @@ import os
 import sys
 import inspect
 from time import strftime
-from ConfigParser import SafeConfigParser, NoSectionError
+from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
 
 _prefix_path = '$PREFIX'
 if os.environ['TXSSCAN_HOME']:
@@ -30,18 +30,19 @@ class Config(object):
     in fine the arguments passed have the highest priority
     """
     
-    options = ( 'cfg_file', 'sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+    #if a new option is added think to add it also (if needed) in save
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                'log_level', 'log_file', 'worker_nb', 'config_file')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
-                ordered_db = None,  
+                ordered_db = None,
                 hmmer_exe = None,
                 e_value_res = None,
                 i_evalue_sel = None,
                 coverage_profile = None,
-                def_dir = None , 
+                def_dir = None ,
                 res_search_dir = None,
                 res_search_suffix = None,
                 profile_dir = None,
@@ -50,11 +51,14 @@ class Config(object):
                 log_level = None,
                 log_file = None,
                 worker_nb = None,
-                config_file = None
+                config_file = None,
+                previous_run = None
                 ):
         """
         :param cfg_file: the path of txsscan configuration file to use 
         :type cfg_file: string
+        :param previous_run: the path of the directory of a previous run
+        :type previous_run: string 
         :param sequence_db: the path to the sequence database
         :type sequence_db: string
         :param ordered_db: the genes of the db are ordered
@@ -86,10 +90,16 @@ class Config(object):
         :param worker_nb: the max number of processes in parrallel
         :type worker_nb: int
         """
-
-        config_files = [cfg_file] if cfg_file else [ os.path.join( _prefix_path , '/etc/txsscan/txsscan.conf'),
-                                                     os.path.expanduser('~/.txsscan/txsscan.conf'),
-                                                      '.txsscan.conf']
+        
+        self._new_cfg_name = "txsscan.conf"
+        if previous_run:
+            config_files = [os.path.join(previous_run, self._new_cfg_name)]
+        elif cfg_file:
+            config_files = [cfg_file]
+        else:
+            config_files = [os.path.join(_prefix_path, '/etc/txsscan/txsscan.conf'),
+                           os.path.expanduser('~/.txsscan/txsscan.conf'),
+                           '.txsscan.conf']
         self._defaults = {
                           'ordered': 'False',     
                           'hmmer_exe' : 'hmmsearch',
@@ -144,14 +154,13 @@ class Config(object):
         if not os.access(options['res_search_dir'], os.W_OK):
             raise ValueError("research search directory (%s) is not writable" % options['res_search_dir'])
 
-        working_dir = os.path.join(options['res_search_dir'], "txsscan-"+strftime("%Y%m%d_%H-%M-%S"))
+        working_dir = os.path.join(options['res_search_dir'], "txsscan-" + strftime("%Y%m%d_%H-%M-%S"))
         try:
             os.mkdir(working_dir)
         except OSError, err:
-            raise ValueError("cannot create working directory %s : %s" % ( working_dir, err ))
+            raise ValueError("cannot create working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
-        
-        
+
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
         except (AttributeError, NoSectionError):
@@ -172,7 +181,8 @@ class Config(object):
             log_handler = logging.FileHandler(log_file)
             options['log_file'] = log_file
         except Exception , err:
-            log_error.append(err)
+            if not isinstance(err, NoOptionError):
+                log_error.append(err)
             try:
                 log_file = os.path.join( options['working_dir'], 'txsscan.log' )
                 log_handler = logging.FileHandler(log_file)
@@ -196,7 +206,12 @@ class Config(object):
         self._log = logging.getLogger('txsscan.config')
         for error in log_error:
             self._log.warn(error)
-        try:  
+        try:
+            if cmde_line_opt.get('previous_run', None):
+                if os.path.exists(cmde_line_opt['previous_run']):
+                    options['previous_run'] = cmde_line_opt['previous_run']
+                else:
+                    raise ValueError( "previous run '%s' not found" % cmde_line_opt['previous_run'])
             try:
                 options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
             except NoSectionError:
@@ -314,6 +329,7 @@ class Config(object):
                 worker_nb = int(worker_nb)
                 if worker_nb > 0:
                     options['worker_nb'] = worker_nb
+                
             except ValueError:
                 msg = "the number of worker must be an integer"
                 raise ValueError( msg)
@@ -325,7 +341,7 @@ class Config(object):
 
     def save(self, dir_path ):
         """
-        save the configuartion used for this run in ini format file
+        save the configuration used for this run in ini format file
         """
         parser = SafeConfigParser()
         cfg_opts = [
@@ -340,11 +356,14 @@ class Config(object):
         for section , directives in cfg_opts:
             parser.add_section(section)
             for directive in directives:
-                if self.options[directive]:
-                    if directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
-                        parser.set( section, directive, str(self.options[directive]))
-        with open( dir_path, 'w') as new_cfg:
-            parser.write( new_cfg)
+                try:
+                    if self.options[directive]:
+                        if directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
+                            parser.set( section, directive, str(self.options[directive]))
+                except KeyError:
+                    pass
+        with open( os.path.join(dir_path, self._new_cfg_name), 'w') as new_cfg:
+            parser.write(new_cfg)
 
     @property
     def sequence_db(self):
@@ -456,4 +475,12 @@ class Config(object):
         :return: the maximum number of parrallel jobs
         :rtype: int
         """
-        return self.options.get('worker_nb' , None)
+        return self.options.get('worker_nb', None)
+    
+    @property
+    def previous_run(self):
+        """
+        :return: the path to previous run (directory) to use to recover hmm output
+        :rtype: string
+        """
+        return self.options.get('previous_run', None)

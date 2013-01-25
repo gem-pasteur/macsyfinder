@@ -28,7 +28,7 @@ parse 3 location to find configuration files
   * **base** : all information related to the genome to study
   
     * *file* : the path to the genome (*no default value*)
-    * *ordered* : 
+    * *ordered* : if the base is ordered (true/false, yes/no (*default=no*))
     
   * **hmmer**
     
@@ -53,23 +53,28 @@ parse 3 location to find configuration files
   example of a file configuration::
   
     [base]
+    prefix = /path/to/txsscan/home/
+    file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
     ordered = yes
-    
+
     [hmmer]
     hmmer_exe = hmmsearch
     e_value_res = 1
-    e_value_sel = 0.5
+    i_evalue_sel = 0.5
     coverage_profile = 0.5
-    
+
     [directories]
-    res_search_dir = ./datatest/res_search
+    prefix = /path/to/txsscan/home/
+    def_dir = %(prefix)s/data/DEF
+    res_search_dir = %(prefix)s/test/datatest/res_search/
     res_search_suffix = .search_hmm.out
-    profile_dir = ./profiles
+    profile_dir = %(prefix)s/data/profiles
     profile_suffix = .fasta-aln_edit.hmm
     res_extract_suffix = .res_hmm_extract
-    
-    [general]
-    log_level = debug
+
+   [general]
+   log_level = debug
+   
      
  
  

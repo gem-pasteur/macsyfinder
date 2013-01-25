@@ -72,7 +72,44 @@ class Test(unittest.TestCase):
                Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000))
         ]
         self.assertListEqual(hits, report.hits)
-            
+    
+    def test_OrderedHMMReport_extract_concurent(self):
+        system = System("T2SS", self.cfg)
+        gene_name = "gspD"
+        gene = Gene(gene_name, system, self.cfg)
+        shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        reports = []
+        for i in range(5):
+            report = OrderedHMMReport(gene, report_path, self.cfg)
+            reports.append(report)
+        
+        import threading
+        
+        def worker(report):
+            report.extract()
+
+        for report in reports:
+            t = threading.Thread(target = worker, args = (report,))
+            t.start()
+        main_thread = threading.currentThread()    
+        for t in threading.enumerate():
+            if t is main_thread:
+                continue
+        t.join()
+   
+        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000)),
+               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000)),
+               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000)),
+               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000)),
+               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000))
+        ]       
+        for report in reports:
+            report.save_extract()
+            self.assertEqual(len(report.hits), len(hits))
+            self.assertListEqual(hits, report.hits)
+
+    
     def test_str(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"

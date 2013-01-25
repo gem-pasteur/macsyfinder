@@ -247,7 +247,7 @@ class Profile(object):
                             "sequence_db" : self.cfg.sequence_db,
                            }
                 command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
-                _log.debug( "%s hmmer command line : %s" % (self.gene.name, command) )
+                _log.info( "%s hmmer command line : %s" % (self.gene.name, command) )
                 try:
                     hmmer = Popen( command ,
                                    shell = True ,
