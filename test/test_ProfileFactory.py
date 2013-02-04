@@ -38,6 +38,7 @@ class Test(unittest.TestCase):
                            )
 
     def tearDown(self):
+        profile_factory._profiles = {}
         shutil.rmtree(self.cfg.working_dir)
 
     def test_get_profile(self):
@@ -47,15 +48,14 @@ class Test(unittest.TestCase):
         profile = profile_factory.get_profile(gene,self.cfg )
         self.assertTrue( isinstance( profile, Profile ))
         self.assertEqual( profile.gene.name, gene_name )
-    
+
     def test_get_uniq_object(self):
         system_foo = System( "foo", self.cfg)
         gene = Gene('sctJ_FLG', system_foo, self.cfg)
         profile1 = profile_factory.get_profile(gene,self.cfg )
         profile2 = profile_factory.get_profile(gene,self.cfg )
         self.assertEqual( profile1, profile2 )
-        
-        
-                 
+
+
 if __name__ == "__main__":
     unittest.main()

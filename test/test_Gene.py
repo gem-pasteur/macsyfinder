@@ -86,7 +86,18 @@ class Test(unittest.TestCase):
         self.assertFalse(gene.loner)
         gene = Gene(self.cfg, 'sctJ', system_foo, loner = True)
         self.assertTrue(gene.loner)
-    
+
+   
+    def test_exchangeable(self):
+        """
+        test getter for exchangeable property
+        """
+        system_foo = System( "foo", self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        self.assertFalse(gene.exchangeable)
+        gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
+        self.assertTrue(gene.exchangeable)
+        
         
     def test_str(self):
         """
