@@ -30,7 +30,7 @@ class GeneFactory(object):
     """        
     _genes_bank = {}
 
-    def get_gene(self, name, system, cfg):
+    def get_gene(self, cfg, name, system, loner = False):
         """
         :return: return gene corresponding to the name.
         If the gene already exists return it otherwise build it an d returni
@@ -39,7 +39,7 @@ class GeneFactory(object):
         if name in self._genes_bank:
             gene = self._genes_bank[name]
         else:
-            gene = Gene(name, system, cfg)
+            gene = Gene(cfg, name, system, loner)
             self._genes_bank[name] = gene
         return gene
 
@@ -53,7 +53,7 @@ class Gene(object):
     """
     
 
-    def __init__(self, name, system, cfg ):
+    def __init__(self, cfg, name, system, loner = False ):
         """
         handle gene
         
@@ -70,6 +70,7 @@ class Gene(object):
         
         self.homologs = []
         self._system = system
+        self._loner = loner
 
     def __str__(self):
         s = "name : %s" % self.name
@@ -87,8 +88,14 @@ class Gene(object):
         :rtype: :class:`txsscanlib.system.System` object
         """
         return self._system
-
-
+    
+    @property
+    def loner(self):
+        """
+        :return: True if the gene can be isolted on the genome false otherwise
+        :rtype: boolean
+        """
+        return self._loner
     
     def add_homolog(self, homolog):
         """

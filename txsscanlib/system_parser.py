@@ -84,10 +84,16 @@ class SystemParser(object):
             msg = "Invalid system definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
-        gene = gene_factory.get_gene(name, system, self.cfg)
+        loner = node.get("loner")
+        if loner in ("1", "true", "True"):
+            loner = True
+        elif loner in (None, "0" , "false" , "False"):
+            loner = False
+        gene = gene_factory.get_gene(self.cfg, name, system, loner)
         for homolog_node in node.findall("homologs/gene"):
             gene.add_homolog( self._parse_homolog(homolog_node , gene) )
         return gene
+    
     
     def _parse_homolog(self, node, gene_ref):
         """
