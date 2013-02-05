@@ -48,24 +48,24 @@ class Test(unittest.TestCase):
 
     def test_gene_ref(self):
         system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
-        homolog_1 = Homolog( gene, gene_ref)
+        gene_ref = Gene(self.cfg, 'sctJ_FLG', system)
+        gene = Gene(self.cfg, 'sctJ', system)
+        homolog_1 = Homolog(gene, gene_ref)
         self.assertEqual( homolog_1.gene_ref , gene_ref)
  
     def test_is_aligned(self):
         system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
+        gene_ref = Gene(self.cfg, 'sctJ_FLG', system)
+        gene = Gene(self.cfg, 'sctJ', system)
         homolog = Homolog( gene, gene_ref)
         self.assertFalse( homolog.is_aligned() )
         homolog = Homolog(gene, gene_ref, aligned = True  )
         self.assertTrue( homolog.is_aligned() )
 
-    def test_delagation(self):
+    def test_delegation(self):
         system = System("T2SS", self.cfg)
-        gene_ref = Gene('sctJ_FLG', system, self.cfg)
-        gene = Gene( 'sctJ', system, self.cfg)
+        gene_ref = Gene(self.cfg, 'sctJ_FLG', system)
+        gene = Gene(self.cfg, 'sctJ', system)
         homolog = Homolog( gene, gene_ref)
         self.assertEqual( homolog.system , system )
 

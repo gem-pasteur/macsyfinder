@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
     def test_cmp(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
-        gene = Gene("gspD",system, self.cfg)
+        gene = Gene(self.cfg, "gspD",system)
         h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
         h1 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000))
         self.assertGreater(h1, h0)
@@ -57,7 +57,7 @@ class Test(unittest.TestCase):
     def test_eq(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
-        gene = Gene("gspD", system, self.cfg)
+        gene = Gene(self.cfg, "gspD", system)
         h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
         h1 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
         self.assertEqual(h0, h1)
@@ -65,7 +65,7 @@ class Test(unittest.TestCase):
     def test_str(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
-        gene = Gene("gspD", system, self.cfg)
+        gene = Gene(self.cfg, "gspD", system)
         hit_prop={'id' : "PSAE001c01_006940",
                   'replicon_name' : "PSAE001c01",
                   'position' : 694,
