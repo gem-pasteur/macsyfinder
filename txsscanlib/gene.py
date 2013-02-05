@@ -26,20 +26,20 @@ class GeneFactory(object):
     of gene for a given name.
     To get a gene use the method get_gene. if the gene is already cached this instance is returned
     otherwise a new gen is build, cached then returned.
-    
-    """        
+
+    """
     _genes_bank = {}
 
-    def get_gene(self, name, system, cfg):
+    def get_gene(self, cfg, name, system, loner = False , exchangeable = False):
         """
         :return: return gene corresponding to the name.
-        If the gene already exists return it otherwise build it an d returni
+                 If the gene already exists return it otherwise build it an d returni
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         if name in self._genes_bank:
             gene = self._genes_bank[name]
         else:
-            gene = Gene(name, system, cfg)
+            gene = Gene(cfg, name, system, loner, exchangeable)
             self._genes_bank[name] = gene
         return gene
 
@@ -49,27 +49,34 @@ gene_factory = GeneFactory()
 class Gene(object):
     """
     handle Gene of a secretion system
-    
-    """
-    
 
-    def __init__(self, name, system, cfg ):
+    """
+
+
+    def __init__(self, cfg, name, system, loner = False, exchangeable = False ):
         """
         handle gene
-        
-        :param name: the name of the gene
-        :type name: string
-        :param system: the system which belongs this gene
-        :type system: :class:`txsscanlib.system.System` object
-        :param cfg: the configuration 
+
+        :param cfg: the configuration. 
         :type cfg: :class:`txsscanlib.config.Config` object
+        :param name: the name of the gene.
+        :type name: string.
+        :param system: the system which belongs this gene/
+        :type system: :class:`txsscanlib.system.System` object.
+        :param loner: True if a gene can be isolated on the genome, False otherwise.
+        :type loner: boolean.
+        :param exchangeable: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
+        :type exchangeable: boolean.
         """
         self.name = name 
         self.profile = profile_factory.get_profile(self, cfg)
         """:ivar profile: The profile HMM Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
-        
+
         self.homologs = []
         self._system = system
+        self._loner = loner
+        self._exchangeable = exchangeable
+
 
     def __str__(self):
         s = "name : %s" % self.name
@@ -88,8 +95,24 @@ class Gene(object):
         """
         return self._system
 
+    @property
+    def loner(self):
+        """
+        :return: True if the gene can be isolted on the genome false otherwise
+        :rtype: boolean
+        """
+        return self._loner
 
-    
+
+    @property
+    def exchangeable(self):
+        """
+        :return: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
+        :rtype: boolean.
+        """
+        return self._exchangeable
+
+
     def add_homolog(self, homolog):
         """
         add a homolog gene
@@ -155,13 +178,13 @@ class ProfileFactory():
     To get a profile use the method get_profile. If the profile is already cached this instance is returned
     otherwise a new profile is build, cached then returned.
 
-    """        
+    """
     _profiles = {}
 
     def get_profile(self, gene, cfg):
         """
         :return: return profile corresponding to the name.
-        If the profile already exists return it otherwise build it and return
+                 If the profile already exists return it otherwise build it and return
         :rtype: :class:`txsscanlib.gene.Profile` object
         """
         if gene.name in self._profiles:

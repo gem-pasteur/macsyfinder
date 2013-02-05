@@ -103,17 +103,18 @@ otherwise a new gen is build, cached then returned.</p>
 
 <dl class="method">
 <dt id="txsscanlib.gene.GeneFactory.get_gene">
-<tt class="descname">get_gene</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneFactory.get_gene" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">get_gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneFactory.get_gene" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">return gene corresponding to the name.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">return gene corresponding to the name.
+If the gene already exists return it otherwise build it an d returni</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
 </tr>
 </tbody>
 </table>
-<p>If the gene already exists return it otherwise build it an d returni
-:rtype: <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</p>
 </dd></dl>
 
 </dd></dl>
@@ -131,20 +132,22 @@ otherwise a new gen is build, cached then returned.</p>
 <span id="gene-api-reference"></span><h2>Gene API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.gene.Gene">
-<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle Gene of a secretion system</p>
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>system</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle gene</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; the name of the gene</li>
-<li><strong>system</strong> (<a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object) &#8211; the system which belongs this gene</li>
-<li><strong>cfg</strong> (<tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt> object) &#8211; the configuration</li>
+<li><strong>cfg</strong> (<tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt> object) &#8211; the configuration.</li>
+<li><strong>name</strong> (<em>string.</em>) &#8211; the name of the gene.</li>
+<li><strong>system</strong> (<a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object.) &#8211; the system which belongs this gene/</li>
+<li><strong>loner</strong> (<em>boolean.</em>) &#8211; True if a gene can be isolated on the genome, False otherwise.</li>
+<li><strong>exchangeable</strong> (<em>boolean.</em>) &#8211; True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.</li>
 </ul>
 </td>
 </tr>
@@ -172,6 +175,21 @@ otherwise a new gen is build, cached then returned.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="txsscanlib.gene.Gene.exchangeable">
+<tt class="descname">exchangeable</tt><a class="headerlink" href="#txsscanlib.gene.Gene.exchangeable" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.get_homologs">
 <tt class="descname">get_homologs</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.get_homologs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.get_homologs" title="Permalink to this definition">¶</a></dt>
@@ -182,6 +200,21 @@ otherwise a new gen is build, cached then returned.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The homolgs genes</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Gene.loner">
+<tt class="descname">loner</tt><a class="headerlink" href="#txsscanlib.gene.Gene.loner" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the gene can be isolted on the genome false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
 </tr>
 </tbody>
 </table>

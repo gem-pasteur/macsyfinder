@@ -76,8 +76,8 @@ def search_genes(genes, cfg):
             
     #there is only one instance of gene per name but the same instance can be
     #in all genes several times        
-    #hmmsearch and extract should be exute only once pr run
-    #so I uniquify the list of geene
+    #hmmsearch and extract should be execute only once per run
+    #so I uniquify the list of gene
     genes = set(genes)
     _log.debug("start searching genes")
     previous_run = cfg.previous_run
