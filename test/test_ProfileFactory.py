@@ -44,14 +44,14 @@ class Test(unittest.TestCase):
     def test_get_profile(self):
         system_foo = System( "foo", self.cfg)
         gene_name = 'sctJ_FLG'
-        gene = Gene(gene_name, system_foo, self.cfg)
+        gene = Gene(self.cfg, gene_name, system_foo)
         profile = profile_factory.get_profile(gene,self.cfg )
         self.assertTrue( isinstance( profile, Profile ))
         self.assertEqual( profile.gene.name, gene_name )
 
     def test_get_uniq_object(self):
         system_foo = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system_foo, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         profile1 = profile_factory.get_profile(gene,self.cfg )
         profile2 = profile_factory.get_profile(gene,self.cfg )
         self.assertEqual( profile1, profile2 )

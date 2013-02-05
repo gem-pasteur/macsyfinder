@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
     
     def test_add_mandatory_gene(self):
         system = System( "foo" , self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
         self.assertEqual( system._mandatory_genes, [gene])
         self.assertEqual( system._allowed_genes, [])
@@ -52,7 +52,7 @@ class Test(unittest.TestCase):
         
     def test_add_allowed_gene(self):
         system = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system._allowed_genes, [gene])
         self.assertEqual( system._mandatory_genes, [])
@@ -60,7 +60,7 @@ class Test(unittest.TestCase):
         
     def test_add_forbidden_gene(self):
         system = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system._forbidden_genes, [gene])
         self.assertEqual( system._allowed_genes, [])
@@ -68,19 +68,19 @@ class Test(unittest.TestCase):
         
     def test_mandatory_genes(self):
         system = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
         self.assertEqual( system.mandatory_genes, [gene])
         
     def test_allowed_genes(self):
         system = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system.allowed_genes, [gene])
         
     def test_forbidden_genes(self):
         system = System( "foo", self.cfg)
-        gene = Gene('sctJ_FLG', system, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system.forbidden_genes, [gene])
                         
