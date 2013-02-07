@@ -67,7 +67,7 @@ def search_genes(genes, cfg):
             hmm_new_path = os.path.join(cfg.working_dir, gene.name + cfg.res_search_suffix)
             shutil.copy(hmm_old_path, hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
-            if cfg.ordered_db:
+            if cfg.db_type == 'gembase':
                 report = OrderedHMMReport(gene, hmm_new_path, cfg )
             else:
                 report = UnOrderedHMMReport(gene, hmm_new_path, cfg )

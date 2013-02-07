@@ -28,7 +28,14 @@ parse 3 location to find configuration files
   * **base** : all information related to the genome to study
   
     * *file* : the path to the genome (*no default value*)
-    * *ordered* : if the base is ordered (true/false, yes/no (*default=no*))
+    * *type* : the type of the base, 4 types are supported:
+       
+        * *unordered_replicon* :
+        * *ordered_replicon* :
+        * *gembase* :
+        * *unordered* :
+        
+      (*no default value*)
     
   * **hmmer**
     
@@ -48,14 +55,14 @@ parse 3 location to find configuration files
   * **general**
   
     * *log_level* = (default= *debug* )
-    * *log_file* = 
+    * *log_file* = (default = txsscan.log in directory of the run)
  
   example of a file configuration::
   
     [base]
     prefix = /path/to/txsscan/home/
     file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
-    ordered = yes
+    type = gembase
 
     [hmmer]
     hmmer_exe = hmmsearch

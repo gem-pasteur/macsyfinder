@@ -31,13 +31,13 @@ class Config(object):
     """
     
     #if a new option is added think to add it also (if needed) in save
-    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'ordered_db', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                'log_level', 'log_file', 'worker_nb', 'config_file')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
-                ordered_db = None,
+                db_type = None,
                 hmmer_exe = None,
                 e_value_res = None,
                 i_evalue_sel = None,
@@ -61,8 +61,8 @@ class Config(object):
         :type previous_run: string 
         :param sequence_db: the path to the sequence database
         :type sequence_db: string
-        :param ordered_db: the genes of the db are ordered
-        :type ordered_db: boolean
+        :param db_type: the type of genes base 4 values are allowed ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered') 
+        :type db_type: string
         :param hmmer_exe: the hmmsearch executabe
         :type hmmer_exe: string
         :param e_value_res: à déterminer
@@ -93,7 +93,10 @@ class Config(object):
         
         self._new_cfg_name = "txsscan.conf"
         if previous_run:
-            config_files = [os.path.join(previous_run, self._new_cfg_name)]
+            prev_config = os.path.join(previous_run, self._new_cfg_name)
+            if not os.path.exists(prev_config):
+                raise ValueError("No config file found in dir %s" % previous_run)
+            config_files = [prev_config]
         elif cfg_file:
             config_files = [cfg_file]
         else:
@@ -101,7 +104,6 @@ class Config(object):
                            os.path.expanduser('~/.txsscan/txsscan.conf'),
                            '.txsscan.conf']
         self._defaults = {
-                          'ordered': 'False',     
                           'hmmer_exe' : 'hmmsearch',
                           'e_value_res' : "1",
                           'i_evalue_sel' : "0.5",
@@ -112,7 +114,7 @@ class Config(object):
                           'res_extract_suffix' : '.res_hmm_extract',
                           'profile_dir' : './profiles',
                           'profile_suffix' : '.fasta-aln_edit.hmm', 
-                          'log_level': 0,
+                          'log_level': '0',
                           'worker_nb' : '0'
                           }
         self.parser = SafeConfigParser(defaults= self._defaults)
@@ -124,6 +126,9 @@ class Config(object):
         cmde_line_opt = {}
         for arg in args:
             if arg in self.options and values[arg] is not None:
+                #the option in ConfigParser are store as string
+                #so in save method I dump some options only if 
+                #they are != than the default values in ConfigParser
                 cmde_line_opt[arg] = str(values[arg])
 
         self.options = self._validate(cmde_line_opt)        
@@ -222,14 +227,17 @@ class Config(object):
                     options['sequence_db'] = sequence_db
             if not os.path.exists(options['sequence_db']):
                 raise ValueError( "%s: No such sequence data " % options['sequence_db'])
-
-            if 'ordered_db' in cmde_line_opt:
-                options['ordered_db'] = cmde_line_opt['ordered_db']
+            
+            val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
+            if 'db_type' in cmde_line_opt:
+                options['db_type'] = cmde_line_opt['db_type']
             else:
                 try:
-                    options['ordered_db'] = self.parser.getboolean( 'base', 'ordered') 
-                except NoSectionError:
-                    options['ordered_db'] = False if self._defaults['ordered'] == "False" else True
+                    options['db_type'] = self.parser.get( 'base', 'type') 
+                except (NoSectionError, NoOptionError):
+                    raise ValueError( "you must specified the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
+            if options['db_type'] not in val_4_db_type:
+                    raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
             try:
                 options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             except NoSectionError:
@@ -245,7 +253,7 @@ class Config(object):
                 raise ValueError( msg )
             except NoSectionError:
                 if 'e_value_res' in cmde_line_opt:
-                    options['e_value_res'] = cmde_line_opt['e_value_res']
+                    options['e_value_res'] = float(cmde_line_opt['e_value_res'])
                 else:
                     options['e_value_res'] = float(self._defaults['e_value_res'])
             try:
@@ -256,12 +264,12 @@ class Config(object):
                 raise ValueError( msg )
             except NoSectionError:
                 if 'i_evalue_sel' in cmde_line_opt:
-                    options['i_evalue_sel'] = cmde_line_opt['i_evalue_sel']
+                    options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
                 else:
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
 
-            if options['i_evalue_sel'] > options['i_evalue_sel']:
-                raise ValueError( "i_evalue_sel (%f) must be greater than e_value_res (%f)" %( options['i_evalue_sel'], options['i_evalue_sel']) )
+            if options['i_evalue_sel'] > options['e_value_res']:
+                raise ValueError( "i_evalue_sel (%f) must be lower or equal than e_value_res (%f)" %( options['i_evalue_sel'], options['e_value_res']) )
 
             try:
                 coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars = cmde_line_opt)
@@ -271,7 +279,7 @@ class Config(object):
                 raise ValueError( msg )
             except NoSectionError:
                 if 'coverage_profile' in cmde_line_opt:
-                    options['coverage_profile'] = cmde_line_opt['coverage_profile']
+                    options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
@@ -304,38 +312,44 @@ class Config(object):
                     options['res_search_suffix'] = cmde_line_opt['res_search_suffix']
                 else:
                     options['res_search_suffix'] = self._defaults['res_search_suffix']
-            try:       
+            try:
                 options['res_extract_suffix'] = self.parser.get('directories', 'res_extract_suffix', vars = cmde_line_opt)
             except NoSectionError:
                 if 'res_extract_suffix' in cmde_line_opt:
                     options['res_extract_suffix'] = cmde_line_opt['res_extract_suffix']
                 else:
                     options['res_extract_suffix'] = self._defaults['res_extract_suffix']
-            try:       
+            try:
                 options['profile_suffix'] = self.parser.get('directories', 'profile_suffix', vars = cmde_line_opt)
             except NoSectionError:
-                if 'profile_dir' in cmde_line_opt:
+                if 'profile_suffix' in cmde_line_opt:
                     options['profile_suffix'] = cmde_line_opt['profile_suffix']
                 else:
                     options['profile_suffix'] = self._defaults['profile_suffix']
             try:
                 worker_nb = self.parser.get('general', 'worker_nb', vars = cmde_line_opt)
+                
             except NoSectionError:
                 if 'worker_nb' in cmde_line_opt:
-                    options['worker_nb'] = cmde_line_opt['worker_nb']
+                    worker_nb = cmde_line_opt['worker_nb']
                 else:
-                    options['worker_nb'] = int(self._defaults['worker_nb'])
-            try:        
+                    worker_nb = self._defaults['worker_nb']
+            try:
                 worker_nb = int(worker_nb)
-                if worker_nb > 0:
+                if worker_nb >= 0:
                     options['worker_nb'] = worker_nb
-                
             except ValueError:
                 msg = "the number of worker must be an integer"
                 raise ValueError( msg)
 
         except ValueError, err:
             self._log.error(str(err), exc_info= True)
+            if working_dir:
+                import shutil
+                try:
+                    shutil.rmtree(working_dir)
+                except:
+                    pass
             raise err
         return options
 
@@ -351,7 +365,7 @@ class Config(object):
                     ]
         parser.add_section( 'base')
         parser.set( 'base', 'file', str(self.options['sequence_db']))
-        parser.set( 'base', 'ordered', str(self.options['ordered_db']).lower())
+        parser.set( 'base', 'type', str(self.options['db_type']).lower())
                                                     
         for section , directives in cfg_opts:
             parser.add_section(section)
@@ -374,12 +388,12 @@ class Config(object):
         return self.options['sequence_db']
 
     @property
-    def ordered_db(self):
+    def db_type(self):
         """
-        :return: True if the seaquence data base is ordered, False otherwise
-        :rtype: Boolean
+        :return: the type of the sequences data base. the allowed values are :'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
+        :rtype: string
         """
-        return self.options['ordered_db']
+        return self.options['db_type']
 
     @property
     def hmmer_exe(self):
