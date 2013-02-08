@@ -37,7 +37,7 @@ parse 3 location to find configuration files
         
       (*no default value*)
       
-    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default = 'linear')
+    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default* = 'linear')
       this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
       
   * **hmmer**
