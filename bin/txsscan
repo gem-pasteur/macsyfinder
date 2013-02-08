@@ -38,9 +38,9 @@ genome_options.add_argument("--sequence_db",
                     action = 'store',
                     dest = 'sequence_db',
                     help = "aide a définir")
-genome_options.add_argument(  "--ordered" ,
-                       action = "store_true",
-                       dest = "ordered",
+genome_options.add_argument(  "--db_type" ,
+                       choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
+                       dest = "db_type",
                        default = None,
                        help = 'the genes are ordered')
 hmmer_options =  parser.add_argument_group(title = "hmmer options")
@@ -159,7 +159,7 @@ elif args.verbosity == 3:
 config = Config(previous_run = args.previous_run,
                 cfg_file = args.cfg_file,
                 sequence_db = args.sequence_db,
-                ordered_db = args.ordered,
+                db_type = args.db_type,
                 hmmer_exe = args.hmmer_exe,
                 e_value_res = args.e_value_res,
                 i_evalue_sel = args.i_evalue_sel,

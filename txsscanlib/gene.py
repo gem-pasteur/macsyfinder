@@ -290,7 +290,7 @@ class Profile(object):
                 _log.critical( msg, exc_info = True )
                 raise RuntimeError(msg)
             self.hmm_raw_output = output_path
-            if self.cfg.ordered_db:
+            if self.cfg.db_type == 'gembase':
                 report = OrderedHMMReport(self.gene, output_path, self.cfg )
             else:
                 report = UnOrderedHMMReport(self.gene, output_path, self.cfg )

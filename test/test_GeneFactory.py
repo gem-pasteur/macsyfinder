@@ -29,6 +29,7 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.cfg = Config( sequence_db = ".",
+                           db_type = "gembase",
                            hmmer_exe = "",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,

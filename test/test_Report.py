@@ -31,7 +31,7 @@ class Test(unittest.TestCase):
     def setUp(self):
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = "./datatest/prru_psae.001.c01.fasta",
-                           ordered_db = True,
+                           db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = "../data/DEF",

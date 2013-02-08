@@ -80,13 +80,11 @@ class SystemParser(object):
         """
         
         name = node.get("name")
-        print "name = ", name
         if not name:
             msg = "Invalid system definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
         loner = node.get("loner")
-        print "loner = ", loner
         if loner in ("1", "true", "True"):
             loner = True
         elif loner in (None, "0" , "false" , "False"):
@@ -97,7 +95,6 @@ class SystemParser(object):
             exchangeable = True
         elif exchangeable in (None, "0" , "false" , "False"):
             exchangeable = False    
-        print "exchangeable = ", exchangeable
         gene = gene_factory.get_gene(self.cfg, name, system, loner, exchangeable)
         
         for homolog_node in node.findall("homologs/gene"):
