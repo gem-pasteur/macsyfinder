@@ -36,7 +36,10 @@ parse 3 location to find configuration files
         * *unordered* :
         
       (*no default value*)
-    
+      
+    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default = 'linear')
+      this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
+      
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
@@ -63,7 +66,8 @@ parse 3 location to find configuration files
     prefix = /path/to/txsscan/home/
     file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
     type = gembase
-
+    replicon_topology = circular
+    
     [hmmer]
     hmmer_exe = hmmsearch
     e_value_res = 1

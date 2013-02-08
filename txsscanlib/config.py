@@ -31,13 +31,14 @@ class Config(object):
     """
     
     #if a new option is added think to add it also (if needed) in save
-    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                'log_level', 'log_file', 'worker_nb', 'config_file')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
                 db_type = None,
+                replicon_topology = None,
                 hmmer_exe = None,
                 e_value_res = None,
                 i_evalue_sel = None,
@@ -63,6 +64,8 @@ class Config(object):
         :type sequence_db: string
         :param db_type: the type of genes base 4 values are allowed ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered') 
         :type db_type: string
+        :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase' 
+        :type replicon_topology: string
         :param hmmer_exe: the hmmsearch executabe
         :type hmmer_exe: string
         :param e_value_res: à déterminer
@@ -103,7 +106,7 @@ class Config(object):
             config_files = [os.path.join(_prefix_path, '/etc/txsscan/txsscan.conf'),
                            os.path.expanduser('~/.txsscan/txsscan.conf'),
                            '.txsscan.conf']
-        self._defaults = {
+        self._defaults = {'replicon_topology': 'linear',
                           'hmmer_exe' : 'hmmsearch',
                           'e_value_res' : "1",
                           'i_evalue_sel' : "0.5",
@@ -238,6 +241,18 @@ class Config(object):
                     raise ValueError( "you must specified the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
             if options['db_type'] not in val_4_db_type:
                     raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
+            val_4_replicon_topology = ('linear', 'circular')
+            if 'replicon_topology' in cmde_line_opt:
+                options['replicon_topology'] = cmde_line_opt['replicon_topology']
+            else:
+                try:
+                    options['replicon_topology'] = self.parser.get( 'base', 'replicon_topology') 
+                except (NoSectionError, NoOptionError):
+                     options['replicon_topology'] = 'linear'
+            if options['replicon_topology'] not in val_4_replicon_topology:
+                    raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
+            if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
+                self._log.warning("db_type is set to %s, replicon_topology is ignored")
             try:
                 options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             except NoSectionError:
@@ -395,6 +410,14 @@ class Config(object):
         """
         return self.options['db_type']
 
+    @property
+    def replicon_topology(self):
+        """
+        :return: the topology of the replicons. 2 values are supported 'linear' (default) and circular
+        :rtype: string
+        """
+        return self.options['replicon_topology']
+    
     @property
     def hmmer_exe(self):
         """

@@ -88,6 +88,9 @@ in txsscan 4 sections are defined:</p>
 </div></blockquote>
 <p>(<em>no default value</em>)</p>
 </li>
+<li><p class="first"><em>replicon_topology</em> : the topology of the replicon, 2 topologies are supported &#8216;linear&#8217;, &#8216;circular&#8217; (<a href="#id2"><span class="problematic" id="id3">*</span></a>default = &#8216;linear&#8217;)
+this option will be ignored if the base type is not ordered (ordered_replicon or unordered).</p>
+</li>
 </ul>
 </li>
 <li><p class="first"><strong>hmmer</strong></p>
@@ -119,6 +122,7 @@ in txsscan 4 sections are defined:</p>
  prefix = /path/to/txsscan/home/
  file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
  type = gembase
+ replicon_topology = circular
 
  [hmmer]
  hmmer_exe = hmmsearch
@@ -144,14 +148,14 @@ log_level = debug</pre>
 <span id="config-api-reference"></span><h2>Config API reference<a class="headerlink" href="#module-txsscanlib.config" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.config.Config">
-<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>db_type=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em>, <em>config_file=None</em>, <em>previous_run=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.config.</tt><tt class="descname">Config</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>db_type=None</em>, <em>replicon_topology=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em>, <em>config_file=None</em>, <em>previous_run=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse configuration files and handle the configuration according the file location precedence
 /etc/txsscan/txsscan.conf &lt; ~/.txsscan/txsscan.conf &lt; .txsscan.conf
 if a configuration file is given on the command line, only this file is used.
 in fine the arguments passed have the highest priority</p>
 <dl class="method">
 <dt id="txsscanlib.config.Config.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>db_type=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em>, <em>config_file=None</em>, <em>previous_run=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg_file=''</em>, <em>sequence_db=None</em>, <em>db_type=None</em>, <em>replicon_topology=None</em>, <em>hmmer_exe=None</em>, <em>e_value_res=None</em>, <em>i_evalue_sel=None</em>, <em>coverage_profile=None</em>, <em>def_dir=None</em>, <em>res_search_dir=None</em>, <em>res_search_suffix=None</em>, <em>profile_dir=None</em>, <em>profile_suffix=None</em>, <em>res_extract_suffix=None</em>, <em>log_level=None</em>, <em>log_file=None</em>, <em>worker_nb=None</em>, <em>config_file=None</em>, <em>previous_run=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/config.html#Config.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.config.Config.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -161,6 +165,7 @@ in fine the arguments passed have the highest priority</p>
 <li><strong>previous_run</strong> (<em>string</em>) &#8211; the path of the directory of a previous run</li>
 <li><strong>sequence_db</strong> (<em>string</em>) &#8211; the path to the sequence database</li>
 <li><strong>db_type</strong> (<em>string</em>) &#8211; the type of genes base 4 values are allowed (&#8216;unordered_replicon&#8217;, &#8216;ordered_replicon&#8217;, &#8216;gembase&#8217;, &#8216;unordered&#8217;)</li>
+<li><strong>replicon_topology</strong> (<em>string</em>) &#8211; the topology (&#8216;linear&#8217; or &#8216;circular&#8217;) of the replicons. This option is meaningfull only if the db_type is &#8216;ordered_replicon&#8217; or &#8216;gembase&#8217;</li>
 <li><strong>hmmer_exe</strong> (<em>string</em>) &#8211; the hmmsearch executabe</li>
 <li><strong>e_value_res</strong> (<em>float</em>) &#8211; à déterminer</li>
 <li><strong>i_evalue_sel</strong> (<em>float</em>) &#8211; à déterminer</li>
@@ -334,6 +339,21 @@ create the working directory</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the suffix for profile files</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.config.Config.replicon_topology">
+<tt class="descname">replicon_topology</tt><a class="headerlink" href="#txsscanlib.config.Config.replicon_topology" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the topology of the replicons. 2 values are supported &#8216;linear&#8217; (default) and circular</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
