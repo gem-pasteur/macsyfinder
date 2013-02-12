@@ -125,11 +125,35 @@ class Gene(object):
 
     def get_homologs(self):
         """
-        :return: The homolgs genes
-        :rtype: list of :class:`txsscanlib.gene.Gene` object
+        :return: The homologs genes
+        :type: list of :class:`txsscanlib.gene.Gene` object
         """
         return self.homologs
-
+    
+    def __eq__(self, gene):
+        """
+        :return: True if the profiles (genes) are the same, False otherwise.
+        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :rtype: boolean.
+        """
+        return self.name == gene.name
+        
+        
+    def is_homolog(self, gene):
+        """
+        :return: True if the genes are homologs, False otherwise.
+        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :rtype: boolean.
+        """
+        if self == gene:
+            return True
+        else:
+            for h in self.homologs:
+                if self == h.gene:
+                    return True
+                
+        return False       
+        
 
 class Homolog(object):
     """
@@ -156,7 +180,7 @@ class Homolog(object):
 
     def is_aligned(self):
         """
-        :return: Tue if this homolog is align to it's gene of reference, False otherwise.
+        :return: True if this homolog is aligned to its gene of reference, False otherwise.
         :rtype: boolean
         """
         return self.aligned
