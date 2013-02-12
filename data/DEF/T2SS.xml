@@ -35,7 +35,7 @@
     <gene name="gspC" presence="allowed"/>
     <gene name="gspN" presence="allowed"/>
     <gene name="gspL" presence="allowed"/>
-    <gene name="gspO" presence="allowed">
+    <gene name="gspO" presence="allowed" exchangeable="1">
     	<homologs>
     	    <gene name="pilD" system_ref="T4P"/>
         </homologs>
