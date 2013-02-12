@@ -1,4 +1,4 @@
-<system>
+<system inter_gene_max_space="10">
     <gene name="sctC" presence="mandatory"/>
     <gene name="sctJ" presence="mandatory">       
         <homologs>

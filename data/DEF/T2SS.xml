@@ -1,4 +1,4 @@
-<system>
+<system inter_gene_max_space="5">
     <gene name="gspD" presence="mandatory">
     	<homologs>
     	    <gene name="pilQ" system_ref="T4P" aligned="1"/>

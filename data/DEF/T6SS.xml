@@ -1,4 +1,4 @@
-<system>
+<system inter_gene_max_space="5">
     <gene name="evpJ" presence="mandatory"/>
     <gene name="tssA" presence="mandatory"/>
     <gene name="tssB" presence="mandatory"/>

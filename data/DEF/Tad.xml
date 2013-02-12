@@ -1,4 +1,4 @@
-<system>
+<system inter_gene_max_space="5">
     <gene name="rcpA" presence="mandatory"/>
     <gene name="tadA" presence="mandatory"/>
     <gene name="tadB" presence="mandatory"/>
