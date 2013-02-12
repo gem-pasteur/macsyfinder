@@ -26,8 +26,14 @@ class SystemFactory(object):
     
     system_bank = {}
     
-    def get_system(self, name, cfg):
+    def get_system(self, name, inter_gene_max_space, cfg):
         """
+        :param name: the name of the system
+        :type name: string
+        :param inter_gene_max_space: the maximum distance allowed between 2 genes
+        :type inter_gene_max_space: integer
+        :param cfg: the configuration
+        :type cfg: :class:`txsscanlib.config.Config` object
         :return: return system corresponding to the name.
         If the system already exists return it otherwise build it an d returni
         :rtype: :class:`txsscanlib.system.System` object
@@ -35,7 +41,7 @@ class SystemFactory(object):
         if name in self.system_bank:
             system =  self.system_bank[name]
         else:
-            system = System(name, cfg)
+            system = System(name, inter_gene_max_space, cfg)
             self.system_bank[name] = system
         return system
         
@@ -46,18 +52,25 @@ class System(object):
     handle a secretion system.
     """
 
-    def __init__(self, name, cfg):
+    def __init__(self, name, inter_gene_max_space, cfg):
         """
         :param name: the name of the system
         :type name: string
+        :param inter_gene_max_space: the maximum distance allowed between 2 genes
+        :type inter_gene_max_space: integer
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         """
         self.cfg = cfg
         self.name = name
+        self._inter_gene_max_space = inter_gene_max_space
         self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
+    
+    @property
+    def inter_gene_max_space(self):
+        return self._inter_gene_max_space
 
     def add_mandatory_gene(self, gene):
         """

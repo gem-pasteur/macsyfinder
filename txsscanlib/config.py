@@ -31,7 +31,7 @@ class Config(object):
     """
     
     #if a new option is added think to add it also (if needed) in save
-    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'inter_gene_max_space','hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                'log_level', 'log_file', 'worker_nb', 'config_file')
 
@@ -39,6 +39,7 @@ class Config(object):
                 sequence_db = None ,
                 db_type = None,
                 replicon_topology = None,
+                inter_gene_max_space = None,
                 hmmer_exe = None,
                 e_value_res = None,
                 i_evalue_sel = None,
@@ -66,6 +67,8 @@ class Config(object):
         :type db_type: string
         :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase' 
         :type replicon_topology: string
+        :param inter_gene_max_space:
+        :type inter_gene_max_space: list of list of 2 elements [[ string system, integer space] , ...]
         :param hmmer_exe: the hmmsearch executabe
         :type hmmer_exe: string
         :param e_value_res: à déterminer
@@ -134,15 +137,17 @@ class Config(object):
                 #they are != than the default values in ConfigParser
                 cmde_line_opt[arg] = str(values[arg])
 
-        self.options = self._validate(cmde_line_opt)        
+        self.options = self._validate(cmde_line_opt, values)        
 
-    def _validate(self, cmde_line_opt):
+    def _validate(self, cmde_line_opt, cmde_line_values):
         """
         get all configuration values and validate the values
         create the working directory
 
         :param cmde_line_opt: the options from the command line
-        :type cmde_line_opt: dict
+        :type cmde_line_opt: dict, all values are cast in string
+        :param cmde_line_values: the options from the command line
+        :type cmde_line_values: dict, values are not cast
         :return: all the options for this execution
         :rtype: dictionnary
         """  
@@ -253,6 +258,32 @@ class Config(object):
                     raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
             if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
                 self._log.warning("db_type is set to %s, replicon_topology is ignored")
+            
+            if self.parser.has_option("system", "inter_gene_max_space"):
+                options['inter_gene_max_space'] = {}
+                inter_gene_max_space = self.parser.get("system", "inter_gene_max_space" ) 
+                inter_gene_max_space = inter_gene_max_space.split()
+                it = iter( inter_gene_max_space )
+                try:
+                    for system in it:
+                        interval = it.next()
+                        try:
+                            interval = int( interval)
+                            options['inter_gene_max_space'][system] = interval
+                        except ValueError:
+                            raise ValueError( "the interval for system %s must be an integer, you provided %s on config file" % (system, interval))
+                except StopIteration:
+                    raise ValueError( "invalid sysntax for inter_gene_max_space: you must have al list of system, interval separate by spaces" % (system, interval))
+            if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
+                if not 'inter_gene_max_space' in options:
+                    options['inter_gene_max_space'] = {}
+                for item in cmde_line_values['inter_gene_max_space']:
+                    system, interval = item
+                    try:
+                        interval = int( interval)
+                        options['inter_gene_max_space'][system] = interval
+                    except ValueError:
+                        raise ValueError( "the interval for system %s must be an integer, you provided %s on command line" % (system, interval))
             try:
                 options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             except NoSectionError:
@@ -418,6 +449,16 @@ class Config(object):
         """
         return self.options['replicon_topology']
     
+    def inter_gene_max_space(self, system):
+        """
+        :return: the maximum space allowed between 2 genes for the system
+        :rtype: integer 
+        """
+        try:
+            return self.options['inter_gene_max_space'][system] 
+        except KeyError:
+            return None 
+         
     @property
     def hmmer_exe(self):
         """

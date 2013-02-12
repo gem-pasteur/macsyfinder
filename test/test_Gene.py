@@ -46,8 +46,8 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_add_homolog(self):
-        system_foo = System( "foo", self.cfg)
-        system_bar = System( "bar", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
+        system_bar = System( "bar", 30, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         gene_ref = Gene(self.cfg, 'sctJ', system_bar)
         homolog = Homolog(self.cfg, gene, gene_ref)
@@ -57,8 +57,8 @@ class Test(unittest.TestCase):
     
     
     def test_get_homologs(self):
-        system_foo = System( "foo", self.cfg)
-        system_bar = System( "bar", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
+        system_bar = System( "bar", 30, self.cfg)
         gene = Gene(self.cfg, 'sctN', system_foo)
         sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo)
         sctJ = Gene(self.cfg, 'sctJ', system_bar)
@@ -73,7 +73,7 @@ class Test(unittest.TestCase):
         """
         test getter/setter for system property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertEqual(gene.system, system_foo)
     
@@ -82,7 +82,7 @@ class Test(unittest.TestCase):
         """
         test getter for loner property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse(gene.loner)
         gene = Gene(self.cfg, 'sctJ', system_foo, loner = True)
@@ -93,7 +93,7 @@ class Test(unittest.TestCase):
         """
         test getter for exchangeable property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
@@ -103,10 +103,10 @@ class Test(unittest.TestCase):
     def test_str(self):
         """
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         
-        system_bar = System( "bar", self.cfg)
+        system_bar = System( "bar", 30, self.cfg)
         gene_homolog = Gene(self.cfg, 'sctJ', system_bar)
         homolog = Homolog( gene_homolog, gene, self.cfg)
         gene.add_homolog( homolog )

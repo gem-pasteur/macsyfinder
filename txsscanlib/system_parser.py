@@ -46,9 +46,16 @@ class SystemParser(object):
         path = os.path.join(self.cfg.def_dir, system_name + ".xml")
         if not os.path.exists(path):
             raise Exception("%s: No such sytem definitions" % path)
-        system = system_factory.get_system(system_name, self.cfg)
         tree = ET.parse(path)
         root = tree.getroot()
+        inter_gene_max_space = root.get('inter_gene_max_space')
+        try:
+            inter_gene_max_space = int(inter_gene_max_space)
+        except ValueError:
+            msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
+            _log.critical(msg)
+            raise SyntaxError(msg)    
+        system = system_factory.get_system(system_name, inter_gene_max_space, self.cfg)
         genes_nodes = root.findall("gene")
         for gene_node in genes_nodes:
             presence = gene_node.get("presence")

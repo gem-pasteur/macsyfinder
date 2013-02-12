@@ -45,7 +45,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
     
     def test_add_mandatory_gene(self):
-        system = System( "foo" , self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
         self.assertEqual( system._mandatory_genes, [gene])
@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
         self.assertEqual( system._forbidden_genes, [])
         
     def test_add_allowed_gene(self):
-        system = System( "foo", self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system._allowed_genes, [gene])
@@ -61,7 +61,7 @@ class Test(unittest.TestCase):
         self.assertEqual( system._forbidden_genes, [])
         
     def test_add_forbidden_gene(self):
-        system = System( "foo", self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system._forbidden_genes, [gene])
@@ -69,24 +69,26 @@ class Test(unittest.TestCase):
         self.assertEqual( system._mandatory_genes, [])
         
     def test_mandatory_genes(self):
-        system = System( "foo", self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
         self.assertEqual( system.mandatory_genes, [gene])
         
     def test_allowed_genes(self):
-        system = System( "foo", self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system.allowed_genes, [gene])
         
     def test_forbidden_genes(self):
-        system = System( "foo", self.cfg)
+        system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system.forbidden_genes, [gene])
                         
-        
+    def test_inter_gene_max_space(self):
+        system = System( "foo", 20, self.cfg)
+        self.assertEqual( system.inter_gene_max_space , 20 )
                          
 if __name__ == "__main__":
     unittest.main()

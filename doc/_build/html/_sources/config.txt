@@ -37,16 +37,20 @@ parse 3 location to find configuration files
         
       (*no default value*)
       
-    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default = 'linear')
+    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default* = 'linear')
       this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
-      
+  
+  * **system**
+    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will superseed the values found
+       in the system definition file.  
+  
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
     * *e_value_res* = (default= *1* )
     * *e_value_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
-      
+  
   * **directories**
     
     * *res_search_dir* = (default= *./datatest/res_search* )
@@ -54,6 +58,7 @@ parse 3 location to find configuration files
     * *profile_dir* = (default= *./profiles* )
     * *profile_suffix* = (default= *.fasta-aln_edit.hmm* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
+    * *def_dir* = (default= *./DEF/* )
   
   * **general**
   
@@ -67,6 +72,9 @@ parse 3 location to find configuration files
     file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
     type = gembase
     replicon_topology = circular
+    
+    [system]
+    inter_gene_max_space = T2SS 22 Flagellum 44
     
     [hmmer]
     hmmer_exe = hmmsearch

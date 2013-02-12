@@ -48,6 +48,16 @@ genome_options.add_argument(  "--replicon_topology" ,
                        dest = "replicon_topology",
                        default = None,
                        help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+system_options =  parser.add_argument_group(title = "system options")
+system_options.add_argument( "--inter_gene_max_space",
+                             action = 'append',
+                             nargs = 2,
+                             dest = 'inter_gene_max_space',
+                             default = None,
+                             help = "maximum space between 2 genes, the fisrt value must match to a system the second value to an interval,\
+                              this option can appear multiple times: --inter_gene_max_space T2SS 32 --inter_gene_max_space Flagellum 200"
+                             )
+
 hmmer_options =  parser.add_argument_group(title = "hmmer options")
 hmmer_options.add_argument( '--hmmer', 
                             action = 'store',
@@ -165,7 +175,8 @@ config = Config(previous_run = args.previous_run,
                 cfg_file = args.cfg_file,
                 sequence_db = args.sequence_db,
                 db_type = args.db_type,
-                replicon_topo = args.replicon_topology,
+                replicon_topology = args.replicon_topology,
+                inter_gene_max_space = args.inter_gene_max_space,
                 hmmer_exe = args.hmmer_exe,
                 e_value_res = args.e_value_res,
                 i_evalue_sel = args.i_evalue_sel,
