@@ -399,26 +399,34 @@ class Config(object):
             raise err
         return options
 
+
     def save(self, dir_path ):
         """
         save the configuration used for this run in ini format file
         """
         parser = SafeConfigParser()
-        cfg_opts = [
+        parser.add_section( 'base')
+        parser.set( 'base', 'file', str(self.options['sequence_db']))
+        parser.set( 'base', 'type', str(self.options['db_type']).lower())
+        cfg_opts = [('base' ,('replicon_topology',)),
+                    ('system', ('inter_gene_max_space',)),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
-        parser.add_section( 'base')
-        parser.set( 'base', 'file', str(self.options['sequence_db']))
-        parser.set( 'base', 'type', str(self.options['db_type']).lower())
                                                     
         for section , directives in cfg_opts:
-            parser.add_section(section)
+            if not parser.has_section(section):
+                parser.add_section(section)
             for directive in directives:
                 try:
                     if self.options[directive]:
-                        if directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
+                        if directive == 'inter_gene_max_space':
+                            s = ''
+                            for system ,space in self.options['inter_gene_max_space'].items():
+                                s += " %s %s" % ( system, space)
+                            parser.set( section, directive, s )
+                        elif directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
                             parser.set( section, directive, str(self.options[directive]))
                 except KeyError:
                     pass
