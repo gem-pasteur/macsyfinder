@@ -135,6 +135,21 @@ If the gene already exists return it otherwise build it an d returni</td>
 <em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle Gene of a secretion system</p>
 <dl class="method">
+<dt id="txsscanlib.gene.Gene.__eq__">
+<tt class="descname">__eq__</tt><big>(</big><em>gene</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.Gene.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the profiles (genes) are the same, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="txsscanlib.gene.Gene.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle gene</p>
@@ -197,9 +212,24 @@ If the gene already exists return it otherwise build it an d returni</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The homolgs genes</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The homologs genes</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
+<tr class="field-even field"><th class="field-name">Type :</th><td class="field-body">list of <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.Gene.is_homolog">
+<tt class="descname">is_homolog</tt><big>(</big><em>gene</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.Gene.is_homolog" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the genes are homologs, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean.</td>
 </tr>
 </tbody>
 </table>
@@ -316,7 +346,7 @@ If the gene already exists return it otherwise build it an d returni</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tue if this homolog is align to it&#8217;s gene of reference, False otherwise.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this homolog is aligned to its gene of reference, False otherwise.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
 </tr>

@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_HMMReport(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20,self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy( os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -56,7 +56,7 @@ class Test(unittest.TestCase):
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
 
     def test_OrderedHMMReport_extract(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -74,7 +74,7 @@ class Test(unittest.TestCase):
         self.assertListEqual(hits, report.hits)
     
     def test_OrderedHMMReport_extract_concurent(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -111,7 +111,7 @@ class Test(unittest.TestCase):
 
     
     def test_str(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)

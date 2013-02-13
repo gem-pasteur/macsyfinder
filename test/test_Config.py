@@ -252,8 +252,47 @@ class Test(unittest.TestCase):
                           profile_suffix = profile_suffix
                           )
         self.assertEqual(self.cfg.profile_suffix, profile_suffix)
-        
-        
+    
+    def test_replicon_topology(self):
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles',
+                          )
+        self.assertEqual(self.cfg.replicon_topology, 'linear')
+        shutil.rmtree(self.cfg.working_dir)
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles',
+                          replicon_topology = 'circular'
+                          )
+        self.assertEqual(self.cfg.replicon_topology, 'circular')
+        shutil.rmtree(self.cfg.working_dir)
+        kwargs = {'cfg_file' : "nimportnaoik",
+                  'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
+                  'db_type' : 'gembase',
+                  'def_dir' : '../data/DEF',
+                  'profile_dir' : '../data/profiles',
+                  'replicon_topology' : 'foo'
+        }
+        self.assertRaises(ValueError, Config, **kwargs)
+
+    def test_inter_gene_max_space(self):
+        inter_gene_max_space = (["T2SS", 32], ['Flagellum', 64])
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles',
+                          inter_gene_max_space = inter_gene_max_space
+                          )
+        self.assertEqual(self.cfg.inter_gene_max_space('T2SS'), 32)
+        self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
+        self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
+    
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",

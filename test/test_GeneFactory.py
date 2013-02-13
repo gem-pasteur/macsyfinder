@@ -48,28 +48,28 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_get_gene(self):
-        system_foo = System("foo", self.cfg)
+        system_foo = System("foo", 20, self.cfg)
         gene_name = 'sctJ_FLG'
         gene = gene_factory.get_gene(self.cfg, gene_name, system_foo)
         self.assertTrue(isinstance(gene, Gene))
         self.assertEqual(gene.name, gene_name)
 
     def test_get_loner_gene(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse( gene.loner )
         gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, loner = True)
         self.assertTrue( gene.loner )
 
     def test_get_exchangeable_gene(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse( gene.exchangeable )
         gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
         self.assertTrue( gene.exchangeable )
 
     def test_get_uniq_object(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System( "foo", 20, self.cfg)
         gene1 = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
         gene2 = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertEqual( gene1, gene2 )

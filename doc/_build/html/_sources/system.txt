@@ -10,7 +10,7 @@ the xml syntax is
 
 for instance::
 
-    <system> 
+    <system inter_gene_max_space="20"> 
         <gene name="sctJ_FLG" presence="mandatory">
            <homologs>
                <gene name="sctJ" system_ref="T2SS"/>
@@ -34,6 +34,7 @@ for instance::
 a system_parser is used to build a system object from it's xml definition
 
 a system as a name based on the file name of the xml definition
+a system as an attribute inter_gene_max_space which is an integer
 and 3 kind of genes lists in function of their presence:
 
 * The genes which must be present in the genome to defined this system.

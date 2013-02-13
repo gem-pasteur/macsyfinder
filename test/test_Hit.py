@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_cmp(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD",system)
         h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
@@ -57,7 +57,7 @@ class Test(unittest.TestCase):
         self.assertLess(h0, h1)
 
     def test_eq(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
         h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
@@ -65,7 +65,7 @@ class Test(unittest.TestCase):
         self.assertEqual(h0, h1)
         
     def test_str(self):
-        system = System("T2SS", self.cfg)
+        system = System("T2SS", 20, self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
         hit_prop={'id' : "PSAE001c01_006940",
