@@ -44,6 +44,18 @@ class Test(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
     
+    def test_name(self):
+        name = 'foo'
+        inter_gene_max_space = 40
+        system = System(name, inter_gene_max_space, self.cfg)
+        self.assertEqual(system.name, name)
+        
+    def test_inter_gene_max_space(self):
+        name = 'foo'
+        inter_gene_max_space = 40
+        system = System(name, inter_gene_max_space, self.cfg)
+        self.assertEqual( system.inter_gene_max_space , inter_gene_max_space )
+        
     def test_add_mandatory_gene(self):
         system = System( "foo", 20, self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
@@ -86,9 +98,7 @@ class Test(unittest.TestCase):
         system.add_forbidden_gene( gene )
         self.assertEqual( system.forbidden_genes, [gene])
                         
-    def test_inter_gene_max_space(self):
-        system = System( "foo", 20, self.cfg)
-        self.assertEqual( system.inter_gene_max_space , 20 )
+    
                          
 if __name__ == "__main__":
     unittest.main()
