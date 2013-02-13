@@ -194,10 +194,17 @@ logger = logging.getLogger('txsscan')
 config.save(config.working_dir)
 
 parser = SystemParser(config)
+if 'all' in args.systems:
+    import glob
+    system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
+    system_names = [ os.path.basename(s) for s in system_names]
+else:
+    system_names = args.systems
 systems = []
-for i in range(len(args.systems)):
-    system = parser.parse(args.systems[i])
+for name  in system_names:
+    system = parser.parse(name)
     systems.append(system)
+
 all_genes = []
 for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
