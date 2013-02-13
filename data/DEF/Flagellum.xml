@@ -1,4 +1,4 @@
-<system> 
+<system inter_gene_max_space="20"> 
     <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
            <gene name="sctJ" system_ref="T3SS"/>

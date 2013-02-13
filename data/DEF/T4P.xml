@@ -1,4 +1,4 @@
-<system>
+<system inter_gene_max_space="5">
     <gene name="pilAE" presence="mandatory">
     	<homologs>
     	    <gene name="gspG" system_ref="T2SS"/>
@@ -37,7 +37,7 @@
     <gene name="pilP" presence="mandatory"/>      
     <gene name="pilT_pilU" presence="mandatory"/>       
     
-    <gene name="pilD" presence="allowed">       
+    <gene name="pilD" presence="allowed" exchangeable="1">       
         <homologs>
     	    <gene name="gspO" system_ref="T2SS"/>
         </homologs>

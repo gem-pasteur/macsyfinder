@@ -1,5 +1,5 @@
-<system>
+<system inter_gene_max_space="5">
     <gene name="abc" presence="mandatory"/>
     <gene name="mfp" presence="mandatory"/>
-    <gene name="omf" presence="mandatory"/>
+    <gene name="omf" presence="mandatory" loner="1"/>
 </system>

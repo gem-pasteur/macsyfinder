@@ -56,7 +56,8 @@ class HMMReport(object):
         s += "# profile length= %d\n" % len(self.gene.profile)
         s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
         s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
-        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
+        #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
+        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in self.hits:
             s += str(h)
         return s
@@ -124,8 +125,11 @@ class OrderedHMMReport(HMMReport):
                         while not line.startswith("  Alignments"):
                             fields = line.split()
                             if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
-                                cov = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
-                                if (cov >= coverage_treshold):
+                                cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
+                                begin = int(fields[9])
+                                end = int(fields[10])
+                                cov_gene = (end - begin +1) #/ self.gene.sequence_lg # To be added in Gene: sequence_length
+                                if (cov_profile >= coverage_treshold):
                                     i_eval = float(fields[5])
                                     score = float(fields[2])
                                     self.hits.append(Hit(self.gene,
@@ -135,7 +139,10 @@ class OrderedHMMReport(HMMReport):
                                                          position_hit,
                                                          i_eval,
                                                          score,
-                                                         cov))
+                                                         cov_profile, 
+                                                         cov_gene, 
+                                                         begin, 
+                                                         end))
                             line = hmm_out.next()
                 self.hits.sort()
 
@@ -145,7 +152,8 @@ class Hit(object):
     handle hits found by HMM. the hit are instanciate by :py:meth:`HMMReport.extract` method
     """
     
-    def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, coverage):
+    #def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, coverage):
+    def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`txsscanlib.gene.Gene` object
@@ -157,12 +165,18 @@ class Hit(object):
         :type replicon_name: string
         :param position_hit: the position of the hit on the sequence?
         :type position_hit: integer
-        :param i_eval: the ???? evalue
+        :param i_eval: the best-domain evalue
         :type i_eval: float
         :param score: the score of the hit
         :type score: float
-        :param coverage: the coverage of the hit
-        :type coverage: float
+        :param profile_coverage: percentage of the profile that matches the hit sequence
+        :type profile_coverage: float
+        :param sequence_coverage: percentage of the hit sequence that matches the profile
+        :type sequence_coverage: float
+        :param begin_match: where the hit with the profile starts in the sequence 
+        :type begin_match: integer
+        :param end_match: where the hit with the profile ends in the sequence 
+        :type end_match: integer
         """
         self.gene = gene
         self.system = system
@@ -171,20 +185,30 @@ class Hit(object):
         self.position = position_hit
         self.i_eval = i_eval
         self.score = score
-        self.coverage = coverage
+        #self.coverage = coverage
+        self.profile_coverage = profile_coverage
+        self.sequence_coverage = sequence_coverage
+        self.begin_match = begin_match
+        self.end_match = end_match
 
     def __str__(self):
-        return "%s\t%s\t%d\t%s\t%s\t%s\t%s\t%f\n" % (self.id,
+        return "%s\t%s\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
                                                      self.replicon_name,
                                                      self.position,
                                                      self.gene.name,
                                                      self.system.name,
                                                      self.i_eval,
                                                      self.score,
-                                                     self.coverage)
+                                                     self.profile_coverage, 
+                                                     self.sequence_coverage,
+                                                     self.begin_match,
+                                                     self.end_match)
+                                                     
     def __cmp__(self, other):
         if self.id == other.id:
-            return cmp(self.i_eval, other.i_eval)
+            if not self.gene.is_homolog(other.gene): 
+                _log.warning("Non homologs match: %s (%s) %s (%s) for %s"%(self.gene.name, self.system.name, other.gene.name, other.system.name, self.id))
+            return cmp(self.score, other.score)
         else:
             return cmp(self.id, other.id)
  
@@ -197,7 +221,10 @@ class Hit(object):
                 self.position == other.position and
                 self.i_eval == other.i_eval and
                 self.score == other.score and
-                self.coverage == other.coverage
+                self.profile_coverage == other.profile_coverage and
+                self.sequence_coverage == other.sequence_coverage and
+                self.begin_match == other.begin_match and
+                self.end_match == other.end_match 
                 )
 
 
