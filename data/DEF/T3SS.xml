@@ -1,5 +1,11 @@
 <system inter_gene_max_space="10">
-    <gene name="sctC" presence="mandatory"/>
+    <gene name="sctC" presence="mandatory">        
+        <homologs>
+    	    <gene name="gspD" system_ref="T2SS"/>
+    	    <gene name="pilQ" system_ref="T4P"/>
+    	    <gene name="rcpA" system_ref="Tad"/>
+        </homologs>
+    </gene>
     <gene name="sctJ" presence="mandatory">       
         <homologs>
     	    <gene name="sctJ_FLG" system_ref="Flagellum"/>
