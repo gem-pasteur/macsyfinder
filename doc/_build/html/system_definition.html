@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>system definition &mdash; Txsscan 0.9a1 documentation</title>
+    <title>System definition &mdash; Txsscan 0.9a1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -55,9 +55,9 @@
           <div class="body">
             
   <div class="section" id="system-definition">
-<span id="id1"></span><h1>system definition<a class="headerlink" href="#system-definition" title="Permalink to this headline">¶</a></h1>
-<p>The secretion system are defined in xml format. Each file describe <strong>one</strong> system.
-The name of the file correspond to the name of the secretion system.</p>
+<span id="id1"></span><h1>System definition<a class="headerlink" href="#system-definition" title="Permalink to this headline">¶</a></h1>
+<p>The secretion systems are defined in xml format. Each file describe <strong>one</strong> system.
+The name of the file corresponds to the name of the secretion system.</p>
 <ul>
 <li><p class="first">The element root is &#8220;system&#8221;.</p>
 </li>
@@ -66,10 +66,10 @@ The name of the file correspond to the name of the secretion system.</p>
 <li><dl class="first docutils">
 <dt>The element &#8220;gene&#8221;.</dt>
 <dd><ul class="first last simple">
-<li>must have an attribute &#8220;name&#8221; which must match to a profile in profile directory.</li>
-<li>must have an attribute &#8220;presence&#8221; chich can take 3 values &#8220;mandatory&#8221;, &#8220;allowed&#8221;, &#8220;forbidden&#8221;.</li>
+<li>must have an attribute &#8220;name&#8221; which must match to a profile in the profile directory.</li>
+<li>must have an attribute &#8220;presence&#8221; which can take 3 values &#8220;mandatory&#8221;, &#8220;allowed&#8221;, &#8220;forbidden&#8221;.</li>
 <li>may have an attribute &#8220;system_ref&#8221; which is a reference to the secretion system where the gene
-come from (this attribute is mainly used for forbidden gene and homologs gene).
+comes from (this attribute is mainly used for forbidden gene and homologs gene).
 If system_ref is not specified that mean the gene is from the current system.</li>
 <li>may have attribute &#8220;loner&#8221; which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( <em>default false</em> ).</li>
 <li>may have attibute &#8220;exhangeable&#8221; which is a boolean. If a gene is exchangeable that means this gene or one of the homologs can be found without
@@ -82,7 +82,7 @@ impacts on the secretion system.</li>
 <li><p class="first">The element homologs contains one or more element &#8220;gene&#8221;.</p>
 </li>
 </ul>
-<p>example of secretion system defintion:</p>
+<p>Example of secretion system defintion:</p>
 <div class="highlight-python"><pre>&lt;system&gt;
   &lt;gene name="gspD" presence="mandatory" exchangeable="1"&gt;
      &lt;homologs&gt;
