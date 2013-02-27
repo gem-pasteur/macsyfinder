@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Feb 20, 2013
 
-@author: bneron
-@contact: bneron@pasteur.fr
-@organization: Institut Pasteur
-@license: license
+#===============================================================================
+# Created on Feb 20, 2013
+# 
+# @author: bneron
+# @contact: bneron@pasteur.fr
+# @organization: Institut Pasteur
+# @license: license
+#===============================================================================
 
-"""
+
 
 from itertools import groupby
 from collections import namedtuple
@@ -56,7 +58,7 @@ class Database(object):
             
     def _find_hmmer_indexes(self):
         """
-        :return: files wich belongs to the hmmer indexes. 
+        :return: the files wich belongs to the hmmer indexes. 
                  If indexes are inconsistent (lack file) a Runtime Error is raised
         :rtype: list of string 
         """
@@ -86,7 +88,7 @@ class Database(object):
 
     def _find_my_indexes(self):
         """
-        :return: file of my index if exits None otherwise. 
+        :return: the file of txsscan if exits, None otherwise. 
         :rtype: string
         """ 
         path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".dump")
@@ -159,7 +161,7 @@ class Database(object):
 
     def _build_my_indexes(self):
         """
-        build my own indexes. this index is stored in a berkeydb
+        build txsscan indexes. This index is stored in a berkeley DB
         """
         my_index = db.DB()
         my_index.open(self._my_indexes,
@@ -180,7 +182,7 @@ class Database(object):
     def _fasta_iter(self, fasta_file):
         """
         :author: http://biostar.stackexchange.com/users/36/brentp
-        :return: given a fasta file. yield tuples of id ,comment and sequence
+        :return: given a fasta file. yield tuples of id, comment and sequence
         :rtype: tuple (string id, string comment, int sequence length)
         """
         # ditch the boolean (x[0]) and just keep the header or sequence since
@@ -199,6 +201,14 @@ class Database(object):
 
     def __getitem__(self, seq_id):
         """
+        allow to use the following notation to retrieve sequence information ::
+         
+         db = database()
+         seq_info = db[ 'my_id' ] 
+         seq_info.lenght
+         
+        :param seq_id: the sequence identifier
+        :type seq_id: string
         :return: the SequenceInfo corresponding to the seq_id.
                  if the seq_id does not exist in the database a KeyError is raised.
         :rtype:  :class:`txsscanlib.database.SeqInfo` object
@@ -221,8 +231,13 @@ class Database(object):
 
     def get(self, seq_id, default = None):
         """
-        Return the value for key if key is in the dictionary, else default. 
+        Return the :class:`txsscanlib.database.SeqInfo` object for given seq_id if seq_id is in the dictionary, else default. 
         If default is not given, it defaults to None, so that this method never raises a KeyError.
+        
+        :param seq_id: the sequence identifier
+        :type seq_id: string
+        :param default: the value return if the seq_id is not in the database
+        :type default: any
         """
         my_index = db.DB()
         my_index.open(self._my_indexes,
