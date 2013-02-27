@@ -33,7 +33,7 @@ class Config(object):
     #if a new option is added think to add it also (if needed) in save
     options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'inter_gene_max_space','hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
-               'log_level', 'log_file', 'worker_nb', 'config_file')
+               'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
     def __init__(self, cfg_file = "",
                 sequence_db = None ,
@@ -54,7 +54,8 @@ class Config(object):
                 log_file = None,
                 worker_nb = None,
                 config_file = None,
-                previous_run = None
+                previous_run = None,
+                build_indexes = None
                 ):
         """
         :param cfg_file: the path of txsscan configuration file to use 
@@ -95,6 +96,8 @@ class Config(object):
         :type log_file: string
         :param worker_nb: the max number of processes in parrallel
         :type worker_nb: int
+        :param build_indexes: build the indexes from the sequence base in fasta format
+        :type build_indexes: boolean
         """
         
         self._new_cfg_name = "txsscan.conf"
@@ -397,6 +400,8 @@ class Config(object):
                 except:
                     pass
             raise err
+        #build_indexes is not meaningfull in configuration file
+        options['build_indexes']  = cmde_line_values['build_indexes']
         return options
 
 
@@ -448,6 +453,14 @@ class Config(object):
         :rtype: string
         """
         return self.options['db_type']
+    
+    @property
+    def build_indexes(self):
+        """
+        :return: True if the indexes must ne rebuild, False otherwise
+        :rtype: boolean
+        """
+        return self.options['build_indexes']
 
     @property
     def replicon_topology(self):
