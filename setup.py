@@ -79,7 +79,7 @@ def subst_vars(src, dst, vars):
 
 
 require_python = [ 'python (>=2.7, <3.0)' ]
-require_packages = []
+require_packages = ['bsddb3']
 fix_prefix = ["txsscanlib/config.py"]
 
 setup(name        = 'txsscan',
