@@ -185,7 +185,6 @@ class Hit(object):
         self.position = position_hit
         self.i_eval = i_eval
         self.score = score
-        #self.coverage = coverage
         self.profile_coverage = profile_coverage
         self.sequence_coverage = sequence_coverage
         self.begin_match = begin_match
