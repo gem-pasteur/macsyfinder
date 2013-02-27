@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_HMMReport(self):
-        system = System("T2SS", 20,self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy( os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -56,7 +56,7 @@ class Test(unittest.TestCase):
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
 
     def test_OrderedHMMReport_extract(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -65,16 +65,16 @@ class Test(unittest.TestCase):
         report.extract()
         self.assertEqual(len(report.hits), 5)
         
-        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000)),
-               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000))
+        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
         ]
         self.assertListEqual(hits, report.hits)
     
     def test_OrderedHMMReport_extract_concurent(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
@@ -98,12 +98,12 @@ class Test(unittest.TestCase):
                 continue
         t.join()
    
-        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000)),
-               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000)),
-               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000))
-        ]       
+        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
+        ]      
         for report in reports:
             report.save_extract()
             self.assertEqual(len(report.hits), len(hits))
@@ -111,25 +111,25 @@ class Test(unittest.TestCase):
 
     
     def test_str(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = OrderedHMMReport(gene, report_path, self.cfg)
         report.extract()
-        hits=[ Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000)),
-               Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000)),
-               Hit( gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000)),
-               Hit( gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000)),
-               Hit( gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000))
+        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
         ]
         s = ""
         s = "# gene: %s extract from %s hmm output\n" % (gene.name, report_path)
         s += "# profile length= %d\n" % len(gene.profile)
         s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
         s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
-        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
+        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in hits:
             s += str(h)
         self.assertEqual(str(report), s)
