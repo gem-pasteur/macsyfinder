@@ -203,7 +203,7 @@ class Hit(object):
                                                      self.sequence_coverage,
                                                      self.begin_match,
                                                      self.end_match)
-                                                     
+
     def __cmp__(self, other):
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene): 
