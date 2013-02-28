@@ -189,7 +189,7 @@ class Test(unittest.TestCase):
         db = Database(self.cfg)
         self.assertIsNone(db.get('PRRU001c01_') , None)
         self.assertListEqual(db.get('_027920', [] ) , [] )
-        seq_info_from_db = db['PRRU001c01_027920']
+        seq_info_from_db = db.get('PRRU001c01_027920')
         self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
     
 if __name__ == "__main__":
