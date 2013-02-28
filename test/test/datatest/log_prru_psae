@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "main_detect_SS.py", line 627, in <module>
+    main()	
+  File "main_detect_SS.py", line 560, in main
+    dico_syst[el]=System(el, get_syst_def_file(el), PROFILE_DIR, PROFILE_SUFFIX)
+  File "main_detect_SS.py", line 34, in __init__
+    raise IOError, "The file %s does not exist"%deffile
+IOError: The file DEF/T2SS.def does not exist

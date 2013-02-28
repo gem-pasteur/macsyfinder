@@ -1,0 +1,344 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>secretion system &mdash; Txsscan 0.9a1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.9a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Txsscan 0.9a1 documentation" href="index.html" />
+    <link rel="next" title="gene" href="gene.html" />
+    <link rel="prev" title="system_parser" href="system_parser.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="gene.html" title="gene"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="system_parser.html" title="system_parser"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="secretion-system">
+<span id="system"></span><h1>secretion system<a class="headerlink" href="#secretion-system" title="Permalink to this headline">¶</a></h1>
+<p>represent a secretion system.
+it&#8217;s defined by a definition file in xml stored in
+the xml syntax is</p>
+<p>for instance:</p>
+<div class="highlight-python"><pre>&lt;system inter_gene_max_space="20"&gt;
+    &lt;gene name="sctJ_FLG" presence="mandatory"&gt;
+       &lt;homologs&gt;
+           &lt;gene name="sctJ" system_ref="T2SS"/&gt;
+           &lt;gene name="pilO" system_ref="T2SS" aligned="true"/&gt;
+       &lt;/homologs&gt;
+    &lt;/gene&gt;
+    &lt;gene name="sctN_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctQ_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctR_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctS_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctT_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctU_FLG" presence="mandatory"/&gt;
+    &lt;gene name="sctV_FLG" presence="mandatory"/&gt;
+    &lt;gene name="flgB" presence="allowed"/&gt;
+    &lt;gene name="flgC" presence="allowed"/&gt;
+    &lt;gene name="fliE" presence="allowed"/&gt;
+    &lt;gene name="sctC" presence="forbidden"/&gt;
+&lt;/system&gt;</pre>
+</div>
+<p>a system_parser is used to build a system object from it&#8217;s xml definition</p>
+<p>a system as a name based on the file name of the xml definition
+a system as an attribute inter_gene_max_space which is an integer
+and 3 kind of genes lists in function of their presence:</p>
+<ul class="simple">
+<li>The genes which must be present in the genome to defined this system.</li>
+<li>The genes which can be presents but not in all cases.</li>
+<li>The genes which must not be present.</li>
+</ul>
+<div class="section" id="systemfactory-api-reference">
+<h2>SystemFactory API reference<a class="headerlink" href="#systemfactory-api-reference" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><span class="target" id="module-txsscanlib.system"></span><dl class="class">
+<dt id="txsscanlib.system.SystemFactory">
+<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">SystemFactory</tt><a class="headerlink" href="#txsscanlib.system.SystemFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>build and cached all systems objects. Systems must not be instanciate directly.
+the system_factory must be used. The system factory ensure there is only one instance
+of system for a given name.
+To get a system use the method get_system. if the gene is already cached this instance is returned
+otherwise a new system is build, cached then returned.</p>
+<dl class="attribute">
+<dt id="txsscanlib.system.SystemFactory.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.system.SystemFactory.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system.SystemFactory.get_system">
+<tt class="descname">get_system</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemFactory.get_system" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the system</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return system corresponding to the name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If the system already exists return it otherwise build it an d returni
+:rtype: <a class="reference internal" href="#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Don&#8217;t instanciate your own SystemFactory use the system_factory at the top level of the module.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.system</span> <span class="kn">import</span> <span class="n">system_factory</span>
+<span class="n">t2ss</span> <span class="o">=</span>  <span class="n">system_factory</span><span class="o">.</span><span class="n">get_system</span><span class="p">(</span><span class="s">&quot;T2SS&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="module-txsscanlib.system">
+<span id="system-api-reference"></span><h2>System API reference<a class="headerlink" href="#module-txsscanlib.system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="txsscanlib.system.System">
+<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">System</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System" title="Permalink to this definition">¶</a></dt>
+<dd><p>handle a secretion system.</p>
+<dl class="method">
+<dt id="txsscanlib.system.System.__init__">
+<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the system</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.system.System.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system.System.add_allowed_gene">
+<tt class="descname">add_allowed_gene</tt><big>(</big><em>gene</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.add_allowed_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.add_allowed_gene" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a gene in the list of allowed genes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gene</strong> (<tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> object) &#8211; gene which should be present in this system</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system.System.add_forbidden_gene">
+<tt class="descname">add_forbidden_gene</tt><big>(</big><em>gene</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.add_forbidden_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.add_forbidden_gene" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a gene in the list of forbidden genes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gene</strong> (<tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> object) &#8211; gene which must not be present in this system</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system.System.add_mandatory_gene">
+<tt class="descname">add_mandatory_gene</tt><big>(</big><em>gene</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.add_mandatory_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.add_mandatory_gene" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a gene in the list of mandatory genes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>gene</strong> (<tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> object) &#8211; gene which are mandatory for this system</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.allowed_genes">
+<tt class="descname">allowed_genes</tt><a class="reference internal" href="_modules/txsscanlib/system.html#System.allowed_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.allowed_genes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of genes which should be present in this secretion system</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.forbidden_genes">
+<tt class="descname">forbidden_genes</tt><a class="reference internal" href="_modules/txsscanlib/system.html#System.forbidden_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.forbidden_genes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of genes which cannot be present in this secretion system</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> objects</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.inter_gene_max_space">
+<tt class="descname">inter_gene_max_space</tt><a class="headerlink" href="#txsscanlib.system.System.inter_gene_max_space" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set the maximum distance allowed between 2 genes for this sytem</td>
+</tr>
+</tbody>
+</table>
+<p>:rtype&#8221; type</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.mandatory_genes">
+<tt class="descname">mandatory_genes</tt><a class="reference internal" href="_modules/txsscanlib/system.html#System.mandatory_genes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.mandatory_genes" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of genes which are mandatory for this secretion system</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.Gene</span></tt> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">secretion system</a><ul>
+<li><a class="reference internal" href="#systemfactory-api-reference">SystemFactory API reference</a></li>
+<li><a class="reference internal" href="#module-txsscanlib.system">System API reference</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="system_parser.html"
+                        title="previous chapter">system_parser</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="gene.html"
+                        title="next chapter">gene</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/system.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="gene.html" title="gene"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="system_parser.html" title="system_parser"
+             >previous</a> |</li>
+        <li><a href="index.html">Txsscan 0.9a1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

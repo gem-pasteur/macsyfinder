@@ -80,7 +80,8 @@ class SystemParser(object):
                 _log.error(msg)
                 raise SyntaxError(msg)       
         return system
-    
+
+
     def _parse_gene(self, node, system):
         """
         parse a xml element gene and build the corresponding object
@@ -90,7 +91,6 @@ class SystemParser(object):
         :return: the gene object corresponding to the node
         :rtype: :class:`txsscanlib.secretion.System` object 
         """
-        
         name = node.get("name")
         if not name:
             msg = "Invalid system definition: gene without name"
@@ -101,19 +101,19 @@ class SystemParser(object):
             loner = True
         elif loner in (None, "0" , "false" , "False"):
             loner = False
-            
+
         exchangeable = node.get("exchangeable")
         if exchangeable in ("1", "true", "True"):
             exchangeable = True
         elif exchangeable in (None, "0" , "false" , "False"):
             exchangeable = False    
         gene = gene_factory.get_gene(self.cfg, name, system, loner, exchangeable)
-        
+
         for homolog_node in node.findall("homologs/gene"):
             gene.add_homolog( self._parse_homolog(homolog_node , gene) )
         return gene
-    
-    
+
+
     def _parse_homolog(self, node, gene_ref):
         """
         parse a xml element gene and build the corresponding object
@@ -123,7 +123,6 @@ class SystemParser(object):
         :return: the gene object corresponding to the node
         :rtype: :class:`txsscanlib.secretion.System` object 
         """
-        
         name = node.get("name")
         if not name:
             msg = "Invalid system definition: gene without name"

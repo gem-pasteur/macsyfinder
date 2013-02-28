@@ -1,0 +1,154 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>txsscanlib.system_parser &mdash; Txsscan 0.9a1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Txsscan 0.9a1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Txsscan 0.9a1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for txsscanlib.system_parser</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Nov 12, 2012</span>
+
+<span class="sd">@author: bneron</span>
+<span class="sd">@contact: user_email</span>
+<span class="sd">@organization: organization_name</span>
+<span class="sd">@license: license</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="kn">as</span> <span class="nn">ET</span>
+<span class="kn">from</span> <span class="nn">secretion</span> <span class="kn">import</span> <span class="n">System</span>
+<span class="kn">from</span> <span class="nn">secretion</span> <span class="kn">import</span> <span class="n">Gene</span>
+
+<div class="viewcode-block" id="SystemParser"><a class="viewcode-back" href="../../system_parser.html#txsscanlib.system_parser.SystemParser">[docs]</a><span class="k">class</span> <span class="nc">SystemParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build a System instance from System definition write in XML and build a </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="SystemParser.__init__"><a class="viewcode-back" href="../../system_parser.html#txsscanlib.system_parser.SystemParser.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        :param cfg: the path of a file containing the system definition</span>
+<span class="sd">        :type cfg: Config object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+    </div>
+<div class="viewcode-block" id="SystemParser.parse"><a class="viewcode-back" href="../../system_parser.html#txsscanlib.system_parser.SystemParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system_name</span> <span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">def_dir</span><span class="p">,</span> <span class="n">system_name</span> <span class="o">+</span> <span class="s">&quot;.xml&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s">: No such sytem definitions&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">system</span> <span class="o">=</span> <span class="n">System</span><span class="p">(</span> <span class="n">system_name</span> <span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="n">mandatory_genes_nodes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;mandatory&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">gene_node</span> <span class="ow">in</span> <span class="n">mandatory_genes_nodes</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&quot;gene&quot;</span><span class="p">):</span>
+            <span class="n">gene</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_gene</span><span class="p">(</span><span class="n">gene_node</span><span class="p">)</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">add_mandatory_gene</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+        <span class="n">allowed_genes_nodes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;allowed&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">gene_node</span> <span class="ow">in</span> <span class="n">allowed_genes_nodes</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&quot;gene&quot;</span><span class="p">):</span>
+            <span class="n">gene</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_gene</span><span class="p">(</span><span class="n">gene_node</span><span class="p">)</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">add_allowed_gene</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+        <span class="n">forbidden_gene_nodes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;forbidden&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">gene_node</span> <span class="ow">in</span> <span class="n">allowed_genes_nodes</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&quot;gene&quot;</span><span class="p">):</span>
+            <span class="n">gene</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_gene</span><span class="p">(</span><span class="n">gene_node</span><span class="p">)</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">add_forbidden_gene</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">system</span>
+    </div>
+<div class="viewcode-block" id="SystemParser._parse_gene"><a class="viewcode-back" href="../../system_parser.html#txsscanlib.system_parser.SystemParser._parse_gene">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_gene</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+        <span class="n">gene</span> <span class="o">=</span> <span class="n">Gene</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="p">)</span>
+        <span class="k">for</span> <span class="n">homolog_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s">&quot;homolog&quot;</span><span class="p">):</span>
+            <span class="n">h_name</span> <span class="o">=</span> <span class="n">homolog_node</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">homolog</span> <span class="o">=</span> <span class="n">Gene</span><span class="p">(</span><span class="n">h_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+            <span class="n">gene</span><span class="o">.</span><span class="n">add_homolog</span><span class="p">(</span><span class="n">homolog</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="n">gene</span>
+        </div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Txsscan 0.9a1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

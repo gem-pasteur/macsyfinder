@@ -1,0 +1,222 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+Created on Nov 5, 2012
+
+@author: bneron
+@contact: bneron@pasteur.fr
+@organization: Institut Pasteur
+@license: license
+"""
+import sys
+import os
+import argparse
+import logging
+
+if 'TXSSCAN_HOME' in os.environ:
+    TXSSCAN_HOME = os.environ.get('TXSSCAN_HOME')
+    TXSSCAN_HOME = os.path.abspath( os.path.realpath(TXSSCAN_HOME))
+    if TXSSCAN_HOME not in sys.path:
+        sys.path.append( TXSSCAN_HOME )
+try:
+    from txsscanlib.config import Config
+except ImportError , err:
+    msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
+    sys.exit( msg )
+
+from txsscanlib.system_parser import SystemParser
+from txsscanlib.search_genes import search_genes
+
+parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
+
+parser.add_argument("systems",
+                    nargs = '+',
+                    help = "aide a définir")
+genome_options =  parser.add_argument_group(title = "genome options")
+genome_options.add_argument("--sequence_db",
+                    action = 'store',
+                    dest = 'sequence_db',
+                    help = "aide a définir")
+genome_options.add_argument(  "--db_type" ,
+                       choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
+                       dest = "db_type",
+                       default = None,
+                       help = 'the genes are ordered')
+genome_options.add_argument(  "--replicon_topology" ,
+                       choices = ['linear', 'circular'],
+                       dest = "replicon_topology",
+                       default = None,
+                       help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+
+genome_options.add_argument(  "--idx" ,
+                       action = 'store_true',
+                       dest = "build_indexes",
+                       default = False,
+                       help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+
+system_options =  parser.add_argument_group(title = "system options")
+system_options.add_argument( "--inter_gene_max_space",
+                             action = 'append',
+                             nargs = 2,
+                             dest = 'inter_gene_max_space',
+                             default = None,
+                             help = "maximum space between 2 genes, the fisrt value must match to a system the second value to an interval,\
+                              this option can appear multiple times: --inter_gene_max_space T2SS 32 --inter_gene_max_space Flagellum 200"
+                             )
+
+hmmer_options =  parser.add_argument_group(title = "hmmer options")
+hmmer_options.add_argument( '--hmmer', 
+                            action = 'store',
+                            dest = 'hmmer_exe',
+                            default = None, 
+                            help = 'hmm binary')
+hmmer_options.add_argument( '--e_value_search',
+                     action = 'store',
+                     dest = 'e_value_res',
+                     type = float,
+                     default = None,
+                     help = 'help for e_value_res')
+
+hmmer_options.add_argument('--i_evalue_select',
+                     action = 'store',
+                    dest = 'i_evalue_sel',
+                    type = float,
+                    default = None , 
+                    help = 'help for i_evalue_select')
+
+hmmer_options.add_argument('--coverage_profile',
+                     action = 'store',
+                    dest = 'coverage_profile',
+                    type = float,
+                    default = None , 
+                    help = 'help for coverage_profile')
+
+dir_options =  parser.add_argument_group(title = "directories options", description = None)
+dir_options.add_argument('-d', '--d',
+                    action = 'store',
+                    dest = 'def_dir',
+                    default = None,
+                    help = 'the path to the systems definition files')
+dir_options.add_argument('-r', '--research-search',
+                    action = 'store',
+                    dest = 'res_search_dir',
+                    default = None,
+                    help = 'aide a définir')
+dir_options.add_argument( '--research-search-suffix',
+                    action = 'store',
+                    dest = 'res_search_suffix',
+                    default = None,
+                    help = 'aide a définir')
+dir_options.add_argument('--research-extract-suffix',
+                    action = 'store',
+                    dest = 'res_extract_suffix',
+                    default = None,
+                    help = 'aide a définir')
+dir_options.add_argument('-p', '--profile_dir',
+                    action = 'store',
+                    dest = 'profile_dir',
+                    default = None,
+                    help = 'the path to the profiles directory')
+dir_options.add_argument('--profile-suffix',
+                    action = 'store',
+                    dest = 'profile_suffix',
+                    default = None,
+                    help = 'the suffix of profile files')
+
+general_options =  parser.add_argument_group(title = "general options", description = "general options")
+general_options.add_argument("-w", "--worker",
+                    action = 'store',
+                    dest = 'worker_nb',
+                    type = int,
+                    default = None,
+                    help = "number of worker not yet implemented")
+general_options.add_argument( "-v" , "--verbosity",
+                      action= "count",
+                      dest = "verbosity",
+                      default = 0,
+                      help = "increase the verbosity level. There is 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
+general_options.add_argument("--log",
+                    action = 'store',
+                    dest = 'log_file',
+                    default = None,
+                    help = "the path to log file")
+general_options.add_argument("--config",
+                    action = 'store',
+                    dest = 'cfg_file',
+                    default = None,
+                    help = "the path to a txsscan file to use")
+general_options.add_argument("--previous-run",
+                    action = 'store',
+                    dest = 'previous_run',
+                    default = None,
+                    help = """path to a previous run. Skip the step of hmmsearch. 
+(conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
+--e_value_res, --ordered, --hmmer_exe)""")
+
+args = parser.parse_args()
+if args.previous_run and (args.cfg_file or
+                          args.sequence_db or
+                          args.profile_suffix or
+                          args.profile_dir or
+                          args.res_extract_suffix or
+                          args.e_value_res or
+                          args.ordered or
+                          args.hmmer_exe):
+    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
+                          
+sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
+sh = logging.StreamHandler(sys.stderr)
+sh.setFormatter(sh_formatter)
+
+if args.verbosity == 0:
+    log_level = None
+elif args.verbosity == 1:
+    log_level = logging.WARNING
+elif args.verbosity == 2:
+    log_level = logging.INFO
+elif args.verbosity == 3:
+    log_level = logging.DEBUG
+
+config = Config(previous_run = args.previous_run,
+                cfg_file = args.cfg_file,
+                sequence_db = args.sequence_db,
+                db_type = args.db_type,
+                build_indexes = args.build_indexes,
+                replicon_topology = args.replicon_topology,
+                inter_gene_max_space = args.inter_gene_max_space,
+                hmmer_exe = args.hmmer_exe,
+                e_value_res = args.e_value_res,
+                i_evalue_sel = args.i_evalue_sel,
+                coverage_profile = args.coverage_profile,
+                res_search_dir = args.res_search_dir,
+                res_search_suffix = args.res_search_suffix,
+                profile_dir = args.profile_dir,
+                profile_suffix = args.profile_suffix,
+                res_extract_suffix = args.res_extract_suffix,
+                log_level = log_level,
+                log_file = args.log_file,
+                worker_nb = args.worker_nb
+                )
+logger = logging.getLogger('txsscan')
+config.save(config.working_dir)
+
+parser = SystemParser(config)
+if 'all' in args.systems:
+    import glob
+    system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
+    system_names = [ os.path.basename(s) for s in system_names]
+else:
+    system_names = args.systems
+systems = []
+for name  in system_names:
+    system = parser.parse(name)
+    systems.append(system)
+
+all_genes = []
+for system in systems:
+    genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
+    all_genes += genes
+
+search_genes(all_genes, config)
+logger.debug("FIN")

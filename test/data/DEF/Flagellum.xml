@@ -1,0 +1,40 @@
+<system inter_gene_max_space="20"> 
+    <gene name="sctJ_FLG" presence="mandatory">
+       <homologs>
+           <gene name="sctJ" system_ref="T3SS"/>
+       </homologs>
+    </gene>
+    <gene name="sctN_FLG" presence="mandatory"/>       
+        <homologs>
+           <gene name="sctN" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctQ_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctQ" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctR_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctR" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctS_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctS" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctT_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctT" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctU_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctU" system_ref="T3SS"/>
+       </homologs>
+    <gene name="sctV_FLG" presence="mandatory"/>      
+        <homologs>
+           <gene name="sctV" system_ref="T3SS"/>
+       </homologs>
+    <gene name="flgB" presence="allowed"/>
+    <gene name="flgC" presence="allowed"/>
+    <gene name="fliE" presence="allowed"/>
+    <gene name="sctC" presence="forbidden" system_ref="T3SS"/>
+</system>
+

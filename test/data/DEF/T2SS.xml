@@ -1,0 +1,46 @@
+<system inter_gene_max_space="5">
+    <gene name="gspD" presence="mandatory">
+    	<homologs>
+    	    <gene name="pilQ" system_ref="T4P" aligned="1"/>
+    	    <gene name="rcpA" system_ref="Tad"/>
+    	    <gene name="sctC" system_ref="T3SS"/>
+    	</homologs>    
+    </gene>
+    <gene name="gspE" presence="mandatory">
+    	<homologs>
+    	    <gene name="pilB" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="gspF" presence="mandatory">
+    	<homologs>
+            <gene name="pilC" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="gspM" presence="mandatory">
+    	<homologs>
+            <gene name="pilO" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="gspG" presence="mandatory">
+        <homologs>
+    	    <gene name="pilAE" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="gspH" presence="mandatory">
+        <homologs>
+    	    <gene name="gspI"/>
+    	    <gene name="gspJ"/>
+    	    <gene name="gspK"/>
+    	    <gene name="pilI_pilV" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="gspC" presence="allowed"/>
+    <gene name="gspN" presence="allowed"/>
+    <gene name="gspL" presence="allowed"/>
+    <gene name="gspO" presence="allowed" exchangeable="1">
+    	<homologs>
+    	    <gene name="pilD" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="pilT_pilU" presence="forbidden" system_ref="T4P"/>
+</system>
