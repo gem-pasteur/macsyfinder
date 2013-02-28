@@ -191,6 +191,14 @@ class Test(unittest.TestCase):
         self.assertListEqual(db.get('_027920', [] ) , [] )
         seq_info_from_db = db.get('PRRU001c01_027920')
         self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
+        
+    def test_init(self):
+        Database.__init__ = self.real_init
+        db = Database(self.cfg)
+        my_idx = db._find_my_indexes()
+        hmmer_idx = db._find_hmmer_indexes()
+        self.assertEqual(my_idx, os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"))
+        self.assertEqual( hmmer_idx , [ self.cfg.sequence_db + suffix for suffix in ('.phr', '.pin', '.psd', '.psi', '.psq')])
     
 if __name__ == "__main__":
     unittest.main()
