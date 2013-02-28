@@ -51,7 +51,7 @@ class Test(unittest.TestCase):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
-        shutil.copy( os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
+        shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
 
