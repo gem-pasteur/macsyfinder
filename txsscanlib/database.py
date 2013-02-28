@@ -55,6 +55,8 @@ class Database(object):
             self._my_indexes = self._find_my_indexes()
         if not self._hmmer_indexes or not self._my_indexes:
             self.build()
+            self._hmmer_indexes = self._find_hmmer_indexes()
+            self._my_indexes = self._find_my_indexes()
             
     def _find_hmmer_indexes(self):
         """
@@ -82,7 +84,12 @@ class Database(object):
                     msg = "some indexes lack. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
                     raise  RuntimeError(msg)
+                elif file_nb == 1 and nb_of_index == 1:
+                    msg = "a virtual index is detected (.pal) but there is only one file per index type. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    _log.critical(msg)
+                    raise  RuntimeError(msg)
             idx.extend(index_files)
+            file_nb = nb_of_index
         return idx
     
 
@@ -91,7 +98,7 @@ class Database(object):
         :return: the file of txsscan if exits, None otherwise. 
         :rtype: string
         """ 
-        path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".dump")
+        path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
         if os.path.exists(path):
             return path
 
@@ -120,9 +127,6 @@ class Database(object):
                 msg = "an error occurred during databases indexation see formatdb.log f"
                 _log.error( msg, exc_info = True )
                 raise RuntimeError(msg)
-            self._hmmer_indexes = self._find_hmmer_indexes()
-        if self.cfg.build_indexes or not self._my_indexes:
-            self._my_indexes = self._find_my_indexes()
 
 
     def _build_hmmer_indexes(self):
@@ -164,7 +168,7 @@ class Database(object):
         build txsscan indexes. This index is stored in a berkeley DB
         """
         my_index = db.DB()
-        my_index.open(self._my_indexes,
+        my_index.open(os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx"),
                       dbname = self.name,
                       dbtype = db.DB_HASH,
                       flags = db.DB_CREATE)
@@ -175,6 +179,10 @@ class Database(object):
                 for seqid, comment, length in f_iter:
                     seq_nb += 1
                     my_index.put(seqid, "%d;%d" % (length, seq_nb))
+        except Exception, err:
+            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
+            _log.critical( msg, exc_info = True )
+            raise err
         finally:
             my_index.close()
 
@@ -219,7 +227,7 @@ class Database(object):
                       dbtype = db.DB_HASH,
                       flags = db.DB_RDONLY)
         try:
-            data = my_index.get(seq_id).split(';')
+            data = my_index.get(seq_id)
             if data:
                 length, seq_nb = data.split(';')
                 return SequenceInfo(seq_id, int(length), int(seq_nb))
@@ -245,7 +253,7 @@ class Database(object):
                       dbtype = db.DB_HASH,
                       flags = db.DB_RDONLY)
         try:
-            data = my_index.get(seq_id).split(';')
+            data = my_index.get(seq_id)
             if data:
                 length, seq_nb = data.split(';')
                 return SequenceInfo(seq_id, int(length), int(seq_nb))
