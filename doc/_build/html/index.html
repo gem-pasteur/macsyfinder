@@ -66,12 +66,12 @@ Criteria for system detection includes gene quorum, and genomic colocalization. 
 </dl>
 </div></blockquote>
 </div>
-<div class="section" id="class-diagram">
-<h1>Class diagram<a class="headerlink" href="#class-diagram" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="system-overview">
+<h1>system overview<a class="headerlink" href="#system-overview" title="Permalink to this headline">¶</a></h1>
 <p>The objects Systems, Gene, Profile must be created via theire respective factory. This allows to have only one object System, Gene or Profile for a given name.
 The Homolog objects are composed of a gene and 2 other properties &#8220;gene_ref and &#8220;aligned&#8221;. All Gene methods/attributes can be applied to Homolg objects.</p>
 <p class="graphviz">
-<img src="_images/graphviz-cfadf1b21fe2d152d1ea2bf7a468091eb63047ca.png" alt="digraph class_diagram {
+<img src="_images/graphviz-067a3ae1e83acd19294ee1216d20b895a91b1c8c.png" alt="digraph system_overview {
 &quot;System&quot; -&gt; &quot;Gene&quot; -&gt; &quot;Homolog&quot; ;
 &quot;Gene&quot; -&gt; &quot;Profile&quot;;
 &quot;Gene&quot; -&gt; &quot;HMMReport&quot; -&gt; &quot;Hit&quot;;
@@ -115,6 +115,10 @@ The Homolog objects are composed of a gene and 2 other properties &#8220;gene_re
 <li class="toctree-l2"><a class="reference internal" href="search_genes.html#module-txsscanlib.search_genes">search_genes API reference</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="database.html">database</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database.html#module-txsscanlib.database">Database API reference</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -136,7 +140,7 @@ The Homolog objects are composed of a gene and 2 other properties &#8220;gene_re
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Welcome to Txsscan&#8217;s documentation!</a></li>
-<li><a class="reference internal" href="#class-diagram">Class diagram</a></li>
+<li><a class="reference internal" href="#system-overview">system overview</a></li>
 <li><a class="reference internal" href="#txsscanlib-api-documentation">txsscanlib API documentation</a><ul>
 </ul>
 </li>

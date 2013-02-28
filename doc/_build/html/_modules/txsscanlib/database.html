@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>txsscanlib.database &mdash; Txsscan 0.9a1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Txsscan 0.9a1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Txsscan 0.9a1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for txsscanlib.database</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Feb 20, 2013</span>
+
+<span class="sd">@author: bneron</span>
+<span class="sd">@contact: bneron@pasteur.fr</span>
+<span class="sd">@organization: Institut Pasteur</span>
+<span class="sd">@license: license</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s">&#39;txsscan.&#39;</span> <span class="o">+</span> <span class="n">__name__</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span>
+<span class="kn">from</span> <span class="nn">bsddb3</span> <span class="kn">import</span> <span class="n">db</span>
+
+<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">SequenceInfo contains 3 fields </span>
+<span class="sd"> </span>
+<span class="sd">* id : the identifier of the sequence.</span>
+<span class="sd">* length : the length of the sequence.</span>
+<span class="sd">* position : it&#39;s rank in the sequences base in fasta format.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">SequenceInfo</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s">&#39;SequenceInfo&#39;</span><span class="p">,</span> <span class="s">&#39;id, length, position&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Database"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database">[docs]</a><span class="k">class</span> <span class="nc">Database</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    classdocs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="Database.__init__"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor retrieve file of indexes, if they are not present</span>
+<span class="sd">        or the user ask for build indexes (--idx) launch the indexes building. </span>
+
+<span class="sd">        :param cfg: the configuration </span>
+<span class="sd">        :type cfg: :class:`txsscanlib.config.Config` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fasta_path</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sequence_db</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">sequence_db</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">build_indexes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_hmmer_indexes</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_my_indexes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+            </div>
+<div class="viewcode-block" id="Database._find_hmmer_indexes"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database._find_hmmer_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">_find_hmmer_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: files wich belongs to the hmmer indexes. </span>
+<span class="sd">                 If indexes are inconsistent (lack file) a Runtime Error is raised</span>
+<span class="sd">        :rtype: list of string </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">suffixes</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;.phr&#39;</span><span class="p">,</span> <span class="s">&#39;.pin&#39;</span><span class="p">,</span> <span class="s">&#39;.psd&#39;</span><span class="p">,</span> <span class="s">&#39;.psi&#39;</span><span class="p">,</span> <span class="s">&#39;.psq&#39;</span><span class="p">,</span> <span class="s">&#39;.pal&#39;</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">file_nb</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">suffixes</span><span class="p">:</span>
+            <span class="n">index_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">*</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fasta_path</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+            <span class="n">nb_of_index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">index_files</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">suffix</span> <span class="o">!=</span> <span class="s">&#39;.pal&#39;</span><span class="p">:</span>
+               <span class="k">if</span> <span class="n">file_nb</span> <span class="ow">and</span> <span class="n">file_nb</span> <span class="o">!=</span> <span class="n">nb_of_index</span><span class="p">:</span>
+                   <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;some indexes lack. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them.&quot;</span>
+                   <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                   <span class="k">raise</span>  <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">nb_of_index</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;too many .pal file . remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them.&quot;</span>
+                    <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span>  <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>    
+                <span class="k">elif</span> <span class="n">file_nb</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">nb_of_index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;some indexes lack. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them.&quot;</span>
+                    <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span>  <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">idx</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">index_files</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">idx</span>
+    
+</div>
+<div class="viewcode-block" id="Database._find_my_indexes"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database._find_my_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">_find_my_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: file of my index if exits None otherwise. </span>
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">sequence_db</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;.dump&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">path</span>
+
+</div>
+<div class="viewcode-block" id="Database.build"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build the indexes from the sequences base in fasta format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">###########################</span>
+        <span class="c"># build indexes if needed #</span>
+        <span class="c">###########################</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">build_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_indexes</span><span class="p">:</span>
+            <span class="c">#self._build_hmmer_indexes() is asynchron</span>
+            <span class="n">hmmer_indexes_proc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_hmmer_indexes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">build_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">:</span>
+            <span class="c">#self._build_my_indexes() is synchron</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_my_indexes</span><span class="p">()</span>
+
+        <span class="c">################################# </span>
+        <span class="c"># synchronization point between #</span>
+        <span class="c"># hmmer_indexes and my_indexes  #</span>
+        <span class="c">#################################</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">build_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_indexes</span><span class="p">:</span>
+            <span class="n">hmmer_indexes_proc</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">hmmer_indexes_proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;an error occurred during databases indexation see formatdb.log f&quot;</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hmmer_indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_hmmer_indexes</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">build_indexes</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_my_indexes</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="Database._build_hmmer_indexes"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database._build_hmmer_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">_build_hmmer_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build the indexes for hmmer using formatdb tool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c">#formatdb create indexes in the same directory as the sequence_db</span>
+        <span class="c">#so it must be writable</span>
+        <span class="c">#if the directory is not writable, formatdb do a Segmentation fault</span>
+        <span class="n">index_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">sequence_db</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">index_dir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">W_OK</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;cannot build indexes, (</span><span class="si">%s</span><span class="s">) is not writable&quot;</span> <span class="o">%</span> <span class="n">index_dir</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="s">&quot;formatdb -t </span><span class="si">%s</span><span class="s"> -i </span><span class="si">%s</span><span class="s"> -p T -o T -s T&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">sequence_db</span>
+                                                          <span class="p">)</span>
+
+        <span class="n">err_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">index_dir</span><span class="p">,</span> <span class="s">&quot;formatdb.err&quot;</span><span class="p">)</span>
+        <span class="k">with</span>  <span class="nb">open</span><span class="p">(</span><span class="n">err_path</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">err_file</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">formatdb</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span> <span class="n">command</span> <span class="p">,</span>
+                                  <span class="n">shell</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">,</span>
+                                  <span class="n">stdout</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">,</span>
+                                  <span class="n">stdin</span>  <span class="o">=</span> <span class="bp">None</span> <span class="p">,</span>
+                                  <span class="n">stderr</span> <span class="o">=</span> <span class="n">err_file</span> <span class="p">,</span>
+                                  <span class="n">close_fds</span> <span class="o">=</span> <span class="bp">False</span> <span class="p">,</span>
+                                  <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;unable to format the sequence base : </span><span class="si">%s</span><span class="s"> : </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">command</span> <span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span> <span class="n">msg</span><span class="p">,</span> <span class="n">exc_info</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">err</span>
+            <span class="k">return</span> <span class="n">formatdb</span>
+
+</div>
+<div class="viewcode-block" id="Database._build_my_indexes"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database._build_my_indexes">[docs]</a>    <span class="k">def</span> <span class="nf">_build_my_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        build my own indexes. this index is stored in a berkeydb</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_index</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB</span><span class="p">()</span>
+        <span class="n">my_index</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">,</span>
+                      <span class="n">dbname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                      <span class="n">dbtype</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_HASH</span><span class="p">,</span>
+                      <span class="n">flags</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_CREATE</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fasta_path</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fasta_file</span><span class="p">:</span>
+                <span class="n">f_iter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fasta_iter</span><span class="p">(</span> <span class="n">fasta_file</span> <span class="p">)</span>
+                <span class="n">seq_nb</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">seqid</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">length</span> <span class="ow">in</span> <span class="n">f_iter</span><span class="p">:</span>
+                    <span class="n">seq_nb</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">my_index</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">seqid</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">%d</span><span class="s">;</span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">seq_nb</span><span class="p">))</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">my_index</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="Database._fasta_iter"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database._fasta_iter">[docs]</a>    <span class="k">def</span> <span class="nf">_fasta_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fasta_file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :author: http://biostar.stackexchange.com/users/36/brentp</span>
+<span class="sd">        :return: given a fasta file. yield tuples of id ,comment and sequence</span>
+<span class="sd">        :rtype: tuple (string id, string comment, int sequence length)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># ditch the boolean (x[0]) and just keep the header or sequence since</span>
+        <span class="c"># we know they alternate.</span>
+        <span class="n">faiter</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">fasta_file</span> <span class="p">,</span> <span class="k">lambda</span> <span class="n">line</span><span class="p">:</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;&gt;&quot;</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">header</span> <span class="ow">in</span> <span class="n">faiter</span><span class="p">:</span>
+            <span class="c"># drop the &quot;&gt;&quot;</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">next</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="s">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">header</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">faiter</span><span class="o">.</span><span class="n">next</span><span class="p">())</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="nb">id</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">length</span>
+
+</div>
+<div class="viewcode-block" id="Database.__getitem__"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: the SequenceInfo corresponding to the seq_id.</span>
+<span class="sd">                 if the seq_id does not exist in the database a KeyError is raised.</span>
+<span class="sd">        :rtype:  :class:`txsscanlib.database.SeqInfo` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_index</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB</span><span class="p">()</span>
+        <span class="n">my_index</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">,</span>
+                      <span class="n">dbname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                      <span class="n">dbtype</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_HASH</span><span class="p">,</span>
+                      <span class="n">flags</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_RDONLY</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">my_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">length</span><span class="p">,</span> <span class="n">seq_nb</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SequenceInfo</span><span class="p">(</span><span class="n">seq_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_nb</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">seq_id</span><span class="p">))</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">my_index</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="Database.get"><a class="viewcode-back" href="../../database.html#txsscanlib.database.Database.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the value for key if key is in the dictionary, else default. </span>
+<span class="sd">        If default is not given, it defaults to None, so that this method never raises a KeyError.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_index</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB</span><span class="p">()</span>
+        <span class="n">my_index</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_my_indexes</span><span class="p">,</span>
+                      <span class="n">dbname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                      <span class="n">dbtype</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_HASH</span><span class="p">,</span>
+                      <span class="n">flags</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">DB_RDONLY</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">my_index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">seq_id</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">length</span><span class="p">,</span> <span class="n">seq_nb</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">SequenceInfo</span><span class="p">(</span><span class="n">seq_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">length</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">seq_nb</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">default</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">my_index</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Txsscan 0.9a1 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Sophie Abby, Bertrand Néron.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
