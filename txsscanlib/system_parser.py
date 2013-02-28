@@ -49,13 +49,18 @@ class SystemParser(object):
         tree = ET.parse(path)
         root = tree.getroot()
         inter_gene_max_space = root.get('inter_gene_max_space')
+        if inter_gene_max_space is None:
+            msg = "Invalid system definition: inter_gene_max_space must be defined"
+            _log.critical(msg)
+            raise SyntaxError(msg)  
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
             msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
             _log.critical(msg)
             raise SyntaxError(msg)    
-        system = system_factory.get_system(system_name, inter_gene_max_space, self.cfg)
+        system = system_factory.get_system(system_name, self.cfg)
+        system.inter_gene_max_space = inter_gene_max_space
         genes_nodes = root.findall("gene")
         for gene_node in genes_nodes:
             presence = gene_node.get("presence")

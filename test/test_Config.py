@@ -28,7 +28,33 @@ class Test(unittest.TestCase):
             shutil.rmtree(self.cfg.working_dir)
         except:
             pass
-    
+
+    def test_build_indexes(self):
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles'
+                          )
+        self.assertFalse(self.cfg.build_indexes)
+        self.tearDown()
+        kwargs = {'cfg_file' : "nimportnaoik",
+                  'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
+                  'db_type' : 'gembase',
+                  'def_dir' : '../data/DEF',
+                  'profile_dir' : '../data/profiles',
+                  'build_indexes' : True
+        }
+        config = Config(
+                        cfg_file = "nimportnaoik",
+                        sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                        db_type = 'gembase',
+                        def_dir = '../data/DEF',
+                        profile_dir = '../data/profiles',
+                        build_indexes = True
+                        )
+        self.assertTrue(config.build_indexes)
+        
     def test_default(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -46,7 +72,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles'
                           )
         self.assertEqual( self.cfg.coverage_profile, 0.5 )
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -55,7 +81,7 @@ class Test(unittest.TestCase):
                           coverage_profile = 0.6
                           )
         self.assertEqual( self.cfg.coverage_profile, 0.6 )
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         #coverage_profile must be a float
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -96,7 +122,7 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles')
         self.assertEqual(self.cfg.e_value_res, 1)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -105,7 +131,7 @@ class Test(unittest.TestCase):
                           e_value_res = 0.7
                           )
         self.assertEqual(self.cfg.e_value_res, 0.7)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
                   'db_type' : 'gembase',
@@ -123,7 +149,7 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles')
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -148,7 +174,7 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles')
         self.assertEqual(self.cfg.i_evalue_sel, 0.5)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -157,7 +183,7 @@ class Test(unittest.TestCase):
                           i_evalue_sel = 0.7
                           )
         self.assertEqual(self.cfg.i_evalue_sel, 0.7)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
                   'db_type' : 'gembase',
@@ -176,7 +202,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )
         self.assertEqual( self.cfg.db_type, 'gembase')
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
                   'db_type' : 'foo',
@@ -242,7 +268,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )
         self.assertEqual(self.cfg.profile_suffix, '.fasta-aln_edit.hmm')                 
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         profile_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -261,7 +287,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )
         self.assertEqual(self.cfg.replicon_topology, 'linear')
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -270,7 +296,7 @@ class Test(unittest.TestCase):
                           replicon_topology = 'circular'
                           )
         self.assertEqual(self.cfg.replicon_topology, 'circular')
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
                   'db_type' : 'gembase',
@@ -301,7 +327,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )
         self.assertEqual(self.cfg.res_extract_suffix, '.res_hmm_extract')                 
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         res_extract_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -339,7 +365,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )
         self.assertEqual(self.cfg.res_search_suffix, '.search_hmm.out')                 
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         res_search_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -386,7 +412,7 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles'
                           )
         self.assertEqual(self.cfg.worker_nb, 0)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
@@ -395,7 +421,7 @@ class Test(unittest.TestCase):
                           worker_nb = 2
                           )
         self.assertEqual(self.cfg.worker_nb, 2)
-        shutil.rmtree(self.cfg.working_dir)
+        self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
                   'db_type' : 'gembase',

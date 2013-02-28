@@ -48,6 +48,13 @@ genome_options.add_argument(  "--replicon_topology" ,
                        dest = "replicon_topology",
                        default = None,
                        help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+
+genome_options.add_argument(  "--idx" ,
+                       action = 'store_true',
+                       dest = "build_indexes",
+                       default = False,
+                       help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+
 system_options =  parser.add_argument_group(title = "system options")
 system_options.add_argument( "--inter_gene_max_space",
                              action = 'append',
@@ -175,6 +182,7 @@ config = Config(previous_run = args.previous_run,
                 cfg_file = args.cfg_file,
                 sequence_db = args.sequence_db,
                 db_type = args.db_type,
+                build_indexes = args.build_indexes,
                 replicon_topology = args.replicon_topology,
                 inter_gene_max_space = args.inter_gene_max_space,
                 hmmer_exe = args.hmmer_exe,

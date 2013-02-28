@@ -48,24 +48,26 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_cmp(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD",system)
-        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
-        h1 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000))
+        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741)
+        h1 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736)
         self.assertGreater(h1, h0)
         self.assertLess(h0, h1)
 
     def test_eq(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
-        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
-        h1 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000))
+        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741)
+        h1 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000),float(638.000000), 104, 741)
+        h2 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736)
         self.assertEqual(h0, h1)
+        self.assertNotEqual(h0, h2)
         
     def test_str(self):
-        system = System("T2SS", 20, self.cfg)
+        system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
         hit_prop={'id' : "PSAE001c01_006940",
@@ -73,13 +75,17 @@ class Test(unittest.TestCase):
                   'position' : 694,
                   'i_eval' : float(1.2e-234),
                   'score' : float(779.2),
-                  'coverage' : float(1.0),
                   'gene_name' : gene.name,
-                  'system_name' : system.name 
+                  'system_name' : system.name, 
+                  'profil_coverage' : float(1.0),
+                  'sequence_coverage' : float(638.000000),
+                  'begin' : 104,
+                  'end' : 741
                   }
         
-        hit = Hit( gene, system, hit_prop['id'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], hit_prop['coverage'])
-        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(coverage)f\n" % hit_prop
+        hit = Hit( gene, system, hit_prop['id'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], 
+                   hit_prop['profil_coverage'], hit_prop['sequence_coverage'],hit_prop['begin'],hit_prop['end'])
+        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(profil_coverage)f\t%(sequence_coverage)f\t%(begin)d\t%(end)d\n" % hit_prop
         self.assertEqual(s,str(hit))
         
 if __name__ == "__main__":

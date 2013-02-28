@@ -46,14 +46,13 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_get_system(self):
-        system_foo = system_factory.get_system("foo", 20, self.cfg)
+        system_foo = system_factory.get_system("foo", self.cfg)
         self.assertTrue( isinstance( system_foo, System ))
         self.assertEqual( system_foo.name, "foo" )
-        self.assertEqual( system_foo.inter_gene_max_space, 20 )
     
     def test_get_uniq_object(self):
-        system_1 = system_factory.get_system("foo", 20, self.cfg)
-        system_2 = system_factory.get_system("foo", 20, self.cfg)
+        system_1 = system_factory.get_system("foo", self.cfg)
+        system_2 = system_factory.get_system("foo", self.cfg)
         self.assertEqual( system_1, system_2 )
         
         
