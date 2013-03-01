@@ -1,5 +1,11 @@
 <system inter_gene_max_space="5">
-    <gene name="rcpA" presence="mandatory"/>
+    <gene name="rcpA" presence="mandatory">    	
+        <homologs>
+    	    <gene name="gspD" system_ref="T2SS"/>
+    	    <gene name="pilQ" system_ref="T4P"/>
+    	    <gene name="sctC" system_ref="T3SS"/>
+    	</homologs> 
+    </gene>
     <gene name="tadA" presence="mandatory"/>
     <gene name="tadB" presence="mandatory"/>
     <gene name="tadC" presence="mandatory"/>
