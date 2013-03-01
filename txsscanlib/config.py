@@ -457,7 +457,7 @@ class Config(object):
     @property
     def build_indexes(self):
         """
-        :return: True if the indexes must ne rebuild, False otherwise
+        :return: True if the indexes must be rebuild, False otherwise
         :rtype: boolean
         """
         return self.options['build_indexes']

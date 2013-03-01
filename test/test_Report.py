@@ -64,7 +64,7 @@ class Test(unittest.TestCase):
         report = OrderedHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 5)
-        
+
         hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
                Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
                Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),

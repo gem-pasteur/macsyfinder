@@ -52,12 +52,11 @@ class Test(unittest.TestCase):
                            log_level = 30,
                            log_file = '/dev/null'
                            )
-        
+
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join( self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
-        
-        
-                    
+
+
     def tearDown(self):
         try:
             shutil.rmtree(self.cfg.working_dir)
@@ -65,14 +64,12 @@ class Test(unittest.TestCase):
             pass
 
     def test_find_hmmer_indexes_no_files(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)
         #tester pas de fichier
         hmmer_idx = db._find_hmmer_indexes()
         self.assertListEqual(hmmer_idx, [])
-    
+
     def test_find_hmmer_indexes_all_files(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)
         #tester tous les fichiers
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
@@ -86,7 +83,6 @@ class Test(unittest.TestCase):
 
 
     def test_find_hmmer_indexes_all_files_and_pal(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)
         #tester tous les fichiers + pal
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq', '.pal')
@@ -98,7 +94,6 @@ class Test(unittest.TestCase):
 
 
     def test_find_hmmer_indexes_some_files(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)        
         #tester pas tous les fichiers
         suffixes = ('.phr', '.pin', '.psd', '.psi')
@@ -110,7 +105,6 @@ class Test(unittest.TestCase):
 
 
     def test_find_hmmer_indexes_lack_pal(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)   
         #tester plusieurs index pas de pal
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
@@ -123,7 +117,6 @@ class Test(unittest.TestCase):
 
 
     def test_find_hmmer_indexes_all_files_and_2virtual(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)           
         #tester 1 fichier index + pal    
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq', '.pal')
@@ -137,7 +130,6 @@ class Test(unittest.TestCase):
 
 
     def test_find_hmmer_indexes_all_files_and_virtual(self):
-        Database.__init__ = self.fake_init
         db = Database(self.cfg)           
         #tester index + pal    
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
@@ -156,49 +148,109 @@ class Test(unittest.TestCase):
         self.assertListEqual(hmmer_idx, files_2_find)
 
 
-    def test_build_my_indexes(self):
-        Database.__init__ = self.fake_init
+    def test_find_my_indexes(self):
         db = Database(self.cfg) 
         self.assertIsNone(db._find_my_indexes())
         new_idx = os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx")
         open(new_idx, 'w')
         self.assertEqual(db._find_my_indexes(), new_idx)
 
-    def test_get_item(self):
-        Database.__init__ = self.real_init
-        #put fake hmmer indexes
-        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
-        for s in  suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
-            open(new_idx, 'w')
-        #build only new txsscan indexes
-        db = Database(self.cfg)
-        self.assertRaises(KeyError, db.__getitem__ ,'ZZZZZ')
-        seq_info_from_db = db['PRRU001c01_027920']
-        self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
 
-
-    def test_get(self):
-        Database.__init__ = self.real_init
-        #put fake hmmer indexes
-        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
-        for s in  suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
-            open(new_idx, 'w')
-        #build only new txsscan indexes
+    def test_build_no_idx(self):
         db = Database(self.cfg)
-        self.assertIsNone(db.get('PRRU001c01_') , None)
-        self.assertListEqual(db.get('_027920', [] ) , [] )
-        seq_info_from_db = db.get('PRRU001c01_027920')
-        self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
-        
-    def test_init(self):
-        Database.__init__ = self.real_init
-        db = Database(self.cfg)
+        db.build()
         my_idx = db._find_my_indexes()
         hmmer_idx = db._find_hmmer_indexes()
         self.assertEqual(my_idx, os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"))
         self.assertEqual( hmmer_idx , [ self.cfg.sequence_db + suffix for suffix in ('.phr', '.pin', '.psd', '.psi', '.psq')])
+
+
+    def test_build_with_idx(self):
+        #put fake hmmer indexes
+        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
+        for s in  suffixes:
+            new_idx = os.path.join( self.cfg.sequence_db + s)
+            open(new_idx, 'w')
+        db = Database(self.cfg)
+        new_idx = open(os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"), 'w')
+        db.build()
+        my_idx = db._find_my_indexes()
+        hmmer_idx = db._find_hmmer_indexes()
+        for f in hmmer_idx +[my_idx]:
+            self.assertEqual(os.path.getsize(f), 0)
+
+
+    def test_build_force(self):
+        #put fake hmmer indexes
+        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
+        for s in  suffixes:
+            new_idx = os.path.join( self.cfg.sequence_db + s)
+            open(new_idx, 'w')
+        db = Database(self.cfg)
+        new_idx = open(os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"), 'w')
+        db.build(force = True)
+        my_idx = db._find_my_indexes()
+        hmmer_idx = db._find_hmmer_indexes()
+        for f in hmmer_idx +[my_idx]:
+            self.assertNotEqual(os.path.getsize(f), 0)
+            
     
+    def test_build_not_writable(self):
+        db = Database(self.cfg)
+        idx_dir = os.path.join( os.path.dirname(self.cfg.sequence_db))
+        os.chmod(idx_dir, 0000)
+        self.assertRaises( IOError, db.build )
+        os.chmod(idx_dir, 0777)    
+
+    def test_open(self):
+        db = Database(self.cfg)
+        self.assertRaises(IOError, db.open)
+        db.build()
+        db.open()
+        self.assertNotEqual(db._my_open_db, None)
+
+    def test_close(self):
+        db = Database(self.cfg)
+        db.build()
+        db.open()
+        self.assertNotEqual(db._my_open_db, None)
+        db.close()
+        self.assertIsNone(db._my_open_db)
+
+    
+    def test_get_item(self):
+        db = Database(self.cfg)
+        #put fake hmmer indexes
+        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
+        for s in  suffixes:
+            new_idx = os.path.join( self.cfg.sequence_db + s)
+            open(new_idx, 'w')
+        #build only new txsscan indexes
+        db.build()
+        self.assertRaises(IOError, db.__getitem__, 'PRRU001c01_027920')
+        with db.open():
+            self.assertRaises(KeyError, db.__getitem__ ,'ZZZZZ')
+            seq_info_from_db = db['PRRU001c01_027920']
+            self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
+
+
+    def test_get(self):
+        db = Database(self.cfg)
+        #put fake hmmer indexes
+        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
+        for s in  suffixes:
+            new_idx = os.path.join( self.cfg.sequence_db + s)
+            open(new_idx, 'w')
+        #build only new txsscan indexes
+        db.build()
+        self.assertRaises(IOError, db.get, 'PRRU001c01_027920')
+        with db.open():
+            self.assertIsNone(db.get('PRRU001c01_') , None)
+            self.assertListEqual(db.get('_027920', [] ) , [] )
+            seq_info_from_db = db.get('PRRU001c01_027920')
+            self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
+        
+
+        
 if __name__ == "__main__":
     unittest.main()

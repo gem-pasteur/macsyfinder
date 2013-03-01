@@ -1,6 +1,7 @@
 exclude txsscanlib/pool.py
 exclude txsscanlib/secretion-old.py
 exclude txsscanlib/detect_SS.py
-exclude txsscanlib/test_*.py
+exclude txsscanlib/test_parser.py
+exclude txsscanlib/system_parser.py
 exclude test/*
 recursive-include doc *

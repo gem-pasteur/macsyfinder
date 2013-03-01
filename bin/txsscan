@@ -27,6 +27,7 @@ except ImportError , err:
 
 from txsscanlib.system_parser import SystemParser
 from txsscanlib.search_genes import search_genes
+from txsscanlib.database import Database
 
 parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
 
@@ -201,6 +202,10 @@ config = Config(previous_run = args.previous_run,
 logger = logging.getLogger('txsscan')
 config.save(config.working_dir)
 
+#build indexes
+db = Database(config)
+db.build( force = config.build_indexes )
+
 parser = SystemParser(config)
 if 'all' in args.systems:
     import glob
@@ -218,5 +223,8 @@ for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
 
-search_genes(all_genes, config)
+all_reports = search_genes(all_genes, config)
+
+all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
+
 logger.debug("FIN")
