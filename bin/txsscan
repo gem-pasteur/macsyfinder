@@ -223,5 +223,8 @@ for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
 
-search_genes(all_genes, config)
+all_reports = search_genes(all_genes, config)
+
+all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
+
 logger.debug("FIN")

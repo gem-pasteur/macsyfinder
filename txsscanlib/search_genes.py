@@ -33,13 +33,16 @@ def search_genes(genes, cfg):
         worker_nb = len(genes)
     _log.debug("worker_nb = %d" % worker_nb)
     sema = threading.BoundedSemaphore(value = worker_nb)
-
-    def search(gene, sema):
+    all_reports = []
+    
+    def search(gene, all_reports, sema):
         """
         search gene in base (exeute a hmmsearch) and produce a report
         
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object
+        :param all_reports: a container to append the generated Report object
+        :type all_reports: list
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore
         """
@@ -49,17 +52,22 @@ def search_genes(genes, cfg):
             report = profile.execute()
             report.extract()
             report.save_extract()
-    
-    def recover(gene, cfg, sema):
+            all_reports.append(report)
+            
+    def recover(gene, all_reports, cfg, sema):
         """
         recover hmmoutput from a previous run and produce a report
         
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object
+        :param all_reports: a container to append the generated Report object
+        :type all_reports: list
         :param cfg: the configuration 
         :type cfg: :class:`txsscanlib.config.Config` object
         :param sema: semaphore to limit the number of parallel workers
-        :type sema: a threading.BoundedSemaphore
+        :type sema: a threading.BoundedSemaphore.
+        :return: the list of all HMMReports. 
+        :rtype: list of `txsscanlib.report.HMMReport` object.
         """
         with sema:
             hmm_old_path = os.path.join(cfg.previous_run, gene.name + cfg.res_search_suffix)
@@ -73,6 +81,7 @@ def search_genes(genes, cfg):
                 report = UnOrderedHMMReport(gene, hmm_new_path, cfg )
             report.extract()
             report.save_extract()
+            all_reports.append(report)
             
     #there is only one instance of gene per name but the same instance can be
     #in all genes several times        
@@ -83,9 +92,9 @@ def search_genes(genes, cfg):
     previous_run = cfg.previous_run
     for gene in genes:
         if previous_run and os.path.exists(os.path.join(previous_run, gene.name + cfg.res_search_suffix)):
-            t = threading.Thread(target = recover, args = (gene, cfg, sema))
+            t = threading.Thread(target = recover, args = (gene, all_reports, cfg, sema))
         else:
-            t = threading.Thread(target = search, args = (gene, sema))
+            t = threading.Thread(target = search, args = (gene, all_reports, sema))
         t.start()
         
     main_thread = threading.currentThread()    
@@ -94,4 +103,4 @@ def search_genes(genes, cfg):
             continue
         t.join()
     _log.debug("end searching genes")
-            
+    return all_reports
