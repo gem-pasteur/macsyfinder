@@ -69,13 +69,16 @@ index.</p>
 <dl class="class">
 <dt id="txsscanlib.database.Database">
 <em class="property">class </em><tt class="descclassname">txsscanlib.database.</tt><tt class="descname">Database</tt><big>(</big><em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database" title="Permalink to this definition">¶</a></dt>
-<dd><p>classdocs</p>
+<dd><p>Handle the indexes for txsscan</p>
+<p># find the indexes for hmmer, or build them using formatdb external tool
+# find the indexes need by txsscan to compute some scores, or build them. These indexes are store in a Berkeley DB</p>
 <dl class="method">
 <dt id="txsscanlib.database.Database.__getitem__">
 <tt class="descname">__getitem__</tt><big>(</big><em>seq_id</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><p>allow to use the following notation to retrieve sequence information</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">database</span><span class="p">()</span>
-<span class="n">seq_info</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span> <span class="s">&#39;my_id&#39;</span> <span class="p">]</span> 
+<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">():</span>
+   <span class="n">seq_info</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span> <span class="s">&#39;my_id&#39;</span> <span class="p">]</span> 
 <span class="n">seq_info</span><span class="o">.</span><span class="n">lenght</span>
 </pre></div>
 </div>
@@ -128,23 +131,6 @@ or the user ask for build indexes (&#8211;idx) launch the indexes building.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="txsscanlib.database.Database._fasta_iter">
-<tt class="descname">_fasta_iter</tt><big>(</big><em>fasta_file</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database._fasta_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database._fasta_iter" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Author :</th><td class="field-body"><a class="reference external" href="http://biostar.stackexchange.com/users/36/brentp">http://biostar.stackexchange.com/users/36/brentp</a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">given a fasta file. yield tuples of id ,comment and sequence</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple (string id, string comment, int sequence length)</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="txsscanlib.database.Database._find_hmmer_indexes">
 <tt class="descname">_find_hmmer_indexes</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database._find_hmmer_indexes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database._find_hmmer_indexes" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
@@ -177,15 +163,40 @@ If indexes are inconsistent (lack file) a Runtime Error is raised</td>
 
 <dl class="method">
 <dt id="txsscanlib.database.Database.build">
-<tt class="descname">build</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database.build" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">build</tt><big>(</big><em>force=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>build the indexes from the sequences base in fasta format</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.database.Database.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#txsscanlib.database.Database.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>close the connection. This method must be called when the search in the db is ended.
+or use the with statement:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+<span class="n">db</span><span class="p">[</span> <span class="n">my_key</span> <span class="p">]</span>
+<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">():</span>
+   <span class="n">db</span><span class="p">[</span> <span class="n">my_key</span> <span class="p">]</span> 
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="txsscanlib.database.Database.get">
 <tt class="descname">get</tt><big>(</big><em>seq_id</em>, <em>default=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/database.html#Database.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.database.Database.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the <tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.database.SeqInfo</span></tt> object for given seq_id if seq_id is in the dictionary, else default. 
-If default is not given, it defaults to None, so that this method never raises a KeyError.</p>
+If default is not given, it defaults to None, so that this method never raises a KeyError.:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">():</span>
+   <span class="n">seq_info</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s">&#39;my_id&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> 
+<span class="n">seq_info</span><span class="o">.</span><span class="n">lenght</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -198,6 +209,24 @@ If default is not given, it defaults to None, so that this method never raises a
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.database.Database.open">
+<tt class="descname">open</tt><big>(</big><big>)</big><a class="headerlink" href="#txsscanlib.database.Database.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>open a connection. This method must be called before to get items or use the with statement:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">)</span>
+<span class="n">db</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+<span class="n">db</span><span class="p">[</span> <span class="n">my_key</span> <span class="p">]</span>
+<span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">open</span><span class="p">():</span>
+   <span class="n">db</span><span class="p">[</span> <span class="n">my_key</span> <span class="p">]</span> 
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -232,7 +261,7 @@ If default is not given, it defaults to None, so that this method never raises a
 
 <dl class="classmethod">
 <dt id="txsscanlib.database.SequenceInfo._make">
-<em class="property">classmethod </em><tt class="descname">_make</tt><big>(</big><em>iterable</em>, <em>new=&lt;built-in method __new__ of type object at 0x7fcaf3804740&gt;</em>, <em>len=&lt;built-in function len&gt;</em><big>)</big><a class="headerlink" href="#txsscanlib.database.SequenceInfo._make" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><tt class="descname">_make</tt><big>(</big><em>iterable</em>, <em>new=&lt;built-in method __new__ of type object at 0x7f7bbb3dc740&gt;</em>, <em>len=&lt;built-in function len&gt;</em><big>)</big><a class="headerlink" href="#txsscanlib.database.SequenceInfo._make" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a new SequenceInfo object from a sequence or iterable</p>
 </dd></dl>
 
@@ -260,6 +289,26 @@ If default is not given, it defaults to None, so that this method never raises a
 <dd><p>Alias for field number 2</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="txsscanlib.database.fasta_iter">
+<tt class="descclassname">txsscanlib.database.</tt><tt class="descname">fasta_iter</tt><big>(</big><em>fasta_file</em><big>)</big><a class="headerlink" href="#txsscanlib.database.fasta_iter" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fasta_file</strong> (<em>file object</em>) &#8211; the file containing all sequences in fasta format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Author :</th><td class="field-body"><a class="reference external" href="http://biostar.stackexchange.com/users/36/brentp">http://biostar.stackexchange.com/users/36/brentp</a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">given a fasta file. return an iterator which yield tuples
+(string id, string comment, int sequence length)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">iterator</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

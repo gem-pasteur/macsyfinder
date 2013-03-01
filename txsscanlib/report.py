@@ -17,6 +17,8 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 import abc
 from threading import Lock
+from database import Database
+
 
 class HMMReport(object):
     """
@@ -86,7 +88,6 @@ class UnOrderedHMMReport(HMMReport):
     """
     handle HMM report. extract a synthetic report from the raw hmmer output
     """
-
     pass
 
 
@@ -107,43 +108,52 @@ class OrderedHMMReport(HMMReport):
             # the other calls do nothing
             if self.hits :
                 return 
-            i_evalue_sel = self.cfg.i_evalue_sel
-            coverage_treshold = self.cfg.coverage_profile
-            gene_profile_lg = len(self.gene.profile)
-            with open(self._hmmer_raw_out, 'r') as hmm_out:
-                for line in hmm_out:
-                    if line.startswith(">> "):
-                        fields = line.split()
-                        hit_id = line.split()[1]
-                        fields_hit = hit_id.split('_')
-                        replicon_name = fields_hit[0]
-                        position_hit = int(fields_hit[1]) / 10
-                        # skip next 2 line
-                        # the hits begins on the 3rd line
-                        for _ in range(3):
-                            line = hmm_out.next()
-                        while not line.startswith("  Alignments"):
+            
+            db = Database(self.cfg)
+            #the indexes has bee build in txsscan
+            #here we only reuse them
+            db.build()
+            with db.open():
+                #db.get or db[] can be used in this block
+                #and the db connection will be automatically closed 
+                #outside this block
+                i_evalue_sel = self.cfg.i_evalue_sel
+                coverage_treshold = self.cfg.coverage_profile
+                gene_profile_lg = len(self.gene.profile)
+                with open(self._hmmer_raw_out, 'r') as hmm_out:
+                    for line in hmm_out:
+                        if line.startswith(">> "):
                             fields = line.split()
-                            if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
-                                cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
-                                begin = int(fields[9])
-                                end = int(fields[10])
-                                cov_gene = (end - begin +1) #/ self.gene.sequence_lg # To be added in Gene: sequence_length
-                                if (cov_profile >= coverage_treshold):
-                                    i_eval = float(fields[5])
-                                    score = float(fields[2])
-                                    self.hits.append(Hit(self.gene,
-                                                         self.gene.system,
-                                                         hit_id,
-                                                         replicon_name,
-                                                         position_hit,
-                                                         i_eval,
-                                                         score,
-                                                         cov_profile, 
-                                                         cov_gene, 
-                                                         begin, 
-                                                         end))
-                            line = hmm_out.next()
+                            hit_id = line.split()[1]
+                            fields_hit = hit_id.split('_')
+                            replicon_name = fields_hit[0]
+                            position_hit = int(fields_hit[1]) / 10
+                            # skip next 2 line
+                            # the hits begins on the 3rd line
+                            for _ in range(3):
+                                line = hmm_out.next()
+                            while not line.startswith("  Alignments"):
+                                fields = line.split()
+                                if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
+                                    cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
+                                    begin = int(fields[9])
+                                    end = int(fields[10])
+                                    cov_gene = (end - begin +1) #/ self.gene.sequence_lg # To be added in Gene: sequence_length
+                                    if (cov_profile >= coverage_treshold):
+                                        i_eval = float(fields[5])
+                                        score = float(fields[2])
+                                        self.hits.append(Hit(self.gene,
+                                                             self.gene.system,
+                                                             hit_id,
+                                                             replicon_name,
+                                                             position_hit,
+                                                             i_eval,
+                                                             score,
+                                                             cov_profile, 
+                                                             cov_gene, 
+                                                             begin, 
+                                                             end))
+                                line = hmm_out.next()
                 self.hits.sort()
 
 
