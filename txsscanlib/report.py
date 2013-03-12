@@ -120,11 +120,16 @@ class OrderedHMMReport(HMMReport):
                 i_evalue_sel = self.cfg.i_evalue_sel
                 coverage_treshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
+                
                 with open(self._hmmer_raw_out, 'r') as hmm_out:
                     for line in hmm_out:
                         if line.startswith(">> "):
                             fields = line.split()
                             hit_id = line.split()[1]
+                            
+                            seq_info = db[hit_id]
+                            seq_lg = seq_info.length
+                            
                             fields_hit = hit_id.split('_')
                             replicon_name = fields_hit[0]
                             position_hit = int(fields_hit[1]) / 10
@@ -138,7 +143,7 @@ class OrderedHMMReport(HMMReport):
                                     cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
                                     begin = int(fields[9])
                                     end = int(fields[10])
-                                    cov_gene = (end - begin +1) #/ self.gene.sequence_lg # To be added in Gene: sequence_length
+                                    cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
                                     if (cov_profile >= coverage_treshold):
                                         i_eval = float(fields[5])
                                         score = float(fields[2])

@@ -28,6 +28,7 @@ except ImportError , err:
 from txsscanlib.system_parser import SystemParser
 from txsscanlib.search_genes import search_genes
 from txsscanlib.database import Database
+from txsscanlib.search_systems import search_systems
 
 parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
 
@@ -226,5 +227,7 @@ for system in systems:
 all_reports = search_genes(all_genes, config)
 
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
+
+search_systems(all_hits, config)
 
 logger.debug("FIN")
