@@ -236,8 +236,10 @@ all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
 all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
 
+tmp=""
 for h in all_hits:
-    print h
+    tmp+=str(h)
+print tmp
 print "***** SEARCH_SYSTEMS *****"
 search_systems(all_hits, config)
 
