@@ -98,7 +98,7 @@ class Gene(object):
     @property
     def loner(self):
         """
-        :return: True if the gene can be isolted on the genome false otherwise
+        :return: True if the gene can be isolated on the genome false otherwise
         :rtype: boolean
         """
         return self._loner
@@ -153,8 +153,8 @@ class Gene(object):
                     return True
                 
         return False       
-        
 
+        
 class Homolog(object):
     """
     handle homologs

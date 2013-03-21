@@ -132,7 +132,11 @@ class OrderedHMMReport(HMMReport):
                             
                             fields_hit = hit_id.split('_')
                             replicon_name = fields_hit[0]
-                            position_hit = int(fields_hit[1]) / 10
+                            
+                            #position_hit = int(fields_hit[1]) / 10
+                            # New ! Defined from position in fasta file.
+                            position_hit = seq_info.position
+                            
                             # skip next 2 line
                             # the hits begins on the 3rd line
                             for _ in range(3):
@@ -242,6 +246,9 @@ class Hit(object):
                 )
 
 
+    def get_position(self):
+        return(self.position)
 
-
- 
+    def get_syst_inter_gene_max_space(self):
+        #return(self.system.inter_gene_max_space)
+        return(self.gene.system.inter_gene_max_space)

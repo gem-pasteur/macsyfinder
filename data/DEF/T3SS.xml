@@ -1,5 +1,5 @@
 <system inter_gene_max_space="10">
-    <gene name="sctC" presence="mandatory">        
+    <gene name="sctC" presence="mandatory" loner="1">        
         <homologs>
     	    <gene name="gspD" system_ref="T2SS"/>
     	    <gene name="pilQ" system_ref="T4P"/>

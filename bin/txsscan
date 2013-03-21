@@ -25,6 +25,7 @@ except ImportError , err:
     msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 
+from operator import attrgetter # To be used with "sorted"
 from txsscanlib.system_parser import SystemParser
 from txsscanlib.search_genes import search_genes
 from txsscanlib.database import Database
@@ -211,7 +212,8 @@ parser = SystemParser(config)
 if 'all' in args.systems:
     import glob
     system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
-    system_names = [ os.path.basename(s) for s in system_names]
+    #system_names = [ os.path.basename(s) for s in system_names]
+    system_names = [ os.path.basename(s)[:-4] for s in system_names]
 else:
     system_names = args.systems
 systems = []
@@ -228,6 +230,15 @@ all_reports = search_genes(all_genes, config)
 
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
+#all_hits.sort()
+# NEW! (cmp will not exist anymore in py 3.)
+all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
+all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+
+for h in all_hits:
+    print h
+print "***** SEARCH_SYSTEMS *****"
 search_systems(all_hits, config)
 
 logger.debug("FIN")
