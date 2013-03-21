@@ -1,0 +1,274 @@
+# -*- coding: utf-8 -*-
+
+###############################
+# Created on Feb 14, 2013
+#
+# @author: sabby
+# @contact: sabby@pasteur.fr
+# @organization: Institut Pasteur
+# @license: GPLv3
+################################
+
+import threading
+import logging
+from report import Hit # required? 
+_log = logging.getLogger('txsscan.' + __name__)
+
+
+"""
+def search_systems(systems, hits, cfg):
+   
+    #gets all hits obtained from HMMER runs and applies decision rules to assess system occurences. 
+    #Criteria are the quorum of genes, and the colocalization in the case of \"ordered\" datasets. 
+    
+    
+    #_log.debug("Starting system detection with search_systems")
+    
+    # Deals with different dataset types using Pipeline ?? 
+       
+    clusters=ClustersHandler()
+    
+    # Browse positions instead of Hit !!! 
+    for hit in sort(hits):
+        if hit.is_mandatory() or hit.is_allowed(): # in any system
+            cur_system = hit.get_system()
+            # will take the appropriate inter_gene_max_space and all hits within this area
+            # replies True only if neighbors are allowed in the current system !
+            neighbies=hit.get_neighbors(cur_system, cfg)
+            #if hit.has_neighbors(cur_system, cfg): 
+            if neighbies:
+                #hit.get_neighbors(cur_system)
+                cluster = Cluster(hit, cfg)
+                for n in neighbies:
+                    cluster.add(n)
+                clusters.add(cluster)
+                # Computes where to restart to check
+                jump_pos=cluster.end - pos + 1
+            else:
+                if hit.is_loner():
+                    clusters.add_hit(hit)
+                    detected_syst.add_gene(cur_system, hit)
+                else:
+                    pass 
+"""
+
+def build_clusters(hits, cfg):
+    """
+    Gets sets of contiguous genes according to the minimal inter_gene_max_space between two genes. 
+    Returns a ClustersHandler for the database.
+    Only for \"ordered\" datasets. 
+    Remains To do : 
+        - implement case of circular replicons
+        - check that genes from different replicons are not aggregated in a cluster
+    """    
+    
+    _log.debug("Starting cluster detection with build_clusters... ")
+    
+    # Deals with different dataset types using Pipeline ?? 
+    clusters=ClustersHandler(cfg)
+
+    #pass
+    #sort(hits)
+    prev=hits[0]
+    cur_cluster = Cluster(cfg)
+    
+    positions=[]
+    #prev_inter_gene=-1
+    loner_state=False
+    
+    tmp=""
+    for cur in hits[1:]:
+        #cur = p 
+      
+        #prev_max_dist = prev.system.inter_gene_max_space
+        #cur_max_dist = cur.system.inter_gene_max_space
+        #inter_gene = cur.position - prev.position - 1
+        prev_max_dist = prev.get_syst_inter_gene_max_space()
+        cur_max_dist = cur.get_syst_inter_gene_max_space()
+        inter_gene = cur.get_position() - prev.get_position() - 1
+        
+        tmp="\n****\n"
+        tmp+="prev_max_dist : %d\n"%(prev_max_dist)
+        tmp+="cur_max_dist : %d\n"%(cur_max_dist)
+        tmp+="Intergene space : %d\n"%(inter_gene)
+        tmp+="Cur : %s"%cur
+        tmp+="Prev : %s"%prev
+        tmp+="Len cluster: %d\n"%len(cur_cluster)
+        
+        #print tmp
+        
+        # First condition removes duplicates (hits for the same sequence)
+        # the two others takes into account either system1 parameter or system2 parameter
+        #if( inter_gene!=-1 and inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):        
+        if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
+        # First check the cur.id is different from  the prev.id !!!
+        #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
+            #print "zero"
+            if positions.count(prev.position)==0:
+                #print "un - ADD prev in cur_cluster"
+                cur_cluster.add(prev)
+                positions.append(prev.position)
+            if positions.count(cur.position)==0:
+                #print "deux - ADD cur in cur_cluster"
+                cur_cluster.add(cur)
+                positions.append(cur.position)
+                
+            if prev.gene.loner:
+                # PB !!!! Do not enter here when T3SS sctC loner and T2SS searched too... CHECK !!
+                #print "trois - loner_state"
+                #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
+                loner_state=True
+        else:
+            # Storage of the previous cluster
+            if len(cur_cluster)>1:
+                #print "quatre - ADD cur_cluster"
+                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+                print(cur_cluster)
+                
+                cur_cluster = Cluster(cfg) 
+                loner_state=False
+                
+            elif len(cur_cluster)==1 and loner_state==True:
+                #print "cinq - ADD cur_cluster"
+                #print "LNOER??"
+                #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
+                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+                print(cur_cluster)
+                    
+                cur_cluster = Cluster(cfg) 
+                loner_state=False
+            
+            if prev.gene.loner:
+                #print "six - check"
+                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                
+                if positions.count(prev.position)==0:
+                    #print "six - ADD prev in cur_cluster, ADD cur_cluster"
+                    cur_cluster.add(prev) 
+                    clusters.add(cur_cluster) 
+                    print(cur_cluster)
+                    
+                    positions.append(prev.position)
+                    loner_state=False  
+                    cur_cluster = Cluster(cfg)  
+                
+            cur_cluster = Cluster(cfg)     
+            
+        prev=cur
+
+def analyze_clusters():
+    """
+    Analyzes clusters to prepare system detection:
+            - split clusters if needed
+            - delete them if they are not relevant
+    Only for \"ordered\" datasets. 
+    """
+    pass
+
+
+
+class ClustersHandler(object):
+    """
+    Deals with sets of clusters found in a dataset.
+    """
+    
+    def __init__(self, cfg):
+        self.clusters = []
+        
+    
+    def add(self, cluster):
+        cluster.save()
+        self.clusters.append(cluster)
+        
+    def __str__(self):
+        to_print=""
+        for cluster in self.clusters:
+            to_print+=str(cluster)
+            
+        return to_print
+                        
+class Cluster(object):
+    """
+    Stores a set of contiguous hits. 
+    """
+    
+    def __init__(self, cfg):
+        self.hits = []
+        self.begin = 0
+        self.end = 0
+        self.state = ""
+        self.putative_system = ""
+        self.replicon_name = ""
+        #self.add(hit)
+    
+    def __len__(self):
+        return len(self.hits)
+    
+    def __str__(self):
+        
+        pos = []
+        seq_ids = []
+        gene_names = [] 
+        systems = [] 
+        for h in self.hits:
+            pos.append(h.position)
+            seq_ids.append(h.id)
+            gene_names.append(h.gene.name)
+            #systems.append(h.system)
+            
+        #return "--- Cluster ---\n%s\n%s\n%s"%(str(seq_ids), str(gene_names), str(pos))
+        return "--- Cluster %s ? ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
+        
+        
+    def add(self, hit):
+        # need to update cluster bounds
+        if len(self.hits) == 0:
+            self.begin = hit.get_position()
+            self.end = self.begin
+            self.replicon_name = hit.replicon_name
+            self.hits.append(hit)
+        else:
+            if(self.replicon_name == hit.replicon_name):
+                if hit.get_position() < self.begin:
+                    self.begin = hit.get_position()
+                elif hit.get_position() > self.end:
+                    self.end = hit.get_position()
+                else:
+                    if hit.get_position()>self.begin and hit.get_position() < self.end:
+                        _log.debug("Weird cluster inclusion hit : %s"%hit)
+                            
+                self.hits.append(hit)
+                
+    def save(self):
+        
+        if not self.putative_system :
+            systems={}
+            for h in self.hits:
+                syst=h.system.name
+                if not systems.has_key(syst):
+                    systems[syst]=1
+                else:
+                    systems[syst]+=1
+            
+            print systems
+                
+            max_syst=0
+            tmp_syst_name=""
+            for x,y in systems.iteritems():
+                if y>=max_syst:
+                    tmp_syst_name=x
+                    max_syst=y
+        
+            self.putative_system = tmp_syst_name
+        
+
+def search_systems(hits, cfg):
+    """
+    Runs systems search from hits according to the kind of database provided. 
+    Analyze quorum and colocalization if required for system detection. 
+    """
+
+    if cfg.db_type == 'gembase':
+        build_clusters(hits, cfg)
+        #pass
+
