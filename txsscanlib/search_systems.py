@@ -12,6 +12,9 @@
 import threading
 import logging
 from report import Hit # required? 
+#from operator import attrgetter # To be used by the groupby()
+#from itertools import groupby
+import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
 
@@ -55,11 +58,13 @@ def search_systems(systems, hits, cfg):
 def build_clusters(hits, cfg):
     """
     Gets sets of contiguous genes according to the minimal inter_gene_max_space between two genes. 
-    Returns a ClustersHandler for the database.
-    Only for \"ordered\" datasets. 
-    Remains To do : 
-        - implement case of circular replicons
-        - check that genes from different replicons are not aggregated in a cluster
+    
+    :Returns a ClustersHandler for the database.
+    :Only for \"ordered\" datasets. 
+    :Remains To do : 
+    :   - implement case of circular replicons => need to store max position for each replicon ! and update... 
+    :   - Runs on data grouped by replicon : does not check that genes from different replicons are not aggregated in a cluster 
+    :    (but functions Cluster and ClustersHandler do) 
     """    
     
     _log.debug("Starting cluster detection with build_clusters... ")
@@ -67,22 +72,16 @@ def build_clusters(hits, cfg):
     # Deals with different dataset types using Pipeline ?? 
     clusters=ClustersHandler(cfg)
 
-    #pass
-    #sort(hits)
     prev=hits[0]
     cur_cluster = Cluster(cfg)
     
     positions=[]
-    #prev_inter_gene=-1
     loner_state=False
     
+    #tmp="\n************\nBuilding clusters for...\n************\n"
     tmp=""
     for cur in hits[1:]:
-        #cur = p 
-      
-        #prev_max_dist = prev.system.inter_gene_max_space
-        #cur_max_dist = cur.system.inter_gene_max_space
-        #inter_gene = cur.position - prev.position - 1
+        
         prev_max_dist = prev.get_syst_inter_gene_max_space()
         cur_max_dist = cur.get_syst_inter_gene_max_space()
         inter_gene = cur.get_position() - prev.get_position() - 1
@@ -98,17 +97,17 @@ def build_clusters(hits, cfg):
         #print tmp
         
         # First condition removes duplicates (hits for the same sequence)
-        # the two others takes into account either system1 parameter or system2 parameter
-        #if( inter_gene!=-1 and inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):        
+        # the two others takes into account either system1 parameter or system2 parameter    
         if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
         # First check the cur.id is different from  the prev.id !!!
         #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
             #print "zero"
-            if positions.count(prev.position)==0:
+            if positions.count(prev.position) == 0:
                 #print "un - ADD prev in cur_cluster"
                 cur_cluster.add(prev)
                 positions.append(prev.position)
-            if positions.count(cur.position)==0:
+                
+            if positions.count(cur.position) == 0:
                 #print "deux - ADD cur in cur_cluster"
                 cur_cluster.add(cur)
                 positions.append(cur.position)
@@ -117,7 +116,7 @@ def build_clusters(hits, cfg):
                 # PB !!!! Do not enter here when T3SS sctC loner and T2SS searched too... CHECK !!
                 #print "trois - loner_state"
                 #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
-                loner_state=True
+                loner_state = True
         else:
             # Storage of the previous cluster
             if len(cur_cluster)>1:
@@ -126,9 +125,9 @@ def build_clusters(hits, cfg):
                 print(cur_cluster)
                 
                 cur_cluster = Cluster(cfg) 
-                loner_state=False
+                loner_state = False
                 
-            elif len(cur_cluster)==1 and loner_state==True:
+            elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print "cinq - ADD cur_cluster"
                 #print "LNOER??"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
@@ -136,32 +135,34 @@ def build_clusters(hits, cfg):
                 print(cur_cluster)
                     
                 cur_cluster = Cluster(cfg) 
-                loner_state=False
+                loner_state = False
             
             if prev.gene.loner:
                 #print "six - check"
                 #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
                 
-                if positions.count(prev.position)==0:
+                if positions.count(prev.position) == 0:
                     #print "six - ADD prev in cur_cluster, ADD cur_cluster"
                     cur_cluster.add(prev) 
                     clusters.add(cur_cluster) 
                     print(cur_cluster)
                     
                     positions.append(prev.position)
-                    loner_state=False  
+                    loner_state = False  
                     cur_cluster = Cluster(cfg)  
                 
             cur_cluster = Cluster(cfg)     
             
         prev=cur
-
+        
+    return clusters
+    
 def analyze_clusters():
     """
     Analyzes clusters to prepare system detection:
-            - split clusters if needed
-            - delete them if they are not relevant
-    Only for \"ordered\" datasets. 
+    :        - split clusters if needed
+    :        - delete them if they are not relevant
+    :Only for \"ordered\" datasets. 
     """
     pass
 
@@ -169,16 +170,26 @@ def analyze_clusters():
 
 class ClustersHandler(object):
     """
-    Deals with sets of clusters found in a dataset.
+    Deals with sets of clusters found in a dataset. 
+    Stores only clusters for a same replicon? 
     """
     
     def __init__(self, cfg):
         self.clusters = []
-        
+        self.replicon_name = ""
     
     def add(self, cluster):
-        cluster.save()
-        self.clusters.append(cluster)
+        if not self.replicon_name:
+            self.replicon_name = cluster.replicon_name            
+            cluster.save()
+            self.clusters.append(cluster)
+        elif self.replicon_name == cluster.replicon_name:            
+            cluster.save()
+            self.clusters.append(cluster)
+        else:
+            msg = "Attempting to add a cluster in a ClustersHandler for another replicon !"
+            _log.critical(msg)
+            raise Exception(msg)
         
     def __str__(self):
         to_print=""
@@ -209,16 +220,16 @@ class Cluster(object):
         pos = []
         seq_ids = []
         gene_names = [] 
-        systems = [] 
         for h in self.hits:
             pos.append(h.position)
             seq_ids.append(h.id)
             gene_names.append(h.gene.name)
-            #systems.append(h.system)
             
         #return "--- Cluster ---\n%s\n%s\n%s"%(str(seq_ids), str(gene_names), str(pos))
-        return "--- Cluster %s ? ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
-        
+        if self.state == "clear":
+            return "--- Cluster %s ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
+        else:
+            return "--- Cluster %s ? ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
         
     def add(self, hit):
         # need to update cluster bounds
@@ -234,11 +245,16 @@ class Cluster(object):
                 elif hit.get_position() > self.end:
                     self.end = hit.get_position()
                 else:
-                    if hit.get_position()>self.begin and hit.get_position() < self.end:
+                    if hit.get_position() > self.begin and hit.get_position() < self.end:
                         _log.debug("Weird cluster inclusion hit : %s"%hit)
                             
                 self.hits.append(hit)
                 
+            else:
+                msg = "Attempting to gather in a cluster hits from different replicons ! "
+                _log.critical(msg)
+                raise Exception(msg)
+                    
     def save(self):
         
         if not self.putative_system :
@@ -260,7 +276,23 @@ class Cluster(object):
                     max_syst=y
         
             self.putative_system = tmp_syst_name
-        
+            
+            if len(systems.keys()) == 1:
+                self.state = "clear"
+            else:
+                self.state = "ambiguous"
+
+
+
+def analyze_clusters(clusters, cfg):
+    """
+    Analyze sets of contiguous hits (clusters) stored in a ClustersHandler.
+    Only ran for ordered versions of datasets
+    Report systems occurence. 
+    """
+    
+    pass
+
 
 def search_systems(hits, cfg):
     """
@@ -269,6 +301,26 @@ def search_systems(hits, cfg):
     """
 
     if cfg.db_type == 'gembase':
-        build_clusters(hits, cfg)
-        #pass
+        #build_clusters(hits, cfg)
+        
+        # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
+        # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
+                
+        #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
+        for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
+            sub_hits=list(g)
+            print "\n************\nBuilding clusters for %s \n************\n"%k
+            clusters=build_clusters(sub_hits, cfg)
+        
+    elif cfg.db_type == 'ordered_replicon':
+        clusters=build_clusters(hits, cfg)
+    elif cfg.db_type == 'unordered_replicon':
+        pass
+    elif cfg.db_type == 'unordered':
+        pass
+
+
+
+
+
 

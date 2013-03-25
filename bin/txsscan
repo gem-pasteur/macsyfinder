@@ -209,7 +209,7 @@ db = Database(config)
 db.build( force = config.build_indexes )
 
 parser = SystemParser(config)
-if 'all' in args.systems:
+if 'all' or 'All' or 'ALL' in args.systems:
     import glob
     system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
     #system_names = [ os.path.basename(s) for s in system_names]
@@ -236,11 +236,11 @@ all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
 all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
 
-tmp=""
-for h in all_hits:
-    tmp+=str(h)
-print tmp
-print "***** SEARCH_SYSTEMS *****"
+#tmp=""
+#for h in all_hits:
+#    tmp+=str(h)
+#print tmp
+#print "***** SEARCH_SYSTEMS *****"
 search_systems(all_hits, config)
 
 logger.debug("FIN")
