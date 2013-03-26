@@ -58,13 +58,12 @@ def search_systems(systems, hits, cfg):
 def build_clusters(hits, cfg):
     """
     Gets sets of contiguous genes according to the minimal inter_gene_max_space between two genes. 
-    
-    :Returns a ClustersHandler for the database.
-    :Only for \"ordered\" datasets. 
-    :Remains To do : 
-    :   - implement case of circular replicons => need to store max position for each replicon ! and update... 
-    :   - Runs on data grouped by replicon : does not check that genes from different replicons are not aggregated in a cluster 
-    :    (but functions Cluster and ClustersHandler do) 
+    \nOnly for \"ordered\" datasets. 
+    \nRemains To do : 
+    \n  - implement case of circular replicons => need to store max position for each replicon ! and update... 
+    \n  - Runs on data grouped by replicon : does not check that genes from different replicons are not aggregated in a cluster 
+    (but functions Cluster and ClustersHandler do) 
+    :rtype :class:`txsscanlib.search_systems.ClustersHandler`
     """    
     
     _log.debug("Starting cluster detection with build_clusters... ")
@@ -156,25 +155,51 @@ def build_clusters(hits, cfg):
         prev=cur
         
     return clusters
+
+class SystemOccurence(object):
+    """
+    This class is instantiated for a system that has been asked for detection.
     
-def analyze_clusters():
     """
-    Analyzes clusters to prepare system detection:
-    :        - split clusters if needed
-    :        - delete them if they are not relevant
-    :Only for \"ordered\" datasets. 
+    def __init__(self, system):
+        
+        pass
+        
+    
+def analyze_clusters_replicon(clusters, systems, cfg):
     """
+    Analyzes clusters stored in a ClustersHandler for system detection:
+    \n      - split clusters if needed
+    \n      - delete them if they are not relevant
+    \n      - check the QUORUM for each system to detect, *i.e.* mandatory + allowed - forbidden
+    \nOnly for \"ordered\" datasets representing a whole replicon. 
+    :param clusters: the set of clusters to analyze
+    :type clusters: :class:`txsscanlib.search_systems.ClustersHandler` 
+    :param systems: the set of systems to detect
+    :type systems: a list of :class:`txsscanlib.system.System` 
+    """
+    
+    systems_occurences={}
+    for system in systems:
+        systems_occurences[system.name]=SystemOccurence(system)
+    
+    for clust in clusters:
+        pass
+    
     pass
 
 
 
 class ClustersHandler(object):
     """
-    Deals with sets of clusters found in a dataset. 
-    Stores only clusters for a same replicon? 
+    Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
     """
     
     def __init__(self, cfg):
+        """
+        :param cfg: The configuration object built from default and user parameters.
+        :type cfg: :class:`txsscanlib.config.Config` 
+        """
         self.clusters = []
         self.replicon_name = ""
     
@@ -187,7 +212,7 @@ class ClustersHandler(object):
             cluster.save()
             self.clusters.append(cluster)
         else:
-            msg = "Attempting to add a cluster in a ClustersHandler for another replicon !"
+            msg = "Attempting to add a cluster in a ClustersHandler dedicated to another replicon !"
             _log.critical(msg)
             raise Exception(msg)
         
@@ -284,7 +309,7 @@ class Cluster(object):
 
 
 
-def analyze_clusters(clusters, cfg):
+def analyze_clusters(clusters, systems, cfg):
     """
     Analyze sets of contiguous hits (clusters) stored in a ClustersHandler.
     Only ran for ordered versions of datasets
@@ -294,7 +319,7 @@ def analyze_clusters(clusters, cfg):
     pass
 
 
-def search_systems(hits, cfg):
+def search_systems(hits, systems, cfg):
     """
     Runs systems search from hits according to the kind of database provided. 
     Analyze quorum and colocalization if required for system detection. 
@@ -311,14 +336,16 @@ def search_systems(hits, cfg):
             sub_hits=list(g)
             print "\n************\nBuilding clusters for %s \n************\n"%k
             clusters=build_clusters(sub_hits, cfg)
-        
+            analyze_clusters_replicon(clusters, systems, cfg)
+            
     elif cfg.db_type == 'ordered_replicon':
         clusters=build_clusters(hits, cfg)
     elif cfg.db_type == 'unordered_replicon':
         pass
     elif cfg.db_type == 'unordered':
         pass
-
+    else:
+        raise ValueError("Invalid database type. ")
 
 
 

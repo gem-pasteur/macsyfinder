@@ -241,6 +241,6 @@ all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 #    tmp+=str(h)
 #print tmp
 #print "***** SEARCH_SYSTEMS *****"
-search_systems(all_hits, config)
+search_systems(all_hits, systems, config)
 
 logger.debug("FIN")
