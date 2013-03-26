@@ -153,7 +153,25 @@ class Gene(object):
                     return True
                 
         return False       
-
+    
+    def is_mandatory(self, system):
+        if self in system.mandatory_genes:
+            return True
+        else:
+            return False    
+    
+    def is_allowed(self, system):
+        if self in system.allowed_genes:
+            return True
+        else:
+            return False
+            
+    def is_forbidden(self, system):
+        if self in system.forbidden_genes:
+            return True
+        else:
+            return False
+    
         
 class Homolog(object):
     """

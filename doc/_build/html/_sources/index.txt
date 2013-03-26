@@ -18,8 +18,8 @@ Contents:
 System overview
 ===============
 
-The objects Systems, Gene, Profile must be created via theire respective factory. This allows to have only one object System, Gene or Profile for a given name.
-The Homolog objects are composed of a gene and 2 other properties "gene_ref and "aligned". All Gene methods/attributes can be applied to Homolg objects.  
+The objects Systems, Gene, Profile must be created via their respective factory. This allows to have only one object System, Gene or Profile for a given name.
+The Homolog objects are composed of a gene and 2 other properties "gene_ref and "aligned". All Gene methods/attributes can be applied to Homolog objects.  
   
 .. digraph:: system_overview
 
