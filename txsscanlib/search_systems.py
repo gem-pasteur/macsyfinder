@@ -326,7 +326,17 @@ class SystemOccurence(object):
             out+="%s\t%d\n"%(k, g)   
         return out
         
-    def add(self, cluster):
+    def fill_with(self, cluster):
+        """
+        Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
+        
+        :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
+        :type cluster: :class:`txsscanlib.search_systems.Cluster`
+        :return: True if the system occurence is completed with this cluster given input parameters of quorum, and False otherwise (cf. :func:`txsscanlib.search_systems.SystemOccurence.decide`) 
+        :rtype: boolean
+        
+        """
+        so_cl=SystemOccurence(self.system)
         
         for hit in cluster.hits:
             if hit.gene.is_mandatory(self.system):
@@ -340,9 +350,37 @@ class SystemOccurence(object):
                 #print "forbid"
             else:
                 print "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
+        
+        return self.decide()
+
+    def count_genes(self, gene_dict):
+        total = 0
+        for v in gene_dict.values():
+            if v>0:
+                total+=1
+        return total
                 
-    # Add function in Genes isMandatory, isForbidden, isAllowed, isHomolog? 
-    #def     
+    def decide(self):
+        #if (self.count_genes(self.forbidden_genes) == 0 and self.count_genes(self.mandatory_genes) >= self.system.min_mandatory_genes_required and (self.count_genes(self.mandatory_genes) + self.count_genes(self.allowed_genes)) >= self.system.min_system_genes_required):
+        nb_forbid = self.count_genes(self.forbidden_genes)
+        nb_mandat = self.count_genes(self.mandatory_genes)
+        nb_allowed = self.count_genes(self.allowed_genes)
+        nb_genes = nb_mandat + nb_allowed
+        
+        print "====> Decision rule for putative system %s"%self.system_name
+        print self
+        
+        print "nb_forbid : %d"%nb_forbid
+        print "nb_mandat : %d"%nb_mandat
+        print "nb_allowed : %d"%nb_allowed
+        
+        if ( nb_forbid == 0 and nb_mandat >= (len(self.mandatory_genes)-3) and nb_genes >= (len(self.mandatory_genes) + len(self.allowed_genes)  - 4) and nb_genes >= 2):
+            print "Yeah complete system."
+            return True
+        else:
+            print "uncomplete system."
+            return False
+        
 
 def analyze_clusters_replicon(clusters, systems, cfg):
     """
@@ -364,6 +402,7 @@ def analyze_clusters_replicon(clusters, systems, cfg):
     
     """
     
+    # Global Hits collectors, for uncomplete cluster Hits
     systems_occurences={}
     #for system in systems:
     #    systems_occurences[system.name]=SystemOccurence(system)
@@ -376,11 +415,16 @@ def analyze_clusters_replicon(clusters, systems, cfg):
         if clust.state == "clear":
             #so=systems_occurences[clust.putative_system]
             
-            so=SystemOccurence(syst_dict[clust.putative_system])
-            so.add(clust)
+            print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
             print clust
-            print so
-        
+            # Local Hits collector
+            so=SystemOccurence(syst_dict[clust.putative_system])
+            decision = so.fill_with(clust)
+            if decision:
+                # Store for the later reporting of detected systems?
+                pass
+            #print so
+            
         #break
 
 
