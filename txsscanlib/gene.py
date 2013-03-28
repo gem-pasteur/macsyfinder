@@ -311,7 +311,8 @@ class Profile(object):
                             "profile" : self.path,
                             "sequence_db" : self.cfg.sequence_db,
                            }
-                command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
+                #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
+                command = "%(hmmer_exe)s --cpu 0 -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s " % options
                 _log.info( "%s hmmer command line : %s" % (self.gene.name, command) )
                 try:
                     hmmer = Popen( command ,
