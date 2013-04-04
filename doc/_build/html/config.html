@@ -94,7 +94,7 @@ this option will be ignored if the base type is not ordered (ordered_replicon or
 </ul>
 </li>
 <li><p class="first"><strong>system</strong>
-* <em>inter_gene_max_space</em> = list of system name and integer separated by spaces. These values will superseed the values found</p>
+* <em>inter_gene_max_space</em> = list of system name and integer separated by spaces. These values will supersede the values found</p>
 <blockquote>
 <div><p>in the system definition file.</p>
 </div></blockquote>
@@ -118,9 +118,59 @@ this option will be ignored if the base type is not ordered (ordered_replicon or
 </ul>
 </li>
 <li><p class="first"><strong>general</strong></p>
-<ul class="simple">
-<li><em>log_level</em> = (default= <em>debug</em> )</li>
-<li><em>log_file</em> = (default = txsscan.log in directory of the run)</li>
+<ul>
+<li><dl class="first docutils">
+<dt><em>log_level</em>: (default= <em>debug</em> ) This corresponds to an integer code:</dt>
+<dd><table border="1" class="first last docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><p class="first last">Level</p>
+</th>
+<th class="head"><p class="first last">Numeric value</p>
+</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first last">CRITICAL</p>
+</td>
+<td><p class="first last">50</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">ERROR</p>
+</td>
+<td><p class="first last">40</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">WARNING</p>
+</td>
+<td><p class="first last">30</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">INFO</p>
+</td>
+<td><p class="first last">20</p>
+</td>
+</tr>
+<tr class="row-even"><td><p class="first last">DEBUG</p>
+</td>
+<td><p class="first last">10</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p class="first last">NOTSET</p>
+</td>
+<td><p class="first last">0</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>log_file</em> = (default = txsscan.log in directory of the run)</p>
+</li>
 </ul>
 </li>
 </ul>

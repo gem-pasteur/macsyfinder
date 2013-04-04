@@ -41,7 +41,7 @@ parse 3 location to find configuration files
       this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
   
   * **system**
-    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will superseed the values found
+    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will supersede the values found
        in the system definition file.  
   
   * **hmmer**
@@ -62,7 +62,17 @@ parse 3 location to find configuration files
   
   * **general**
   
-    * *log_level* = (default= *debug* )
+    * *log_level*: (default= *debug* ) This corresponds to an integer code:
+        ========    ========== 
+        Level 	    Numeric value
+        ========    ==========
+        CRITICAL 	50
+        ERROR 	    40
+        WARNING 	30
+        INFO 	    20
+        DEBUG 	    10
+        NOTSET 	    0
+        ========    ==========
     * *log_file* = (default = txsscan.log in directory of the run)
  
   example of a file configuration::
