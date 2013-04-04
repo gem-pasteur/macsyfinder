@@ -149,24 +149,40 @@ general_options.add_argument("--config",
                     dest = 'cfg_file',
                     default = None,
                     help = "the path to a txsscan file to use")
+#general_options.add_argument("--previous-run",
+#                    action = 'store',
+#                    dest = 'previous_run',
+#                    default = None,
+#                    help = """path to a previous run. Skip the step of hmmsearch. 
+#(conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
+#--e_value_res, --ordered, --hmmer_exe)""")
 general_options.add_argument("--previous-run",
                     action = 'store',
                     dest = 'previous_run',
                     default = None,
                     help = """path to a previous run. Skip the step of hmmsearch. 
 (conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
---e_value_res, --ordered, --hmmer_exe)""")
+--e_value_res, --db_type, --hmmer_exe)""")
 
 args = parser.parse_args()
+#if args.previous_run and (args.cfg_file or
+#                          args.sequence_db or
+#                          args.profile_suffix or
+#                          args.profile_dir or
+#                          args.res_extract_suffix or
+#                          args.e_value_res or
+#                          args.ordered or
+#                          args.hmmer_exe):
+#    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
                           args.profile_suffix or
                           args.profile_dir or
                           args.res_extract_suffix or
                           args.e_value_res or
-                          args.ordered or
+                          args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
+    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --db_type, --hmmer_exe""")
                           
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
