@@ -30,10 +30,10 @@ parse 3 location to find configuration files
     * *file* : the path to the genome (*no default value*)
     * *type* : the type of the base, 4 types are supported:
        
-        * *unordered_replicon* :
-        * *ordered_replicon* :
-        * *gembase* :
-        * *unordered* :
+        * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
+        * *unordered_replicon* : a set of sequences corresponding to a complete replicon (*e.g.* an unassembled complete genome)
+        * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered (*e.g.* an assembled complete genome)
+        * *gembase* : a set of multiple ordered replicons.
         
       (*no default value*)
       
@@ -41,8 +41,8 @@ parse 3 location to find configuration files
       this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
   
   * **system**
-    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will supersede the values found
-       in the system definition file.  
+  
+    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.  
   
   * **hmmer**
     

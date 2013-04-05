@@ -18,46 +18,6 @@ import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
 
-"""
-def search_systems(systems, hits, cfg):
-   
-    #gets all hits obtained from HMMER runs and applies decision rules to assess system occurences. 
-    #Criteria are the quorum of genes, and the colocalization in the case of \"ordered\" datasets. 
-    
-    
-    #_log.debug("Starting system detection with search_systems")
-    
-    # Deals with different dataset types using Pipeline ?? 
-       
-    clusters=ClustersHandler()
-    
-    # Browse positions instead of Hit !!! 
-    for hit in sort(hits):
-        if hit.is_mandatory() or hit.is_allowed(): # in any system
-            cur_system = hit.get_system()
-            # will take the appropriate inter_gene_max_space and all hits within this area
-            # replies True only if neighbors are allowed in the current system !
-            neighbies=hit.get_neighbors(cur_system, cfg)
-            #if hit.has_neighbors(cur_system, cfg): 
-            if neighbies:
-                #hit.get_neighbors(cur_system)
-                cluster = Cluster(hit, cfg)
-                for n in neighbies:
-                    cluster.add(n)
-                clusters.add(cluster)
-                # Computes where to restart to check
-                jump_pos=cluster.end - pos + 1
-            else:
-                if hit.is_loner():
-                    clusters.add_hit(hit)
-                    detected_syst.add_gene(cur_system, hit)
-                else:
-                    pass 
-"""
-
-
-
-
 class ClustersHandler(object):
     """
     Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
@@ -152,32 +112,39 @@ class Cluster(object):
                     
     def save(self):
         
-        if not self.putative_system :
+        if not self.putative_system:
             systems={}
+            genes=[]
             for h in self.hits:
                 syst=h.system.name
                 if not systems.has_key(syst):
                     systems[syst]=1
                 else:
                     systems[syst]+=1
-            
-            #print systems
-                
+                if genes.count(h.gene.name) == 0:
+                    genes.append(h.gene.name)
+
             max_syst=0
             tmp_syst_name=""
             for x,y in systems.iteritems():
                 if y>=max_syst:
                     tmp_syst_name=x
                     max_syst=y
-        
+            
             self.putative_system = tmp_syst_name
             self.systems=systems
-            
-            if len(systems.keys()) == 1:
-                self.state = "clear"
-            else:
-                self.state = "ambiguous"
 
+            if len(genes) == 1 and self.hits[0].gene.loner == False:
+                self.state = "ineligible"
+            else:
+                if len(systems.keys()) == 1:
+                    self.state = "clear"
+                else:
+                    self.state = "ambiguous"
+
+    #def is_eligible(self):
+    #    for h in hits:
+            
 
 def build_clusters(hits, cfg):
     """
@@ -245,6 +212,7 @@ def build_clusters(hits, cfg):
         else:
             # Storage of the previous cluster
             if len(cur_cluster)>1:
+                #print cur_cluster
                 #print "quatre - ADD cur_cluster"
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
@@ -253,6 +221,7 @@ def build_clusters(hits, cfg):
                 loner_state = False
                 
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
+                #print cur_cluster
                 #print "cinq - ADD cur_cluster"
                 #print "LNOER??"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
@@ -298,12 +267,22 @@ class SystemOccurence(object):
         self.system_name = system.name
         # Make those attributes non modifiable?
         self.mandatory_genes = {}
+        self.exmandatory_genes = {} # List of 'exchanged' mandatory genes
         for g in system.mandatory_genes:
             self.mandatory_genes[g.name]=0
+            if g.exchangeable:
+                homologs=g.get_homologs()
+                for h in homologs:
+                    self.exmandatory_genes[h.name] = g.name
         
         self.allowed_genes = {}
+        self.exallowed_genes = {} # List of 'exchanged' allowed genes
         for g in system.allowed_genes:
             self.allowed_genes[g.name]=0
+            if g.exchangeable:
+                homologs=g.get_homologs()
+                for h in homologs:
+                    self.exallowed_genes[h.name] = g.name
         
         self.forbidden_genes = {}
         for g in system.forbidden_genes:
@@ -312,18 +291,24 @@ class SystemOccurence(object):
         #self.mandatory_genes = system.mandatory_genes
         #self.allowed_genes = system.allowed_genes
         #self.forbidden_genes = system.forbidden_genes
+        
+        self.state = "empty"
+        self.nb_cluster = 0
                  
     def __str__(self):
         out=""
-        out+="Mandatory\n"
-        for k, g in self.mandatory_genes.iteritems():
-            out+="%s\t%d\n"%(k, g) 
-        out+="Allowed\n"  
-        for k, g in self.allowed_genes.iteritems():
-            out+="%s\t%d\n"%(k, g)  
-        out+="Forbidden\n"  
-        for k, g in self.forbidden_genes.iteritems():
-            out+="%s\t%d\n"%(k, g)   
+        if self.mandatory_genes: 
+            out+="Mandatory genes: \n"
+            for k, g in self.mandatory_genes.iteritems():
+                out+="%s\t%d\n"%(k, g) 
+        if self.allowed_genes:
+            out+="Allowed genes: \n"  
+            for k, g in self.allowed_genes.iteritems():
+                out+="%s\t%d\n"%(k, g)  
+        if self.forbidden_genes:
+            out+="Forbidden genes: \n"  
+            for k, g in self.forbidden_genes.iteritems():
+                out+="%s\t%d\n"%(k, g)   
         return out
         
     def fill_with(self, cluster):
@@ -336,22 +321,30 @@ class SystemOccurence(object):
         :rtype: boolean
         
         """
-        so_cl=SystemOccurence(self.system)
-        
+        #so_cl=SystemOccurence(self.system)
+        self.nb_cluster += 1
         for hit in cluster.hits:
+            # Need to check first that this cluster is eligible for system inclusion
+            #
+            
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
-                #print "mandat"
             elif hit.gene.is_allowed(self.system):
                 self.allowed_genes[hit.gene.name]+=1
-                #print "allowed"
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name]+=1
-                #print "forbid"
             else:
-                print "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
+                if hit.gene.name in self.exmandatory_genes.keys():
+                    self.mandatory_genes[self.exmandatory_genes[hit.gene.name]]+=1
+                elif hit.gene.name in self.exallowed_genes.keys():
+                    self.allowed_genes[self.exallowed_genes[hit.gene.name]]+=1
+                else:
+                    #print "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
+                    msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
+                    print msg
+                    #_log.info(msg)
         
-        return self.decide()
+        #return self.decide()
 
     def count_genes(self, gene_dict):
         total = 0
@@ -366,19 +359,27 @@ class SystemOccurence(object):
         nb_mandat = self.count_genes(self.mandatory_genes)
         nb_allowed = self.count_genes(self.allowed_genes)
         nb_genes = nb_mandat + nb_allowed
-        
-        print "====> Decision rule for putative system %s"%self.system_name
-        print self
-        
-        print "nb_forbid : %d"%nb_forbid
-        print "nb_mandat : %d"%nb_mandat
-        print "nb_allowed : %d"%nb_allowed
-        
-        if ( nb_forbid == 0 and nb_mandat >= (len(self.mandatory_genes)-3) and nb_genes >= (len(self.mandatory_genes) + len(self.allowed_genes)  - 4) and nb_genes >= 2):
-            print "Yeah complete system."
+
+        msg = "====> Decision rule for putative system %s\n"%self.system_name
+        msg += str(self)
+        msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d"%(nb_forbid, nb_mandat, nb_allowed)
+               
+        if ( nb_forbid == 0 and nb_mandat >= (len(self.mandatory_genes)-3) and nb_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and nb_genes >= 2):
+           
+            if self.nb_cluster == 1: 
+                self.state = "single_locus"
+            else:
+                self.state = "multi_loci"
+                
+            msg += "\nYeah complete system \"%s\"."%self.state
+            print msg
+            #_log.info(msg)
             return True
         else:
-            print "uncomplete system."
+            msg += "\nuncomplete system."
+            print msg
+            #_log.info(msg)
+            self.state = "uncomplete"
             return False
         
 
@@ -405,27 +406,45 @@ def analyze_clusters_replicon(clusters, systems, cfg):
     # Global Hits collectors, for uncomplete cluster Hits
     systems_occurences={}
     #for system in systems:
-    #    systems_occurences[system.name]=SystemOccurence(system)
-    
+    #    systems_occurences[system.name]=SystemOccurence(system)    
     syst_dict={}
     for system in systems:
         syst_dict[system.name]=system
+        systems_occurences[system.name]=SystemOccurence(system)
     
     for clust in clusters.clusters:
         if clust.state == "clear":
             #so=systems_occurences[clust.putative_system]
             
-            print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
-            print clust
+            #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
+            print "\n%s"%str(clust)
             # Local Hits collector
             so=SystemOccurence(syst_dict[clust.putative_system])
-            decision = so.fill_with(clust)
+            #decision = so.fill_with(clust)
+            so.fill_with(clust)
+            decision = so.decide()
             if decision:
-                # Store for the later reporting of detected systems?
-                pass
+                print "...\nComplete system stored.\n"
+                #pass
+            else:
+                # Store it to pool genes found with genes from other clusters.
+                #if not systems_occurences.has_key(clust.putative_system):
+                #    systems_occurences[clust.putative_system]=[]
+                #    systems_occurences[clust.putative_system].append(so)
+                #else:
+                #    systems_occurences[clust.putative_system].append(so)
+                print "...\nStored for later treatment of scattered systems.\n"
+                systems_occurences[clust.putative_system].fill_with(clust)
+                
             #print so
             
         #break
+    print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
+    for system in systems:
+        #print systems_occurences[system]
+        if systems_occurences[system.name].decide():
+            print "\n******************************************\n"
+
 
 
 
@@ -444,9 +463,9 @@ def search_systems(hits, systems, cfg):
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
-            print "\n************\nBuilding clusters for %s \n************\n"%k
+            #print "\n************\nBuilding clusters for %s \n************\n"%k
             clusters=build_clusters(sub_hits, cfg)
-            print "\n************\nAnalyzing clusters for %s \n************\n"%k
+            #print "\n************\nAnalyzing clusters for %s \n************\n"%k
             analyze_clusters_replicon(clusters, systems, cfg)
             #break
             

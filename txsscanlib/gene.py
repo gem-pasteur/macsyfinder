@@ -182,9 +182,9 @@ class Homolog(object):
         """
         :param gene: the gene
         :type gene: :class:`txsscanlib.gene.Gene` object.
-        :param gene_ref: the gene which this one is homolog.
+        :param gene_ref: the gene to which this one is homolog.
         :type gene_ref: :class:`txsscanlib.gene.Gene` object.
-        :param aligned: if True, this gene overlap totally the sequence of the gene reference. Otherwise it overlap partially. 
+        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile. Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
         """
         self.gene = gene 

@@ -242,6 +242,8 @@ class Database(object):
                       dbtype = db.DB_HASH,
                       flags = db.DB_RDONLY)
         self._my_open_db = mydb
+        _log.debug("open("+self._my_indexes+",dbname = "+self.name+",dbtype = "+str(db.DB_HASH)+",flags ="+ str(db.DB_RDONLY)+")")
+                
         return self
 
     def close(self):
@@ -297,7 +299,10 @@ class Database(object):
             msg = msg = "the database must be open before to get items"
             _log.critical(msg)
             raise IOError(msg)
+        
+        #_log.debug()
         data = self._my_open_db.get(seq_id)
+        
         if data:
             length, seq_nb = data.split(';')
             return SequenceInfo(seq_id, int(length), int(seq_nb))
@@ -313,7 +318,7 @@ class Database(object):
           db = Database()
           with db.open():
              seq_info = db.get( 'my_id', None ) 
-          seq_info.lenght
+          seq_info.length
 
         :param seq_id: the sequence identifier
         :type seq_id: string

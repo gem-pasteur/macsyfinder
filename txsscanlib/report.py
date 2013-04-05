@@ -121,8 +121,14 @@ class OrderedHMMReport(HMMReport):
                 coverage_treshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
                 
+                # TMP ! Pour debug erreur parsing
+                tmp_line_nb=0
                 with open(self._hmmer_raw_out, 'r') as hmm_out:
                     for line in hmm_out:
+                        
+                         # TMP ! Pour debug erreur parsing
+                        tmp_line_nb+=1
+                        
                         if line.startswith(">> "):
                             fields = line.split()
                             hit_id = line.split()[1]
@@ -143,25 +149,33 @@ class OrderedHMMReport(HMMReport):
                                 line = hmm_out.next()
                             while not line.startswith("  Alignments"):
                                 fields = line.split()
-                                if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
-                                    cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
-                                    begin = int(fields[9])
-                                    end = int(fields[10])
-                                    cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
-                                    if (cov_profile >= coverage_treshold):
-                                        i_eval = float(fields[5])
-                                        score = float(fields[2])
-                                        self.hits.append(Hit(self.gene,
-                                                             self.gene.system,
-                                                             hit_id,
-                                                             replicon_name,
-                                                             position_hit,
-                                                             i_eval,
-                                                             score,
-                                                             cov_profile, 
-                                                             cov_gene, 
-                                                             begin, 
-                                                             end))
+                                
+                                try:
+                                    if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
+                                     cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
+                                     begin = int(fields[9])
+                                     end = int(fields[10])
+                                     cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
+                                     if (cov_profile >= coverage_treshold):
+                                         i_eval = float(fields[5])
+                                         score = float(fields[2])
+                                         self.hits.append(Hit(self.gene,
+                                                              self.gene.system,
+                                                              hit_id,
+                                                              replicon_name,
+                                                              position_hit,
+                                                              i_eval,
+                                                              score,
+                                                              cov_profile, 
+                                                              cov_gene, 
+                                                              begin, 
+                                                              end))
+                                except ValueError:
+                                    msg = "Invalid line to parse :{0}: ".format(line)
+                                    msg += "\nin file %s, line %d"%(self._hmmer_raw_out, tmp_line_nb) 
+                                    _log.debug(msg)
+                                    raise ValueError( msg )
+                                                              
                                 line = hmm_out.next()
                 self.hits.sort()
 

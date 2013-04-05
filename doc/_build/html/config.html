@@ -80,10 +80,10 @@ in txsscan 4 sections are defined:</p>
 <li><p class="first"><em>type</em> : the type of the base, 4 types are supported:</p>
 <blockquote>
 <div><ul class="simple">
-<li><em>unordered_replicon</em> :</li>
-<li><em>ordered_replicon</em> :</li>
-<li><em>gembase</em> :</li>
-<li><em>unordered</em> :</li>
+<li><em>unordered</em> : a set of sequences (<em>e.g.</em> a metagenomic dataset)</li>
+<li><em>unordered_replicon</em> : a set of sequences corresponding to a complete replicon (<em>e.g.</em> a complete genome unassembled)</li>
+<li><em>ordered_replicon</em> : a set of sequences corresponding to a complete replicon ordered (<em>e.g.</em> an assembled complete genome)</li>
+<li><em>gembase</em> : a set of multiple ordered replicons.</li>
 </ul>
 </div></blockquote>
 <p>(<em>no default value</em>)</p>
@@ -93,11 +93,10 @@ this option will be ignored if the base type is not ordered (ordered_replicon or
 </li>
 </ul>
 </li>
-<li><p class="first"><strong>system</strong>
-* <em>inter_gene_max_space</em> = list of system name and integer separated by spaces. These values will supersede the values found</p>
-<blockquote>
-<div><p>in the system definition file.</p>
-</div></blockquote>
+<li><p class="first"><strong>system</strong></p>
+<ul class="simple">
+<li><em>inter_gene_max_space</em> = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.</li>
+</ul>
 </li>
 <li><p class="first"><strong>hmmer</strong></p>
 <ul class="simple">
