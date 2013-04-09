@@ -261,8 +261,14 @@ class Hit(object):
 
 
     def get_position(self):
+        """
+        returns the position of the hit 
+        """
         return(self.position)
 
     def get_syst_inter_gene_max_space(self):
+        """
+        returns the 'inter_gene_max_space' parameter defined for the system of the hit
+        """
         #return(self.system.inter_gene_max_space)
         return(self.gene.system.inter_gene_max_space)

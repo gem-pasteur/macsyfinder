@@ -12,8 +12,8 @@
 import threading
 import logging
 from report import Hit # required? 
-#from operator import attrgetter # To be used by the groupby()
-#from itertools import groupby
+import os.path
+from collections import namedtuple
 import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
@@ -23,7 +23,7 @@ class ClustersHandler(object):
     Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
     """
     
-    def __init__(self, cfg):
+    def __init__(self):
         """
         :param cfg: The configuration object built from default and user parameters.
         :type cfg: :class:`txsscanlib.config.Config` 
@@ -57,7 +57,7 @@ class Cluster(object):
     Stores a set of contiguous hits. 
     """
     
-    def __init__(self, cfg):
+    def __init__(self):
         self.hits = []
         self.systems = []
         self.replicon_name = ""
@@ -65,7 +65,6 @@ class Cluster(object):
         self.end = 0
         self.state = ""
         self.putative_system = ""
-        #self.add(hit)
     
     def __len__(self):
         return len(self.hits)
@@ -146,7 +145,7 @@ class Cluster(object):
     #    for h in hits:
             
 
-def build_clusters(hits, cfg):
+def build_clusters(hits):
     """
     Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets. 
     Remains to do : 
@@ -165,9 +164,9 @@ def build_clusters(hits, cfg):
     _log.debug("Starting cluster detection with build_clusters... ")
     
     # Deals with different dataset types using Pipeline ?? 
-    clusters = ClustersHandler(cfg)
+    clusters = ClustersHandler()
     prev = hits[0]
-    cur_cluster = Cluster(cfg)
+    cur_cluster = Cluster()
     positions = []
     loner_state=False
     
@@ -216,8 +215,8 @@ def build_clusters(hits, cfg):
                 #print "quatre - ADD cur_cluster"
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
-                
-                cur_cluster = Cluster(cfg) 
+                 
+                cur_cluster = Cluster()
                 loner_state = False
                 
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
@@ -227,8 +226,8 @@ def build_clusters(hits, cfg):
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
-                    
-                cur_cluster = Cluster(cfg) 
+                     
+                cur_cluster = Cluster() 
                 loner_state = False
             
             if prev.gene.loner:
@@ -243,9 +242,9 @@ def build_clusters(hits, cfg):
                     
                     positions.append(prev.position)
                     loner_state = False  
-                    cur_cluster = Cluster(cfg)  
+                    cur_cluster = Cluster() 
                 
-            cur_cluster = Cluster(cfg)     
+            cur_cluster = Cluster()     
             
         prev=cur
     
@@ -269,7 +268,7 @@ class SystemOccurence(object):
         self.mandatory_genes = {}
         self.exmandatory_genes = {} # List of 'exchanged' mandatory genes
         for g in system.mandatory_genes:
-            self.mandatory_genes[g.name]=0
+            self.mandatory_genes[g.name] = 0
             if g.exchangeable:
                 homologs=g.get_homologs()
                 for h in homologs:
@@ -278,7 +277,7 @@ class SystemOccurence(object):
         self.allowed_genes = {}
         self.exallowed_genes = {} # List of 'exchanged' allowed genes
         for g in system.allowed_genes:
-            self.allowed_genes[g.name]=0
+            self.allowed_genes[g.name] = 0
             if g.exchangeable:
                 homologs=g.get_homologs()
                 for h in homologs:
@@ -286,7 +285,7 @@ class SystemOccurence(object):
         
         self.forbidden_genes = {}
         for g in system.forbidden_genes:
-            self.forbidden_genes[g.name]=0
+            self.forbidden_genes[g.name] = 0
         
         #self.mandatory_genes = system.mandatory_genes
         #self.allowed_genes = system.allowed_genes
@@ -383,7 +382,8 @@ class SystemOccurence(object):
             return False
         
 
-def analyze_clusters_replicon(clusters, systems, cfg):
+def analyze_clusters_replicon(clusters, systems):
+#def analyze_clusters_replicon(replicon_name, clusters, systems):
     """
     Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
         
@@ -404,76 +404,113 @@ def analyze_clusters_replicon(clusters, systems, cfg):
     """
     
     # Global Hits collectors, for uncomplete cluster Hits
-    systems_occurences={}
-    #for system in systems:
-    #    systems_occurences[system.name]=SystemOccurence(system)    
-    syst_dict={}
+    systems_occurences_scattered = {}
+    systems_occurences_list = []
+    
+    syst_dict = {}
     for system in systems:
-        syst_dict[system.name]=system
-        systems_occurences[system.name]=SystemOccurence(system)
+        syst_dict[system.name] = system
+        systems_occurences_scattered[system.name] = SystemOccurence(system)
     
     for clust in clusters.clusters:
         if clust.state == "clear":
-            #so=systems_occurences[clust.putative_system]
-            
             #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
             print "\n%s"%str(clust)
+            
             # Local Hits collector
             so=SystemOccurence(syst_dict[clust.putative_system])
-            #decision = so.fill_with(clust)
             so.fill_with(clust)
-            decision = so.decide()
-            if decision:
+            if so.decide():
                 print "...\nComplete system stored.\n"
-                #pass
+                systems_occurences_list.append(so)
             else:
                 # Store it to pool genes found with genes from other clusters.
-                #if not systems_occurences.has_key(clust.putative_system):
-                #    systems_occurences[clust.putative_system]=[]
-                #    systems_occurences[clust.putative_system].append(so)
-                #else:
-                #    systems_occurences[clust.putative_system].append(so)
                 print "...\nStored for later treatment of scattered systems.\n"
-                systems_occurences[clust.putative_system].fill_with(clust)
+                systems_occurences_scattered[clust.putative_system].fill_with(clust)
                 
-            #print so
             
-        #break
     print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
     for system in systems:
         #print systems_occurences[system]
-        if systems_occurences[system.name].decide():
+        so = systems_occurences_scattered[system.name]
+        if so.decide():
+            systems_occurences_list.append(so)
             print "\n******************************************\n"
+    
+    # Stores results in this list? Or code a new object : systemDetectionReport ? 
+    return systems_occurences_list
 
 
+class systemOccurenceReport(object):
+    
+    def __init__(self, systems_occurences_list, systems, reportfilename):
+        self._filename = reportfilename
+        self._systems_occurences_list = systems_occurences_list
+    
+    def tabulated_output(self):
+        #for s in systems:
+        #    for 
+        pass
+        
+"""   
+class systemOccurenceReport(object):
+    
+    def __init__(self, systems, reportfilename):
+        self._filename = reportfilename
+        #self._systems_occurences_list = systems_occurences_list
+    
+    def tabulated_output(self):
+        #for s in systems:
+        #    for 
+        pass
+"""
 
-
+ 
 def search_systems(hits, systems, cfg):
     """
     Runs systems search from hits according to the kind of database provided. 
     Analyze quorum and colocalization if required for system detection. 
     """
-
+    
+    # For system occurences report, creation of a namedtuple with every system
+    system_occurences_states = ['single_locus', 'multi_loci']
+    TabReport = namedtuple('TabReport', 'Replicon')
+    for s in systems:
+        for state in system_occurences_states:
+            TabReport = namedtuple('TabReport', TabReport._fields+(s.name+"_"+state,))
+    
+    #print TabReport._fields
+    reportfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
+    
     if cfg.db_type == 'gembase':
-        #build_clusters(hits, cfg)
-        
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
-                
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
             #print "\n************\nBuilding clusters for %s \n************\n"%k
-            clusters=build_clusters(sub_hits, cfg)
+            clusters=build_clusters(sub_hits)
             #print "\n************\nAnalyzing clusters for %s \n************\n"%k
-            analyze_clusters_replicon(clusters, systems, cfg)
-            #break
             
+            # Make analyze_clusters_replicon return an object systemOccurenceReport?
+            systems_occurences_list = analyze_clusters_replicon(clusters, systems)
+            print k
+            
+            report = systemOccurenceReport(systems_occurences_list, systems, reportfilename)
+            report.tabulated_output()
+            
+        #for system in systems:
+        #    print system.name
+            #break
+                    
     elif cfg.db_type == 'ordered_replicon':
-        clusters=build_clusters(hits, cfg)
+        clusters=build_clusters(hits)
+        #analyze_clusters_replicon(clusters, systems)
     elif cfg.db_type == 'unordered_replicon':
+        # implement a new function "analyze_cluster" => Fills a systemOccurence per system
         pass
     elif cfg.db_type == 'unordered':
+        # Same as 'unordered_replicon' ? 
         pass
     else:
         raise ValueError("Invalid database type. ")

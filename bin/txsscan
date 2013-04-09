@@ -252,6 +252,7 @@ all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in 
 all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
 all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
+systems=sorted(systems, key=attrgetter('name'))
 
 #tmp=""
 #for h in all_hits:
