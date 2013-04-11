@@ -13,7 +13,7 @@ import threading
 import logging
 from report import Hit # required? 
 import os.path
-from collections import namedtuple
+from collections import namedtuple, Counter
 import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
@@ -441,29 +441,41 @@ def analyze_clusters_replicon(clusters, systems):
     return systems_occurences_list
 
 
-class systemOccurenceReport(object):
+class systemDetectionReport(object):
+    """
+    Stores the systems to report for each replicon: 
+    - by system name, 
+    - by state of the systems
+    """
     
-    def __init__(self, systems_occurences_list, systems, reportfilename):
-        self._filename = reportfilename
+    def __init__(self, replicon_name, systems_occurences_list, systems):
+    #def __init__(self, replicon_name, systems_occurences_list, systems, reportfilename):
+    #def __init__(self, replicon_name, systems, reportfilename):
+        #self._filename = reportfilename
         self._systems_occurences_list = systems_occurences_list
-    
-    def tabulated_output(self):
-        #for s in systems:
-        #    for 
-        pass
+        self._system_textlist = []
+        self.replicon_name = replicon_name
         
-"""   
-class systemOccurenceReport(object):
-    
-    def __init__(self, systems, reportfilename):
-        self._filename = reportfilename
-        #self._systems_occurences_list = systems_occurences_list
-    
-    def tabulated_output(self):
-        #for s in systems:
-        #    for 
-        pass
-"""
+        for so in self._systems_occurences_list:
+            self._system_textlist.append(so.system_name+"_"+so.state)
+        
+        self._system_counter = Counter(self._system_textlist)
+        print self._system_counter
+     
+    def tabulated_output(self, system_occurence_states, system_names, reportfilename):
+        report_str = self.replicon_name
+        for s in system_names:
+            for o in system_occurence_states:
+                index=s+"_"+str(o)
+                if self._system_counter.has_key(index):
+                    report_str+="\t"
+                    report_str+=str(self._system_counter[index])
+                else:
+                    report_str+="\t0"
+        report_str+="\n"      
+        
+        with open(reportfilename, 'a') as _file:
+            _file.write(report_str)
 
  
 def search_systems(hits, systems, cfg):
@@ -473,14 +485,27 @@ def search_systems(hits, systems, cfg):
     """
     
     # For system occurences report, creation of a namedtuple with every system
-    system_occurences_states = ['single_locus', 'multi_loci']
-    TabReport = namedtuple('TabReport', 'Replicon')
-    for s in systems:
-        for state in system_occurences_states:
-            TabReport = namedtuple('TabReport', TabReport._fields+(s.name+"_"+state,))
-    
-    #print TabReport._fields
+    # PB with namedtuples : need to fill all fields in a single step.
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
+    system_occurences_states = ['single_locus', 'multi_loci']
+    system_names = []
+    tabulated_report_header = "Replicon"
+    #TabReport = namedtuple('TabReport', 'Replicon')
+    for s in systems:
+        syst_name = s.name
+        system_names.append(syst_name)
+        for state in system_occurences_states:
+            colname = "\t"+syst_name+"_"+state
+            tabulated_report_header += colname
+    #        TabReport = namedtuple('TabReport', TabReport._fields+(s.name+"_"+state,))
+    
+    tabulated_report_header+="\n"        
+    with open(reportfilename, 'w') as _file:
+        _file.write(tabulated_report_header)
+
+    #print tabulated_report_header
+    #print system_names
+    #print TabReport._fields
     
     if cfg.db_type == 'gembase':
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
@@ -494,14 +519,10 @@ def search_systems(hits, systems, cfg):
             
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
-            print k
             
-            report = systemOccurenceReport(systems_occurences_list, systems, reportfilename)
-            report.tabulated_output()
-            
-        #for system in systems:
-        #    print system.name
-            #break
+            #report = systemDetectionReport(k, systems_occurences_list, systems, reportfilename)
+            report = systemDetectionReport(k, systems_occurences_list, systems)
+            report.tabulated_output(system_occurences_states, system_names, reportfilename)
                     
     elif cfg.db_type == 'ordered_replicon':
         clusters=build_clusters(hits)
