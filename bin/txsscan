@@ -25,11 +25,14 @@ except ImportError , err:
     msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 
+from operator import attrgetter # To be used with "sorted"
 from txsscanlib.system_parser import SystemParser
 from txsscanlib.search_genes import search_genes
 from txsscanlib.database import Database
+from txsscanlib.database import Database
+from txsscanlib.search_systems import search_systems
 
-parser = argparse.ArgumentParser(description=" @@decrire txsscan en 1 ligne@@")
+parser = argparse.ArgumentParser(description=" Txsscan is a tool for the detection of protein secretion systems in diderm bacteria.\nIt also provides a framework fully parametrizable with a dedicated syntax to implement the detection of new systems (function units encoded by one or more genes, contiguous or not in genomes) for which Hmmer protein profiles are available. ")
 
 parser.add_argument("systems",
                     nargs = '+',
@@ -48,13 +51,13 @@ genome_options.add_argument(  "--replicon_topology" ,
                        choices = ['linear', 'circular'],
                        dest = "replicon_topology",
                        default = None,
-                       help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+                       help = "the topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
 
 genome_options.add_argument(  "--idx" ,
                        action = 'store_true',
                        dest = "build_indexes",
                        default = False,
-                       help = "the topology of the replicons (this option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase'")
+                       help = "the topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
 
 system_options =  parser.add_argument_group(title = "system options")
 system_options.add_argument( "--inter_gene_max_space",
@@ -147,24 +150,40 @@ general_options.add_argument("--config",
                     dest = 'cfg_file',
                     default = None,
                     help = "the path to a txsscan file to use")
+#general_options.add_argument("--previous-run",
+#                    action = 'store',
+#                    dest = 'previous_run',
+#                    default = None,
+#                    help = """path to a previous run. Skip the step of hmmsearch. 
+#(conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
+#--e_value_res, --ordered, --hmmer_exe)""")
 general_options.add_argument("--previous-run",
                     action = 'store',
                     dest = 'previous_run',
                     default = None,
                     help = """path to a previous run. Skip the step of hmmsearch. 
 (conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
---e_value_res, --ordered, --hmmer_exe)""")
+--e_value_res, --db_type, --hmmer_exe)""")
 
 args = parser.parse_args()
+#if args.previous_run and (args.cfg_file or
+#                          args.sequence_db or
+#                          args.profile_suffix or
+#                          args.profile_dir or
+#                          args.res_extract_suffix or
+#                          args.e_value_res or
+#                          args.ordered or
+#                          args.hmmer_exe):
+#    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
                           args.profile_suffix or
                           args.profile_dir or
                           args.res_extract_suffix or
                           args.e_value_res or
-                          args.ordered or
+                          args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --ordered, --hmmer_exe""")
+    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --db_type, --hmmer_exe""")
                           
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
@@ -207,10 +226,12 @@ db = Database(config)
 db.build( force = config.build_indexes )
 
 parser = SystemParser(config)
-if 'all' in args.systems:
+if ('all' or 'All' or 'ALL') in args.systems:
+#if 'all' in args.systems:
     import glob
     system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
-    system_names = [ os.path.basename(s) for s in system_names]
+    #system_names = [ os.path.basename(s) for s in system_names]
+    system_names = [ os.path.basename(s)[:-4] for s in system_names]
 else:
     system_names = args.systems
 systems = []
@@ -223,8 +244,33 @@ for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
 
+<<<<<<< .working
 all_reports = search_genes(all_genes, config)
 
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
+print [report.hits for report in all_reports ]
+print "########################"
+print all_hits
+
+logger.debug("FIN")=======
+all_reports = search_genes(all_genes, config)
+
+all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
+
+#all_hits.sort()
+# NEW! (cmp will not exist anymore in py 3.)
+all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
+all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+systems=sorted(systems, key=attrgetter('name'))
+
+#tmp=""
+#for h in all_hits:
+#    tmp+=str(h)
+#print tmp
+#print "***** SEARCH_SYSTEMS *****"
+search_systems(all_hits, systems, config)
+
 logger.debug("FIN")
+>>>>>>> .merge-right.r140

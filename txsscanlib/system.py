@@ -68,7 +68,7 @@ class System(object):
     def inter_gene_max_space(self):
         """
         :return: set the maximum distance allowed between 2 genes for this sytem
-        :rtype" type
+        :rtype: integer
         """
         return self._inter_gene_max_space
 

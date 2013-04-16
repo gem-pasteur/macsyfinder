@@ -15,11 +15,11 @@ Contents:
     - to provide its own profiles for a new system, 
     - to define its own decision rules for system inference.
 
-system overview
+System overview
 ===============
 
-The objects Systems, Gene, Profile must be created via theire respective factory. This allows to have only one object System, Gene or Profile for a given name.
-The Homolog objects are composed of a gene and 2 other properties "gene_ref and "aligned". All Gene methods/attributes can be applied to Homolg objects.  
+The objects Systems, Gene, Profile must be created via their respective factory. This allows to have only one object System, Gene or Profile for a given name.
+The Homolog objects are composed of a gene and 2 other properties "gene_ref and "aligned". All Gene methods/attributes can be applied to Homolog objects.  
   
 .. digraph:: system_overview
 
@@ -40,6 +40,7 @@ txsscanlib API documentation
    profile
    HMMReport
    search_genes
+   search_systems
    database 
 
 Indices and tables

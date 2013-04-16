@@ -94,7 +94,7 @@ class Config(object):
         :type log_level: int
         :param log_file: the path of file to write logs 
         :type log_file: string
-        :param worker_nb: the max number of processes in parrallel
+        :param worker_nb: the max number of processes in parallel
         :type worker_nb: int
         :param build_indexes: build the indexes from the sequence base in fasta format
         :type build_indexes: boolean
@@ -246,7 +246,7 @@ class Config(object):
                 try:
                     options['db_type'] = self.parser.get( 'base', 'type') 
                 except (NoSectionError, NoOptionError):
-                    raise ValueError( "you must specified the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
+                    raise ValueError( "you must specify the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
             if options['db_type'] not in val_4_db_type:
                     raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
             val_4_replicon_topology = ('linear', 'circular')

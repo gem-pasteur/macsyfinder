@@ -98,7 +98,7 @@ class Gene(object):
     @property
     def loner(self):
         """
-        :return: True if the gene can be isolted on the genome false otherwise
+        :return: True if the gene can be isolated on the genome false otherwise
         :rtype: boolean
         """
         return self._loner
@@ -153,8 +153,26 @@ class Gene(object):
                     return True
                 
         return False       
+    
+    def is_mandatory(self, system):
+        if self in system.mandatory_genes:
+            return True
+        else:
+            return False    
+    
+    def is_allowed(self, system):
+        if self in system.allowed_genes:
+            return True
+        else:
+            return False
+            
+    def is_forbidden(self, system):
+        if self in system.forbidden_genes:
+            return True
+        else:
+            return False
+    
         
-
 class Homolog(object):
     """
     handle homologs
@@ -164,9 +182,9 @@ class Homolog(object):
         """
         :param gene: the gene
         :type gene: :class:`txsscanlib.gene.Gene` object.
-        :param gene_ref: the gene which this one is homolog.
+        :param gene_ref: the gene to which this one is homolog.
         :type gene_ref: :class:`txsscanlib.gene.Gene` object.
-        :param aligned: if True, this gene overlap totally the sequence of the gene reference. Otherwise it overlap partially. 
+        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile. Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
         """
         self.gene = gene 
@@ -293,7 +311,8 @@ class Profile(object):
                             "profile" : self.path,
                             "sequence_db" : self.cfg.sequence_db,
                            }
-                command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
+                #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
+                command = "%(hmmer_exe)s --cpu 0 -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s " % options
                 _log.info( "%s hmmer command line : %s" % (self.gene.name, command) )
                 try:
                     hmmer = Popen( command ,

@@ -4,9 +4,9 @@
 secretion system
 ****************
 
-represent a secretion system. 
-it's defined by a definition file in xml stored in 
-the xml syntax is
+Represents a secretion system. 
+It is defined by a definition file in xml stored in 
+The xml syntax is
 
 for instance::
 

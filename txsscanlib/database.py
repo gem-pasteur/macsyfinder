@@ -243,6 +243,34 @@ class Database(object):
                       flags = db.DB_RDONLY)
         self._my_open_db = mydb
         return self
+    
+    def open(self):
+        """
+        open a connection. This method must be called before to get items or use the with statement::
+        
+          db = Database(self.cfg)
+          db.build()
+          db.open()
+          db[ my_key ]
+          db.close()
+        
+        or::
+        
+          with db.open():
+             db[ my_key ] 
+        
+        """
+        if not self._my_indexes:
+            msg = "no index available, the database must be build before to open it"
+            _log.critical(msg)
+            raise IOError(msg)
+        mydb = db.DB()
+        mydb.open(self._my_indexes,
+                      dbname = self.name,
+                      dbtype = db.DB_HASH,
+                      flags = db.DB_RDONLY)
+        self._my_open_db = mydb
+        return self
 
     def close(self):
         """
