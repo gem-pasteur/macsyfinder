@@ -254,8 +254,14 @@ def build_clusters(hits):
 
 class SystemOccurence(object):
     """
-    This class is instantiated for a system that has been asked for detection. It can be filled step by step with hits. 
-    A decision can then be made according to parameters defined *e.g.* quorum of genes.     
+    This class is instantiated for a specific system that has been asked for detection. It can be filled step by step with hits. 
+    A decision can then be made according to parameters defined *e.g.* quorum of genes. 
+    
+    The SystemOccurence object has a "state" parameter, with the possible following values: 
+    - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
+    - "single_locus" 
+    - "multi_loci" 
+    - "uncomplete"
     """
     def __init__(self, system):
         """
@@ -264,9 +270,11 @@ class SystemOccurence(object):
         """
         self.system = system
         self.system_name = system.name
+        
         # Make those attributes non modifiable?
         self.mandatory_genes = {}
         self.exmandatory_genes = {} # List of 'exchanged' mandatory genes
+        
         for g in system.mandatory_genes:
             self.mandatory_genes[g.name] = 0
             if g.exchangeable:
@@ -287,12 +295,9 @@ class SystemOccurence(object):
         for g in system.forbidden_genes:
             self.forbidden_genes[g.name] = 0
         
-        #self.mandatory_genes = system.mandatory_genes
-        #self.allowed_genes = system.allowed_genes
-        #self.forbidden_genes = system.forbidden_genes
-        
-        self.state = "empty"
+        self._state = "empty"
         self.nb_cluster = 0
+        self._nb_syst_genes = 0
                  
     def __str__(self):
         out=""
@@ -309,7 +314,39 @@ class SystemOccurence(object):
             for k, g in self.forbidden_genes.iteritems():
                 out+="%s\t%d\n"%(k, g)   
         return out
+    
+    @property
+    def state(self):
+        """
+        :return: the state of a system occurence
+        :rtype: string
+        """
+        return self._state
+    
+    @property
+    def nb_syst_genes(self):
+        """
+        :return: the number of mandatory and allowed genes with at least one occurence
+        :rtype: integer
+        """
+        return self._nb_syst_genes
+          
+    def compute_nb_syst_genes(self):
+        return self.count_genes(self.mandatory_genes)+self.count_genes(self.allowed_genes)
         
+    def count_genes(self, gene_dict):
+        total = 0
+        for v in gene_dict.values():
+            if v>0:
+                total+=1
+        return total
+       
+    def is_complete(self):
+        if self.state == "single_locus" or self.state == "multi_loci":
+            return True
+        else:
+            return False 
+            
     def fill_with(self, cluster):
         """
         Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
@@ -344,43 +381,53 @@ class SystemOccurence(object):
                     #_log.info(msg)
         
         #return self.decide()
-
-    def count_genes(self, gene_dict):
-        total = 0
-        for v in gene_dict.values():
-            if v>0:
-                total+=1
-        return total
-                
-    def decide(self):
+        #self.decision_rule()
+        #return self.state
+        
+        # !!! State might still be "empty"....
+              
+    #def decide(self):
+    def decision_rule(self):
         #if (self.count_genes(self.forbidden_genes) == 0 and self.count_genes(self.mandatory_genes) >= self.system.min_mandatory_genes_required and (self.count_genes(self.mandatory_genes) + self.count_genes(self.allowed_genes)) >= self.system.min_system_genes_required):
         nb_forbid = self.count_genes(self.forbidden_genes)
         nb_mandat = self.count_genes(self.mandatory_genes)
         nb_allowed = self.count_genes(self.allowed_genes)
-        nb_genes = nb_mandat + nb_allowed
+        #nb_genes = nb_mandat + nb_allowed
+        self._nb_syst_genes = self.compute_nb_syst_genes()
 
         msg = "====> Decision rule for putative system %s\n"%self.system_name
         msg += str(self)
         msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d"%(nb_forbid, nb_mandat, nb_allowed)
                
-        if ( nb_forbid == 0 and nb_mandat >= (len(self.mandatory_genes)-3) and nb_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and nb_genes >= 2):
+        if ( nb_forbid == 0 ):
+            if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 2):
            
-            if self.nb_cluster == 1: 
-                self.state = "single_locus"
-            else:
-                self.state = "multi_loci"
+                if self.nb_cluster == 1: 
+                    self._state = "single_locus"
+                else:
+                    self._state = "multi_loci"
                 
-            msg += "\nYeah complete system \"%s\"."%self.state
-            print msg
-            #_log.info(msg)
-            return True
+                msg += "\nYeah complete system \"%s\"."%self.state
+                print msg
+                #_log.info(msg)
+                #return True
+            elif self.nb_syst_genes > 0:
+                msg += "\nuncomplete system."
+                print msg
+                #_log.info(msg)
+                self._state = "uncomplete"
+                #return False
+            else:
+                msg += "\nempty system."
+                print msg
+                #_log.info(msg)
+                self._state = "empty"
         else:
-            msg += "\nuncomplete system."
+            msg += "\nexclude."
             print msg
             #_log.info(msg)
-            self.state = "uncomplete"
-            return False
-        
+            self._state = "exclude"
+                
 
 def analyze_clusters_replicon(clusters, systems):
 #def analyze_clusters_replicon(replicon_name, clusters, systems):
@@ -420,22 +467,31 @@ def analyze_clusters_replicon(clusters, systems):
             # Local Hits collector
             so=SystemOccurence(syst_dict[clust.putative_system])
             so.fill_with(clust)
-            if so.decide():
-                print "...\nComplete system stored.\n"
-                systems_occurences_list.append(so)
-            else:
-                # Store it to pool genes found with genes from other clusters.
-                print "...\nStored for later treatment of scattered systems.\n"
-                systems_occurences_scattered[clust.putative_system].fill_with(clust)
-                
+            so.decision_rule()
+            so_state=so.state
+            if so_state != "exclude":
+                if so_state != "single_locus":            
+                    # Store it to pool genes found with genes from other clusters.
+                    # Do not do it if the so has a forbidden gene !!!
+                    print "...\nStored for later treatment of scattered systems.\n"
+                    systems_occurences_scattered[clust.putative_system].fill_with(clust)
+                else: 
+                    print "...\nComplete system stored.\n"
+                    systems_occurences_list.append(so)
             
     print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
     for system in systems:
         #print systems_occurences[system]
         so = systems_occurences_scattered[system.name]
-        if so.decide():
+        #if so.decide():
+        #if so.nb_syst_genes()>0:
+        so.decision_rule()
+        so_state=so.state
+        #if so_state != "empty" or so_state != "exclude":
+            #so.decision_rule()
+        if so.is_complete():
             systems_occurences_list.append(so)
-            print "\n******************************************\n"
+        print "\n******************************************\n"
     
     # Stores results in this list? Or code a new object : systemDetectionReport ? 
     return systems_occurences_list
