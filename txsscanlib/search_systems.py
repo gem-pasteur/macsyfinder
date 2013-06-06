@@ -54,17 +54,21 @@ class ClustersHandler(object):
                         
 class Cluster(object):
     """
-    Stores a set of contiguous hits. 
+    Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes'systems: 
+    - ineligible
+    - clear: a single system is represented in the cluster
+    - ambiguous: several systems are represented in the cluster
     """
     
     def __init__(self):
         self.hits = []
-        self.systems = []
+        #self.systems = []
+        self.systems = {}
         self.replicon_name = ""
         self.begin = 0
         self.end = 0
-        self.state = ""
-        self.putative_system = ""
+        self._state = ""
+        self._putative_system = ""
     
     def __len__(self):
         return len(self.hits)
@@ -84,7 +88,23 @@ class Cluster(object):
             return "--- Cluster %s ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
         else:
             return "--- Cluster %s ? ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
+    
+    @property
+    def state(self):
+        """
+        :return: the state of the cluster of hits
+        :rtype: string
+        """
+        return self._state
         
+    @property
+    def putative_system(self):
+        """
+        :return: the name of the putative system represented by the cluster
+        :rtype: string
+        """
+        return self._putative_system
+   
     def add(self, hit):
         # need to update cluster bounds
         if len(self.hits) == 0:
@@ -110,7 +130,11 @@ class Cluster(object):
                 raise Exception(msg)
                     
     def save(self):
-        
+        """
+        Check the status of the cluster regarding systems which have hits in it. 
+        Update systems represented, and assign a putative system (self._putative_system), which is the system with most hits in the cluster. 
+        The systems represented are stored in a dictionary in the self.systems variable. 
+        """        
         if not self.putative_system:
             systems={}
             genes=[]
@@ -127,130 +151,23 @@ class Cluster(object):
             tmp_syst_name=""
             for x,y in systems.iteritems():
                 if y>=max_syst:
-                    tmp_syst_name=x
-                    max_syst=y
+                    tmp_syst_name = x
+                    max_syst = y
             
-            self.putative_system = tmp_syst_name
-            self.systems=systems
+            self._putative_system = tmp_syst_name
+            self.systems = systems
 
             if len(genes) == 1 and self.hits[0].gene.loner == False:
-                self.state = "ineligible"
+                self._state = "ineligible"
             else:
                 if len(systems.keys()) == 1:
-                    self.state = "clear"
+                    self._state = "clear"
                 else:
-                    self.state = "ambiguous"
+                    self._state = "ambiguous"
 
     #def is_eligible(self):
     #    for h in hits:
             
-
-def build_clusters(hits):
-    """
-    Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets. 
-    Remains to do : 
-    
-    - Implement case of circular replicons => need to store max position for each replicon ! and update... 
-    - Runs on data grouped by replicon : does not check that genes from different replicons are not aggregated in a cluster (but functions Cluster and ClustersHandler do) 
-    
-    :param hits: a list of Hmmer hits to analyze 
-    :type hits: a list of :class:`txsscanlib.report.Hit`
-    :param cfg: the configuration object built from default and user parameters.
-    :type cfg: :class:`txsscanlib.config.Config`
-    :return: a set of clusters
-    :rtype: :class:`txsscanlib.search_systems.ClustersHandler`
-    """    
-    
-    _log.debug("Starting cluster detection with build_clusters... ")
-    
-    # Deals with different dataset types using Pipeline ?? 
-    clusters = ClustersHandler()
-    prev = hits[0]
-    cur_cluster = Cluster()
-    positions = []
-    loner_state=False
-    
-    tmp=""
-    for cur in hits[1:]:
-        
-        prev_max_dist = prev.get_syst_inter_gene_max_space()
-        cur_max_dist = cur.get_syst_inter_gene_max_space()
-        inter_gene = cur.get_position() - prev.get_position() - 1
-        
-        tmp="\n****\n"
-        tmp+="prev_max_dist : %d\n"%(prev_max_dist)
-        tmp+="cur_max_dist : %d\n"%(cur_max_dist)
-        tmp+="Intergene space : %d\n"%(inter_gene)
-        tmp+="Cur : %s"%cur
-        tmp+="Prev : %s"%prev
-        tmp+="Len cluster: %d\n"%len(cur_cluster)
-        
-        #print tmp
-        
-        # First condition removes duplicates (hits for the same sequence)
-        # the two others takes into account either system1 parameter or system2 parameter    
-        if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
-        # First check the cur.id is different from  the prev.id !!!
-        #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
-            #print "zero"
-            if positions.count(prev.position) == 0:
-                #print "un - ADD prev in cur_cluster"
-                cur_cluster.add(prev)
-                positions.append(prev.position)
-                
-            if positions.count(cur.position) == 0:
-                #print "deux - ADD cur in cur_cluster"
-                cur_cluster.add(cur)
-                positions.append(cur.position)
-                
-            if prev.gene.loner:
-                # PB !!!! Do not enter here when T3SS sctC loner and T2SS searched too... CHECK !!
-                #print "trois - loner_state"
-                #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
-                loner_state = True
-        else:
-            # Storage of the previous cluster
-            if len(cur_cluster)>1:
-                #print cur_cluster
-                #print "quatre - ADD cur_cluster"
-                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
-                #print(cur_cluster)
-                 
-                cur_cluster = Cluster()
-                loner_state = False
-                
-            elif len(cur_cluster) == 1 and loner_state == True: # WTF?
-                #print cur_cluster
-                #print "cinq - ADD cur_cluster"
-                #print "LNOER??"
-                #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
-                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
-                #print(cur_cluster)
-                     
-                cur_cluster = Cluster() 
-                loner_state = False
-            
-            if prev.gene.loner:
-                #print "six - check"
-                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
-                
-                if positions.count(prev.position) == 0:
-                    #print "six - ADD prev in cur_cluster, ADD cur_cluster"
-                    cur_cluster.add(prev) 
-                    clusters.add(cur_cluster) 
-                    #print(cur_cluster)
-                    
-                    positions.append(prev.position)
-                    loner_state = False  
-                    cur_cluster = Cluster() 
-                
-            cur_cluster = Cluster()     
-            
-        prev=cur
-    
-    # !!! Treat the last cluster?     
-    return clusters
-
 
 class SystemOccurence(object):
     """
@@ -259,6 +176,7 @@ class SystemOccurence(object):
     
     The SystemOccurence object has a "state" parameter, with the possible following values: 
     - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
+    - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
     - "single_locus" 
     - "multi_loci" 
     - "uncomplete"
@@ -350,6 +268,7 @@ class SystemOccurence(object):
     def fill_with(self, cluster):
         """
         Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
+        Set the system occurence state to "no_decision" after calling of this function.
         
         :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
         :type cluster: :class:`txsscanlib.search_systems.Cluster`
@@ -358,7 +277,8 @@ class SystemOccurence(object):
         
         """
         #so_cl=SystemOccurence(self.system)
-        self.nb_cluster += 1
+        self.nb_cluster += 1 # To be checked
+        self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
             #
@@ -383,9 +303,7 @@ class SystemOccurence(object):
         #return self.decide()
         #self.decision_rule()
         #return self.state
-        
-        # !!! State might still be "empty"....
-              
+                      
     #def decide(self):
     def decision_rule(self):
         #if (self.count_genes(self.forbidden_genes) == 0 and self.count_genes(self.mandatory_genes) >= self.system.min_mandatory_genes_required and (self.count_genes(self.mandatory_genes) + self.count_genes(self.allowed_genes)) >= self.system.min_system_genes_required):
@@ -427,75 +345,6 @@ class SystemOccurence(object):
             print msg
             #_log.info(msg)
             self._state = "exclude"
-                
-
-def analyze_clusters_replicon(clusters, systems):
-#def analyze_clusters_replicon(replicon_name, clusters, systems):
-    """
-    Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
-        
-    - split clusters if needed
-    - delete them if they are not relevant
-    - check the QUORUM for each system to detect, *i.e.* mandatory + allowed - forbidden
-          
-    Only for \"ordered\" datasets representing a whole replicon. 
-    Reports systems occurence. 
-    
-    :param clusters: the set of clusters to analyze
-    :type clusters: :class:`txsscanlib.search_systems.ClustersHandler` 
-    :param systems: the set of systems to detect
-    :type systems: a list of :class:`txsscanlib.system.System`
-    :return: a set of systems occurence filled with hits found in clusters
-    :rtype: a list of :class:`txsscanlib.search_systems.SystemOccurence` 
-    
-    """
-    
-    # Global Hits collectors, for uncomplete cluster Hits
-    systems_occurences_scattered = {}
-    systems_occurences_list = []
-    
-    syst_dict = {}
-    for system in systems:
-        syst_dict[system.name] = system
-        systems_occurences_scattered[system.name] = SystemOccurence(system)
-    
-    for clust in clusters.clusters:
-        if clust.state == "clear":
-            #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
-            print "\n%s"%str(clust)
-            
-            # Local Hits collector
-            so=SystemOccurence(syst_dict[clust.putative_system])
-            so.fill_with(clust)
-            so.decision_rule()
-            so_state=so.state
-            if so_state != "exclude":
-                if so_state != "single_locus":            
-                    # Store it to pool genes found with genes from other clusters.
-                    # Do not do it if the so has a forbidden gene !!!
-                    print "...\nStored for later treatment of scattered systems.\n"
-                    systems_occurences_scattered[clust.putative_system].fill_with(clust)
-                else: 
-                    print "...\nComplete system stored.\n"
-                    systems_occurences_list.append(so)
-            
-    print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
-    for system in systems:
-        #print systems_occurences[system]
-        so = systems_occurences_scattered[system.name]
-        #if so.decide():
-        #if so.nb_syst_genes()>0:
-        so.decision_rule()
-        so_state=so.state
-        #if so_state != "empty" or so_state != "exclude":
-            #so.decision_rule()
-        if so.is_complete():
-            systems_occurences_list.append(so)
-        print "\n******************************************\n"
-    
-    # Stores results in this list? Or code a new object : systemDetectionReport ? 
-    return systems_occurences_list
-
 
 class systemDetectionReport(object):
     """
@@ -532,6 +381,222 @@ class systemDetectionReport(object):
         
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
+
+
+def disambiguate_cluster(cluster):
+    """
+    This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
+    It returns a "cleansed" set of clusters, ready to use for system occurence detection. It: 
+     - splits the cluster in two if it seems that two systems are nearby
+     - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster
+    in this case, check that they are not "loners", cause "loners" can be stored.
+    """
+    res_clusters = []               
+    syst_dico = cluster.systems
+    print syst_dico
+    
+    cur_syst = cluster.hits[0].system
+    nb_syst_genes_tot = syst_dico[cur_syst]
+    nb_syst_genes = 1
+    if nb_syst_genes == nb_syst_genes_tot:
+            # Treat this gene
+            # Check if "loner"
+            # Check if ""
+            pass 
+            
+    for h in cluster.hits[1:]:
+        syst = h.system
+        
+    #pass
+    
+def analyze_clusters_replicon(clusters, systems):
+#def analyze_clusters_replicon(replicon_name, clusters, systems):
+    """
+    Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
+        
+    - split clusters if needed
+    - delete them if they are not relevant
+    - check the QUORUM for each system to detect, *i.e.* mandatory + allowed - forbidden
+          
+    Only for \"ordered\" datasets representing a whole replicon. 
+    Reports systems occurence. 
+    
+    :param clusters: the set of clusters to analyze
+    :type clusters: :class:`txsscanlib.search_systems.ClustersHandler` 
+    :param systems: the set of systems to detect
+    :type systems: a list of :class:`txsscanlib.system.System`
+    :return: a set of systems occurence filled with hits found in clusters
+    :rtype: a list of :class:`txsscanlib.search_systems.SystemOccurence` 
+    
+    """
+    
+    # Global Hits collectors, for uncomplete cluster Hits
+    systems_occurences_scattered = {}
+    systems_occurences_list = []
+    
+    syst_dict = {}
+    for system in systems:
+        syst_dict[system.name] = system
+        systems_occurences_scattered[system.name] = SystemOccurence(system)
+    
+    for clust in clusters.clusters:
+        print "\n%s"%str(clust)
+        if clust.state == "clear":
+            #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
+            print "\n%s"%str(clust)
+            
+            # Local Hits collector
+            so = SystemOccurence(syst_dict[clust.putative_system])
+            so.fill_with(clust)
+            so.decision_rule()
+            so_state = so.state
+            if so_state != "exclude":
+                if so_state != "single_locus":            
+                    # Store it to pool genes found with genes from other clusters.
+                    # Do not do it if the so has a forbidden gene !!!
+                    print "...\nStored for later treatment of scattered systems.\n"
+                    systems_occurences_scattered[clust.putative_system].fill_with(clust)
+                else: 
+                    print "...\nComplete system stored.\n"
+                    systems_occurences_list.append(so)
+        elif clust.state == "ambiguous":
+            # TO DO : implement a way to "clean" the clusters. 
+            # For instance :
+            # - split the cluster in two if it seems that two systems are nearby
+            # - remove single hits that are not forbidden for the "main" system and that are at one end of the current cluster
+            # in this case, check that they are not "loners", cause "loners" can be stored.
+            disambiguate_cluster(clust)
+            print "------- next -------"
+        else:
+            print "------- next -------"
+    print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
+    for system in systems:
+        #print systems_occurences[system]
+        so = systems_occurences_scattered[system.name]
+        #if so.decide():
+        #if so.nb_syst_genes()>0:
+        so.decision_rule()
+        so_state=so.state
+        #if so_state != "empty" or so_state != "exclude":
+            #so.decision_rule()
+        if so.is_complete():
+            systems_occurences_list.append(so)
+        print "\n******************************************\n"
+    
+    # Stores results in this list? Or code a new object : systemDetectionReport ? 
+    return systems_occurences_list
+
+
+
+def build_clusters(hits):
+    """
+    Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets. 
+    Remains to do : 
+    
+    - Implement case of circular replicons => need to store max position for each replicon ! and update... 
+    - Runs on data grouped by replicon : does not check that genes from different replicons are not aggregated in a cluster (but functions Cluster and ClustersHandler do) 
+    
+    :param hits: a list of Hmmer hits to analyze 
+    :type hits: a list of :class:`txsscanlib.report.Hit`
+    :param cfg: the configuration object built from default and user parameters.
+    :type cfg: :class:`txsscanlib.config.Config`
+    :return: a set of clusters
+    :rtype: :class:`txsscanlib.search_systems.ClustersHandler`
+    """    
+    
+    _log.debug("Starting cluster detection with build_clusters... ")
+    
+    # Deals with different dataset types using Pipeline ?? 
+    clusters = ClustersHandler()
+    prev = hits[0]
+    cur_cluster = Cluster()
+    positions = []
+    loner_state=False
+    
+    tmp=""
+    for cur in hits[1:]:
+        
+        prev_max_dist = prev.get_syst_inter_gene_max_space()
+        cur_max_dist = cur.get_syst_inter_gene_max_space()
+        inter_gene = cur.get_position() - prev.get_position() - 1
+        
+        tmp="\n****\n"
+        tmp+="prev_max_dist : %d\n"%(prev_max_dist)
+        tmp+="cur_max_dist : %d\n"%(cur_max_dist)
+        tmp+="Intergene space : %d\n"%(inter_gene)
+        tmp+="Cur : %s"%cur
+        tmp+="Prev : %s"%prev
+        tmp+="Len cluster: %d\n"%len(cur_cluster)
+        
+        #print tmp
+        
+        # First condition removes duplicates (hits for the same sequence)
+        # the two others takes into account either system1 parameter or system2 parameter
+
+        # TEST !! Pick up the smallest of the two distances...
+        smaller_dist = min(prev_max_dist, cur_max_dist)    
+        #if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
+        if(inter_gene <= smaller_dist ):
+        # First check the cur.id is different from  the prev.id !!!
+        #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
+            #print "zero"
+            if positions.count(prev.position) == 0:
+                #print "un - ADD prev in cur_cluster"
+                cur_cluster.add(prev)
+                positions.append(prev.position)
+                
+            if positions.count(cur.position) == 0:
+                #print "deux - ADD cur in cur_cluster"
+                cur_cluster.add(cur)
+                positions.append(cur.position)
+                
+            if prev.gene.loner:
+                # PB !!!! Do not enter here when T3SS sctC loner and T2SS searched too... CHECK !!
+                #print "trois - loner_state"
+                #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
+                loner_state = True
+        else:
+            # Storage of the previous cluster
+            if len(cur_cluster)>1:
+                #print cur_cluster
+                #print "quatre - ADD cur_cluster"
+                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+                #print(cur_cluster)
+                 
+                cur_cluster = Cluster()
+                loner_state = False
+                
+            elif len(cur_cluster) == 1 and loner_state == True: # WTF?
+                #print cur_cluster
+                #print "cinq - ADD cur_cluster"
+                #print "LNOER??"
+                #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
+                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+                #print(cur_cluster)
+                     
+                cur_cluster = Cluster() 
+                loner_state = False
+            
+            if prev.gene.loner:
+                #print "six - check"
+                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                
+                if positions.count(prev.position) == 0:
+                    #print "six - ADD prev in cur_cluster, ADD cur_cluster"
+                    cur_cluster.add(prev) 
+                    clusters.add(cur_cluster) 
+                    #print(cur_cluster)
+                    
+                    positions.append(prev.position)
+                    loner_state = False  
+                    cur_cluster = Cluster() 
+                
+            cur_cluster = Cluster()     
+            
+        prev=cur
+    
+    # !!! Treat the last cluster?     
+    return clusters
 
  
 def search_systems(hits, systems, cfg):
