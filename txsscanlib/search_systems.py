@@ -395,7 +395,7 @@ def disambiguate_cluster(cluster):
     syst_dico = cluster.systems
     print syst_dico
     
-    cur_syst = cluster.hits[0].system
+    cur_syst = cluster.hits[0].system.name
     nb_syst_genes_tot = syst_dico[cur_syst]
     nb_syst_genes = 1
     if nb_syst_genes == nb_syst_genes_tot:
