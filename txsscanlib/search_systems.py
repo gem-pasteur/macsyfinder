@@ -443,7 +443,7 @@ def analyze_clusters_replicon(clusters, systems):
         print "\n%s"%str(clust)
         if clust.state == "clear":
             #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
-            print "\n%s"%str(clust)
+            #print "\n%s"%str(clust)
             
             # Local Hits collector
             so = SystemOccurence(syst_dict[clust.putative_system])
@@ -636,15 +636,17 @@ def search_systems(hits, systems, cfg):
             sub_hits=list(g)
             #print "\n************\nBuilding clusters for %s \n************\n"%k
             clusters=build_clusters(sub_hits)
-            #print "\n************\nAnalyzing clusters for %s \n************\n"%k
+            print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
             
+            print "Reporting systems for %s : \n"%k
             #report = systemDetectionReport(k, systems_occurences_list, systems, reportfilename)
             report = systemDetectionReport(k, systems_occurences_list, systems)
             report.tabulated_output(system_occurences_states, system_names, reportfilename)
-                    
+            print "******************************************"
+            
     elif cfg.db_type == 'ordered_replicon':
         clusters=build_clusters(hits)
         #analyze_clusters_replicon(clusters, systems)
