@@ -1,5 +1,0 @@
-<system inter_gene_max_space="1">
-    <gene name="AT47_full_length" presence="mandatory"/>
-    <gene name="PF03797" presence="mandatory"/>
-    <gene name="PF03895" presence="mandatory"/>
-</system>
