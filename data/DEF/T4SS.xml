@@ -1,0 +1,32 @@
+<system inter_gene_max_space="60">
+    <gene name="virB4" presence="mandatory">        
+        <homologs>
+    	    <gene name="traU"/>
+        </homologs>
+    </gene>
+    <gene name="traU" presence="mandatory">       
+        <homologs>
+    	    <gene name="virB4"/>
+        </homologs>
+    </gene>
+    <gene name="virD4" presence="allowed">       
+    	<homologs>
+    	    <gene name="tcpA"/>
+    	</homologs>
+    </gene>
+    <gene name="tcpA" presence="allowed">  
+        <homologs>
+    	    <gene name="virD4"/>
+    	</homologs>
+    </gene>
+    <gene name="MOBB" presence="forbidden"/>
+    <gene name="MOBC" presence="forbidden"/>
+    <gene name="MOBF" presence="forbidden"/>
+    <gene name="MOBH" presence="forbidden"/>
+    <gene name="MOBP1" presence="forbidden"/>
+    <gene name="MOBP2" presence="forbidden"/>
+    <gene name="MOBP3" presence="forbidden"/>
+    <gene name="MOBQ" presence="forbidden"/>
+    <gene name="MOBT" presence="forbidden"/>
+    <gene name="MOBV" presence="forbidden"/>
+</system>

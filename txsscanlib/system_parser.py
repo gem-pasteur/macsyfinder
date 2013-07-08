@@ -109,10 +109,10 @@ class SystemParser(object):
             exchangeable = False 
         
         # Added by Sophie !!!    
-        #system_ref = node.get("system_ref")
+        system_ref = node.get("system_ref")
         #print system_ref
-        #if system_ref != None:
-        #    system = system_factory.get_system(system_ref, self.cfg)
+        if system_ref != None:
+            system = system_factory.get_system(system_ref, self.cfg)
         # END Added by Sophie !!! 
                
         gene = gene_factory.get_gene(self.cfg, name, system, loner, exchangeable)

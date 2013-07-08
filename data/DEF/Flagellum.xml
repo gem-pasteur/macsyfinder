@@ -35,6 +35,7 @@
     <gene name="flgB" presence="allowed"/>
     <gene name="flgC" presence="allowed"/>
     <gene name="fliE" presence="allowed"/>
+    <gene name="tadZ" presence="allowed" system_ref="Tad"/>
     <gene name="sctC" presence="forbidden" system_ref="T3SS"/>
 </system>
 
