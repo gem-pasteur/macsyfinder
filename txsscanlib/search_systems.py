@@ -244,7 +244,7 @@ class SystemOccurence(object):
     @property
     def nb_syst_genes(self):
         """
-        :return: the number of mandatory and allowed genes with at least one occurence
+        :return: the number of mandatory and allowed genes with at least one occurence (number of different allowed genes)
         :rtype: integer
         """
         return self._nb_syst_genes
@@ -281,7 +281,7 @@ class SystemOccurence(object):
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
-            #
+            # To add: store hits for system extraction (positions, sequences) when complete.
             
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
@@ -318,7 +318,8 @@ class SystemOccurence(object):
         msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d"%(nb_forbid, nb_mandat, nb_allowed)
                
         if ( nb_forbid == 0 ):
-            if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 2):
+            #if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 2):
+            if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 1):
            
                 if self.nb_cluster == 1: 
                     self._state = "single_locus"

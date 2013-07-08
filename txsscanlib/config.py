@@ -276,7 +276,7 @@ class Config(object):
                         except ValueError:
                             raise ValueError( "the interval for system %s must be an integer, you provided %s on config file" % (system, interval))
                 except StopIteration:
-                    raise ValueError( "invalid sysntax for inter_gene_max_space: you must have al list of system, interval separate by spaces" % (system, interval))
+                    raise ValueError( "invalid sysntax for inter_gene_max_space: you must have a list of systems, interval separated by spaces" % (system, interval))
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if not 'inter_gene_max_space' in options:
                     options['inter_gene_max_space'] = {}
