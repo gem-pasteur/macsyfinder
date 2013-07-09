@@ -60,7 +60,7 @@ class HMMReport(object):
         s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
         #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
         #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
-        s += "# hit_id hit_sequence_length replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in self.hits:
             s += str(h)
         return s
@@ -224,10 +224,10 @@ class Hit(object):
         self.end_match = end_match
 
     def __str__(self):
-        return "%s\t%d\t%s\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
-                                                     self.seq_length,
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
                                                      self.replicon_name,
                                                      self.position,
+                                                     self.seq_length,
                                                      self.gene.name,
                                                      self.system.name,
                                                      self.i_eval,
