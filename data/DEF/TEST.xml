@@ -1,0 +1,3 @@
+<system inter_gene_max_space="5">
+    <gene name="gspI" presence="mandatory" loner="1"/>
+</system>
