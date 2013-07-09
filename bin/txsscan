@@ -60,15 +60,30 @@ genome_options.add_argument(  "--idx" ,
                        help = "the topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
 
 system_options =  parser.add_argument_group(title = "system options")
-system_options.add_argument( "--inter_gene_max_space",
+system_options.add_argument( "--inter-gene-max_space",
                              action = 'append',
                              nargs = 2,
                              dest = 'inter_gene_max_space',
                              default = None,
                              help = "maximum space between 2 genes, the fisrt value must match to a system the second value to an interval,\
-                              this option can appear multiple times: --inter_gene_max_space T2SS 32 --inter_gene_max_space Flagellum 200"
+                              this option can appear multiple times: --inter-gene-max-space T2SS 32 --inter-gene-max-space Flagellum 200"
                              )
-
+system_options.add_argument( "--min-mandatory-genes-required",
+                             action = 'append',
+                             nargs = 2,
+                             dest = 'min_mandatory_genes_required',
+                             default = None,
+                             help = "the mandatory genes quorum for the system, the fisrt value must match to a system the second value to an integer,\
+                              this option can appear multiple times: --min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
+                             )
+system_options.add_argument( "--min-genes-required",
+                             action = 'append',
+                             nargs = 2,
+                             dest = 'min_genes_required',
+                             default = None,
+                             help = "the genes quorum for the system, the fisrt value must match to a system the second value to an integer,\
+                              this option can appear multiple times: --min-genes-required T2SS 15 --min-genes-required Flagellum 10"
+                             )
 hmmer_options =  parser.add_argument_group(title = "hmmer options")
 hmmer_options.add_argument( '--hmmer', 
                             action = 'store',
@@ -205,6 +220,8 @@ config = Config(previous_run = args.previous_run,
                 build_indexes = args.build_indexes,
                 replicon_topology = args.replicon_topology,
                 inter_gene_max_space = args.inter_gene_max_space,
+                min_mandatory_genes_required = args.min_mandatory_genes_required,
+                min_genes_required = args.min_genes_required,
                 hmmer_exe = args.hmmer_exe,
                 e_value_res = args.e_value_res,
                 i_evalue_sel = args.i_evalue_sel,
@@ -244,18 +261,7 @@ for system in systems:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
 
-<<<<<<< .working
 all_reports = search_genes(all_genes, config)
-
-all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
-
-print [report.hits for report in all_reports ]
-print "########################"
-print all_hits
-
-logger.debug("FIN")=======
-all_reports = search_genes(all_genes, config)
-
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
 #all_hits.sort()
@@ -273,4 +279,3 @@ systems=sorted(systems, key=attrgetter('name'))
 search_systems(all_hits, systems, config)
 
 logger.debug("FIN")
->>>>>>> .merge-right.r140

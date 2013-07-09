@@ -56,6 +56,26 @@ class Test(unittest.TestCase):
         system.inter_gene_max_space = inter_gene_max_space
         self.assertEqual( system.inter_gene_max_space , inter_gene_max_space )
         
+    def test_min_genes_required(self):
+        name = 'foo'
+        min_genes_required = 40
+        system = System(name, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
+        system.add_mandatory_gene( gene )
+        self.assertEqual( system.min_genes_required , 1 )
+        system.min_genes_required = min_genes_required
+        self.assertEqual( system.min_genes_required , min_genes_required )
+        
+    def test_min_mandatory_genes_required(self):
+        name = 'foo'
+        min_mandatory_genes_required = 40
+        system = System(name, self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system)
+        system.add_mandatory_gene( gene )
+        self.assertEqual( system.min_mandatory_genes_required , 1 )
+        system.min_mandatory_genes_required = min_mandatory_genes_required
+        self.assertEqual( system.min_mandatory_genes_required , min_mandatory_genes_required )    
+        
     def test_add_mandatory_gene(self):
         system = System( "foo", self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system)

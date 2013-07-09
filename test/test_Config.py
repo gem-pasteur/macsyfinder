@@ -319,6 +319,32 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
         self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
     
+    def test_min_genes_required(self):
+        min_genes_required = (["T2SS", 32], ['Flagellum', 64])
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles',
+                          min_genes_required = min_genes_required
+                          )
+        self.assertEqual(self.cfg.min_genes_required('T2SS'), 32)
+        self.assertEqual(self.cfg.min_genes_required('Flagellum'), 64)
+        self.assertIsNone(self.cfg.min_genes_required('Foo'))
+    
+    def test_min_mandatory_genes_required(self):
+        min_mandatory_genes_required = (["T2SS", 32], ['Flagellum', 64])
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                          db_type = 'gembase',
+                          def_dir = '../data/DEF',
+                          profile_dir = '../data/profiles',
+                          min_mandatory_genes_required = min_mandatory_genes_required
+                          )
+        self.assertEqual(self.cfg.min_mandatory_genes_required('T2SS'), 32)
+        self.assertEqual(self.cfg.min_mandatory_genes_required('Flagellum'), 64)
+        self.assertIsNone(self.cfg.min_mandatory_genes_required('Foo'))    
+        
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",

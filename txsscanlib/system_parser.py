@@ -33,11 +33,11 @@ class SystemParser(object):
         :type cfg: :class:`txsscanlib.config.Config` object
         """
         self.cfg = cfg
-    
+
     def parse(self, system_name ):
         """
         parse a system definition in xml format to build the corresponding object
-        
+
         :param system_name: the name of the system to parse
         :type system_name: string
         :return: the system corresponding to the name 
@@ -45,22 +45,45 @@ class SystemParser(object):
         """
         path = os.path.join(self.cfg.def_dir, system_name + ".xml")
         if not os.path.exists(path):
-            raise Exception("%s: No such sytem definitions" % path)
+            raise Exception("%s: No such system definitions" % path)
         tree = ET.parse(path)
         root = tree.getroot()
         inter_gene_max_space = root.get('inter_gene_max_space')
         if inter_gene_max_space is None:
             msg = "Invalid system definition: inter_gene_max_space must be defined"
             _log.critical(msg)
-            raise SyntaxError(msg)  
+            raise SyntaxError(msg)
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
             msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
             _log.critical(msg)
-            raise SyntaxError(msg)    
+            raise SyntaxError(msg)
+
+        min_mandatory_genes_required = root.get('min_mandatory_genes_required')
+        if min_mandatory_genes_required is not None:
+            try:
+                min_mandatory_genes_required = int(min_mandatory_genes_required)
+            except ValueError:
+                msg = "Invalid system definition: min_mandatory_genes_required must be an integer: %s" % min_mandatory_genes_required
+                _log.critical(msg)
+                raise SyntaxError(msg)
+
+        min_genes_required = root.get('min_genes_required')
+        if min_genes_required is not None:
+            try:
+                min_genes_required = int(min_genes_required)
+            except ValueError:
+                msg = "Invalid system definition: min_genes_required must be an integer: %s" % min_genes_required
+                _log.critical(msg)
+                raise SyntaxError(msg)
+
         system = system_factory.get_system(system_name, self.cfg)
         system.inter_gene_max_space = inter_gene_max_space
+        if min_genes_required is not None:
+            system.min_genes_required = min_genes_required
+        if min_mandatory_genes_required is not None:
+            system.min_mandatory_genes_required = min_mandatory_genes_required
         genes_nodes = root.findall("gene")
         for gene_node in genes_nodes:
             presence = gene_node.get("presence")
@@ -78,14 +101,14 @@ class SystemParser(object):
             else:
                 msg = "Invalid system definition: presence value must be either [mandatory, allowed, forbidden] not %s" % presence
                 _log.error(msg)
-                raise SyntaxError(msg)       
+                raise SyntaxError(msg)
         return system
 
 
     def _parse_gene(self, node, system):
         """
         parse a xml element gene and build the corresponding object
-        
+
         :param node: a node corresponding to gene element
         :type node: :class:`xml.etree.ElementTree.Element` object 
         :return: the gene object corresponding to the node
@@ -107,14 +130,10 @@ class SystemParser(object):
             exchangeable = True
         elif exchangeable in (None, "0" , "false" , "False"):
             exchangeable = False 
-        
-        # Added by Sophie !!!    
+
         system_ref = node.get("system_ref")
-        #print system_ref
         if system_ref != None:
             system = system_factory.get_system(system_ref, self.cfg)
-        # END Added by Sophie !!! 
-               
         gene = gene_factory.get_gene(self.cfg, name, system, loner, exchangeable)
 
         for homolog_node in node.findall("homologs/gene"):
@@ -125,7 +144,7 @@ class SystemParser(object):
     def _parse_homolog(self, node, gene_ref):
         """
         parse a xml element gene and build the corresponding object
-        
+
         :param node: a node corresponding to gene element
         :type node: :class:`xml.etree.ElementTree.Element` object 
         :return: the gene object corresponding to the node
@@ -157,4 +176,4 @@ class SystemParser(object):
             homolog.add_homolog(homolog)
             homolog.add_homolog( self._parse_homolog(homolog_node , gene) )
         return homolog
-    
+
