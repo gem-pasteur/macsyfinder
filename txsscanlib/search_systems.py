@@ -310,20 +310,23 @@ class SystemOccurence(object):
             
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
-                
-                # To finish !!
-                valid_hit=validSystemHit(hit, self.system, "mandatory")
-                
-                self.valid_hits.append()
+                valid_hit=validSystemHit(hit, self.system_name, "mandatory")
+                self.valid_hits.append(valid_hit)
             elif hit.gene.is_allowed(self.system):
                 self.allowed_genes[hit.gene.name]+=1
+                valid_hit=validSystemHit(hit, self.system_name, "allowed")
+                self.valid_hits.append(valid_hit)
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name]+=1
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]]+=1
+                    valid_hit=validSystemHit(hit, self.system_name, "mandatory")
+                    self.valid_hits.append(valid_hit)
                 elif hit.gene.name in self.exallowed_genes.keys():
                     self.allowed_genes[self.exallowed_genes[hit.gene.name]]+=1
+                    valid_hit=validSystemHit(hit, self.system_name, "allowed")
+                    self.valid_hits.append(valid_hit)
                 else:
                     #print "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
                     msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
@@ -390,24 +393,45 @@ class validSystemHit(object):
     """
     def __init__(self, hit, detected_system, gene_status):
         self.hit = hit
-        self.detected_system = detected_system
-        self.reference_system = hit.system_name
+        self.predicted_system = detected_system
+        self.reference_system = hit.system.name
         self.gene_status = gene_status
            
     def __str__(self):
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.hit.id,
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.hit.id,
                                                      self.hit.replicon_name,
                                                      self.hit.position,
                                                      self.hit.seq_length,
                                                      self.hit.gene.name,
-                                                     self.hit.system.name,
+                                                     self.reference_system,
+                                                     self.predicted_system,
+                                                     self.gene_status,
                                                      self.hit.i_eval,
                                                      self.hit.score,
                                                      self.hit.profile_coverage, 
                                                      self.hit.sequence_coverage,
                                                      self.hit.begin_match,
                                                      self.hit.end_match)
-
+                                                     
+    def output_system(self, system_name, system_status):
+        
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.hit.id,
+                                                     self.hit.replicon_name,
+                                                     self.hit.position,
+                                                     self.hit.seq_length,
+                                                     self.hit.gene.name,
+                                                     self.reference_system,
+                                                     self.predicted_system,
+                                                     system_name, 
+                                                     system_status,
+                                                     self.gene_status,
+                                                     self.hit.i_eval,
+                                                     self.hit.score,
+                                                     self.hit.profile_coverage, 
+                                                     self.hit.sequence_coverage,
+                                                     self.hit.begin_match,
+                                                     self.hit.end_match)
+                                                     
 
 class systemDetectionReport(object):
     """
@@ -423,8 +447,7 @@ class systemDetectionReport(object):
         self._systems_occurences_list = systems_occurences_list
         #self._system_textlist = []
         self.replicon_name = replicon_name
-       
-    
+            
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
@@ -433,7 +456,7 @@ class systemDetectionReport(object):
         for so in self._systems_occurences_list:
             system_textlist.append(so.system_name+"_"+so.state)
                
-       return Counter(system_textlist)
+        return Counter(system_textlist)
  
 
     def tabulated_output(self, system_occurence_states, system_names, reportfilename):
@@ -461,11 +484,15 @@ class systemDetectionReport(object):
         Build a report of all the systems detected with information in their gene content and localization on replicons. 
         """
         # Then name the system ! 
+        report_str=""
         for so in self._systems_occurences_list:
-            so_name = system_name_generator.getSystemName(self.replicon_name, so.system_name)
-            # Make system_occurrence return a namedTuple with all info to write? 
+            so_unique_name = system_name_generator.getSystemName(self.replicon_name, so.system_name)
+            for hit in so.valid_hits:
+                report_str+=hit.output_system(so_unique_name, so.state)
+                # Make system_occurrence return a namedTuple with all info to write? 
         
-    
+        with open(reportfilename, 'a') as _file:
+            _file.write(report_str)    
 
 def disambiguate_cluster(cluster):
     """
@@ -692,7 +719,9 @@ def search_systems(hits, systems, cfg):
     
     # For system occurences report, creation of a namedtuple with every system
     # PB with namedtuples : need to fill all fields in a single step.
-    reportfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
+    tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
+    reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
+    
     system_occurences_states = ['single_locus', 'multi_loci']
     system_names = []
     tabulated_report_header = "Replicon"
@@ -706,7 +735,7 @@ def search_systems(hits, systems, cfg):
     #        TabReport = namedtuple('TabReport', TabReport._fields+(s.name+"_"+state,))
     
     tabulated_report_header+="\n"        
-    with open(reportfilename, 'w') as _file:
+    with open(tabfilename, 'w') as _file:
         _file.write(tabulated_report_header)
 
     #print tabulated_report_header
@@ -731,7 +760,9 @@ def search_systems(hits, systems, cfg):
             report = systemDetectionReport(k, systems_occurences_list, systems)
             
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
-            report.tabulated_output(system_occurences_states, system_names, reportfilename)
+            report.tabulated_output(system_occurences_states, system_names, tabfilename)
+            # Add the header once in the report
+            report.report_output(reportfilename)
             print "******************************************"
             
     elif cfg.db_type == 'ordered_replicon':
