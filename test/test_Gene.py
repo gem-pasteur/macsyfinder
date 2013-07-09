@@ -98,6 +98,17 @@ class Test(unittest.TestCase):
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
         self.assertTrue(gene.exchangeable)
+
+ 
+    def test_multi_system(self):
+        """
+        test getter for multi_system property
+        """
+        system_foo = System( "foo", self.cfg)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        self.assertFalse(gene.multi_system)
+        gene = Gene(self.cfg, 'sctJ', system_foo, multi_system = True)
+        self.assertTrue(gene.multi_system)
         
         
     def test_str(self):
