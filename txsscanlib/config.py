@@ -294,7 +294,6 @@ class Config(object):
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
                         raise ValueError( "the interval for system %s must be an integer, you provided %s on command line" % (system, interval))
-            ######################################################################################3
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
                 min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required" ) 
@@ -320,8 +319,6 @@ class Config(object):
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
                         raise ValueError( "the min mandatory genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_mandatory_genes))
-            ######################################################################################3        
-            ######################################################################################3
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
                 min_genes_required = self.parser.get("system", "min_genes_required") 
@@ -347,7 +344,56 @@ class Config(object):
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
                         raise ValueError( "the min genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_genes))
-            ######################################################################################3        
+            if self.parser.has_option("system", "min_mandatory_genes_required"):
+                options['min_mandatory_genes_required'] = {}
+                min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required" ) 
+                min_mandatory_genes_required = min_mandatory_genes_required.split()
+                it = iter( min_mandatory_genes_required )
+                try:
+                    for system in it:
+                        quorum_mandatory_genes = it.next()
+                        try:
+                            quorum_mandatory_genes = int(quorum_mandatory_genes)
+                            options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
+                        except ValueError:
+                            raise ValueError( "the min mandatory genes required for system %s must be an integer, you provided %s on config file" % (system, quorum_mandatory_genes))
+                except StopIteration:
+                    raise ValueError( "invalid syntax for min_mandatory_genes_required: you must have a list of systems, interval separated by spaces")
+            if 'min_mandatory_genes_required' in cmde_line_values and cmde_line_values['min_mandatory_genes_required'] is not None: 
+                if not 'min_mandatory_genes_required' in options:
+                    options['min_mandatory_genes_required'] = {}
+                for item in cmde_line_values['min_mandatory_genes_required']:
+                    system, quorum_mandatory_genes = item
+                    try:
+                        interval = int( quorum_mandatory_genes)
+                        options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
+                    except ValueError:
+                        raise ValueError( "the min mandatory genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_mandatory_genes))
+            if self.parser.has_option("system", "min_genes_required"):
+                options['min_genes_required'] = {}
+                min_genes_required = self.parser.get("system", "min_genes_required") 
+                min_genes_required = min_genes_required.split()
+                it = iter(min_genes_required)
+                try:
+                    for system in it:
+                        quorum_genes = it.next()
+                        try:
+                            quorum_genes = int( quorum_genes)
+                            options['min_genes_required'][system] = quorum_genes
+                        except ValueError:
+                            raise ValueError( "the min genes required for system %s must be an integer, you provided %s on config file" % (system, quorum_genes))
+                except StopIteration:
+                    raise ValueError( "invalid syntax for min_genes_required: you must have a list of systems, interval separated by spaces")
+            if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
+                if not 'min_genes_required' in options:
+                    options['min_genes_required'] = {}
+                for item in cmde_line_values['min_genes_required']:
+                    system, quorum_genes = item
+                    try:
+                        quorum_genes = int( quorum_genes)
+                        options['min_genes_required'][system] = quorum_genes
+                    except ValueError:
+                        raise ValueError( "the min genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_genes))
             try:
                 options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             except NoSectionError:
