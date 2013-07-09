@@ -277,11 +277,11 @@ class SystemOccurence(object):
         
         """
         #so_cl=SystemOccurence(self.system)
-        self.nb_cluster += 1 # To be checked
+        self.nb_cluster += 1 # To be checked... useless? 
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
-            # To add: store hits for system extraction (positions, sequences) when complete.
+            # To add: store hits for system extraction (positions, sequences) when complete. To do that: instead of having a nb of occurences per reference gene, let's have a list of hits? and an easy way to check for gene occurrence => empty list, and the nb of occurences: len(list)
             
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
@@ -346,6 +346,18 @@ class SystemOccurence(object):
             print msg
             #_log.info(msg)
             self._state = "exclude"
+
+class validSystemHit(Hit):
+    """
+    Derives from the :class:`txsscanlib.report.Hit`
+    This class stores a Hit that has been attributed to a detected system. Thus, it also stores 
+        - the system, 
+        - the status of the gene in this system,
+    It also aims at storing information for results extraction:
+        - system extraction (e.g. genomic positions)
+        - sequence extraction
+    """
+    pass
 
 class systemDetectionReport(object):
     """
@@ -517,6 +529,7 @@ def build_clusters(hits):
     tmp=""
     for cur in hits[1:]:
         
+        _log.debug("Hit %s"%str(cur))
         prev_max_dist = prev.get_syst_inter_gene_max_space()
         cur_max_dist = cur.get_syst_inter_gene_max_space()
         inter_gene = cur.get_position() - prev.get_position() - 1
@@ -529,7 +542,7 @@ def build_clusters(hits):
         tmp+="Prev : %s"%prev
         tmp+="Len cluster: %d\n"%len(cur_cluster)
         
-        #print tmp
+        print tmp
         
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
