@@ -60,6 +60,8 @@ class System(object):
         self.cfg = cfg
         self.name = name
         self._inter_gene_max_space = None
+        self._min_mandatory_genes_required = None
+        self._min_genes_required = None
         self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
@@ -67,21 +69,71 @@ class System(object):
     @property
     def inter_gene_max_space(self):
         """
-        :return: set the maximum distance allowed between 2 genes for this sytem
+        :return: set the maximum distance allowed between 2 genes for this system
         :rtype: integer
         """
+        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(self.name)
+        if cfg_inter_gene_max_space is not None:
+            return cfg_inter_gene_max_space
         return self._inter_gene_max_space
 
     @inter_gene_max_space.setter
     def inter_gene_max_space(self, val):
         """
         set the maximum distance allowed between 2 genes for this system
-        
+
         :param val: the maximum distance allowed between 2 genes
         :type val: integer
         """
         self._inter_gene_max_space = int(val)
 
+    @property
+    def min_mandatory_genes_required(self):
+        """
+        :return: get the quorum of mandatory genes required for this system
+        :rtype: integer
+        """
+        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(self.name)
+        if cfg_min_mandatory_genes_required is not None:
+            return cfg_min_mandatory_genes_required
+        elif self._min_mandatory_genes_required is None:
+            return len(self._mandatory_genes)
+        else:
+            return self._min_mandatory_genes_required
+
+    @min_mandatory_genes_required.setter
+    def min_mandatory_genes_required(self, val):
+        """
+        set the quorum of mandatory genes required for this system
+
+        :param val: the quorum of mandatory genes required for this system
+        :type val: integer
+        """
+        self._min_mandatory_genes_required = int(val)
+
+    @property
+    def min_genes_required(self):
+        """
+        :return: get the quorum of genes required for this system
+        :rtype: integer
+        """
+        cfg_min_genes_required = self.cfg.min_genes_required(self.name)
+        if cfg_min_genes_required is not None:
+            return cfg_min_genes_required
+        elif self._min_genes_required is None:
+            return len(self._mandatory_genes)
+        else:
+            return self._min_genes_required
+
+    @min_genes_required.setter
+    def min_genes_required(self, val):
+        """
+        set the quorum of genes required for this system
+
+        :param val: the quorum of genes required for this system
+        :type val: integer
+        """
+        self._min_genes_required = int(val)
 
     def add_mandatory_gene(self, gene):
         """
