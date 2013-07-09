@@ -30,16 +30,16 @@ class GeneFactory(object):
     """
     _genes_bank = {}
 
-    def get_gene(self, cfg, name, system, loner = False , exchangeable = False):
+    def get_gene(self, cfg, name, system, loner = False , exchangeable = False, multi_system = False):
         """
         :return: return gene corresponding to the name.
-                 If the gene already exists return it otherwise build it an d returni
+                 If the gene already exists return it otherwise build it and return it
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         if name in self._genes_bank:
             gene = self._genes_bank[name]
         else:
-            gene = Gene(cfg, name, system, loner, exchangeable)
+            gene = Gene(cfg, name, system, loner, exchangeable, multi_system)
             self._genes_bank[name] = gene
         return gene
 
@@ -53,7 +53,7 @@ class Gene(object):
     """
 
 
-    def __init__(self, cfg, name, system, loner = False, exchangeable = False ):
+    def __init__(self, cfg, name, system, loner = False, exchangeable = False, multi_system = False ):
         """
         handle gene
 
@@ -67,6 +67,8 @@ class Gene(object):
         :type loner: boolean.
         :param exchangeable: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
         :type exchangeable: boolean.
+        :param multi_system: True if a gene can belong to different system. 
+        :type multi_system: boolean.
         """
         self.name = name 
         self.profile = profile_factory.get_profile(self, cfg)
@@ -76,7 +78,7 @@ class Gene(object):
         self._system = system
         self._loner = loner
         self._exchangeable = exchangeable
-
+        self._multi_system = multi_system
 
     def __str__(self):
         s = "name : %s" % self.name
@@ -103,7 +105,6 @@ class Gene(object):
         """
         return self._loner
 
-
     @property
     def exchangeable(self):
         """
@@ -112,7 +113,14 @@ class Gene(object):
         """
         return self._exchangeable
 
-
+    @property
+    def multi_system(self):
+        """
+        :return: True if this gene can belong to different systems, False otherwise.
+        :rtype: boolean.
+        """
+        return self._multi_system
+    
     def add_homolog(self, homolog):
         """
         add a homolog gene

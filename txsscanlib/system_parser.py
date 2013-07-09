@@ -119,25 +119,22 @@ class SystemParser(object):
             msg = "Invalid system definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
-        loner = node.get("loner")
-        if loner in ("1", "true", "True"):
-            loner = True
-        elif loner in (None, "0" , "false" , "False"):
-            loner = False
 
-        exchangeable = node.get("exchangeable")
-        if exchangeable in ("1", "true", "True"):
-            exchangeable = True
-        elif exchangeable in (None, "0" , "false" , "False"):
-            exchangeable = False 
-
+        attrs = {}
+        for attr in ('loner', 'exchangeable', 'multi_system'):
+            val = node.get(attr)
+            if val in ("1", "true", "True"):
+                val = True
+            elif val in (None, "0", "false", "False"):
+                val = False
+            attrs[attr] = val
         system_ref = node.get("system_ref")
         if system_ref != None:
             system = system_factory.get_system(system_ref, self.cfg)
-        gene = gene_factory.get_gene(self.cfg, name, system, loner, exchangeable)
+        gene = gene_factory.get_gene(self.cfg, name, system, **attrs)
 
         for homolog_node in node.findall("homologs/gene"):
-            gene.add_homolog( self._parse_homolog(homolog_node , gene) )
+            gene.add_homolog(self._parse_homolog(homolog_node, gene))
         return gene
 
 
