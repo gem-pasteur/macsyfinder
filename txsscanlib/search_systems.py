@@ -542,7 +542,7 @@ def build_clusters(hits):
         tmp+="Prev : %s"%prev
         tmp+="Len cluster: %d\n"%len(cur_cluster)
         
-        print tmp
+        #print tmp
         
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
