@@ -60,7 +60,7 @@ genome_options.add_argument(  "--idx" ,
                        help = "the topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
 
 system_options =  parser.add_argument_group(title = "system options")
-system_options.add_argument( "--inter-gene-max_space",
+system_options.add_argument( "--inter-gene-max-space",
                              action = 'append',
                              nargs = 2,
                              dest = 'inter_gene_max_space',
