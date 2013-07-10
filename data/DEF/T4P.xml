@@ -1,4 +1,4 @@
-<system inter_gene_max_space="5">
+<system inter_gene_max_space="5" min_mandatory_genes_required="7" min_genes_required="7">
     <gene name="pilAE" presence="mandatory">
     	<homologs>
     	    <gene name="gspG" system_ref="T2SS"/>

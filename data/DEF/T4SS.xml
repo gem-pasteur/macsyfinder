@@ -1,4 +1,4 @@
-<system inter_gene_max_space="60">
+<system inter_gene_max_space="30" min_mandatory_genes_required="2" min_genes_required="2">
     <gene name="virB4" presence="mandatory">        
         <homologs>
     	    <gene name="traU"/>
@@ -19,14 +19,14 @@
     	    <gene name="virD4"/>
     	</homologs>
     </gene>
-    <gene name="MOBB" presence="forbidden"/>
-    <gene name="MOBC" presence="forbidden"/>
-    <gene name="MOBF" presence="forbidden"/>
-    <gene name="MOBH" presence="forbidden"/>
-    <gene name="MOBP1" presence="forbidden"/>
-    <gene name="MOBP2" presence="forbidden"/>
-    <gene name="MOBP3" presence="forbidden"/>
-    <gene name="MOBQ" presence="forbidden"/>
-    <gene name="MOBT" presence="forbidden"/>
-    <gene name="MOBV" presence="forbidden"/>
+    <gene name="MOBB" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBC" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBF" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBH" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBP1" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBP2" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBP3" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBQ" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBT" presence="forbidden" inter_gene_max_space="60"/>
+    <gene name="MOBV" presence="forbidden" inter_gene_max_space="60"/>
 </system>

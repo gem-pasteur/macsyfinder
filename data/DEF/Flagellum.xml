@@ -1,4 +1,4 @@
-<system inter_gene_max_space="20"> 
+<system inter_gene_max_space="20" min_mandatory_genes_required="9" min_genes_required="10"> 
     <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
            <gene name="sctJ" system_ref="T3SS"/>
@@ -32,9 +32,9 @@
         <homologs>
            <gene name="sctV" system_ref="T3SS"/>
        </homologs>
-    <gene name="flgB" presence="allowed"/>
-    <gene name="flgC" presence="allowed"/>
-    <gene name="fliE" presence="allowed"/>
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory"/>
+    <gene name="fliE" presence="mandatory"/>
     <gene name="tadZ" presence="allowed" system_ref="Tad"/>
     <gene name="sctC" presence="forbidden" system_ref="T3SS"/>
 </system>
