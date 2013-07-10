@@ -51,8 +51,8 @@ class Test(unittest.TestCase):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD",system)
-        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741)
-        h1 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736)
+        h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
+        h1 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
         self.assertGreater(h1, h0)
         self.assertLess(h0, h1)
 
@@ -60,9 +60,9 @@ class Test(unittest.TestCase):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
-        h0 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741)
-        h1 = Hit( gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000),float(638.000000), 104, 741)
-        h2 = Hit( gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736)
+        h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
+        h1 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
+        h2 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
         self.assertEqual(h0, h1)
         self.assertNotEqual(h0, h2)
         
@@ -71,6 +71,7 @@ class Test(unittest.TestCase):
         gene_name = "gspD"
         gene = Gene(self.cfg, "gspD", system)
         hit_prop={'id' : "PSAE001c01_006940",
+                  'hit_seq_len': 803,
                   'replicon_name' : "PSAE001c01",
                   'position' : 694,
                   'i_eval' : float(1.2e-234),
@@ -83,9 +84,9 @@ class Test(unittest.TestCase):
                   'end' : 741
                   }
         
-        hit = Hit( gene, system, hit_prop['id'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], 
+        hit = Hit( gene, system, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], 
                    hit_prop['profil_coverage'], hit_prop['sequence_coverage'],hit_prop['begin'],hit_prop['end'])
-        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(profil_coverage)f\t%(sequence_coverage)f\t%(begin)d\t%(end)d\n" % hit_prop
+        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(hit_seq_len)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(profil_coverage)f\t%(sequence_coverage)f\t%(begin)d\t%(end)d\n" % hit_prop
         self.assertEqual(s,str(hit))
         
 if __name__ == "__main__":
