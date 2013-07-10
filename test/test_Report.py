@@ -46,7 +46,8 @@ class Test(unittest.TestCase):
 
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
-
+        pass
+    
     def test_HMMReport(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
@@ -64,15 +65,15 @@ class Test(unittest.TestCase):
         report = OrderedHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 5)
-
-        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
-               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
-               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
-               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
-               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
+                #gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,          score,       profile_coverage, sequence_coverage, begin_match, end_match
+        hits=[ Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 4482, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 4634, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 5870, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
         ]
         self.assertListEqual(hits, report.hits)
-    
+
     def test_OrderedHMMReport_extract_concurent(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
@@ -83,33 +84,33 @@ class Test(unittest.TestCase):
         for i in range(5):
             report = OrderedHMMReport(gene, report_path, self.cfg)
             reports.append(report)
-        
+
         import threading
-        
+
         def worker(report):
             report.extract()
 
         for report in reports:
             t = threading.Thread(target = worker, args = (report,))
             t.start()
-        main_thread = threading.currentThread()    
+        main_thread = threading.currentThread()
         for t in threading.enumerate():
             if t is main_thread:
                 continue
         t.join()
-   
-        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
-               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
-               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
-               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
-               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
-        ]      
+
+                        #gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,          score,       profile_coverage, sequence_coverage, begin_match, end_match
+        hits=[ Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 4482, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 4634, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 5870, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
+        ]
         for report in reports:
             report.save_extract()
             self.assertEqual(len(report.hits), len(hits))
             self.assertListEqual(hits, report.hits)
 
-    
     def test_str(self):
         system = System("T2SS", self.cfg)
         gene_name = "gspD"
@@ -118,21 +119,21 @@ class Test(unittest.TestCase):
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = OrderedHMMReport(gene, report_path, self.cfg)
         report.extract()
-        hits=[ Hit(gene, system, "PSAE001c01_006940", "PSAE001c01", 694 , float(1.2e-234), float(779.2), float(1.000000), float(638.000000), 104, 741),
-               Hit(gene, system, "PSAE001c01_013980", "PSAE001c01", 1398, float(3.7e-76), float(255.8), float(1.000000), float(632.000000), 105, 736),
-               Hit(gene, system, "PSAE001c01_017350", "PSAE001c01", 1735, float(3.2e-27), float(94.2), float(0.500000), float(281.000000),  226, 506),
-               Hit(gene, system, "PSAE001c01_018920", "PSAE001c01", 1892, float(6.1e-183), float(608.4), float(1.000000), float(559.000000), 48, 606),
-               Hit(gene, system, "PSAE001c01_031420", "PSAE001c01", 3142, float(1.8e-210), float(699.3), float(1.000000), float(560.000000), 55, 614)
+        hits=[ Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 4482, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 4634, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 5870, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
         ]
         s = ""
         s = "# gene: %s extract from %s hmm output\n" % (gene.name, report_path)
         s += "# profile length= %d\n" % len(gene.profile)
         s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
         s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
-        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in hits:
             s += str(h)
         self.assertEqual(str(report), s)
-        
+
 if __name__ == "__main__":
     unittest.main()

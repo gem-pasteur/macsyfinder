@@ -59,7 +59,8 @@ class HMMReport(object):
         s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
         s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
         #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
-        s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in self.hits:
             s += str(h)
         return s
@@ -155,6 +156,7 @@ class OrderedHMMReport(HMMReport):
                                             self.hits.append(Hit(self.gene,
                                                                  self.gene.system,
                                                                  hit_id,
+                                                                 seq_lg,
                                                                  replicon_name,
                                                                  position_hit,
                                                                  i_eval,
@@ -179,7 +181,8 @@ class Hit(object):
     """
     
     #def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, coverage):
-    def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
+    #def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
+    def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`txsscanlib.gene.Gene` object
@@ -187,6 +190,8 @@ class Hit(object):
         :type system: :class:`txsscanlib.system.System` object
         :param hit_id: the identifier of the hit
         :type hit_id: string
+        :param hit_seq_length: the length of the hit sequence
+        :type hit_id: integer
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :param position_hit: the position of the hit on the sequence?
@@ -207,6 +212,7 @@ class Hit(object):
         self.gene = gene
         self.system = system
         self.id = hit_id
+        self.seq_length = hit_seq_length
         self.replicon_name = replicon_name
         self.position = position_hit
         self.i_eval = i_eval
@@ -217,9 +223,10 @@ class Hit(object):
         self.end_match = end_match
 
     def __str__(self):
-        return "%s\t%s\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
                                                      self.replicon_name,
                                                      self.position,
+                                                     self.seq_length,
                                                      self.gene.name,
                                                      self.system.name,
                                                      self.i_eval,
@@ -242,6 +249,7 @@ class Hit(object):
                 self.gene.name == other.gene.name and
                 self.system.name == other.system.name and
                 self.id == other.id and
+                self.seq_length == other.seq_length and
                 self.replicon_name == other.replicon_name and
                 self.position == other.position and
                 self.i_eval == other.i_eval and

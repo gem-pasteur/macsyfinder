@@ -98,7 +98,6 @@ class Test(unittest.TestCase):
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
         self.assertTrue(gene.exchangeable)
-
  
     def test_multi_system(self):
         """
