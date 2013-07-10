@@ -50,7 +50,7 @@ class SystemParser(object):
         root = tree.getroot()
         inter_gene_max_space = root.get('inter_gene_max_space')
         if inter_gene_max_space is None:
-            msg = "Invalid system definition: inter_gene_max_space must be defined"
+            msg = "Invalid system definition (%s): inter_gene_max_space must be defined" % path
             _log.critical(msg)
             raise SyntaxError(msg)
         try:
@@ -128,6 +128,18 @@ class SystemParser(object):
             elif val in (None, "0", "false", "False"):
                 val = False
             attrs[attr] = val
+        inter_gene_max_space = node.get("inter_gene_max_space")
+        try:
+            inter_gene_max_space = int(inter_gene_max_space)
+        except ValueError:
+            msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
+            _log.critical(msg)
+            raise SyntaxError(msg)
+        except TypeError:#if None
+            pass
+        else:
+            attrs['inter_gene_max_space'] = inter_gene_max_space
+
         system_ref = node.get("system_ref")
         if system_ref != None:
             system = system_factory.get_system(system_ref, self.cfg)

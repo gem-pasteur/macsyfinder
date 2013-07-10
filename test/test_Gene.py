@@ -88,7 +88,7 @@ class Test(unittest.TestCase):
         gene = Gene(self.cfg, 'sctJ', system_foo, loner = True)
         self.assertTrue(gene.loner)
 
-   
+
     def test_exchangeable(self):
         """
         test getter for exchangeable property
@@ -109,14 +109,27 @@ class Test(unittest.TestCase):
         self.assertFalse(gene.multi_system)
         gene = Gene(self.cfg, 'sctJ', system_foo, multi_system = True)
         self.assertTrue(gene.multi_system)
-        
-        
+
+
+    def test_inter_gene_max_space(self):
+        """
+        test getter for nter_gene_max_space property
+        """
+        system_foo = System("foo", self.cfg)
+        system_inter_gene_max_space = 40
+        gene_inter_gene_max_space = 50
+        system_foo.inter_gene_max_space = system_inter_gene_max_space
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
+        gene = Gene(self.cfg, 'sctJ', system_foo, gene_inter_gene_max_space)
+        self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
+
+
     def test_str(self):
         """
         """
         system_foo = System( "foo", self.cfg)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
-        
         system_bar = System( "bar", self.cfg)
         gene_homolog = Gene(self.cfg, 'sctJ', system_bar)
         homolog = Homolog( gene_homolog, gene, self.cfg)

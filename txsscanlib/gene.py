@@ -30,7 +30,11 @@ class GeneFactory(object):
     """
     _genes_bank = {}
 
-    def get_gene(self, cfg, name, system, loner = False , exchangeable = False, multi_system = False):
+    def get_gene(self, cfg, name, system,
+                 loner = False,
+                 exchangeable = False,
+                 multi_system = False,
+                 inter_gene_max_space = None):
         """
         :return: return gene corresponding to the name.
                  If the gene already exists return it otherwise build it and return it
@@ -39,7 +43,7 @@ class GeneFactory(object):
         if name in self._genes_bank:
             gene = self._genes_bank[name]
         else:
-            gene = Gene(cfg, name, system, loner, exchangeable, multi_system)
+            gene = Gene(cfg, name, system, loner, exchangeable, multi_system, inter_gene_max_space)
             self._genes_bank[name] = gene
         return gene
 
@@ -52,8 +56,12 @@ class Gene(object):
 
     """
 
-
-    def __init__(self, cfg, name, system, loner = False, exchangeable = False, multi_system = False ):
+    def __init__(self, cfg, name,
+                 system,
+                 loner = False,
+                 exchangeable = False,
+                 multi_system = False,
+                 inter_gene_max_space = None ):
         """
         handle gene
 
@@ -69,6 +77,8 @@ class Gene(object):
         :type exchangeable: boolean.
         :param multi_system: True if a gene can belong to different system. 
         :type multi_system: boolean.
+        :param inter_gene_max_space: the maximum space between this gene and an other gene of the system.
+        :type inter_gene_max_space: integer
         """
         self.name = name 
         self.profile = profile_factory.get_profile(self, cfg)
@@ -79,6 +89,7 @@ class Gene(object):
         self._loner = loner
         self._exchangeable = exchangeable
         self._multi_system = multi_system
+        self._inter_gene_max_space = inter_gene_max_space
 
     def __str__(self):
         s = "name : %s" % self.name
@@ -120,6 +131,18 @@ class Gene(object):
         :rtype: boolean.
         """
         return self._multi_system
+    
+    @property
+    def inter_gene_max_space(self):
+        """
+        :return: The maximum distance between this gene and an other from the system. 
+                 If the value is not set at the gene level return the value set at the system level.
+        :rtype: integer.
+        """
+        if self._inter_gene_max_space is not None:
+            return self._inter_gene_max_space
+        else:
+            return self._system.inter_gene_max_space
     
     def add_homolog(self, homolog):
         """
