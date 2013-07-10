@@ -130,7 +130,6 @@ class OrderedHMMReport(HMMReport):
                         tmp_line_nb+=1
 
                         if line.startswith(">> "):
-                            fields = line.split()
                             hit_id = line.split()[1]
                             seq_info = db[hit_id]
                             seq_lg = seq_info.length

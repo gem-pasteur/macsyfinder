@@ -55,18 +55,18 @@ class Test(unittest.TestCase):
         self.assertEqual(gene.name, gene_name)
 
     def test_get_loner_gene(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System("foo", self.cfg)
         gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
-        self.assertFalse( gene.loner )
+        self.assertFalse(gene.loner)
         gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, loner = True)
-        self.assertTrue( gene.loner )
+        self.assertTrue(gene.loner)
 
     def test_get_exchangeable_gene(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System("foo", self.cfg)
         gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
-        self.assertFalse( gene.exchangeable )
+        self.assertFalse(gene.exchangeable)
         gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
-        self.assertTrue( gene.exchangeable )
+        self.assertTrue(gene.exchangeable)
         
     def test_get_multi_system_gene(self):
         system_foo = System( "foo", self.cfg)
@@ -74,6 +74,27 @@ class Test(unittest.TestCase):
         self.assertFalse( gene.multi_system )
         gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, multi_system = True)
         self.assertTrue( gene.multi_system )
+
+    def test_get_multi_system_gene(self):
+        system_foo = System("foo", self.cfg)
+        gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
+        self.assertFalse(gene.multi_system)
+        gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, multi_system = True)
+        self.assertTrue(gene.multi_system)
+
+    def test_inter_gene_max_space(self):
+        """
+        test getter for nter_gene_max_space property
+        """
+        system_foo = System("foo", self.cfg)
+        system_inter_gene_max_space = 40
+        gene_inter_gene_max_space = 50
+        system_foo.inter_gene_max_space = system_inter_gene_max_space
+        gene = gene_factory.get_gene(self.cfg, 'sctJ_FLG', system_foo)
+        self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
+        gene = gene_factory.get_gene(self.cfg, 'sctJ', system_foo, gene_inter_gene_max_space)
+        self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
+
 
     def test_get_uniq_object(self):
         system_foo = System( "foo", self.cfg)

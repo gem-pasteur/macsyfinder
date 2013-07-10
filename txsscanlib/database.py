@@ -242,8 +242,34 @@ class Database(object):
                       dbtype = db.DB_HASH,
                       flags = db.DB_RDONLY)
         self._my_open_db = mydb
-        _log.debug("open("+self._my_indexes+",dbname = "+self.name+",dbtype = "+str(db.DB_HASH)+",flags ="+ str(db.DB_RDONLY)+")")
-                
+        return self
+    
+    def open(self):
+        """
+        open a connection. This method must be called before to get items or use the with statement::
+        
+          db = Database(self.cfg)
+          db.build()
+          db.open()
+          db[ my_key ]
+          db.close()
+        
+        or::
+        
+          with db.open():
+             db[ my_key ] 
+        
+        """
+        if not self._my_indexes:
+            msg = "no index available, the database must be build before to open it"
+            _log.critical(msg)
+            raise IOError(msg)
+        mydb = db.DB()
+        mydb.open(self._my_indexes,
+                      dbname = self.name,
+                      dbtype = db.DB_HASH,
+                      flags = db.DB_RDONLY)
+        self._my_open_db = mydb
         return self
 
     def close(self):
@@ -299,10 +325,7 @@ class Database(object):
             msg = msg = "the database must be open before to get items"
             _log.critical(msg)
             raise IOError(msg)
-        
-        #_log.debug()
         data = self._my_open_db.get(seq_id)
-        
         if data:
             length, seq_nb = data.split(';')
             return SequenceInfo(seq_id, int(length), int(seq_nb))
@@ -318,7 +341,7 @@ class Database(object):
           db = Database()
           with db.open():
              seq_info = db.get( 'my_id', None ) 
-          seq_info.length
+          seq_info.lenght
 
         :param seq_id: the sequence identifier
         :type seq_id: string
