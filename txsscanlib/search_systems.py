@@ -157,7 +157,7 @@ class Cluster(object):
             self._putative_system = tmp_syst_name
             self.systems = systems
 
-            if len(genes) == 1 and self.hits[0].gene.loner == False:
+            if len(genes) == 1 and self.hits[0].gene.loner == False:                            
                 self._state = "ineligible"
             else:
                 if len(systems.keys()) == 1:
