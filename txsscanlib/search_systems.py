@@ -17,6 +17,7 @@ from collections import namedtuple, Counter
 import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
+from system import system_factory
 
 class ClustersHandler(object):
     """
@@ -55,7 +56,7 @@ class ClustersHandler(object):
 class Cluster(object):
     """
     Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes'systems: 
-    - ineligible
+    - ineligible: not a cluster to analyze
     - clear: a single system is represented in the cluster
     - ambiguous: several systems are represented in the cluster
     """
@@ -136,12 +137,14 @@ class Cluster(object):
         The systems represented are stored in a dictionary in the self.systems variable. 
         """        
         if not self.putative_system:
-            systems={}
+            systems={} # Counter of occcurrences of systems in the cluster
             genes=[]
+            systems_object={} # Store systems objet. 
             for h in self.hits:
                 syst=h.system.name
                 if not systems.has_key(syst):
                     systems[syst]=1
+                    systems_object[syst]=h.system
                 else:
                     systems[syst]+=1
                 if genes.count(h.gene.name) == 0:
@@ -160,10 +163,20 @@ class Cluster(object):
             if len(genes) == 1 and self.hits[0].gene.loner == False:                            
                 self._state = "ineligible"
             else:
+                # Check for foreign "allowed" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
                 if len(systems.keys()) == 1:
                     self._state = "clear"
                 else:
-                    self._state = "ambiguous"
+                    # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
+                    foreign_allowed=0
+                    for h in self.hits:
+                        if h.system.name != self._putative_system and systems_object[self._putative_system].allowed_genes.count(h.gene)>0:
+                           foreign_allowed+=1
+                    if foreign_allowed == sum(systems.values())-systems[self._putative_system]:
+                        # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
+                        self._state = "clear"
+                    else:
+                        self._state = "ambiguous"
 
     #def is_eligible(self):
     #    for h in hits:
@@ -406,7 +419,7 @@ class SystemOccurence(object):
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
-            # To add: store hits for system extraction (positions, sequences) when complete. To do that: instead of having a nb of occurences per reference gene, let's have a list of hits? and an easy way to check for gene occurrence => empty list, and the nb of occurences: len(list)
+            # Stores hits for system extraction (positions, sequences) when complete. 
             
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
@@ -571,7 +584,8 @@ class systemDetectionReport(object):
         Write a tabulated output with number of detected systems for each replicon. 
         """
         system_counter=self.counter_output()
-        #print system_counter    
+        print system_counter    
+        
         report_str = self.replicon_name
         for s in system_names:
             for o in system_occurence_states:
@@ -617,31 +631,76 @@ class systemDetectionReport(object):
             _file.write(report_str)    
 
 
-def disambiguate_cluster(cluster):
+def disambiguate_cluster(cluster):  
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
-    It returns a "cleansed" set of clusters, ready to use for system occurence detection. It: 
+    It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
      - splits the cluster in two if it seems that two systems are nearby
      - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster
     in this case, check that they are not "loners", cause "loners" can be stored.
     """
     res_clusters = []               
     syst_dico = cluster.systems
+    print "Disambiguation step"
     print syst_dico
     
+    """
     cur_syst = cluster.hits[0].system.name
     nb_syst_genes_tot = syst_dico[cur_syst]
-    nb_syst_genes = 1
+    cur_nb_syst_genes = 1
     if nb_syst_genes == nb_syst_genes_tot:
             # Treat this gene
-            # Check if "loner"
-            # Check if ""
-            pass 
-            
+            # Check if "loner". In this case: keep it! 
+            if cluster.hits[0].gene.loner:
+                # Valid cluster, appended:
+                cluster=Cluster()
+                cluster.add(cluster.hits[0])
+                cluster.save()
+                res_clusters.append(cluster)
+            pass
+    """
+    
+    cur_syst = cluster.hits[0].system.name
+    cur_nb_syst_genes_tot = syst_dico[cur_syst]
+    cur_nb_syst_genes = 1
+             
+    cur_cluster=Cluster() 
+    cur_cluster.add(cluster.hits[0])       
     for h in cluster.hits[1:]:
-        syst = h.system
-        
-    #pass
+        syst = h.system.name
+        if syst == cur_syst:
+            cur_nb_syst_genes+=1
+            cur_cluster.add(h)
+            #if cur_nb_syst_genes == cur_nb_syst_genes_tot:
+            #    cluster.save()
+        else:
+            if cur_nb_syst_genes == cur_nb_syst_genes_tot:
+                cur_cluster.save()
+                # Check cluster status before storing it or not:
+                if cur_cluster.state == "clear":
+                    res_clusters.append(cur_cluster)
+            
+            cur_syst = syst
+            cur_nb_syst_genes = 1
+            cur_nb_syst_genes_tot = syst_dico[cur_syst]
+            cur_cluster = Cluster()
+            cur_cluster.add(h)
+            
+    if cur_nb_syst_genes == cur_nb_syst_genes_tot:
+        #print cur_nb_syst_genes
+        #print cur_nb_syst_genes_tot
+        #print cur_syst
+        cur_cluster.save()
+        # Check cluster status before storing it or not:
+        if cur_cluster.state == "clear":
+            res_clusters.append(cur_cluster) 
+    
+    for r in res_clusters:
+        print r
+                                   
+    return res_clusters
+
+
     
 def analyze_clusters_replicon(clusters, systems):
 #def analyze_clusters_replicon(replicon_name, clusters, systems):
@@ -699,11 +758,18 @@ def analyze_clusters_replicon(clusters, systems):
             # - split the cluster in two if it seems that two systems are nearby
             # - remove single hits that are not forbidden for the "main" system and that are at one end of the current cluster
             # in this case, check that they are not "loners", cause "loners" can be stored.
-            disambiguate_cluster(clust)
-            print "------- next -------"
+            disamb_clusters = disambiguate_cluster(clust)
+            # Add those new clusters to the set of clusters to fill system_occurrences?
+            for c in disamb_clusters:
+                clusters.add(c)
+            if disamb_clusters:
+                print "=> disambiguated cluster(s) stored for later treatment"
+            else:
+                print "=> none kept"
+                
         else:
             print "------- next -------"
-    print "\n\n*****************************************\n******* Report scattered systems *******\n*****************************************\n"
+    print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
     for system in systems:
         #print systems_occurences[system]
         so = systems_occurences_scattered[system.name]
