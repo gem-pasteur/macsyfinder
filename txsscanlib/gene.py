@@ -176,13 +176,14 @@ class Gene(object):
         :type gene: :class:`txsscanlib.gene.Gene` object.
         :rtype: boolean.
         """
+
         if self == gene:
             return True
         else:
             for h in self.homologs:
-                if self == h.gene:
+                if gene == h.gene:
                     return True
-                
+               
         return False       
     
     def is_mandatory(self, system):
@@ -204,19 +205,10 @@ class Gene(object):
             return False
     
     def is_authorized(self, system):
-        print "--------- is_autho"
         for m in (system.mandatory_genes+system.allowed_genes):
             if self == m:
                 return True
-            if m.exchangeable:
-                print str(m)+" exch" 
-            if m.is_homolog(self):
-                print str(m)+" homo"
-            if self.is_homolog(m):
-                print str(self)+" l'autre homo"
-                 
             if m.exchangeable and m.is_homolog(self):
-                print "On retourne True"
                 return True
             
         return False
