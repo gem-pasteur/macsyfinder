@@ -137,6 +137,7 @@ class Cluster(object):
         The systems represented are stored in a dictionary in the self.systems variable. 
         """        
         if not self.putative_system:
+            # First compiute the "Majoritary" system
             systems={} # Counter of occcurrences of systems in the cluster
             genes=[]
             systems_object={} # Store systems objet. 
@@ -164,14 +165,20 @@ class Cluster(object):
                 self._state = "ineligible"
             else:
                 # Check for foreign "allowed" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
+                # Also deal with foreign "exchangeable" genes for the same reasons... NB !! Maybe just not add the system to the list if exchangeable?  
                 if len(systems.keys()) == 1:
                     self._state = "clear"
                 else:
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
-                    foreign_allowed=0
+                    foreign_allowed = 0
                     for h in self.hits:
-                        if h.system.name != self._putative_system and systems_object[self._putative_system].allowed_genes.count(h.gene)>0:
-                           foreign_allowed+=1
+                        print "Put "+self._putative_system
+                        print "Cur_syst "+h.system.name
+                        print h.gene
+                        #if h.system.name != self._putative_system and systems_object[self._putative_system].allowed_genes.count(h.gene)>0:
+                        if h.system.name != self._putative_system and h.gene.is_authorized(systems_object[self._putative_system]):
+                            
+                            foreign_allowed+=1
                     if foreign_allowed == sum(systems.values())-systems[self._putative_system]:
                         # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
                         self._state = "clear"
@@ -643,23 +650,7 @@ def disambiguate_cluster(cluster):
     syst_dico = cluster.systems
     print "Disambiguation step"
     print syst_dico
-    
-    """
-    cur_syst = cluster.hits[0].system.name
-    nb_syst_genes_tot = syst_dico[cur_syst]
-    cur_nb_syst_genes = 1
-    if nb_syst_genes == nb_syst_genes_tot:
-            # Treat this gene
-            # Check if "loner". In this case: keep it! 
-            if cluster.hits[0].gene.loner:
-                # Valid cluster, appended:
-                cluster=Cluster()
-                cluster.add(cluster.hits[0])
-                cluster.save()
-                res_clusters.append(cluster)
-            pass
-    """
-    
+     
     cur_syst = cluster.hits[0].system.name
     cur_nb_syst_genes_tot = syst_dico[cur_syst]
     cur_nb_syst_genes = 1
@@ -671,15 +662,24 @@ def disambiguate_cluster(cluster):
         if syst == cur_syst:
             cur_nb_syst_genes+=1
             cur_cluster.add(h)
-            #if cur_nb_syst_genes == cur_nb_syst_genes_tot:
-            #    cluster.save()
         else:
+            # Deal with "allowed foreign genes", and system attribution when the current gene can be in both aside systems! 
+            #if h.gene.is_authorized(cur_syst):
+            #    if not h.gene.is_authorized(syst):
+            #        cur_cluster.add(h)
+                
+                    
+            
+            
+            
+            ###### OLD PART ######
+            # Case 1: the current gene can not be found in the last system
             if cur_nb_syst_genes == cur_nb_syst_genes_tot:
                 cur_cluster.save()
                 # Check cluster status before storing it or not:
                 if cur_cluster.state == "clear":
                     res_clusters.append(cur_cluster)
-            
+           
             cur_syst = syst
             cur_nb_syst_genes = 1
             cur_nb_syst_genes_tot = syst_dico[cur_syst]

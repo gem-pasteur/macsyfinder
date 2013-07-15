@@ -203,6 +203,23 @@ class Gene(object):
         else:
             return False
     
+    def is_authorized(self, system):
+        print "--------- is_autho"
+        for m in (system.mandatory_genes+system.allowed_genes):
+            if self == m:
+                return True
+            if m.exchangeable:
+                print str(m)+" exch" 
+            if m.is_homolog(self):
+                print str(m)+" homo"
+            if self.is_homolog(m):
+                print str(self)+" l'autre homo"
+                 
+            if m.exchangeable and m.is_homolog(self):
+                print "On retourne True"
+                return True
+            
+        return False
         
 class Homolog(object):
     """
