@@ -19,37 +19,62 @@ from threading import Lock
 from report import OrderedHMMReport, UnOrderedHMMReport
 
 
-class GeneFactory(object):
+class GeneBank(object):
     """
-    build and cached all genes objects. Genes must not be instanciate directly.
-    the gene_factory must be used. The gene factory ensure there is only one instance
-    of gene for a given name.
-    To get a gene use the method get_gene. if the gene is already cached this instance is returned
-    otherwise a new gen is build, cached then returned.
-
+    cached all genes objects. ensure that genes are instanciated only once
     """
     _genes_bank = {}
 
-    def get_gene(self, cfg, name, system,
-                 loner = False,
-                 exchangeable = False,
-                 multi_system = False,
-                 inter_gene_max_space = None):
+    def __getitem__(self, name):
         """
+        :param name: the name of the gene
+        :type name: string
+        :param cfg: the configuration
+        :type cfg: :class:`txsscanlib.config.Config` object
         :return: return gene corresponding to the name.
-                 If the gene already exists return it otherwise build it and return it
+        If the gene already exists return it otherwise build it and return it
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         if name in self._genes_bank:
-            gene = self._genes_bank[name]
+            return self._genes_bank[name]
         else:
-            gene = Gene(cfg, name, system, loner, exchangeable, multi_system, inter_gene_max_space)
-            self._genes_bank[name] = gene
-        return gene
+            raise KeyError(name)
 
-gene_factory = GeneFactory()
 
- 
+    def __contains__(self, gene):
+        """
+        implement membership test operators
+        :param gene:
+        :type gene:
+        :return: True if the gene.name is in , False otherwise
+        :rtype: boolean
+        """
+        return gene in self._genes_bank
+
+    def __iter__(self):
+        """
+        """
+        return self._genes_bank.itervalues()
+
+    def add_gene(self, gene):
+        """
+        :param name: the name of the gene
+        :type name: string
+        :param cfg: the configuration
+        :type cfg: :class:`txsscanlib.config.Config` object
+        :return: return gene corresponding to the name.
+        If the gene already exists return it otherwise build it an d return
+        :rtype: :class:`txsscanlib.gene.Gene` object
+        :raise: KeyError if a gene with the same name is already registered
+        """
+        if gene in self._genes_bank:
+            raise KeyError("a gene named %s is already registered" % gene.name)
+        else:
+            self._genes_bank[gene.name] = gene
+
+gene_bank = GeneBank()
+
+
 class Gene(object):
     """
     handle Gene of a secretion system

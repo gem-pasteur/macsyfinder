@@ -41,20 +41,19 @@ and 3 kind of genes lists in function of their presence:
 * The genes which can be presents but not in all cases.
 * The genes which must not be present.
 
-SystemFactory API reference
+SystemBank API reference
 ===========================
  .. automodule:: txsscanlib.system
-   :members: SystemFactory
+   :members: SystemBank
    :private-members:
    :special-members:
 
- .. note::
+ 
+.. note::
 
-   Don't instanciate your own SystemFactory use the system_factory at the top level of the module. ::
+   Don't instanciate your own SystemBank use the system_bank at the top level of the module. ::
      
-     from txsscanlib.system import system_factory
-     t2ss =  system_factory.get_system("T2SS", config)
-     
+     from txsscanlib.system import system_bank
  
 System API reference
 ====================
