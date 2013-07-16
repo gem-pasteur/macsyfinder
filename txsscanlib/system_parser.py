@@ -154,7 +154,7 @@ class SystemParser(object):
             gene_name = gene_node.get('name')
             gene = self.gene_bank[gene_name]
             for homolog_node in gene_node.findall("homologs/gene"):
-                gene.add_homolog(self._parse_homolog(homolog_node, gene))
+                gene.add_homolog(self._parse_homolog(homolog_node, gene, system))
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
             elif presence == 'allowed':
@@ -167,7 +167,7 @@ class SystemParser(object):
                 raise SyntaxError(msg)
 
 
-    def _parse_homolog(self, node, gene_ref):
+    def _parse_homolog(self, node, gene_ref, curr_system):
         """
         parse a xml element gene and build the corresponding object
 
@@ -197,15 +197,17 @@ class SystemParser(object):
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
+        if system_ref is None:
+            system_ref = curr_system.name
         if system_ref != gene.system.name:
             msg = "inconsitency in systems definitions: the gene %s describe as homolog of %s with system_ref %s has an other system in bank(%s)" % (name, gene_ref.name, system_ref, gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref, aligned)
         for homolog_node in node.findall("homologs/gene"):
-            h2 = self._parse_homolog(homolog_node , gene)
+            h2 = self._parse_homolog(homolog_node , gene, curr_system)
             homolog.add_homolog(h2)
-            h2.add_homolog(self._parse_homolog(homolog_node , gene) )
+            #h2.add_homolog(self._parse_homolog(homolog_node , gene) )
         return homolog
 
 

@@ -253,7 +253,6 @@ if ('all' or 'All' or 'ALL') in args.systems:
     systems_name_to_detect = [ os.path.basename(s)[:-4] for s in systems_name_to_detect]
 else:
     systems_name_to_detect = args.systems
-
 parser.parse(systems_name_to_detect)
 
 systems_to_detect = [ system_bank[system_name] for system_name  in systems_name_to_detect]
@@ -261,7 +260,6 @@ all_genes = []
 for system in systems_to_detect:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
-
 all_reports = search_genes(all_genes, config)
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
