@@ -831,8 +831,8 @@ def build_clusters(hits):
 
         # TEST !! Pick up the smallest of the two distances...
         smaller_dist = min(prev_max_dist, cur_max_dist)    
-        #if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
-        if(inter_gene <= smaller_dist ):
+        if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
+        #if(inter_gene <= smaller_dist ):
         # First check the cur.id is different from  the prev.id !!!
         #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
             #print "zero"
