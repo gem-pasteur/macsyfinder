@@ -14,19 +14,19 @@ import logging
 _log = logging.getLogger('txsscan.' + __name__)
 
 
-class SystemFactory(object):
+class SystemBank(object):
     """
     build and cached all systems objects. Systems must not be instanciate directly.
     the system_factory must be used. The system factory ensure there is only one instance
     of system for a given name.
     To get a system use the method get_system. if the gene is already cached this instance is returned
     otherwise a new system is build, cached then returned.
-    
-    """        
-    
-    system_bank = {}
-    
-    def get_system(self, name, cfg ):
+    """
+
+    _system_bank = {}
+
+
+    def __getitem__(self, name):
         """
         :param name: the name of the system
         :type name: string
@@ -36,32 +36,72 @@ class SystemFactory(object):
         If the system already exists return it otherwise build it an d returni
         :rtype: :class:`txsscanlib.system.System` object
         """
-        if name in self.system_bank:
-            system =  self.system_bank[name]
+        if name in self._system_bank:
+            return self._system_bank[name]
         else:
-            system = System(name, cfg)
-            self.system_bank[name] = system
-        return system
+            raise KeyError(name)
 
-system_factory = SystemFactory()
+
+    def __contains__(self, system):
+        """
+        implement membership test operators
+        :param system:
+        :type system:
+        :return: True if the system.name is in , False otherwise
+        :rtype: boolean
+        """
+        return system in self._system_bank
+
+    def __iter__(self):
+        """
+        """
+        return self._system_bank.itervalues()
+
+    def add_system(self, system ):
+        """
+        :param name: the name of the system
+        :type name: string
+        :param cfg: the configuration
+        :type cfg: :class:`txsscanlib.config.Config` object
+        :return: return system corresponding to the name.
+        If the system already exists return it otherwise build it an d return
+        :rtype: :class:`txsscanlib.system.System` object
+        :raise: KeyError if a system with the same name is already registered
+        """
+        if system in self._system_bank:
+            raise KeyError, "a system named %s is already registered" % system.name
+        else:
+            self._system_bank[system.name] = system
+
+system_bank = SystemBank()
+
 
 class System(object):
     """
     handle a secretion system.
     """
 
-    def __init__(self, name, cfg):
+    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None):
         """
-        :param name: the name of the system
-        :type name: string
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
+        :param name: the name of the system
+        :type name: string
+        :param inter_gene_max_space: the maximum distance between two genes
+        :type inter_gene_max_space: integer
+        :param min_mandatory_genes_required: the quorum of mandatory genes to defined this system
+        :type min_mandatory_genes_required: integer
+        :param min_genes_required: the quorum of genes to defined system
+        :type min_genes_required: integer
         """
         self.cfg = cfg
         self.name = name
-        self._inter_gene_max_space = None
-        self._min_mandatory_genes_required = None
-        self._min_genes_required = None
+        self._inter_gene_max_space = inter_gene_max_space
+        self._min_mandatory_genes_required = min_mandatory_genes_required
+        self._min_genes_required = min_genes_required
+        if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
+            if self._min_genes_required < self._min_mandatory_genes_required:
+                raise ValueError("min_genes_required must be greater or equal than min_mandatory_genes_required")
         self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
@@ -77,16 +117,6 @@ class System(object):
             return cfg_inter_gene_max_space
         return self._inter_gene_max_space
 
-    @inter_gene_max_space.setter
-    def inter_gene_max_space(self, val):
-        """
-        set the maximum distance allowed between 2 genes for this system
-
-        :param val: the maximum distance allowed between 2 genes
-        :type val: integer
-        """
-        self._inter_gene_max_space = int(val)
-
     @property
     def min_mandatory_genes_required(self):
         """
@@ -101,15 +131,6 @@ class System(object):
         else:
             return self._min_mandatory_genes_required
 
-    @min_mandatory_genes_required.setter
-    def min_mandatory_genes_required(self, val):
-        """
-        set the quorum of mandatory genes required for this system
-
-        :param val: the quorum of mandatory genes required for this system
-        :type val: integer
-        """
-        self._min_mandatory_genes_required = int(val)
 
     @property
     def min_genes_required(self):
@@ -124,16 +145,6 @@ class System(object):
             return len(self._mandatory_genes)
         else:
             return self._min_genes_required
-
-    @min_genes_required.setter
-    def min_genes_required(self, val):
-        """
-        set the quorum of genes required for this system
-
-        :param val: the quorum of genes required for this system
-        :type val: integer
-        """
-        self._min_genes_required = int(val)
 
     def add_mandatory_gene(self, gene):
         """

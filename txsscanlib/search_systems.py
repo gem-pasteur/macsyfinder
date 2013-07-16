@@ -587,8 +587,7 @@ class systemDetectionReport(object):
         Write a tabulated output with number of detected systems for each replicon. 
         """
         system_counter=self.counter_output()
-        print system_counter    
-        
+        #print system_counter    
         report_str = self.replicon_name
         for s in system_names:
             for o in system_occurence_states:
@@ -633,8 +632,13 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
+<<<<<<< .working
 
 def disambiguate_cluster(cluster):  
+=======
+
+def disambiguate_cluster(cluster):
+>>>>>>> .merge-right.r180
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
     It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
