@@ -31,6 +31,8 @@ from txsscanlib.search_genes import search_genes
 from txsscanlib.database import Database
 from txsscanlib.database import Database
 from txsscanlib.search_systems import search_systems
+from txsscanlib.system import system_bank
+from txsscanlib.gene import gene_bank
 
 parser = argparse.ArgumentParser(description=" Txsscan is a tool for the detection of protein secretion systems in diderm bacteria.\nIt also provides a framework fully parametrizable with a dedicated syntax to implement the detection of new systems (function units encoded by one or more genes, contiguous or not in genomes) for which Hmmer protein profiles are available. ")
 
@@ -242,22 +244,21 @@ config.save(config.working_dir)
 db = Database(config)
 db.build( force = config.build_indexes )
 
-parser = SystemParser(config)
+parser = SystemParser(config, system_bank, gene_bank)
 if ('all' or 'All' or 'ALL') in args.systems:
 #if 'all' in args.systems:
     import glob
-    system_names = glob.glob( os.path.join(config.def_dir, '*.xml'))
-    #system_names = [ os.path.basename(s) for s in system_names]
-    system_names = [ os.path.basename(s)[:-4] for s in system_names]
+    systems_name_to_detect = glob.glob( os.path.join(config.def_dir, '*.xml'))
+    #systems_to_detect = [ os.path.basename(s) for s in systems_to_detect]
+    systems_name_to_detect = [ os.path.basename(s)[:-4] for s in systems_name_to_detect]
 else:
-    system_names = args.systems
-systems = []
-for name  in system_names:
-    system = parser.parse(name)
-    systems.append(system)
+    systems_name_to_detect = args.systems
 
+parser.parse(systems_name_to_detect)
+
+systems_to_detect = [ system_bank[system_name] for system_name  in systems_name_to_detect]
 all_genes = []
-for system in systems:
+for system in systems_to_detect:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
 
@@ -269,13 +270,13 @@ all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in 
 all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
 all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
-systems=sorted(systems, key=attrgetter('name'))
+systems_to_detect=sorted(systems_to_detect, key=attrgetter('name'))
 
 #tmp=""
 #for h in all_hits:
 #    tmp+=str(h)
 #print tmp
 #print "***** SEARCH_SYSTEMS *****"
-search_systems(all_hits, systems, config)
+search_systems(all_hits, systems_to_detect, config)
 
 logger.debug("FIN")
