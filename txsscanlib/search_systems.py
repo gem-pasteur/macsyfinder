@@ -17,7 +17,7 @@ from collections import namedtuple, Counter
 import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
-from system import system_factory
+#from system import system_factory
 
 class ClustersHandler(object):
     """

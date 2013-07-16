@@ -197,7 +197,8 @@ class SystemParser(object):
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
-        if system_ref != gene.system.name:
+        #if system_ref != gene.system.name:     
+        if system_ref != None and system_ref != gene.system.name:
             msg = "inconsitency in systems definitions: the gene %s describe as homolog of %s with system_ref %s has an other system in bank(%s)" % (name, gene_ref.name, system_ref, gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
