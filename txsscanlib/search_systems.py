@@ -587,7 +587,7 @@ class systemDetectionReport(object):
         Write a tabulated output with number of detected systems for each replicon. 
         """
         system_counter=self.counter_output()
-        #print system_counter    
+        print system_counter    
         report_str = self.replicon_name
         for s in system_names:
             for o in system_occurence_states:
