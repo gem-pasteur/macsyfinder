@@ -632,13 +632,8 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
-<<<<<<< .working
-
-def disambiguate_cluster(cluster):  
-=======
 
 def disambiguate_cluster(cluster):
->>>>>>> .merge-right.r180
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
     It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
