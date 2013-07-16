@@ -172,10 +172,6 @@ class Cluster(object):
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
                     foreign_allowed = 0
                     for h in self.hits:
-                        print "Put "+self._putative_system
-                        print "Cur_syst "+h.system.name
-                        print h.gene
-                        #if h.system.name != self._putative_system and systems_object[self._putative_system].allowed_genes.count(h.gene)>0:
                         if h.system.name != self._putative_system and h.gene.is_authorized(systems_object[self._putative_system]):
                             
                             foreign_allowed+=1
