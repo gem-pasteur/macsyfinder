@@ -42,6 +42,9 @@ class ClustersHandler(object):
             self.clusters.append(cluster)
         else:
             msg = "Attempting to add a cluster in a ClustersHandler dedicated to another replicon !"
+            for c in self.clusters:
+                msg+=str(c)
+            msg+="To add: %s"%str(cluster)
             _log.critical(msg)
             raise Exception(msg)
         
@@ -830,7 +833,7 @@ def build_clusters(hits):
         # the two others takes into account either system1 parameter or system2 parameter
 
         # TEST !! Pick up the smallest of the two distances...
-        smaller_dist = min(prev_max_dist, cur_max_dist)    
+        #smaller_dist = min(prev_max_dist, cur_max_dist)    
         if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
         #if(inter_gene <= smaller_dist ):
         # First check the cur.id is different from  the prev.id !!!
@@ -891,7 +894,19 @@ def build_clusters(hits):
             
         prev=cur
     
-    # !!! Treat the last cluster?     
+    # !!! Treat the last cluster?  Yeeaaaah !!
+    #print "\nHEHOHEHOHEHO !!! Last cluster to deal with..."
+    #print cur_cluster
+    #print len(cur_cluster)
+    #if len(cur_cluster)>1:
+    #    print "store cause long enough"
+    #if prev.gene.loner:
+    #    print "store cause loner"
+        
+    #print "HEHOHEHOHEHO !!!\n"    
+    if len(cur_cluster)>1 or (len(cur_cluster)==1 and prev.gene.loner):
+        clusters.add(cur_cluster)
+        
     return clusters
 
  
@@ -933,8 +948,13 @@ def search_systems(hits, systems, cfg):
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
+            #for h in sub_hits:
+            #    print h
             #print "\n************\nBuilding clusters for %s \n************\n"%k
             clusters=build_clusters(sub_hits)
+            #for c in clusters.clusters:
+            #    print c
+            
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
