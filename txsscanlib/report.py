@@ -180,9 +180,8 @@ class Hit(object):
     handle hits found by HMM. the hit are instanciate by :py:meth:`HMMReport.extract` method
     """
     
-    #def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, coverage):
-    #def __init__(self, gene, system, hit_id, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
-    def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name, position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
+    def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name,
+                 position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`txsscanlib.gene.Gene` object
