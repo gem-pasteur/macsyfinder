@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created on Jul 12, 2013
-
-@author: bneron
-@contact: user_email
-@organization: Institut Pasteur
-@license: license
-"""
+#################################
+# Created on Jul 12, 2013
+#
+# @author: bneron
+# @contact: user_email
+# @organization: Institut Pasteur
+# @license: license
+###################################
 import os
 import xml.etree.ElementTree as ET
 import logging

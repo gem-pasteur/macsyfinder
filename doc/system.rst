@@ -30,7 +30,7 @@ for instance::
         <gene name="sctC" presence="forbidden"/>
     </system>
 
-
+ 
 a system_parser is used to build a system object from it's xml definition
 
 a system as a name based on the file name of the xml definition
@@ -40,6 +40,10 @@ and 3 kind of genes lists in function of their presence:
 * The genes which must be present in the genome to defined this system.
 * The genes which can be presents but not in all cases.
 * The genes which must not be present.
+
+.. note:: 
+    
+    a complete description of the secretion system grammar is available here :ref:`system-definition-grammar-label`
 
 SystemBank API reference
 ===========================
