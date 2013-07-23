@@ -69,7 +69,7 @@ a gene may have homologs.</p>
 Homolog are redireted to this gene.</p>
 <p>To optimize computation and to avoid concurrency problems when we search several systems.
 Each gene must be instanciate only one time. This is ensure by using the gene_factory.
-gene_factory is a  <a class="reference internal" href="#txsscanlib.gene.GeneFactory" title="txsscanlib.gene.GeneFactory"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.GeneFactory</span></tt></a> object.</p>
+gene_factory is a  <tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.GeneFactory</span></tt> object.</p>
 <p>example to get a gene object:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.system</span> <span class="kn">import</span> <span class="n">system_factory</span>
 <span class="kn">from</span> <span class="nn">txsscanlib.config</span> <span class="kn">import</span> <span class="n">Config</span>
@@ -84,37 +84,77 @@ gene_factory is a  <a class="reference internal" href="#txsscanlib.gene.GeneFact
 <span class="n">pilO</span> <span class="o">=</span> <span class="n">gene_factory</span><span class="o">.</span><span class="n">get_gene</span><span class="p">(</span><span class="s">&quot;pilO&quot;</span><span class="p">,</span> <span class="n">t2ss</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="genefactory-api-reference">
-<h2>GeneFactory API reference<a class="headerlink" href="#genefactory-api-reference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="genebank-api-reference">
+<h2>GeneBank API reference<a class="headerlink" href="#genebank-api-reference" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><span class="target" id="module-txsscanlib.gene"></span><dl class="class">
-<dt id="txsscanlib.gene.GeneFactory">
-<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">GeneFactory</tt><a class="headerlink" href="#txsscanlib.gene.GeneFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>build and cached all genes objects. Genes must not be instanciate directly.
-the gene_factory must be used. The gene factory ensure there is only one instance
-of gene for a given name.
-To get a gene use the method get_gene. if the gene is already cached this instance is returned
-otherwise a new gen is build, cached then returned.</p>
-<dl class="attribute">
-<dt id="txsscanlib.gene.GeneFactory.__weakref__">
-<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.gene.GeneFactory.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dt id="txsscanlib.gene.GeneBank">
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">GeneBank</tt><a class="headerlink" href="#txsscanlib.gene.GeneBank" title="Permalink to this definition">¶</a></dt>
+<dd><p>cached all genes objects. ensure that genes are instanciated only once</p>
+<dl class="method">
+<dt id="txsscanlib.gene.GeneBank.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>gene</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneBank.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>implement membership test operators
+:param gene:
+:type gene:
+:return: True if the gene.name is in , False otherwise
+:rtype: boolean</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="txsscanlib.gene.GeneFactory.get_gene">
-<tt class="descname">get_gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneFactory.get_gene" title="Permalink to this definition">¶</a></dt>
+<dt id="txsscanlib.gene.GeneBank.__getitem__">
+<tt class="descname">__getitem__</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneBank.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">return gene corresponding to the name.
-If the gene already exists return it otherwise build it an d returni</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the gene</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return gene corresponding to the name.</p>
+</td>
 </tr>
 </tbody>
 </table>
+<p>If the gene already exists return it otherwise build it and return it
+:rtype: <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.GeneBank.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneBank.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.GeneBank.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.gene.GeneBank.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.gene.GeneBank.add_gene">
+<tt class="descname">add_gene</tt><big>(</big><em>gene</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.GeneBank.add_gene" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the gene</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return gene corresponding to the name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If the gene already exists return it otherwise build it an d return
+:rtype: <a class="reference internal" href="#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object
+:raise: KeyError if a gene with the same name is already registered</p>
 </dd></dl>
 
 </dd></dl>
@@ -122,8 +162,8 @@ If the gene already exists return it otherwise build it an d returni</td>
 </div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>Don&#8217;t instanciate your own GeneFactory use the gene_factory at the top level of the module.</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.gene</span> <span class="kn">import</span> <span class="n">gene_factory</span>
+<p>Don&#8217;t instanciate your own GeneFactory use the gene_bank at the top level of the module.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.gene</span> <span class="kn">import</span> <span class="n">gene_bank</span>
 </pre></div>
 </div>
 </div>
@@ -132,7 +172,7 @@ If the gene already exists return it otherwise build it an d returni</td>
 <span id="gene-api-reference"></span><h2>Gene API reference<a class="headerlink" href="#module-txsscanlib.gene" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.gene.Gene">
-<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.gene.</tt><tt class="descname">Gene</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em>, <em>multi_system=False</em>, <em>inter_gene_max_space=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle Gene of a secretion system</p>
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.__eq__">
@@ -151,7 +191,7 @@ If the gene already exists return it otherwise build it an d returni</td>
 
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>system</em>, <em>loner=False</em>, <em>exchangeable=False</em>, <em>multi_system=False</em>, <em>inter_gene_max_space=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/gene.html#Gene.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.gene.Gene.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle gene</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -163,6 +203,8 @@ If the gene already exists return it otherwise build it an d returni</td>
 <li><strong>system</strong> (<a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object.) &#8211; the system which belongs this gene/</li>
 <li><strong>loner</strong> (<em>boolean.</em>) &#8211; True if a gene can be isolated on the genome, False otherwise.</li>
 <li><strong>exchangeable</strong> (<em>boolean.</em>) &#8211; True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.</li>
+<li><strong>multi_system</strong> (<em>boolean.</em>) &#8211; True if a gene can belong to different system.</li>
+<li><strong>inter_gene_max_space</strong> (<em>integer</em>) &#8211; the maximum space between this gene and an other gene of the system.</li>
 </ul>
 </td>
 </tr>
@@ -220,6 +262,22 @@ If the gene already exists return it otherwise build it an d returni</td>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="txsscanlib.gene.Gene.inter_gene_max_space">
+<tt class="descname">inter_gene_max_space</tt><a class="headerlink" href="#txsscanlib.gene.Gene.inter_gene_max_space" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The maximum distance between this gene and an other from the system. 
+If the value is not set at the gene level return the value set at the system level.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="txsscanlib.gene.Gene.is_homolog">
 <tt class="descname">is_homolog</tt><big>(</big><em>gene</em><big>)</big><a class="headerlink" href="#txsscanlib.gene.Gene.is_homolog" title="Permalink to this definition">¶</a></dt>
@@ -245,6 +303,21 @@ If the gene already exists return it otherwise build it an d returni</td>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the gene can be isolated on the genome false otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.gene.Gene.multi_system">
+<tt class="descname">multi_system</tt><a class="headerlink" href="#txsscanlib.gene.Gene.multi_system" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this gene can belong to different systems, False otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">boolean.</td>
 </tr>
 </tbody>
 </table>
@@ -368,7 +441,7 @@ If the gene already exists return it otherwise build it an d returni</td>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">gene</a><ul>
-<li><a class="reference internal" href="#genefactory-api-reference">GeneFactory API reference</a></li>
+<li><a class="reference internal" href="#genebank-api-reference">GeneBank API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.gene">Gene API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.gene">Homolog API reference</a></li>
 </ul>

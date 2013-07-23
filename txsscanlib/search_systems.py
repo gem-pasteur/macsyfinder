@@ -489,23 +489,27 @@ class SystemOccurence(object):
                     self._state = "multi_loci"
                 
                 msg += "\nYeah complete system \"%s\"."%self.state
+                msg += "\n******************************************\n"
                  
                 print msg
                 #_log.info(msg)
                 #return True
             elif self.nb_syst_genes > 0:
                 msg += "\nuncomplete system."
+                msg += "\n******************************************\n"
                 print msg
                 #_log.info(msg)
                 self._state = "uncomplete"
                 #return False
             else:
                 msg += "\nempty system."
-                print msg
+                msg += "\n******************************************\n"
+                #print msg
                 #_log.info(msg)
                 self._state = "empty"
         else:
             msg += "\nexclude."
+            msg += "\n******************************************\n"
             print msg
             #_log.info(msg)
             self._state = "exclude"
@@ -779,7 +783,7 @@ def analyze_clusters_replicon(clusters, systems):
             #so.decision_rule()
         if so.is_complete():
             systems_occurences_list.append(so)
-        print "\n******************************************\n"
+    print "******************************************\n"
     
     # Stores results in this list? Or code a new object : systemDetectionReport ? 
     return systems_occurences_list
@@ -960,6 +964,7 @@ def search_systems(hits, systems, cfg):
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
             
+            print "******************************************"
             print "Reporting systems for %s : \n"%k
             #report = systemDetectionReport(k, systems_occurences_list, systems, reportfilename)
             report = systemDetectionReport(k, systems_occurences_list, systems)

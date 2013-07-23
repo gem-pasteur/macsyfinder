@@ -149,11 +149,11 @@ and produced a new synthetic report file.</p>
 <span id="hit"></span><h2>Hit<a class="headerlink" href="#module-txsscanlib.report" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.report.Hit">
-<em class="property">class </em><tt class="descclassname">txsscanlib.report.</tt><tt class="descname">Hit</tt><big>(</big><em>gene</em>, <em>system</em>, <em>hit_id</em>, <em>replicon_name</em>, <em>position_hit</em>, <em>i_eval</em>, <em>score</em>, <em>profile_coverage</em>, <em>sequence_coverage</em>, <em>begin_match</em>, <em>end_match</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/report.html#Hit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.report.Hit" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.report.</tt><tt class="descname">Hit</tt><big>(</big><em>gene</em>, <em>system</em>, <em>hit_id</em>, <em>hit_seq_length</em>, <em>replicon_name</em>, <em>position_hit</em>, <em>i_eval</em>, <em>score</em>, <em>profile_coverage</em>, <em>sequence_coverage</em>, <em>begin_match</em>, <em>end_match</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/report.html#Hit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.report.Hit" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle hits found by HMM. the hit are instanciate by <a class="reference internal" href="#txsscanlib.report.HMMReport.extract" title="txsscanlib.report.HMMReport.extract"><tt class="xref py py-meth docutils literal"><span class="pre">HMMReport.extract()</span></tt></a> method</p>
 <dl class="method">
 <dt id="txsscanlib.report.Hit.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>gene</em>, <em>system</em>, <em>hit_id</em>, <em>replicon_name</em>, <em>position_hit</em>, <em>i_eval</em>, <em>score</em>, <em>profile_coverage</em>, <em>sequence_coverage</em>, <em>begin_match</em>, <em>end_match</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/report.html#Hit.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.report.Hit.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>gene</em>, <em>system</em>, <em>hit_id</em>, <em>hit_seq_length</em>, <em>replicon_name</em>, <em>position_hit</em>, <em>i_eval</em>, <em>score</em>, <em>profile_coverage</em>, <em>sequence_coverage</em>, <em>begin_match</em>, <em>end_match</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/report.html#Hit.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.report.Hit.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -161,7 +161,8 @@ and produced a new synthetic report file.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>gene</strong> (<a class="reference internal" href="gene.html#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a> object) &#8211; the gene corresponding to this profile</li>
 <li><strong>system</strong> (<a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object) &#8211; the system to which this gene belongs</li>
-<li><strong>hit_id</strong> (<em>string</em>) &#8211; the identifier of the hit</li>
+<li><strong>hit_id</strong> (<em>integer</em>) &#8211; the identifier of the hit</li>
+<li><strong>hit_seq_length</strong> &#8211; the length of the hit sequence</li>
 <li><strong>replicon_name</strong> (<em>string</em>) &#8211; the name of the replicon</li>
 <li><strong>position_hit</strong> (<em>integer</em>) &#8211; the position of the hit on the sequence?</li>
 <li><strong>i_eval</strong> (<em>float</em>) &#8211; the best-domain evalue</li>

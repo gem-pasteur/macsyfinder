@@ -89,26 +89,30 @@ and 3 kind of genes lists in function of their presence:</p>
 <li>The genes which can be presents but not in all cases.</li>
 <li>The genes which must not be present.</li>
 </ul>
-<div class="section" id="systemfactory-api-reference">
-<h2>SystemFactory API reference<a class="headerlink" href="#systemfactory-api-reference" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="systembank-api-reference">
+<h2>SystemBank API reference<a class="headerlink" href="#systembank-api-reference" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><span class="target" id="module-txsscanlib.system"></span><dl class="class">
-<dt id="txsscanlib.system.SystemFactory">
-<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">SystemFactory</tt><a class="headerlink" href="#txsscanlib.system.SystemFactory" title="Permalink to this definition">¶</a></dt>
+<dt id="txsscanlib.system.SystemBank">
+<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">SystemBank</tt><a class="headerlink" href="#txsscanlib.system.SystemBank" title="Permalink to this definition">¶</a></dt>
 <dd><p>build and cached all systems objects. Systems must not be instanciate directly.
 the system_factory must be used. The system factory ensure there is only one instance
 of system for a given name.
 To get a system use the method get_system. if the gene is already cached this instance is returned
 otherwise a new system is build, cached then returned.</p>
-<dl class="attribute">
-<dt id="txsscanlib.system.SystemFactory.__weakref__">
-<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.system.SystemFactory.__weakref__" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of weak references to the object (if defined)</p>
+<dl class="method">
+<dt id="txsscanlib.system.SystemBank.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>system</em><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemBank.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>implement membership test operators
+:param system:
+:type system:
+:return: True if the system.name is in , False otherwise
+:rtype: boolean</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="txsscanlib.system.SystemFactory.get_system">
-<tt class="descname">get_system</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemFactory.get_system" title="Permalink to this definition">¶</a></dt>
+<dt id="txsscanlib.system.SystemBank.__getitem__">
+<tt class="descname">__getitem__</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemBank.__getitem__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -128,34 +132,70 @@ otherwise a new system is build, cached then returned.</p>
 :rtype: <a class="reference internal" href="#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="txsscanlib.system.SystemBank.__iter__">
+<tt class="descname">__iter__</tt><big>(</big><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemBank.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.SystemBank.__weakref__">
+<tt class="descname">__weakref__</tt><a class="headerlink" href="#txsscanlib.system.SystemBank.__weakref__" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of weak references to the object (if defined)</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="txsscanlib.system.SystemBank.add_system">
+<tt class="descname">add_system</tt><big>(</big><em>system</em><big>)</big><a class="headerlink" href="#txsscanlib.system.SystemBank.add_system" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the system</li>
+<li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">return system corresponding to the name.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>If the system already exists return it otherwise build it an d return
+:rtype: <a class="reference internal" href="#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object
+:raise: KeyError if a system with the same name is already registered</p>
+</dd></dl>
+
+</dd></dl>
+
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>Don&#8217;t instanciate your own SystemFactory use the system_factory at the top level of the module.</p>
-<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.system</span> <span class="kn">import</span> <span class="n">system_factory</span>
-<span class="n">t2ss</span> <span class="o">=</span>  <span class="n">system_factory</span><span class="o">.</span><span class="n">get_system</span><span class="p">(</span><span class="s">&quot;T2SS&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<p>Don&#8217;t instanciate your own SystemBank use the system_bank at the top level of the module.</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">txsscanlib.system</span> <span class="kn">import</span> <span class="n">system_bank</span>
 </pre></div>
 </div>
 </div>
-</div></blockquote>
 </div>
 <div class="section" id="module-txsscanlib.system">
 <span id="system-api-reference"></span><h2>System API reference<a class="headerlink" href="#module-txsscanlib.system" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="txsscanlib.system.System">
-<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">System</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.system.</tt><tt class="descname">System</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>inter_gene_max_space</em>, <em>min_mandatory_genes_required=None</em>, <em>min_genes_required=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System" title="Permalink to this definition">¶</a></dt>
 <dd><p>handle a secretion system.</p>
 <dl class="method">
 <dt id="txsscanlib.system.System.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>name</em>, <em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>name</em>, <em>inter_gene_max_space</em>, <em>min_mandatory_genes_required=None</em>, <em>min_genes_required=None</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system.html#System.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system.System.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; the name of the system</li>
 <li><strong>cfg</strong> (<a class="reference internal" href="config.html#txsscanlib.config.Config" title="txsscanlib.config.Config"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.config.Config</span></tt></a> object) &#8211; the configuration</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; the name of the system</li>
+<li><strong>inter_gene_max_space</strong> (<em>integer</em>) &#8211; the maximum distance between two genes</li>
+<li><strong>min_mandatory_genes_required</strong> (<em>integer</em>) &#8211; the quorum of mandatory genes to defined this system</li>
+<li><strong>min_genes_required</strong> (<em>integer</em>) &#8211; the quorum of genes to defined system</li>
 </ul>
 </td>
 </tr>
@@ -248,7 +288,7 @@ otherwise a new system is build, cached then returned.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set the maximum distance allowed between 2 genes for this sytem</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set the maximum distance allowed between 2 genes for this system</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
 </tr>
@@ -271,6 +311,36 @@ otherwise a new system is build, cached then returned.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="txsscanlib.system.System.min_genes_required">
+<tt class="descname">min_genes_required</tt><a class="headerlink" href="#txsscanlib.system.System.min_genes_required" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">get the quorum of genes required for this system</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="txsscanlib.system.System.min_mandatory_genes_required">
+<tt class="descname">min_mandatory_genes_required</tt><a class="headerlink" href="#txsscanlib.system.System.min_mandatory_genes_required" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">get the quorum of mandatory genes required for this system</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -285,7 +355,7 @@ otherwise a new system is build, cached then returned.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">secretion system</a><ul>
-<li><a class="reference internal" href="#systemfactory-api-reference">SystemFactory API reference</a></li>
+<li><a class="reference internal" href="#systembank-api-reference">SystemBank API reference</a></li>
 <li><a class="reference internal" href="#module-txsscanlib.system">System API reference</a></li>
 </ul>
 </li>

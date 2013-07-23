@@ -34,18 +34,18 @@ example to get a gene object: ::
     #instanciation of a gene
     pilO = gene_factory.get_gene("pilO", t2ss, config)
  
-GeneFactory API reference
+GeneBank API reference
 =========================
  .. automodule:: txsscanlib.gene
-   :members: GeneFactory
+   :members: GeneBank
    :private-members:
    :special-members:
 
 .. note::
 
-   Don't instanciate your own GeneFactory use the gene_factory at the top level of the module. ::
+   Don't instanciate your own GeneFactory use the gene_bank at the top level of the module. ::
      
-     from txsscanlib.gene import gene_factory
+     from txsscanlib.gene import gene_bank
 
 Gene API reference
 ==================

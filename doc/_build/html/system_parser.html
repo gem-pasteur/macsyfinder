@@ -56,13 +56,18 @@
             
   <div class="section" id="system-parser">
 <span id="id1"></span><h1>system_parser<a class="headerlink" href="#system-parser" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-txsscanlib.system_parser"></span><dl class="class">
+<span class="target" id="module-txsscanlib.system_parser"></span><p>Created on Jul 12, 2013</p>
+<p>&#64;author: bneron
+&#64;contact: user_email
+&#64;organization: Institut Pasteur
+&#64;license: license</p>
+<dl class="class">
 <dt id="txsscanlib.system_parser.SystemParser">
-<em class="property">class </em><tt class="descclassname">txsscanlib.system_parser.</tt><tt class="descname">SystemParser</tt><big>(</big><em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">txsscanlib.system_parser.</tt><tt class="descname">SystemParser</tt><big>(</big><em>cfg</em>, <em>system_bank</em>, <em>gene_bank</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>build a System instance from System definition write in XML and build a</p>
 <dl class="method">
 <dt id="txsscanlib.system_parser.SystemParser.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cfg</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.__init__" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">__init__</tt><big>(</big><em>cfg</em>, <em>system_bank</em>, <em>gene_bank</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -81,24 +86,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="txsscanlib.system_parser.SystemParser._parse_gene">
-<tt class="descname">_parse_gene</tt><big>(</big><em>node</em>, <em>system</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser._parse_gene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser._parse_gene" title="Permalink to this definition">¶</a></dt>
-<dd><p>parse a xml element gene and build the corresponding object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<tt class="xref py py-class docutils literal"><span class="pre">xml.etree.ElementTree.Element</span></tt> object) &#8211; a node corresponding to gene element</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the gene object corresponding to the node</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.System</span></tt> object</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="txsscanlib.system_parser.SystemParser._parse_homolog">
 <tt class="descname">_parse_homolog</tt><big>(</big><em>node</em>, <em>gene_ref</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser._parse_homolog" title="Permalink to this definition">¶</a></dt>
 <dd><p>parse a xml element gene and build the corresponding object</p>
@@ -110,6 +97,63 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the gene object corresponding to the node</td>
 </tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="gene.html#txsscanlib.gene.Homolog" title="txsscanlib.gene.Homolog"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Homolog</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system_parser.SystemParser.check_consitency">
+<tt class="descname">check_consitency</tt><big>(</big><em>systems</em>, <em>cfg</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.check_consitency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system_parser.SystemParser.create_genes">
+<tt class="descname">create_genes</tt><big>(</big><em>system</em>, <em>system_node</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.create_genes" title="Permalink to this definition">¶</a></dt>
+<dd><p>create genes belonging to the systems. be carefull the return genes have not their homologs.
+:param gene_name:
+:type gene_name: string
+:param system:
+:type system: <a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object
+:return: a list of the genes belonging to the system.
+:rtype: [<a class="reference internal" href="gene.html#txsscanlib.gene.Gene" title="txsscanlib.gene.Gene"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.gene.Gene</span></tt></a>, ...]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system_parser.SystemParser.create_system">
+<tt class="descname">create_system</tt><big>(</big><em>system_name</em>, <em>system_node</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.create_system" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>system_name</strong> &#8211; the name of system. This name must match a file in Definitions directory</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the system corresponding to the name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="system.html#txsscanlib.system.System" title="txsscanlib.system.System"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.system.System</span></tt></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system_parser.SystemParser.fill">
+<tt class="descname">fill</tt><big>(</big><em>system</em>, <em>system_node</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.fill" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="txsscanlib.system_parser.SystemParser.parse">
+<tt class="descname">parse</tt><big>(</big><em>systems_2_detect</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>parse  systems definition in xml format to build the corresponding objects</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>systems_name</strong> (<em>string</em>) &#8211; the name of the system to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the system corresponding to the name</td>
+</tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.System</span></tt> object</td>
 </tr>
 </tbody>
@@ -117,18 +161,17 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="txsscanlib.system_parser.SystemParser.parse">
-<tt class="descname">parse</tt><big>(</big><em>system_name</em><big>)</big><a class="reference internal" href="_modules/txsscanlib/system_parser.html#SystemParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.parse" title="Permalink to this definition">¶</a></dt>
-<dd><p>parse a system definition in xml format to build the corresponding object</p>
-<table class="docutils field-list" frame="void" rules="none">
+<dt id="txsscanlib.system_parser.SystemParser.system_to_parse">
+<tt class="descname">system_to_parse</tt><big>(</big><em>sys_2_detect</em><big>)</big><a class="headerlink" href="#txsscanlib.system_parser.SystemParser.system_to_parse" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>system_name</strong> (<em>string</em>) &#8211; the name of the system to parse</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sys_2_detect</strong> (<em>[string, ...]</em>) &#8211; the list of systems to detect</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the system corresponding to the name</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the list of systems name to parse</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">txsscanlib.secretion.System</span></tt> object</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string, ...]</td>
 </tr>
 </tbody>
 </table>
