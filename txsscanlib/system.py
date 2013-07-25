@@ -51,7 +51,7 @@ class SystemBank(object):
         :return: True if the system.name is in , False otherwise
         :rtype: boolean
         """
-        return system in self._system_bank
+        return system in self._system_bank.values()
 
     def __iter__(self):
         """

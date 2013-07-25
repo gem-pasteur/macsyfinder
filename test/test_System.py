@@ -46,46 +46,47 @@ class Test(unittest.TestCase):
 
     def test_name(self):
         name = 'foo'
-        system = System(name, self.cfg)
+        system = System(self.cfg, name, 10)
         self.assertEqual(system.name, name)
 
     def test_inter_gene_max_space(self):
         name = 'foo'
         inter_gene_max_space = 40
-        system = System(name, self.cfg)
-        system.inter_gene_max_space = inter_gene_max_space
-        self.assertEqual( system.inter_gene_max_space , inter_gene_max_space )
+        system = System(self.cfg, name, inter_gene_max_space)
+        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space )
 
     def test_min_genes_required(self):
         name = 'foo'
         min_genes_required = 40
-        system = System(name, self.cfg)
+        system = System(self.cfg, name, 10, min_genes_required = min_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
-        self.assertEqual( system.min_genes_required , 1 )
-        system.min_genes_required = min_genes_required
-        self.assertEqual( system.min_genes_required , min_genes_required )
-
+        self.assertEqual(system.min_genes_required, min_genes_required)
+        #see https://projets.pasteur.fr/issues/1850
+        system = System(self.cfg, name, 10)
+        self.assertEqual(system.min_genes_required , len(system.mandatory_genes))
+        
     def test_min_mandatory_genes_required(self):
         name = 'foo'
         min_mandatory_genes_required = 40
-        system = System(name, self.cfg)
+        system = System(self.cfg, name, 10, min_mandatory_genes_required = min_mandatory_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
-        self.assertEqual( system.min_mandatory_genes_required , 1 )
-        system.min_mandatory_genes_required = min_mandatory_genes_required
         self.assertEqual( system.min_mandatory_genes_required , min_mandatory_genes_required )    
-
+        #see https://projets.pasteur.fr/issues/1850
+        system = System(self.cfg, name, 10)
+        self.assertEqual(system.min_mandatory_genes_required , len(system.mandatory_genes))
+        
     def test_add_mandatory_gene(self):
-        system = System( "foo", self.cfg)
+        system = System("foo", self.cfg, 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
-        self.assertEqual( system._mandatory_genes, [gene])
-        self.assertEqual( system._allowed_genes, [])
-        self.assertEqual( system._forbidden_genes, [])
+        self.assertEqual(system._mandatory_genes, [gene])
+        self.assertEqual(system._allowed_genes, [])
+        self.assertEqual(system._forbidden_genes, [])
 
     def test_add_allowed_gene(self):
-        system = System( "foo", self.cfg)
+        system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system._allowed_genes, [gene])
@@ -93,7 +94,7 @@ class Test(unittest.TestCase):
         self.assertEqual( system._forbidden_genes, [])
 
     def test_add_forbidden_gene(self):
-        system = System( "foo", self.cfg)
+        system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system._forbidden_genes, [gene])
@@ -101,19 +102,19 @@ class Test(unittest.TestCase):
         self.assertEqual( system._mandatory_genes, [])
 
     def test_mandatory_genes(self):
-        system = System( "foo", self.cfg)
+        system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_mandatory_gene( gene )
         self.assertEqual( system.mandatory_genes, [gene])
 
     def test_allowed_genes(self):
-        system = System( "foo", self.cfg)
+        system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_allowed_gene( gene )
         self.assertEqual( system.allowed_genes, [gene])
 
     def test_forbidden_genes(self):
-        system = System( "foo", self.cfg)
+        system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system)
         system.add_forbidden_gene( gene )
         self.assertEqual( system.forbidden_genes, [gene])

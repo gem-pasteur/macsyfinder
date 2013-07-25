@@ -51,16 +51,17 @@ class GeneBank(object):
         :rtype: boolean
         
         """
-        return gene in self._genes_bank
+        return gene in self._genes_bank.values()
 
     def __iter__(self):
         """
+        Return an iterator object on the genes contains in the bank
         """
         return self._genes_bank.itervalues()
 
     def add_gene(self, gene):
         """
-        
+
         :param name: the name of the gene
         :type name: string
         :param cfg: the configuration
@@ -69,7 +70,6 @@ class GeneBank(object):
           If the gene already exists return it otherwise build it an d return
         :rtype: :class:`txsscanlib.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
-        
         """
         if gene in self._genes_bank:
             raise KeyError("a gene named %s is already registered" % gene.name)
