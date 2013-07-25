@@ -32,7 +32,7 @@ class GeneBank(object):
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         :return: return gene corresponding to the name.
-        If the gene already exists return it otherwise build it and return it
+          If the gene already exists return it otherwise build it and return it
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         if name in self._genes_bank:
@@ -44,26 +44,30 @@ class GeneBank(object):
     def __contains__(self, gene):
         """
         implement membership test operators
+        
         :param gene:
         :type gene:
         :return: True if the gene.name is in , False otherwise
         :rtype: boolean
+        
         """
-        return gene in self._genes_bank
+        return gene in self._genes_bank.values()
 
     def __iter__(self):
         """
+        Return an iterator object on the genes contains in the bank
         """
         return self._genes_bank.itervalues()
 
     def add_gene(self, gene):
         """
+
         :param name: the name of the gene
         :type name: string
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         :return: return gene corresponding to the name.
-        If the gene already exists return it otherwise build it an d return
+          If the gene already exists return it otherwise build it an d return
         :rtype: :class:`txsscanlib.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """

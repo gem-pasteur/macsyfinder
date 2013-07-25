@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created on Jul 12, 2013
-
-@author: bneron
-@contact: user_email
-@organization: Institut Pasteur
-@license: license
-"""
+#################################
+# Created on Jul 12, 2013
+#
+# @author: bneron
+# @contact: user_email
+# @organization: Institut Pasteur
+# @license: license
+###################################
 import os
 import xml.etree.ElementTree as ET
 import logging
@@ -154,7 +154,7 @@ class SystemParser(object):
             gene_name = gene_node.get('name')
             gene = self.gene_bank[gene_name]
             for homolog_node in gene_node.findall("homologs/gene"):
-                gene.add_homolog(self._parse_homolog(homolog_node, gene))
+                gene.add_homolog(self._parse_homolog(homolog_node, gene, system))
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
             elif presence == 'allowed':
@@ -167,7 +167,7 @@ class SystemParser(object):
                 raise SyntaxError(msg)
 
 
-    def _parse_homolog(self, node, gene_ref):
+    def _parse_homolog(self, node, gene_ref, curr_system):
         """
         parse a xml element gene and build the corresponding object
 
@@ -204,9 +204,9 @@ class SystemParser(object):
             raise SystemInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref, aligned)
         for homolog_node in node.findall("homologs/gene"):
-            h2 = self._parse_homolog(homolog_node , gene)
+            h2 = self._parse_homolog(homolog_node , gene, curr_system)
             homolog.add_homolog(h2)
-            h2.add_homolog(self._parse_homolog(homolog_node , gene) )
+            #h2.add_homolog(self._parse_homolog(homolog_node , gene) )
         return homolog
 
 
@@ -231,25 +231,19 @@ class SystemParser(object):
             # min_mandatory_genes_required <= len(mandatory_genes)
 
             # min_mandatory_genes_required =  Value ; min_genes_required = Value
-            # len(allowed_genes+mandatory_genes) >= min_genes_required >= len(mandatory_genes) 
+            # len(allowed_genes+mandatory_genes) >= min_genes_required 
             # AND min_mandatory_genes_required <= len(mandatory_genes) 
             # AND min_genes_required >= min_mandatory_genes_required
 
             len_allowed_genes = len(system.allowed_genes)
             len_mandatory_genes = len(system.mandatory_genes)
-
             if system.min_genes_required > (len_allowed_genes + len_mandatory_genes) :
                 msg = "systems %s is not consistent min_genes_required %d must be lesser or equal than allowed_genes + mandatory_genes %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
                                                                                                                                       len_allowed_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
-            if system.min_genes_required < len_mandatory_genes:
-                msg = "systems %s is not consistent min_genes_required %d must be greater or equal than mandatory_genes %d" %(system.name, 
-                                                                                                                      system.min_genes_required, 
-                                                                                                                      len_mandatory_genes)
-                _log.critical(msg)
-                raise SystemInconsistencyError(msg)
+
             if system.min_mandatory_genes_required > len_mandatory_genes:
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 

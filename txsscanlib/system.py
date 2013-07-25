@@ -33,7 +33,7 @@ class SystemBank(object):
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         :return: return system corresponding to the name.
-        If the system already exists return it otherwise build it an d returni
+         If the system already exists return it otherwise build it an d returni
         :rtype: :class:`txsscanlib.system.System` object
         """
         if name in self._system_bank:
@@ -45,12 +45,13 @@ class SystemBank(object):
     def __contains__(self, system):
         """
         implement membership test operators
+        
         :param system:
         :type system:
         :return: True if the system.name is in , False otherwise
         :rtype: boolean
         """
-        return system in self._system_bank
+        return system in self._system_bank.values()
 
     def __iter__(self):
         """
@@ -64,7 +65,7 @@ class SystemBank(object):
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         :return: return system corresponding to the name.
-        If the system already exists return it otherwise build it an d return
+         If the system already exists return it otherwise build it an d return
         :rtype: :class:`txsscanlib.system.System` object
         :raise: KeyError if a system with the same name is already registered
         """

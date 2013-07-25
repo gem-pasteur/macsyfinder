@@ -42,6 +42,7 @@ txsscanlib API documentation
    search_genes
    search_systems
    database 
+   txsscan_error
 
 Indices and tables
 ==================

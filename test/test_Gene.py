@@ -46,8 +46,8 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_add_homolog(self):
-        system_foo = System( "foo", self.cfg)
-        system_bar = System( "bar", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
+        system_bar = System(self.cfg, "bar", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         gene_ref = Gene(self.cfg, 'sctJ', system_bar)
         homolog = Homolog(self.cfg, gene, gene_ref)
@@ -57,23 +57,23 @@ class Test(unittest.TestCase):
     
     
     def test_get_homologs(self):
-        system_foo = System( "foo", self.cfg)
-        system_bar = System( "bar", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
+        system_bar = System(self.cfg, "bar", 10)
         gene = Gene(self.cfg, 'sctN', system_foo)
         sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo)
         sctJ = Gene(self.cfg, 'sctJ', system_bar)
-        homolog_1 = Homolog( sctJ_FLG, gene)
-        gene.add_homolog( homolog_1 )
+        homolog_1 = Homolog(sctJ_FLG, gene)
+        gene.add_homolog(homolog_1)
         homolog_2 = Homolog(sctJ, gene)
-        gene.add_homolog( homolog_2 )
-        self.assertEqual( gene.get_homologs(), [homolog_1, homolog_2] )
+        gene.add_homolog(homolog_2)
+        self.assertEqual(gene.get_homologs(), [homolog_1, homolog_2] )
     
         
     def test_system(self):
         """
         test getter/setter for system property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertEqual(gene.system, system_foo)
     
@@ -82,7 +82,7 @@ class Test(unittest.TestCase):
         """
         test getter for loner property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse(gene.loner)
         gene = Gene(self.cfg, 'sctJ', system_foo, loner = True)
@@ -93,7 +93,7 @@ class Test(unittest.TestCase):
         """
         test getter for exchangeable property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
@@ -103,7 +103,7 @@ class Test(unittest.TestCase):
         """
         test getter for multi_system property
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertFalse(gene.multi_system)
         gene = Gene(self.cfg, 'sctJ', system_foo, multi_system = True)
@@ -112,24 +112,23 @@ class Test(unittest.TestCase):
 
     def test_inter_gene_max_space(self):
         """
-        test getter for nter_gene_max_space property
+        test getter for inter_gene_max_space property
         """
-        system_foo = System("foo", self.cfg)
         system_inter_gene_max_space = 40
         gene_inter_gene_max_space = 50
-        system_foo.inter_gene_max_space = system_inter_gene_max_space
+        system_foo = System(self.cfg, "foo", system_inter_gene_max_space)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
-        gene = Gene(self.cfg, 'sctJ', system_foo, gene_inter_gene_max_space)
-        self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
+        gene = Gene(self.cfg, 'sctJ', system_foo, inter_gene_max_space = gene_inter_gene_max_space)
+        self.assertEqual(gene.inter_gene_max_space, gene_inter_gene_max_space)
 
 
     def test_str(self):
         """
         """
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
-        system_bar = System( "bar", self.cfg)
+        system_bar = System(self.cfg, "bar", 20)
         gene_homolog = Gene(self.cfg, 'sctJ', system_bar)
         homolog = Homolog( gene_homolog, gene, self.cfg)
         gene.add_homolog( homolog )

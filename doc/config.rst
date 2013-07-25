@@ -43,7 +43,9 @@ parse 3 location to find configuration files
   * **system**
   
     * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.  
-  
+    * *min_mandatory_genes_required* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.
+    * *min_genes_required* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.
+    
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
@@ -85,6 +87,8 @@ parse 3 location to find configuration files
     
     [system]
     inter_gene_max_space = T2SS 22 Flagellum 44
+    min_mandatory_genes_required = T2SS 6 Flagellum 4
+    min_genes_required = T2SS 8 Flagellum 4
     
     [hmmer]
     hmmer_exe = hmmsearch
@@ -105,8 +109,6 @@ parse 3 location to find configuration files
    log_level = debug
    
      
- 
- 
  
  
 Config API reference

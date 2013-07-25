@@ -5,7 +5,7 @@ gene
 ****
 
 the Gene class represents the genes defined by a System
-each gene must have a profile (the profiles nust be stored in ... ). 
+each gene must have a profile (the profiles must be stored in ... ). 
 a gene may have homologs.
 
  homolog have to properties :
@@ -14,25 +14,25 @@ a gene may have homologs.
 * and if the profile is aligned on the gene reference or not.
 
 and is composed of a gene. All attribute/methods which are not directly implemented in 
-Homolog are redireted to this gene.
+Homolog are redirected to this gene.
 
 To optimize computation and to avoid concurrency problems when we search several systems.
-Each gene must be instanciate only one time. This is ensure by using the gene_factory.
-gene_factory is a  :class:`txsscanlib.gene.GeneFactory` object. 
+Each gene must be instanciated only one time,and stored in gene_bank.
+gene_bank is a  :class:`txsscanlib.gene.GeneBank` object. 
+the gene_bank and system bank are filled by a system_parser ( :class:`txsscanlib.system_parser.SystemParser` )
 
 example to get a gene object: ::
   
-    from txsscanlib.system import system_factory
+    from txsscanlib.system import system_bank
     from txsscanlib.config import Config
-    from txsscanlib.gene import gene_factory
+    from txsscanlib.gene import gene_bank
       
-    config = Config()
       
-    #instanciation of a system  
-    t2ss =  system_factory.get_system("T2SS", config)
+    #get a system  
+    t2ss =  system_bank["T2SS"]
     
-    #instanciation of a gene
-    pilO = gene_factory.get_gene("pilO", t2ss, config)
+    #get of a gene
+    pilO = gene_bank["pilO"]
  
 GeneBank API reference
 =========================
