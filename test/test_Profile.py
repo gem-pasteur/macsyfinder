@@ -49,26 +49,26 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_len(self):
-        system = System("T2SS", self.cfg)
+        system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system)
         profile = Profile(gene, self.cfg)
         self.assertEqual(len(profile), 501)
 
     def test_unknow_profile(self):
-        system = System("T2SS", self.cfg)
+        system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system)
         gene.name = "foo"
         self.assertRaises(IOError, Profile, gene, self.cfg)
-        
+
     def test_str(self):
-        system = System("T2SS", self.cfg)
+        system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system)
         profile = Profile(gene, self.cfg)
         s = "%s : %s" % (gene.name, os.path.join(self.cfg.profile_dir, gene.name + self.cfg.profile_suffix))
         self.assertEqual(str(profile), s)
-        
+
     def test_execute(self):
-        system = System("T2SS", self.cfg)
+        system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system)
         profile = Profile(gene, self.cfg)
         report = profile.execute()
@@ -86,12 +86,11 @@ class Test(unittest.TestCase):
 
     def test_execute_unknown_binary(self):
         self.cfg.options['hmmer_exe'] = "Nimportnaoik"
-        system = System("T2SS", self.cfg)
+        system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system)
         profile = Profile(gene, self.cfg)
         self.assertRaises(RuntimeError, profile.execute)
-        
 
-            
+
 if __name__ == "__main__":
     unittest.main()

@@ -43,7 +43,7 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_get_profile(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.cfg, gene_name, system_foo)
         profile = profile_factory.get_profile(gene,self.cfg )
@@ -51,7 +51,7 @@ class Test(unittest.TestCase):
         self.assertEqual( profile.gene.name, gene_name )
 
     def test_get_uniq_object(self):
-        system_foo = System( "foo", self.cfg)
+        system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
         profile1 = profile_factory.get_profile(gene,self.cfg )
         profile2 = profile_factory.get_profile(gene,self.cfg )
