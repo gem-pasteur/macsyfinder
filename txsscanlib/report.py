@@ -17,6 +17,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 import abc
 from threading import Lock
+from itertools import groupby
 from database import Database
 
 
@@ -97,6 +98,50 @@ class OrderedHMMReport(HMMReport):
     handle HMM report. extract a synthetic report from the raw hmmer output
     """
 
+    def _parse_hmm_header(self, h_grp):
+        for line in h_grp:
+            hit_id = line.split()[1]
+        return hit_id
+
+    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, b_grp):
+        first_line = b_grp.next()
+        if not first_line.startswith('   #'):
+            return []
+        else:
+            hits = []
+            for line in b_grp:
+                if line[0] == '\n':
+                        return hits
+                elif line.startswith(" ---"):
+                    pass
+                else:
+                    fields = line.split()
+                    try:
+                        if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
+                            cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
+                            begin = int(fields[9])
+                            end = int(fields[10])
+                            cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
+                            if (cov_profile >= coverage_treshold):
+                                i_eval = float(fields[5])
+                                score = float(fields[2])
+                                hits.append(Hit(self.gene,
+                                                self.gene.system,
+                                                hit_id,
+                                                seq_lg,
+                                                replicon_name,
+                                                position_hit,
+                                                i_eval,
+                                                score,
+                                                cov_profile,
+                                                cov_gene,
+                                                begin,
+                                                end))
+                    except ValueError, err:
+                        msg = "Invalid line to parse :{0}: ".format(line)
+                        _log.debug(msg)
+                        print err
+                        raise ValueError(msg)
 
     def extract(self):
         """
@@ -107,72 +152,37 @@ class OrderedHMMReport(HMMReport):
             # so the extract of a given HMM output is executed only once per run
             # if this method is called several times the first call induce the parsing of HMM out
             # the other calls do nothing
-            if self.hits :
+            if self.hits:
                 return
 
-            db = Database(self.cfg)
-            #the indexes has bee build in txsscan
-            #here we only reuse them
-            db.build()
-            with db.open():
-                #db.get or db[] can be used in this block
-                #and the db connection will be automatically closed 
-                #outside this block
+            with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
                 coverage_treshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
 
-                # TMP ! Pour debug erreur parsing
-                tmp_line_nb=0
-                with open(self._hmmer_raw_out, 'r') as hmm_out:
-                    for line in hmm_out:
-                        # TMP ! Pour debug erreur parsing
-                        tmp_line_nb+=1
+                def _hit_start(line):
+                    return line.startswith(">>")
 
-                        if line.startswith(">> "):
-                            hit_id = line.split()[1]
-                            seq_info = db[hit_id]
-                            seq_lg = seq_info.length
-                            fields_hit = hit_id.split('_')
-                            replicon_name = fields_hit[0]
-                            #position_hit = int(fields_hit[1]) / 10
-                            # New ! Defined from position in fasta file.
-                            position_hit = seq_info.position
-                            # skip next 2 line
-                            # the hits begins on the 3rd line
-                            for _ in range(3):
-                                line = hmm_out.next()
-                            while not line.startswith("  Alignments"):
-                                fields = line.split()
-                                try:
-                                    if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
-                                        cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
-                                        begin = int(fields[9])
-                                        end = int(fields[10])
-                                        cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
-                                        if (cov_profile >= coverage_treshold):
-                                            i_eval = float(fields[5])
-                                            score = float(fields[2])
-                                            self.hits.append(Hit(self.gene,
-                                                                 self.gene.system,
-                                                                 hit_id,
-                                                                 seq_lg,
-                                                                 replicon_name,
-                                                                 position_hit,
-                                                                 i_eval,
-                                                                 score,
-                                                                 cov_profile,
-                                                                 cov_gene,
-                                                                 begin,
-                                                                 end))
-                                except ValueError:
-                                    msg = "Invalid line to parse :{0}: ".format(line)
-                                    msg += "\nin file %s, line %d"%(self._hmmer_raw_out, tmp_line_nb) 
-                                    _log.debug(msg)
-                                    raise ValueError(msg)
-
-                                line = hmm_out.next()
+                hmm_hits = (x[1] for x in groupby(hmm_out, _hit_start))
+                #drop summary
+                hmm_hits.next()
+                db = Database(self.cfg)
+                #the indexes has been build in txsscan
+                #here we only reuse them
+                db.build()
+                with db.open():
+                    for hmm_hit in hmm_hits:
+                        hit_id = self._parse_hmm_header(hmm_hit)
+                        seq_info = db[hit_id]
+                        seq_lg = seq_info.length
+                        fields_hit = hit_id.split('_')
+                        replicon_name = fields_hit[0]
+                        position_hit = seq_info.position
+                        body = hmm_hits.next()
+                        h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                        self.hits += h
                 self.hits.sort()
+                return self.hits
 
 
 class Hit(object):
