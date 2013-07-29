@@ -16,7 +16,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 from system import System
 from gene import Gene
 from gene import Homolog
-from txsscan_error import SystemInconsistencyError
+from txsscan_error import TxsscanError, SystemInconsistencyError
 
 
 class SystemParser(object):
@@ -47,12 +47,18 @@ class SystemParser(object):
             systems_2_parse[system_name] = None
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             if not os.path.exists(path):
-                raise Exception("%s: No such system definitions" % path)
-            tree = ET.parse(path)
-            root = tree.getroot()
-            sys_ref = root.findall(".//gene[@system_ref]")
-            for gene_node in sys_ref:
-                systems_2_parse[gene_node.get("system_ref")] = None
+                raise TxsscanError("%s: No such system definitions" % path)
+            try:
+                tree = ET.parse(path)
+                root = tree.getroot()
+                sys_ref = root.findall(".//gene[@system_ref]")
+                for gene_node in sys_ref:
+                    systems_2_parse[gene_node.get("system_ref")] = None
+            except Exception, err:
+                msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
+                _log.critical(msg)
+                raise TxsscanError(msg)
+            
         return systems_2_parse.keys()
 
     def create_system(self, system_name, system_node):
@@ -237,21 +243,21 @@ class SystemParser(object):
 
             len_allowed_genes = len(system.allowed_genes)
             len_mandatory_genes = len(system.mandatory_genes)
-            if system.min_genes_required > (len_allowed_genes + len_mandatory_genes) :
+            if system.min_genes_required >= (len_allowed_genes + len_mandatory_genes) :
                 msg = "systems %s is not consistent min_genes_required %d must be lesser or equal than allowed_genes + mandatory_genes %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
                                                                                                                                       len_allowed_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
-            if system.min_mandatory_genes_required > len_mandatory_genes:
+            if system.min_mandatory_genes_required >= len_mandatory_genes:
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
-            if system.min_mandatory_genes_required < system.min_genes_required:
-                msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
+            if system.min_mandatory_genes_required >= system.min_genes_required:
+                msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       system.min_genes_required)
                 _log.critical(msg)

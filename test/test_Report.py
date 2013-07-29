@@ -23,6 +23,8 @@ from txsscanlib.report import HMMReport, UnOrderedHMMReport, OrderedHMMReport, H
 from txsscanlib.gene import Gene
 from txsscanlib.system import System
 from txsscanlib.config import Config
+from txsscanlib.database import Database
+
 
 class Test(unittest.TestCase):
 
@@ -43,7 +45,11 @@ class Test(unittest.TestCase):
                            log_level = 30,
                            log_file = '/dev/null'
                            )
-
+        db = Database(self.cfg)
+        txsscan_idx = db.find_my_indexes()
+        if not txsscan_idx:
+            db._build_my_indexes()
+        
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
         pass

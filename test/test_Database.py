@@ -20,7 +20,7 @@ if not TXSSCAN_HOME in sys.path:
 import unittest
 import shutil
 from txsscanlib.config import Config
-from txsscanlib.database import Database, SequenceInfo
+from txsscanlib.database import Database
 
  
 class Test(unittest.TestCase):
@@ -66,7 +66,7 @@ class Test(unittest.TestCase):
     def test_find_hmmer_indexes_no_files(self):
         db = Database(self.cfg)
         #tester pas de fichier
-        hmmer_idx = db._find_hmmer_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         self.assertListEqual(hmmer_idx, [])
 
     def test_find_hmmer_indexes_all_files(self):
@@ -78,7 +78,7 @@ class Test(unittest.TestCase):
             new_idx = os.path.join( self.cfg.sequence_db + s)
             open(new_idx, 'w')
             files_2_find.append(new_idx)
-        hmmer_idx = db._find_hmmer_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         self.assertListEqual(hmmer_idx, files_2_find)
 
 
@@ -90,7 +90,7 @@ class Test(unittest.TestCase):
         for s in  suffixes:
             new_idx = os.path.join( self.cfg.sequence_db + s)
             open(new_idx, 'w')
-        self.assertRaises(RuntimeError, db._find_hmmer_indexes)
+        self.assertRaises(RuntimeError, db.find_hmmer_indexes)
 
 
     def test_find_hmmer_indexes_some_files(self):
@@ -101,7 +101,7 @@ class Test(unittest.TestCase):
         for s in  suffixes:
             new_idx = os.path.join( self.cfg.sequence_db + s)
             open(new_idx, 'w')
-        self.assertRaises(RuntimeError, db._find_hmmer_indexes)
+        self.assertRaises(RuntimeError, db.find_hmmer_indexes)
 
 
     def test_find_hmmer_indexes_lack_pal(self):
@@ -113,7 +113,7 @@ class Test(unittest.TestCase):
             for i in range(2):
                 new_idx = os.path.join( self.cfg.sequence_db+ str(i) + s)
                 open(new_idx, 'w')
-        self.assertRaises(RuntimeError, db._find_hmmer_indexes)
+        self.assertRaises(RuntimeError, db.find_hmmer_indexes)
 
 
     def test_find_hmmer_indexes_all_files_and_2virtual(self):
@@ -126,7 +126,7 @@ class Test(unittest.TestCase):
                 new_idx = os.path.join( self.cfg.sequence_db+ str(i) + s)
                 open(new_idx, 'w')
                 files_2_find.append(new_idx)
-        self.assertRaises(RuntimeError, db._find_hmmer_indexes)
+        self.assertRaises(RuntimeError, db.find_hmmer_indexes)
 
 
     def test_find_hmmer_indexes_all_files_and_virtual(self):
@@ -143,24 +143,24 @@ class Test(unittest.TestCase):
         open(new_idx, 'w')
         files_2_find.append(new_idx)
         files_2_find.sort()
-        hmmer_idx = db._find_hmmer_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         hmmer_idx.sort()
         self.assertListEqual(hmmer_idx, files_2_find)
 
 
     def test_find_my_indexes(self):
         db = Database(self.cfg) 
-        self.assertIsNone(db._find_my_indexes())
+        self.assertIsNone(db.find_my_indexes())
         new_idx = os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx")
         open(new_idx, 'w')
-        self.assertEqual(db._find_my_indexes(), new_idx)
+        self.assertEqual(db.find_my_indexes(), new_idx)
 
 
     def test_build_no_idx(self):
         db = Database(self.cfg)
         db.build()
-        my_idx = db._find_my_indexes()
-        hmmer_idx = db._find_hmmer_indexes()
+        my_idx = db.find_my_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         self.assertEqual(my_idx, os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"))
         self.assertEqual( hmmer_idx , [ self.cfg.sequence_db + suffix for suffix in ('.phr', '.pin', '.psd', '.psi', '.psq')])
 
@@ -174,8 +174,8 @@ class Test(unittest.TestCase):
         db = Database(self.cfg)
         new_idx = open(os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"), 'w')
         db.build()
-        my_idx = db._find_my_indexes()
-        hmmer_idx = db._find_hmmer_indexes()
+        my_idx = db.find_my_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         for f in hmmer_idx +[my_idx]:
             self.assertEqual(os.path.getsize(f), 0)
 
@@ -189,8 +189,8 @@ class Test(unittest.TestCase):
         db = Database(self.cfg)
         new_idx = open(os.path.join( os.path.dirname(self.cfg.sequence_db), db.name + ".idx"), 'w')
         db.build(force = True)
-        my_idx = db._find_my_indexes()
-        hmmer_idx = db._find_hmmer_indexes()
+        my_idx = db.find_my_indexes()
+        hmmer_idx = db.find_hmmer_indexes()
         for f in hmmer_idx +[my_idx]:
             self.assertNotEqual(os.path.getsize(f), 0)
             
@@ -202,54 +202,7 @@ class Test(unittest.TestCase):
         self.assertRaises( IOError, db.build )
         os.chmod(idx_dir, 0777)    
 
-    def test_open(self):
-        db = Database(self.cfg)
-        self.assertRaises(IOError, db.open)
-        db.build()
-        db.open()
-        self.assertNotEqual(db._my_open_db, None)
-
-    def test_close(self):
-        db = Database(self.cfg)
-        db.build()
-        db.open()
-        self.assertNotEqual(db._my_open_db, None)
-        db.close()
-        self.assertIsNone(db._my_open_db)
-
-    
-    def test_get_item(self):
-        db = Database(self.cfg)
-        #put fake hmmer indexes
-        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
-        for s in  suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
-            open(new_idx, 'w')
-        #build only new txsscan indexes
-        db.build()
-        self.assertRaises(IOError, db.__getitem__, 'PRRU001c01_027920')
-        with db.open():
-            self.assertRaises(KeyError, db.__getitem__ ,'ZZZZZ')
-            seq_info_from_db = db['PRRU001c01_027920']
-            self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
-
-
-    def test_get(self):
-        db = Database(self.cfg)
-        #put fake hmmer indexes
-        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
-        for s in  suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
-            open(new_idx, 'w')
-        #build only new txsscan indexes
-        db.build()
-        self.assertRaises(IOError, db.get, 'PRRU001c01_027920')
-        with db.open():
-            self.assertIsNone(db.get('PRRU001c01_') , None)
-            self.assertListEqual(db.get('_027920', [] ) , [] )
-            seq_info_from_db = db.get('PRRU001c01_027920')
-            self.assertEqual(seq_info_from_db, SequenceInfo( 'PRRU001c01_027920', 401, 2730) )
-        
+ 
 
         
 if __name__ == "__main__":
