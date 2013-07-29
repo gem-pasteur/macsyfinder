@@ -12,23 +12,11 @@
 
 
 from itertools import groupby
-from collections import namedtuple
 from glob import glob
 import os.path
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
 from subprocess import Popen
-from bsddb3 import db
-
-""" 
-SequenceInfo contains 3 fields 
- 
-* id : the identifier of the sequence.
-* length : the length of the sequence.
-* position : it's rank in the sequences base in fasta format.
-
-"""
-SequenceInfo = namedtuple('SequenceInfo', 'id, length, position')
 
 
 def fasta_iter(fasta_file):
@@ -47,11 +35,11 @@ def fasta_iter(fasta_file):
         # drop the ">"
         header = header.next()[1:].strip()
         header = header.split()
-        id = header[0]
+        _id = header[0]
         comment = ' '.join(header[1:])
         seq = ''.join(s.strip() for s in faiter.next())
         length = len(seq)
-        yield id, comment, length
+        yield _id, comment, length
 
 
 class Database(object):
@@ -75,16 +63,15 @@ class Database(object):
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db
         self.name = os.path.basename(cfg.sequence_db)
-        self._hmmer_indexes = None
-        self._my_indexes = None
-        self._my_open_db = None
+        self._hmmer_indexes = None  #list of path
+        self._my_indexes = None  #path 
 
     def build(self, force = False):
         """
         build the indexes from the sequences base in fasta format
         """
-        hmmer_indexes = self._find_hmmer_indexes()
-        my_indexes = self._find_my_indexes()
+        hmmer_indexes = self.find_hmmer_indexes()
+        my_indexes = self.find_my_indexes()
 
         ###########################
         # build indexes if needed #
@@ -95,7 +82,7 @@ class Database(object):
                 msg = "cannot build indexes, (%s) is not writable" % index_dir
                 _log.critical(msg)
                 raise IOError(msg)
-        
+
         if force or not hmmer_indexes:
             #self._build_hmmer_indexes() is asynchron
             hmmer_indexes_proc = self._build_hmmer_indexes()
@@ -113,12 +100,12 @@ class Database(object):
                 msg = "an error occurred during databases indexation see formatdb.log f"
                 _log.error( msg, exc_info = True )
                 raise RuntimeError(msg)
-        self._hmmer_indexes = self._find_hmmer_indexes()
-        self._my_indexes = self._find_my_indexes()
+        self._hmmer_indexes = self.find_hmmer_indexes()
+        self._my_indexes = self.find_my_indexes()
         assert self._hmmer_indexes , "cannot create hmmer indexes"
         assert self._my_indexes, "cannot create txsscan indexes"
 
-    def _find_hmmer_indexes(self):
+    def find_hmmer_indexes(self):
         """
         :return: the files wich belongs to the hmmer indexes. 
                  If indexes are inconsistent (lack file) a Runtime Error is raised
@@ -151,9 +138,9 @@ class Database(object):
             idx.extend(index_files)
             file_nb = nb_of_index
         return idx
-    
 
-    def _find_my_indexes(self):
+
+    def find_my_indexes(self):
         """
         :return: the file of txsscan if exits, None otherwise. 
         :rtype: string
@@ -195,166 +182,24 @@ class Database(object):
 
     def _build_my_indexes(self):
         """
-        build txsscan indexes. This index is stored in a berkeley DB
+        build txsscan indexes. This index is stored in file.
+        
+        the format of the file is :
+        one entry per line
+        each line have the following format:
+         - sequence id;sequence length;sequence rank
+        
         """
-        my_index = db.DB()
-        my_index.open(os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx"),
-                      dbname = self.name,
-                      dbtype = db.DB_HASH,
-                      flags = db.DB_CREATE)
         try:
             with open(self._fasta_path, 'r') as fasta_file:
-                f_iter = fasta_iter(fasta_file)
-                seq_nb = 0
-                for seqid, comment, length in f_iter:
-                    seq_nb += 1
-                    my_index.put(seqid, "%d;%d" % (length, seq_nb))
+                with open(os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx" ), 'w') as my_base:
+                    f_iter = fasta_iter(fasta_file)
+                    seq_nb = 0
+                    for seqid, comment, length in f_iter:
+                        seq_nb += 1
+                        my_base.write( "%s;%d;%d\n" % (seqid, length, seq_nb))
         except Exception, err:
             msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
             _log.critical( msg, exc_info = True )
             raise err
-        finally:
-            my_index.close()
-    
-    def open(self):
-        """
-        open a connection. This method must be called before to get items or use the with statement::
-        
-          db = Database(self.cfg)
-          db.build()
-          db.open()
-          db[ my_key ]
-          db.close()
-        
-        or::
-        
-          with db.open():
-             db[ my_key ] 
-        
-        """
-        if not self._my_indexes:
-            msg = "no index available, the database must be build before to open it"
-            _log.critical(msg)
-            raise IOError(msg)
-        mydb = db.DB()
-        mydb.open(self._my_indexes,
-                      dbname = self.name,
-                      dbtype = db.DB_HASH,
-                      flags = db.DB_RDONLY)
-        self._my_open_db = mydb
-        return self
-    
-    def open(self):
-        """
-        open a connection. This method must be called before to get items or use the with statement::
-        
-          db = Database(self.cfg)
-          db.build()
-          db.open()
-          db[ my_key ]
-          db.close()
-        
-        or::
-        
-          with db.open():
-             db[ my_key ] 
-        
-        """
-        if not self._my_indexes:
-            msg = "no index available, the database must be build before to open it"
-            _log.critical(msg)
-            raise IOError(msg)
-        mydb = db.DB()
-        mydb.open(self._my_indexes,
-                      dbname = self.name,
-                      dbtype = db.DB_HASH,
-                      flags = db.DB_RDONLY)
-        self._my_open_db = mydb
-        return self
 
-    def close(self):
-        """
-        close the connection. This method must be called when the search in the db is ended.
-        or use the with statement::
-        
-          db = Database(self.cfg)
-          db.build()
-          db.open()
-          db[ my_key ]
-          db.close()
-        
-        or::
-        
-          with db.open():
-             db[ my_key ] 
-        
-        """
-        if self._my_open_db:
-            self._my_open_db.close()
-        self._my_open_db = None
-        
-    def __enter__(self):
-        return self.open()
-    
-    def __exit__(self, exctype, exc, traceback):
-        if traceback is None: #no traceback means no error
-            self.close()
-            success = True
-        else:
-            self.close()
-            success = False
-        return success    
-    
-    
-    def __getitem__(self, seq_id):
-        """
-        allow to use the following notation to retrieve sequence information ::
-         
-          db = Database()
-          with db.open():
-             seq_info = db[ 'my_id' ] 
-          seq_info.lenght
-         
-        :param seq_id: the sequence identifier
-        :type seq_id: string
-        :return: the SequenceInfo corresponding to the seq_id.
-                 if the seq_id does not exist in the database a KeyError is raised.
-        :rtype:  :class:`txsscanlib.database.SeqInfo` object
-        """
-        if not self._my_open_db:
-            msg = msg = "the database must be open before to get items"
-            _log.critical(msg)
-            raise IOError(msg)
-        data = self._my_open_db.get(seq_id)
-        if data:
-            length, seq_nb = data.split(';')
-            return SequenceInfo(seq_id, int(length), int(seq_nb))
-        else:
-            raise KeyError(str(seq_id))
-
-
-    def get(self, seq_id, default = None):
-        """
-        Return the :class:`txsscanlib.database.SeqInfo` object for given seq_id if seq_id is in the dictionary, else default. 
-        If default is not given, it defaults to None, so that this method never raises a KeyError.::
-        
-          db = Database()
-          with db.open():
-             seq_info = db.get( 'my_id', None ) 
-          seq_info.lenght
-
-        :param seq_id: the sequence identifier
-        :type seq_id: string
-        :param default: the value return if the seq_id is not in the database
-        :type default: any
-        """
-        if not self._my_open_db:
-            msg = "the database must be open before to get items"
-            _log.critical(msg)
-            raise IOError(msg)
-        data = self._my_open_db.get(seq_id)
-        if data:
-            length, seq_nb = data.split(';')
-            return SequenceInfo(seq_id, int(length), int(seq_nb))
-        else:
-            return default

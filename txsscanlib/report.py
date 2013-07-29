@@ -85,7 +85,8 @@ class HMMReport(object):
             return self.hits[0]
         except IndexError:
             return None
-
+    
+    
 class UnOrderedHMMReport(HMMReport):
     """
     handle HMM report. extract a synthetic report from the raw hmmer output
@@ -98,21 +99,68 @@ class OrderedHMMReport(HMMReport):
     handle HMM report. extract a synthetic report from the raw hmmer output
     """
 
+    def _hit_start(self, line):
+        return line.startswith(">>")
+
+    def _build_my_db(self, hmm_output):
+        """
+        """
+        d = {}
+        with open(hmm_output) as hmm_file:
+            hits = (x[1] for x in groupby(hmm_file, self._hit_start) if x[0])
+            for h in hits:
+                d[self._parse_hmm_header(h)] = None
+        return d
+
+    def _fill_my_db(self, txsscan_idx, db):
+        """
+        """
+        with open(txsscan_idx, 'r') as idx:
+            for l in idx:
+                #print l
+                seqid, length, rank = l.split(';')
+                if seqid in db:
+                    db[seqid] = (int(length), int(rank))
+
     def _parse_hmm_header(self, h_grp):
+        """
+        """
         for line in h_grp:
             hit_id = line.split()[1]
         return hit_id
 
     def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, b_grp):
+        """
+
+        :param hit_id:
+        :type hit_id:
+        :param gene_profile_lg:
+        :type gene_profile_lg:
+        :param seq_lg:
+        :type seq_lg:
+        :param coverage_treshold:
+        :type coverage_treshold:
+        :param replicon_name:
+        :type replicon_name:
+        :param position_hit:
+        :type position_hit:
+        :param i_evalue_sel:
+        :type i_evalue_sel:
+        :param b_grp:
+        :type b_grp:
+        :returns:
+        :rtype:
+
+        """
         first_line = b_grp.next()
-        if not first_line.startswith('   #'):
+        if not first_line.startswith('   #    score'):
             return []
         else:
             hits = []
             for line in b_grp:
                 if line[0] == '\n':
-                        return hits
-                elif line.startswith(" ---"):
+                    return hits
+                elif line.startswith(" ---   ------ ----- --------"):
                     pass
                 else:
                     fields = line.split()
@@ -121,7 +169,7 @@ class OrderedHMMReport(HMMReport):
                             cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
                             begin = int(fields[9])
                             end = int(fields[10])
-                            cov_gene = (float(end) - float(begin) +1) / seq_lg # To be added in Gene: sequence_length
+                            cov_gene = (float(end) - float(begin) + 1) / seq_lg # To be added in Gene: sequence_length
                             if (cov_profile >= coverage_treshold):
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
@@ -138,14 +186,13 @@ class OrderedHMMReport(HMMReport):
                                                 begin,
                                                 end))
                     except ValueError, err:
-                        msg = "Invalid line to parse :{0}: ".format(line)
+                        msg = "Invalid line to parse :{0}:{1}".format(line, err)
                         _log.debug(msg)
-                        print err
                         raise ValueError(msg)
 
     def extract(self):
         """
-        Parse the output file of hmmer compute from an unordered genes base 
+        Parse the output file of hmmer compute from an unordered genes base
         and produced a new synthetic report file.
         """
         with self._lock:
@@ -155,39 +202,33 @@ class OrderedHMMReport(HMMReport):
             if self.hits:
                 return
 
+            db = Database(self.cfg)
+            txsscan_idx = db.find_my_indexes()
+            my_db = self._build_my_db(self._hmmer_raw_out)
+            self._fill_my_db(txsscan_idx, my_db)
+
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
                 coverage_treshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
-
-                def _hit_start(line):
-                    return line.startswith(">>")
-
-                hmm_hits = (x[1] for x in groupby(hmm_out, _hit_start))
+                hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 #drop summary
                 hmm_hits.next()
-                db = Database(self.cfg)
-                #the indexes has been build in txsscan
-                #here we only reuse them
-                db.build()
-                with db.open():
-                    for hmm_hit in hmm_hits:
-                        hit_id = self._parse_hmm_header(hmm_hit)
-                        seq_info = db[hit_id]
-                        seq_lg = seq_info.length
-                        fields_hit = hit_id.split('_')
-                        replicon_name = fields_hit[0]
-                        position_hit = seq_info.position
-                        body = hmm_hits.next()
-                        h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
-                        self.hits += h
+                for hmm_hit in hmm_hits:
+                    hit_id = self._parse_hmm_header(hmm_hit)
+                    seq_lg, position_hit = my_db[hit_id]
+                    fields_hit = hit_id.split('_')
+                    replicon_name = fields_hit[0]
+                    body = hmm_hits.next()
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    self.hits += h
                 self.hits.sort()
                 return self.hits
 
 
 class Hit(object):
     """
-    handle hits found by HMM. the hit are instanciate by :py:meth:`HMMReport.extract` method
+    handle hits found by HMM. The hits are instanciated by :py:meth:`HMMReport.extract` method
     """
     
     def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name,
@@ -272,13 +313,14 @@ class Hit(object):
 
     def get_position(self):
         """
-        returns the position of the hit 
+        :returns: the position of the hit
+        :rtype: integer 
         """
-        return(self.position)
+        return self.position
 
     def get_syst_inter_gene_max_space(self):
         """
-        returns the 'inter_gene_max_space' parameter defined for the system of the hit
+        :returns: the 'inter_gene_max_space' parameter defined for the system of the hit
+        :rtype: integer
         """
-        #return(self.system.inter_gene_max_space)
-        return(self.gene.system.inter_gene_max_space)
+        return self.gene.system.inter_gene_max_space
