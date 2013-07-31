@@ -997,35 +997,28 @@ def search_systems(hits, systems, cfg):
         syst_name = s.name
         system_names.append(syst_name)
     
+    header_print = True
     if cfg.db_type == 'gembase':
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
-        header_print = True
+        #header_print = True
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
-            #for h in sub_hits:
-            #    print h
+            
+            # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
             clusters=build_clusters(sub_hits)
             #for c in clusters.clusters:
             #    print c
             
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
-            
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
             
             print "******************************************"
             print "Reporting systems for %s : \n"%k
-            #report = systemDetectionReport(k, systems_occurences_list, systems, reportfilename)
             report = systemDetectionReport(k, systems_occurences_list, systems)
-            
-            # Add the header once in the reports:
-            #if header_print:
-            #    report.tabulated_output_header(system_occurences_states, system_names, tabfilename)
-                #report.report_output_header(reportfilename)
-                #report.summary_output_header(summaryfilename)
                 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
@@ -1036,8 +1029,21 @@ def search_systems(hits, systems, cfg):
             header_print = False
             
     elif cfg.db_type == 'ordered_replicon':
-        clusters=build_clusters(hits)
-        #analyze_clusters_replicon(clusters, systems)
+        
+        replicon = "UserReplicon"
+        clusters=build_clusters(hits) 
+        print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
+        systems_occurences_list = analyze_clusters_replicon(clusters, systems)            
+        
+        print "******************************************"
+        print "Reporting systems for %s : \n"%replicon
+        report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
+        report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
+        report.report_output(reportfilename, header_print)
+        report.summary_output(summaryfilename, header_print)
+        print "******************************************"
+
+        
     elif cfg.db_type == 'unordered_replicon':
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
         pass
