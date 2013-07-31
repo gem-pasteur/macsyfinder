@@ -292,5 +292,5 @@ class SystemParser(object):
             tree = ET.parse(path)
             system_node = tree.getroot()
             self.fill(system, system_node)
-        self.check_consitency(self.system_bank, self.cfg)
+        #self.check_consitency(self.system_bank, self.cfg)
 
