@@ -284,6 +284,20 @@ class SystemOccurence(object):
                 out+="%s\t%d\n"%(k, g)   
         return out
     
+    def get_gene_counter_output(self):
+        """
+        Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden) occurences in the system occurrence        
+        """
+        out=""
+        #if self.mandatory_genes: 
+        out+=str(self.mandatory_genes)
+        #if self.allowed_genes:
+        out+="\t%s"%str(self.allowed_genes)
+        #if self.forbidden_genes:
+        out+="\t%s"%str(self.forbidden_genes)
+        
+        return out
+    
     @property
     def state(self):
         """
@@ -375,7 +389,14 @@ class SystemOccurence(object):
         else:
             return False 
      
-
+    def get_summary_header(self):
+        """
+        Returns a string with the description of the summary returned by self.get_summary()
+        
+        :rtype: string
+        """
+        return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
+        
     def get_summary(self, replicon_name):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
@@ -405,6 +426,7 @@ class SystemOccurence(object):
         report_str+="\t%s"%str(missing_allowed) # List of allowed genes with no occurrence in the system
         
         report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
+        report_str+="\t%s"%self.get_gene_counter_output() # A dico per type of gene 'Mandatory, Allowed, Forbidden' with gene occurrences in the system
        
         return report_str
         
@@ -565,6 +587,9 @@ class validSystemHit(object):
                                                      self.hit.begin_match,
                                                      self.hit.end_match)
                                                      
+    def output_system_header(self):
+        return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
+
 
 class systemDetectionReport(object):
     """
@@ -588,8 +613,23 @@ class systemDetectionReport(object):
                
         return Counter(system_textlist)
  
+    #def tabulated_output_header(self, system_occurence_states, system_names, reportfilename):
+    def tabulated_output_header(self, system_occurence_states, system_names):
+        """
+        Returns a string containing the header of the tabulated output
+        """
+        # Can be done intra-class 
+        header = "#Replicon"
+        for syst_name in system_names:
+            for state in system_occurence_states:
+                header += "\t"+syst_name+"_"+state
+    
+        header+="\n"        
+        #with open(reportfilename, 'w') as _file:
+        #    _file.write(header)
+        return header
 
-    def tabulated_output(self, system_occurence_states, system_names, reportfilename):
+    def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
         """
         Write a tabulated output with number of detected systems for each replicon. 
         """
@@ -605,11 +645,14 @@ class systemDetectionReport(object):
                 else:
                     report_str+="\t0"
         report_str+="\n"      
-        
-        with open(reportfilename, 'a') as _file:
-            _file.write(report_str)
             
-    def report_output(self, reportfilename):
+        with open(reportfilename, 'a') as _file:            
+            if print_header:
+                _file.write(self.tabulated_output_header(system_occurence_states, system_names))
+            _file.write(report_str)
+    
+           
+    def report_output(self, reportfilename, print_header = False):
         """
         Write a report of sequences forming the detected systems, with information in their status in the system, their localization on replicons, and statistics on the Hits. 
         """
@@ -617,12 +660,15 @@ class systemDetectionReport(object):
         for so in self._systems_occurences_list:
             so_unique_name = so.get_system_unique_name(self.replicon_name)
             for hit in so.valid_hits:
+                if print_header:
+                    report_str+=hit.output_system_header()
+                    print_header = False
                 report_str+=hit.output_system(so_unique_name, so.state)
         
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
-    def summary_output(self, reportfilename):
+    def summary_output(self, reportfilename, print_header = False):
         """
         Write a report with the summary of systems detected in replicons. For each system, a summary is done including:
             - the number of mandatory/allowed genes in the reference system (as defined in XML files)
@@ -634,6 +680,10 @@ class systemDetectionReport(object):
         report_str = ""
         for so in self._systems_occurences_list:
             #so_unique_name = so.get_system_unique_name(self.replicon_name)
+            if print_header:
+                report_str+="%s\n"%so.get_summary_header()
+                print_header=False
+                
             report_str+="%s\n"%so.get_summary(self.replicon_name)
            
         with open(reportfilename, 'a') as _file:
@@ -926,30 +976,32 @@ def search_systems(hits, systems, cfg):
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
     
+    # Build of output headers:
+    #system_occurences_states = ['single_locus', 'multi_loci']
+    #system_names = []
+    #tabulated_report_header = "Replicon"
+    #for s in systems:
+    #    syst_name = s.name
+    #    system_names.append(syst_name)
+    #    for state in system_occurences_states:
+    #        colname = "\t"+syst_name+"_"+state
+    #        tabulated_report_header += colname    
+    #tabulated_report_header+="\n"        
+    #with open(tabfilename, 'w') as _file:
+    #    _file.write(tabulated_report_header)
+    
+    # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     system_occurences_states = ['single_locus', 'multi_loci']
     system_names = []
-    tabulated_report_header = "Replicon"
-    #TabReport = namedtuple('TabReport', 'Replicon')
     for s in systems:
         syst_name = s.name
         system_names.append(syst_name)
-        for state in system_occurences_states:
-            colname = "\t"+syst_name+"_"+state
-            tabulated_report_header += colname
-    #        TabReport = namedtuple('TabReport', TabReport._fields+(s.name+"_"+state,))
-    
-    tabulated_report_header+="\n"        
-    with open(tabfilename, 'w') as _file:
-        _file.write(tabulated_report_header)
-
-    #print tabulated_report_header
-    #print system_names
-    #print TabReport._fields
     
     if cfg.db_type == 'gembase':
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
+        header_print = True
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
             #for h in sub_hits:
@@ -969,13 +1021,19 @@ def search_systems(hits, systems, cfg):
             #report = systemDetectionReport(k, systems_occurences_list, systems, reportfilename)
             report = systemDetectionReport(k, systems_occurences_list, systems)
             
+            # Add the header once in the reports:
+            #if header_print:
+            #    report.tabulated_output_header(system_occurences_states, system_names, tabfilename)
+                #report.report_output_header(reportfilename)
+                #report.summary_output_header(summaryfilename)
+                
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
-            report.tabulated_output(system_occurences_states, system_names, tabfilename)
-            # Add the header once in the report
-            report.report_output(reportfilename)
-            report.summary_output(summaryfilename)
-            #report.
+            report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
+            report.report_output(reportfilename, header_print)
+            report.summary_output(summaryfilename, header_print)
             print "******************************************"
+            
+            header_print = False
             
     elif cfg.db_type == 'ordered_replicon':
         clusters=build_clusters(hits)
