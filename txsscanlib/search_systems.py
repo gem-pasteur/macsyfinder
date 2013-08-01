@@ -15,6 +15,9 @@ from report import Hit # required?
 import os.path
 from collections import namedtuple, Counter
 import itertools, operator
+
+from txsscan_error import TxsscanError, SystemDetectionError
+
 _log = logging.getLogger('txsscan.' + __name__)
 
 class ClustersHandler(object):
@@ -44,7 +47,8 @@ class ClustersHandler(object):
                 msg+=str(c)
             msg+="To add: %s"%str(cluster)
             _log.critical(msg)
-            raise Exception(msg)
+            #raise Exception(msg)
+            raise SystemDetectionError(msg)
         
     def __str__(self):
         to_print=""
@@ -153,7 +157,8 @@ class Cluster(object):
             else:
                 msg = "Attempting to gather in a cluster hits from different replicons ! "
                 _log.critical(msg)
-                raise Exception(msg)
+                #raise Exception(msg)
+                raise SystemDetectionError(msg)
                     
     def save(self, force=False):
         """
@@ -349,7 +354,11 @@ class SystemOccurence(object):
                 locus_length=end-begin+rep_info.max-rep_info.min+2
                 length+=locus_length
             else:
-                print "PB raise an exception..."
+                msg="Inconsistency in locus positions in the case of a linear replicon. The begin position of a locus cannot be higher than the end position. \n"
+                msg+="Problem with locus found with positions begin: %d end: %d"%(begin, end)
+                _log.critical(msg)
+                #raise Exception(msg)
+                raise SystemDetectionError(msg)
         return length
     
     @property
