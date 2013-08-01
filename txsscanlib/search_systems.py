@@ -17,8 +17,6 @@ from collections import namedtuple, Counter
 import itertools, operator
 _log = logging.getLogger('txsscan.' + __name__)
 
-#from system import system_factory
-
 class ClustersHandler(object):
     """
     Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
@@ -87,7 +85,6 @@ class Cluster(object):
             seq_ids.append(h.id)
             gene_names.append(h.gene.name)
             
-        #return "--- Cluster ---\n%s\n%s\n%s"%(str(seq_ids), str(gene_names), str(pos))
         if self.state == "clear":
             return "--- Cluster %s ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
         else:
@@ -183,9 +180,6 @@ class Cluster(object):
                         self._state = "clear"
                     else:
                         self._state = "ambiguous"
-
-    #def is_eligible(self):
-    #    for h in hits:
 
 
     
@@ -289,11 +283,8 @@ class SystemOccurence(object):
         Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden) occurences in the system occurrence        
         """
         out=""
-        #if self.mandatory_genes: 
         out+=str(self.mandatory_genes)
-        #if self.allowed_genes:
         out+="\t%s"%str(self.allowed_genes)
-        #if self.forbidden_genes:
         out+="\t%s"%str(self.forbidden_genes)
         
         return out
@@ -441,9 +432,7 @@ class SystemOccurence(object):
         :rtype: boolean
         
         """
-        #so_cl=SystemOccurence(self.system)
         included = True
-        #self.nb_cluster += 1 # To be checked if the cluster will be included! Not here ! 
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
@@ -470,30 +459,21 @@ class SystemOccurence(object):
                     valid_hit=validSystemHit(hit, self.system_name, "allowed")
                     self.valid_hits.append(valid_hit)
                 else:
-                    #print "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
                     msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
                     print msg
                     #_log.info(msg)
         
         if included:
             # Update the number of loci included in the system
-            self.nb_cluster += 1
-            
+            self.nb_cluster += 1            
             # Update the positions of the system
-            #self.loci_positions.append(LociPositions(self.nb_cluster, cluster.begin, cluster.end))
             self.loci_positions.append((cluster.begin, cluster.end))
-            
-        #return self.decide()
-        #self.decision_rule()
-        #return self.state
-                      
-    #def decide(self):
+                     
+
     def decision_rule(self):
-        #if (self.count_genes(self.forbidden_genes) == 0 and self.count_genes(self.mandatory_genes) >= self.system.min_mandatory_genes_required and (self.count_genes(self.mandatory_genes) + self.count_genes(self.allowed_genes)) >= self.system.min_system_genes_required):
         nb_forbid = self.count_genes(self.forbidden_genes)
         nb_mandat = self.count_genes(self.mandatory_genes)
         nb_allowed = self.count_genes(self.allowed_genes)
-        #nb_genes = nb_mandat + nb_allowed
         self._nb_syst_genes = self.compute_nb_syst_genes()
 
         msg = "====> Decision rule for putative system %s\n"%self.system_name
@@ -501,10 +481,7 @@ class SystemOccurence(object):
         msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d"%(nb_forbid, nb_mandat, nb_allowed)
                
         if ( nb_forbid == 0 ):
-            #if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 2):
-            #if (nb_mandat >= (len(self.mandatory_genes)-3) and self.nb_syst_genes >= (len(self.mandatory_genes) + len(self.allowed_genes) - 4) and self.nb_syst_genes  >= 1):
             if (nb_mandat >= self.system.min_mandatory_genes_required) and (self.nb_syst_genes >= self.system.min_genes_required) and (self.nb_syst_genes  >= 1):
-           
                 if self.nb_cluster == 1: 
                     self._state = "single_locus"
                 else:
@@ -512,17 +489,16 @@ class SystemOccurence(object):
                 
                 msg += "\nYeah complete system \"%s\"."%self.state
                 msg += "\n******************************************\n"
-                 
                 print msg
                 #_log.info(msg)
-                #return True
+
             elif self.nb_syst_genes > 0:
                 msg += "\nuncomplete system."
                 msg += "\n******************************************\n"
                 print msg
                 #_log.info(msg)
                 self._state = "uncomplete"
-                #return False
+
             else:
                 msg += "\nempty system."
                 msg += "\n******************************************\n"
@@ -613,7 +589,6 @@ class systemDetectionReport(object):
                
         return Counter(system_textlist)
  
-    #def tabulated_output_header(self, system_occurence_states, system_names, reportfilename):
     def tabulated_output_header(self, system_occurence_states, system_names):
         """
         Returns a string containing the header of the tabulated output
@@ -679,7 +654,6 @@ class systemDetectionReport(object):
         
         report_str = ""
         for so in self._systems_occurences_list:
-            #so_unique_name = so.get_system_unique_name(self.replicon_name)
             if print_header:
                 report_str+="%s\n"%so.get_summary_header()
                 print_header=False
@@ -719,12 +693,8 @@ def disambiguate_cluster(cluster):
             #if h.gene.is_authorized(cur_syst):
             #    if not h.gene.is_authorized(syst):
             #        cur_cluster.add(h)
-                
-                    
-            
-            
-            
-            ###### OLD PART ######
+            # ==> Part done elsewhere ! now systems of foreign genes are not counted.
+
             # Case 1: the current gene can not be found in the last system
             if cur_nb_syst_genes == cur_nb_syst_genes_tot:
                 cur_cluster.save()
@@ -755,7 +725,6 @@ def disambiguate_cluster(cluster):
 
     
 def analyze_clusters_replicon(clusters, systems):
-#def analyze_clusters_replicon(replicon_name, clusters, systems):
     """
     Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
         
@@ -786,10 +755,7 @@ def analyze_clusters_replicon(clusters, systems):
     
     for clust in clusters.clusters:
         print "\n%s"%str(clust)
-        if clust.state == "clear":
-            #print "\n@@@@@@@--- CHECK current cluster ---@@@@@@@" 
-            #print "\n%s"%str(clust)
-            
+        if clust.state == "clear":            
             # Local Hits collector
             so = SystemOccurence(syst_dict[clust.putative_system])
             so.fill_with(clust)
@@ -805,8 +771,7 @@ def analyze_clusters_replicon(clusters, systems):
                     print "...\nComplete system stored.\n"
                     systems_occurences_list.append(so)
         elif clust.state == "ambiguous":
-            # TO DO : implement a way to "clean" the clusters. 
-            # For instance :
+            # Implement a way to "clean" the clusters. For instance :
             # - split the cluster in two if it seems that two systems are nearby
             # - remove single hits that are not forbidden for the "main" system and that are at one end of the current cluster
             # in this case, check that they are not "loners", cause "loners" can be stored.
@@ -886,12 +851,9 @@ def build_clusters(hits):
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
 
-        # TEST !! Pick up the smallest of the two distances...
         #smaller_dist = min(prev_max_dist, cur_max_dist)    
         if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist ):
         #if(inter_gene <= smaller_dist ):
-        # First check the cur.id is different from  the prev.id !!!
-        #if(inter_gene!=-1 and (inter_gene <= prev_max_dist or inter_gene <= cur_max_dist )):
             #print "zero"
             if positions.count(prev.position) == 0:
                 #print "un - ADD prev in cur_cluster"
@@ -904,7 +866,6 @@ def build_clusters(hits):
                 positions.append(cur.position)
                 
             if prev.gene.loner:
-                # PB !!!! Do not enter here when T3SS sctC loner and T2SS searched too... CHECK !!
                 #print "trois - loner_state"
                 #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
                 loner_state = True
@@ -922,7 +883,6 @@ def build_clusters(hits):
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print cur_cluster
                 #print "cinq - ADD cur_cluster"
-                #print "LNOER??"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
@@ -948,16 +908,6 @@ def build_clusters(hits):
             
         prev=cur
     
-    # !!! Treat the last cluster?  Yeeaaaah !!
-    #print "\nHEHOHEHOHEHO !!! Last cluster to deal with..."
-    #print cur_cluster
-    #print len(cur_cluster)
-    #if len(cur_cluster)>1:
-    #    print "store cause long enough"
-    #if prev.gene.loner:
-    #    print "store cause loner"
-        
-    #print "HEHOHEHOHEHO !!!\n"    
     if len(cur_cluster)>1 or (len(cur_cluster)==1 and prev.gene.loner):
         clusters.add(cur_cluster)
         
