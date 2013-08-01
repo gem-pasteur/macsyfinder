@@ -52,7 +52,25 @@ class ClustersHandler(object):
             to_print+=str(cluster)
             
         return to_print
-
+    
+    def circularize(self, rep_info):
+        # We assume this function is called when appropriate (i.e. for circular replicons)
+        if len(self.clusters) > 1:
+            clust_first = self.clusters[0]
+            clust_last = self.clusters[len(self.clusters)-1]
+            
+            pos_min = rep_info.min
+            pos_max = rep_info.max
+            dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
+            
+            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
+                # Need to circularize ! 
+                print " A cluster needs to be \"circularized\" ! "
+                self.clusters.pop(0)
+                for h in clust_first.hits:
+                    clust_last.add(h)
+                clust_last.save(True) # Force to re-save the updated cluster
+                print clust_last
                         
 class Cluster(object):
     """
@@ -115,6 +133,7 @@ class Cluster(object):
             self.hits.append(hit)
         else:
             if(self.replicon_name == hit.replicon_name):
+                # To be updated !! make this work also with "circularized" clusters
                 if hit.get_position() < self.begin:
                     self.begin = hit.get_position()
                 elif hit.get_position() > self.end:
@@ -130,13 +149,15 @@ class Cluster(object):
                 _log.critical(msg)
                 raise Exception(msg)
                     
-    def save(self):
+    #def save(self):
+    def save(self, force=False):
         """
         Check the status of the cluster regarding systems which have hits in it. 
         Update systems represented, and assign a putative system (self._putative_system), which is the system with most hits in the cluster. 
         The systems represented are stored in a dictionary in the self.systems variable. 
+        The execution of this function can be forced, even if it has already run for the cluster with the option force=True.
         """        
-        if not self.putative_system:
+        if not self.putative_system or force:
             # First compiute the "Majoritary" system
             systems={} # Counter of occcurrences of systems in the cluster
             genes=[]
@@ -790,12 +811,8 @@ def analyze_clusters_replicon(clusters, systems):
     for system in systems:
         #print systems_occurences[system]
         so = systems_occurences_scattered[system.name]
-        #if so.decide():
-        #if so.nb_syst_genes()>0:
         so.decision_rule()
         so_state=so.state
-        #if so_state != "empty" or so_state != "exclude":
-            #so.decision_rule()
         if so.is_complete():
             systems_occurences_list.append(so)
     print "******************************************\n"
@@ -805,7 +822,8 @@ def analyze_clusters_replicon(clusters, systems):
 
 
 
-def build_clusters(hits):
+#def build_clusters(hits):
+def build_clusters(hits, rep_info):
     """
     Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets. 
     Remains to do : 
@@ -845,7 +863,6 @@ def build_clusters(hits):
         tmp+="Cur : %s"%cur
         tmp+="Prev : %s"%prev
         tmp+="Len cluster: %d\n"%len(cur_cluster)
-        
         #print tmp
         
         # First condition removes duplicates (hits for the same sequence)
@@ -910,6 +927,10 @@ def build_clusters(hits):
     
     if len(cur_cluster)>1 or (len(cur_cluster)==1 and prev.gene.loner):
         clusters.add(cur_cluster)
+    
+    if rep_info.topology == "circular":
+        #print "Circ TEST"
+        clusters.circularize(rep_info)
         
     return clusters
 
@@ -920,26 +941,10 @@ def search_systems(hits, systems, cfg):
     Analyze quorum and colocalization if required for system detection. 
     """
     
-    # For system occurences report, creation of a namedtuple with every system
-    # PB with namedtuples : need to fill all fields in a single step.
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-    
-    # Build of output headers:
-    #system_occurences_states = ['single_locus', 'multi_loci']
-    #system_names = []
-    #tabulated_report_header = "Replicon"
-    #for s in systems:
-    #    syst_name = s.name
-    #    system_names.append(syst_name)
-    #    for state in system_occurences_states:
-    #        colname = "\t"+syst_name+"_"+state
-    #        tabulated_report_header += colname    
-    #tabulated_report_header+="\n"        
-    #with open(tabfilename, 'w') as _file:
-    #    _file.write(tabulated_report_header)
-    
+   
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     system_occurences_states = ['single_locus', 'multi_loci']
     system_names = []
@@ -958,10 +963,7 @@ def search_systems(hits, systems, cfg):
             
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
-            clusters=build_clusters(sub_hits)
-            #for c in clusters.clusters:
-            #    print c
-            
+            clusters=build_clusters(sub_hits)            
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
@@ -979,12 +981,20 @@ def search_systems(hits, systems, cfg):
             header_print = False
             
     elif cfg.db_type == 'ordered_replicon':
-        
+        # Basically the same as for 'gembase' (except the loop on replicons)
         replicon = "UserReplicon"
-        clusters=build_clusters(hits) 
-        print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
-        systems_occurences_list = analyze_clusters_replicon(clusters, systems)            
         
+        # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
+        # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
+        replicon_type = "circular"
+        replicon_pos_min = 1
+        replicon_pos_max = 5569
+        RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+        rep_info=RepInfo("circular", 1, 5569)
+        #clusters=build_clusters(hits) 
+        clusters=build_clusters(hits, rep_info) 
+        print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
+        systems_occurences_list = analyze_clusters_replicon(clusters, systems)                    
         print "******************************************"
         print "Reporting systems for %s : \n"%replicon
         report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
@@ -992,7 +1002,6 @@ def search_systems(hits, systems, cfg):
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         print "******************************************"
-
         
     elif cfg.db_type == 'unordered_replicon':
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
