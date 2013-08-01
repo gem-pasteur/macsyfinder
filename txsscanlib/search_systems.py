@@ -125,6 +125,9 @@ class Cluster(object):
         return self._putative_system
    
     def add(self, hit):
+        """
+        Hits are always added at the end of the cluster (appended to the list of hits). Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
+        """
         # need to update cluster bounds
         if len(self.hits) == 0:
             self.begin = hit.get_position()
@@ -134,6 +137,7 @@ class Cluster(object):
         else:
             if(self.replicon_name == hit.replicon_name):
                 # To be updated !! make this work also with "circularized" clusters
+                """
                 if hit.get_position() < self.begin:
                     self.begin = hit.get_position()
                 elif hit.get_position() > self.end:
@@ -141,7 +145,9 @@ class Cluster(object):
                 else:
                     if hit.get_position() > self.begin and hit.get_position() < self.end:
                         _log.debug("Weird cluster inclusion hit : %s"%hit)
-                            
+                """
+                # The end position only is updated, as Hits are always appended.
+                self.end = hit.get_position()
                 self.hits.append(hit)
                 
             else:
@@ -149,7 +155,6 @@ class Cluster(object):
                 _log.critical(msg)
                 raise Exception(msg)
                     
-    #def save(self):
     def save(self, force=False):
         """
         Check the status of the cluster regarding systems which have hits in it. 
@@ -330,13 +335,21 @@ class SystemOccurence(object):
         return self.unique_name
 
     
-    def compute_system_length(self):
+    #def compute_system_length(self):
+    def compute_system_length(self, rep_info):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
         """
         length=0
+        # To be updated to deal with "circular" clusters
         for(begin, end) in self.loci_positions:
-            length+=(end-begin+1)
+            if begin<end:
+                length+=(end-begin+1)
+            elif rep_info.topology == "circular":
+                locus_length=end-begin+rep_info.max-rep_info.min+2
+                length+=locus_length
+            else:
+                print "PB raise an exception..."
         return length
     
     @property
@@ -409,7 +422,8 @@ class SystemOccurence(object):
         """
         return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
         
-    def get_summary(self, replicon_name):
+    #def get_summary(self, replicon_name):
+    def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
         
@@ -425,7 +439,9 @@ class SystemOccurence(object):
         report_str+="\t%d"%len(self.allowed_genes) # Nb allowed_genes in the definition of the system
         report_str+="\t%d"%self.nb_syst_genes # Nb syst genes NR
         report_str+="\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
-        report_str+="\t%d"%self.compute_system_length() # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        #report_str+="\t%d"%self.compute_system_length() # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        report_str+="\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
+
         report_str+="\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
         report_str+="\t%d"%self.count_genes(self.allowed_genes) # Nb allowed_genes matched at least once
         
@@ -664,7 +680,8 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
-    def summary_output(self, reportfilename, print_header = False):
+    #def summary_output(self, reportfilename, print_header = False):
+    def summary_output(self, reportfilename, rep_info, print_header = False):
         """
         Write a report with the summary of systems detected in replicons. For each system, a summary is done including:
             - the number of mandatory/allowed genes in the reference system (as defined in XML files)
@@ -679,7 +696,8 @@ class systemDetectionReport(object):
                 report_str+="%s\n"%so.get_summary_header()
                 print_header=False
                 
-            report_str+="%s\n"%so.get_summary(self.replicon_name)
+            #report_str+="%s\n"%so.get_summary(self.replicon_name)
+            report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
            
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
@@ -952,6 +970,11 @@ def search_systems(hits, systems, cfg):
         syst_name = s.name
         system_names.append(syst_name)
     
+    # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
+    # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
+    RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+    rep_info=RepInfo("circular", 1, 5569)
+    
     header_print = True
     if cfg.db_type == 'gembase':
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
@@ -975,7 +998,8 @@ def search_systems(hits, systems, cfg):
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
-            report.summary_output(summaryfilename, header_print)
+            #report.summary_output(summaryfilename, header_print)
+            report.summary_output(summaryfilename, rep_info, header_print)
             print "******************************************"
             
             header_print = False
@@ -984,13 +1008,6 @@ def search_systems(hits, systems, cfg):
         # Basically the same as for 'gembase' (except the loop on replicons)
         replicon = "UserReplicon"
         
-        # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
-        # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
-        replicon_type = "circular"
-        replicon_pos_min = 1
-        replicon_pos_max = 5569
-        RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-        rep_info=RepInfo("circular", 1, 5569)
         #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
         print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
@@ -1000,7 +1017,8 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
-        report.summary_output(summaryfilename, header_print)
+        #report.summary_output(summaryfilename, header_print)
+        report.summary_output(summaryfilename, rep_info, header_print)
         print "******************************************"
         
     elif cfg.db_type == 'unordered_replicon':
