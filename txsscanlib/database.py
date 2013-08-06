@@ -12,6 +12,7 @@
 
 
 from itertools import groupby
+from collections import namedtuple
 from glob import glob
 import os.path
 import logging
@@ -42,7 +43,7 @@ def fasta_iter(fasta_file):
         yield _id, comment, length
 
 
-class Database(object):
+class Indexes(object):
     """
     Handle the indexes for txsscan
     
@@ -69,6 +70,9 @@ class Database(object):
     def build(self, force = False):
         """
         build the indexes from the sequences base in fasta format
+        
+        :param force: If True force the index building even the index file are present on the system
+        :type force: boolean
         """
         hmmer_indexes = self.find_hmmer_indexes()
         my_indexes = self.find_my_indexes()
@@ -102,8 +106,8 @@ class Database(object):
                 raise RuntimeError(msg)
         self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
-        assert self._hmmer_indexes , "cannot create hmmer indexes"
-        assert self._my_indexes, "cannot create txsscan indexes"
+        assert self._hmmer_indexes , "failed to create hmmer indexes"
+        assert self._my_indexes, "failed create txsscan indexes"
 
     def find_hmmer_indexes(self):
         """
@@ -142,7 +146,7 @@ class Database(object):
 
     def find_my_indexes(self):
         """
-        :return: the file of txsscan if exits, None otherwise. 
+        :return: the file of txsscan indexes if exits, None otherwise. 
         :rtype: string
         """ 
         path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
@@ -202,4 +206,118 @@ class Database(object):
             msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
             _log.critical( msg, exc_info = True )
             raise err
+
+
+"""handle information name, min, max for a replicon"""
+RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max')
+
+
+class RepliconDB(object):
+    """
+    store informations (topology, min, max) for all replicon in the sequence_db
+    the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'
+    """
+
+    def __init__(self, cfg):
+        """
+        :param cfg: the configuration
+        :type cfg: :class:`txsscanlib.config.Config` object
+
+        .. note ::
+        this class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
+        """
+        self.cfg = cfg
+        assert self.cfg.db_type in ('gembase', 'ordered_replicon')
+        idx = Indexes(self.cfg)
+        self.sequence_idx = idx.find_my_indexes()
+        self.topology_file = self.cfg.topology_file
+        self._DB = {}
+        if self.topology_file:
+            topo_dict = self._fill_topology()
+        else:
+            topo_dict = {}
+        self._fill_min_max(topo_dict, default_topology = self.cfg.replicon_topology)
+
+
+    def _fill_topology(self):
+        """
+        fill the internal dict with  min, max for each replicon_name of the sequence_db
+        """
+        topo_dict = {}
+        with open(self.topology_file) as topo_f:
+            for l in topo_f:
+                if l.startswith('#'): 
+                    continue
+                replicon_name, topo = l.split(':')
+                replicon_name = replicon_name.strip()
+                topo = topo.strip().lower()
+                topo_dict[replicon_name] = topo
+        return topo_dict
+
+    def _fill_min_max(self, topology , default_topology = None):
+        """
+        for each replicon_name of the sequence_db, fill the internal dict with RepliconInfo
+        
+        :param topology: the topologies for each replicon 
+                         (parsed from the file specified with the option --topology-file)
+        :type topology: dict
+        :param default_topology: the topology provided by the config.replicon_topology 
+        :type default_topology: string
+        """
+        def grp_replicon(line):
+            #
+            return line.split('_')[0]
+
+        def parse_entry(entry):
+            entry = entry.rstrip()
+            seq_id, length, rank = entry.split(';')
+            replicon_name = seq_id.split('_')[0]
+            return replicon_name, int(rank)
+
+        with open(self.sequence_idx) as idx_f:
+            replicons = (x[1] for x in groupby(idx_f, grp_replicon))
+            for replicon in replicons:
+                entry = replicon.next()
+                replicon_name, _min = parse_entry(entry)
+                for entry in replicon:
+                    #pass all sequence of the replicon until the las one
+                    pass
+                _, _max = parse_entry(entry)
+                if replicon_name in topology:
+                    self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max)
+                else:
+                    self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max)
+
+
+    def __contains__(self, replicon_name):
+        """
+        :param replicon_name: the name of the replicon
+        :type replicon_name: string
+        :returns: True if replicon_name is in the repliconDB, false otherwise.
+        :rtype: boolean
+        """
+        return replicon_name in self._DB
+    
+    
+    def __getitem__(self, replicon_name):
+        """
+        :param replicon_name: the name of the replicon to get informations
+        :type replicon_name: string
+        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else raise KeyError
+        :rtype: :class:`RepliconInfo` object
+        :raise: KeyError if replicon_name is not in repliconDB
+        """
+        return self._DB[replicon_name]
+
+    def get(self, replicon_name, default = None):
+        """
+        :param replicon_name: the name of the replicon to get informations
+        :type replicon_name: string
+        :param default: the value to return if the replicon_name is not in the RepliconDB
+        :type default: any
+        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default. 
+        If default is not given, it defaults to None, so that this method never raises a KeyError.
+        :rtype: :class:`RepliconInfo` object
+        """
+        return self._DB.get(replicon_name, default)
 

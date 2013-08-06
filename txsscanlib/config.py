@@ -31,7 +31,7 @@ class Config(object):
     """
     
     #if a new option is added think to add it also (if needed) in save
-    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file' ,'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
                 'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
@@ -40,6 +40,7 @@ class Config(object):
                 sequence_db = None ,
                 db_type = None,
                 replicon_topology = None,
+                topology_file = None,
                 inter_gene_max_space = None,
                 min_mandatory_genes_required = None,
                 min_genes_required = None,
@@ -71,6 +72,8 @@ class Config(object):
         :type db_type: string
         :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase' 
         :type replicon_topology: string
+        :param topology_file: a file of mapping between replicons with their respectives topology 
+        :type topology_file: string
         :param inter_gene_max_space:
         :type inter_gene_max_space: list of list of 2 elements [[ string system, integer space] , ...]
         :param min_mandatory_genes_required:
@@ -119,7 +122,7 @@ class Config(object):
             config_files = [os.path.join(_prefix_path, '/etc/txsscan/txsscan.conf'),
                            os.path.expanduser('~/.txsscan/txsscan.conf'),
                            '.txsscan.conf']
-        self._defaults = {'replicon_topology': 'linear',
+        self._defaults = {'replicon_topology': 'circular',
                           'hmmer_exe' : 'hmmsearch',
                           'e_value_res' : "1",
                           'i_evalue_sel' : "0.5",
@@ -263,11 +266,19 @@ class Config(object):
                 try:
                     options['replicon_topology'] = self.parser.get( 'base', 'replicon_topology') 
                 except (NoSectionError, NoOptionError):
-                     options['replicon_topology'] = 'linear'
+                     options['replicon_topology'] =  self._defaults['replicon_topology']
             if options['replicon_topology'] not in val_4_replicon_topology:
                     raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
             if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
                 self._log.warning("db_type is set to %s, replicon_topology is ignored")
+            
+            if 'topology_file' in cmde_line_opt:
+                options['topology_file'] = cmde_line_opt['topology_file']
+            else:
+                try:
+                    options['topology_file'] = self.parser.get( 'base', 'topology_file') 
+                except (NoSectionError, NoOptionError):
+                    options['topology_file'] = None
 
             if self.parser.has_option("system", "inter_gene_max_space"):
                 options['inter_gene_max_space'] = {}
@@ -669,7 +680,7 @@ class Config(object):
         parser.add_section( 'base')
         parser.set( 'base', 'file', str(self.options['sequence_db']))
         parser.set( 'base', 'type', str(self.options['db_type']).lower())
-        cfg_opts = [('base' ,('replicon_topology',)),
+        cfg_opts = [('base' ,('replicon_topology', 'topology_file')),
                     ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required')),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
@@ -725,6 +736,14 @@ class Config(object):
         :rtype: string
         """
         return self.options['replicon_topology']
+
+    @property
+    def topology_file(self):
+        """
+        :return: the topology of the replicons. 2 values are supported 'linear' (default) and circular
+        :rtype: string
+        """
+        return self.options['topology_file']
 
     def inter_gene_max_space(self, system):
         """
