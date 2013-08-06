@@ -54,7 +54,8 @@ class Test(unittest.TestCase):
                         build_indexes = True
                         )
         self.assertTrue(config.build_indexes)
-        
+
+
     def test_default(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -63,7 +64,8 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles'
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
-    
+
+
     def test_coverage_profile(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -90,8 +92,8 @@ class Test(unittest.TestCase):
                   'profile_dir' : '../data/profiles',
                   'coverage_profile' : "foo"}
         self.assertRaises(ValueError, Config, **kwargs)
-        
-        
+
+
     def test_def_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -105,8 +107,9 @@ class Test(unittest.TestCase):
                           def_dir = def_dir,
                           profile_dir = '../data/profiles'
                           )  
-        self.assertEqual( def_dir, self.cfg.def_dir)                
-    
+        self.assertEqual( def_dir, self.cfg.def_dir)
+
+
     def test_e_value_res(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -142,6 +145,7 @@ class Test(unittest.TestCase):
         }
         self.assertRaises(ValueError, Config, **kwargs)
         
+        
     def test_hmmer_exe(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -158,6 +162,7 @@ class Test(unittest.TestCase):
                           hmmer_exe = 'truc'
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'truc')
+    
     
     def test_i_value_sel(self):
         kwargs = {'cfg_file' : "nimportnaoik",
@@ -194,6 +199,7 @@ class Test(unittest.TestCase):
         }
         self.assertRaises(ValueError, Config, **kwargs)
       
+      
     def test_db_type(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -210,6 +216,7 @@ class Test(unittest.TestCase):
                   'profile_dir' : '../data/profiles',
         }
         self.assertRaises(ValueError, Config, **kwargs)
+        
         
     def test_previous_run(self):
         kwargs = {'cfg_file' : "nimportnaoik",
@@ -243,6 +250,7 @@ class Test(unittest.TestCase):
             except:
                 pass
             
+            
     def test_profile_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -259,6 +267,7 @@ class Test(unittest.TestCase):
                           profile_dir = profile_dir,
                           )
         self.assertEqual(self.cfg.profile_dir , profile_dir)
+         
          
     def test_profile_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -279,6 +288,7 @@ class Test(unittest.TestCase):
                           )
         self.assertEqual(self.cfg.profile_suffix, profile_suffix)
     
+    
     def test_replicon_topology(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -286,16 +296,16 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles',
                           )
-        self.assertEqual(self.cfg.replicon_topology, 'linear')
+        self.assertEqual(self.cfg.replicon_topology, 'circular')
         self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
                           db_type = 'gembase',
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles',
-                          replicon_topology = 'circular'
+                          replicon_topology = 'linear'
                           )
-        self.assertEqual(self.cfg.replicon_topology, 'circular')
+        self.assertEqual(self.cfg.replicon_topology, 'linear')
         self.tearDown()
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -305,6 +315,7 @@ class Test(unittest.TestCase):
                   'replicon_topology' : 'foo'
         }
         self.assertRaises(ValueError, Config, **kwargs)
+
 
     def test_inter_gene_max_space(self):
         inter_gene_max_space = (["T2SS", 32], ['Flagellum', 64])
@@ -319,6 +330,7 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
         self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
     
+    
     def test_min_genes_required(self):
         min_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -332,6 +344,7 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.min_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_genes_required('Foo'))
     
+    
     def test_min_mandatory_genes_required(self):
         min_mandatory_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -343,7 +356,8 @@ class Test(unittest.TestCase):
                           )
         self.assertEqual(self.cfg.min_mandatory_genes_required('T2SS'), 32)
         self.assertEqual(self.cfg.min_mandatory_genes_required('Flagellum'), 64)
-        self.assertIsNone(self.cfg.min_mandatory_genes_required('Foo'))    
+        self.assertIsNone(self.cfg.min_mandatory_genes_required('Foo'))
+        
         
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -352,7 +366,7 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles',
                           )
-        self.assertEqual(self.cfg.res_extract_suffix, '.res_hmm_extract')                 
+        self.assertEqual(self.cfg.res_extract_suffix, '.res_hmm_extract')
         self.tearDown()
         res_extract_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -363,7 +377,8 @@ class Test(unittest.TestCase):
                           res_extract_suffix = res_extract_suffix
                           )
         self.assertEqual(self.cfg.res_extract_suffix, res_extract_suffix)
-    
+        
+        
     def test_res_search_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : "./datatest/prru_psae.001.c01.fasta",
@@ -382,7 +397,8 @@ class Test(unittest.TestCase):
                           res_search_dir = res_search_dir
                           )
         self.assertEqual(self.cfg.res_search_dir , res_search_dir)
-     
+
+
     def test_res_search_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -390,7 +406,7 @@ class Test(unittest.TestCase):
                           def_dir = '../data/DEF',
                           profile_dir = '../data/profiles',
                           )
-        self.assertEqual(self.cfg.res_search_suffix, '.search_hmm.out')                 
+        self.assertEqual(self.cfg.res_search_suffix, '.search_hmm.out')
         self.tearDown()
         res_search_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -429,7 +445,8 @@ class Test(unittest.TestCase):
                           profile_dir = '../data/profiles',
                           )  
         self.assertEqual(self.cfg.sequence_db, sequence_db)
-    
+
+
     def test_worker_nb(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
@@ -456,9 +473,6 @@ class Test(unittest.TestCase):
                   'worker_nb' : '2.3'
         }
         self.assertRaises(ValueError, Config, **kwargs)   
-          
-
-
 
 
 if __name__ == "__main__":
