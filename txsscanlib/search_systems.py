@@ -17,6 +17,7 @@ from collections import namedtuple, Counter
 import itertools, operator
 
 from txsscan_error import TxsscanError, SystemDetectionError
+from database import RepliconDB
 
 _log = logging.getLogger('txsscan.' + __name__)
 
@@ -348,7 +349,7 @@ class SystemOccurence(object):
         length=0
         # To be updated to deal with "circular" clusters
         for(begin, end) in self.loci_positions:
-            if begin<end:
+            if begin<=end:
                 length+=(end-begin+1)
             elif rep_info.topology == "circular":
                 locus_length=end-begin+rep_info.max-rep_info.min+2
@@ -981,21 +982,25 @@ def search_systems(hits, systems, cfg):
     
     # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
-    RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-    rep_info=RepInfo("circular", 1, 5569)
+    #RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+    #rep_info=RepInfo("circular", 1, 5569)
     
     header_print = True
     if cfg.db_type == 'gembase':
+        # Construction of the replicon database storing info on replicons: 
+        rep_db = RepliconDB(cfg)
+        
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
         #header_print = True
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
+            rep_info=rep_db[k]
             
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
-            clusters=build_clusters(sub_hits)            
+            clusters=build_clusters(sub_hits, rep_info)            
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
@@ -1015,7 +1020,9 @@ def search_systems(hits, systems, cfg):
             
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
+        rep_db = RepliconDB(cfg)
         replicon = "UserReplicon"
+        rep_info = rep_db[replicon]
         
         #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
