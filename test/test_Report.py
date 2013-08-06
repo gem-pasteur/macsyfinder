@@ -37,7 +37,7 @@ class Test(unittest.TestCase):
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = "../data/DEF",
-                           res_search_dir = '.',
+                           res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
                            profile_dir = "../data/profiles",
                            profile_suffix = ".fasta-aln_edit.hmm",
@@ -45,10 +45,11 @@ class Test(unittest.TestCase):
                            log_level = 30,
                            log_file = '/dev/null'
                            )
+        shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
+        self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
+       
         idx = Indexes(self.cfg)
-        txsscan_idx = idx.find_my_indexes()
-        if not txsscan_idx:
-            idx._build_my_indexes()
+        idx._build_my_indexes()
         
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)

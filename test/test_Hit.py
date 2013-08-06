@@ -35,7 +35,7 @@ class Test(unittest.TestCase):
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = "../data/DEF",
-                           res_search_dir = ".",
+                           res_search_dir = "/tmp",
                            res_search_suffix = "",
                            profile_dir = "../data/profiles",
                            profile_suffix = ".fasta-aln_edit.hmm",
