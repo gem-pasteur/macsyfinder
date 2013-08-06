@@ -18,7 +18,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 import abc
 from threading import Lock
 from itertools import groupby
-from database import Database
+from database import Indexes
 
 
 class HMMReport(object):
@@ -85,22 +85,11 @@ class HMMReport(object):
             return self.hits[0]
         except IndexError:
             return None
-    
-    
-class UnOrderedHMMReport(HMMReport):
-    """
-    handle HMM report. extract a synthetic report from the raw hmmer output
-    """
-    pass
 
-
-class OrderedHMMReport(HMMReport):
-    """
-    handle HMM report. extract a synthetic report from the raw hmmer output
-    """
 
     def _hit_start(self, line):
         return line.startswith(">>")
+
 
     def _build_my_db(self, hmm_output):
         """
@@ -190,6 +179,13 @@ class OrderedHMMReport(HMMReport):
                         _log.debug(msg)
                         raise ValueError(msg)
 
+    
+    
+class GeneralHMMReport(HMMReport):
+    """
+    handle HMM report. extract a synthetic report from the raw hmmer output
+    """
+    #pass
     def extract(self):
         """
         Parse the output file of hmmer compute from an unordered genes base
@@ -202,8 +198,52 @@ class OrderedHMMReport(HMMReport):
             if self.hits:
                 return
 
-            db = Database(self.cfg)
-            txsscan_idx = db.find_my_indexes()
+            idx = Indexes(self.cfg)
+            txsscan_idx = idx.find_my_indexes()
+            my_db = self._build_my_db(self._hmmer_raw_out)
+            self._fill_my_db(txsscan_idx, my_db)
+
+            with open(self._hmmer_raw_out, 'r') as hmm_out:
+                i_evalue_sel = self.cfg.i_evalue_sel
+                coverage_treshold = self.cfg.coverage_profile
+                gene_profile_lg = len(self.gene.profile)
+                hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
+                #drop summary
+                hmm_hits.next()
+                for hmm_hit in hmm_hits:
+                    hit_id = self._parse_hmm_header(hmm_hit)
+                    seq_lg, position_hit = my_db[hit_id]
+                    
+                    #fields_hit = hit_id.split('_')
+                    #replicon_name = fields_hit[0]
+                    replicon_name = "UserReplicon"
+                    
+                    body = hmm_hits.next()
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    self.hits += h
+                self.hits.sort()
+                return self.hits
+
+
+class GembaseHMMReport(HMMReport):
+    """
+    handle HMM report. extract a synthetic report from the raw hmmer output
+    """
+
+    def extract(self):
+        """
+        Parse the output file of hmmer compute from an unordered genes base
+        and produced a new synthetic report file.
+        """
+        with self._lock:
+            # so the extract of a given HMM output is executed only once per run
+            # if this method is called several times the first call induce the parsing of HMM out
+            # the other calls do nothing
+            if self.hits:
+                return
+
+            idx = Indexes(self.cfg)
+            txsscan_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
             self._fill_my_db(txsscan_idx, my_db)
 

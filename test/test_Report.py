@@ -19,11 +19,11 @@ if not TXSSCAN_HOME in sys.path:
 
 import unittest
 import shutil
-from txsscanlib.report import HMMReport, UnOrderedHMMReport, OrderedHMMReport, Hit
+from txsscanlib.report import HMMReport, GeneralHMMReport, GembaseHMMReport, Hit
 from txsscanlib.gene import Gene
 from txsscanlib.system import System
 from txsscanlib.config import Config
-from txsscanlib.database import Database
+from txsscanlib.database import Indexes
 
 
 class Test(unittest.TestCase):
@@ -45,10 +45,10 @@ class Test(unittest.TestCase):
                            log_level = 30,
                            log_file = '/dev/null'
                            )
-        db = Database(self.cfg)
-        txsscan_idx = db.find_my_indexes()
+        idx = Indexes(self.cfg)
+        txsscan_idx = idx.find_my_indexes()
         if not txsscan_idx:
-            db._build_my_indexes()
+            idx._build_my_indexes()
         
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
@@ -62,13 +62,13 @@ class Test(unittest.TestCase):
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
 
-    def test_OrderedHMMReport_extract(self):
+    def test_GembaseHMMReport_extract(self):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
-        report = OrderedHMMReport(gene, report_path, self.cfg)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 5)
                 #gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,          score,       profile_coverage, sequence_coverage, begin_match, end_match
@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
         ]
         self.assertListEqual(hits, report.hits)
 
-    def test_OrderedHMMReport_extract_concurent(self):
+    def test_GembaseHMMReport_extract_concurent(self):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system)
@@ -88,7 +88,7 @@ class Test(unittest.TestCase):
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         reports = []
         for i in range(5):
-            report = OrderedHMMReport(gene, report_path, self.cfg)
+            report = GembaseHMMReport(gene, report_path, self.cfg)
             reports.append(report)
 
         import threading
@@ -123,7 +123,7 @@ class Test(unittest.TestCase):
         gene = Gene(self.cfg, gene_name, system)
         shutil.copy(os.path.join(self._data_dir, gene_name + self.cfg.res_search_suffix), self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
-        report = OrderedHMMReport(gene, report_path, self.cfg)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
         report.extract()
         hits=[ Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
                Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
