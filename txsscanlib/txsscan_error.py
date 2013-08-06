@@ -22,3 +22,9 @@ class SystemInconsistencyError(TxsscanError):
     Raised when a secretion system is not consistent.
     """
     pass
+
+class SystemDetectionError(TxsscanError):
+    """
+    Raised when the detection of systems from Hits encountered a problem.
+    """
+    pass
