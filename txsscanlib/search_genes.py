@@ -15,7 +15,6 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 import shutil
 import os.path
-#from report import OrderedHMMReport, UnOrderedHMMReport
 from report import GembaseHMMReport, GeneralHMMReport
 
 def search_genes(genes, cfg):
@@ -77,10 +76,8 @@ def search_genes(genes, cfg):
             shutil.copy(hmm_old_path, hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
             if cfg.db_type == 'gembase':
-                #report = OrderedHMMReport(gene, hmm_new_path, cfg )
                 report = GembaseHMMReport(gene, hmm_new_path, cfg )
             else:
-                #report = UnOrderedHMMReport(gene, hmm_new_path, cfg )
                 report = GeneralHMMReport(gene, hmm_new_path, cfg )
             report.extract()
             report.save_extract()

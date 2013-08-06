@@ -16,7 +16,6 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 from subprocess import Popen
 from threading import Lock
-#from report import OrderedHMMReport, UnOrderedHMMReport
 from report import GembaseHMMReport, GeneralHMMReport
 
 
@@ -404,10 +403,8 @@ class Profile(object):
                 raise RuntimeError(msg)
             self.hmm_raw_output = output_path
             if self.cfg.db_type == 'gembase':
-                #report = OrderedHMMReport(self.gene, output_path, self.cfg )
                 report = GembaseHMMReport(self.gene, output_path, self.cfg )
             else:
-                #report = UnOrderedHMMReport(self.gene, output_path, self.cfg )
                 report = GeneralHMMReport(self.gene, output_path, self.cfg )
             self._report = report
             return report

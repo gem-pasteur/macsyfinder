@@ -18,7 +18,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 import abc
 from threading import Lock
 from itertools import groupby
-from database import Database
+from database import Indexes
 
 
 class HMMReport(object):
@@ -87,9 +87,9 @@ class HMMReport(object):
             return None
 
 
-
     def _hit_start(self, line):
         return line.startswith(">>")
+
 
     def _build_my_db(self, hmm_output):
         """
@@ -181,7 +181,6 @@ class HMMReport(object):
 
     
     
-#class UnOrderedHMMReport(HMMReport):
 class GeneralHMMReport(HMMReport):
     """
     handle HMM report. extract a synthetic report from the raw hmmer output
@@ -199,8 +198,8 @@ class GeneralHMMReport(HMMReport):
             if self.hits:
                 return
 
-            db = Database(self.cfg)
-            txsscan_idx = db.find_my_indexes()
+            idx = Indexes(self.cfg)
+            txsscan_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
             self._fill_my_db(txsscan_idx, my_db)
 
@@ -226,7 +225,6 @@ class GeneralHMMReport(HMMReport):
                 return self.hits
 
 
-#class OrderedHMMReport(HMMReport):
 class GembaseHMMReport(HMMReport):
     """
     handle HMM report. extract a synthetic report from the raw hmmer output
@@ -244,8 +242,8 @@ class GembaseHMMReport(HMMReport):
             if self.hits:
                 return
 
-            db = Database(self.cfg)
-            txsscan_idx = db.find_my_indexes()
+            idx = Indexes(self.cfg)
+            txsscan_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
             self._fill_my_db(txsscan_idx, my_db)
 
@@ -259,10 +257,8 @@ class GembaseHMMReport(HMMReport):
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
-                    
                     fields_hit = hit_id.split('_')
                     replicon_name = fields_hit[0]
-                    
                     body = hmm_hits.next()
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
