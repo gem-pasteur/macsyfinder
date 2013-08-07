@@ -1014,17 +1014,14 @@ def search_systems(hits, systems, cfg):
             
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
-        #rep_db = RepliconDB(cfg)
-        #replicon = "UserReplicon"
-        #rep_info = rep_db[replicon]
-        RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-        rep_info=RepInfo("circular", 1, 5569)
+        rep_db = RepliconDB(cfg)
+        rep_info = rep_db[RepliconDB.ordered_replicon_name]
         
         clusters=build_clusters(hits, rep_info) 
-        print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
+        print "\n************************************\n Analyzing clusters \n************************************\n"
         systems_occurences_list = analyze_clusters_replicon(clusters, systems)                    
         print "******************************************"
-        print "Reporting systems for %s : \n"%replicon
+        print "Reporting detected systems : \n"
         report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)            
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
