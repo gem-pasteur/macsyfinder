@@ -187,12 +187,12 @@ class Indexes(object):
     def _build_my_indexes(self):
         """
         build txsscan indexes. This index is stored in file.
-        
+
         the format of the file is :
         one entry per line
         each line have the following format:
          - sequence id;sequence length;sequence rank
-        
+
         """
         try:
             with open(self._fasta_path, 'r') as fasta_file:
@@ -201,7 +201,7 @@ class Indexes(object):
                     seq_nb = 0
                     for seqid, comment, length in f_iter:
                         seq_nb += 1
-                        my_base.write( "%s;%d;%d\n" % (seqid, length, seq_nb))
+                        my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
         except Exception, err:
             msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
             _log.critical( msg, exc_info = True )
@@ -217,6 +217,8 @@ class RepliconDB(object):
     store informations (topology, min, max) for all replicon in the sequence_db
     the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'
     """
+
+    ordered_replicon_name = 'UserReplicon'
 
     def __init__(self, cfg):
         """
@@ -236,7 +238,10 @@ class RepliconDB(object):
             topo_dict = self._fill_topology()
         else:
             topo_dict = {}
-        self._fill_min_max(topo_dict, default_topology = self.cfg.replicon_topology)
+        if self.cfg.db_type == 'gembase':
+            self._fill_gembase_min_max(topo_dict, default_topology = self.cfg.replicon_topology)
+        else:
+            self._fill_ordered_min_max(self.cfg.replicon_topology)
 
 
     def _fill_topology(self):
@@ -254,10 +259,26 @@ class RepliconDB(object):
                 topo_dict[replicon_name] = topo
         return topo_dict
 
-    def _fill_min_max(self, topology , default_topology = None):
+
+    def _fill_ordered_min_max(self, default_topology = None):
         """
-        for each replicon_name of the sequence_db, fill the internal dict with RepliconInfo
-        
+        for the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
+
+        :param default_topology: the topology provided by the config.replicon_topology 
+        :type default_topology: string
+        """
+        _min = 1
+        with open(self.sequence_idx) as idx_f:
+            _max = 0
+            for l in idx_f:
+                _max += 1
+            self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max)
+
+
+    def _fill_gembase_min_max(self, topology, default_topology):
+        """
+        for each replicon_name of the gembase, fill the internal dict with RepliconInfo
+
         :param topology: the topologies for each replicon 
                          (parsed from the file specified with the option --topology-file)
         :type topology: dict
@@ -280,7 +301,7 @@ class RepliconDB(object):
                 entry = replicon.next()
                 replicon_name, _min = parse_entry(entry)
                 for entry in replicon:
-                    #pass all sequence of the replicon until the las one
+                    #pass all sequence of the replicon until the last one
                     pass
                 _, _max = parse_entry(entry)
                 if replicon_name in topology:
@@ -321,3 +342,27 @@ class RepliconDB(object):
         """
         return self._DB.get(replicon_name, default)
 
+    def items(self):
+        """
+        :return: a copy of the RepliconDB’s list of (replicon_name, RepliconInfo) pairs.
+        """
+        return self._DB.items()
+
+    def iteritems(self):
+        """
+        :return: an iterator over the RepliconDB’s (replicon_name, RepliconInfo) pairs.
+        """
+        return self._DB.iteritems()
+
+    def replicon_names(self):
+        """
+        :return: a copy of the RepliconDB’s list of replicon_names
+        """
+        return self._DB.keys()
+    
+    def replicon_infos(self):
+        """
+        :return: a copy of the RepliconDB’s list of replicons info
+        :rtype: RepliconInfo instance
+        """
+        return self._DB.values()

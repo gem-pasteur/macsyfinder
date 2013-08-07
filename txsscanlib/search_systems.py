@@ -1025,7 +1025,7 @@ def search_systems(hits, systems, cfg):
         systems_occurences_list = analyze_clusters_replicon(clusters, systems)                    
         print "******************************************"
         print "Reporting systems for %s : \n"%replicon
-        report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
+        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)            
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)

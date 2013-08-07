@@ -18,7 +18,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 import abc
 from threading import Lock
 from itertools import groupby
-from database import Indexes
+from database import Indexes, RepliconDB
 
 
 class HMMReport(object):
@@ -191,6 +191,7 @@ class GeneralHMMReport(HMMReport):
         Parse the output file of hmmer compute from an unordered genes base
         and produced a new synthetic report file.
         """
+        
         with self._lock:
             # so the extract of a given HMM output is executed only once per run
             # if this method is called several times the first call induce the parsing of HMM out
@@ -216,7 +217,7 @@ class GeneralHMMReport(HMMReport):
                     
                     #fields_hit = hit_id.split('_')
                     #replicon_name = fields_hit[0]
-                    replicon_name = "UserReplicon"
+                    replicon_name = RepliconDB.ordered_replicon_name
                     
                     body = hmm_hits.next()
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
