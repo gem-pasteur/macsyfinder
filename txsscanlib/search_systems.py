@@ -342,7 +342,6 @@ class SystemOccurence(object):
         return self.unique_name
 
     
-    #def compute_system_length(self):
     def compute_system_length(self, rep_info):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
@@ -433,7 +432,6 @@ class SystemOccurence(object):
         """
         return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
         
-    #def get_summary(self, replicon_name):
     def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
@@ -648,8 +646,7 @@ class systemDetectionReport(object):
                 header += "\t"+syst_name+"_"+state
     
         header+="\n"        
-        #with open(reportfilename, 'w') as _file:
-        #    _file.write(header)
+        
         return header
 
     def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
@@ -691,7 +688,6 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
-    #def summary_output(self, reportfilename, print_header = False):
     def summary_output(self, reportfilename, rep_info, print_header = False):
         """
         Write a report with the summary of systems detected in replicons. For each system, a summary is done including:
@@ -707,7 +703,6 @@ class systemDetectionReport(object):
                 report_str+="%s\n"%so.get_summary_header()
                 print_header=False
                 
-            #report_str+="%s\n"%so.get_summary(self.replicon_name)
             report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
            
         with open(reportfilename, 'a') as _file:
@@ -993,8 +988,6 @@ def search_systems(hits, systems, cfg):
         
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
-        #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
-        #header_print = True
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
             rep_info=rep_db[k]
@@ -1014,7 +1007,6 @@ def search_systems(hits, systems, cfg):
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
-            #report.summary_output(summaryfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
             print "******************************************"
             
@@ -1028,7 +1020,6 @@ def search_systems(hits, systems, cfg):
         RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
         rep_info=RepInfo("circular", 1, 5569)
         
-        #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
         print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
         systems_occurences_list = analyze_clusters_replicon(clusters, systems)                    
@@ -1037,7 +1028,6 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
-        #report.summary_output(summaryfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
         print "******************************************"
         
