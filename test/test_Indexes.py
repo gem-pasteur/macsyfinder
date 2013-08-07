@@ -25,8 +25,8 @@ from txsscanlib.database import Indexes
  
 class Test(unittest.TestCase):
 
-    _data_dir = "./datatest/res_search" 
-    
+    _data_dir = "./datatest/res_search"
+
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)
         def fake_init(obj, cfg):
@@ -35,9 +35,9 @@ class Test(unittest.TestCase):
             obj.name = os.path.basename(cfg.sequence_db)
         self.fake_init = fake_init
         self.real_init = Indexes.__init__
-    
+
     def setUp(self):
-        
+
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = "./datatest/prru_psae.001.c01.fasta",
                            db_type = "gembase",

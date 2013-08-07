@@ -17,6 +17,7 @@ from collections import namedtuple, Counter
 import itertools, operator
 
 from txsscan_error import TxsscanError, SystemDetectionError
+from database import RepliconDB
 
 _log = logging.getLogger('txsscan.' + __name__)
 
@@ -67,7 +68,8 @@ class ClustersHandler(object):
             pos_max = rep_info.max
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
             
-            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
+            #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
+            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
                 # Need to circularize ! 
                 print " A cluster needs to be \"circularized\" ! "
                 self.clusters.pop(0)
@@ -340,7 +342,6 @@ class SystemOccurence(object):
         return self.unique_name
 
     
-    #def compute_system_length(self):
     def compute_system_length(self, rep_info):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
@@ -348,7 +349,7 @@ class SystemOccurence(object):
         length=0
         # To be updated to deal with "circular" clusters
         for(begin, end) in self.loci_positions:
-            if begin<end:
+            if begin<=end:
                 length+=(end-begin+1)
             elif rep_info.topology == "circular":
                 locus_length=end-begin+rep_info.max-rep_info.min+2
@@ -431,7 +432,6 @@ class SystemOccurence(object):
         """
         return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
         
-    #def get_summary(self, replicon_name):
     def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
@@ -646,8 +646,7 @@ class systemDetectionReport(object):
                 header += "\t"+syst_name+"_"+state
     
         header+="\n"        
-        #with open(reportfilename, 'w') as _file:
-        #    _file.write(header)
+        
         return header
 
     def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
@@ -689,7 +688,6 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)    
 
-    #def summary_output(self, reportfilename, print_header = False):
     def summary_output(self, reportfilename, rep_info, print_header = False):
         """
         Write a report with the summary of systems detected in replicons. For each system, a summary is done including:
@@ -705,7 +703,6 @@ class systemDetectionReport(object):
                 report_str+="%s\n"%so.get_summary_header()
                 print_header=False
                 
-            #report_str+="%s\n"%so.get_summary(self.replicon_name)
             report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
            
         with open(reportfilename, 'a') as _file:
@@ -981,21 +978,24 @@ def search_systems(hits, systems, cfg):
     
     # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
-    RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-    rep_info=RepInfo("circular", 1, 5569)
+    #RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+    #rep_info=RepInfo("circular", 1, 5569)
     
     header_print = True
     if cfg.db_type == 'gembase':
+        # Construction of the replicon database storing info on replicons: 
+        rep_db = RepliconDB(cfg)
+        
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
-        #build_clusters(sub_hits, cfg) for sub_hits in [list(g) for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name'))]
-        #header_print = True
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
+            rep_info=rep_db[k]
+            print rep_info
             
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
-            clusters=build_clusters(sub_hits)            
+            clusters=build_clusters(sub_hits, rep_info)            
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
@@ -1007,7 +1007,6 @@ def search_systems(hits, systems, cfg):
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
-            #report.summary_output(summaryfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
             print "******************************************"
             
@@ -1015,18 +1014,20 @@ def search_systems(hits, systems, cfg):
             
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
-        replicon = "UserReplicon"
+        #rep_db = RepliconDB(cfg)
+        #replicon = "UserReplicon"
+        #rep_info = rep_db[replicon]
+        RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+        rep_info=RepInfo("circular", 1, 5569)
         
-        #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
         print "\n************************************\n Analyzing clusters for %s \n************************************\n"%replicon
         systems_occurences_list = analyze_clusters_replicon(clusters, systems)                    
         print "******************************************"
         print "Reporting systems for %s : \n"%replicon
-        report = systemDetectionReport("UserReplicon", systems_occurences_list, systems)            
+        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)            
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
-        #report.summary_output(summaryfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
         print "******************************************"
         
