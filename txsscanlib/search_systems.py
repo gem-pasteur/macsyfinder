@@ -68,7 +68,8 @@ class ClustersHandler(object):
             pos_max = rep_info.max
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
             
-            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
+            #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
+            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
                 # Need to circularize ! 
                 print " A cluster needs to be \"circularized\" ! "
                 self.clusters.pop(0)
@@ -982,8 +983,8 @@ def search_systems(hits, systems, cfg):
     
     # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
-    #RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-    #rep_info=RepInfo("circular", 1, 5569)
+    RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+    rep_info=RepInfo("circular", 1, 5569)
     
     header_print = True
     if cfg.db_type == 'gembase':
@@ -997,6 +998,7 @@ def search_systems(hits, systems, cfg):
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits=list(g)
             rep_info=rep_db[k]
+            print rep_info
             
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
@@ -1020,9 +1022,9 @@ def search_systems(hits, systems, cfg):
             
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
-        rep_db = RepliconDB(cfg)
-        replicon = "UserReplicon"
-        rep_info = rep_db[replicon]
+        #rep_db = RepliconDB(cfg)
+        #replicon = "UserReplicon"
+        #rep_info = rep_db[replicon]
         
         #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
