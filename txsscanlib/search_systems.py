@@ -983,8 +983,8 @@ def search_systems(hits, systems, cfg):
     
     # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
-    RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
-    rep_info=RepInfo("circular", 1, 5569)
+    #RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+    #rep_info=RepInfo("circular", 1, 5569)
     
     header_print = True
     if cfg.db_type == 'gembase':
@@ -1025,6 +1025,8 @@ def search_systems(hits, systems, cfg):
         #rep_db = RepliconDB(cfg)
         #replicon = "UserReplicon"
         #rep_info = rep_db[replicon]
+        RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
+        rep_info=RepInfo("circular", 1, 5569)
         
         #clusters=build_clusters(hits) 
         clusters=build_clusters(hits, rep_info) 
