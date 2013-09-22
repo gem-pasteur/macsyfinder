@@ -3,19 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Txsscan's documentation!
+Welcome to TXSScan's documentation!
 ===================================
 
-Contents:
-
-  Txsscan is a program aiming at detecting protein secretion systems in diderm bacteria (T1SS-T6SS), using Hmmer to perform homologs searches with provided proteic profiles. 
-  Criteria for system detection includes gene quorum, and genomic colocalization. These criteria can be tuned by the user.
+  TXSScan is a program inlucding a framework to model and detect macromolecular systems. It has been applied to the detection of protein secretion systems and related appendages in diderm bacteria (T1SS-T6SS), using Hmmer to perform homologs searches with provided proteic profiles. 
+  Criteria for system detection includes *component content (quorum)*, and *genomic co-localization*. These criteria can be tuned by the user.
    
-  Its flexible architecture also allows the user :
-    - to provide its own profiles for a new system, 
-    - to define its own decision rules for system inference.
+  Its flexible architecture allows the user to describe its own system for detection purpose by:
+    - providing its *own profiles* for a new system, 
+    - defining its *own decision rules* for system inference in our dedicated XML grammar.
 
-System overview
+TXSScan implementation overview
 ===============
 
 The objects Systems, Gene, Profile must be created via their respective factory. This allows to have only one object System, Gene or Profile for a given name.
@@ -23,7 +21,7 @@ The Homolog objects are composed of a gene and 2 other properties "gene_ref and 
   
 .. digraph:: system_overview
 
-     "System" -> "Gene" -> "Homolog" ;
+     "System" -> "Gene" -> "Homolog";
      "Gene" -> "Profile";
      "Gene" -> "HMMReport" -> "Hit";
      
