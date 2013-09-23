@@ -3,20 +3,29 @@
 
 .. _system-definition-grammar-label:
 
-*****************
-System definition
-*****************
+******************
+Systems definition
+******************
 
-The secretion systems are defined in xml format. Each file describe **one** system.
-The name of the file corresponds to the name of the secretion system.
+TXSScan allows to fully customize the definition of macromolecular systems via a **XML grammar** that is described below. 
+A system is defined in a dedicated file named after the system (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used for **content description**. Some components are specific to the system, and some are possibly from other systems. In the latter case, the full description of the gene with its attributes must be defined in the XML file of the original system. 
+Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
+
+Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profile. 
+
+* **Mandatory** components represent essential components to be found to infer the System presence.
+* **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
+* **Forbidden** components are components which presence is eliminatory for the System assessment. 
+
+Here is the XML hierarchy:
 
 * The element root is "system". 
 
-  * The element "system" must have an attribute "inter_gene_max_space" which is an integer representing
+  * The element "system" must have an attribute "inter_gene_max_space" which is an integer representing the maximal number of components without a match between two components with a match for a component profile.
   * The element "system" may have attributes:
   
-     * "min_mandatory_genes_required" which is an integer representing
-     * "min_genes_required" which is an integer representing
+     * "min_mandatory_genes_required" which is an integer representing the minimal number of mandatory genes required to infer the system presence.
+     * "min_genes_required" which is an integer representing the minimal number of mandatory or allowed genes (whose corresponding proteins match a profile of the system) required to infer the system presence.
      
   * The system contains one or more element "gene".
   
@@ -36,7 +45,7 @@ The name of the file corresponds to the name of the secretion system.
    
 * The element "homologs" contains one or more element "gene".
 
-Example of secretion system defintion: ::
+Example of a system definition in XML: ::
   
   <system> 
     <gene name="gspD" presence="mandatory" exchangeable="1">
