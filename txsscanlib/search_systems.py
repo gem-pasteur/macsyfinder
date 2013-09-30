@@ -15,6 +15,7 @@ from report import Hit # required?
 import os.path
 from collections import namedtuple, Counter
 import itertools, operator
+import json
 
 from txsscan_error import TxsscanError, SystemDetectionError
 from database import RepliconDB
@@ -608,7 +609,8 @@ class validSystemHit(object):
                                                      self.hit.sequence_coverage,
                                                      self.hit.begin_match,
                                                      self.hit.end_match)
-                                                     
+        
+                                                           
     def output_system_header(self):
         return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
 
@@ -666,7 +668,7 @@ class systemDetectionReport(object):
                     report_str+="\t0"
         report_str+="\n"      
             
-        with open(reportfilename, 'a') as _file:            
+        with open(reportfilename, 'a') as _file:
             if print_header:
                 _file.write(self.tabulated_output_header(system_occurence_states, system_names))
             _file.write(report_str)
@@ -674,7 +676,8 @@ class systemDetectionReport(object):
            
     def report_output(self, reportfilename, print_header = False):
         """
-        Write a report of sequences forming the detected systems, with information in their status in the system, their localization on replicons, and statistics on the Hits. 
+        Write a report of sequences forming the detected systems, with information in their status in the system, 
+        their localization on replicons, and statistics on the Hits. 
         """
         report_str=""
         for so in self._systems_occurences_list:
@@ -702,13 +705,56 @@ class systemDetectionReport(object):
             if print_header:
                 report_str+="%s\n"%so.get_summary_header()
                 print_header=False
-                
+
             report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
-           
+
         with open(reportfilename, 'a') as _file:
-            _file.write(report_str)    
+            _file.write(report_str)
 
+    def json_output(self, path, rep_db):
+        """
+        generate the report in json format
 
+        :param path: the path to a file where to write the report in json format
+        :type path: string
+        :param rep_db: the replicons database
+        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
+        """
+        print "call json_output with ", path
+        with open(path, 'a') as _file:
+            _file.write('[\n')
+            for so in self._systems_occurences_list:
+                system = {}
+                system['replicon'] = {}
+                system['replicon']['name'] = so.valid_hits[0].hit.replicon_name
+                rep_info = rep_db[system['replicon']['name']]
+                system['replicon']['length'] = rep_info.max - rep_info.min
+                system['replicon']['topology'] = rep_info.topology
+                system['genes'] = []
+                for valid_hit in so.valid_hits:
+                    gene = {}
+                    gene['id'] = valid_hit.hit.id
+                    gene['position'] = valid_hit.hit.position
+                    gene['sequence_length'] = valid_hit.hit.seq_length
+                    gene['system'] = valid_hit.reference_system
+                    gene['match'] = valid_hit.hit.gene.name
+                    gene['gene_status'] = valid_hit.gene_status
+                    gene['i_eval'] = valid_hit.hit.i_eval
+                    gene['score'] = valid_hit.hit.score
+                    gene['profile_coverage'] = valid_hit.hit.profile_coverage
+                    gene['sequence_coverage'] = valid_hit.hit.sequence_coverage
+                    gene['begin_match'] = valid_hit.hit.begin_match
+                    gene['end_match'] = valid_hit.hit.end_match
+                system['summary'] = {}
+                system['summary']['mandatory'] = so.mandatory_genes
+                system['summary']['exmandatory_genes'] = so.exmandatory_genes
+                system['summary']['allowed'] = so.allowed_genes
+                system['summary']['exallowed_genes'] = so.exallowed_genes
+                system['summary']['forbiden'] = so.forbidden_genes
+                json.dump(system, _file, indent = 2)
+            _file.write('\n]\n')
+            
+            
 def disambiguate_cluster(cluster):
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
@@ -968,7 +1014,8 @@ def search_systems(hits, systems, cfg):
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-   
+    json_filename = os.path.join(cfg.working_dir, 'txsscan.js')
+    
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     system_occurences_states = ['single_locus', 'multi_loci']
     system_names = []
@@ -1008,6 +1055,7 @@ def search_systems(hits, systems, cfg):
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
+            report.json_output(json_filename, rep_db)
             print "******************************************"
             
             header_print = False
@@ -1026,6 +1074,7 @@ def search_systems(hits, systems, cfg):
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
+        report.json_output(json_filename, rep_db)
         print "******************************************"
         
     elif cfg.db_type == 'unordered_replicon':
