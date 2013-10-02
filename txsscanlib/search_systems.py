@@ -721,8 +721,8 @@ class systemDetectionReport(object):
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
         print "call json_output with ", path
-        with open(path, 'a') as _file:
-            _file.write('[\n')
+        with open(path, 'w') as _file:
+            all_systems_occurences = []
             for so in self._systems_occurences_list:
                 system = {}
                 system['replicon'] = {}
@@ -751,8 +751,10 @@ class systemDetectionReport(object):
                 system['summary']['allowed'] = so.allowed_genes
                 system['summary']['exallowed_genes'] = so.exallowed_genes
                 system['summary']['forbiden'] = so.forbidden_genes
-                json.dump(system, _file, indent = 2)
-            _file.write('\n]\n')
+                system['summary']['state'] = so._state
+                all_systems_occurences.append(system)
+            json.dump(all_systems_occurences, _file, indent = 2)    
+            #_file.write('\n]\n')
             
             
 def disambiguate_cluster(cluster):
@@ -1014,7 +1016,7 @@ def search_systems(hits, systems, cfg):
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-    json_filename = os.path.join(cfg.working_dir, 'txsscan.js')
+    json_filename = os.path.join(cfg.working_dir, 'txsscan.json')
     
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     system_occurences_states = ['single_locus', 'multi_loci']
