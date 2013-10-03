@@ -745,6 +745,7 @@ class systemDetectionReport(object):
                     gene['sequence_coverage'] = valid_hit.hit.sequence_coverage
                     gene['begin_match'] = valid_hit.hit.begin_match
                     gene['end_match'] = valid_hit.hit.end_match
+                    system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['exmandatory_genes'] = so.exmandatory_genes
@@ -753,7 +754,7 @@ class systemDetectionReport(object):
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 all_systems_occurences.append(system)
-            json.dump(all_systems_occurences, _file, indent = 2)    
+            json.dump(all_systems_occurences, _file, indent = 2)
             #_file.write('\n]\n')
             
             
