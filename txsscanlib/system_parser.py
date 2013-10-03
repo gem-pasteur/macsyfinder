@@ -243,20 +243,20 @@ class SystemParser(object):
 
             len_allowed_genes = len(system.allowed_genes)
             len_mandatory_genes = len(system.mandatory_genes)
-            if system.min_genes_required >= (len_allowed_genes + len_mandatory_genes) :
+            if system.min_genes_required > (len_allowed_genes + len_mandatory_genes) :
                 msg = "systems %s is not consistent min_genes_required %d must be lesser or equal than allowed_genes + mandatory_genes %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
                                                                                                                                       len_allowed_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
-            if system.min_mandatory_genes_required >= len_mandatory_genes:
+            if system.min_mandatory_genes_required > len_mandatory_genes:
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
-            if system.min_mandatory_genes_required >= system.min_genes_required:
+            if system.min_mandatory_genes_required > system.min_genes_required:
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       system.min_genes_required)
@@ -291,5 +291,5 @@ class SystemParser(object):
             tree = ET.parse(path)
             system_node = tree.getroot()
             self.fill(system, system_node)
-        #self.check_consitency(self.system_bank, self.cfg)
+        self.check_consitency(self.system_bank, self.cfg)
 
