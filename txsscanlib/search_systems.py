@@ -725,6 +725,7 @@ class systemDetectionReport(object):
             all_systems_occurences = []
             for so in self._systems_occurences_list:
                 system = {}
+                system['name'] = so.unique_name
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].hit.replicon_name
                 rep_info = rep_db[system['replicon']['name']]
@@ -755,9 +756,8 @@ class systemDetectionReport(object):
                 system['summary']['state'] = so._state
                 all_systems_occurences.append(system)
             json.dump(all_systems_occurences, _file, indent = 2)
-            #_file.write('\n]\n')
-            
-            
+
+
 def disambiguate_cluster(cluster):
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
