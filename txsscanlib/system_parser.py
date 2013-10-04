@@ -61,7 +61,7 @@ class SystemParser(object):
             
         return systems_2_parse.keys()
 
-    def create_system(self, system_name, system_node):
+    def _create_system(self, system_name, system_node):
         """
         :param system_name: the name of system. This name must match a file in Definitions directory
         :type param: string
@@ -104,7 +104,7 @@ class SystemParser(object):
         system = System(self.cfg, system_name, inter_gene_max_space, min_mandatory_genes_required, min_genes_required)
         return system
 
-    def create_genes(self, system, system_node):
+    def _create_genes(self, system, system_node):
         """
         create genes belonging to the systems. be carefull the return genes have not their homologs.
         :param gene_name:
@@ -147,7 +147,7 @@ class SystemParser(object):
             genes.append(Gene(self.cfg, name, system, **attrs))
         return genes
 
-    def fill(self, system, system_node):
+    def _fill(self, system, system_node):
         """
         """
         genes_nodes = system_node.findall("gene")
@@ -193,13 +193,13 @@ class SystemParser(object):
         elif aligned in (None, "0", "false", "False"):
             aligned = False
         else:
-            msg = 'Invalid system definition: invalid value for attribute type for gene %s: %s allowed values are "1","true", "True","0" , "false" , "False" '% (aligned, name)
+            msg = 'Invalid system definition: invalid value for attribute type for gene %s: %s allowed values are "1", "true", "True", "0", "false", "False"'% (aligned, name)
             _log.error(msg)
             raise SyntaxError(msg)
         try:
             gene = self.gene_bank[name]
         except KeyError:
-            msg = "the gene %s describe as homolog of %s in system %s in is not in the bank" % (name, gene_ref.name, gene.system.name)
+            msg = "the gene %s describe as homolog of %s in system %s in is not in the bank" % (name, gene_ref.name, curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
@@ -213,7 +213,6 @@ class SystemParser(object):
         for homolog_node in node.findall("homologs/gene"):
             h2 = self._parse_homolog(homolog_node , gene, curr_system)
             homolog.add_homolog(h2)
-            #h2.add_homolog(self._parse_homolog(homolog_node , gene) )
         return homolog
 
 
@@ -247,43 +246,22 @@ class SystemParser(object):
           - AND min_genes_required >= min_mandatory_genes_required
         """
         for system in systems:
-            # feature https://projets.pasteur.fr/issues/1850
-
-            # min_mandatory_genes_required = None  ; min_genes_required = None
-            # min_mandatory_genes_required = min_genes_required = len(mandatory_genes)
-            # always True by Systems design
-
-            # min_mandatory_genes_required = value  ; min_genes_required = None
-            # min_mandatory_genes_required = len(mandatory_genes) 
-            # AND len(allowed_genes+mandatory_genes) >= min_genes_required >= len(mandatory_genes)
-            # allways True 
-
-            # min_mandatory_genes_required =  None ; min_genes_required = Value
-            # min_genes_required = min_mandatory_genes_required 
-            # AND min_mandatory_genes_required <= len(mandatory_genes)
-            # min_mandatory_genes_required <= len(mandatory_genes)
-
-            # min_mandatory_genes_required =  Value ; min_genes_required = Value
-            # len(allowed_genes+mandatory_genes) >= min_genes_required 
-            # AND min_mandatory_genes_required <= len(mandatory_genes) 
-            # AND min_genes_required >= min_mandatory_genes_required
-
             len_allowed_genes = len(system.allowed_genes)
             len_mandatory_genes = len(system.mandatory_genes)
-            if system.min_genes_required > (len_allowed_genes + len_mandatory_genes) :
+            if not (system.min_genes_required <= (len_allowed_genes + len_mandatory_genes)) :
                 msg = "systems %s is not consistent min_genes_required %d must be lesser or equal than allowed_genes + mandatory_genes %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
                                                                                                                                       len_allowed_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
-            if system.min_mandatory_genes_required > len_mandatory_genes:
+            if not (system.min_mandatory_genes_required <= len_mandatory_genes):
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
-            if system.min_mandatory_genes_required > system.min_genes_required:
+            if not(system.min_mandatory_genes_required <= system.min_genes_required):
                 msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       system.min_genes_required)
@@ -307,9 +285,9 @@ class SystemParser(object):
                 raise Exception("%s: No such system definitions" % path)
             tree = ET.parse(path)
             system_node = tree.getroot()
-            sys = self.create_system(system_name, system_node)  # une ouverture par fichier
+            sys = self._create_system(system_name, system_node)  # une ouverture par fichier
             self.system_bank.add_system(sys)
-            genes = self.create_genes(sys, system_node)
+            genes = self._create_genes(sys, system_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
         for system_name in systems_2_detect: #une ouverture par fichier
@@ -317,6 +295,7 @@ class SystemParser(object):
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             tree = ET.parse(path)
             system_node = tree.getroot()
-            self.fill(system, system_node)
-        self.check_consitency(self.system_bank, self.cfg)
+            self._fill(system, system_node)
+        system_2_check = [self.system_bank[s] for s in systems_2_detect]
+        self.check_consitency(system_2_check, self.cfg)
 
