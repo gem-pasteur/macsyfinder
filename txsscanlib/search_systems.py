@@ -26,7 +26,7 @@ class ClustersHandler(object):
     """
     Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
     """
-    
+
     def __init__(self):
         """
         :param cfg: The configuration object built from default and user parameters.
@@ -34,13 +34,13 @@ class ClustersHandler(object):
         """
         self.clusters = []
         self.replicon_name = ""
-    
+
     def add(self, cluster):
         if not self.replicon_name:
-            self.replicon_name = cluster.replicon_name            
+            self.replicon_name = cluster.replicon_name
             cluster.save()
             self.clusters.append(cluster)
-        elif self.replicon_name == cluster.replicon_name:            
+        elif self.replicon_name == cluster.replicon_name:
             cluster.save()
             self.clusters.append(cluster)
         else:
@@ -51,24 +51,24 @@ class ClustersHandler(object):
             _log.critical(msg)
             #raise Exception(msg)
             raise SystemDetectionError(msg)
-        
+
     def __str__(self):
         to_print=""
         for cluster in self.clusters:
             to_print+=str(cluster)
-            
+
         return to_print
-    
+
     def circularize(self, rep_info):
         # We assume this function is called when appropriate (i.e. for circular replicons)
         if len(self.clusters) > 1:
             clust_first = self.clusters[0]
             clust_last = self.clusters[len(self.clusters)-1]
-            
+
             pos_min = rep_info.min
             pos_max = rep_info.max
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
-            
+
             #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
             if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
                 # Need to circularize ! 
@@ -78,7 +78,8 @@ class ClustersHandler(object):
                     clust_last.add(h)
                 clust_last.save(True) # Force to re-save the updated cluster
                 print clust_last
-                        
+
+
 class Cluster(object):
     """
     Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes'systems: 
@@ -96,12 +97,11 @@ class Cluster(object):
         self.end = 0
         self._state = ""
         self._putative_system = ""
-    
+
     def __len__(self):
         return len(self.hits)
-    
+
     def __str__(self):
-        
         pos = []
         seq_ids = []
         gene_names = [] 
@@ -109,12 +109,12 @@ class Cluster(object):
             pos.append(h.position)
             seq_ids.append(h.id)
             gene_names.append(h.gene.name)
-            
+
         if self.state == "clear":
             return "--- Cluster %s ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
         else:
             return "--- Cluster %s ? ---\n%s\n%s\n%s"%(self.putative_system, str(seq_ids), str(gene_names), str(pos))
-    
+
     @property
     def state(self):
         """
@@ -122,7 +122,7 @@ class Cluster(object):
         :rtype: string
         """
         return self._state
-        
+
     @property
     def putative_system(self):
         """
@@ -130,7 +130,7 @@ class Cluster(object):
         :rtype: string
         """
         return self._putative_system
-   
+
     def add(self, hit):
         """
         Hits are always added at the end of the cluster (appended to the list of hits). Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
@@ -156,13 +156,13 @@ class Cluster(object):
                 # The end position only is updated, as Hits are always appended.
                 self.end = hit.get_position()
                 self.hits.append(hit)
-                
             else:
                 msg = "Attempting to gather in a cluster hits from different replicons ! "
                 _log.critical(msg)
                 #raise Exception(msg)
                 raise SystemDetectionError(msg)
-                    
+
+
     def save(self, force=False):
         """
         Check the status of the cluster regarding systems which have hits in it. 
@@ -191,7 +191,7 @@ class Cluster(object):
                 if y>=max_syst:
                     tmp_syst_name = x
                     max_syst = y
-            
+
             self._putative_system = tmp_syst_name
             self.systems = systems
 
@@ -207,7 +207,7 @@ class Cluster(object):
                     foreign_allowed = 0
                     for h in self.hits:
                         if h.system.name != self._putative_system and h.gene.is_authorized(systems_object[self._putative_system]):
-                            
+
                             foreign_allowed+=1
                     if foreign_allowed == sum(systems.values())-systems[self._putative_system]:
                         # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
@@ -216,35 +216,35 @@ class Cluster(object):
                         self._state = "ambiguous"
 
 
-    
+
 class SystemNameGenerator(object):
     """
     Creates and stores the names of detected systems. Ensures the uniqueness of the names.  
     """
     name_bank={}
-    
+
     def getSystemName(self, replicon, system):
         basename = self._computeBasename(replicon, system)
         if basename in self.name_bank:
             self.name_bank[basename]+=1
         else:
             self.name_bank[basename] = 1
-        
+
         system_name =  basename+str(self.name_bank[basename])   
         return system_name
-        
+
     def _computeBasename(self, replicon, system):
         return replicon+"_"+system+"_"
-    
+
 system_name_generator = SystemNameGenerator()
 
-            
+
 
 class SystemOccurence(object):
     """
     This class is instantiated for a specific system that has been asked for detection. It can be filled step by step with hits. 
     A decision can then be made according to parameters defined *e.g.* quorum of genes. 
-    
+
     The SystemOccurence object has a "state" parameter, with the possible following values: 
     - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
     - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
@@ -259,29 +259,29 @@ class SystemOccurence(object):
         """
         self.system = system
         self.system_name = system.name
-        
+
         # Variables to be updated during the system detection 
         self.valid_hits = [] # validSystemHit are stored with the "fill_with" function, and ready for extraction in case of a positive detection
-        
+
         self.loci_positions = [] # list of tuples
-        
+
         self._state = "empty"
         self.nb_cluster = 0
         self._nb_syst_genes = 0
         self.unique_name = ""
-        
+
         # System definition
         # Make those attributes non modifiable?
         self.mandatory_genes = {}
         self.exmandatory_genes = {} # List of 'exchanged' mandatory genes
-        
+
         for g in system.mandatory_genes:
             self.mandatory_genes[g.name] = 0
             if g.exchangeable:
                 homologs=g.get_homologs()
                 for h in homologs:
                     self.exmandatory_genes[h.name] = g.name
-        
+
         self.allowed_genes = {}
         self.exallowed_genes = {} # List of 'exchanged' allowed genes
         for g in system.allowed_genes:
@@ -290,12 +290,12 @@ class SystemOccurence(object):
                 homologs=g.get_homologs()
                 for h in homologs:
                     self.exallowed_genes[h.name] = g.name
-        
+
         self.forbidden_genes = {}
         for g in system.forbidden_genes:
             self.forbidden_genes[g.name] = 0
-        
-                 
+
+
     def __str__(self):
         out=""
         if self.mandatory_genes: 
@@ -311,7 +311,7 @@ class SystemOccurence(object):
             for k, g in self.forbidden_genes.iteritems():
                 out+="%s\t%d\n"%(k, g)   
         return out
-    
+
     def get_gene_counter_output(self):
         """
         Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden) occurences in the system occurrence        
@@ -320,9 +320,9 @@ class SystemOccurence(object):
         out+=str(self.mandatory_genes)
         out+="\t%s"%str(self.allowed_genes)
         out+="\t%s"%str(self.forbidden_genes)
-        
+
         return out
-    
+
     @property
     def state(self):
         """
@@ -342,7 +342,7 @@ class SystemOccurence(object):
             self.unique_name = system_name_generator.getSystemName(replicon_name, self.system_name)
         return self.unique_name
 
-    
+
     def compute_system_length(self, rep_info):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
@@ -362,7 +362,7 @@ class SystemOccurence(object):
                 #raise Exception(msg)
                 raise SystemDetectionError(msg)
         return length
-    
+
     @property
     def nb_syst_genes(self):
         """
@@ -371,13 +371,13 @@ class SystemOccurence(object):
         :rtype: integer
         """
         return self._nb_syst_genes
-          
+
     def compute_nb_syst_genes(self):
         return self.count_genes(self.mandatory_genes)+self.count_genes(self.allowed_genes)
 
     def compute_nb_syst_genes_tot(self):
         return self.count_genes_tot(self.mandatory_genes)+self.count_genes_tot(self.allowed_genes)
-        
+
     def count_genes(self, gene_dict):
         """
         Count the nb of genes with at least one occurrence in a dictionary with a counter of genes. 
@@ -399,8 +399,7 @@ class SystemOccurence(object):
 
     def compute_missing_genes_list(self, gene_dict):
         """
-        Returns the list of genes with no occurence in the gene counter. 
-        
+        :returns: the list of genes with no occurence in the gene counter. 
         :rtype: list
         """
         missing=[]
@@ -408,39 +407,40 @@ class SystemOccurence(object):
             if v==0:
                 missing.append(k)
         return missing
-        
-        
+
+
     def count_missing_genes(self, gene_dict):
         """
         Counts the number of genes with no occurence in the gene counter.
-        
+
         :rtype: integer
         """
         return len(self.compute_missing_genes_list(gene_dict))
-        
-       
+
+
     def is_complete(self):
         if self.state == "single_locus" or self.state == "multi_loci":
             return True
         else:
             return False 
-     
+
     def get_summary_header(self):
         """
         Returns a string with the description of the summary returned by self.get_summary()
-        
+
         :rtype: string
         """
         return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
-        
+
+
     def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
-        
+
         :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
-        
+
         report_str = replicon_name+"\t"+self.get_system_unique_name(replicon_name)
         report_str+="\t%s"%self.system_name
         report_str+="\t%s"%self.state
@@ -454,37 +454,38 @@ class SystemOccurence(object):
 
         report_str+="\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
         report_str+="\t%d"%self.count_genes(self.allowed_genes) # Nb allowed_genes matched at least once
-        
+
         missing_mandatory = self.compute_missing_genes_list(self.mandatory_genes)        
         missing_allowed = self.compute_missing_genes_list(self.allowed_genes)
-        
+
         report_str+="\t%d"%len(missing_mandatory) # Nb mandatory_genes with no occurrence in the system
         report_str+="\t%d"%len(missing_allowed) # Nb allowed_genes with no occurrence in the system
         report_str+="\t%s"%str(missing_mandatory) # List of mandatory genes with no occurrence in the system
         report_str+="\t%s"%str(missing_allowed) # List of allowed genes with no occurrence in the system
-        
+
         report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
         report_str+="\t%s"%self.get_gene_counter_output() # A dico per type of gene 'Mandatory, Allowed, Forbidden' with gene occurrences in the system
-       
+
         return report_str
-        
+
+
     def fill_with(self, cluster):
         """
         Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
         Set the system occurence state to "no_decision" after calling of this function.
-        
+
         :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
         :type cluster: :class:`txsscanlib.search_systems.Cluster`
         :return: True if the system occurence is completed with this cluster given input parameters of quorum, and False otherwise (cf. :func:`txsscanlib.search_systems.SystemOccurence.decide`) 
         :rtype: boolean
-        
+
         """
         included = True
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
             # Stores hits for system extraction (positions, sequences) when complete. 
-            
+
             if hit.gene.is_mandatory(self.system):
                 self.mandatory_genes[hit.gene.name]+=1
                 valid_hit=validSystemHit(hit, self.system_name, "mandatory")
@@ -509,13 +510,13 @@ class SystemOccurence(object):
                     msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
                     print msg
                     #_log.info(msg)
-        
+
         if included:
             # Update the number of loci included in the system
             self.nb_cluster += 1            
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
-                     
+
 
     def decision_rule(self):
         nb_forbid = self.count_genes(self.forbidden_genes)
@@ -526,14 +527,14 @@ class SystemOccurence(object):
         msg = "====> Decision rule for putative system %s\n"%self.system_name
         msg += str(self)
         msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d"%(nb_forbid, nb_mandat, nb_allowed)
-               
+
         if ( nb_forbid == 0 ):
             if (nb_mandat >= self.system.min_mandatory_genes_required) and (self.nb_syst_genes >= self.system.min_genes_required) and (self.nb_syst_genes  >= 1):
                 if self.nb_cluster == 1: 
                     self._state = "single_locus"
                 else:
                     self._state = "multi_loci"
-                
+
                 msg += "\nYeah complete system \"%s\"."%self.state
                 msg += "\n******************************************\n"
                 print msg
@@ -570,47 +571,50 @@ class validSystemHit(object):
         - sequence extraction
     """
     def __init__(self, hit, detected_system, gene_status):
-        self.hit = hit
+        self._hit = hit
         self.predicted_system = detected_system
         self.reference_system = hit.system.name
         self.gene_status = gene_status
-           
+
+    def __getattr__(self, attr_name):
+        return getattr(self._hit, attr_name)
+    
     def __str__(self):
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.hit.id,
-                                                     self.hit.replicon_name,
-                                                     self.hit.position,
-                                                     self.hit.seq_length,
-                                                     self.hit.gene.name,
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
+                                                     self.replicon_name,
+                                                     self.position,
+                                                     self.seq_length,
+                                                     self.gene.name,
                                                      self.reference_system,
                                                      self.predicted_system,
                                                      self.gene_status,
-                                                     self.hit.i_eval,
-                                                     self.hit.score,
-                                                     self.hit.profile_coverage, 
-                                                     self.hit.sequence_coverage,
-                                                     self.hit.begin_match,
-                                                     self.hit.end_match)
-                                                     
+                                                     self.i_eval,
+                                                     self.score,
+                                                     self.profile_coverage,
+                                                     self.sequence_coverage,
+                                                     self.begin_match,
+                                                     self.end_match)
+
     def output_system(self, system_name, system_status):
         
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.hit.id,
-                                                     self.hit.replicon_name,
-                                                     self.hit.position,
-                                                     self.hit.seq_length,
-                                                     self.hit.gene.name,
+        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
+                                                     self.replicon_name,
+                                                     self.position,
+                                                     self.seq_length,
+                                                     self.gene.name,
                                                      self.reference_system,
                                                      self.predicted_system,
-                                                     system_name, 
+                                                     system_name,
                                                      system_status,
                                                      self.gene_status,
-                                                     self.hit.i_eval,
-                                                     self.hit.score,
-                                                     self.hit.profile_coverage, 
-                                                     self.hit.sequence_coverage,
-                                                     self.hit.begin_match,
-                                                     self.hit.end_match)
-        
-                                                           
+                                                     self.i_eval,
+                                                     self.score,
+                                                     self.profile_coverage,
+                                                     self.sequence_coverage,
+                                                     self.begin_match,
+                                                     self.end_match)
+
+
     def output_system_header(self):
         return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
 
@@ -727,25 +731,25 @@ class systemDetectionReport(object):
                 system = {}
                 system['name'] = so.unique_name
                 system['replicon'] = {}
-                system['replicon']['name'] = so.valid_hits[0].hit.replicon_name
+                system['replicon']['name'] = so.valid_hits[0].replicon_name
                 rep_info = rep_db[system['replicon']['name']]
                 system['replicon']['length'] = rep_info.max - rep_info.min
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 for valid_hit in so.valid_hits:
                     gene = {}
-                    gene['id'] = valid_hit.hit.id
-                    gene['position'] = valid_hit.hit.position
-                    gene['sequence_length'] = valid_hit.hit.seq_length
+                    gene['id'] = valid_hit.id
+                    gene['position'] = valid_hit.position
+                    gene['sequence_length'] = valid_hit.seq_length
                     gene['system'] = valid_hit.reference_system
-                    gene['match'] = valid_hit.hit.gene.name
+                    gene['match'] = valid_hit.gene.name
                     gene['gene_status'] = valid_hit.gene_status
-                    gene['i_eval'] = valid_hit.hit.i_eval
-                    gene['score'] = valid_hit.hit.score
-                    gene['profile_coverage'] = valid_hit.hit.profile_coverage
-                    gene['sequence_coverage'] = valid_hit.hit.sequence_coverage
-                    gene['begin_match'] = valid_hit.hit.begin_match
-                    gene['end_match'] = valid_hit.hit.end_match
+                    gene['i_eval'] = valid_hit.i_eval
+                    gene['score'] = valid_hit.score
+                    gene['profile_coverage'] = valid_hit.profile_coverage
+                    gene['sequence_coverage'] = valid_hit.sequence_coverage
+                    gene['begin_match'] = valid_hit.begin_match
+                    gene['end_match'] = valid_hit.end_match
                     system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
