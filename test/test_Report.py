@@ -10,13 +10,7 @@
 #===============================================================================
 
 
-import sys
 import os
-
-TXSSCAN_HOME = os.path.abspath('..')
-if not TXSSCAN_HOME in sys.path: 
-    sys.path.append(os.path.abspath('..') )
-
 import unittest
 import shutil
 from txsscanlib.report import HMMReport, GeneralHMMReport, GembaseHMMReport, Hit
@@ -28,18 +22,18 @@ from txsscanlib.database import Indexes
 
 class Test(unittest.TestCase):
 
-    _data_dir = "./datatest/res_search" 
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest", "res_search")
     
     def setUp(self):
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = "../data/DEF",
+                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = "../data/profiles",
+                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,

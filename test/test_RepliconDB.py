@@ -10,13 +10,7 @@
 #===============================================================================
 
 
-import sys
 import os
-
-TXSSCAN_HOME = os.path.abspath('..')
-if not TXSSCAN_HOME in sys.path: 
-    sys.path.append(os.path.abspath('..') )
-
 import unittest
 import shutil
 from txsscanlib.config import Config
@@ -25,7 +19,7 @@ from txsscanlib.database import RepliconDB, Indexes, RepliconInfo
 
 class Test(unittest.TestCase):
 
-    _data_dir = "./datatest/res_search" 
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest", "res_search")
 
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)
@@ -41,14 +35,14 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = "./datatest/prru_psae.001.c01.fasta",
+                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = "../data/DEF",
+                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = "../data/profiles",
+                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
@@ -86,14 +80,14 @@ class Test(unittest.TestCase):
     def test_fill_ordered_replicon_min_max(self):
         self.tearDown()
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = "./datatest/ordered_replicon_base",
+                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "ordered_replicon_base"),
                            db_type = "ordered_replicon",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = "../data/DEF",
+                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = "../data/profiles",
+                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
@@ -182,7 +176,3 @@ class Test(unittest.TestCase):
         PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 2763)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 2764, 8332)
         
-        
-        
-if __name__ == "__main__":
-    unittest.main()
