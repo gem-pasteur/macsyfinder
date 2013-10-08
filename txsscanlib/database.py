@@ -203,8 +203,8 @@ class Indexes(object):
                         seq_nb += 1
                         my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
         except Exception, err:
-            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
-            _log.critical( msg, exc_info = True )
+            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err)
+            _log.critical(msg, exc_info = True)
             raise err
 
 

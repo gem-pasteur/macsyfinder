@@ -4,12 +4,7 @@ Created on Nov 30, 2012
 @author: bneron
 '''
 
-import sys
 import os
-TXSSCAN_HOME = os.path.abspath('..')
-if not TXSSCAN_HOME in sys.path:
-    sys.path.append(os.path.abspath('..') )
-
 import unittest
 import shutil
 from txsscanlib.gene import profile_factory
@@ -28,10 +23,10 @@ class Test(unittest.TestCase):
                            hmmer_exe = "",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = "../data/DEF",
+                           def_dir = os.path.join(os.path.dirname(__file__), ".." , "data", "DEF"),
                            res_search_dir = "/tmp",
                            res_search_suffix = "",
-                           profile_dir = "../data/profiles",
+                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
@@ -58,5 +53,3 @@ class Test(unittest.TestCase):
         self.assertEqual( profile1, profile2 )
 
 
-if __name__ == "__main__":
-    unittest.main()

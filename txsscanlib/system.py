@@ -12,7 +12,7 @@
 
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
-
+from txsscan_error import SystemInconsistencyError
 
 class SystemBank(object):
     """
@@ -57,7 +57,15 @@ class SystemBank(object):
         """
         """
         return self._system_bank.itervalues()
-
+    
+    def __len__(self):
+        """
+        :return: the number of system store in the bank
+        :rtype: int
+        """
+        return len(self._system_bank)
+    
+    
     def add_system(self, system ):
         """
         :param name: the name of the system
@@ -102,7 +110,7 @@ class System(object):
         self._min_genes_required = min_genes_required
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
-                raise ValueError("min_genes_required must be greater or equal than min_mandatory_genes_required")
+                raise SystemInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
         self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
