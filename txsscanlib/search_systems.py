@@ -855,19 +855,25 @@ def analyze_clusters_replicon(clusters, systems):
         print "\n%s"%str(clust)
         if clust.state == "clear":            
             # Local Hits collector
-            so = SystemOccurence(syst_dict[clust.putative_system])
-            so.fill_with(clust)
-            so.decision_rule()
-            so_state = so.state
-            if so_state != "exclude":
-                if so_state != "single_locus":            
-                    # Store it to pool genes found with genes from other clusters.
-                    # Do not do it if the so has a forbidden gene !!!
-                    print "...\nStored for later treatment of scattered systems.\n"
-                    systems_occurences_scattered[clust.putative_system].fill_with(clust)
-                else: 
-                    print "...\nComplete system stored.\n"
-                    systems_occurences_list.append(so)
+            # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
+            #if not clust.putative_system in syst_dict.keys():
+            #    print "New n'est pas a detecter!!!"
+            #    #break
+            if clust.putative_system in syst_dict.keys():
+                so = SystemOccurence(syst_dict[clust.putative_system])
+                so.fill_with(clust)
+                so.decision_rule()
+                so_state = so.state
+                if so_state != "exclude":
+                    if so_state != "single_locus":            
+                        # Store it to pool genes found with genes from other clusters.
+                        # Do not do it if the so has a forbidden gene !!!
+                        print "...\nStored for later treatment of scattered systems.\n"
+                        systems_occurences_scattered[clust.putative_system].fill_with(clust)
+                    else: 
+                        print "...\nComplete system stored.\n"
+                        systems_occurences_list.append(so)
+                    
         elif clust.state == "ambiguous":
             # Implement a way to "clean" the clusters. For instance :
             # - split the cluster in two if it seems that two systems are nearby
@@ -1052,6 +1058,8 @@ def search_systems(hits, systems, cfg):
             clusters=build_clusters(sub_hits, rep_info)            
             print "\n************************************\n Analyzing clusters for %s \n************************************\n"%k
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
+            # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
+            # 
             systems_occurences_list = analyze_clusters_replicon(clusters, systems)
             
             print "******************************************"
@@ -1088,7 +1096,7 @@ def search_systems(hits, systems, cfg):
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
         pass
     elif cfg.db_type == 'unordered':
-        # Same as 'unordered_replicon' ? 
+        # Same as 'unordered_replicon' ? Yes ! 
         pass
     else:
         raise ValueError("Invalid database type. ")
