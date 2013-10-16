@@ -16,6 +16,7 @@ import os.path
 from collections import namedtuple, Counter
 import itertools, operator
 import json
+from operator import attrgetter # To be used with "sorted"
 
 from txsscan_error import TxsscanError, SystemDetectionError
 from database import RepliconDB
@@ -517,6 +518,54 @@ class SystemOccurence(object):
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
 
+    def fill_with_hits(self, hits):
+        """
+        Adds hits to a system occurence, and check which are their status according to the system definition.
+        Set the system occurence state to "no_decision" after calling of this function.
+
+        :param hits: a list of Hits to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion.s 
+        :type list of: :class:`txsscanlib.report.Hit`
+        :return: True if the system occurence is completed with this set of hits given input parameters of quorum, and False otherwise (cf. :func:`txsscanlib.search_systems.SystemOccurence.decide`) 
+        :rtype: boolean
+
+        """
+        included = True
+        self._state = "no_decision"
+        for hit in hits:
+            # Need to check first that this cluster is eligible for system inclusion
+            # Stores hits for system extraction (positions, sequences) when complete. 
+
+            if hit.gene.is_mandatory(self.system):
+                self.mandatory_genes[hit.gene.name]+=1
+                valid_hit=validSystemHit(hit, self.system_name, "mandatory")
+                self.valid_hits.append(valid_hit)
+            elif hit.gene.is_allowed(self.system):
+                self.allowed_genes[hit.gene.name]+=1
+                valid_hit=validSystemHit(hit, self.system_name, "allowed")
+                self.valid_hits.append(valid_hit)
+            elif hit.gene.is_forbidden(self.system):
+                self.forbidden_genes[hit.gene.name]+=1
+                included=False
+            else:
+                if hit.gene.name in self.exmandatory_genes.keys():
+                    self.mandatory_genes[self.exmandatory_genes[hit.gene.name]]+=1
+                    valid_hit=validSystemHit(hit, self.system_name, "mandatory")
+                    self.valid_hits.append(valid_hit)
+                elif hit.gene.name in self.exallowed_genes.keys():
+                    self.allowed_genes[self.exallowed_genes[hit.gene.name]]+=1
+                    valid_hit=validSystemHit(hit, self.system_name, "allowed")
+                    self.valid_hits.append(valid_hit)
+                else:
+                    msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
+                    print msg
+                    #_log.info(msg)
+                    
+        # Not meaningful here 
+        #if included:
+        #    # Update the number of loci included in the system
+        #    self.nb_cluster += 1            
+        #    # Update the positions of the system
+        #    self.loci_positions.append((cluster.begin, cluster.end))
 
     def decision_rule(self):
         nb_forbid = self.count_genes(self.forbidden_genes)
@@ -1017,6 +1066,55 @@ def build_clusters(hits, rep_info):
         
     return clusters
 
+def get_best_hits(hits, tosort=False, criterion="score"):
+    """
+    Returns from a putatively redundant list of hits a list of best matching hits
+    Analyze quorum and colocalization if required for system detection. 
+    By default, hits are already sorted by position, and the hit with the best score is kept. 
+    """
+    if tosort:
+        hits = sorted(hits, key=attrgetter('position'))
+    best_hits=[]
+
+    prev_hit=hits[0]
+    prev_pos=prev_hit.get_position()
+    #print hits[0]
+    for h in hits[1:]:
+        pos=h.get_position()
+        if pos !=prev_pos:
+            best_hits.append(prev_hit)
+            #print "******* no comp ****"
+            #print prev_hit
+            #print "******* ****** ****"
+            prev_hit=h
+            prev_pos=pos
+        else:
+            #print "******* COMP ****"
+            #print h 
+            #print prev_hit
+            if criterion == "score":
+                if prev_hit.score<h.score:
+                    prev_hit=h
+            elif criterion == "i_eval":
+                if getattr(prev_hit, 'i_eval') > getattr(h, 'i_eval'):
+                    prev_hit=h
+            elif criterion == "profile_coverage":
+                if getattr(prev_hit, 'profile_coverage') < getattr(h, 'profile_coverage'):
+                    prev_hit=h
+            else:
+                raise TxsscanError("The criterion for Hits comparison % does not exist or is not available. \nIt must be either \"score\", \"i_eval\" or \"profile_coverage\"."%criterion)
+            
+            #print "BEST"
+            #print prev_hit
+            #print "******* ****** ****"
+    
+    best_hits.append(prev_hit)
+    
+    #settupkes=[(h, pos) for h in hits for pos in [getattr(z, 'position') for z in hits]]
+        
+    return best_hits
+
+
  
 def search_systems(hits, systems, cfg):
     """
@@ -1091,13 +1189,41 @@ def search_systems(hits, systems, cfg):
         report.summary_output(summaryfilename, rep_info, header_print)
         report.json_output(json_filename, rep_db)
         print "******************************************"
+    
+    elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
+        #rep_db = RepliconDB(cfg)
+        #rep_info = rep_db[RepliconDB.unordered_replicon_name]
         
-    elif cfg.db_type == 'unordered_replicon':
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
-        pass
-    elif cfg.db_type == 'unordered':
-        # Same as 'unordered_replicon' ? Yes ! 
-        pass
+        systems_occurences_list=[]
+        # Hits with best score are first selected. 
+        hits=get_best_hits(hits, True)
+        # Then system-wise treatment:
+        hits=sorted(hits, key=attrgetter('system'))
+        for k, g in itertools.groupby(hits, operator.attrgetter('system')):
+            if k in systems:
+                sub_hits=list(g)
+                so=SystemOccurence(k)
+                resy=so.fill_with_hits(sub_hits)
+                print "******************************************"
+                print k.name
+                print "******************************************"
+                print so
+                systems_occurences_list.append(so)
+        #print "******************************************"
+        #print "Reporting detected systems "
+        #report = systemDetectionReport("POUETT", systems_occurences_list, systems)
+        #report.report_output(reportfilename, header_print)
+        #report.summary_output(summaryfilename, rep_info, header_print)
+        #report.json_output(json_filename, rep_db)
+        #pass
+       
+    #elif cfg.db_type == 'unordered_replicon':
+    #    # implement a new function "analyze_cluster" => Fills a systemOccurence per system
+    #    pass
+    #elif cfg.db_type == 'unordered':
+    #    # Same as 'unordered_replicon' ? Yes ! 
+    #    pass
     else:
         raise ValueError("Invalid database type. ")
 
