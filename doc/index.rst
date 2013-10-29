@@ -11,7 +11,7 @@ Welcome to TXSScan's documentation!
    
   Its flexible architecture allows the user to describe its own system for detection purpose by:
     - providing its **own profiles** for a new system, 
-    - defining its **own decision rules** for system inference in our dedicated XML grammar.
+    - defining its **own decision rules** for system inference in our dedicated XML grammar (see :ref:`system-definition-grammar-label`).
 
 TXSScan implementation overview
 ===============================

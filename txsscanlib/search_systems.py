@@ -25,7 +25,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 class ClustersHandler(object):
     """
-    Deals with sets of clusters found in a dataset. Conceived to store only clusters for a same replicon.
+    Deals with sets of clusters found in a dataset. Conceived to store only clusters from a same replicon.
     """
 
     def __init__(self):
@@ -62,7 +62,7 @@ class ClustersHandler(object):
 
     def circularize(self, rep_info):
         """
-        This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replcon's ends). 
+        This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
         It has to be called only if the replicon_topology is set to \"circular\".
         """
         # We assume this function is called when appropriate (i.e. for circular replicons)
@@ -88,9 +88,9 @@ class ClustersHandler(object):
 class Cluster(object):
     """
     Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes' systems: 
-    - ineligible: not a cluster to analyze
-    - clear: a single system is represented in the cluster
-    - ambiguous: several systems are represented in the cluster => might need a disambiguation
+        - ineligible: not a cluster to analyze
+        - clear: a single system is represented in the cluster
+        - ambiguous: several systems are represented in the cluster => might need a disambiguation
     """
     
     def __init__(self):
@@ -250,11 +250,12 @@ class SystemOccurence(object):
     A decision can then be made according to parameters defined *e.g.* quorum of genes. 
 
     The SystemOccurence object has a "state" parameter, with the possible following values: 
-    - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
-    - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
-    - "single_locus" 
-    - "multi_loci" 
-    - "uncomplete"
+        - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
+        - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
+        - "single_locus" 
+        - "multi_loci" 
+        - "uncomplete"
+        
     """
     def __init__(self, system):
         """
@@ -349,8 +350,9 @@ class SystemOccurence(object):
 
     def get_system_unique_name(self, replicon_name):
         """
-        Attributes unique name to the system occurrence with the class :class:`txsscanlib.search_systems.SystemNameGenerator`
-        Generate the name if not already set. 
+        Attributes unique name to the system occurrence with the class :class:`txsscanlib.search_systems.SystemNameGenerator`.
+        Generates the name if not already set. 
+        
         :return: the unique name of the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
@@ -383,6 +385,7 @@ class SystemOccurence(object):
     def nb_syst_genes(self):
         """
         This value is set after a decision was made on the system in :func:`txsscanlib.search_systems.SystemOccurence:decision_rule`
+        
         :return: the number of mandatory and allowed genes with at least one occurence (number of different allowed genes)
         :rtype: integer
         """
@@ -676,10 +679,13 @@ class SystemOccurence(object):
 class validSystemHit(object):
     """
     Encapsulates a :class:`txsscanlib.report.Hit`
-    This class stores a Hit that has been attributed to a detected system. Thus, it also stores 
+    This class stores a Hit that has been attributed to a detected system. Thus, it also stores:  
+    
     - the system, 
     - the status of the gene in this system,
+    
     It also aims at storing information for results extraction:
+    
     - system extraction (e.g. genomic positions)
     - sequence extraction
         
@@ -736,8 +742,9 @@ class validSystemHit(object):
 class systemDetectionReport(object):
     """
     Stores the systems to report for each replicon: 
-    - by system name, 
-    - by state of the systems (single vs multi loci)
+        - by system name, 
+        - by state of the systems (single vs multi loci)
+    
     """
     
     def __init__(self, replicon_name, systems_occurences_list, systems):
@@ -794,7 +801,7 @@ class systemDetectionReport(object):
            
     def report_output(self, reportfilename, print_header = False):
         """
-        Write a report of sequences forming the detected systems, with information in their status in the system, 
+        Writes a report of sequences forming the detected systems, with information in their status in the system, 
         their localization on replicons, and statistics on the Hits. 
         """
         report_str=""
@@ -811,11 +818,13 @@ class systemDetectionReport(object):
 
     def summary_output(self, reportfilename, rep_info, print_header = False):
         """
-        Write a report with the summary of systems detected in replicons. For each system, a summary is done including:
+        Writes a report with the summary of systems detected in replicons. For each system, a summary is done including: 
+                   
             - the number of mandatory/allowed genes in the reference system (as defined in XML files)
             - the number of mandatory/allowed genes detected
             - the number and list of missing genes
             - the number of loci encoding the system
+            
         """
         
         report_str = ""
@@ -831,7 +840,7 @@ class systemDetectionReport(object):
 
     def json_output(self, path, rep_db):
         """
-        generate the report in json format
+        Generates the report in json format
 
         :param path: the path to a file where to write the report in json format
         :type path: string
@@ -880,9 +889,9 @@ def disambiguate_cluster(cluster):
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
     It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
+
     - splits the cluster in two if it seems that two systems are nearby
-    - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster
-    in this case, check that they are not "loners", cause "loners" can be stored.
+    - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster in this case, check that they are not "loners", cause "loners" can be stored.
 
     """
     res_clusters = []               
@@ -1025,7 +1034,8 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
 
 def build_clusters(hits, rep_info):
     """
-    Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets. 
+    Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets.
+     
     :param hits: a list of Hmmer hits to analyze 
     :type hits: a list of :class:`txsscanlib.report.Hit`
     :param cfg: the configuration object built from default and user parameters.
@@ -1151,8 +1161,9 @@ def build_clusters(hits, rep_info):
 def get_best_hits(hits, tosort=False, criterion="score"):
     """
     Returns from a putatively redundant list of hits a list of best matching hits.
-    Analyze quorum and co-localization if required for system detection. 
+    Analyzes quorum and co-localization if required for system detection. 
     By default, hits are already sorted by position, and the hit with the best score is kept. Possible criteria are:
+        
     - maximal score (criterion=\"score\")
     - minimal i-evalue (criterion=\"i_eval\")
     - maximal percentage of the profile covered by the alignment with the query sequence (criterion=\"profile_coverage\")

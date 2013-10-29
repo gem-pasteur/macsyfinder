@@ -1,12 +1,12 @@
 .. _system:
 
-****************
-secretion system
-****************
+*****************
+The system object
+*****************
 
-Represents a secretion system. 
-It is defined by a definition file in xml stored in 
-The xml syntax is
+It represents a macromolecular system to detect. 
+It is defined by a definition file in XML stored in 
+The XML syntax is
 
 for instance::
 
@@ -31,15 +31,15 @@ for instance::
     </system>
 
  
-a system_parser is used to build a system object from it's xml definition
+An object system_parser is used to build a system object from its XML definition file.
 
-a system as a name based on the file name of the xml definition
-a system as an attribute inter_gene_max_space which is an integer
-and 3 kind of genes lists in function of their presence:
+A system is named after the file name of its XML definition.
+A system has an attribute inter_gene_max_space which is an integer,
+and three kind of components are listed in function of their presence in the system:
 
-* The genes which must be present in the genome to defined this system.
-* The genes which can be presents but not in all cases.
-* The genes which must not be present.
+* The genes that must be present in the genome to defined this system ("mandatory").
+* The genes that can be present, but do not have to be found in every cases ("allowed").
+* The genes that must not be present in the system ("forbiden").
 
 .. note:: 
     
