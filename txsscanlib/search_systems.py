@@ -61,6 +61,10 @@ class ClustersHandler(object):
         return to_print
 
     def circularize(self, rep_info):
+        """
+        This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replcon's ends). 
+        It has to be called only if the replicon_topology is set to \"circular\".
+        """
         # We assume this function is called when appropriate (i.e. for circular replicons)
         if len(self.clusters) > 1:
             clust_first = self.clusters[0]
@@ -83,15 +87,14 @@ class ClustersHandler(object):
 
 class Cluster(object):
     """
-    Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes'systems: 
+    Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes' systems: 
     - ineligible: not a cluster to analyze
     - clear: a single system is represented in the cluster
-    - ambiguous: several systems are represented in the cluster
+    - ambiguous: several systems are represented in the cluster => might need a disambiguation
     """
     
     def __init__(self):
         self.hits = []
-        #self.systems = []
         self.systems = {}
         self.replicon_name = ""
         self.begin = 0
@@ -381,7 +384,7 @@ class SystemOccurence(object):
 
     def count_genes(self, gene_dict):
         """
-        Count the nb of genes with at least one occurrence in a dictionary with a counter of genes. 
+        Counts the nb of genes with at least one occurrence in a dictionary with a counter of genes. 
         """
         total = 0
         for v in gene_dict.values():
@@ -391,7 +394,7 @@ class SystemOccurence(object):
 
     def count_genes_tot(self, gene_dict):
         """
-        Count the nb of matches in a dictionary with a counter of genes, independently of the nb of genes matched.
+        Counts the nb of matches in a dictionary with a counter of genes, independently of the nb of genes matched.
         """
         total = 0
         for v in gene_dict.values():
@@ -905,9 +908,6 @@ def analyze_clusters_replicon(clusters, systems):
         if clust.state == "clear":            
             # Local Hits collector
             # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
-            #if not clust.putative_system in syst_dict.keys():
-            #    print "New n'est pas a detecter!!!"
-            #    #break
             if clust.putative_system in syst_dict.keys():
                 so = SystemOccurence(syst_dict[clust.putative_system])
                 so.fill_with(clust)
@@ -1068,9 +1068,12 @@ def build_clusters(hits, rep_info):
 
 def get_best_hits(hits, tosort=False, criterion="score"):
     """
-    Returns from a putatively redundant list of hits a list of best matching hits
-    Analyze quorum and colocalization if required for system detection. 
-    By default, hits are already sorted by position, and the hit with the best score is kept. 
+    Returns from a putatively redundant list of hits a list of best matching hits.
+    Analyze quorum and co-localization if required for system detection. 
+    By default, hits are already sorted by position, and the hit with the best score is kept. Possible criteria are:
+        - maximal score (criterion=\"score\")
+        - minimal i-evalue (criterion=\"i_eval\")
+        - maximal percentage of the profile covered by the alignment with the query sequence (criterion=\"profile_coverage\")
     """
     if tosort:
         hits = sorted(hits, key=attrgetter('position'))
