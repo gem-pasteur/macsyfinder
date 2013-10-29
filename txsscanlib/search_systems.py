@@ -590,6 +590,7 @@ class SystemOccurence(object):
         
         :param multi_systems_hits: a list of hits of genes that are "multi_system" which correspond to mandatory or allowed genes from the current system for which to fill a SystemOccurrence 
         :type list of: :class:`txsscanlib.report.Hit`
+        
         """
         # For each "multi_system" gene missing:
         for g in self.multi_syst_genes:
@@ -676,11 +677,12 @@ class validSystemHit(object):
     """
     Encapsulates a :class:`txsscanlib.report.Hit`
     This class stores a Hit that has been attributed to a detected system. Thus, it also stores 
-        - the system, 
-        - the status of the gene in this system,
+    - the system, 
+    - the status of the gene in this system,
     It also aims at storing information for results extraction:
-        - system extraction (e.g. genomic positions)
-        - sequence extraction
+    - system extraction (e.g. genomic positions)
+    - sequence extraction
+        
     """
     def __init__(self, hit, detected_system, gene_status):
         self._hit = hit
@@ -878,9 +880,10 @@ def disambiguate_cluster(cluster):
     """
     This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
     It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
-     - splits the cluster in two if it seems that two systems are nearby
-     - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster
+    - splits the cluster in two if it seems that two systems are nearby
+    - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster
     in this case, check that they are not "loners", cause "loners" can be stored.
+
     """
     res_clusters = []               
     syst_dico = cluster.systems
@@ -1150,9 +1153,10 @@ def get_best_hits(hits, tosort=False, criterion="score"):
     Returns from a putatively redundant list of hits a list of best matching hits.
     Analyze quorum and co-localization if required for system detection. 
     By default, hits are already sorted by position, and the hit with the best score is kept. Possible criteria are:
-        - maximal score (criterion=\"score\")
-        - minimal i-evalue (criterion=\"i_eval\")
-        - maximal percentage of the profile covered by the alignment with the query sequence (criterion=\"profile_coverage\")
+    - maximal score (criterion=\"score\")
+    - minimal i-evalue (criterion=\"i_eval\")
+    - maximal percentage of the profile covered by the alignment with the query sequence (criterion=\"profile_coverage\")
+    
     """
     if tosort:
         hits = sorted(hits, key=attrgetter('position'))

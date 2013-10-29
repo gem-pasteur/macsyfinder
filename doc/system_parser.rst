@@ -73,7 +73,7 @@ countrariwise:
 only the systems in the list to the systems to search are full.
 
 SystemParser API reference
-=========================
+==========================
 .. automodule:: txsscanlib.system_parser
    :members:
    :private-members:

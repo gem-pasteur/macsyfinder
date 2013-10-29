@@ -232,7 +232,7 @@ class SystemParser(object):
           - min_mandatory_genes_required = value  ; min_genes_required = None
           - min_mandatory_genes_required = len(mandatory_genes) 
           - AND len(allowed_genes + mandatory_genes) >= min_genes_required >= len(mandatory_genes)
-           always True By design
+          always True By design
 
           - min_mandatory_genes_required =  None ; min_genes_required = Value
           - min_genes_required = min_mandatory_genes_required 
@@ -243,6 +243,7 @@ class SystemParser(object):
           - len(allowed_genes+mandatory_genes) >= min_genes_required 
           - AND min_mandatory_genes_required <= len(mandatory_genes) 
           - AND min_genes_required >= min_mandatory_genes_required
+          
         """
         for system in systems:
             len_allowed_genes = len(system.allowed_genes)
