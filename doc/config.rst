@@ -1,11 +1,11 @@
 .. _config:
 
-******
-config
-******
+*******************
+Configuration files
+*******************
 
-Handle the all configuration options for txsscan.
-parse 3 location to find configuration files
+Handle all the configuration options for txsscan.
+Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/txsscan/txsscan.conf
  
