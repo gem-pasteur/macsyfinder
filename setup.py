@@ -7,7 +7,7 @@ from distutils.core import Command
 from distutils.command.build import build
 from distutils.command.install import install
 from distutils.util import get_platform
-from distutils.errors import DistutilsOptionError
+from distutils.errors import DistutilsOptionError, DistutilsPlatformError
 from distutils.versionpredicate import VersionPredicate
 from distutils.errors import DistutilsFileError
 from distutils.util import subst_vars as distutils_subst_vars
@@ -25,7 +25,15 @@ class check_and_build( build ):
             chk &= self.check_package(req)
         if not chk: 
             sys.exit(1)
+        test_res_path = os.path.join(self.build_lib, ".tests_results")
+        try:
+            os.unlink(test_res_path)
+        except OSError:
+            pass
         build.run(self)
+        print """
+Unit tests are available. It is _highly_ recommended to run tests now.
+to run test, run 'python setup.py test'"""
 
     def check_python(self, req):
         chk = VersionPredicate(req)
@@ -53,6 +61,7 @@ class check_and_build( build ):
             pass
         return True
 
+
 class test(Command):
 
     description = "run the unit tests against the build library"
@@ -72,7 +81,8 @@ class test(Command):
         self.build_purelib = None
         self.build_platlib = None
         self.plat_name = None
-
+        self.skip_build = 0
+        self.warn_dir = 1
 
     def finalize_options(self):
         #if self.build_lib is None:
@@ -118,19 +128,35 @@ class test(Command):
                 self.build_lib = self.build_purelib
             elif os.path.exists(self.build_platlib):
                 self.build_lib = self.build_platlib
-            else:
-                msg = """the builded lib cannot be found in {0} or {0}. 
- You must build the package before to test it (python setup.py build). 
- If you build it in other location, you must specify it for the test see options with "python setup.py test --help" """.format(self.build_purelib, self.build_platlib)
-                raise DistutilsOptionError(msg)
 
 
     def run(self):
         """
         """
+        if not self.skip_build:
+            self.run_command('build')
+            # If we built for any other platform, we can't install.
+            build_plat = self.distribution.get_command_obj('build').plat_name
+            # check warn_dir - it is a clue that the 'install' is happening
+            # internally, and not to sys.path, so we don't check the platform
+            # matches what we are running.
+            if self.warn_dir and build_plat != get_platform():
+                raise DistutilsPlatformError("Can't test when "
+                                             "cross-compiling")
         sys.path.insert(0, os.path.join(os.getcwd(), 'test'))
         import main
+        if self.build_lib is None:
+            if os.path.exists(self.build_purelib):
+                self.build_lib = self.build_purelib
+            elif os.path.exists(self.build_platlib):
+                self.build_lib = self.build_platlib
+
+        print "running test"
         test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
+        res_path = os.path.join(self.build_lib, ".tests_results")
+
+        with open(res_path, 'w') as _file:
+            print >> _file, int(test_res.wasSuccessful())
         if not test_res.wasSuccessful():
             sys.exit("some tests fails. Run python setup.py test -vv to have more details")
 
@@ -139,13 +165,34 @@ class test(Command):
 class install_txsscan(install):
 
     def run(self):
-        for _file in fix_prefix:
-            input_file = os.path.join(self.build_lib, _file)
-            output_file =  input_file + '.tmp'
-            subst_vars( input_file, output_file, {'PREFIX': self.prefix})
-            os.unlink(input_file)
-            self.move_file(output_file, input_file) 
-            install.run(self)
+        test_res_path = os.path.join(self.build_lib, ".tests_results")
+        test_res = 0
+        if os.path.exists(test_res_path):
+            with open(test_res_path) as _file:
+                test_res = int(_file.readline().strip())
+                if not test_res:
+                    msg = "Unit tests failed. It is _highly_ recommended to fix the problem, before installing"
+        else:
+            msg = """Unit tests are available. It is _highly_ recommended to run tests now, before installing
+to run test, run 'python setup.py test'"""
+
+        if not test_res: #test_res = 0 => test fails ore test not ran
+            test_OK = raw_input( "{}\nAre you sure you want to install anyway (y/N) ?".format(msg))
+            if test_OK.lower() in ('y', 'yes'):
+                test_OK = True
+            else:
+                test_OK = False
+        else:
+            #test_res = 1
+            test_OK = True
+        if test_OK:
+            for _file in fix_prefix:
+                input_file = os.path.join(self.build_lib, _file)
+                output_file =  input_file + '.tmp'
+                subst_vars( input_file, output_file, {'PREFIX': self.prefix})
+                os.unlink(input_file)
+                self.move_file(output_file, input_file) 
+                install.run(self)
 
 
 def subst_vars(src, dst, vars):
@@ -165,7 +212,7 @@ def subst_vars(src, dst, vars):
 
 
 require_python = [ 'python (>=2.7, <3.0)' ]
-require_packages = ['bsddb3']
+require_packages = []
 fix_prefix = ["txsscanlib/config.py"]
 
 setup(name        = 'txsscan',
