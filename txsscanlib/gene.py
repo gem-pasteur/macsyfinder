@@ -233,8 +233,14 @@ class Gene(object):
         else:
             return False
     
-    def is_authorized(self, system):
-        for m in (system.mandatory_genes+system.allowed_genes):
+    def is_authorized(self, system):        
+        """
+        :return: True if the genes are found in the system definition file, False otherwise.
+        :type system: :class:`txsscanlib.system.System` object.
+        :rtype: boolean.
+        """
+        #for m in (system.mandatory_genes+system.allowed_genes):
+        for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
             if self == m:
                 return True
             if m.exchangeable and m.is_homolog(self):

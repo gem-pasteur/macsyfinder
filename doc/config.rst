@@ -1,11 +1,13 @@
 .. _config:
 
-******
-config
-******
+.. _config-definition-label:
 
-Handle the all configuration options for txsscan.
-parse 3 location to find configuration files
+*******************
+Configuration files
+*******************
+
+Options to run TXSScan can be specified in a configuration file. The API described below handles all configuration options for txsscan.
+Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/txsscan/txsscan.conf
  
@@ -13,22 +15,28 @@ parse 3 location to find configuration files
  
  * ./txsscan.conf  
  
- Moreover these 3 locations options can be passed on the command line.
+ Moreover these three locations options can be passed on the command line.
  
  Each file can defined options, at the end all options are added. if an option is specified several times.
- The precedence rules from the less important to the more important are:
- $PREFIX/etc/txsscan/txsscan.conf < $(HOME)/.txsscan/txsscan.conf < ./txsscan.conf < command line option
+ 
+ .. note::
+    The precedence rules from the less important to the more important are:
+ 
+    $PREFIX/etc/txsscan/txsscan.conf < $(HOME)/.txsscan/txsscan.conf < ./txsscan.conf < "command-line" options
    
- the Config object provide some default values and perform some validations of the values, for instance:
+    This means that command-line options will always bypass those from the configuration files. In the same flavor, options altering the definition of systems found in the command-line or the configuration file will always overwhelm values from XML definition files.   
+ 
+ The Config object provides some default values and performs some validations of the values, for instance:
  
  
- the configuration files must follow the python ini file syntax:
- in txsscan 4 sections are defined:
+ The configuration files must follow the Python "ini" file syntax:
  
-  * **base** : all information related to the genome to study
+ In TXSScan, five sections are defined:
+ 
+  * **base** : all information related to the protein dataset under study
   
-    * *file* : the path to the genome (*no default value*)
-    * *type* : the type of the base, 4 types are supported:
+    * *file* : the path to the dataset in Fasta format (*no default value*)
+    * *type* : the type of dataset to handle, four types are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
         * *unordered_replicon* : a set of sequences corresponding to a complete replicon (*e.g.* an unassembled complete genome)
@@ -37,8 +45,8 @@ parse 3 location to find configuration files
         
       (*no default value*)
       
-    * *replicon_topology* : the topology of the replicon, 2 topologies are supported 'linear', 'circular' (*default* = 'linear')
-      this option will be ignored if the base type is not ordered (ordered_replicon or unordered).     
+    * *replicon_topology* : the topology of the replicon under study. Two topologies are supported: 'linear' and 'circular' (*default* = 'linear')
+      This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
   
   * **system**
   
@@ -77,7 +85,7 @@ parse 3 location to find configuration files
         ========    ==========
     * *log_file* = (default = txsscan.log in directory of the run)
  
-  example of a file configuration::
+  Example of a configuration file::
   
     [base]
     prefix = /path/to/txsscan/home/

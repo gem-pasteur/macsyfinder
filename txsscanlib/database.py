@@ -186,12 +186,12 @@ class Indexes(object):
 
     def _build_my_indexes(self):
         """
-        build txsscan indexes. This index is stored in file.
+        Build txsscan indexes. These indexes are stored in a file.
 
         the format of the file is :
         one entry per line
-        each line have the following format:
-         - sequence id;sequence length;sequence rank
+        each line has the following format:
+        - sequence id;sequence length;sequence rank
 
         """
         try:
@@ -203,8 +203,8 @@ class Indexes(object):
                         seq_nb += 1
                         my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
         except Exception, err:
-            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err )
-            _log.critical( msg, exc_info = True )
+            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err)
+            _log.critical(msg, exc_info = True)
             raise err
 
 
@@ -214,7 +214,7 @@ RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max')
 
 class RepliconDB(object):
     """
-    store informations (topology, min, max) for all replicon in the sequence_db
+    Stores information (topology, min, max) for all replicons in the sequence_db
     the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'
     """
 
@@ -226,7 +226,7 @@ class RepliconDB(object):
         :type cfg: :class:`txsscanlib.config.Config` object
 
         .. note ::
-        this class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
+            this class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
         """
         self.cfg = cfg
         assert self.cfg.db_type in ('gembase', 'ordered_replicon')
@@ -336,33 +336,32 @@ class RepliconDB(object):
         :type replicon_name: string
         :param default: the value to return if the replicon_name is not in the RepliconDB
         :type default: any
-        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default. 
-        If default is not given, it defaults to None, so that this method never raises a KeyError.
+        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default. If default is not given, it is set to None, so that this method never raises a KeyError.
         :rtype: :class:`RepliconInfo` object
         """
         return self._DB.get(replicon_name, default)
 
     def items(self):
         """
-        :return: a copy of the RepliconDB’s list of (replicon_name, RepliconInfo) pairs.
+        :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs.
         """
         return self._DB.items()
 
     def iteritems(self):
         """
-        :return: an iterator over the RepliconDB’s (replicon_name, RepliconInfo) pairs.
+        :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs.
         """
         return self._DB.iteritems()
 
     def replicon_names(self):
         """
-        :return: a copy of the RepliconDB’s list of replicon_names
+        :return: a copy of the RepliconDB as a list of replicon_names
         """
         return self._DB.keys()
     
     def replicon_infos(self):
         """
-        :return: a copy of the RepliconDB’s list of replicons info
+        :return: a copy of the RepliconDB as list of replicons info
         :rtype: RepliconInfo instance
         """
         return self._DB.values()
