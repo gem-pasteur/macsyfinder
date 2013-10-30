@@ -102,7 +102,22 @@ class Test(unittest.TestCase):
                   'profile_dir' : os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles'),
                   'res_search_dir' : '/tmp',
                   }
+        real_def_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'DEF'),
         self.assertRaises(ValueError, Config, **kwargs)
+        
+        def_dir = os.path.join('/tmp', 'txsscan_DEF')
+        if not os.path.exists(def_dir):
+            os.mkdir(def_dir)
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
+                          db_type = 'gembase',
+                          def_dir = def_dir,
+                          profile_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles'),
+                          res_search_dir = '/tmp',
+                          ) 
+        self.assertEqual( def_dir, self.cfg.def_dir)
+        shutil.rmtree(def_dir)
+        self.tearDown()
         def_dir = os.path.join(os.path.dirname(__file__),'..', 'data',  'DEF')
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
