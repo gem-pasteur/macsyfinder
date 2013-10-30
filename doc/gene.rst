@@ -1,10 +1,10 @@
 .. _gene:
 
-****
-gene
-****
+**************
+The Gene class
+**************
 
-the Gene class represents the genes defined by a System
+The Gene class represents the genes defined by a System
 each gene must have a profile (the profiles must be stored in ... ). 
 a gene may have homologs.
 

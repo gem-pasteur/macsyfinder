@@ -1,8 +1,8 @@
 .. _txsscan_error:
 
-*************
-txsscan_error
-*************
+**************
+TXSScan errors
+**************
 
  
 txsscan_error API reference

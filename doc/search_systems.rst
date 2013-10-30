@@ -1,8 +1,8 @@
 .. _search_systems:
 
-******************
-Search for systems
-******************
+**************************
+Assessing systems presence
+**************************
 The search for systems starts with the extraction of the list of components to be detected with HMM protein profiles. Then Hmmer is run on this set of profiles, and hits are filtered. 
 
 For *ordered* datasets: 
