@@ -11,10 +11,27 @@
 
 
 import os
+import sys
 import unittest
 import shutil
 from txsscanlib.config import Config
 from txsscanlib.database import Indexes
+
+#########################
+# Utilities
+#########################
+def which(name, flags=os.X_OK):
+    """Search PATH for executable files with the given name."""
+    result = []
+    path = os.environ.get('PATH', None)
+    if path is None:
+        return []
+    for p in os.environ.get('PATH', '').split(os.pathsep):
+        p = os.path.join(p, name)
+        if os.access(p, flags):
+            result.append(p)
+            break
+    return result
 
  
 class Test(unittest.TestCase):
@@ -148,17 +165,22 @@ class Test(unittest.TestCase):
         open(new_idx, 'w')
         self.assertEqual(idx.find_my_indexes(), new_idx)
 
-
+    @unittest.skipIf( not (which('makeblastdb') or which('formatdb')) , 'neither makeblast nor formatdb found in PATH')
     def test_build_no_idx(self):
+        if not which('makeblastdb') and which('formatdb'):
+            self.cfg.options['index_db_exe'] = 'formatdb'
         idx = Indexes(self.cfg)
         idx.build()
         my_idx = idx.find_my_indexes()
         hmmer_idx = idx.find_hmmer_indexes()
         self.assertEqual(my_idx, os.path.join( os.path.dirname(self.cfg.sequence_db), idx.name + ".idx"))
         self.assertEqual( hmmer_idx , [ self.cfg.sequence_db + suffix for suffix in ('.phr', '.pin', '.psd', '.psi', '.psq')])
+        
 
-
+    @unittest.skipIf( not (which('makeblastdb') or which('formatdb')) , 'neither makeblast nor formatdb found in PATH')
     def test_build_with_idx(self):
+        if not which('makeblastdb') and which('formatdb'):
+            self.cfg.options['index_db_exe'] = 'formatdb'
         #put fake hmmer indexes
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
         for s in  suffixes:
@@ -172,9 +194,12 @@ class Test(unittest.TestCase):
         for f in hmmer_idx +[my_idx]:
             self.assertEqual(os.path.getsize(f), 0)
 
-
+    @unittest.skipIf( not (which('makeblastdb') or which('formatdb')) , 'neither makeblast nor formatdb found in PATH')
     def test_build_force(self):
         #put fake hmmer indexes
+        if not which('makeblastdb') and which('formatdb'):
+            self.cfg.options['index_db_exe'] = 'formatdb'
+       
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
         for s in  suffixes:
             new_idx = os.path.join( self.cfg.sequence_db + s)
@@ -192,6 +217,6 @@ class Test(unittest.TestCase):
         idx = Indexes(self.cfg)
         idx_dir = os.path.join( os.path.dirname(self.cfg.sequence_db))
         os.chmod(idx_dir, 0000)
-        self.assertRaises( IOError, idx.build )
+        self.assertRaises(IOError, idx.build)
         os.chmod(idx_dir, 0777)    
 
