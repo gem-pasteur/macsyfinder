@@ -115,7 +115,7 @@ class Test(unittest.TestCase):
                           profile_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles'),
                           res_search_dir = '/tmp',
                           ) 
-        self.assertEqual( def_dir, self.cfg.def_dir)
+        self.assertEqual(def_dir, self.cfg.def_dir)
         shutil.rmtree(def_dir)
         self.tearDown()
         def_dir = os.path.join(os.path.dirname(__file__),'..', 'data',  'DEF')
@@ -189,6 +189,29 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'truc')
+    
+    
+    
+    def test_index_db_exe(self):
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
+                          db_type = 'gembase',
+                          def_dir = os.path.join(os.path.dirname(__file__),'..', 'data', 'DEF'),
+                          profile_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles'),
+                          res_search_dir = '/tmp'
+                          )
+        self.assertEqual(self.cfg.index_db_exe, 'makeblastdb')
+        self.tearDown()
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
+                          db_type = 'gembase',
+                          def_dir = os.path.join(os.path.dirname(__file__),'..', 'data', 'DEF'),
+                          profile_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles'),
+                          index_db_exe = 'truc',
+                          res_search_dir = '/tmp',
+                          )
+        self.assertEqual(self.cfg.index_db_exe, 'truc')
+    
     
     
     def test_i_value_sel(self):

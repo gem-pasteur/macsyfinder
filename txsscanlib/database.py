@@ -18,7 +18,7 @@ import os.path
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
 from subprocess import Popen
-
+from txsscan_error import TxsscanError
 
 def fasta_iter(fasta_file):
     """
@@ -163,9 +163,27 @@ class Indexes(object):
         #so it must be writable
         #if the directory is not writable, formatdb do a Segmentation fault
         index_dir = os.path.dirname(self.cfg.sequence_db)
-        command = "formatdb -t %s -i %s -p T -o T -s T" % ( self.name,
-                                                            self.cfg.sequence_db
+        
+        if not os.access(index_dir, os.R_OK|os.W_OK):
+            raise TxsscanError( "%s must be writable to write database indexes")
+        
+        if self.cfg.index_db_exe.find('makeblast') != -1:
+            command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
+                                                                      self.name,
+                                                                      self.cfg.sequence_d)
+        elif self.cfg.index_db_exe.find('formatdb') != -1:
+            # -t  Title for database file [String]
+            # -i Input file(s) for formatting [File In]
+            # -p T Type of file = protein
+            # -o T Parse SeqId and create indexes.
+            # -s T Create indexes limited only to accessions
+            command = "%s -t %s -i %s -p T -o T -s T" % ( self.cfg.index_db_exe,
+                                                      self.name,
+                                                      self.cfg.sequence_db
                                                           )
+        else:
+            raise TxsscanError("%s is not support to index database use makeblastdb or formatdb" % self.cfg.sequence_db)
+
 
         err_path = os.path.join(index_dir, "formatdb.err")
         with  open(err_path, 'w') as err_file:
@@ -178,7 +196,7 @@ class Indexes(object):
                                   close_fds = False ,
                                   )
             except Exception, err:
-                msg = "unable to format the sequence base : %s : %s" % ( command , err)
+                msg = "unable to format the sequence base : %s : %s" % (command, err)
                 _log.critical( msg, exc_info = True )
                 raise err
             return formatdb
