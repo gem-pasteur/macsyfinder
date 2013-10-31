@@ -32,7 +32,7 @@ class Config(object):
     
     #if a new option is added think to add it also (if needed) in save
     options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file' ,'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
-                'hmmer_exe' , 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
+                'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
@@ -45,6 +45,7 @@ class Config(object):
                 min_mandatory_genes_required = None,
                 min_genes_required = None,
                 hmmer_exe = None,
+                index_db_exe = None,
                 e_value_res = None,
                 i_evalue_sel = None,
                 coverage_profile = None,
@@ -82,6 +83,8 @@ class Config(object):
         :type min_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
         :param hmmer_exe: the hmmsearch executabe
         :type hmmer_exe: string
+        :param index_db_exe: the indexer executable (makeblastdb or formatdb)
+        :type index_db_exe: string
         :param e_value_res: à déterminer
         :type  e_value_res: float
         :param i_evalue_sel: à déterminer
@@ -124,6 +127,7 @@ class Config(object):
                            '.txsscan.conf']
         self._defaults = {'replicon_topology': 'circular',
                           'hmmer_exe' : 'hmmsearch',
+                          'index_db_exe': 'makeblastdb',
                           'e_value_res' : "1",
                           'i_evalue_sel' : "0.5",
                           'coverage_profile' : "0.5",
@@ -258,7 +262,7 @@ class Config(object):
                 except (NoSectionError, NoOptionError):
                     raise ValueError( "you must specify the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
             if options['db_type'] not in val_4_db_type:
-                    raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
+                raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
             val_4_replicon_topology = ('linear', 'circular')
             if 'replicon_topology' in cmde_line_opt:
                 options['replicon_topology'] = cmde_line_opt['replicon_topology']
@@ -266,9 +270,9 @@ class Config(object):
                 try:
                     options['replicon_topology'] = self.parser.get( 'base', 'replicon_topology') 
                 except (NoSectionError, NoOptionError):
-                     options['replicon_topology'] =  self._defaults['replicon_topology']
+                    options['replicon_topology'] =  self._defaults['replicon_topology']
             if options['replicon_topology'] not in val_4_replicon_topology:
-                    raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
+                raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
             if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
                 self._log.warning("db_type is set to %s, replicon_topology is ignored")
             
@@ -512,6 +516,15 @@ class Config(object):
                     options['hmmer_exe'] = cmde_line_opt['hmmer_exe']
                 else:
                     options['hmmer_exe'] = self._defaults['hmmer_exe']
+           
+            try:
+                options['index_db_exe'] = self.parser.get('hmmer', 'index_db_exe', vars = cmde_line_opt)
+            except NoSectionError:
+                if 'index_db_exe' in cmde_line_opt:
+                    options['index_db_exe'] = cmde_line_opt['index_db_exe']
+                else:
+                    options['index_db_exe'] = self._defaults['index_db_exe']        
+                    
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
                 options['e_value_res'] = float(e_value_res)
@@ -632,7 +645,7 @@ class Config(object):
         parser.set( 'base', 'type', str(self.options['db_type']).lower())
         cfg_opts = [('base' ,('replicon_topology', 'topology_file')),
                     ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required')),
-                    ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
+                    ('hmmer', ('hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
@@ -732,6 +745,14 @@ class Config(object):
         :rtype: string 
         """
         return self.options['hmmer_exe']
+
+    @property
+    def index_db_exe(self):
+        """
+        :return: the name of the binary to indexe the database for hmm
+        :rtype: string 
+        """
+        return self.options['index_db_exe']
 
     @property
     def e_value_res(self):

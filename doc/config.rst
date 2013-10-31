@@ -57,6 +57,7 @@ Three locations are parsed to find configuration files:
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
+    * *index_db_exe* the executable to use to build the index for the hmm. The value can be 'makeblastdb' or 'formatdb' or the absolute path toward one of these 2 binaries (default= *makeblastdb* )
     * *e_value_res* = (default= *1* )
     * *e_value_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
@@ -100,6 +101,7 @@ Three locations are parsed to find configuration files:
     
     [hmmer]
     hmmer_exe = hmmsearch
+    index_db_exe = makeblastdb
     e_value_res = 1
     i_evalue_sel = 0.5
     coverage_profile = 0.5

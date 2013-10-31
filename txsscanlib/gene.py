@@ -376,8 +376,8 @@ class Profile(object):
             # the other calls return directly this report
             if self._report is not None:
                 return self._report
-            output_path = os.path.join( self.cfg.working_dir, self.gene.name + self.cfg.res_search_suffix )
-            err_path = os.path.join( self.cfg.working_dir, self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0]+".err" )
+            output_path = os.path.join( self.cfg.working_dir, self.gene.name + self.cfg.res_search_suffix)
+            err_path = os.path.join(self.cfg.working_dir, self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err" )
 
             with  open(err_path, 'w') as err_file:
                 options = { "hmmer_exe" : self.cfg.hmmer_exe,
@@ -388,7 +388,7 @@ class Profile(object):
                            }
                 #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
                 command = "%(hmmer_exe)s --cpu 0 -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s " % options
-                _log.info( "%s hmmer command line : %s" % (self.gene.name, command) )
+                _log.info( "%s hmmer command line : %s" % (self.gene.name, command))
                 try:
                     hmmer = Popen( command ,
                                    shell = True ,
