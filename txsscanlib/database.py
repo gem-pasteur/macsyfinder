@@ -170,7 +170,7 @@ class Indexes(object):
         if self.cfg.index_db_exe.find('makeblast') != -1:
             command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
                                                                       self.name,
-                                                                      self.cfg.sequence_d)
+                                                                      self.cfg.sequence_db)
         elif self.cfg.index_db_exe.find('formatdb') != -1:
             # -t  Title for database file [String]
             # -i Input file(s) for formatting [File In]
