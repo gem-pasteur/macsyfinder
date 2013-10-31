@@ -81,8 +81,12 @@ class Indexes(object):
         # build indexes if needed #
         ###########################
         index_dir = os.path.dirname(self.cfg.sequence_db)
+        
         if force or not hmmer_indexes or not my_indexes:
-            if not os.access(index_dir, os.W_OK):
+            #formatdb create indexes in the same directory as the sequence_db
+            #so it must be writable
+            #if the directory is not writable, formatdb do a Segmentation fault
+            if not os.access(index_dir, os.R_OK|os.W_OK):
                 msg = "cannot build indexes, (%s) is not writable" % index_dir
                 _log.critical(msg)
                 raise IOError(msg)
@@ -159,13 +163,7 @@ class Indexes(object):
         """
         build the indexes for hmmer using formatdb tool
         """
-        #formatdb create indexes in the same directory as the sequence_db
-        #so it must be writable
-        #if the directory is not writable, formatdb do a Segmentation fault
         index_dir = os.path.dirname(self.cfg.sequence_db)
-        
-        if not os.access(index_dir, os.R_OK|os.W_OK):
-            raise TxsscanError( "%s must be writable to write database indexes")
         
         if self.cfg.index_db_exe.find('makeblast') != -1:
             command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
@@ -190,7 +188,7 @@ class Indexes(object):
             try:
                 formatdb = Popen( command ,
                                   shell = True ,
-                                  stdout = None ,
+                                  stdout = err_file ,
                                   stdin  = None ,
                                   stderr = err_file ,
                                   close_fds = False ,
