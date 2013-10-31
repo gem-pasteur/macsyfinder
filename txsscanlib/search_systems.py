@@ -1255,7 +1255,8 @@ def search_systems(hits, systems, cfg):
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
             # 
-            systems_occurences_list = analyze_clusters_replicon(clusters, systems)
+            #systems_occurences_list = analyze_clusters_replicon(clusters, systems)
+            systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)  
             
             print "******************************************"
             print "Reporting systems for %s : \n"%k
@@ -1276,9 +1277,9 @@ def search_systems(hits, systems, cfg):
         rep_info = rep_db[RepliconDB.ordered_replicon_name]
         
         (clusters, multi_syst_genes)=build_clusters(hits, rep_info) 
-        for syst in multi_syst_genes:
-            for g in multi_syst_genes[syst]:
-                print g
+        #for syst in multi_syst_genes:
+        #    for g in multi_syst_genes[syst]:
+        #        print g
         print "\n************************************\n Analyzing clusters \n************************************\n"
         #systems_occurences_list = analyze_clusters_replicon(clusters, systems)              
         systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)                    

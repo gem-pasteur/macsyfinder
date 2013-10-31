@@ -1,10 +1,10 @@
 .. _HMMReport:
 
-**********
-HMM Report
-**********
+******************************
+Reporting Hmmer search results
+******************************
 
-represent the results of a HMMer search on a genome with a profile.
+Represents the results of a Hmmer search on a genome with a profile.
 The report has some method to extract informations needed for the expert rules to decides if a system of secretion is 
 present in the genome.
 

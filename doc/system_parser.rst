@@ -1,13 +1,13 @@
 .. _system_parser:
 
-*************
-system_parser
-*************
+********************************
+The parser of systems definition
+********************************
 
-the system parser create system and genes from the xml system definition.
-the parsing in 3 phases
+The system parser creates systems and genes from XML system definitions.
+The parsing consists in three phases.
 
-for instance::
+For instance::
 
     Syst_1
     <system inter_gene_max_space="10">

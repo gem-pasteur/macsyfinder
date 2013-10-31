@@ -1,8 +1,8 @@
 .. _search_genes:
 
-************
-search_genes
-************
+*******************************
+Searching for "gene" components
+*******************************
 
  
 search_genes API reference
