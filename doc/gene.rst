@@ -4,24 +4,17 @@
 The Gene class
 **************
 
-The Gene class represents the genes defined by a System
-each gene must have a profile (the profiles must be stored in ... ). 
-a gene may have homologs.
+The Gene class represents genes encoding the protein components of a System. 
+Each Gene points out its System of origin (:class:`txsscanlib.system.System`). A Gene must have a correponding HMM protein profile. These profiles are represented by Profile objects (:class:`txsscanlib.gene.Profile`), and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file. See :ref:`profile-label`). A Gene has several properties described in the Gene API below. 
 
- homolog have to properties :
+A Gene may have Homologs. An Homolog object encapsulates a Gene and has a reference to the Gene it is homolog to. See the Homolog API below for more details. All attributes/methods which are not directly implemented in Homolog are redirected to that of the encapsulated Gene.
 
-* a reference gene, which is a reference toward the gene which is the homolog
-* and if the profile is aligned on the gene reference or not.
+.. warning::
+    To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in gene_bank.
+    gene_bank is a :class:`txsscanlib.gene.GeneBank` object. 
+    The gene_bank and system bank are filled by a system_parser (:class:`txsscanlib.system_parser.SystemParser`)
 
-and is composed of a gene. All attribute/methods which are not directly implemented in 
-Homolog are redirected to this gene.
-
-To optimize computation and to avoid concurrency problems when we search several systems.
-Each gene must be instanciated only one time,and stored in gene_bank.
-gene_bank is a  :class:`txsscanlib.gene.GeneBank` object. 
-the gene_bank and system bank are filled by a system_parser ( :class:`txsscanlib.system_parser.SystemParser` )
-
-example to get a gene object: ::
+Example to get a gene object: ::
   
     from txsscanlib.system import system_bank
     from txsscanlib.config import Config

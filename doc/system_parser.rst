@@ -1,11 +1,35 @@
 .. _system_parser:
 
-********************************
-The parser of systems definition
-********************************
+*********************************
+The Parser of Systems definitions
+*********************************
 
-The system parser creates systems and genes from XML system definitions.
+The system parser object "SystemParser" instanciates Systems and Genes objects from XML system definitions (see :ref:`system-definition-grammar-label`).
 The parsing consists in three phases.
+
+Phase 1. 
+
+   * each Gene is parsed from the System it is defined
+   * From the list of System to detect, the list of Systems to parse is established
+
+Phase 2.
+
+   * For each system to parse 
+   
+     * create the system
+     * add this system to the system_bank
+     * create the genes defined in this system with their attributes but not their homologs
+     * add these genes in the gene_bank
+    
+Phase 3. 
+
+   * For each system to search
+   
+     * For each gene defined in this system:
+     
+         * create the Homologs by encapsulating Genes from the gene_bank
+         * add the Gene to the System
+
 
 For instance::
 
@@ -34,43 +58,22 @@ For instance::
     <system>
 
 
-1. phase: 
+With the example above:
 
-   * each gene must be parse from the system where it is defined
-   * so from the list of system to search establish the list of system to parse
-
-2. phase:
-
-   * for each system to parse 
-   
-     * create the system
-     * add this system in the system_bank
-     * create of the genes defined in this system with its attribute but not its homologs
-     * add these genes in the gene_bank
-    
-3. phase: 
-
-   * for each system to search
-   
-     * for each gene defined in this system:
-     
-         * create the homologs getting the gene from the gene_bank
-         * add the gene in the system
-
-at the end with the example above:
-
-* the Syst_1 have a gene_A 
-* the gene_A have homolog gene_B
-* the gene_B have a reference to Syst_2
-* the gene_B attributes from the Syst_2 are use to build the gene
-* the Syst_2 have attributes as define in xml (inter_gene_max_space ,...)
+* the Syst_1 has a gene_A 
+* the gene_A has homolog gene_B
+* the gene_B has a reference to Syst_2
+* gene_B attributes from the Syst_2 are used to build the Gene
+* the Syst_2 has attributes as defined in the corresponding XML file (inter_gene_max_space ,...)
 
 countrariwise: 
 
-* the gene_B have no homologs
-* the Syst_2 have not gene
+* the gene_B has no Homologs
+* the Syst_2 has no Genes
 
-only the systems in the list to the systems to search are full.
+.. note::
+    The only "full" Systems (*i.e.,* with all corresponding Genes created) are those to detect.
+
 
 SystemParser API reference
 ==========================

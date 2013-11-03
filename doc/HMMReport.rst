@@ -4,7 +4,7 @@
 Reporting Hmmer search results
 ******************************
 
-Represents the results of a Hmmer search on a genome with a profile.
+A HMMReport object represents the results of a Hmmer program search on a dataset with a hidden Markov model protein profile.
 The report has some method to extract informations needed for the expert rules to decides if a system of secretion is 
 present in the genome.
 

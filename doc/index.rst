@@ -5,9 +5,9 @@
 
 
 .. image:: images/logo_buen.jpg
-   :height: 100px
-   :width: 200 px
-   :align: left
+ :height: 50px
+ :width: 100 px
+ :align: left
 
 
 Welcome to TXSScan's documentation! 

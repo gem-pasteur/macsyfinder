@@ -1,7 +1,7 @@
 .. _system:
 
 *****************
-The system object
+The System object
 *****************
 
 It represents a macromolecular system to detect. 
