@@ -3,11 +3,11 @@
 
 .. _system-definition-grammar-label:
 
-******************
-Systems definition
-******************
+****************************
+Secretion systems definition
+****************************
 
-TXSScan allows to fully customize the definition of macromolecular systems via a **XML grammar** that is described below. 
+TXSScan relies on the definition of models of secretion systems and related appendages with a **XML grammar** that is described below. 
 A system is defined in a dedicated file named after the system (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used for **content description**. Some components are specific to the system, and some are possibly from other systems. In the latter case, the full description of the gene with its attributes must be defined in the XML file of the original system. 
 Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
 
@@ -48,10 +48,10 @@ Here is the XML hierarchy:
 
 Example of a system definition in XML: ::
   
-  <system> 
+  <system inter_gene_max_space="5"> 
     <gene name="gspD" presence="mandatory" exchangeable="1">
        <homologs>
-           <gene name="sctJ" system_ref="T3SS"/>
+           <gene name="sctC" system_ref="T3SS"/>
        </homologs>
     </gene>
     <gene name="sctN_FLG" presence="mandatory" loner="1"/>

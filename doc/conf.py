@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Txsscan'
-copyright = u'2012, Sophie Abby, Bertrand Néron'
+copyright = u'2013, Sophie Abby, Bertrand Néron'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
