@@ -1,0 +1,22 @@
+<system inter_gene_max_space="30" min_mandatory_genes_required="2" min_genes_required="2">
+    <gene name="virB4" presence="mandatory" exchangeable="1">        
+        <homologs>
+    	    <gene name="traU" system_ref="pT4SSi"/>
+        </homologs>
+    </gene>
+    <gene name="virD4" presence="allowed" exchangeable="1">       
+    	<homologs>
+    	    <gene name="tcpA"/>
+    	</homologs>
+    </gene>
+    <gene name="MOBB" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBC" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBF" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBH" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP1" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP2" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP3" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBQ" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBT" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBV" presence="mandatory" inter_gene_max_space="60"/>
+</system>
