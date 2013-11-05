@@ -5,7 +5,7 @@ The System object
 *****************
 
 It represents a macromolecular system to detect. 
-It is defined by a definition file in XML stored in a dedicated location that can be specified *via* the configuration of the command-line.
+It is defined by a definition file in XML stored in a dedicated location that can be specified *via* the configuration of the command-line. See :ref:`system-definition-grammar-label` for more details on the XML grammar. 
 The XML syntax is
 for instance::
 
@@ -43,7 +43,7 @@ and three kind of components are listed in function of their presence in the sys
 
 .. note:: 
     
-    a complete description of the secretion system grammar is available here :ref:`system-definition-grammar-label`
+    a complete description of the secretion system modelling is available here :ref:`system_definition`
 
 SystemBank API reference
 ===========================

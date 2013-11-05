@@ -4,7 +4,7 @@
 The Parser of Systems definitions
 *********************************
 
-The system parser object "SystemParser" instanciates Systems and Genes objects from XML system definitions (see :ref:`system-definition-grammar-label`).
+The system parser object "SystemParser" instanciates Systems and Genes objects from XML system definitions (see :ref:`system_definition`).
 The parsing consists in three phases.
 
 Phase 1. 

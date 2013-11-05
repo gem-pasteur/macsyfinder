@@ -1,8 +1,5 @@
 .. _system_definition:
 
-
-.. _system-definition-grammar-label:
-
 ****************************
 Secretion systems definition
 ****************************
@@ -17,7 +14,10 @@ Three distinct types of components can be used to model a given system content, 
 * **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
-Here is the XML hierarchy:
+.. _system-definition-grammar-label:
+
+The XML hierarchy
+-----------------
 
 * The element root is "system". 
 
