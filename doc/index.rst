@@ -4,12 +4,6 @@
    contain the root `toctree` directive.
 
 
-.. image:: images/logo_buen.jpg
- :height: 50px
- :width: 100 px
- :align: left
-
-
 Welcome to TXSScan's documentation! 
 ===================================
 	
@@ -22,22 +16,18 @@ Welcome to TXSScan's documentation!
     - defined **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-Table of Contents   
-=================
+TXSScan documentation contents   
+==============================
 .. toctree::
    :maxdepth: 2
 
    installation 
    implementation
    system_definition
+   system_parser  
+   functioning
    config
    database 
-   system
-   system_parser
-   gene
-   profile
-   HMMReport
-   functioning
    outputs
    txsscan_error
 
