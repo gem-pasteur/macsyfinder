@@ -641,7 +641,7 @@ class Config(object):
 
     def save(self, dir_path ):
         """
-        save the configuration used for this run in ini format file
+        save the configuration used for this run in the ini format file
         """
         parser = SafeConfigParser()
         parser.add_section( 'base')
@@ -675,7 +675,7 @@ class Config(object):
     @property
     def sequence_db(self):
         """
-        :return: the path to the sequence database
+        :return: the path to the input sequence dataset (in fasta format)
         :rtype: string 
         """
         return self.options['sequence_db']
@@ -683,7 +683,7 @@ class Config(object):
     @property
     def db_type(self):
         """
-        :return: the type of the sequences data base. the allowed values are :'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
+        :return: the type of the input sequence dataset. The allowed values are :'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
         :rtype: string
         """
         return self.options['db_type']
@@ -691,7 +691,7 @@ class Config(object):
     @property
     def build_indexes(self):
         """
-        :return: True if the indexes must be rebuild, False otherwise
+        :return: True if the indexes must be rebuilt, False otherwise
         :rtype: boolean
         """
         return self.options['build_indexes']
@@ -699,7 +699,7 @@ class Config(object):
     @property
     def replicon_topology(self):
         """
-        :return: the topology of the replicons. 2 values are supported 'linear' (default) and circular
+        :return: the topology of the replicons. Two values are supported 'linear' (default) and circular. Only relevant for 'ordered' datasets
         :rtype: string
         """
         return self.options['replicon_topology']
@@ -707,14 +707,14 @@ class Config(object):
     @property
     def topology_file(self):
         """
-        :return: the topology of the replicons. 2 values are supported 'linear' (default) and circular
+        :return: the path to the file of replicons topology. 
         :rtype: string
         """
         return self.options['topology_file']
 
     def inter_gene_max_space(self, system):
         """
-        :return: the maximum space allowed between 2 genes for the system
+        :return: the maximum number of components with no match allowed between two genes with a match to consider them contiguous(at the system level)
         :rtype: integer 
         """
         try:
@@ -724,7 +724,7 @@ class Config(object):
 
     def min_mandatory_genes_required(self, system):
         """
-        :return: the mandatory genes quorum for the system
+        :return: the mandatory genes quorum to assess the system presence
         :rtype: integer 
         """
         try:
@@ -734,7 +734,7 @@ class Config(object):
 
     def min_genes_required(self, system):
         """
-        :return: the genes quorum for the system
+        :return: the genes (mandatory+allowed) quorum to assess the system presence
         :rtype: integer
         """
         try:
@@ -745,7 +745,7 @@ class Config(object):
     @property
     def hmmer_exe(self):
         """
-        :return: the name of the binary to excute to use profiles
+        :return: the name of the binary to execute for homology search from HMM protein profiles (Hmmer)
         :rtype: string 
         """
         return self.options['hmmer_exe']
@@ -753,7 +753,7 @@ class Config(object):
     @property
     def index_db_exe(self):
         """
-        :return: the name of the binary to indexe the database for hmm
+        :return: the name of the binary to index the input sequences dataset for Hmmer
         :rtype: string 
         """
         return self.options['index_db_exe']
@@ -761,7 +761,7 @@ class Config(object):
     @property
     def e_value_res(self):
         """
-        :return: The e_value to apply for searching genes in sequences data base
+        :return: The e_value threshold used by Hmmer to report hits in the Hmmer raw output file
         :rtype: float
         """
         return self.options['e_value_res']
@@ -769,7 +769,7 @@ class Config(object):
     @property
     def i_evalue_sel(self):
         """
-        :return: the i_evalue threshold to selct a hit in the hmm report
+        :return: the i_evalue threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
         :rtype: float
         """
         return self.options['i_evalue_sel']
@@ -777,7 +777,7 @@ class Config(object):
     @property
     def coverage_profile(self):
         """
-        :return: the coverage threshold to select a hit in the hmm report
+        :return: the coverage threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
         :rtype: float
         """
         return self.options['coverage_profile']
@@ -785,7 +785,7 @@ class Config(object):
     @property
     def def_dir(self):
         """
-        :return: the path to the directory where are the xml definitions of sectretion systems
+        :return: the path to the directory where are stored definitions of secretion systems (.xml files)
         :rtype: string
         """
         return self.options['def_dir']
@@ -793,7 +793,7 @@ class Config(object):
     @property
     def res_search_dir(self):
         """
-        :return the path to the directory where are the results of txsscan runs
+        :return the path to the directory to store results of TXSScan runs
         :rtype: string
         """
         return self.options['res_search_dir']
@@ -801,7 +801,7 @@ class Config(object):
     @property
     def working_dir(self):
         """
-        :return: the path of the working directory of this run
+        :return: the path to the working directory to use for this run
         :rtpe: string
         """
         return self.options['working_dir']
@@ -809,7 +809,7 @@ class Config(object):
     @property
     def res_search_suffix(self):
         """
-        :return: the suffix for hmm output files
+        :return: the suffix for Hmmer raw output files
         :rtype: string
         """
         return self.options['res_search_suffix']
@@ -817,7 +817,7 @@ class Config(object):
     @property
     def profile_dir(self):
         """
-        :return: the path to the directory where are the gene profiles
+        :return: the path to the directory where are the HMM protein profiles which corresponds to Gene
         :rtype: string
         """
         return self.options['profile_dir']
@@ -833,7 +833,7 @@ class Config(object):
     @property
     def res_extract_suffix(self):
         """
-        :return: the suffix of extract files (after HMM output parsing)
+        :return: the suffix of extract files (tabulated files after HMM output parsing and filtering of hits)
         :rtype: string
         """
         return self.options['res_extract_suffix']
@@ -841,7 +841,7 @@ class Config(object):
     @property
     def worker_nb(self):
         """
-        :return: the maximum number of parrallel jobs
+        :return: the maximum number of parallel jobs
         :rtype: int
         """
         return self.options.get('worker_nb', None)
@@ -849,7 +849,7 @@ class Config(object):
     @property
     def previous_run(self):
         """
-        :return: the path to previous run (directory) to use to recover hmm output
+        :return: the path to the previous run directory to use (to recover Hmmer raw output)
         :rtype: string
         """
         return self.options.get('previous_run', None)
