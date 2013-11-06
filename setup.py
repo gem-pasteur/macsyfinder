@@ -1,20 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
+import sys
+import os
+
 from distutils import log
 from distutils.core import setup
 from distutils.core import Command
 #from distutils.command.install_egg_info import install_egg_info
 from distutils.command.build import build
 from distutils.command.install import install
+from distutils.command.install_data import install_data as _install_data
 from distutils.util import get_platform
 from distutils.errors import DistutilsOptionError, DistutilsPlatformError
 from distutils.versionpredicate import VersionPredicate
 from distutils.errors import DistutilsFileError
 from distutils.util import subst_vars as distutils_subst_vars
+from distutils.util import change_root, convert_path
 
-import time
-import sys
-import os
 
 class check_and_build( build ):
     def run(self):
@@ -143,7 +146,8 @@ class test(Command):
             if self.warn_dir and build_plat != get_platform():
                 raise DistutilsPlatformError("Can't test when "
                                              "cross-compiling")
-        sys.path.insert(0, os.path.join(os.getcwd(), 'test'))
+        TXSSCAN_HOME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test')
+        sys.path.insert(0, TXSSCAN_HOME)
         import main
         if self.build_lib is None:
             if os.path.exists(self.build_purelib):
@@ -152,9 +156,10 @@ class test(Command):
                 self.build_lib = self.build_platlib
 
         print "running test"
+        os.environ['TXSSCAN_HOME'] = os.getcwd()
         test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
-        res_path = os.path.join(self.build_lib, ".tests_results")
-
+        res_path = os.path.join(self.build_base, ".tests_results")
+        print "res_path = ", res_path
         with open(res_path, 'w') as _file:
             print >> _file, int(test_res.wasSuccessful())
         if not test_res.wasSuccessful():
@@ -165,8 +170,8 @@ class test(Command):
 class install_txsscan(install):
 
     def run(self):
-        test_res_path = os.path.join(self.build_lib, ".tests_results")
-        test_res = 0
+        test_res_path = os.path.join(self.build_base, ".tests_results")
+        test_res = 0 # test fails
         if os.path.exists(test_res_path):
             with open(test_res_path) as _file:
                 test_res = int(_file.readline().strip())
@@ -176,14 +181,13 @@ class install_txsscan(install):
             msg = """Unit tests are available. It is _highly_ recommended to run tests now, before installing
 to run test, run 'python setup.py test'"""
 
-        if not test_res: #test_res = 0 => test fails ore test not ran
+        if not test_res: #test_res = 0 => test fails or test not ran
             test_OK = raw_input( "{}\nAre you sure you want to install anyway (y/N) ?".format(msg))
             if test_OK.lower() in ('y', 'yes'):
                 test_OK = True
             else:
                 test_OK = False
         else:
-            #test_res = 1
             test_OK = True
         if test_OK:
             for _file in fix_prefix:
@@ -193,6 +197,158 @@ to run test, run 'python setup.py test'"""
                 os.unlink(input_file)
                 self.move_file(output_file, input_file) 
                 install.run(self)
+
+class install_data(_install_data):
+    
+    #install.sub_commands += [('install_data', lambda self:True)]
+     
+    user_options = [
+        ('install-dir=', 'd',
+         "base directory for installing data files "
+         "(default: installation base dir)"),
+        ('root=', None,
+         "install everything relative to this alternate root directory"),
+        ('force', 'f', "force installation (overwrite existing files)"),
+        ]
+ 
+    boolean_options = ['force']
+ 
+    def initialize_options(self):
+        self.install_dir = None
+        self.outfiles = []
+        self.root = None
+        self.force = 0
+        self.data_files = self.distribution.data_files
+        self.warn_dir = 1
+ 
+    def finalize_options(self):
+        inst = self.distribution.command_options.get('install')
+        if 'install_data' in inst:
+            self.install_dir = inst['install_data'][1]
+        elif 'prefix' in inst:
+            self.install_dir = os.path.join(inst['prefix'][1], 'share')
+        else:
+            self.install_dir = os.path.join('/', 'usr', 'share')
+        self.set_undefined_options('install',
+                                   ('root', 'root'),
+                                   ('force', 'force'),
+                                  )
+
+    
+    def run(self):
+        self.mkpath(self.install_dir)
+        
+        for f in self.data_files:
+            if isinstance(f, str):
+                # it's a simple file, so copy it
+                f = convert_path(f)
+                if self.warn_dir:
+                    self.warn("setup script did not provide a directory for "
+                              "'%s' -- installing right in '%s'" %
+                              (f, self.install_dir))
+                (out, _) = self.copy_file(f, self.install_dir)
+                self.outfiles.append(out)
+            else:
+                # it's a tuple with path to install to and a list of path
+                dir = convert_path(f[0])
+                if not os.path.isabs(dir):
+                    dir = os.path.join(self.install_dir, dir)
+                elif self.root:
+                    dir = change_root(self.root, dir)
+                self.mkpath(dir)
+ 
+                if f[1] == []:
+                    # If there are no files listed, the user must be
+                    # trying to create an empty directory, so add the
+                    # directory to the list of output files.
+                    self.outfiles.append(dir)
+                else:
+                    # Copy files, adding them to the list of output files.
+                    for data in f[1]:
+                        data = convert_path(data)#return name that will work on the native filesystem
+                        if os.path.isdir(data):
+                            out = self.copy_tree(data, dir)
+                            self.outfiles.extend(out)
+                        else:
+                            (out, _) = self.copy_file(data, dir)
+                            self.outfiles.append(out)
+
+ 
+class install_conf(install_data):
+     
+    install.sub_commands += [('install_conf', lambda self:True)]
+     
+    description = "installation directory for configuration files"
+    
+    setattr(install, 'install_conf', None)
+    install.user_options.append(('install-conf=', None, description)) 
+    
+    user_options = [
+        ('install-conf=', 'd',
+         "base directory for installing configuration files "
+         "(default: installation base etc)"),
+        ('root=', None,
+         "install everything relative to this alternate root directory"),
+        ('force', 'f', "force installation (overwrite existing files)"),
+        ]
+ 
+    boolean_options = ['force']
+     
+    def initialize_options(self):
+        self.install_dir = None
+        self.outfiles = []
+        self.root = None
+        self.force = 0
+        self.conf_files = conf_files #as defined at the top of this file
+        self.warn_dir = 1
+    
+ 
+    def finalize_options(self):
+        inst = self.distribution.command_options.get('install')
+        print "inst = ", inst
+        if 'install_conf' in inst:
+            self.install_dir = inst['install_conf'][1]
+        elif 'prefix' in inst:
+            self.install_dir = os.path.join(inst['prefix'][1], 'etc')
+        else:
+            self.install_dir = '/etc'
+        self.set_undefined_options('install',
+                                   ('root', 'root'),
+                                   ('force', 'force'),
+                                  )
+         
+    def run(self):
+        self.mkpath(self.install_dir)
+        for f in self.conf_files:
+            if isinstance(f, str):
+                # it's a simple file, so copy it
+                f = convert_path(f)
+                if self.warn_dir:
+                    self.warn("setup script did not provide a directory for "
+                              "'%s' -- installing right in '%s'" %
+                              (f, self.install_dir))
+                (out, _) = self.copy_file(f, self.install_dir)
+                self.outfiles.append(out)
+            else:
+                # it's a tuple with path to install to and a list of files
+                dir = convert_path(f[0])
+                if not os.path.isabs(dir):
+                    dir = os.path.join(self.install_dir, dir)
+                elif self.root:
+                    dir = change_root(self.root, dir)
+                self.mkpath(dir)
+
+                if f[1] == []:
+                    # If there are no files listed, the user must be
+                    # trying to create an empty directory, so add the
+                    # directory to the list of output files.
+                    self.outfiles.append(dir)
+                else:
+                    # Copy files, adding them to the list of output files.
+                    for conf in f[1]:
+                        conf = convert_path(conf)
+                        (out, _) = self.copy_file(conf, dir)
+                        self.outfiles.append(out)
 
 
 def subst_vars(src, dst, vars):
@@ -213,7 +369,14 @@ def subst_vars(src, dst, vars):
 
 require_python = [ 'python (>=2.7, <3.0)' ]
 require_packages = []
-fix_prefix = ["txsscanlib/config.py"]
+
+#I cannot succeed to inject conf_file in a distribution
+#so i put it at the top level :-(
+conf_files = [('txsscan', ['etc/txsscan.conf'])]
+fix_conf = ["txsscanlib/config.py"]
+
+fix_data = ["txsscanlib/config.py"]
+
 
 setup(name        = 'txsscan',
       version     =  time.strftime("%Y%m%d"),
@@ -225,9 +388,14 @@ setup(name        = 'txsscan',
                     ] ,
       packages    = ['txsscanlib'],
       scripts     = [ 'bin/txsscan' ] ,
-      data_files=[('etc/txsscan', ['etc/txsscan.conf'])],
+      data_files = [('txsscan/DEF', ['data/DEF/']),
+                    ('txsscan/profiles', ['data/profiles/'])
+                    ],
       cmdclass= { 'build' : check_and_build ,
                   'test': test,
-                  'install' : install_txsscan
+                  'install' : install_txsscan,
+                  'install_data' : install_data,
+                  'install_conf' : install_conf
                  }
       )
+
