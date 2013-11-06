@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
         rep = db[RepliconDB.ordered_replicon_name]
         self.assertEqual(rep.topology, self.cfg.replicon_topology)
         self.assertEqual(rep.min, 1)
-        self.assertEqual(rep.max, 5569)
+        self.assertEqual(rep.max, 52)
 
 
     def test_fill_gembase_min_max_default_topology(self):
