@@ -61,7 +61,7 @@ genome_options.add_argument(  "--db_type" ,
                        choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                        dest = "db_type",
                        default = None,
-                       help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName_SequenceID\"." )
+                       help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName SequenceID\"." )
 genome_options.add_argument(  "--replicon_topology" ,
                        choices = ['linear', 'circular'],
                        dest = "replicon_topology",
@@ -119,21 +119,21 @@ hmmer_options.add_argument( '--e_value_search',
                      dest = 'e_value_res',
                      type = float,
                      default = None,
-                     help = 'Maximal e-value for hits to be reported during Hmmer search.')
+                     help = 'Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
 
 hmmer_options.add_argument('--i_evalue_select',
                      action = 'store',
                     dest = 'i_evalue_sel',
                     type = float,
                     default = None , 
-                    help = 'Maximal independent e-value for Hmmer hits to be selected for system detection.')
+                    help = 'Maximal independent e-value for Hmmer hits to be selected for system detection. (default = 0.001)')
 
 hmmer_options.add_argument('--coverage_profile',
                      action = 'store',
                     dest = 'coverage_profile',
                     type = float,
                     default = None , 
-                    help = 'Minimal profile coverage required in the hit alignment to allow the hit selection for system detection.')
+                    help = 'Minimal profile coverage required in the hit alignment to allow the hit selection for system detection. (default = 0.5)')
 
 dir_options =  parser.add_argument_group(title = "Path options", description = None)
 dir_options.add_argument('-d', '--d',

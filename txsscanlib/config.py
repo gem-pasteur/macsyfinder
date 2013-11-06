@@ -24,10 +24,10 @@ import logging
 
 class Config(object):
     """
-    parse configuration files and handle the configuration according the file location precedence
+    parse configuration files and handle the configuration according to the following file location precedence:
     /etc/txsscan/txsscan.conf < ~/.txsscan/txsscan.conf < .txsscan.conf
-    if a configuration file is given on the command line, only this file is used.
-    in fine the arguments passed have the highest priority
+    If a configuration file is given on the command-line, this file will be used.
+    *In fine* the arguments passed on the command-line have the highest priority.
     """
     
     #if a new option is added think to add it also (if needed) in save
@@ -63,17 +63,21 @@ class Config(object):
                 build_indexes = None
                 ):
         """
-        :param cfg_file: the path of txsscan configuration file to use 
+        :param cfg_file: the path to the TXSScan configuration file to use 
         :type cfg_file: string
-        :param previous_run: the path of the directory of a previous run
+        :param previous_run: the path to the results directory of a previous run
         :type previous_run: string 
-        :param sequence_db: the path to the sequence database
+        :param sequence_db: the path to the sequence input dataset (fasta format)
         :type sequence_db: string
-        :param db_type: the type of genes base 4 values are allowed ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered') 
+        :param db_type: the type of dataset to deal with. 
+         \"unordered_replicon\" corresponds to a non-assembled genome, 
+         \"unordered\" to a metagenomic dataset, 
+         \"ordered_replicon\" to an assembled genome, and 
+         \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
         :type db_type: string
-        :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningfull only if the db_type is 'ordered_replicon' or 'gembase' 
+        :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningful only if the db_type is 'ordered_replicon' or 'gembase' 
         :type replicon_topology: string
-        :param topology_file: a file of mapping between replicons with their respectives topology 
+        :param topology_file: a tabular file of mapping between replicon names and the corresponding topology (e.g. \"RepliconA linear\") 
         :type topology_file: string
         :param inter_gene_max_space:
         :type inter_gene_max_space: list of list of 2 elements [[ string system, integer space] , ...]
@@ -81,17 +85,17 @@ class Config(object):
         :type min_mandatory_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
         :param min_genes_required:
         :type min_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
-        :param hmmer_exe: the hmmsearch executabe
+        :param hmmer_exe: the Hmmer \"hmmsearch\" executable
         :type hmmer_exe: string
-        :param index_db_exe: the indexer executable (makeblastdb or formatdb)
+        :param index_db_exe: the indexer executable (\"makeblastdb\" or \"formatdb\")
         :type index_db_exe: string
-        :param e_value_res: à déterminer
+        :param e_value_res: maximal e-value for hits to be reported during Hmmer search
         :type  e_value_res: float
-        :param i_evalue_sel: à déterminer
+        :param i_evalue_sel: maximal independent e-value for Hmmer hits to be selected for system detection
         :type  i_evalue_sel: float
-        :param coverage_profile: a déterminer
+        :param coverage_profile: minimal profile coverage required in the hit alignment to allow the hit selection for system detection
         :type coverage_profile: float
-        :param def_dir: the path to the definition directory
+        :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
         :param res_search_dir: à déterminer
         :type  res_search_dir: string
@@ -99,17 +103,17 @@ class Config(object):
         :type  res_search_suffix: string
         :param res_extract_suffix: à déterminer
         :type  res_extract_suffix: string
-        :param profile_dir: à déterminer
+        :param profile_dir: path to the profiles directory
         :type  profile_dir: string
-        :param profile_suffix: à déterminer
+        :param profile_suffix: the suffix of profile files. For each 'Gene' element, the corresponding profile is searched in the 'profile_dir', in a file which name is based on the Gene name + the profile suffix. 
         :type  profile_suffix: string
         :param log_level: the level of log output
         :type log_level: int
-        :param log_file: the path of file to write logs 
+        :param log_file: the path to the directory to write TXSScan log files
         :type log_file: string
-        :param worker_nb: the max number of processes in parallel
+        :param worker_nb: maximal number of processes to be used in parallel (multi-thread run)
         :type worker_nb: int
-        :param build_indexes: build the indexes from the sequence base in fasta format
+        :param build_indexes: build the indexes from the sequence dataset in fasta format
         :type build_indexes: boolean
         """
         
@@ -129,7 +133,7 @@ class Config(object):
                           'hmmer_exe' : 'hmmsearch',
                           'index_db_exe': 'makeblastdb',
                           'e_value_res' : "1",
-                          'i_evalue_sel' : "0.5",
+                          'i_evalue_sel' : "0.001",
                           'coverage_profile' : "0.5",
                           'def_dir': './DEF',
                           'res_search_dir' : './datatest/res_search',
@@ -158,15 +162,15 @@ class Config(object):
 
     def _validate(self, cmde_line_opt, cmde_line_values):
         """
-        get all configuration values and validate the values
-        create the working directory
+        Get all configuration values and check the validity of their values
+        Create the working directory
 
         :param cmde_line_opt: the options from the command line
         :type cmde_line_opt: dict, all values are cast in string
         :param cmde_line_values: the options from the command line
         :type cmde_line_values: dict, values are not cast
         :return: all the options for this execution
-        :rtype: dictionnary
+        :rtype: dictionary
         """  
         options = {}
         if 'sequence_db' in cmde_line_opt:
@@ -180,15 +184,15 @@ class Config(object):
             else:
                 options['res_search_dir'] = self._defaults['res_search_dir']
         if not os.path.exists(options['res_search_dir']):
-            raise ValueError( "%s: No such research search directory" % options['res_search_dir'])
+            raise ValueError( "%s: This results directory does not exist" % options['res_search_dir'])
         if not os.access(options['res_search_dir'], os.W_OK):
-            raise ValueError("research search directory (%s) is not writable" % options['res_search_dir'])
+            raise ValueError("The results directory (%s) is not writable" % options['res_search_dir'])
 
         working_dir = os.path.join(options['res_search_dir'], "txsscan-" + strftime("%Y%m%d_%H-%M-%S"))
         try:
             os.mkdir(working_dir)
         except OSError, err:
-            raise ValueError("cannot create working directory %s : %s" % (working_dir, err))
+            raise ValueError("cannot create TXSScan working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
         try:
@@ -241,17 +245,17 @@ class Config(object):
                 if os.path.exists(cmde_line_opt['previous_run']):
                     options['previous_run'] = cmde_line_opt['previous_run']
                 else:
-                    raise ValueError( "previous run '%s' not found" % cmde_line_opt['previous_run'])
+                    raise ValueError( "previous run directory '%s' was not found" % cmde_line_opt['previous_run'])
             try:
                 options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
             except NoSectionError:
                 sequence_db = cmde_line_opt.get( 'sequence_db' , None )
                 if sequence_db is None:
-                    raise ValueError( "No genome sequence file specified")
+                    raise ValueError( "No input sequence file specified")
                 else:
                     options['sequence_db'] = sequence_db
             if not os.path.exists(options['sequence_db']):
-                raise ValueError( "%s: No such sequence data " % options['sequence_db'])
+                raise ValueError( "%s: The input sequence file does not exist " % options['sequence_db'])
 
             val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
             if 'db_type' in cmde_line_opt:
@@ -260,9 +264,9 @@ class Config(object):
                 try:
                     options['db_type'] = self.parser.get( 'base', 'type') 
                 except (NoSectionError, NoOptionError):
-                    raise ValueError( "you must specify the type of the genome base (%s)." %  ', '.join(val_4_db_type) )
+                    raise ValueError( "You must specify the type of the input dataset (%s)." %  ', '.join(val_4_db_type) )
             if options['db_type'] not in val_4_db_type:
-                raise ValueError( "allowed values for base type are : %s" % ', '.join(val_4_db_type))    
+                raise ValueError( "Allowed values for the input dataset are : %s" % ', '.join(val_4_db_type))    
             val_4_replicon_topology = ('linear', 'circular')
             if 'replicon_topology' in cmde_line_opt:
                 options['replicon_topology'] = cmde_line_opt['replicon_topology']
@@ -272,9 +276,9 @@ class Config(object):
                 except (NoSectionError, NoOptionError):
                     options['replicon_topology'] =  self._defaults['replicon_topology']
             if options['replicon_topology'] not in val_4_replicon_topology:
-                raise ValueError( "allowed values for base replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
+                raise ValueError( "Allowed values for dataset replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
             if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
-                self._log.warning("db_type is set to %s, replicon_topology is ignored")
+                self._log.warning("As the input dataset type 'db_type' is set to %s, the replicon_topology file was ignored")
             
             if 'topology_file' in cmde_line_opt:
                 options['topology_file'] = cmde_line_opt['topology_file']
@@ -296,9 +300,9 @@ class Config(object):
                             interval = int( interval)
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
-                            raise ValueError("the interval for system %s must be an integer, you provided %s on config file" % (system, interval))
+                            raise ValueError("The 'inter_gene_max_space for system %s must be an integer, but you provided %s in the configuration file" % (system, interval))
                 except StopIteration:
-                    raise ValueError( "invalid syntax for inter_gene_max_space: you must have a list of systems, interval separated by spaces")
+                    raise ValueError( "Invalid syntax for 'inter_gene_max_space': you must have a list of systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if not 'inter_gene_max_space' in options:
                     options['inter_gene_max_space'] = {}
@@ -308,7 +312,7 @@ class Config(object):
                         interval = int( interval)
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
-                        raise ValueError("the interval for system %s must be an integer, you provided %s on command line" % (system, interval))
+                        raise ValueError("The 'inter_gene_max_space for system %s must be an integer, but you provided %s on command line" % (system, interval))
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
                 min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required" ) 
@@ -321,9 +325,9 @@ class Config(object):
                             quorum_mandatory_genes = int(quorum_mandatory_genes)
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
-                            raise ValueError( "the min mandatory genes required for system %s must be an integer, you provided %s on config file" % (system, quorum_mandatory_genes))
+                            raise ValueError( "The value for 'min_mandatory_genes_required' option for system %s must be an integer, but you provided %s in the configuration file" % (system, quorum_mandatory_genes))
                 except StopIteration:
-                    raise ValueError( "invalid syntax for min_mandatory_genes_required: you must have a list of systems, interval separated by spaces")
+                    raise ValueError( "Invalid syntax for 'min_mandatory_genes_required': you must have a list of systems and corresponding 'min_mandatory_genes_required' separated by spaces")
             if 'min_mandatory_genes_required' in cmde_line_values and cmde_line_values['min_mandatory_genes_required'] is not None: 
                 if not 'min_mandatory_genes_required' in options:
                     options['min_mandatory_genes_required'] = {}
@@ -333,7 +337,7 @@ class Config(object):
                         quorum_mandatory_genes = int(quorum_mandatory_genes)
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
-                        raise ValueError("the min mandatory genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_mandatory_genes))
+                        raise ValueError("The value for 'min_mandatory_genes_required' option for system %s must be an integer, but you provided %s on command line" % (system, quorum_mandatory_genes))
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
                 min_genes_required = self.parser.get("system", "min_genes_required") 
@@ -346,9 +350,9 @@ class Config(object):
                             quorum_genes = int(quorum_genes)
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
-                            raise ValueError("the min genes required for system %s must be an integer, you provided %s on config file" % (system, quorum_genes))
+                            raise ValueError("The value for 'min_genes_required' option for system %s must be an integer, but you provided %s in the configuration file" % (system, quorum_genes))
                 except StopIteration:
-                    raise ValueError("invalid syntax for min_genes_required: you must have a list of systems, interval separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and corresponding 'min_mandatory_genes_required' separated by spaces")
             if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
                 if not 'min_genes_required' in options:
                     options['min_genes_required'] = {}
@@ -358,7 +362,7 @@ class Config(object):
                         quorum_genes = int( quorum_genes)
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
-                        raise ValueError("the min genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_genes))
+                        raise ValueError("The value for 'min_genes_required' option for system %s must be an integer, but you provided %s on command line" % (system, quorum_genes))
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
                 min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required" ) 
