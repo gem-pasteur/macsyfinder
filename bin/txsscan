@@ -22,10 +22,11 @@ if 'TXSSCAN_HOME' in os.environ:
 try:
     from txsscanlib.config import Config
 except ImportError , err:
-    msg = "cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
+    msg = "Cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 
 from operator import attrgetter # To be used with "sorted"
+from textwrap import dedent
 from txsscanlib.system_parser import SystemParser
 from txsscanlib.search_genes import search_genes
 from txsscanlib.database import Indexes
@@ -33,105 +34,118 @@ from txsscanlib.search_systems import search_systems
 from txsscanlib.system import system_bank
 from txsscanlib.gene import gene_bank
 
-parser = argparse.ArgumentParser(description=" Txsscan is a tool for the detection of protein secretion systems in diderm bacteria.\nIt also provides a framework fully parametrizable with a dedicated syntax to implement the detection of new systems (function units encoded by one or more genes, contiguous or not in genomes) for which Hmmer protein profiles are available. ")
+parser = argparse.ArgumentParser(epilog="For more details, visit the TXSScan website and see the TXSScan documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
+     description=dedent('''
+
+=================================================== Outer Membrane
+         |_   _\ \/ / __/ __| __ __ _ _ _  
+========== | |  >  <\__ \__ \/ _/ _` | ' \ ======== Periplsam 
+           |_| /_/\_\___/___/\__\__,_|_||_|
+=================================================== Inner Membrane
+                           
+Txsscan is a tool for the detection of protein secretion systems 
+of diderm bacteria from a protein dataset.   
+     ''') )
+#, formatter_class=argparse.RawDescriptionHelpFormatter)
+#, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("systems",
                     nargs = '+',
-                    help = "aide a définir")
-genome_options =  parser.add_argument_group(title = "genome options")
+                    help = "The systems to detect. This is an obligatory option with no keyword associated to it. To detect all the protein secretion systems and related appendages: set to \"all\" (case insensitive). Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
+genome_options =  parser.add_argument_group(title = "Input dataset options")
 genome_options.add_argument("--sequence_db",
                     action = 'store',
                     dest = 'sequence_db',
-                    help = "aide a définir")
+                    help = "Path to the sequence dataset in fasta format.")
 genome_options.add_argument(  "--db_type" ,
                        choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                        dest = "db_type",
                        default = None,
-                       help = 'the genes are ordered')
+                       help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName_SequenceID\"." )
 genome_options.add_argument(  "--replicon_topology" ,
                        choices = ['linear', 'circular'],
                        dest = "replicon_topology",
                        default = None,
-                       help = "the topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
+                       help = "The topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
 genome_options.add_argument(  "--topology-file" ,
                        dest = "topology-file",
                        default = None,
-                       help = "the topology file allow to specify a topology (linear or circular) for each replicon (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'")
+                       help = "Topology file path. The topology file allows to specify a topology (linear or circular) for each replicon (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. A topology file is a tabular file with two columns: the 1st is the replicon name, and the 2nd the corresponding topology:\n\"RepliconA\tlinear\" ")
 genome_options.add_argument(  "--idx" ,
                        action = 'store_true',
                        dest = "build_indexes",
                        default = False,
-                       help = "force to build the indexes even there are presents (default = False)")
+                       help = "Forces to build the indexes for the sequence dataset even if they were presviously computed and present at the dataset location (default = False)")
 
-system_options =  parser.add_argument_group(title = "system options")
+system_options =  parser.add_argument_group(title = "Systems detection options")
 system_options.add_argument( "--inter-gene-max-space",
                              action = 'append',
                              nargs = 2,
                              dest = 'inter_gene_max_space',
                              default = None,
-                             help = "maximum space between 2 genes, the fisrt value must match to a system the second value to an interval,\
-                              this option can appear multiple times: --inter-gene-max-space T2SS 32 --inter-gene-max-space Flagellum 200"
+                             help = "Co-localization criterion: maximum number of components non-matched by a profile allowed between two matched components for them to be considered contiguous. Option only meaningful for 'ordered' datasets. The fisrt value must match to a system, the second to a number of components.\
+                              This option can be repeated several times:\n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
                              )
 system_options.add_argument( "--min-mandatory-genes-required",
                              action = 'append',
                              nargs = 2,
                              dest = 'min_mandatory_genes_required',
                              default = None,
-                             help = "the mandatory genes quorum for the system, the fisrt value must match to a system the second value to an integer,\
-                              this option can appear multiple times: --min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
+                             help = "The minimal number of mandatory genes required for system assessment. The first value must correspond to a system name, the second value to an integer.\
+                              This option can be repeated several times:\n \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                              )
 system_options.add_argument( "--min-genes-required",
                              action = 'append',
                              nargs = 2,
                              dest = 'min_genes_required',
                              default = None,
-                             help = "the genes quorum for the system, the fisrt value must match to a system the second value to an integer,\
-                              this option can appear multiple times: --min-genes-required T2SS 15 --min-genes-required Flagellum 10"
+                             help = "The minimal number of genes required for system assessment (includes both 'mandatory' and 'allowed' components). The first value must correspond to a system name, the second value to an integer.\
+                              This option can be repeated several times:\n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                              )
-hmmer_options =  parser.add_argument_group(title = "hmmer options")
+hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
 hmmer_options.add_argument( '--hmmer', 
                             action = 'store',
                             dest = 'hmmer_exe',
                             default = None, 
-                            help = 'hmm binary')
+                            help = 'Path to the Hmmer program.')
 hmmer_options.add_argument( '--index_db', 
                             action = 'store',
                             dest = 'index_db_exe',
                             default = None, 
-                            help = 'the indexer to use for hmmer. The value can be either makeblastdb or formatdb or the path to one of these binary (default = makeblastb)')
+                            help = "The indexer to be used for Hmmer. The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary (default = makeblastb)")
 
 hmmer_options.add_argument( '--e_value_search',
                      action = 'store',
                      dest = 'e_value_res',
                      type = float,
                      default = None,
-                     help = 'help for e_value_res')
+                     help = 'Maximal e-value for hits to be reported during Hmmer search.')
 
 hmmer_options.add_argument('--i_evalue_select',
                      action = 'store',
                     dest = 'i_evalue_sel',
                     type = float,
                     default = None , 
-                    help = 'help for i_evalue_select')
+                    help = 'Maximal independent e-value for Hmmer hits to be selected for system detection.')
 
 hmmer_options.add_argument('--coverage_profile',
                      action = 'store',
                     dest = 'coverage_profile',
                     type = float,
                     default = None , 
-                    help = 'help for coverage_profile')
+                    help = 'Minimal profile coverage required in the hit alignment to allow the hit selection for system detection.')
 
-dir_options =  parser.add_argument_group(title = "directories options", description = None)
+dir_options =  parser.add_argument_group(title = "Path options", description = None)
 dir_options.add_argument('-d', '--d',
                     action = 'store',
                     dest = 'def_dir',
                     default = None,
-                    help = 'the path to the systems definition files')
+                    help = 'Path to the systems definition files.')
 dir_options.add_argument('-r', '--research-search',
                     action = 'store',
                     dest = 'res_search_dir',
                     default = None,
-                    help = 'aide a définir')
+                    help = 'Path to the directory to store TXSScan search results directories.')
 dir_options.add_argument( '--research-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
@@ -146,40 +160,40 @@ dir_options.add_argument('-p', '--profile_dir',
                     action = 'store',
                     dest = 'profile_dir',
                     default = None,
-                    help = 'the path to the profiles directory')
+                    help = 'Path to the profiles directory.')
 dir_options.add_argument('--profile-suffix',
                     action = 'store',
                     dest = 'profile_suffix',
                     default = None,
-                    help = 'the suffix of profile files')
+                    help = "The suffix of profile files. For each 'Gene' element, the corresponding profile is searched in the 'profile_dir', in a file which name is based on the Gene name + the profile suffix. For instance, if the Gene is named 'gspG' and the suffix is '.hmm3', then the profile should be placed at the specified location and be named 'gspG.hmm3'")
 
-general_options =  parser.add_argument_group(title = "general options", description = "general options")
+general_options =  parser.add_argument_group(title = "General options", description = None)
 general_options.add_argument("-w", "--worker",
                     action = 'store',
                     dest = 'worker_nb',
                     type = int,
                     default = None,
-                    help = "number of worker not yet implemented")
+                    help = "Number of workers to be used by TXSScan. In the case the user wants to run TXSScan in a multi-thread mode.")
 general_options.add_argument( "-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
                       default = 0,
-                      help = "increase the verbosity level. There is 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
+                      help = "Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
 general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
                     default = None,
-                    help = "the path to log file")
+                    help = "Path to the directory where to store the 'txsscan.log' log file.")
 general_options.add_argument("--config",
                     action = 'store',
                     dest = 'cfg_file',
                     default = None,
-                    help = "the path to a txsscan file to use")
+                    help = "Path to a putative TXSScan configuration file to be used.")
 general_options.add_argument("--previous-run",
                     action = 'store',
                     dest = 'previous_run',
                     default = None,
-                    help = """path to a previous run. Skip the step of hmmsearch. 
+                    help = """Path to a previous TXSScan run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
 (conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
 --e_value_res, --db_type, --hmmer_exe)""")
 
@@ -192,7 +206,7 @@ if args.previous_run and (args.cfg_file or
                           args.e_value_res or
                           args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run confict with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --db_type, --hmmer_exe""")
+    parser.error(""" --previous-run conficts with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --db_type, --hmmer_exe""")
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
@@ -264,5 +278,5 @@ if len(all_hits)> 0:
     systems_to_detect=sorted(systems_to_detect, key=attrgetter('name'))
     search_systems(all_hits, systems_to_detect, config)
 else:
-    logger.info("No hit found in this dataset.")
+    logger.info("No hits found in this dataset.")
 logger.debug("FIN")
