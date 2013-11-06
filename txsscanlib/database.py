@@ -70,7 +70,7 @@ class Indexes(object):
     def build(self, force = False):
         """
         build the indexes from the sequences base in fasta format
-        
+
         :param force: If True force the index building even the index file are present on the system
         :type force: boolean
         """
@@ -81,7 +81,7 @@ class Indexes(object):
         # build indexes if needed #
         ###########################
         index_dir = os.path.dirname(self.cfg.sequence_db)
-        
+
         if force or not hmmer_indexes or not my_indexes:
             #formatdb create indexes in the same directory as the sequence_db
             #so it must be writable
