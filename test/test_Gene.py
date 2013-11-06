@@ -17,34 +17,41 @@ from txsscanlib.gene import Gene
 from txsscanlib.gene import Homolog
 from txsscanlib.system import System
 from txsscanlib.config import Config
+from txsscanlib.registries import ProfilesRegistry
 
 
 class Test(unittest.TestCase):
 
 
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
+    
+    
     def setUp(self):
-        self.cfg = Config( sequence_db = ".",
+        self.cfg = Config( sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            hmmer_exe = "",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
+                           def_dir = os.path.join(self._data_dir, 'DEF'),
                            res_search_dir = "/tmp",
                            res_search_suffix = "",
-                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
+                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
                            log_file = '/dev/null'
                            )
+        self.profile_registry = ProfilesRegistry(self.cfg)
+
+
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_add_homolog(self):
         system_foo = System(self.cfg, "foo", 10)
         system_bar = System(self.cfg, "bar", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
-        gene_ref = Gene(self.cfg, 'sctJ', system_bar)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
+        gene_ref = Gene(self.cfg, 'sctJ', system_bar, self.profile_registry)
         homolog = Homolog(self.cfg, gene, gene_ref)
         gene.add_homolog( homolog )
         self.assertEqual(len( gene.homologs), 1)
@@ -54,9 +61,9 @@ class Test(unittest.TestCase):
     def test_get_homologs(self):
         system_foo = System(self.cfg, "foo", 10)
         system_bar = System(self.cfg, "bar", 10)
-        gene = Gene(self.cfg, 'sctN', system_foo)
-        sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo)
-        sctJ = Gene(self.cfg, 'sctJ', system_bar)
+        gene = Gene(self.cfg, 'sctN', system_foo, self.profile_registry)
+        sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
+        sctJ = Gene(self.cfg, 'sctJ', system_bar, self.profile_registry)
         homolog_1 = Homolog(sctJ_FLG, gene)
         gene.add_homolog(homolog_1)
         homolog_2 = Homolog(sctJ, gene)
@@ -69,7 +76,7 @@ class Test(unittest.TestCase):
         test getter/setter for system property
         """
         system_foo = System(self.cfg, "foo", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertEqual(gene.system, system_foo)
     
     
@@ -78,9 +85,9 @@ class Test(unittest.TestCase):
         test getter for loner property
         """
         system_foo = System(self.cfg, "foo", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.loner)
-        gene = Gene(self.cfg, 'sctJ', system_foo, loner = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, loner = True)
         self.assertTrue(gene.loner)
 
 
@@ -89,9 +96,9 @@ class Test(unittest.TestCase):
         test getter for exchangeable property
         """
         system_foo = System(self.cfg, "foo", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.exchangeable)
-        gene = Gene(self.cfg, 'sctJ', system_foo, exchangeable = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, exchangeable = True)
         self.assertTrue(gene.exchangeable)
  
     def test_multi_system(self):
@@ -99,9 +106,9 @@ class Test(unittest.TestCase):
         test getter for multi_system property
         """
         system_foo = System(self.cfg, "foo", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.multi_system)
-        gene = Gene(self.cfg, 'sctJ', system_foo, multi_system = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, multi_system = True)
         self.assertTrue(gene.multi_system)
 
 
@@ -112,9 +119,9 @@ class Test(unittest.TestCase):
         system_inter_gene_max_space = 40
         gene_inter_gene_max_space = 50
         system_foo = System(self.cfg, "foo", system_inter_gene_max_space)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
-        gene = Gene(self.cfg, 'sctJ', system_foo, inter_gene_max_space = gene_inter_gene_max_space)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, inter_gene_max_space = gene_inter_gene_max_space)
         self.assertEqual(gene.inter_gene_max_space, gene_inter_gene_max_space)
 
 
@@ -122,9 +129,9 @@ class Test(unittest.TestCase):
         """
         """
         system_foo = System(self.cfg, "foo", 10)
-        gene = Gene(self.cfg, 'sctJ_FLG', system_foo)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         system_bar = System(self.cfg, "bar", 20)
-        gene_homolog = Gene(self.cfg, 'sctJ', system_bar)
+        gene_homolog = Gene(self.cfg, 'sctJ', system_bar, self.profile_registry)
         homolog = Homolog( gene_homolog, gene, self.cfg)
         gene.add_homolog( homolog )
         s = """name : sctJ_FLG

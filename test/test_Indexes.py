@@ -36,7 +36,7 @@ def which(name, flags=os.X_OK):
  
 class Test(unittest.TestCase):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "datatest", "res_search")
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)
@@ -50,14 +50,14 @@ class Test(unittest.TestCase):
     def setUp(self):
 
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
+                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
+                           def_dir = os.path.join(self._data_dir, "DEF"),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
+                           profile_dir = os.path.join(self._data_dir, "profiles"),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,

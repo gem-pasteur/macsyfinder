@@ -1,0 +1,366 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/pilT_pilU.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/pilT_pilU.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilT_pilU.tab.seqid  [M=333]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+   1.1e-162  539.6   0.2   1.3e-162  539.5   0.1    1.0  1  PSAE001c01_003970 D ATG TGA 436570 437604 Valid pilT 1035 _P
+   1.3e-154  513.2   0.1   1.5e-154  513.0   0.1    1.0  1  PSAE001c01_003980 D ATG TGA 437782 438930 Valid pilU 1149 _P
+    8.5e-51  171.9   0.8    2.5e-48  163.8   0.6    2.1  2  PSAE001c01_006950 D ATG TGA 744333 745742 Valid PA0686 1410 
+    1.4e-49  167.9   0.6    1.2e-48  164.8   0.5    2.0  2  PSAE001c01_031400 C ATG TAA 3481914 3483422 Valid xcpR 1509 
+    8.5e-48  162.0   1.2    1.1e-45  155.1   0.2    2.1  2  PSAE001c01_045810 D ATG TAA 5069763 5071463 Valid pilB 1701 
+    3.4e-46  156.8   0.2    5.8e-46  156.0   0.1    1.3  1  PSAE001c01_027040 C ATG TAA 3022988 3024715 Valid PA2677 172
+    5.2e-46  156.2   0.1    1.1e-44  151.9   0.0    2.2  2  PSAE001c01_052810 D ATG TAG 5865227 5867011 Valid PA5210 178
+    1.8e-14   52.5   0.3    2.9e-14   51.8   0.2    1.2  1  PSAE001c01_043560 C ATG TGA 4825923 4827188 Valid tadA 1266 
+     0.0066   14.5   0.5      0.088   10.8   0.1    2.4  3  PSAE001c01_051430 C GTG TAG 5711477 5712211 Valid PA5074 735
+  ------ inclusion threshold ------
+      0.017   13.1   0.1      0.029   12.4   0.0    1.3  1  PSAE001c01_014690 D ATG TGA 1582528 1583817 Valid flhF 1290 
+      0.038   12.0   0.3      0.078   11.0   0.0    1.6  2  PSAE001c01_013550 C ATG TGA 1453470 1454204 Valid PA1339 735
+      0.041   11.9   0.0      0.062   11.3   0.0    1.2  1  PSAE001c01_051060 C ATG TGA 5672366 5674021 Valid PA5037 165
+      0.084   10.8   0.0       0.13   10.2   0.0    1.2  1  PSAE001c01_042370 C ATG TGA 4689902 4690645 Valid PA4192 744
+        0.1   10.6   0.0       0.16    9.9   0.0    1.3  1  PSAE001c01_042680 C GTG TGA 4728614 4730326 Valid PA4223 171
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_003970  D ATG TGA 436570 437604 Valid pilT 1035 _PA0395_NP_249086.1_ PA0395 1 436570 437604 | twitching mo
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  539.5   0.1  2.2e-165  1.3e-162       1     333 []       3     334 ..       3     334 .. 1.00
+
+  Alignments for each domain:
+  == domain 1    score: 539.5 bits;  conditional E-value: 2.2e-165
+  pilT_pilU.tab.seqid   1 leellkllvekkasDlhlsaglppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleldfsievkglaRfRvnvfkqrgsa 90 
+                          ++ell++ ++++asDlhlsaglpp++r+dg++++i+ +pl++++v+al+++i+n+kq+k+fee le+dfs+ev+g+aRfRvn+f+q+++a
+    PSAE001c01_003970   3 ITELLAFSAKQGASDLHLSAGLPPMIRVDGDVRRINLPPLEHKQVHALIYDIMNDKQRKDFEEFLETDFSFEVPGVARFRVNAFNQNRGA 92 
+                          689*************************************************************************************** PP
+
+  pilT_pilU.tab.seqid  91 gavlRtieskiltleelglpevlkelaakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskkslvnqRevgldt 180
+                          gav+Rti+sk+lt+eelg+ ev+k++++ +rGlvlvtGptGsGksttlaam+dy+n++k++hiltieDPiefvh+skk+lvnqRev++dt
+    PSAE001c01_003970  93 GAVFRTIPSKVLTMEELGMGEVFKRVSDVPRGLVLVTGPTGSGKSTTLAAMLDYLNNTKYHHILTIEDPIEFVHESKKCLVNQREVHRDT 182
+                          ****************************************************************************************** PP
+
+  pilT_pilU.tab.seqid 181 ksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvfpeeekeqvrvqlsesLeavisqrLlkkk 270
+                            f++al+salRedPD+ilvGe+Rd+eti+laltaaetGhlv+gtLht+saaktidR++dvfp+eek++vr++lsesL++visq+L+kk 
+    PSAE001c01_003970 183 LGFSEALRSALREDPDIILVGEMRDLETIRLALTAAETGHLVFGTLHTTSAAKTIDRVVDVFPAEEKAMVRSMLSESLQSVISQTLIKKI 272
+                          ****************************************************************************************** PP
+
+  pilT_pilU.tab.seqid 271 dgkgRvaaleiliatpaireliregkvsqiksvlktgkekGmqtldqalaelykegliteeea 333
+                          +g gRvaa+ei+i tpair+lire+kv+q++s+++tg++ Gmqtld++l+ l+ +gli++e+a
+    PSAE001c01_003970 273 GG-GRVAAHEIMIGTPAIRNLIREDKVAQMYSAIQTGGSLGMQTLDMCLKGLVAKGLISRENA 334
+                          *9.*********************************************************997 PP
+
+>> PSAE001c01_003980  D ATG TGA 437782 438930 Valid pilU 1149 _PA0396_NP_249087.1_ PA0396 1 437782 438930 | twitching mo
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  513.0   0.1  2.5e-157  1.5e-154       1     333 []       3     335 ..       3     335 .. 1.00
+
+  Alignments for each domain:
+  == domain 1    score: 513.0 bits;  conditional E-value: 2.5e-157
+  pilT_pilU.tab.seqid   1 leellkllvekkasDlhlsaglppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleldfsievkglaRfRvnvfkqrgsa 90 
+                          +e+ll+l+vek++sDl+++ag+pps++++g+++p++k+pl++e+++++vl ++ne+q+++f+e++e++f+i+++g++RfRv++f+qr+ +
+    PSAE001c01_003980   3 FEKLLRLMVEKGGSDLFITAGVPPSMKVNGRVMPVTKTPLSPEQTRETVLGVMNEQQRRDFAENHECNFAISARGIGRFRVSAFYQRNLV 92 
+                          589*************************************************************************************** PP
+
+  pilT_pilU.tab.seqid  91 gavlRtieskiltleelglpevlkelaakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskkslvnqRevgldt 180
+                          g+vlR+ie++i+tleel+lpe+lk+la +krGlv+++G+tG+Gkst+laami+y+nk+++ hi++ieDPie++h+++ ++v+qRevgldt
+    PSAE001c01_003980  93 GMVLRRIETNIPTLEELKLPEILKKLALTKRGLVIFVGATGTGKSTSLAAMIGYRNKNSTGHIISIEDPIEYIHQHQGCIVTQREVGLDT 182
+                          ****************************************************************************************** PP
+
+  pilT_pilU.tab.seqid 181 ksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvfpeeekeqvrvqlsesLeavisqrLlkkk 270
+                          +sfe+alk++lR++PDvi++Ge+R+ret+++a+++aetGhl+l+tLh+n+a+++++Rii++fp++++ qv+++ls +L+a+++q+L+++ 
+    PSAE001c01_003980 183 DSFEVALKNTLRQAPDVIMIGEVRSRETMDHAVAFAETGHLCLATLHANNANQALERIIHFFPADRHGQVWMDLSLNLKAIVAQQLVPTP 272
+                          ****************************************************************************************** PP
+
+  pilT_pilU.tab.seqid 271 dgkgRvaaleiliatpaireliregkvsqiksvlktgkekGmqtldqalaelykegliteeea 333
+                          dgkgR a++e+l++tp+  +lir+g+v+++k ++k+++e+Gmqt+dqal++ly++g+it+e+a
+    PSAE001c01_003980 273 DGKGRRAVIEVLLNTPLAADLIRKGEVHELKPLMKRSTEQGMQTFDQALYQLYTQGEITYEDA 335
+                          *************************************************************98 PP
+
+>> PSAE001c01_006950  D ATG TGA 744333 745742 Valid PA0686 1410 _NP_249377.1_ PA0686 1 744333 745742 | type II secretion
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  163.8   0.6   4.2e-51   2.5e-48       1     276 [.     109     384 ..     109     388 .. 0.83
+   2 !    5.9   0.0    0.0044       2.6     268     318 ..     399     447 ..     392     461 .. 0.79
+
+  Alignments for each domain:
+  == domain 1    score: 163.8 bits;  conditional E-value: 4.2e-51
+  pilT_pilU.tab.seqid   1 leellkllvekkasDlhls...aglppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleldfsievkglaR...fRvnvf 84 
+                          ++ ll++++  +asD+h++   +    ++r+dg+l+++  +       +alv  i   +q +  e++l  d  i ++ ++R    Rv+  
+    PSAE001c01_006950 109 INALLTQAARDEASDIHIEpfeTHSVVRYRVDGALRDVVAPRKA--LHAALVSRIKIMAQLDIAEKRLPQDGRIALRVAGRpidIRVSTV 196
+                          5789*************963336677899*******99876533..344566666666788888899999988888888886668***** PP
+
+  pilT_pilU.tab.seqid  85 kqrgsagavlRtieski..ltleelglp.ev...lkelaakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskk 168
+                           + ++  +v+R ++++   l le lg+   v   l +l  +++G+vlvtGptGsGk+ttl a + ++++ ++++ilt+eDP+e+      
+    PSAE001c01_006950 197 PTGHGERVVMRLLDKQAgrLRLETLGMApGVlapLDNLIRQPHGIVLVTGPTGSGKTTTLYAALARLDA-STSNILTVEDPVEYDLPGIS 285
+                          *************9997446789**985255222578999********************999988865.6799**********877655 PP
+
+  pilT_pilU.tab.seqid 169 slvnqRevgldt.ksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvfpeeekeqvrvqlses 257
+                           +    +v++     f++al+++lR+dPD+i++Ge+Rd+et ++a++a  tGhlvl+tLhtn+a+ ++ R++d+  e         l+ s
+    PSAE001c01_006950 286 QI----QVNARIdMTFAVALRAILRQDPDIIMIGEIRDLETAQIAVQASLTGHLVLATLHTNDAVSAVTRLVDMGVE------PFLLASS 365
+                          44....444433147**********************************************************8554......478999* PP
+
+  pilT_pilU.tab.seqid 258 LeavisqrLlkkkdgkgRv 276
+                          + +v++qrL+++   + Rv
+    PSAE001c01_006950 366 MLGVLAQRLVRRLCTHCRV 384
+                          **********998777776 PP
+
+  == domain 2    score: 5.9 bits;  conditional E-value: 0.0044
+  pilT_pilU.tab.seqid 268 kkkdgkgRvaaleiliatpaireliregkvsqiksvlktgkekGmqtldqa 318
+                          ++++ +gR+ ++e+++  + ir l+++g+ +q  ++ + +++ Gm+++ + 
+    PSAE001c01_006950 399 NQTGYSGRTGIHELFVIDDEIRRLVHQGRAEQ--DLREAARAAGMRSMRED 447
+                          567889**********************9986..55566778888888665 PP
+
+>> PSAE001c01_031400  C ATG TAA 3481914 3483422 Valid xcpR 1509 _PA3103_NP_251793.1_ PA3103 1 3481914 3483422 | general 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  164.8   0.5     2e-51   1.2e-48       2     268 ..     127     393 ..     126     403 .. 0.80
+   2 ?    0.4   0.0      0.22   1.3e+02     269     299 ..     434     464 ..     431     478 .. 0.79
+
+  Alignments for each domain:
+  == domain 1    score: 164.8 bits;  conditional E-value: 2e-51
+  pilT_pilU.tab.seqid   2 eellkllvekkasDlhlsa...glppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleldfsievkglaR...fRvnvfk 85 
+                          + +l +++ ++asD+hl++    l  ++r+dg l+++ +++ +  ++     +++   + +  e++   d  i+++  +R    Rv+ + 
+    PSAE001c01_031400 127 NAILGEAIRENASDIHLETfekRLVVRFRVDGVLREVLEPKRELAALLVSRIKVMA--RLDIAEKRIPQDGRISLRVGGRevdIRVSTLP 214
+                          6789999*********975222678899******9998876554444444444454..45555555666666666655554448****** PP
+
+  pilT_pilU.tab.seqid  86 qrgsagavlRtieski..ltleelglp....evlkelaakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskks 169
+                          + ++  +vlR ++++   l+l++lg+     + + e + k++G++lvtGptGsGk+ttl a + ++n + +++ilt+eDPie+  +    
+    PSAE001c01_031400 215 SANGERVVLRLLDKQAgrLNLQHLGMSerdrKLMDETVRKPHGILLVTGPTGSGKTTTLYASLTTLNDR-TRNILTVEDPIEYHLEG--- 300
+                          ************9987447899***994333467888899**************************986.679**********7765... PP
+
+  pilT_pilU.tab.seqid 170 lvnqRevgldtk.sfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvfpeeekeqvrvqlsesL 258
+                           + q +v+++ +  f+ +l+++lR+dPDv++vGe+Rdret e+a++a  tGhlvl+tLhtnsa+ +i R++d+  e         ls s+
+    PSAE001c01_031400 301 -IGQTQVNAKVDmTFARGLRAILRQDPDVVMVGEIRDRETAEIAVQASLTGHLVLSTLHTNSAIGAITRLVDMGIE------PFLLSSSM 383
+                          .4566666554327**********************************************************8543......46788888 PP
+
+  pilT_pilU.tab.seqid 259 eavisqrLlk 268
+                           +v++qrL++
+    PSAE001c01_031400 384 LGVLAQRLVR 393
+                          8888888875 PP
+
+  == domain 2    score: 0.4 bits;  conditional E-value: 0.22
+  pilT_pilU.tab.seqid 269 kkdgkgRvaaleiliatpaireliregkvsq 299
+                          +++ +gR+ ++e+++  + +r li+++  +q
+    PSAE001c01_031400 434 QHGYRGRTGIYELVVFDDHMRSLIHNESSEQ 464
+                          67788*******************9876654 PP
+
+>> PSAE001c01_045810  D ATG TAA 5069763 5071463 Valid pilB 1701 _PA4526_NP_253216.1_ PA4526 1 5069763 5071463 | type 4 f
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  155.1   0.2   1.8e-48   1.1e-45       2     270 ..     189     458 ..     188     474 .. 0.84
+   2 !    5.6   0.0    0.0057       3.4     269     306 ..     498     536 ..     495     560 .. 0.77
+
+  Alignments for each domain:
+  == domain 1    score: 155.1 bits;  conditional E-value: 1.8e-48
+  pilT_pilU.tab.seqid   2 eellkllvekkasDlhls...aglppslridgeltpiekkpltkeevkalvleilnekqkkefe..eeleldfsievkglaRfRvnvfkq 86 
+                          +++l  +++ ++sDlh +   +    ++r dg l+++ k+p++  +  +  l+++   + +e +  ++  + + ++  +   fRvn + +
+    PSAE001c01_045810 189 NKMLLDAIKGGSSDLHFEpyeKIYRVRFRTDGMLHEVAKPPIQLASRISARLKVMAGLDISERRkpQDGRIKMRVSKTKSIDFRVNTLPT 278
+                          68899999********972224567899**************9999888888999866655544116677888888888899******** PP
+
+  pilT_pilU.tab.seqid  87 rgsagavlRtieskiltl..eelglpevlkela....akkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskksl 170
+                            +  +v+R ++s   ++  ++lg  e  kel     ++++G++lvtGptGsGk+ +l + ++ +n+++  +i t eDP+e   +     
+    PSAE001c01_045810 279 LWGEKIVMRILDSSSAQMgiDALGYEEDQKELYlaalKQPQGMILVTGPTGSGKTVSLYTGLNILNTTD-INISTAEDPVEINLEG---- 363
+                          ***********99887764489*99999999852233689*************************9876.68*********87776.... PP
+
+  pilT_pilU.tab.seqid 171 vnqRevg.ldtksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvfpeeekeqvrvqlsesLe 259
+                          +nq +v+ ++  +f++al++ lR+dPDvi+vGe+Rd+et e+a++aa+tGh+v++tLhtnsaa+t+ R++++           +l++s++
+    PSAE001c01_045810 364 INQVNVNpRQGMDFSQALRAFLRQDPDVIMVGEIRDLETAEIAIKAAQTGHMVMSTLHTNSAAETLTRLLNMGVP------AFNLATSVN 447
+                          4555665245678*********************************************************98544......478899999 PP
+
+  pilT_pilU.tab.seqid 260 avisqrLlkkk 270
+                           +i+qrL++k 
+    PSAE001c01_045810 448 LIIAQRLARKL 458
+                          99999998774 PP
+
+  == domain 2    score: 5.6 bits;  conditional E-value: 0.0057
+  pilT_pilU.tab.seqid 269 kkdgkgRvaaleiliatpairelir.egkvsqiksvlkt 306
+                          k++ kgRv ++e++ +tpa++ +i  eg+  +i +  ++
+    PSAE001c01_045810 498 KNGYKGRVGIYEVVKNTPALQRIIMeEGNSIEIAEQARK 536
+                          66789******************9834566666655444 PP
+
+>> PSAE001c01_027040  C ATG TAA 3022988 3024715 Valid PA2677 1728 _NP_251367.1_ PA2677 1 3022988 3024715 | type II secre
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  156.0   0.1   9.7e-49   5.8e-46       2     241 ..     193     438 ..     192     461 .. 0.82
+
+  Alignments for each domain:
+  == domain 1    score: 156.0 bits;  conditional E-value: 9.7e-49
+  pilT_pilU.tab.seqid   2 eellkllvekkasDlhls...aglppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleld..fsievkgl.aRfRvnvfk 85 
+                          ++++++++ek++sD+h++    ++  ++r+dg l+++   +l +e+++a+v  i   +  +  e++l  d  +si v g+   +Rv+ + 
+    PSAE001c01_027040 193 NNVMSQAMEKRSSDIHIEpreFDFRIRFRVDGVLHDQ--LSLPRERFAAVVSRIKLISAIDIAERRLPQDgrMSIRVSGTeLDVRVSTLP 280
+                          67899************73224677788889988765..566777777777766555555555555555511666666653579****** PP
+
+  pilT_pilU.tab.seqid  86 qrgsagavlRtieski..ltleelg.lpevlkel...aakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskks 169
+                            ++ ++v+R ++++   l l+ lg lp+ l+++   +a+++G++lvtGptGsGksttl   +++in    ++++++eDP+e+   +   
+    PSAE001c01_027040 281 GVHGESVVMRLLPKERegLRLDRLGmLPDHLRRMrawVAEPHGIILVTGPTGSGKSTTLYGALEEINDGV-RKLISVEDPVEYQVPN--- 366
+                          ************9865227899**8469988877333679***************************875.6789*******96654... PP
+
+  pilT_pilU.tab.seqid 170 lvnqRevgldt.ksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidv 241
+                           ++q +v++d    f++al+s+lR+dPDvi++Ge+Rd+et e+a++   tGhlvl+tLhtn+a+ +  R+id+
+    PSAE001c01_027040 367 -ITQVQVHADIgLTFAAALRSILRQDPDVIMIGEIRDLETAEIAVQSSLTGHLVLSTLHTNDAVSAFTRLIDM 438
+                          .7899999996369*********************************************************97 PP
+
+>> PSAE001c01_052810  D ATG TAG 5865227 5867011 Valid PA5210 1785 _NP_253897.1_ PA5210 1 5865227 5867011 | secretion pat
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  151.9   0.0   1.8e-47   1.1e-44       4     242 ..     214     459 ..     211     486 .. 0.77
+   2 ?    1.8   0.0     0.079        47     269     296 ..     522     549 ..     515     583 .. 0.75
+
+  Alignments for each domain:
+  == domain 1    score: 151.9 bits;  conditional E-value: 1.8e-47
+  pilT_pilU.tab.seqid   4 llkllvekkasDlhls...aglppslridgeltpiekkpltkeevkalvleilnekqkkefeeeleld..fsievkgl..aRfRvnvfkq 86 
+                          l++ + +++asD+h++      + ++ridg l+++ + p  ++ ++a+v  + +  + +  e+++  d  + +++++      R + + +
+    PSAE001c01_052810 214 LFQYAFQQRASDIHIEprrEQGTVRFRIDGVLHNVYQFP--PQVTMAVVSRLKSLGRMNVAEKRKPQDgrVKTKTPDGaeVELRLSTLPT 301
+                          788999*********83223446789******9998765..4444444444444444444444444440034444454115689999*** PP
+
+  pilT_pilU.tab.seqid  87 rgsagavlRtieski..ltleelglp....evlkelaakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskksl 170
+                            +  +v+R  + ++  +++++lg      +  + +++++ G++lvtGptGsGk+ttl + ++++ + ++ ++ tieDPie +  s + +
+    PSAE001c01_052810 302 AFGEKMVMRIFDPEVllKSFDQLGFSaddlRRWQSMTSQPNGIILVTGPTGSGKTTTLYTTLKQLAT-DEVNVCTIEDPIEMIEPSFNQM 390
+                          **********987763369*****9853334567899*************************99965.5679************998888 PP
+
+  pilT_pilU.tab.seqid 171 vnqRevgldtksfetalksalRedPDvilvGelRdretielaltaaetGhlvlgtLhtnsaaktidRiidvf 242
+                            q +++l    f++++++ lR+dPD+i+vGe+Rd+et e+a++aa tGhlvl+tLhtn++  +i R++++ 
+    PSAE001c01_052810 391 QVQHNIDL---TFASGVRALLRQDPDIIMVGEIRDLETAEMAIQAALTGHLVLSTLHTNDSPTAITRLLELG 459
+                          88888875...7********************************************************9974 PP
+
+  == domain 2    score: 1.8 bits;  conditional E-value: 0.079
+  pilT_pilU.tab.seqid 269 kkdgkgRvaaleiliatpaireliregk 296
+                           ++ +gR+ ++ei++ ++ ++eli  + 
+    PSAE001c01_052810 522 DTGYRGRAGVYEIMLLSDSLKELITADT 549
+                          56678*******************9653 PP
+
+>> PSAE001c01_043560  C ATG TGA 4825923 4827188 Valid tadA 1266 _PA4302_NP_252992.1_ PA4302 1 4825923 4827188 | TadA ATP
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   51.8   0.2   4.8e-17   2.9e-14     117     263 ..     212     364 ..     176     387 .. 0.75
+
+  Alignments for each domain:
+  == domain 1    score: 51.8 bits;  conditional E-value: 4.8e-17
+  pilT_pilU.tab.seqid 117 aakkrGlvlvtGptGsGksttlaamidyinkekakhiltieDPiefvhkskksl.vnqRevgldtksfeta...lksalRedPDvilvGe 202
+                          a ++r  +l+ G tG+Gk+t l  + + i+++  + i+tieD  e    + + + ++ R  +++     ta   +++alR  PD i++Ge
+    PSAE001c01_043560 212 AVSRRCNILISGGTGTGKTTLLNVISGFIDER--ERIVTIEDTAELQLGHDHVVrLETRPPNAEGYGEVTArdlIRNALRMRPDRIILGE 299
+                          6678999***********99999998998765..68*********987776655356665555543333333339*************** PP
+
+  pilT_pilU.tab.seqid 203 lRdretielaltaaetGhl.vlgtLhtnsaaktidRi...idvfpee.ekeqvrvqlsesLeavis 263
+                          +R  e +++ l+a +tGh   ++t+h+nsa+ ++ R+   + +  ++  ++++r ++  +L  v+ 
+    PSAE001c01_043560 300 IRGVEVLDV-LQAMNTGHDgSMSTVHANSAMDSLLRMemlVGLTGNRlPEQTLRLMICAALDVVVQ 364
+                          *****9985.9*******6479**********9988621133333331345567777777776654 PP
+
+>> PSAE001c01_051430  C GTG TAG 5711477 5712211 Valid PA5074 735 _NP_253761.1_ PA5074 1 5711477 5712211 | ABC transporte
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   10.8   0.1   0.00015     0.088     119     140 ..      28      50 ..      15      56 .. 0.74
+   2 ?    0.8   0.0      0.16        97      61     110 ..      54     105 ..      51     118 .. 0.74
+   3 ?   -0.7   0.0      0.47   2.8e+02     261     285 ..     103     127 ..      86     132 .. 0.81
+
+  Alignments for each domain:
+  == domain 1    score: 10.8 bits;  conditional E-value: 0.00015
+  pilT_pilU.tab.seqid 119 kkrGlv.lvtGptGsGksttlaa 140
+                            rG v +v+Gp GsGkst l  
+    PSAE001c01_051430  28 VARGEVlVVIGPSGSGKSTFLRC 50 
+                          4577551568*********8865 PP
+
+  == domain 2    score: 0.8 bits;  conditional E-value: 0.16
+  pilT_pilU.tab.seqid  61 feeeleldfsievkglaRfRvnvfkqrgsagavlRties..kiltleelglp 110
+                          +ee  e  +si+  +la  R ++   r+++g+v+   +   ++  le+l l 
+    PSAE001c01_051430  54 LEEFDEGSVSIDGVDLADPRTDINAYRREVGMVFQHFNLfpHMTVLENLCLA 105
+                          56777888899999999999999999999****9987642256666666665 PP
+
+  == domain 3    score: -0.7 bits;  conditional E-value: 0.47
+  pilT_pilU.tab.seqid 261 visqrLlkkkdgkgRvaaleiliat 285
+                           ++qr+++k+++  R a    l+a 
+    PSAE001c01_051430 103 CLAQRVVRKRGKAEREAKARALLAK 127
+                          589***********99988877765 PP
+
+>> PSAE001c01_014690  D ATG TGA 1582528 1583817 Valid flhF 1290 _PA1453_NP_250144.1_ PA1453 1 1582528 1583817 | flagella
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.4   0.0   4.9e-05     0.029     121     142 ..     209     230 ..     202     240 .. 0.89
+
+  Alignments for each domain:
+  == domain 1    score: 12.4 bits;  conditional E-value: 4.9e-05
+  pilT_pilU.tab.seqid 121 rGlvlvtGptGsGksttlaami 142
+                           G++ ++Gp G+Gk+ttla m 
+    PSAE001c01_014690 209 GGVLALVGPAGAGKTTTLAKMA 230
+                          689999*************996 PP
+
+>> PSAE001c01_013550  C ATG TGA 1453470 1454204 Valid PA1339 735 _NP_250030.1_ PA1339 1 1453470 1454204 | amino acid ABC
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.0   0.0   0.00013     0.078     120     146 ..      26      51 ..      14      71 .. 0.71
+   2 ?   -2.2   0.1       1.3   7.8e+02     207     227 ..     174     194 ..     142     209 .. 0.52
+
+  Alignments for each domain:
+  == domain 1    score: 11.0 bits;  conditional E-value: 0.00013
+  pilT_pilU.tab.seqid 120 krGlvlvtGptGsGksttlaamidyin 146
+                          k  +v+v Gp GsGkst +   ++ + 
+    PSAE001c01_013550  26 KGEVVVVCGPSGSGKSTLI-KCVNALE 51 
+                          44578999*******9844.4555555 PP
+
+  == domain 2    score: -2.2 bits;  conditional E-value: 1.3
+  pilT_pilU.tab.seqid 207 etielaltaaetGhlvlgtLh 227
+                          e +++ +++a+ G  ++   h
+    PSAE001c01_013550 174 EVLDVMVQLAHEGMTMMCVTH 194
+                          334444455555555444444 PP
+
+>> PSAE001c01_051060  C ATG TGA 5672366 5674021 Valid PA5037 1656 _NP_253724.1_ PA5037 1 5672366 5674021 | hypothetical 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.3   0.0    0.0001     0.062     113     150 ..      42      79 ..      35      86 .. 0.86
+
+  Alignments for each domain:
+  == domain 1    score: 11.3 bits;  conditional E-value: 0.0001
+  pilT_pilU.tab.seqid 113 lkelaakkrGlvlvtGptGsGksttlaamidyinkeka 150
+                          l++la   + l+lvtGp GsGk+    a++   nk+  
+    PSAE001c01_051060  42 LHHLARYSQLLLLVTGPLGSGKTLLRQALVASTNKDAV 79 
+                          6788888999*************9999****9999765 PP
+
+>> PSAE001c01_042370  C ATG TGA 4689902 4690645 Valid PA4192 744 _NP_252881.1_ PA4192 1 4689902 4690645 | ABC transporte
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.2   0.0   0.00022      0.13     121     140 ..      26      46 ..      11      57 .. 0.77
+
+  Alignments for each domain:
+  == domain 1    score: 10.2 bits;  conditional E-value: 0.00022
+  pilT_pilU.tab.seqid 121 rG.lvlvtGptGsGksttlaa 140
+                          rG +v+v Gp GsGkst + +
+    PSAE001c01_042370  26 RGeVVVVCGPSGSGKSTLIRT 46 
+                          55367889********97655 PP
+
+>> PSAE001c01_042680  C GTG TGA 4728614 4730326 Valid PA4223 1713 _NP_252913.1_ PA4223 1 4728614 4730326 | ABC transport
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    9.9   0.0   0.00028      0.16     117     147 ..     351     381 ..     340     412 .. 0.81
+
+  Alignments for each domain:
+  == domain 1    score: 9.9 bits;  conditional E-value: 0.00028
+  pilT_pilU.tab.seqid 117 aakkrGlvlvtGptGsGksttlaamidyink 147
+                            ++  lv ++Gp GsGkst l  +  y+++
+    PSAE001c01_042680 351 ELEDGSLVALVGPSGSGKSTLLHLLARYMDA 381
+                          4566789*************98777666655 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (333 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       449  (0.0538886); expected 166.6 (0.02)
+Passed bias filter:                      378  (0.0453673); expected 166.6 (0.02)
+Passed Vit filter:                       120  (0.0144023); expected 8.3 (0.001)
+Passed Fwd filter:                        14  (0.00168027); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):              14  [number of targets reported over threshold]
+# CPU time: 0.57u 0.01s 00:00:00.57 Elapsed: 00:00:00.15
+# Mc/sec: 6497.04
+//

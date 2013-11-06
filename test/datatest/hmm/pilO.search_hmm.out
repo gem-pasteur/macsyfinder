@@ -1,0 +1,66 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/pilO.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/pilO.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilO_buen.tab.seqid  [M=187]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    1.6e-69  232.5   0.1    1.9e-69  232.2   0.1    1.1  1  PSAE001c01_051110 C ATG TGA 5678433 5679056 Valid pilO 624 _
+  ------ inclusion threshold ------
+       0.49    9.2   5.6       0.98    8.2   3.9    1.4  1  PRRU001c01_006730 C ATG TAA 826498 827817 Valid serS 1320 _P
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_051110  C ATG TGA 5678433 5679056 Valid pilO 624 _PA5042_NP_253729.1_ PA5042 1 5678433 5679056 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  232.2   0.1   4.6e-73   1.9e-69       1     173 [.      31     203 ..      31     206 .. 0.99
+
+  Alignments for each domain:
+  == domain 1    score: 232.2 bits;  conditional E-value: 4.6e-73
+  pilO_buen.tab.seqid   1 kiigillavaavlalgyilllspaleeleqqeaeeeeLksqleqKsaqaknleklreelaeveqklakllkqlpnekeldeLladinrlG 90 
+                          k+i+++l++aavlalgy+++ls+++++leqq+aeee+Lk+q+++K++qa+nle+++++++e+e+++++ll+qlp+++e++ Ll+di+r+G
+    PSAE001c01_051110  31 KVIVCVLLTAAVLALGYNFHLSDMQAQLEQQAAEEETLKQQFSTKAFQAANLEAYKAQMKEMEESFGALLRQLPSDTEVPGLLEDITRTG 120
+                          89**************************************************************************************** PP
+
+  pilO_buen.tab.seqid  91 vesGleldsikpvkavvkrfvarlPisievtGnYeqialfirdvasLsrivtlkdikitgsklgktsvlqleaiattyralsp 173
+                          + sGle+++ik++++v+++f+++lPi+i+v+G+Y+++a+f+++v+sL+rivtl+d++i+++++g+ts+l+++++a+tyr++++
+    PSAE001c01_051110 121 LGSGLEFEEIKLLPEVAQQFYIELPIQISVVGGYHDLATFVSGVSSLPRIVTLHDFEIKPVAPGSTSKLRMSILAKTYRYNDK 203
+                          ********************************************************************************994 PP
+
+>> PRRU001c01_006730  C ATG TAA 826498 827817 Valid serS 1320 _PRU_0700_YP_003574060.1_ PRU_0700 1 826498 827817 | serin
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    8.2   3.9   0.00024      0.98      23      89 ..      42     111 ..      35     129 .. 0.88
+
+  Alignments for each domain:
+  == domain 1    score: 8.2 bits;  conditional E-value: 0.00024
+  pilO_buen.tab.seqid  23 paleeleqqeaeeeeLksqleq..Ksaqaknleklreelaeveqklakllkqlpn.ekeldeLladinrl 89 
+                          +a++el++   e+++L +q+    K+ +  + e++++++a++++k ++l + +++ ++e+ +Ll +i ++
+    PRRU001c01_006730  42 EAQQELDKCLNEQKQLSGQIGRlmKEGKKDEAEQVKAQVAQLKEKSKELDETMAKaQEEMTTLLCQIPNI 111
+                          57889999999********9754488888999*********************973679*****999765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (187 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       456  (0.0547288); expected 166.6 (0.02)
+Passed bias filter:                      314  (0.037686); expected 166.6 (0.02)
+Passed Vit filter:                        33  (0.00396063); expected 8.3 (0.001)
+Passed Fwd filter:                         3  (0.000360058); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.19u 0.01s 00:00:00.20 Elapsed: 00:00:00.05
+# Mc/sec: 10945.46
+//

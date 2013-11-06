@@ -17,26 +17,29 @@ from txsscanlib.report import Hit
 from txsscanlib.config import Config
 from txsscanlib.gene import Gene
 from txsscanlib.system import System
-
+from txsscanlib.registries import ProfilesRegistry
 
 class Test(unittest.TestCase):
 
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def setUp(self):
         self.cfg = Config( hmmer_exe = "",
-                           sequence_db = ".",
+                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = os.path.join(os.path.dirname(__file__), "../data/DEF"),
+                           def_dir = os.path.join(self._data_dir, 'DEF'),
                            res_search_dir = "/tmp",
                            res_search_suffix = "",
-                           profile_dir = os.path.join(os.path.dirname(__file__), "../data/profiles"),
+                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
                            log_file = '/dev/null'
                            )
+        self.profile_registry = ProfilesRegistry(self.cfg)
+        
   
     def tearDown(self):
         shutil.rmtree(self.cfg.working_dir)
@@ -44,7 +47,7 @@ class Test(unittest.TestCase):
     def test_cmp(self):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD",system)
+        gene = Gene(self.cfg, "gspD",system, self.profile_registry)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h1 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
         self.assertGreater(h1, h0)
@@ -53,7 +56,7 @@ class Test(unittest.TestCase):
     def test_eq(self):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD", system)
+        gene = Gene(self.cfg, "gspD", system, self.profile_registry)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h1 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h2 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
@@ -63,7 +66,7 @@ class Test(unittest.TestCase):
     def test_str(self):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD", system)
+        gene = Gene(self.cfg, "gspD", system, self.profile_registry)
         hit_prop={'id' : "PSAE001c01_006940",
                   'hit_seq_len': 803,
                   'replicon_name' : "PSAE001c01",

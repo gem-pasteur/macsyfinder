@@ -1,0 +1,254 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/gspH.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/gspH.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspH_tcoffee_aln  [M=153]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    3.1e-68  227.2   1.1    3.8e-68  226.9   0.7    1.0  1  PSAE001c01_006870 C GTG TGA 737081 737530 Valid PA0678 450 _
+    1.2e-12   46.7   0.0    1.3e-12   46.6   0.0    1.2  1  PSAE001c01_031370 C ATG TGA 3479721 3480239 Valid xcpU 519 _
+    3.8e-08   32.0   0.1    5.7e-08   31.5   0.1    1.3  1  PSAE001c01_006900 D ATG TGA 738719 739168 Valid PA0681 450 _
+    7.5e-08   31.1   0.2    1.1e-07   30.6   0.2    1.2  1  PSAE001c01_031380 C GTG TGA 3480246 3480692 Valid xcpT 447 _
+      1e-06   27.4   0.1    1.3e-06   27.0   0.1    1.2  1  PSAE001c01_027020 C ATG TGA 3021308 3021742 Valid PA2675 435
+      2e-06   26.4   0.0    3.1e-06   25.8   0.0    1.4  1  PSAE001c01_046130 D ATG TGA 5104514 5104939 Valid pilE 426 _
+    2.9e-06   25.9   0.4    5.5e-06   25.0   0.2    1.4  1  PSAE001c01_046070 D ATG TGA 5098212 5098718 Valid fimU 507 _
+    3.2e-06   25.8   0.1    5.2e-06   25.1   0.0    1.4  1  PSAE001c01_045800 C ATG TAA 5069082 5069531 Valid pilA 450 _
+    1.5e-05   23.6   0.6    1.9e-05   23.3   0.4    1.2  1  PSAE001c01_006890 C ATG TGA 738111 738485 Valid PA0680 375 _
+    6.3e-05   21.6   2.0    7.4e-05   21.3   1.4    1.4  1  PSAE001c01_027010 C ATG TGA 3020929 3021339 Valid PA2674 411
+    0.00014   20.5   1.1    0.00014   20.4   0.8    1.3  1  PSAE001c01_031360 C ATG TGA 3479335 3479724 Valid xcpV 390 _
+     0.0011   17.6   0.9     0.0017   16.9   0.1    1.7  2  PSAE001c01_006860 C ATG TGA 736456 737097 Valid PA0677 642 _
+     0.0059   15.2   0.6     0.0093   14.5   0.2    1.5  1  PSAE001c01_026990 C ATG TGA 3019917 3020507 Valid PA2672 591
+  ------ inclusion threshold ------
+      0.023   13.3   0.3      0.042   12.4   0.0    1.7  2  PSAE001c01_031350 C ATG TGA 3478625 3479338 Valid xcpW 714 _
+      0.074   11.6   0.1       0.11   11.1   0.0    1.3  1  PSAE001c01_046080 D ATG TGA 5098709 5099266 Valid pilV 558 _
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_006870  C GTG TGA 737081 737530 Valid PA0678 450 _NP_249369.1_ PA0678 1 737081 737530 | HxcU pseudopilin  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  226.9   0.7   6.8e-71   3.8e-68       9     153 .]       5     148 ..       2     148 .. 0.98
+
+  Alignments for each domain:
+  == domain 1    score: 226.9 bits;  conditional E-value: 6.8e-71
+   gspH_tcoffee_aln   9 rrrGftllellvvlvivGivvavvslsarpnPrsdlredaqrlarllelaqeeaqvrarPiaWeadakGyrfsertgdGkr..vladdvlra 98 
+                        r++Gftl+el+vvlvivGi++a++slsarp+P++ lr+da+rlarlle+aq+ea+vr++Pi+W+++akGyrfs+++++Gk+  ++ad++lra
+  PSAE001c01_006870   5 RQSGFTLIELMVVLVIVGIATAAISLSARPDPTGLLRQDAARLARLLEIAQGEARVRGTPILWQPSAKGYRFSPQAYRGKTdaFAADTELRA 96 
+                        89******************************************************************************9999******** PP
+
+   gspH_tcoffee_aln  99 rdWraavagaavdaPgatqavvlgaeaigvPlrvtlssaqasvtvvsegngrvev 153
+                        rdW+aa+++++v++P   ++v+l+ae+ig+Plr+tls++q+svtv++e+ng+v+v
+  PSAE001c01_006870  97 RDWQAAPLRVSVRPP---RPVLLDAEWIGAPLRITLSDGQHSVTVLREANGHVRV 148
+                        ************999...***********************************97 PP
+
+>> PSAE001c01_031370  C ATG TGA 3479721 3480239 Valid xcpU 519 _PA3100_NP_251790.1_ PA3100 1 3479721 3480239 | general s
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   46.6   0.0   2.3e-15   1.3e-12       8     103 ..       2     100 ..       1     151 [. 0.85
+
+  Alignments for each domain:
+  == domain 1    score: 46.6 bits;  conditional E-value: 2.3e-15
+   gspH_tcoffee_aln   8 rrrrGftllellvvlvivGivvavvslsarpnPrs.dlredaqrlarllelaqeeaqvrarPiaWeadakGyrfse..rtgdGkrvladdvl 96 
+                        r  rGftl+el+vv+vi+ ++++ + ls     +s +l  +a+rla l+ +  +ea +  r    + +   y+ +   +++  + ++a+d  
+  PSAE001c01_031370   2 RASRGFTLIELMVVMVIISVLIGLAVLSTGFASTSrELDSEAERLAGLIGVLTDEAVLDNREYGLRLERDAYQVLRydEAKARWLPVARDSH 93 
+                        789********************999999877665379*********************999888877777765431146677889999999 PP
+
+   gspH_tcoffee_aln  97 rardWra 103
+                        r  +W +
+  PSAE001c01_031370  94 RLPEWAE 100
+                        9999975 PP
+
+>> PSAE001c01_006900  D ATG TGA 738719 739168 Valid PA0681 450 _NP_249372.1_ PA0681 1 738719 739168 | HxcT pseudopilin  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   31.5   0.1     1e-10   5.7e-08       6      42 ..      12      48 ..       8      72 .. 0.76
+
+  Alignments for each domain:
+  == domain 1    score: 31.5 bits;  conditional E-value: 1e-10
+   gspH_tcoffee_aln  6 aarrrrGftllellvvlvivGivvavvslsarpnPrs 42
+                         r +rGftl+e++vv+vi+Gi+ a+v  ++   P  
+  PSAE001c01_006900 12 GHRGQRGFTLIEIMVVVVILGILAAMVVPKVLDRPDQ 48
+                       5689*******************99887655555543 PP
+
+>> PSAE001c01_031380  C GTG TGA 3480246 3480692 Valid xcpT 447 _PA3101_NP_251791.1_ PA3101 1 3480246 3480692 | general s
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   30.6   0.2   1.9e-10   1.1e-07       7      40 ..       9      42 ..       5      65 .. 0.77
+
+  Alignments for each domain:
+  == domain 1    score: 30.6 bits;  conditional E-value: 1.9e-10
+   gspH_tcoffee_aln  7 arrrrGftllellvvlvivGivvavvslsarpnP 40
+                        r+++Gftl+e++vv+vi+Gi+ a v  ++   P
+  PSAE001c01_031380  9 RRQQSGFTLIEIMVVVVILGILAALVVPQVMSRP 42
+                       5899******************998754443333 PP
+
+>> PSAE001c01_027020  C ATG TGA 3021308 3021742 Valid PA2675 435 _NP_251365.1_ PA2675 1 3021308 3021742 | type II secret
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   27.0   0.1   2.4e-09   1.3e-06       9      36 ..       5      32 ..       1      56 [. 0.77
+
+  Alignments for each domain:
+  == domain 1    score: 27.0 bits;  conditional E-value: 2.4e-09
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGivvavvslsa 36
+                        ++Gftlle++vvlvi+G++++ v   +
+  PSAE001c01_027020  5 AQQGFTLLEMIVVLVIIGMLMGLVGPRL 32
+                       589******************9987554 PP
+
+>> PSAE001c01_046130  D ATG TGA 5104514 5104939 Valid pilE 426 _PA4556_NP_253246.1_ PA4556 1 5104514 5104939 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   25.8   0.0   5.6e-09   3.1e-06       9      33 ..       4      28 ..       1      59 [. 0.79
+
+  Alignments for each domain:
+  == domain 1    score: 25.8 bits;  conditional E-value: 5.6e-09
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGivvavvs 33
+                       r++Gftlle++vv+ ++Gi+++++ 
+  PSAE001c01_046130  4 RQKGFTLLEMVVVVAVIGILLGIAI 28
+                       89*******************9864 PP
+
+>> PSAE001c01_046070  D ATG TGA 5098212 5098718 Valid fimU 507 _PA4550_NP_253240.1_ PA4550 1 5098212 5098718 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   25.0   0.2   9.9e-09   5.5e-06      10      73 ..       7      71 ..       2      78 .. 0.85
+
+  Alignments for each domain:
+  == domain 1    score: 25.0 bits;  conditional E-value: 9.9e-09
+   gspH_tcoffee_aln 10 rrGftllellvvlvivGivvavvslsarp.nPrsdlredaqrlarllelaqeeaqvrarPiaWea 73
+                         Gftl+ell+++v++ i+ + +  + ++   r +l+  a+ l  +l+ a  ea  + r i  +a
+  PSAE001c01_046070  7 STGFTLIELLIIVVLLAIMASFAIPNFKQlTERNELQSAAEELNAMLQYARSEAVSQRRAISIQA 71
+                       57****************9998777766537899********************98888887665 PP
+
+>> PSAE001c01_045800  C ATG TAA 5069082 5069531 Valid pilA 450 _PA4525_NP_253215.1_ PA4525 1 5069082 5069531 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   25.1   0.0   9.4e-09   5.2e-06       9      34 ..       3      27 ..       1      56 [. 0.82
+
+  Alignments for each domain:
+  == domain 1    score: 25.1 bits;  conditional E-value: 9.4e-09
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGivvavvsl 34
+                        ++Gftl+el++v+ i+Gi+ a+ ++
+  PSAE001c01_045800  3 AQKGFTLIELMIVVAIIGILAAI-AI 27
+                       699****************8665.44 PP
+
+>> PSAE001c01_006890  C ATG TGA 738111 738485 Valid PA0680 375 _NP_249371.1_ PA0680 1 738111 738485 | HxcV pseudopilin  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   23.3   0.4   3.4e-08   1.9e-05       9      49 ..       6      48 ..       1      68 [. 0.81
+
+  Alignments for each domain:
+  == domain 1    score: 23.3 bits;  conditional E-value: 3.4e-08
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGivvavv..slsarpnPrsdlredaq 49
+                         rGftl+e+lv l iv i++a++  ++ +  +  + lr+ + 
+  PSAE001c01_006890  6 SSRGFTLIEVLVALAIVAIALAAAirAVGLMTDGNGLLRDKSL 48
+                       479****************997654489999*******99763 PP
+
+>> PSAE001c01_027010  C ATG TGA 3020929 3021339 Valid PA2674 411 _NP_251364.1_ PA2674 1 3020929 3021339 | type II secret
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   21.3   1.4   1.3e-07   7.4e-05       9      32 ..      11      34 ..       3      97 .. 0.85
+
+  Alignments for each domain:
+  == domain 1    score: 21.3 bits;  conditional E-value: 1.3e-07
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGivvavv 32
+                        +  ftllellvvlvivG + av+
+  PSAE001c01_027010 11 DQAAFTLLELLVVLVIVGAIAAVA 34
+                       5789**************887775 PP
+
+>> PSAE001c01_031360  C ATG TGA 3479335 3479724 Valid xcpV 390 _PA3099_NP_251789.1_ PA3099 1 3479335 3479724 | general s
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   20.4   0.8   2.6e-07   0.00014       8      53 ..       2      47 ..       1     119 [. 0.72
+
+  Alignments for each domain:
+  == domain 1    score: 20.4 bits;  conditional E-value: 2.6e-07
+   gspH_tcoffee_aln  8 rrrrGftllellvvlvivGivv.avvslsarpnPrsdlredaqrlar 53
+                       +r+rGftlle+lv l i  +v  +v+s sar    +  r + + la 
+  PSAE001c01_031360  2 KRARGFTLLEVLVALAIFAMVAaSVLSASARSLQNA-SRLEDKTLAM 47
+                       699************998876516777777764333.2333344444 PP
+
+>> PSAE001c01_006860  C ATG TGA 736456 737097 Valid PA0677 642 _NP_249368.1_ PA0677 1 736456 737097 | HxcW pseudopilin  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.9   0.1   3.1e-06    0.0017       6      30 ..      10      34 ..       5      72 .. 0.68
+   2 ?   -2.8   0.0       3.8   2.1e+03      85     102 ..     174     192 ..     161     205 .. 0.55
+
+  Alignments for each domain:
+  == domain 1    score: 16.9 bits;  conditional E-value: 3.1e-06
+   gspH_tcoffee_aln  6 aarrrrGftllellvvlvivGivva 30
+                       + rr+ Gftl+e++v ++++ iv  
+  PSAE001c01_006860 10 TRRRQAGFTLIEVMVAIMLMAIVSL 34
+                       568999**********999998743 PP
+
+  == domain 2    score: -2.8 bits;  conditional E-value: 3.8
+   gspH_tcoffee_aln  85 gdGkr.vladdvlrardWr 102
+                        g+G++ + a+  +ra   +
+  PSAE001c01_006860 174 GKGWTrLPARSKVRASGLE 192
+                        4566644455555555444 PP
+
+>> PSAE001c01_026990  C ATG TGA 3019917 3020507 Valid PA2672 591 _NP_251362.1_ PA2672 1 3019917 3020507 | type II secret
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.5   0.2   1.7e-05    0.0093       5      28 ..       3      26 ..       1      50 [. 0.80
+
+  Alignments for each domain:
+  == domain 1    score: 14.5 bits;  conditional E-value: 1.7e-05
+   gspH_tcoffee_aln  5 aaarrrrGftllellvvlvivGiv 28
+                       ++ r++  ftlle++vvl++v  +
+  PSAE001c01_026990  3 RSRRKQGAFTLLEMIVVLLVVSFI 26
+                       67788888**********998765 PP
+
+>> PSAE001c01_031350  C ATG TGA 3478625 3479338 Valid xcpW 714 _PA3098_NP_251788.1_ PA3098 1 3478625 3479338 | general s
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.4   0.0   7.5e-05     0.042       8      28 ..       2      22 ..       1      76 [. 0.84
+   2 ?   -3.5   0.0       6.1   3.4e+03      73      83 ..     145     155 ..     127     164 .. 0.59
+
+  Alignments for each domain:
+  == domain 1    score: 12.4 bits;  conditional E-value: 7.5e-05
+   gspH_tcoffee_aln  8 rrrrGftllellvvlvivGiv 28
+                       r +rGftllell+ + i  ++
+  PSAE001c01_031350  2 RLQRGFTLLELLIAIAIFALL 22
+                       889**********99998765 PP
+
+  == domain 2    score: -3.5 bits;  conditional E-value: 6.1
+   gspH_tcoffee_aln  73 adakGyrfser 83 
+                         +a  +rf+ +
+  PSAE001c01_031350 145 VTALSWRFLDK 155
+                        45555666544 PP
+
+>> PSAE001c01_046080  D ATG TGA 5098709 5099266 Valid pilV 558 _PA4551_NP_253241.1_ PA4551 1 5098709 5099266 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.1   0.0   0.00019      0.11       9      36 ..      11      39 ..       4      67 .. 0.76
+
+  Alignments for each domain:
+  == domain 1    score: 11.1 bits;  conditional E-value: 0.00019
+   gspH_tcoffee_aln  9 rrrGftllellvvlvivGi.vvavvslsa 36
+                        ++Gf ++e+lv l+++ i v+++++++ 
+  PSAE001c01_046080 11 HQSGFSMIEVLVALLLISIgVLGMIAMQG 39
+                       699***********999986678888764 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (153 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       342  (0.0410466); expected 166.6 (0.02)
+Passed bias filter:                      256  (0.0307249); expected 166.6 (0.02)
+Passed Vit filter:                        43  (0.00516083); expected 8.3 (0.001)
+Passed Fwd filter:                        15  (0.00180029); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):              15  [number of targets reported over threshold]
+# CPU time: 0.15u 0.01s 00:00:00.16 Elapsed: 00:00:00.06
+# Mc/sec: 7462.81
+//
