@@ -17,7 +17,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 from subprocess import Popen
 from threading import Lock
 from report import GembaseHMMReport, GeneralHMMReport
-
+from txsscan_error import TxsscanError
 
 class GeneBank(object):
     """
@@ -87,6 +87,7 @@ class Gene(object):
 
     def __init__(self, cfg, name,
                  system,
+                 profiles_registry,
                  loner = False,
                  exchangeable = False,
                  multi_system = False,
@@ -100,6 +101,8 @@ class Gene(object):
         :type name: string.
         :param system: the system which belongs this gene/
         :type system: :class:`txsscanlib.system.System` object.
+        :param profiles_registry: where all the paths profiles where register.
+        :type profiles_registry: :class:`txsscanlib.registries.ProfilesRegistry` object.
         :param loner: True if a gene can be isolated on the genome, False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
@@ -110,7 +113,7 @@ class Gene(object):
         :type inter_gene_max_space: integer
         """
         self.name = name 
-        self.profile = profile_factory.get_profile(self, cfg)
+        self.profile = profile_factory.get_profile(self, cfg, profiles_registry)
         """:ivar profile: The profile HMM Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
 
         self.homologs = []
@@ -298,7 +301,7 @@ class ProfileFactory():
     """
     _profiles = {}
 
-    def get_profile(self, gene, cfg):
+    def get_profile(self, gene, cfg, profiles_registry):
         """
         :return: return profile corresponding to the name.
                  If the profile already exists return it otherwise build it and return
@@ -307,7 +310,10 @@ class ProfileFactory():
         if gene.name in self._profiles:
             profile = self._profiles[gene.name]
         else:
-            profile = Profile(gene, cfg)
+            path = profiles_registry.get(gene.name)
+            if path is None:
+                raise TxsscanError( "%s: No such profile" % gene.name)
+            profile = Profile(gene, cfg, path)
             self._profiles[gene.name] = profile
         return profile 
 
@@ -319,7 +325,7 @@ class Profile(object):
     handle profile
     """
 
-    def __init__(self, gene , cfg):
+    def __init__(self, gene, cfg, path):
         """
 
         :param gene: the gene corresponding to this profile
@@ -328,9 +334,6 @@ class Profile(object):
         :type cfg: :class:`txsscanlib.config.Config` object
         """
         self.gene = gene 
-        path = os.path.join(cfg.profile_dir, self.gene.name + cfg.profile_suffix)
-        if not os.path.exists(path):
-            raise IOError( "%s: No such profile" % path)
         self.path = path
         self.len = self._len()
         self.cfg = cfg 
