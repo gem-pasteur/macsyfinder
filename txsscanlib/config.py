@@ -122,9 +122,9 @@ class Config(object):
         elif cfg_file:
             config_files = [cfg_file]
         else:
-            config_files = [os.path.join(_prefix_path, '/etc/txsscan/txsscan.conf'),
+            config_files = [os.path.join(_prefix_path, 'txsscan/txsscan.conf'),
                            os.path.expanduser('~/.txsscan/txsscan.conf'),
-                           '.txsscan.conf']
+                           'txsscan.conf']
         self._defaults = {'replicon_topology': 'circular',
                           'hmmer_exe' : 'hmmsearch',
                           'index_db_exe': 'makeblastdb',
@@ -132,7 +132,7 @@ class Config(object):
                           'i_evalue_sel' : "0.5",
                           'coverage_profile' : "0.5",
                           'def_dir': './DEF',
-                          'res_search_dir' : './datatest/res_search',
+                          'res_search_dir' : '.',
                           'res_search_suffix' : '.search_hmm.out',
                           'res_extract_suffix' : '.res_hmm_extract',
                           'profile_dir' : './profiles',
@@ -154,7 +154,7 @@ class Config(object):
                 #they are != than the default values in ConfigParser
                 cmde_line_opt[arg] = str(values[arg])
 
-        self.options = self._validate(cmde_line_opt, values)        
+        self.options = self._validate(cmde_line_opt, values)
 
     def _validate(self, cmde_line_opt, cmde_line_values):
         """
@@ -566,15 +566,15 @@ class Config(object):
                     options['hmmer_exe'] = cmde_line_opt['hmmer_exe']
                 else:
                     options['hmmer_exe'] = self._defaults['hmmer_exe']
-           
+
             try:
-                options['index_db_exe'] = self.parser.get('hmmer', 'index_db_exe', vars = cmde_line_opt)
+                options['index_db_exe'] = self.parser.get('base', 'index_db_exe', vars = cmde_line_opt)
             except NoSectionError:
                 if 'index_db_exe' in cmde_line_opt:
                     options['index_db_exe'] = cmde_line_opt['index_db_exe']
                 else:
                     options['index_db_exe'] = self._defaults['index_db_exe']        
-                    
+
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
                 options['e_value_res'] = float(e_value_res)
@@ -693,9 +693,9 @@ class Config(object):
         parser.add_section( 'base')
         parser.set( 'base', 'file', str(self.options['sequence_db']))
         parser.set( 'base', 'type', str(self.options['db_type']).lower())
-        cfg_opts = [('base' ,('replicon_topology', 'topology_file')),
+        cfg_opts = [('base' ,('replicon_topology', 'topology_file', 'index_db_exe',)),
                     ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required')),
-                    ('hmmer', ('hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
+                    ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
