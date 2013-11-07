@@ -146,9 +146,7 @@ class test(Command):
             if self.warn_dir and build_plat != get_platform():
                 raise DistutilsPlatformError("Can't test when "
                                              "cross-compiling")
-        TXSSCAN_HOME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'test')
-        sys.path.insert(0, TXSSCAN_HOME)
-        import main
+        from test import main
         if self.build_lib is None:
             if os.path.exists(self.build_purelib):
                 self.build_lib = self.build_purelib
@@ -156,10 +154,9 @@ class test(Command):
                 self.build_lib = self.build_platlib
 
         print "running test"
-        os.environ['TXSSCAN_HOME'] = os.getcwd()
+        os.environ['TXSSCAN_HOME'] = os.path.dirname(os.path.abspath(__file__))
         test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
         res_path = os.path.join(self.build_base, ".tests_results")
-        print "res_path = ", res_path
         with open(res_path, 'w') as _file:
             print >> _file, int(test_res.wasSuccessful())
         if not test_res.wasSuccessful():
