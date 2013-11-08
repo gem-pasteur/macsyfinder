@@ -16,6 +16,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 from system import System
 from gene import Gene
 from gene import Homolog
+from registries import ProfilesRegistry, DefinitionsRegistry
 from txsscan_error import TxsscanError, SystemInconsistencyError
 
 
@@ -34,7 +35,10 @@ class SystemParser(object):
         self.cfg = cfg
         self.system_bank = system_bank
         self.gene_bank = gene_bank
-
+        self.profiles_registry = ProfilesRegistry(cfg)
+        self.definitions_registry = DefinitionsRegistry(cfg)
+        
+        
     def system_to_parse(self, sys_2_detect):
         """
         :param sys_2_detect: the list of systems to detect
@@ -144,11 +148,16 @@ class SystemParser(object):
                 pass
             else:
                 attrs['inter_gene_max_space'] = inter_gene_max_space
-            genes.append(Gene(self.cfg, name, system, **attrs))
+            genes.append(Gene(self.cfg, name, system, self.profiles_registry, **attrs))
         return genes
 
     def _fill(self, system, system_node):
         """
+        fill system with genes found in this system. Add homolgs to the genes if necessary
+        :param system: the system to fill
+        :type system: :class:`txsscanlib.system.System` object
+        :param system_node: the node of the document corresonding to the system
+        :type system_node: :class"`ET.ElementTree` object
         """
         genes_nodes = system_node.findall("gene")
         for gene_node in genes_nodes:
@@ -280,9 +289,9 @@ class SystemParser(object):
         """
         systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
         for system_name in systems_2_parse:
-            path = os.path.join(self.cfg.def_dir, system_name + ".xml")
-            if not os.path.exists(path):
-                raise Exception("%s: No such system definitions" % path)
+            path = self.definitions_registry.get(system_name)
+            if path is None:
+                raise TxsscanError("%s: No such system definitions" % path)
             tree = ET.parse(path)
             system_node = tree.getroot()
             sys = self._create_system(system_name, system_node)  # une ouverture par fichier

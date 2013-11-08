@@ -19,7 +19,7 @@ from txsscanlib.database import RepliconDB, Indexes, RepliconInfo
 
 class Test(unittest.TestCase):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "datatest", "res_search")
+    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)
@@ -35,14 +35,14 @@ class Test(unittest.TestCase):
 
     def setUp(self):
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "prru_psae.001.c01.fasta"),
+                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
+                           def_dir = os.path.join(self._data_dir, 'DEF'),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
+                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
@@ -65,7 +65,7 @@ class Test(unittest.TestCase):
 
     def test_fill_topology(self):
         self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
-        db_send = {'PRRU001c01' : 'circular',
+        db_send = {'ESCO030p01' : 'circular',
                    'PSAE001c01' : 'linear'
                    }
         with open(self.cfg.topology_file , 'w') as f:
@@ -80,14 +80,14 @@ class Test(unittest.TestCase):
     def test_fill_ordered_replicon_min_max(self):
         self.tearDown()
         self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(os.path.dirname(__file__), "datatest", "ordered_replicon_base"),
+                           sequence_db = os.path.join(self._data_dir, "base", "ordered_replicon_base"),
                            db_type = "ordered_replicon",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
-                           def_dir = os.path.join(os.path.dirname(__file__), "..", "data", "DEF"),
+                           def_dir = os.path.join(self._data_dir, 'DEF'),
                            res_search_dir = '/tmp',
                            res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(os.path.dirname(__file__), "..", "data", "profiles"),
+                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".fasta-aln_edit.hmm",
                            res_extract_suffix = "",
                            log_level = 30,
@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
         rep = db[RepliconDB.ordered_replicon_name]
         self.assertEqual(rep.topology, self.cfg.replicon_topology)
         self.assertEqual(rep.min, 1)
-        self.assertEqual(rep.max, 5569)
+        self.assertEqual(rep.max, 52)
 
 
     def test_fill_gembase_min_max_default_topology(self):
@@ -115,64 +115,64 @@ class Test(unittest.TestCase):
         db = RepliconDB(self.cfg)
         db._fill_gembase_min_max({}, self.cfg.replicon_topology)
         self.assertEqual(len(db._DB), 2)
-        PRRU001c01 = db['PRRU001c01']
+        PRRU001c01 = db['ESCO030p01']
         self.assertEqual(PRRU001c01.topology, 'circular')
         self.assertEqual(PRRU001c01.min, 1)
-        self.assertEqual(PRRU001c01.max, 2763)
+        self.assertEqual(PRRU001c01.max, 67)
         PSAE001c01 = db['PSAE001c01']
         self.assertEqual(PSAE001c01.topology, 'circular')
-        self.assertEqual(PSAE001c01.min, 2764)
-        self.assertEqual(PSAE001c01.max, 8332)
+        self.assertEqual(PSAE001c01.min, 68)
+        self.assertEqual(PSAE001c01.max, 133)
  
  
     def test_fill_gembase_min_max_with_topology(self):
         self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
         with open(self.cfg.topology_file , 'w') as f:
-            f.write('PRRU001c01 : circular\nPSAE001c01 : linear\n')
+            f.write('ESCO030p01 : circular\nPSAE001c01 : linear\n')
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
         topo_dict = db._fill_topology()
         db._fill_gembase_min_max(topo_dict, 'circular')
         self.assertEqual(len(db._DB), 2)
-        PRRU001c01 = db['PRRU001c01']
-        self.assertEqual(PRRU001c01.topology, 'circular')
-        self.assertEqual(PRRU001c01.min, 1)
-        self.assertEqual(PRRU001c01.max, 2763)
+        ESCO030p01 = db['ESCO030p01']
+        self.assertEqual(ESCO030p01.topology, 'circular')
+        self.assertEqual(ESCO030p01.min, 1)
+        self.assertEqual(ESCO030p01.max, 67)
         PSAE001c01 = db['PSAE001c01']
         self.assertEqual(PSAE001c01.topology, 'linear')
-        self.assertEqual(PSAE001c01.min, 2764)
-        self.assertEqual(PSAE001c01.max, 8332)
+        self.assertEqual(PSAE001c01.min, 68)
+        self.assertEqual(PSAE001c01.max, 133)
          
  
     def test_in(self):
         db = RepliconDB(self.cfg)
-        self.assertIn('PRRU001c01', db)
+        self.assertIn('ESCO030p01', db)
         self.assertIn('PSAE001c01', db)
         self.assertNotIn('toto', db)
  
     def test_getitem(self):
         db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 2763)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 2764, 8332)
-        self.assertEqual(PRRU001c01, db['PRRU001c01'])
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        self.assertEqual(ESCO030p01, db['ESCO030p01'])
         self.assertEqual(PSAE001c01, db['PSAE001c01'])
         self.assertRaises(KeyError, db.__getitem__, 'foo')
  
     def test_get(self):
         db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 2763)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 2764, 8332)
-        self.assertEqual(PRRU001c01, db.get('PRRU001c01'))
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        self.assertEqual(ESCO030p01, db.get('ESCO030p01'))
         self.assertEqual(PSAE001c01, db.get('PSAE001c01'))
         self.assertIsNone(db.get('foo'))
         self.assertEqual('bar', db.get('foo', 'bar'))
 
     def test_items(self):
         db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 2763)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 2764, 8332)
-        self.assertItemsEqual(db.items(), [('PRRU001c01',PRRU001c01),('PSAE001c01',PSAE001c01)])
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01),('PSAE001c01',PSAE001c01)])
         db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 2763)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 2764, 8332)
+        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
         

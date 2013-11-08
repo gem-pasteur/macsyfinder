@@ -268,7 +268,13 @@ all_genes = []
 for system in systems_to_detect:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     all_genes += genes
+#############################################
+# this part of code is executed in parallel
+#############################################
 all_reports = search_genes(all_genes, config)
+#############################################
+# end of parallel code
+#############################################
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
 if len(all_hits)> 0:
