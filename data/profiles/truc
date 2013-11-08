@@ -11,3 +11,13 @@ for (gene, eq) in zip(liste, equi):
 	print new
 	#os.path()
 	os.rename(ancien, new)
+
+
+
+
+#foreach gene (I_traE I_traI I_traK I_traL I_traM I_traN I_traO I_traP I_traQ I_traR I_traT I_traW I_traY I_trbA I_trbB)
+foreach gene (T_virB1 T_virB10 T_virB11 T_virB2 T_virB3 T_virB5 T_virB6 T_virB8 T_virB9)
+    set file=${gene}.hmm
+    set newfile=${gene}.fasta-aln_edit.hmm
+    mv $file $newfile
+end

@@ -1,33 +1,33 @@
 .. _system:
 
 *****************
-The system object
+The System object
 *****************
 
 It represents a macromolecular system to detect. 
-It is defined by a definition file in XML stored in 
+It is defined by a definition file in XML stored in a dedicated location that can be specified *via* the configuration of the command-line. See :ref:`system-definition-grammar-label` for more details on the XML grammar. 
 The XML syntax is
-
 for instance::
 
-    <system inter_gene_max_space="20"> 
-        <gene name="sctJ_FLG" presence="mandatory">
+    <system inter_gene_max_space="15"> 
+        <gene name="sctC" presence="mandatory">
            <homologs>
-               <gene name="sctJ" system_ref="T2SS"/>
-               <gene name="pilO" system_ref="T2SS" aligned="true"/>
+               <gene name="gspD" system_ref="T2SS"/>
+               <gene name="pilQ" system_ref="T4P"/>
+               <gene name="rcpA" system_ref="Tad"/>
            </homologs>
         </gene>
-        <gene name="sctN_FLG" presence="mandatory"/>
-        <gene name="sctQ_FLG" presence="mandatory"/>
-        <gene name="sctR_FLG" presence="mandatory"/>
-        <gene name="sctS_FLG" presence="mandatory"/>
-        <gene name="sctT_FLG" presence="mandatory"/>
-        <gene name="sctU_FLG" presence="mandatory"/>
-        <gene name="sctV_FLG" presence="mandatory"/>
-        <gene name="flgB" presence="allowed"/>
-        <gene name="flgC" presence="allowed"/>
-        <gene name="fliE" presence="allowed"/>
-        <gene name="sctC" presence="forbidden"/>
+        <gene name="sctJ" presence="mandatory"/>
+        <gene name="sctN" presence="mandatory"/>
+        <gene name="sctQ" presence="mandatory"/>
+        <gene name="sctR" presence="mandatory"/>
+        <gene name="sctS" presence="mandatory"/>
+        <gene name="sctT" presence="mandatory"/>
+        <gene name="sctU" presence="mandatory"/>
+        <gene name="sctV" presence="mandatory"/>
+        <gene name="flgB" presence="forbidden"/>
+        <gene name="flgC" presence="forbidden"/>
+        <gene name="fliE" presence="forbidden"/>
     </system>
 
  
@@ -43,7 +43,7 @@ and three kind of components are listed in function of their presence in the sys
 
 .. note:: 
     
-    a complete description of the secretion system grammar is available here :ref:`system-definition-grammar-label`
+    a complete description of the secretion system modelling is available here :ref:`system_definition`
 
 SystemBank API reference
 ===========================

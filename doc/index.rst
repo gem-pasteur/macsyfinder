@@ -4,41 +4,31 @@
    contain the root `toctree` directive.
 
 
-.. image:: images/logo_buen.jpg
-   :height: 100px
-   :width: 200 px
-   :align: left
-
-
 Welcome to TXSScan's documentation! 
 ===================================
 	
-  TXSScan is a program that includes a framework to model and detect macromolecular systems. It has been applied to the detection of protein secretion systems and related appendages in diderm bacteria (T1SS-T6SS), using Hmmer to perform homologs searches with provided proteic profiles. 
-  Criteria for system detection includes **component content (quorum)**, and **genomic co-localization**. These criteria can be tuned by the user.
+  TXSScan is a program that detects bacterial protein secretion systems (T1-T6SS) and related appendages (the flagellum, the type  IV pilus, and the tad pilus). These systems have evolutionarily conserved features: their component content, and their genetic architecture, often in compact loci. We modelled these systems to reflect these features and to allow their efficient detection. 
+  
+  Criteria for systems detection thus includes **component content (quorum)**, and **genomic co-localization**. Each component corresponds to a hidden Markov model (HMM) protein profile to perform homology searches with the program Hmmer. 
    
-  Its flexible architecture allows the user to describe its own system for detection purpose by:
-    - providing its **own profiles** for a new system, 
-    - defining its **own decision rules** for system inference in our dedicated XML grammar (see :ref:`system-definition-grammar-label`).
+  In order to model these protein secretion systems and their related appendages, we:
+    - built **HMM protein profiles** for components of interest, 
+    - defined **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-Table of Contents   
-=================
+TXSScan documentation contents   
+==============================
 .. toctree::
    :maxdepth: 2
 
-   implementation
    installation 
+   implementation
    system_definition
+   system_parser  
+   functioning
    config
    database 
-   system
-   system_parser
-   gene
-   profile
-   HMMReport
-   functioning
-   search_genes
-   search_systems
+   outputs
    txsscan_error
 
 Indices and tables

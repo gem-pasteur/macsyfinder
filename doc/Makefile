@@ -5,6 +5,7 @@
 SPHINXOPTS    =
 # matit
 SPHINXBUILD   = sphinx-build
+# to be used !
 #SPHINXBUILD   = sphinx-build-2.7
 PAPER         =
 BUILDDIR      = _build

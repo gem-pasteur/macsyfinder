@@ -1,0 +1,37 @@
+<system inter_gene_max_space="30" min_mandatory_genes_required="2" min_genes_required="6">
+    <gene name="traU" presence="mandatory">        
+        <homologs>
+    	    <gene name="virB4"/>
+        </homologs>
+    </gene>
+    <gene name="virD4" presence="mandatory" system_ref="cT4SS">       
+    	<homologs>
+    	    <gene name="tcpA" system_ref="cT4SS"/>
+    	</homologs>
+    </gene>
+    <gene name="I_traE" presence="allowed"/>
+    <gene name="I_traI" presence="allowed"/>
+    <gene name="I_traK" presence="allowed"/>
+    <gene name="I_traL" presence="allowed"/>
+    <gene name="I_traM" presence="allowed"/>
+    <gene name="I_traN" presence="allowed"/>
+    <gene name="I_traO" presence="allowed"/>
+    <gene name="I_traP" presence="allowed"/>
+    <gene name="I_traQ" presence="allowed"/>
+    <gene name="I_traR" presence="allowed"/>
+    <gene name="I_traT" presence="allowed"/>
+    <gene name="I_traW" presence="allowed"/>
+    <gene name="I_traY" presence="allowed"/>
+    <gene name="I_trbA" presence="allowed"/>
+    <gene name="I_trbB" presence="allowed"/>
+    <gene name="MOBB" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBC" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBF" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBH" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBP1" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBP2" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBP3" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBQ" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBT" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+    <gene name="MOBV" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
+</system>
