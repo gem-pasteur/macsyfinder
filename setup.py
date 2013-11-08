@@ -346,7 +346,6 @@ class install_conf(install_data):
                     # Copy files, adding them to the list of output files.
                     for conf in f[1]:
                         conf = convert_path(conf)
-                        print "@@@@@@@@@", conf
                         (out, _) = self.copy_file(conf, dir)
                         if conf in fix_conf:
                             input_file = out
@@ -394,8 +393,6 @@ def get_install_conf_dir(inst):
     return install_dir
         
 def subst_vars(src, dst, vars):
-    print '========'
-    print vars
     try:
         src_file = open(src, "r")
     except os.error, err:
@@ -408,10 +405,6 @@ def subst_vars(src, dst, vars):
         with dest_file:
             for line in src_file:
                 new_line = distutils_subst_vars(line, vars)
-                if line != new_line:
-                    print " - ",line
-                    print " + ", new_line
-                    print "======================="
                 dest_file.write(new_line)
 
 require_python = [ 'python (>=2.7, <3.0)' ]
@@ -420,8 +413,12 @@ require_packages = []
 #I cannot succeed to inject conf_file in a distribution
 #so i put it at the top level :-(
 conf_files = [('txsscan', ['etc/txsscan.conf'])]
+
+#file where some variable must be fix by install_conf
 fix_conf = ['etc/txsscan.conf']
-fix_prefix = ["txsscanlib/config.py"]
+
+#file where some variable must be fix by txsscan_install
+fix_prefix = ['txsscanlib/config.py', 'txsscanlib/registries.py']
 
 
 setup(name        = 'txsscan',
