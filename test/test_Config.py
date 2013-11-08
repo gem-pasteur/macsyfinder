@@ -234,7 +234,7 @@ class Test(unittest.TestCase):
                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                           res_search_dir = '/tmp'
                           )
-        self.assertEqual(self.cfg.i_evalue_sel, 0.5)
+        self.assertEqual(self.cfg.i_evalue_sel, 0.001)
         self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
