@@ -847,7 +847,6 @@ class systemDetectionReport(object):
         :param rep_db: the replicons database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        print "call json_output with ", path
         with open(path, 'w') as _file:
             all_systems_occurences = []
             for so in self._systems_occurences_list:
