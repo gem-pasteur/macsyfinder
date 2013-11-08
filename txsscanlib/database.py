@@ -104,9 +104,13 @@ class Indexes(object):
         #################################
         if force or not hmmer_indexes:
             hmmer_indexes_proc.wait()
+            if hmmer_indexes_proc.returncode == 127:
+                msg = "neither makeblastdb nor formatdb can be found, check your config or install makeblastb"
+                _log.critical( msg, exc_info = True )
+                raise RuntimeError(msg)
             if hmmer_indexes_proc.returncode != 0:
-                msg = "an error occurred during databases indexation see formatdb.log f"
-                _log.error( msg, exc_info = True )
+                msg = "an error occurred during databases indexation see formatdb.log"
+                _log.critical( msg, exc_info = True )
                 raise RuntimeError(msg)
         self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
