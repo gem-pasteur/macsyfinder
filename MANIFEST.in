@@ -7,7 +7,7 @@ exclude txsscanlib/hmm_parsing_in_memory.py
 exclude txsscanlib/hmm_parsing_w_DB.*
 exclude txsscanlib/min_max_proto.py
 
-recursive-include doc *
+recursive-include doc/_build/html *
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
