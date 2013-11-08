@@ -102,6 +102,7 @@ class Test(unittest.TestCase):
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type' : 'gembase',
                   'profile_dir' : os.path.join(self._data_dir, 'profiles'),
+                  'def_dir': '/kjhdsjkg938268235764kjdsg',
                   'res_search_dir' : '/tmp',
                   }
         real_def_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'DEF'),
