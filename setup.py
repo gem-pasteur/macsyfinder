@@ -37,7 +37,7 @@ class check_and_build( build ):
         build.run(self)
         print """
 Unit tests are available. It is _highly_ recommended to run tests now.
-to run test, run 'python setup.py test'"""
+to run test, run 'python setup.py test -vv'"""
 
     def check_python(self, req):
         chk = VersionPredicate(req)
