@@ -29,10 +29,10 @@ class check_and_build( build ):
             chk &= self.check_package(req)
         if not chk: 
             sys.exit(1)
-        test_res_path = os.path.join(self.build_lib, ".tests_results")
+        test_res_path = os.path.join(self.build_base, ".tests_results")
         try:
             os.unlink(test_res_path)
-        except OSError:
+        except OSError, err:
             pass
         build.run(self)
         print """
@@ -189,14 +189,14 @@ to run test, run 'python setup.py test'"""
             test_OK = True
         if test_OK:
             inst = self.distribution.command_options.get('install')
-            vars_2_subst = {'PREFIX': self.prefix,
+            vars_2_subst = {'PREFIX': inst.get('prefix', ''),
                             'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
-                            'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan')
+                            'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
+                            'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
                             }
             for _file in fix_prefix:
                 input_file = os.path.join(self.build_lib, _file)
                 output_file =  input_file + '.tmp'
-                print "subst_vars ",input_file,", ",output_file,", ",vars_2_subst
                 subst_vars(input_file, output_file, vars_2_subst)
                 os.unlink(input_file)
                 self.move_file(output_file, input_file)
@@ -217,28 +217,22 @@ class install_data(_install_data):
         ]
 
     boolean_options = ['force']
-
-    def initialize_options(self):
-        self.install_dir = None
-        self.outfiles = []
-        self.root = None
-        self.force = 0
-        self.data_files = self.distribution.data_files
-        self.warn_dir = 1
-
+    
+    
+        
     def finalize_options(self):
         inst = self.distribution.command_options.get('install')
-        self.install_dir = get_install_data_dir(inst)    
+        self.install_dir = get_install_data_dir(inst)
         self.set_undefined_options('install',
                                    ('root', 'root'),
                                    ('force', 'force'),
                                   )
         self.prefix_data = self.install_dir
-
+        self.files_2_install = self.distribution.data_files 
 
     def run(self):
         self.mkpath(self.install_dir)
-        for f in self.data_files:
+        for f in self.files_2_install:
             if isinstance(f, str):
                 # it's a simple file, so copy it
                 f = convert_path(f)
@@ -271,7 +265,45 @@ class install_data(_install_data):
                         else:
                             (out, _) = self.copy_file(data, dir)
                             self.outfiles.append(out)
-                
+
+
+
+class install_doc(install_data):
+
+    install.sub_commands += [('install_doc', lambda self:True)]
+
+    description = "installation directory for documentation files"
+
+    setattr(install, 'install_doc', None)
+
+    install.user_options.append(('install-doc=', None, description))
+    install.user_options.append(('no-doc', None, 'do not install documentation'))
+
+    user_options = [
+        ('install-doc=', 'd', "base directory for installing documentation files " "(default: installation base dir share/doc)"),
+        ('root=', None, "install everything relative to this alternate root directory"),
+        ('force', 'f', "force installation (overwrite existing files)"),
+        ('no-doc', None, 'do not install documentation')
+        ]
+
+    boolean_options = ['force']
+
+    def initialize_options(self):
+        install_data.initialize_options(self)
+        self.install_doc = None
+        self.no_doc = False
+        self.files_2_install = doc_files #as defined at the global level of this file
+        
+    def finalize_options(self):
+        inst = self.distribution.command_options.get('install')
+        self.install_dir = get_install_doc_dir(inst)
+        self.set_undefined_options('install',
+                                   ('root', 'root'),
+                                   ('force', 'force'),
+                                  )
+        self.prefix_data = self.install_dir
+        
+
 
 
 class install_conf(install_data):
@@ -286,7 +318,7 @@ class install_conf(install_data):
     user_options = [
         ('install-conf=', 'd',
          "base directory for installing configuration files "
-         "(default: installation base etc)"),
+         "(default: installation base dir etc)"),
         ('root=', None,
          "install everything relative to this alternate root directory"),
         ('force', 'f', "force installation (overwrite existing files)"),
@@ -295,12 +327,8 @@ class install_conf(install_data):
     boolean_options = ['force']
 
     def initialize_options(self):
-        self.install_dir = None
-        self.outfiles = []
-        self.root = None
-        self.force = 0
+        install_data.initialize_options(self)
         self.conf_files = conf_files #as defined at the top of this file
-        self.warn_dir = 1
 
 
     def finalize_options(self):
@@ -316,7 +344,8 @@ class install_conf(install_data):
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
-                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan')
+                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
+                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
                         }
         for f in self.conf_files:
             if isinstance(f, str):
@@ -355,6 +384,10 @@ class install_conf(install_data):
                             self.move_file(output_file, input_file)
                         self.outfiles.append(out)
 
+
+
+
+
 class UsageDistribution(Distribution):
 
     def __init__(self,  attrs=None):
@@ -380,6 +413,7 @@ def get_install_data_dir(inst):
         install_dir = os.path.join('/', 'usr', 'share')
     return install_dir
 
+
 def get_install_conf_dir(inst):
     if 'VIRTUAL_ENV' in os.environ:
         inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
@@ -391,6 +425,20 @@ def get_install_conf_dir(inst):
     else:
         install_dir = '/etc'
     return install_dir
+
+
+def get_install_doc_dir(inst):
+    if 'VIRTUAL_ENV' in os.environ:
+        inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
+    
+    if 'install_doc' in inst:
+        install_dir = inst['install_doc'][1]
+    elif 'prefix' in inst:
+        install_dir = os.path.join(inst['prefix'][1], 'share', 'doc' )
+    else:
+        install_dir = os.path.join('/', 'usr', 'share', 'doc')
+    return install_dir
+
         
 def subst_vars(src, dst, vars):
     try:
@@ -413,6 +461,7 @@ require_packages = []
 #I cannot succeed to inject conf_file in a distribution
 #so i put it at the top level :-(
 conf_files = [('txsscan', ['etc/txsscan.conf'])]
+doc_files = [('txsscan', ['doc/_build/html/'])]
 
 #file where some variable must be fix by install_conf
 fix_conf = ['etc/txsscan.conf']
@@ -438,7 +487,8 @@ setup(name        = 'txsscan',
                   'test': test,
                   'install' : install_txsscan,
                   'install_data' : install_data,
-                  'install_conf' : install_conf
+                  'install_conf' : install_conf,
+                  'install_doc'  : install_doc
                  }
       )
 
