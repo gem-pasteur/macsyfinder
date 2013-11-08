@@ -16,9 +16,12 @@ from time import strftime
 from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
 
 _prefix_path = '$PREFIX'
+_prefix_conf = '$PREFIXCONF'
+_prefix_data = '$PREFIXDATA'
 if os.environ['TXSSCAN_HOME']:
     _prefix_path = os.environ['TXSSCAN_HOME']
-
+    _prefix_conf = os.path.join(os.environ['TXSSCAN_HOME'], 'etc')
+    _prefix_data = os.path.join(os.environ['TXSSCAN_HOME'], 'data')
 
 import logging
 
@@ -122,7 +125,7 @@ class Config(object):
         elif cfg_file:
             config_files = [cfg_file]
         else:
-            config_files = [os.path.join(_prefix_path, 'txsscan/txsscan.conf'),
+            config_files = [os.path.join( _prefix_conf, 'txsscan.conf'),
                            os.path.expanduser('~/.txsscan/txsscan.conf'),
                            'txsscan.conf']
         self._defaults = {'replicon_topology': 'circular',
@@ -131,16 +134,16 @@ class Config(object):
                           'e_value_res' : "1",
                           'i_evalue_sel' : "0.5",
                           'coverage_profile' : "0.5",
-                          'def_dir': './DEF',
+                          'def_dir': os.path.join( _prefix_data, 'DEF'),
                           'res_search_dir' : '.',
                           'res_search_suffix' : '.search_hmm.out',
                           'res_extract_suffix' : '.res_hmm_extract',
-                          'profile_dir' : './profiles',
+                          'profile_dir' : os.path.join( _prefix_data, 'profiles'),
                           'profile_suffix' : '.fasta-aln_edit.hmm', 
                           'log_level': '0',
                           'worker_nb' : '0'
                           }
-        self.parser = SafeConfigParser(defaults= self._defaults)
+        self.parser = SafeConfigParser(defaults = self._defaults)
         used_files = self.parser.read(config_files)
 
         frame = inspect.currentframe()
