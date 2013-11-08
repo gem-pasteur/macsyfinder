@@ -6,6 +6,7 @@ import os
 
 from distutils import log
 from distutils.core import setup
+from distutils.dist import Distribution
 from distutils.core import Command
 #from distutils.command.install_egg_info import install_egg_info
 from distutils.command.build import build
@@ -187,18 +188,25 @@ to run test, run 'python setup.py test'"""
         else:
             test_OK = True
         if test_OK:
+            inst = self.distribution.command_options.get('install')
+            vars_2_subst = {'PREFIX': self.prefix,
+                            'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
+                            'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan')
+                            }
             for _file in fix_prefix:
                 input_file = os.path.join(self.build_lib, _file)
                 output_file =  input_file + '.tmp'
-                subst_vars( input_file, output_file, {'PREFIX': self.prefix})
+                print "subst_vars ",input_file,", ",output_file,", ",vars_2_subst
+                subst_vars(input_file, output_file, vars_2_subst)
                 os.unlink(input_file)
-                self.move_file(output_file, input_file) 
-                install.run(self)
+                self.move_file(output_file, input_file)
+            install.run(self)
+
 
 class install_data(_install_data):
-    
+
     #install.sub_commands += [('install_data', lambda self:True)]
-     
+
     user_options = [
         ('install-dir=', 'd',
          "base directory for installing data files "
@@ -207,9 +215,9 @@ class install_data(_install_data):
          "install everything relative to this alternate root directory"),
         ('force', 'f', "force installation (overwrite existing files)"),
         ]
- 
+
     boolean_options = ['force']
- 
+
     def initialize_options(self):
         self.install_dir = None
         self.outfiles = []
@@ -217,24 +225,19 @@ class install_data(_install_data):
         self.force = 0
         self.data_files = self.distribution.data_files
         self.warn_dir = 1
- 
+
     def finalize_options(self):
         inst = self.distribution.command_options.get('install')
-        if 'install_data' in inst:
-            self.install_dir = inst['install_data'][1]
-        elif 'prefix' in inst:
-            self.install_dir = os.path.join(inst['prefix'][1], 'share')
-        else:
-            self.install_dir = os.path.join('/', 'usr', 'share')
+        self.install_dir = get_install_data_dir(inst)    
         self.set_undefined_options('install',
                                    ('root', 'root'),
                                    ('force', 'force'),
                                   )
+        self.prefix_data = self.install_dir
 
-    
+
     def run(self):
         self.mkpath(self.install_dir)
-        
         for f in self.data_files:
             if isinstance(f, str):
                 # it's a simple file, so copy it
@@ -253,7 +256,6 @@ class install_data(_install_data):
                 elif self.root:
                     dir = change_root(self.root, dir)
                 self.mkpath(dir)
- 
                 if f[1] == []:
                     # If there are no files listed, the user must be
                     # trying to create an empty directory, so add the
@@ -269,17 +271,18 @@ class install_data(_install_data):
                         else:
                             (out, _) = self.copy_file(data, dir)
                             self.outfiles.append(out)
+                
 
- 
+
 class install_conf(install_data):
-     
+
     install.sub_commands += [('install_conf', lambda self:True)]
-     
+
     description = "installation directory for configuration files"
-    
+
     setattr(install, 'install_conf', None)
     install.user_options.append(('install-conf=', None, description)) 
-    
+
     user_options = [
         ('install-conf=', 'd',
          "base directory for installing configuration files "
@@ -288,9 +291,9 @@ class install_conf(install_data):
          "install everything relative to this alternate root directory"),
         ('force', 'f', "force installation (overwrite existing files)"),
         ]
- 
+
     boolean_options = ['force']
-     
+
     def initialize_options(self):
         self.install_dir = None
         self.outfiles = []
@@ -298,24 +301,23 @@ class install_conf(install_data):
         self.force = 0
         self.conf_files = conf_files #as defined at the top of this file
         self.warn_dir = 1
-    
- 
+
+
     def finalize_options(self):
         inst = self.distribution.command_options.get('install')
-        print "inst = ", inst
-        if 'install_conf' in inst:
-            self.install_dir = inst['install_conf'][1]
-        elif 'prefix' in inst:
-            self.install_dir = os.path.join(inst['prefix'][1], 'etc')
-        else:
-            self.install_dir = '/etc'
+        self.install_dir = get_install_conf_dir(inst)
         self.set_undefined_options('install',
                                    ('root', 'root'),
                                    ('force', 'force'),
                                   )
-         
+
     def run(self):
         self.mkpath(self.install_dir)
+        inst = self.distribution.command_options.get('install')
+        vars_2_subst = {'PREFIX': inst['prefix'][1],
+                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
+                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan')
+                        }
         for f in self.conf_files:
             if isinstance(f, str):
                 # it's a simple file, so copy it
@@ -344,11 +346,56 @@ class install_conf(install_data):
                     # Copy files, adding them to the list of output files.
                     for conf in f[1]:
                         conf = convert_path(conf)
+                        print "@@@@@@@@@", conf
                         (out, _) = self.copy_file(conf, dir)
+                        if conf in fix_conf:
+                            input_file = out
+                            output_file =  input_file + '.tmp'
+                            subst_vars(input_file, output_file, vars_2_subst)
+                            os.unlink(input_file)
+                            self.move_file(output_file, input_file)
                         self.outfiles.append(out)
 
+class UsageDistribution(Distribution):
 
+    def __init__(self,  attrs=None):
+        Distribution.__init__(self, attrs = attrs)
+        self.common_usage = """\
+Common commands: (see '--help-commands' for more)
+
+  setup.py build      will build the package underneath 'build/'
+  setup.py test       will run the tests on the newly build library
+  setup.py install    will install the package
+"""
+
+def get_install_data_dir(inst):
+    
+    if 'VIRTUAL_ENV' in os.environ:
+        inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
+    
+    if 'install_data' in inst:
+        install_dir = inst['install_data'][1]
+    elif 'prefix' in inst:
+        install_dir = os.path.join(inst['prefix'][1], 'share')
+    else:
+        install_dir = os.path.join('/', 'usr', 'share')
+    return install_dir
+
+def get_install_conf_dir(inst):
+    if 'VIRTUAL_ENV' in os.environ:
+        inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
+    
+    if 'install_conf' in inst:
+        install_dir = inst['install_conf'][1]
+    elif 'prefix' in inst:
+        install_dir = os.path.join(inst['prefix'][1], 'etc')
+    else:
+        install_dir = '/etc'
+    return install_dir
+        
 def subst_vars(src, dst, vars):
+    print '========'
+    print vars
     try:
         src_file = open(src, "r")
     except os.error, err:
@@ -361,8 +408,11 @@ def subst_vars(src, dst, vars):
         with dest_file:
             for line in src_file:
                 new_line = distutils_subst_vars(line, vars)
+                if line != new_line:
+                    print " - ",line
+                    print " + ", new_line
+                    print "======================="
                 dest_file.write(new_line)
-
 
 require_python = [ 'python (>=2.7, <3.0)' ]
 require_packages = []
@@ -370,9 +420,8 @@ require_packages = []
 #I cannot succeed to inject conf_file in a distribution
 #so i put it at the top level :-(
 conf_files = [('txsscan', ['etc/txsscan.conf'])]
-fix_conf = ["txsscanlib/config.py"]
-
-fix_data = ["txsscanlib/config.py"]
+fix_conf = ['etc/txsscan.conf']
+fix_prefix = ["txsscanlib/config.py"]
 
 
 setup(name        = 'txsscan',
