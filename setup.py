@@ -314,7 +314,7 @@ class install_conf(install_data):
     def run(self):
         self.mkpath(self.install_dir)
         inst = self.distribution.command_options.get('install')
-        vars_2_subst = {'PREFIX': inst['prefix'][1],
+        vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
                         'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan')
                         }
