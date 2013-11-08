@@ -135,7 +135,7 @@ class Config(object):
                           'i_evalue_sel' : "0.5",
                           'coverage_profile' : "0.5",
                           'def_dir': os.path.join( _prefix_data, 'DEF'),
-                          'res_search_dir' : '.',
+                          'res_search_dir' : os.getcwd() ,
                           'res_search_suffix' : '.search_hmm.out',
                           'res_extract_suffix' : '.res_hmm_extract',
                           'profile_dir' : os.path.join( _prefix_data, 'profiles'),
