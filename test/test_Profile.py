@@ -18,7 +18,7 @@ from txsscanlib.gene import Gene
 from txsscanlib.system import System
 from txsscanlib.config import Config
 from txsscanlib.registries import ProfilesRegistry
-
+from test import which
 
 class Test(unittest.TestCase):
 
@@ -61,6 +61,7 @@ class Test(unittest.TestCase):
         s = "%s : %s" % (gene.name, path)
         self.assertEqual(str(profile), s)
 
+    @unittest.skipIf( not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute(self):
         system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.profile_registry)
