@@ -18,7 +18,7 @@ from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
 _prefix_path = '$PREFIX'
 _prefix_conf = '$PREFIXCONF'
 _prefix_data = '$PREFIXDATA'
-if os.environ['TXSSCAN_HOME']:
+if 'TXSSCAN_HOME' in os.environ and os.environ['TXSSCAN_HOME']:
     _prefix_path = os.environ['TXSSCAN_HOME']
     _prefix_conf = os.path.join(os.environ['TXSSCAN_HOME'], 'etc')
     _prefix_data = os.path.join(os.environ['TXSSCAN_HOME'], 'data')

@@ -12,9 +12,9 @@
 import os
 import glob
 
-_prefix_path = '$PREFIX'
-if os.environ['TXSSCAN_HOME']:
-    _prefix_path = os.environ['TXSSCAN_HOME']
+_prefix_data = '$PREFIXDATA'
+if 'TXSSCAN_HOME' in os.environ and os.environ['TXSSCAN_HOME']:
+    _prefix_data = os.path.join(os.environ['TXSSCAN_HOME'], 'data')
 
 
 class ProfilesRegistry(object):
@@ -28,7 +28,7 @@ class ProfilesRegistry(object):
         Constructor
         """
         self._register = {}
-        global_path = os.path.join(_prefix_path, 'txsscan' , 'profiles')
+        global_path = os.path.join(_prefix_data, 'txsscan' , 'profiles')
         self._fill_profile(global_path , cfg)
         local_path = cfg.profile_dir
         if local_path:
@@ -55,7 +55,7 @@ class DefinitionsRegistry(object):
         Constructor
         """
         self._register = {}
-        global_path = os.path.join(_prefix_path, 'txsscan' , 'DEF')
+        global_path = os.path.join(_prefix_data, 'txsscan' , 'DEF')
         self._fill_def(global_path , cfg)
         local_path = cfg.def_dir
         if local_path:
