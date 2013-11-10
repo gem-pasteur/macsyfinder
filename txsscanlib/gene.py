@@ -266,12 +266,16 @@ class Gene(object):
         :rtype: boolean.
         """
         #for m in (system.mandatory_genes+system.allowed_genes):
-        for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
+	#print "=>is %s authorized in %s ??"%(self.name, system.name)
+	for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
             if self == m:
+	    	#print "Yes"
                 return True
             if m.exchangeable and m.is_homolog(self):
+	    	#print "Yes"
                 return True
-            
+        
+	#print "No !"    
         return False
         
 class Homolog(object):

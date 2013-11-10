@@ -173,12 +173,12 @@ class Cluster(object):
         Update systems represented, and assign a putative system (self._putative_system), which is the system with most hits in the cluster. 
         The systems represented are stored in a dictionary in the self.systems variable. 
         The execution of this function can be forced, even if it has already run for the cluster with the option force=True.
-        """        
-        if not self.putative_system or force:
+        """
+	if not self.putative_system or force:
             # First compiute the "Majoritary" system
             systems={} # Counter of occcurrences of systems in the cluster
             genes=[]
-            systems_object={} # Store systems objet. 
+            systems_object={} # Store systems object. 
             for h in self.hits:
                 syst=h.system.name
                 if not systems.has_key(syst):
@@ -208,18 +208,33 @@ class Cluster(object):
                     self._state = "clear"
                 else:
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
-                    foreign_allowed = 0
-                    for h in self.hits:
-                        if h.system.name != self._putative_system and h.gene.is_authorized(systems_object[self._putative_system]):
+                    def try_system(hits, putative_system, systems):
+                        foreign_allowed = 0
+                        print "Unclear state with multiple systems to deal with..."
+                        #print systems
+                        for h in hits:
+                            #print h
+                            #print putative_system
+                            if h.system.name != putative_system and h.gene.is_authorized(systems_object[putative_system]):
+                                foreign_allowed+=1
+                    	if foreign_allowed == sum(systems.values())-systems[putative_system]:
+                            # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
+                            state = "clear"
+                    	else:
+                            state = "ambiguous"
+                        return state
 
-                            foreign_allowed+=1
-                    if foreign_allowed == sum(systems.values())-systems[self._putative_system]:
-                        # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
-                        self._state = "clear"
-                    else:
-                        self._state = "ambiguous"
-
-
+                    for putative_system in systems.keys():
+                        state=try_system(self.hits, putative_system, systems)
+                        if state == "clear":
+                            #print "BUENO SYSTEMO %s"%putative_system
+                            self._state="clear" 
+                            self._putative_system=putative_system 
+                            break
+                        else:
+                            self._state="ambiguous"
+                            #print "YAPABON...%s"%putative_system
+                            
 
 class SystemNameGenerator(object):
     """
