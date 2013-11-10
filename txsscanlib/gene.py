@@ -19,20 +19,21 @@ from threading import Lock
 from report import GembaseHMMReport, GeneralHMMReport
 from txsscan_error import TxsscanError
 
+
 class GeneBank(object):
     """
-    cached all genes objects. ensure that genes are instanciated only once
+    Store all Gene objects. Ensure that genes are instanciated only once.
     """
     _genes_bank = {}
 
     def __getitem__(self, name):
         """
-        :param name: the name of the gene
+        :param name: the name of the Gene
         :type name: string
-        :param cfg: the configuration
+        :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
-        :return: return gene corresponding to the name.
-          If the gene already exists return it otherwise build it and return it
+        :return: return the Gene corresponding to the name.
+          If the Gene already exists, return it, otherwise, build it and return it
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         if name in self._genes_bank:
@@ -43,11 +44,11 @@ class GeneBank(object):
 
     def __contains__(self, gene):
         """
-        implement membership test operators
+        Implement the membership test operator
         
         :param gene:
         :type gene:
-        :return: True if the gene.name is in , False otherwise
+        :return: True if the gene.name is in, False otherwise
         :rtype: boolean
         
         """
@@ -55,7 +56,7 @@ class GeneBank(object):
 
     def __iter__(self):
         """
-        Return an iterator object on the genes contains in the bank
+        Return an iterator object on the genes contained in the bank
         """
         return self._genes_bank.itervalues()
 
@@ -67,7 +68,7 @@ class GeneBank(object):
         :param cfg: the configuration
         :type cfg: :class:`txsscanlib.config.Config` object
         :return: return gene corresponding to the name.
-          If the gene already exists return it otherwise build it an d return
+          If the gene already exists, return it, otherwise, build it and return it
         :rtype: :class:`txsscanlib.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
@@ -81,7 +82,7 @@ gene_bank = GeneBank()
 
 class Gene(object):
     """
-    handle Gene of a secretion system
+    Handle Gene of a (secretion) System
 
     """
 
@@ -95,26 +96,24 @@ class Gene(object):
         """
         handle gene
 
-        :param cfg: the configuration. 
+        :param cfg: the configuration object. 
         :type cfg: :class:`txsscanlib.config.Config` object
-        :param name: the name of the gene.
+        :param name: the name of the Gene.
         :type name: string.
-        :param system: the system which belongs this gene/
+        :param system: the system that owns this Gene
         :type system: :class:`txsscanlib.system.System` object.
-        :param profiles_registry: where all the paths profiles where register.
-        :type profiles_registry: :class:`txsscanlib.registries.ProfilesRegistry` object.
-        :param loner: True if a gene can be isolated on the genome, False otherwise.
+        :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
+        :param exchangeable: True if this Gene can be replaced with one of its homologs whithout any effects on the system assessment, False otherwise.
         :type exchangeable: boolean.
-        :param multi_system: True if a gene can belong to different system. 
+        :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
-        :param inter_gene_max_space: the maximum space between this gene and an other gene of the system.
+        :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
         :type inter_gene_max_space: integer
         """
         self.name = name 
         self.profile = profile_factory.get_profile(self, cfg, profiles_registry)
-        """:ivar profile: The profile HMM Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
+        """:ivar profile: The HMM protein Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
 
         self.homologs = []
         self._system = system
@@ -124,6 +123,9 @@ class Gene(object):
         self._inter_gene_max_space = inter_gene_max_space
 
     def __str__(self):
+    	"""
+	Print the name of the gene and of its homologs.
+	"""
         s = "name : %s" % self.name
         if self.homologs:
             s += "\n    homologs: "
@@ -135,7 +137,7 @@ class Gene(object):
     @property
     def system(self):
         """
-        :return: the secretion system to which this gene belongs
+        :return: the (secretion) System that owns this Gene
         :rtype: :class:`txsscanlib.system.System` object
         """
         return self._system
@@ -159,7 +161,7 @@ class Gene(object):
     @property
     def multi_system(self):
         """
-        :return: True if this gene can belong to different systems, False otherwise.
+        :return: True if this Gene can belong to different occurrences of **this System** (and can be used for multiple System assessments), False otherwise.
         :rtype: boolean.
         """
         return self._multi_system
@@ -167,8 +169,8 @@ class Gene(object):
     @property
     def inter_gene_max_space(self):
         """
-        :return: The maximum distance between this gene and an other from the system. 
-                 If the value is not set at the gene level return the value set at the system level.
+        :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized. 
+                 If the value is not set at the Gene level, return the value set at the System level.
         :rtype: integer.
         """
         if self._inter_gene_max_space is not None:
@@ -178,7 +180,7 @@ class Gene(object):
     
     def add_homolog(self, homolog):
         """
-        add a homolog gene
+        Add a homolog gene to the Gene
 
         :param homolog: homolog to add
         :type homolog:  :class:`txsscanlib.gene.Homolog` object 
@@ -188,14 +190,15 @@ class Gene(object):
 
     def get_homologs(self):
         """
-        :return: The homologs genes
+        :return: the Gene homologs
         :type: list of :class:`txsscanlib.gene.Gene` object
         """
         return self.homologs
     
     def __eq__(self, gene):
         """
-        :return: True if the profiles (genes) are the same, False otherwise.
+        :return: True if the gene names (gene.name) are the same, False otherwise.
+	:param gene: the query of the test
         :type gene: :class:`txsscanlib.gene.Gene` object.
         :rtype: boolean.
         """
@@ -204,7 +207,8 @@ class Gene(object):
         
     def is_homolog(self, gene):
         """
-        :return: True if the genes are homologs, False otherwise.
+        :return: True if the two genes are homologs, False otherwise.
+	:param gene: the query of the test
         :type gene: :class:`txsscanlib.gene.Gene` object.
         :rtype: boolean.
         """
@@ -219,18 +223,36 @@ class Gene(object):
         return False       
     
     def is_mandatory(self, system):
+    	"""
+        :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
+	:param system: the query of the test
+        :type system: :class:`txsscanlib.system.System` object.
+        :rtype: boolean.
+        """
         if self in system.mandatory_genes:
             return True
         else:
             return False    
     
     def is_allowed(self, system):
+        """
+        :return: True if the gene is within the *allowed* genes of the system, False otherwise.
+	:param system: the query of the test
+        :type system: :class:`txsscanlib.system.System` object.
+        :rtype: boolean.
+        """
         if self in system.allowed_genes:
             return True
         else:
             return False
             
     def is_forbidden(self, system):
+        """
+        :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
+	:param system: the query of the test
+        :type system: :class:`txsscanlib.system.System` object.
+        :rtype: boolean.
+        """
         if self in system.forbidden_genes:
             return True
         else:
@@ -238,7 +260,8 @@ class Gene(object):
     
     def is_authorized(self, system):        
         """
-        :return: True if the genes are found in the system definition file, False otherwise.
+        :return: True if the genes are found in the System definition file (.xml), False otherwise.
+	:param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
@@ -253,14 +276,14 @@ class Gene(object):
         
 class Homolog(object):
     """
-    handle homologs
+    Handle homologs, encapsulate a Gene
     """
 
     def __init__(self, gene, gene_ref, aligned = False ):
         """
         :param gene: the gene
         :type gene: :class:`txsscanlib.gene.Gene` object.
-        :param gene_ref: the gene to which this one is homolog.
+        :param gene_ref: the gene to which the current is homolog.
         :type gene_ref: :class:`txsscanlib.gene.Gene` object.
         :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile. Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
@@ -276,7 +299,7 @@ class Homolog(object):
 
     def is_aligned(self):
         """
-        :return: True if this homolog is aligned to its gene of reference, False otherwise.
+        :return: True if this gene homolog is aligned to its homolog, False otherwise.
         :rtype: boolean
         """
         return self.aligned
@@ -284,7 +307,7 @@ class Homolog(object):
     @property
     def gene_ref(self):
         """
-        :return: the gene of reference to this homolog
+        :return: the gene to which this one is homolog to (reference gene)
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         return self.ref
@@ -292,19 +315,19 @@ class Homolog(object):
 
 class ProfileFactory():
     """
-    build and cached all Profile objects. Profiles must not be instanciate directly.
-    the profile_factory must be used. The profile_factory ensure there is only one instance
+    Build and store all Profile objects. Profiles must not be instanciated directly.
+    The profile_factory must be used. The profile_factory ensures there is only one instance
     of profile for a given name.
-    To get a profile use the method get_profile. If the profile is already cached this instance is returned
-    otherwise a new profile is build, cached then returned.
+    To get a profile, use the method get_profile. If the profile is already cached, this instance is returned.
+    Otherwise a new profile is built, stored in the profile_factory and then returned.
 
     """
     _profiles = {}
 
     def get_profile(self, gene, cfg, profiles_registry):
         """
-        :return: return profile corresponding to the name.
-                 If the profile already exists return it otherwise build it and return
+        :return: the profile corresponding to the name.
+                 If the profile already exists, return it. Otherwise build it, store it and return it.
         :rtype: :class:`txsscanlib.gene.Profile` object
         """
         if gene.name in self._profiles:
@@ -322,7 +345,7 @@ profile_factory = ProfileFactory()
 
 class Profile(object):
     """
-    handle profile
+    Handle a HMM protein profile
     """
 
     def __init__(self, gene, cfg, path):
@@ -344,15 +367,15 @@ class Profile(object):
 
     def __len__(self):
         """
-        :return: the length of the HMM profile
+        :return: the length of the HMM protein profile
         :rtype: int
         """
         return self.len
 
     def _len(self):
         """
-        Parse the HMM profile to get the length and cache it
-        this private method is called at the Profile init
+        Parse the HMM profile file to get and store the length.
+        This private method is called at the Profile init.
         """
         with open(self.path) as f:
             for l in f:
@@ -362,14 +385,17 @@ class Profile(object):
         return length
 
     def __str__(self):
+    	"""
+	Print the name of the corresponding gene and the path to the HMM profile.
+	"""
         return "%s : %s" % (self.gene.name, self.path)
 
 
     def execute(self):
         """
-        execute the hmmsearch with this profile
+        Launch the Hmmer search (hmmsearch executable) with this profile
 
-        :return: an HMM report
+        :return: an object storing information on th results of the HMM search (HMMReport)
         :rtype:  :class:`txsscanlib.report.HMMReport` object
         """
         with self._lock:
@@ -391,7 +417,7 @@ class Profile(object):
                            }
                 #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
                 command = "%(hmmer_exe)s --cpu 0 -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s " % options
-                _log.info( "%s hmmer command line : %s" % (self.gene.name, command))
+                _log.info( "%s Hmmer command line : %s" % (self.gene.name, command))
                 try:
                     hmmer = Popen( command ,
                                    shell = True ,
@@ -401,13 +427,13 @@ class Profile(object):
                                    close_fds = False ,
                                    )
                 except Exception, err:
-                    msg = "hmmer execution failed: command = %s : %s" % ( command , err)
+                    msg = "Hmmer execution failed: command = %s : %s" % ( command , err)
                     _log.critical( msg, exc_info = True )
                     raise err
 
                 hmmer.wait()
             if hmmer.returncode != 0:
-                msg = "an error occurred during hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
                 _log.critical( msg, exc_info = True )
                 raise RuntimeError(msg)
             self.hmm_raw_output = output_path
