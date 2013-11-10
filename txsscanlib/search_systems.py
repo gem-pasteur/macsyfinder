@@ -210,7 +210,7 @@ class Cluster(object):
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
                     def try_system(hits, putative_system, systems):
                         foreign_allowed = 0
-                        print "Unclear state with multiple systems to deal with..."
+                        #print "Unclear state with multiple systems to deal with..."
                         #print systems
                         for h in hits:
                             #print h
@@ -225,6 +225,7 @@ class Cluster(object):
                         return state
 
                     for putative_system in systems.keys():
+                        # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
                         state=try_system(self.hits, putative_system, systems)
                         if state == "clear":
                             #print "BUENO SYSTEMO %s"%putative_system
