@@ -247,7 +247,7 @@ system_name_generator = SystemNameGenerator()
 class SystemOccurence(object):
     """
     This class is instantiated for a specific system that has been asked for detection. It can be filled step by step with hits. 
-    A decision can then be made according to parameters defined *e.g.* quorum of genes. 
+    A decision can then be made according to the parameters defined *e.g.* quorum of genes. 
 
     The SystemOccurence object has a "state" parameter, with the possible following values: 
         - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
