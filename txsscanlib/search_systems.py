@@ -889,6 +889,7 @@ class systemDetectionReport(object):
                     gene['begin_match'] = valid_hit.begin_match
                     gene['end_match'] = valid_hit.end_match
                     system['genes'].append(gene)
+                    system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['exmandatory_genes'] = so.exmandatory_genes
