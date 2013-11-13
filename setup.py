@@ -440,7 +440,6 @@ class Uninstall(Command):
         prefixes = []
         for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
             prefixes.append( getattr(self, attr))
-        record_file = os.path.join(os.path.dirname(__file__),"install_record")
 
         def clean_tree(_dir):
             for prefix in prefixes:
@@ -463,7 +462,7 @@ class Uninstall(Command):
             clean_tree(os.path.dirname(_dir))
 
         try:
-            with open(record_file) as record_file:
+            with open(self.distribution.uninstall_files) as record_file:
                 for path in record_file:
                     path = os.path.normpath(path.strip())
                     try:
@@ -477,9 +476,9 @@ class Uninstall(Command):
         except IOError, err:
             msg = "Cannot unistall txsscan.\n"
             if err.errno == os.errno.ENOENT:
-                msg += "Cannot access \"{}\": No such file".format(record_file) 
+                msg += "Cannot access \"{}\": No such file".format(self.distribution.uninstall_files) 
             elif err.errno == os.errno.EACCES:
-                msg += "Cannot access \"{}\": Permission denied".format(record_file)
+                msg += "Cannot access \"{}\": Permission denied".format(self.distribution.uninstall_files)
             else:
                 msg += str(err)
             raise DistutilsFileError(msg)
