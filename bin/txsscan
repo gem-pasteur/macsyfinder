@@ -268,12 +268,14 @@ all_genes = []
 for system in systems_to_detect:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
     # Exchangeable homologs are also added cause they can "replace" an important gene...
+    h_genes=[]
     for g in genes:
     	if g.exchangeable:
             homologs=g.get_homologs()
             for h in homologs:
-                genes.append(h.gene)
+                h_genes.append(h.gene)
     all_genes += genes
+    all_genes += h_genes
 #############################################
 # this part of code is executed in parallel
 #############################################
