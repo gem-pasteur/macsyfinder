@@ -4,21 +4,22 @@ import time
 import sys
 import os
 
-from distutils import log
+from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
+try:
+    import warnings
+except ImportError:
+    warnings = None
+from distutils import log, dir_util
 from distutils.core import setup
-from distutils.dist import Distribution
 from distutils.core import Command
-#from distutils.command.install_egg_info import install_egg_info
+from distutils.dist import Distribution
 from distutils.command.build import build
 from distutils.command.install import install
 from distutils.command.install_data import install_data as _install_data
-from distutils.util import get_platform
-from distutils.errors import DistutilsOptionError, DistutilsPlatformError
+from distutils.errors import DistutilsFileError, DistutilsOptionError, DistutilsPlatformError
 from distutils.versionpredicate import VersionPredicate
-from distutils.errors import DistutilsFileError
 from distutils.util import subst_vars as distutils_subst_vars
-from distutils.util import change_root, convert_path
-
+from distutils.util import get_platform, change_root, convert_path
 
 class check_and_build( build ):
     def run(self):
@@ -167,6 +168,21 @@ class test(Command):
 
 class install_txsscan(install):
 
+    #I use record to store all installed files and reuse this record file for uninstall
+    #so this option is not available anymore for the users 
+    for i, opt in enumerate(install.user_options):
+        if opt[0] == 'record=':
+            install.user_options.pop(i)
+
+    def finalize_options(self):
+        install.finalize_options(self)
+        self.record = self.distribution.uninstall_files
+        with open(self.distribution.uninstall_prefix, "w") as _f:
+            _f.write("[install]\n")
+            _f.write('install_scripts = {}\n'.format(os.path.normpath(self.install_scripts)))
+            _f.write('install_lib = {}\n'.format(os.path.normpath(self.install_lib)))
+
+
     def run(self):
         test_res_path = os.path.join(self.build_base, ".tests_results")
         test_res = 0 # test fails
@@ -194,7 +210,7 @@ to run test, run 'python setup.py test'"""
                             'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
                             'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
                             }
-            for _file in fix_prefix:
+            for _file in self.distribution.fix_prefix:
                 input_file = os.path.join(self.build_lib, _file)
                 output_file =  input_file + '.tmp'
                 subst_vars(input_file, output_file, vars_2_subst)
@@ -217,9 +233,9 @@ class install_data(_install_data):
         ]
 
     boolean_options = ['force']
-    
-    
-        
+
+
+
     def finalize_options(self):
         inst = self.distribution.command_options.get('install')
         self.install_dir = get_install_data_dir(inst)
@@ -229,6 +245,9 @@ class install_data(_install_data):
                                   )
         self.prefix_data = self.install_dir
         self.files_2_install = self.distribution.data_files 
+        with open(self.distribution.uninstall_prefix, "a") as _f:
+            _f.write('install_data = {}\n'.format(self.install_dir))
+
 
     def run(self):
         self.mkpath(self.install_dir)
@@ -270,11 +289,12 @@ class install_data(_install_data):
 
 class install_doc(install_data):
 
-    install.sub_commands += [('install_doc', lambda self:True)]
+    install.sub_commands += [('install_doc', lambda self: not self.no_doc)]
 
     description = "installation directory for documentation files"
 
     setattr(install, 'install_doc', None)
+    setattr(install, 'no_doc', None)
 
     install.user_options.append(('install-doc=', None, description))
     install.user_options.append(('no-doc', None, 'do not install documentation'))
@@ -291,9 +311,9 @@ class install_doc(install_data):
     def initialize_options(self):
         install_data.initialize_options(self)
         self.install_doc = None
-        self.no_doc = False
-        self.files_2_install = doc_files #as defined at the global level of this file
-        
+        self.no_doc = None
+        self.files_2_install = self.distribution.doc_files 
+
     def finalize_options(self):
         inst = self.distribution.command_options.get('install')
         self.install_dir = get_install_doc_dir(inst)
@@ -302,8 +322,12 @@ class install_doc(install_data):
                                    ('force', 'force'),
                                   )
         self.prefix_data = self.install_dir
-        
+        self.no_doc = inst.get('no_doc', ('command line', False))[1]
+        with open(self.distribution.uninstall_prefix, "a") as _f:
+            _f.write('install_doc = {}\n'.format(self.install_dir))
 
+    def run(self):
+        install_data.run(self)
 
 
 class install_conf(install_data):
@@ -328,7 +352,7 @@ class install_conf(install_data):
 
     def initialize_options(self):
         install_data.initialize_options(self)
-        self.conf_files = conf_files #as defined at the top of this file
+        self.conf_files = self.distribution.conf_files
 
 
     def finalize_options(self):
@@ -338,6 +362,8 @@ class install_conf(install_data):
                                    ('root', 'root'),
                                    ('force', 'force'),
                                   )
+        with open(self.distribution.uninstall_prefix, "a") as _f:
+            _f.write('install_conf = {}\n'.format(self.install_dir))
 
     def run(self):
         self.mkpath(self.install_dir)
@@ -355,6 +381,7 @@ class install_conf(install_data):
                     self.warn("setup script did not provide a directory for "
                               "'%s' -- installing right in '%s'" %
                               (f, self.install_dir))
+                dest =  os.path.join(self.install_dir, f +".new" )
                 (out, _) = self.copy_file(f, self.install_dir)
                 self.outfiles.append(out)
             else:
@@ -376,21 +403,103 @@ class install_conf(install_data):
                     for conf in f[1]:
                         conf = convert_path(conf)
                         (out, _) = self.copy_file(conf, dir)
-                        if conf in fix_conf:
+                        if conf in self.distribution.fix_conf:
                             input_file = out
                             output_file =  input_file + '.tmp'
                             subst_vars(input_file, output_file, vars_2_subst)
-                            os.unlink(input_file)
-                            self.move_file(output_file, input_file)
-                        self.outfiles.append(out)
+                            new_file = input_file + ".new"
+                            if os.path.exists(new_file):
+                                os.unlink(new_file)
+                            self.move_file(output_file, new_file)
+                            self.outfiles.append(new_file)
 
 
+class Uninstall(Command):
 
+    description = "remove installed files"
+
+    user_options = []
+
+    def initialize_options (self):
+        self.install_scripts = None
+        self.install_lib = None
+        self.install_data = None
+        self.install_doc = None
+        self.install_conf = None
+
+
+    def finalize_options(self):
+        self.parser = SafeConfigParser()
+        if not os.path.exists(self.distribution.uninstall_prefix):
+            raise DistutilsFileError( "Cannot unistall txsscan.\n{}: No such file".format(self.distribution.uninstall_prefix))
+        used_files = self.parser.read(self.distribution.uninstall_prefix)
+        for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
+            try:
+                value = self.parser.get('install', attr)
+            except(NoSectionError, NoOptionError):
+                continue
+            setattr(self, attr, value)
+
+    def run(self):
+        prefixes = []
+        for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
+            prefixes.append( getattr(self, attr))
+        record_file = os.path.join(os.path.dirname(__file__),"install_record")
+
+        def clean_tree(_dir):
+            for prefix in prefixes:
+                find_prefix = False
+                if _dir.find(prefix) != -1:
+                    find_prefix = True
+                    break
+            if not find_prefix:
+                return
+            try:
+                if not self.dry_run:
+                    os.rmdir(_dir)
+                log.info( "remove dir {}".format(_dir))
+            except OSError as err:
+                if err.errno == os.errno.ENOTEMPTY:
+                    return
+                else:
+                    self.warn(err)
+                    return
+            clean_tree(os.path.dirname(_dir))
+
+        try:
+            with open(record_file) as record_file:
+                for path in record_file:
+                    path = os.path.normpath(path.strip())
+                    try:
+                        if not self.dry_run:
+                            os.unlink(path)
+                        log.info("remove file {}".format(path))
+                    except Exception, err:
+                        pass
+                    _dir = os.path.dirname(path)
+                    clean_tree(_dir)
+        except IOError, err:
+            msg = "Cannot unistall txsscan.\n"
+            if err.errno == os.errno.ENOENT:
+                msg += "Cannot access \"{}\": No such file".format(record_file) 
+            elif err.errno == os.errno.EACCES:
+                msg += "Cannot access \"{}\": Permission denied".format(record_file)
+            else:
+                msg += str(err)
+            raise DistutilsFileError(msg)
 
 
 class UsageDistribution(Distribution):
 
-    def __init__(self,  attrs=None):
+    def __init__(self, attrs = None):
+        #It's important to define opotions before to call __init__
+        #otherwise AttributeError: UsageDistribution instance has no attribute 'conf_files'
+        self.conf_files = None
+        self.doc_files = None
+        self.fix_prefix = None
+        self.fix_conf = None
+        self.uninstall_prefix = os.path.join(os.path.dirname(__file__), "uninstall.cfg")
+        self.uninstall_files = os.path.join(os.path.dirname(__file__), "uninstall_files")
         Distribution.__init__(self, attrs = attrs)
         self.common_usage = """\
 Common commands: (see '--help-commands' for more)
@@ -398,13 +507,15 @@ Common commands: (see '--help-commands' for more)
   setup.py build      will build the package underneath 'build/'
   setup.py test       will run the tests on the newly build library
   setup.py install    will install the package
+  setup.py uninstall  will unistall every installed files
 """
 
+
 def get_install_data_dir(inst):
-    
+
     if 'VIRTUAL_ENV' in os.environ:
         inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
-    
+
     if 'install_data' in inst:
         install_dir = inst['install_data'][1]
     elif 'prefix' in inst:
@@ -417,7 +528,7 @@ def get_install_data_dir(inst):
 def get_install_conf_dir(inst):
     if 'VIRTUAL_ENV' in os.environ:
         inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
-    
+
     if 'install_conf' in inst:
         install_dir = inst['install_conf'][1]
     elif 'prefix' in inst:
@@ -430,7 +541,7 @@ def get_install_conf_dir(inst):
 def get_install_doc_dir(inst):
     if 'VIRTUAL_ENV' in os.environ:
         inst['prefix'] = ('environment', os.environ['VIRTUAL_ENV'])
-    
+
     if 'install_doc' in inst:
         install_dir = inst['install_doc'][1]
     elif 'prefix' in inst:
@@ -439,7 +550,7 @@ def get_install_doc_dir(inst):
         install_dir = os.path.join('/', 'usr', 'share', 'doc')
     return install_dir
 
-        
+
 def subst_vars(src, dst, vars):
     try:
         src_file = open(src, "r")
@@ -458,16 +569,6 @@ def subst_vars(src, dst, vars):
 require_python = [ 'python (>=2.7, <3.0)' ]
 require_packages = []
 
-#I cannot succeed to inject conf_file in a distribution
-#so i put it at the top level :-(
-conf_files = [('txsscan', ['etc/txsscan.conf'])]
-doc_files = [('txsscan', ['doc/_build/html/'])]
-
-#file where some variable must be fix by install_conf
-fix_conf = ['etc/txsscan.conf']
-
-#file where some variable must be fix by txsscan_install
-fix_prefix = ['txsscanlib/config.py', 'txsscanlib/registries.py']
 
 
 setup(name        = 'txsscan',
@@ -483,12 +584,20 @@ setup(name        = 'txsscan',
       data_files = [('txsscan/DEF', ['data/DEF/']),
                     ('txsscan/profiles', ['data/profiles/'])
                     ],
+      conf_files = [('txsscan', ['etc/txsscan.conf'])],
+      doc_files = [('txsscan/html', ['doc/_build/html/']),
+             ('txsscan/pdf', ['doc/_build/latex/Txsscan.pdf']),
+             ],
+      fix_conf = ['etc/txsscan.conf'],#file where some variable must be fix by install_conf
+      fix_prefix = ['txsscanlib/config.py', 'txsscanlib/registries.py'],#file where some variable must be fix by txsscan_install
       cmdclass= { 'build' : check_and_build ,
                   'test': test,
                   'install' : install_txsscan,
                   'install_data' : install_data,
                   'install_conf' : install_conf,
-                  'install_doc'  : install_doc
-                 }
+                  'install_doc'  : install_doc,
+                  'uninstall'    : Uninstall,
+                 },
+      distclass = UsageDistribution
       )
 
