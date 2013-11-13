@@ -30,21 +30,16 @@ class check_and_build( build ):
             chk &= self.check_package(req)
         if not chk: 
             sys.exit(1)
-        test_res_path = os.path.join(self.build_base, ".tests_results")
-        try:
-            os.unlink(test_res_path)
-        except OSError, err:
-            pass
         build.run(self)
-        print """
+        log.info( """
 Unit tests are available. It is _highly_ recommended to run tests now.
-to run test, run 'python setup.py test -vv'"""
+to run test, run 'python setup.py test -vv'""")
 
     def check_python(self, req):
         chk = VersionPredicate(req)
         ver = '.'.join([str(v) for v in sys.version_info[:2]])
         if not chk.satisfied_by(ver):
-            print >> sys.stderr, "Invalid python version, expected %s" % req
+            log.error("Invalid python version, expected %s" % req)
             return False
         return True
 
@@ -53,14 +48,14 @@ to run test, run 'python setup.py test -vv'"""
         try:
             mod = __import__(chk.name)
         except:
-            print >> sys.stderr, "Missing mandatory %s python module" % chk.name
+            log.error("Missing mandatory %s python module" % chk.name)
             return False
         for v in [ '__version__', 'version' ]:
             ver = getattr(mod, v, None)
             break
         try:
             if ver and not chk.satisfied_by(ver):
-                print >> sys.stderr, "Invalid module version, expected %s" % req
+                log.error("Invalid module version, expected %s" % req)
                 return False
         except:
             pass
@@ -155,12 +150,30 @@ class test(Command):
             elif os.path.exists(self.build_platlib):
                 self.build_lib = self.build_platlib
 
-        print "running test"
+        log.info("running test")
         os.environ['TXSSCAN_HOME'] = os.path.dirname(os.path.abspath(__file__))
         test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
-        res_path = os.path.join(self.build_base, ".tests_results")
-        with open(res_path, 'w') as _file:
-            print >> _file, int(test_res.wasSuccessful())
+        kind_of_skipped = {}
+        for test in test_res.skipped:
+            kind_of_skipped[test[1]] = True 
+        for skip_reason in kind_of_skipped.keys():
+            if skip_reason == "neither makeblast nor formatdb found in PATH":
+                msg = """
+#####################################################################
+neither makeblast nor formatdb found in PATH
+You'll have to provide the full path of 
+makeblastdb or formatdb in config file or command line to run txsscan
+#####################################################################"""
+            elif skip_reason == "hmmsearch not found in PATH":
+                msg = """
+########################################################
+hmmsearch not found in PATH
+You'll have to provide the full path of 
+hmmsearch in config file or command line to run txsscan
+########################################################"""
+            else:
+                msg = skip_reason
+            log.warn( msg )
         if not test_res.wasSuccessful():
             sys.exit("some tests fails. Run python setup.py test -vv to have more details")
 
@@ -184,44 +197,22 @@ class install_txsscan(install):
 
 
     def run(self):
-        test_res_path = os.path.join(self.build_base, ".tests_results")
-        test_res = 0 # test fails
-        if os.path.exists(test_res_path):
-            with open(test_res_path) as _file:
-                test_res = int(_file.readline().strip())
-                if not test_res:
-                    msg = "Unit tests failed. It is _highly_ recommended to fix the problem, before installing"
-        else:
-            msg = """Unit tests are available. It is _highly_ recommended to run tests now, before installing
-to run test, run 'python setup.py test'"""
-
-        if not test_res: #test_res = 0 => test fails or test not ran
-            test_OK = raw_input( "{}\nAre you sure you want to install anyway (y/N) ?".format(msg))
-            if test_OK.lower() in ('y', 'yes'):
-                test_OK = True
-            else:
-                test_OK = False
-        else:
-            test_OK = True
-        if test_OK:
-            inst = self.distribution.command_options.get('install')
-            vars_2_subst = {'PREFIX': inst.get('prefix', ''),
-                            'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
-                            'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
-                            'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
-                            }
-            for _file in self.distribution.fix_prefix:
-                input_file = os.path.join(self.build_lib, _file)
-                output_file =  input_file + '.tmp'
-                subst_vars(input_file, output_file, vars_2_subst)
-                os.unlink(input_file)
-                self.move_file(output_file, input_file)
-            install.run(self)
+        inst = self.distribution.command_options.get('install')
+        vars_2_subst = {'PREFIX': inst.get('prefix', ''),
+                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
+                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
+                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
+                        }
+        for _file in self.distribution.fix_prefix:
+            input_file = os.path.join(self.build_lib, _file)
+            output_file =  input_file + '.tmp'
+            subst_vars(input_file, output_file, vars_2_subst)
+            os.unlink(input_file)
+            self.move_file(output_file, input_file)
+        install.run(self)
 
 
 class install_data(_install_data):
-
-    #install.sub_commands += [('install_data', lambda self:True)]
 
     user_options = [
         ('install-dir=', 'd',
