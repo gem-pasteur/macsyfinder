@@ -244,6 +244,8 @@ class install_data(_install_data):
         self.mkpath(self.install_dir)
         for f in self.files_2_install:
             if isinstance(f, str):
+                if not os.path.exists(f):
+                    log.warn("WARNING the document {} cannot be found, installation skipped".format(f))
                 # it's a simple file, so copy it
                 f = convert_path(f)
                 if self.warn_dir:
@@ -269,6 +271,9 @@ class install_data(_install_data):
                     # Copy files, adding them to the list of output files.
                     for data in f[1]:
                         data = convert_path(data)#return name that will work on the native filesystem
+                        if not os.path.exists(data):
+                            log.warn("WARNING the document {} cannot be found, installation skipped".format(data))
+                            continue
                         if os.path.isdir(data):
                             out = self.copy_tree(data, dir)
                             self.outfiles.extend(out)

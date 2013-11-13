@@ -8,6 +8,7 @@ exclude txsscanlib/hmm_parsing_w_DB.*
 exclude txsscanlib/min_max_proto.py
 
 recursive-include doc/_build/html *
+include doc/_build/latex/Txsscan.pdf
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
@@ -22,3 +23,4 @@ include test/datatest/profiles/*
 include test/txsscan.conf
 
 include etc/txsscan.conf
+
