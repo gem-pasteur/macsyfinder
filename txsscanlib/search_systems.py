@@ -759,7 +759,7 @@ class validSystemHit(object):
 
 class systemDetectionReport(object):
     """
-    Stores the systems to report for each replicon: 
+    Stores the detected systems to report for each replicon: 
         - by system name, 
         - by state of the systems (single vs multi loci)
     
