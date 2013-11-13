@@ -102,6 +102,8 @@ class Gene(object):
         :type name: string.
         :param system: the system that owns this Gene
         :type system: :class:`txsscanlib.system.System` object.
+        :param profiles_registry: where all the paths profiles where register.
+        :type profiles_registry: :class:`txsscanlib.registries.ProfilesRegistry` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs whithout any effects on the system assessment, False otherwise.
