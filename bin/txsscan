@@ -150,12 +150,12 @@ dir_options.add_argument( '--research-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
                     default = None,
-                    help = 'aide a définir')
+                    help = 'The suffix to give to Hmmer raw output files.')
 dir_options.add_argument('--research-extract-suffix',
                     action = 'store',
                     dest = 'res_extract_suffix',
                     default = None,
-                    help = 'aide a définir')
+                    help = 'The suffix to give to filtered hits output files.')
 dir_options.add_argument('-p', '--profile_dir',
                     action = 'store',
                     dest = 'profile_dir',
@@ -291,4 +291,4 @@ if len(all_hits)> 0:
     search_systems(all_hits, systems_to_detect, config)
 else:
     logger.info("No hits found in this dataset.")
-logger.debug("FIN")
+logger.debug("END")
