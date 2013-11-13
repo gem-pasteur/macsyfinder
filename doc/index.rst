@@ -22,6 +22,7 @@ TXSScan documentation contents
    :maxdepth: 2
 
    installation 
+   quickstart
    implementation
    system_definition
    system_parser  
