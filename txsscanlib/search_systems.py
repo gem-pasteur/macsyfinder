@@ -87,7 +87,8 @@ class ClustersHandler(object):
 
 class Cluster(object):
     """
-    Stores a set of contiguous hits. The Cluster object can have different states regarding its content in different genes' systems: 
+    Stores a set of contiguous hits. The Cluster object can have different states regarding 
+    its content in different genes' systems: 
         - ineligible: not a cluster to analyze
         - clear: a single system is represented in the cluster
         - ambiguous: several systems are represented in the cluster => might need a disambiguation
@@ -644,7 +645,8 @@ class SystemOccurence(object):
             - the minimal number of mandatory genes is checked (\"min_mandatory_genes_required\")
             - the minimal number of genes in the system is checked (\"min_genes_required\")
             
-        When a decision is made, the status (self.status) of the :class:`txsscanlib.search_systems.SystemOccurence` is set either to:
+        When a decision is made, the status (self.status) of the 
+        :class:`txsscanlib.search_systems.SystemOccurence` is set either to:
             - "\single_locus\" when a complete system in the form of a single cluster was found
             - "\multi_loci\" when a complete system in the form of several clusters was found
             - "\uncomplete\" when no system was assessed (quorum not reached)

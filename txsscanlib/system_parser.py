@@ -110,7 +110,8 @@ class SystemParser(object):
 
     def _create_genes(self, system, system_node):
         """
-        create genes belonging to the systems. be carefull the return genes have not their homologs.
+        Create genes belonging to the systems. Be careful, the return genes have not their homologs.
+        
         :param gene_name:
         :type gene_name: string
         :param system:

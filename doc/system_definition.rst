@@ -33,12 +33,9 @@ The XML hierarchy
 
    * must have an attribute "name" which must match to a profile in the profile directory.
    * must have an attribute "presence" which can take three values "mandatory", "allowed", "forbidden".
-   * may have an attribute "system_ref" which is a reference to the secretion system from where the gene 
-      comes from (this attribute is used for forbidden gene and homologs gene). 
-      If system_ref is not specified, it means the gene is from the current system.
+   * may have an attribute "system_ref" which is a reference to the secretion system from where the gene comes from (this attribute is used for forbidden gene and homologs gene). If system_ref is not specified, it means the gene is from the current system.
    * may have an attribute "loner" which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
-   * may have an attribute "exchangeable" which is a boolean. If a gene is exchangeable that means this gene or one of the homologs can be found without
-      impacts on the secretion system ( *default false* ).
+   * may have an attribute "exchangeable" which is a boolean. If a gene is exchangeable that means this gene or one of the homologs can be found without impacts on the secretion system ( *default false* ).
    * may have an attribute "multi_system" which is a boolean. If a gene is "multi_system", it means that it can be used by multiple systems. Thus, during the phase of systems assessment, a same occurrence of this component will be used multiple times to "fill" systems and be counted in the quorum in the case they lack this gene ( *default false* ).
    * "aligned" which is a boolean (this attribute is used only for homologs).
    * "inter_gene_max_space" which is an integer. 
