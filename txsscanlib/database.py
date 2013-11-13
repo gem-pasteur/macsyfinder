@@ -22,10 +22,10 @@ from txsscan_error import TxsscanError
 
 def fasta_iter(fasta_file):
     """
-    :param fasta_file: the file containing all sequences in fasta format.
+    :param fasta_file: the file containing all input sequences in fasta format.
     :type fasta_file: file object
     :author: http://biostar.stackexchange.com/users/36/brentp
-    :return: given a fasta file. return an iterator which yield tuples
+    :return: for a given fasta file, it returns an iterator which yields tuples
              (string id, string comment, int sequence length)
     :rtype: iterator
     """
@@ -45,18 +45,19 @@ def fasta_iter(fasta_file):
 
 class Indexes(object):
     """
-    Handle the indexes for txsscan
+    Handle the indexes for txsscan:
     
-    # find the indexes for hmmer, or build them using formatdb external tool
-    # find the indexes need by txsscan to compute some scores, or build them. These indexes are store in a Berkeley DB
+     - find the indexes for hmmer, or build them using formatdb or makeblastdb external tools
+     - find the indexes required by txsscan to compute some scores, or build them 
       
     """
 
 
     def __init__(self, cfg):
         """
-        Constructor retrieve file of indexes, if they are not present
-        or the user ask for build indexes (--idx) launch the indexes building. 
+        The constructor retrieves the file of indexes in the case they are not present
+        or the user asked for build indexes (--idx) 
+        Launch the indexes building. 
 
         :param cfg: the configuration 
         :type cfg: :class:`txsscanlib.config.Config` object
@@ -69,9 +70,9 @@ class Indexes(object):
 
     def build(self, force = False):
         """
-        build the indexes from the sequences base in fasta format
+        Build the indexes from the sequence dataset in fasta format
 
-        :param force: If True force the index building even the index file are present on the system
+        :param force: If True, force the index building even if the index files are present in the sequence dataset folder 
         :type force: boolean
         """
         hmmer_indexes = self.find_hmmer_indexes()
@@ -119,8 +120,8 @@ class Indexes(object):
 
     def find_hmmer_indexes(self):
         """
-        :return: the files wich belongs to the hmmer indexes. 
-                 If indexes are inconsistent (lack file) a Runtime Error is raised
+        :return: The hmmer index files. 
+                 If indexes are inconsistent (some file(s) missing), a Runtime Error is raised
         :rtype: list of string 
         """
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq', '.pal')
@@ -131,20 +132,20 @@ class Indexes(object):
             nb_of_index = len(index_files)
             if suffix != '.pal':
                 if file_nb and file_nb != nb_of_index:
-                    msg = "some indexes lack. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "some index files are missing. Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
                     raise  RuntimeError(msg)
             else:
                 if nb_of_index > 1:
-                    msg = "too many .pal file . remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "too many .pal file . Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
                     raise  RuntimeError(msg)    
                 elif file_nb > 1 and nb_of_index == 0:
-                    msg = "some indexes lack. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "some index files are missing. Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
                     raise  RuntimeError(msg)
                 elif file_nb == 1 and nb_of_index == 1:
-                    msg = "a virtual index is detected (.pal) but there is only one file per index type. remove indexes (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "a virtual index is detected (.pal) but there is only one file per index type. Delete all index files  (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
                     raise  RuntimeError(msg)
             idx.extend(index_files)
@@ -154,7 +155,7 @@ class Indexes(object):
 
     def find_my_indexes(self):
         """
-        :return: the file of txsscan indexes if exits, None otherwise. 
+        :return: the file of txsscan indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
         """ 
         path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
@@ -165,7 +166,7 @@ class Indexes(object):
  
     def _build_hmmer_indexes(self):
         """
-        build the indexes for hmmer using formatdb tool
+        build the index files for hmmer using the formatdb or makeblastdb tool
         """
         index_dir = os.path.dirname(self.cfg.sequence_db)
         
@@ -184,7 +185,7 @@ class Indexes(object):
                                                       self.cfg.sequence_db
                                                           )
         else:
-            raise TxsscanError("%s is not support to index database use makeblastdb or formatdb" % self.cfg.sequence_db)
+            raise TxsscanError("%s is not supported to index the sequence dataset. Please use makeblastdb or formatdb." % self.cfg.sequence_db)
 
 
         err_path = os.path.join(index_dir, "formatdb.err")
@@ -198,7 +199,7 @@ class Indexes(object):
                                   close_fds = False ,
                                   )
             except Exception, err:
-                msg = "unable to format the sequence base : %s : %s" % (command, err)
+                msg = "unable to format the sequence dataset : %s : %s" % (command, err)
                 _log.critical( msg, exc_info = True )
                 raise err
             return formatdb
@@ -208,10 +209,9 @@ class Indexes(object):
         """
         Build txsscan indexes. These indexes are stored in a file.
 
-        the format of the file is :
-        one entry per line
-        each line has the following format:
-        - sequence id;sequence length;sequence rank
+        The file format is the following:
+         - one entry per line, with each line having this format:
+         - sequence id;sequence length;sequence rank
 
         """
         try:
@@ -223,12 +223,12 @@ class Indexes(object):
                         seq_nb += 1
                         my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
         except Exception, err:
-            msg = "unable to index the sequence base: %s : %s" % (self.cfg.sequence_db, err)
+            msg = "unable to index the sequence dataset: %s : %s" % (self.cfg.sequence_db, err)
             _log.critical(msg, exc_info = True)
             raise err
 
 
-"""handle information name, min, max for a replicon"""
+"""handle name, topology type, and min/max positions in the sequence dataset for a replicon"""
 RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max')
 
 
@@ -242,11 +242,11 @@ class RepliconDB(object):
 
     def __init__(self, cfg):
         """
-        :param cfg: the configuration
+        :param cfg: The configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
 
         .. note ::
-            this class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
+            This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
         """
         self.cfg = cfg
         assert self.cfg.db_type in ('gembase', 'ordered_replicon')
@@ -266,7 +266,7 @@ class RepliconDB(object):
 
     def _fill_topology(self):
         """
-        fill the internal dict with  min, max for each replicon_name of the sequence_db
+        Fill the internal dictionary with min and max positions for each replicon_name of the sequence_db
         """
         topo_dict = {}
         with open(self.topology_file) as topo_f:
@@ -282,9 +282,9 @@ class RepliconDB(object):
 
     def _fill_ordered_min_max(self, default_topology = None):
         """
-        for the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
+        For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
 
-        :param default_topology: the topology provided by the config.replicon_topology 
+        :param default_topology: the topology provided by config.replicon_topology 
         :type default_topology: string
         """
         _min = 1
@@ -297,7 +297,7 @@ class RepliconDB(object):
 
     def _fill_gembase_min_max(self, topology, default_topology):
         """
-        for each replicon_name of the gembase, fill the internal dict with RepliconInfo
+        For each replicon_name of a gembase dataset, it fills the internal dictionary with a namedtuple RepliconInfo
 
         :param topology: the topologies for each replicon 
                          (parsed from the file specified with the option --topology-file)
@@ -342,9 +342,9 @@ class RepliconDB(object):
     
     def __getitem__(self, replicon_name):
         """
-        :param replicon_name: the name of the replicon to get informations
+        :param replicon_name: the name of the replicon to get information on
         :type replicon_name: string
-        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else raise KeyError
+        :returns: the RepliconInfo for the provided replicon_name 
         :rtype: :class:`RepliconInfo` object
         :raise: KeyError if replicon_name is not in repliconDB
         """
@@ -363,13 +363,13 @@ class RepliconDB(object):
 
     def items(self):
         """
-        :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs.
+        :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs
         """
         return self._DB.items()
 
     def iteritems(self):
         """
-        :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs.
+        :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs
         """
         return self._DB.iteritems()
 

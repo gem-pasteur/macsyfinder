@@ -19,13 +19,13 @@ from report import GembaseHMMReport, GeneralHMMReport
 
 def search_genes(genes, cfg):
     """
-    For each each gene of the list use the profile to perform an HMM and parse the output
-    to generate a HMMReport and save it in a file. These tasks are performed in parrallel using threads.
-    The number of workers can be limited by worker_nb directive in the config object.
+    For each gene of the list, use the corresponding profile to perform an HMMer search, and parse the output
+    to generate a HMMReport that is saved in a file after Hit filtering. These tasks are performed in parrallel using threads.
+    The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
     
-    :param genes: the genes to search in the genome
+    :param genes: the genes to search in the input sequence dataset
     :type genes: list of :class:`txsscanlib.gene.Gene` objects
-    :param cfg: the configuration 
+    :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config` object
     """
     worker_nb = cfg.worker_nb
@@ -37,7 +37,7 @@ def search_genes(genes, cfg):
     
     def search(gene, all_reports, sema):
         """
-        search gene in base (exeute a hmmsearch) and produce a report
+        search gene in base (execute \"hmmsearch\") and produce a report
         
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object

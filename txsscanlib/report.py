@@ -23,20 +23,20 @@ from database import Indexes, RepliconDB
 
 class HMMReport(object):
     """
-    handle HMM report. extract a synthetic report from the raw hmmer output
-    this class is an abstract class. there is 2 implementation of this abstract class
-    depending if the genome baes is ordered or not.
+    Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output, after having applied a hit filtering.
+    This class is an **abstract class**. There are two implementations of this abstract class
+    depending on wether the input sequence dataset is "ordered" or not.
     """
 
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, gene, hmmer_output, cfg):
         """
-        :param gene: the gene corresponding to this profile
+        :param gene: the gene corresponding to the profile search reported here
         :type gene: :class:`txsscanlib.gene.Gene` object
-        :param hmmer_output: The path to hmmer output file
+        :param hmmer_output: The path to the raw Hmmer output file
         :type hmmer_output: string
-        :param cfg: the configuration 
+        :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
         """
         self.gene = gene
@@ -49,12 +49,15 @@ class HMMReport(object):
     @abc.abstractmethod
     def extract(self):
         """
-        Parse the output file of hmmer and produced a new synthetic report file.
-        containing selected and sorted hits. ( **abstract method must be implemented in inherited classes** )
+        Parse the raw Hmmer output file and produce a new synthetic report file by applying a filter on hits.
+        Contain selected and sorted hits ( **abstract method to be implemented in inherited classes** )
         """
         pass
 
     def __str__(self):
+    	"""
+	Print information on filtered hits
+	"""
         s = "# gene: %s extract from %s hmm output\n" % (self.gene.name, self._hmmer_raw_out)
         s += "# profile length= %d\n" % len(self.gene.profile)
         s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
@@ -68,8 +71,8 @@ class HMMReport(object):
 
     def save_extract(self):
         """
-        write the string representation of the extact report in a file.
-        the name of this file is the concatenation of the gene and the res_extract_suffix from config
+        Write the string representation of the extact report in a file.
+        The name of this file is the concatenation of the gene name and of the "res_extract_suffix" from the config object
         """
         with self._lock:
             extract_out_name = self.gene.name + self.cfg.res_extract_suffix
@@ -79,7 +82,7 @@ class HMMReport(object):
 
     def best_hit(self):
         """
-        return the best hit when multiple hits
+        Return the best hit when multiple hits
         """
         try:
             return self.hits[0]
@@ -88,11 +91,15 @@ class HMMReport(object):
 
 
     def _hit_start(self, line):
+    	"""
+	Store the string "signalling" the begining of a new hit in Hmmer raw output
+	"""
         return line.startswith(">>")
 
 
     def _build_my_db(self, hmm_output):
         """
+	Build the keys of a dictionary object to store sequence identifiers of hits 
         """
         d = {}
         with open(hmm_output) as hmm_file:
@@ -103,6 +110,7 @@ class HMMReport(object):
 
     def _fill_my_db(self, txsscan_idx, db):
         """
+	Fill the dictionary with information on the sequences matched
         """
         with open(txsscan_idx, 'r') as idx:
             for l in idx:
