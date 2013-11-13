@@ -8,7 +8,7 @@ Installation
 
 TXSScan dependencies
 ====================
-TXSScan has two dependencies, as it requires running the formatdb or the makeblastdb tools provided along the Blast suite of programs (http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) and the program Hmmer (http://hmmer.janelia.org/). Python version 2.7 is required to run TXSScan. Thus formatdb or makeblastdb and hmmsearch programs must be in the PATH in order to use TXSScan. 
+TXSScan has two dependencies, as it requires running the formatdb or the makeblastdb tools provided along the Blast suite of programs (http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) and the program Hmmer (http://hmmer.janelia.org/). Python version 2.7 is required to run TXSScan. Thus formatdb or makeblastdb and hmmsearch programs must be installed (*e.g.*,in the PATH) in order to use TXSScan. 
 
 
 Installation procedure
