@@ -893,6 +893,149 @@ class systemDetectionReport(object):
                 all_systems_occurences.append(system)
             json.dump(all_systems_occurences, _file, indent = 2)
 
+class systemDetectionReportUnordered(object):
+    """
+    Stores the detected systems to report for each replicon: 
+        - by system name, 
+        - by state of the systems (single vs multi loci)
+    
+    """
+    
+    def __init__(self, replicon_name, systems_occurences_list, systems):
+        self._systems_occurences_list = systems_occurences_list
+        #self._system_textlist = []
+        self.replicon_name = replicon_name
+            
+    def counter_output(self):
+        """
+        Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
+        """
+        system_textlist=[]
+        for so in self._systems_occurences_list:
+            system_textlist.append(so.system_name+"_"+so.state)
+               
+        return Counter(system_textlist)
+ 
+    def tabulated_output_header(self, system_occurence_states, system_names):
+        """
+        Returns a string containing the header of the tabulated output
+        """
+        # Can be done intra-class 
+        header = "#Replicon"
+        for syst_name in system_names:
+            for state in system_occurence_states:
+                header += "\t"+syst_name+"_"+state
+    
+        header+="\n"        
+        
+        return header
+
+    def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
+        """
+        Write a tabulated output with number of detected systems for each replicon. 
+        """
+        system_counter=self.counter_output()
+        print system_counter    
+        report_str = self.replicon_name
+        for s in system_names:
+            for o in system_occurence_states:
+                index=s+"_"+str(o)
+                if system_counter.has_key(index):
+                    report_str+="\t"
+                    report_str+=str(system_counter[index])
+                else:
+                    report_str+="\t0"
+        report_str+="\n"      
+            
+        with open(reportfilename, 'a') as _file:
+            if print_header:
+                _file.write(self.tabulated_output_header(system_occurence_states, system_names))
+            _file.write(report_str)
+    
+           
+    def report_output(self, reportfilename, print_header = False):
+        """
+        Writes a report of sequences forming the detected systems, with information in their status in the system, 
+        their localization on replicons, and statistics on the Hits. 
+        """
+        report_str=""
+        for so in self._systems_occurences_list:
+            so_unique_name = so.get_system_unique_name(self.replicon_name)
+            for hit in so.valid_hits:
+                if print_header:
+                    report_str+=hit.output_system_header()
+                    print_header = False
+                report_str+=hit.output_system(so_unique_name, so.state)
+        
+        with open(reportfilename, 'a') as _file:
+            _file.write(report_str)    
+
+    def summary_output(self, reportfilename, rep_info, print_header = False):
+        """
+        Writes a report with the summary of systems detected in replicons. For each system, a summary is done including: 
+                   
+            - the number of mandatory/allowed genes in the reference system (as defined in XML files)
+            - the number of mandatory/allowed genes detected
+            - the number and list of missing genes
+            - the number of loci encoding the system
+            
+        """
+        
+        report_str = ""
+        for so in self._systems_occurences_list:
+            if print_header:
+                report_str+="%s\n"%so.get_summary_header()
+                print_header=False
+
+            report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
+
+        with open(reportfilename, 'a') as _file:
+            _file.write(report_str)
+
+    def json_output(self, path, rep_db):
+        """
+        Generates the report in json format
+
+        :param path: the path to a file where to write the report in json format
+        :type path: string
+        :param rep_db: the replicons database
+        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
+        """
+        with open(path, 'w') as _file:
+            all_systems_occurences = []
+            for so in self._systems_occurences_list:
+                system = {}
+                system['name'] = so.unique_name
+                system['replicon'] = {}
+                system['replicon']['name'] = so.valid_hits[0].replicon_name
+                rep_info = rep_db[system['replicon']['name']]
+                system['replicon']['length'] = rep_info.max - rep_info.min
+                system['replicon']['topology'] = rep_info.topology
+                system['genes'] = []
+                for valid_hit in so.valid_hits:
+                    gene = {}
+                    gene['id'] = valid_hit.id
+                    gene['position'] = valid_hit.position
+                    gene['sequence_length'] = valid_hit.seq_length
+                    gene['system'] = valid_hit.reference_system
+                    gene['match'] = valid_hit.gene.name
+                    gene['gene_status'] = valid_hit.gene_status
+                    gene['i_eval'] = valid_hit.i_eval
+                    gene['score'] = valid_hit.score
+                    gene['profile_coverage'] = valid_hit.profile_coverage
+                    gene['sequence_coverage'] = valid_hit.sequence_coverage
+                    gene['begin_match'] = valid_hit.begin_match
+                    gene['end_match'] = valid_hit.end_match
+                    system['genes'].append(gene)
+                system['summary'] = {}
+                system['summary']['mandatory'] = so.mandatory_genes
+                system['summary']['exmandatory_genes'] = so.exmandatory_genes
+                system['summary']['allowed'] = so.allowed_genes
+                system['summary']['exallowed_genes'] = so.exallowed_genes
+                system['summary']['forbiden'] = so.forbidden_genes
+                system['summary']['state'] = so._state
+                all_systems_occurences.append(system)
+            json.dump(all_systems_occurences, _file, indent = 2)
 
 def disambiguate_cluster(cluster):
     """

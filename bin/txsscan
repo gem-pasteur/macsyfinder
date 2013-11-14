@@ -145,7 +145,7 @@ dir_options.add_argument('-r', '--research-search',
                     action = 'store',
                     dest = 'res_search_dir',
                     default = None,
-                    help = 'Path to the directory to store TXSScan search results directories.')
+                    help = 'Path to the directory where to store TXSScan search results directories.')
 dir_options.add_argument( '--research-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',

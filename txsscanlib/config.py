@@ -100,11 +100,11 @@ class Config(object):
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
-        :param res_search_dir: à déterminer
+        :param res_search_dir: the path to the directory where to store TXSScan search results directories.
         :type  res_search_dir: string
-        :param res_search_suffix: à déterminer
+        :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
-        :param res_extract_suffix: à déterminer
+        :param res_extract_suffix: the suffix to give to filtered hits output files
         :type  res_extract_suffix: string
         :param profile_dir: path to the profiles directory
         :type  profile_dir: string
