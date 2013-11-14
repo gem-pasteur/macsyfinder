@@ -1438,7 +1438,6 @@ def search_systems(hits, systems, cfg):
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         #report.json_output(json_filename)
-        #pass
         print "******************************************"
        
     #elif cfg.db_type == 'unordered_replicon':
