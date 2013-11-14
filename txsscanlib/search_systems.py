@@ -595,14 +595,6 @@ class SystemOccurence(object):
                     print msg
                     #_log.info(msg)
                     
-        # Not meaningful here 
-        #if included:
-        #    # Update the number of loci included in the system
-        #    self.nb_cluster += 1            
-        #    # Update the positions of the system
-        #    self.loci_positions.append((cluster.begin, cluster.end))
-    
-    # NEW!
     def fill_with_multi_systems_genes(self, multi_systems_hits):
         """
         This function fills the SystemOccurrence with genes putatively coming from other systems (feature "multi_system").
