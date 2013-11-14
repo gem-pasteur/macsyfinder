@@ -963,7 +963,6 @@ def disambiguate_cluster(cluster):
 
 
     
-#def analyze_clusters_replicon(clusters, systems):
 def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     """
     Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
@@ -1334,7 +1333,7 @@ def search_systems(hits, systems, cfg):
         #report = systemDetectionReport("POUETT", systems_occurences_list, systems)
         #report.report_output(reportfilename, header_print)
         #report.summary_output(summaryfilename, rep_info, header_print)
-        #report.json_output(json_filename, rep_db)
+        #report.json_output(json_filename, rep_info)
         #pass
        
     #elif cfg.db_type == 'unordered_replicon':
