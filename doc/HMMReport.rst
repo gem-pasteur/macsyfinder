@@ -18,19 +18,27 @@ HMMReport API reference
    :private-members:
    :special-members:
 
-UnOrderedHMMReport
+GeneralHMMReport API reference
+=======================
+
+.. automodule:: txsscanlib.report
+   :members: GeneralHMMReport
+   :private-members:
+   :special-members:
+
+OrderedHMMReport
 ==================
 
 .. automodule:: txsscanlib.report
-   :members: UnOrderedHMMReport
+   :members: OrderedHMMReport
    :private-members:
    :special-members:
    
-OrderedHMMReport 
+GembaseHMMReport 
 ================
 
 .. automodule:: txsscanlib.report
-   :members: OrderedHMMReport
+   :members: GembaseHMMReport
    :private-members:
    :special-members:
 

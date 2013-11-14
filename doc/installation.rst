@@ -38,7 +38,7 @@ Procedures specific to TXSScan can be used instead of default. Please run the co
 
 The main ones are::
  
-  python setup.py --build-base /usr/local/home/bob/my_programs # Specifies an installation path
+  python setup.py install --prefix /usr/local/home/bob/my_programs # Specifies an installation path
 
 which will install TXSScan and required data (profiles folder and systems definition folders) in the Home directory of "bob", in the "my_progams" folder (useful if you do not have super-user privileges)
 

@@ -15,7 +15,7 @@ Raw Hmmer outputs are provided, as long with processed tabular outputs that incl
 The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for hits filtering and relevant information on the matches, as 
 for instance::
 
-    # gene: sctC extract from /Users/sabby/Documents/txsscan/working_dir/txsscan-20130128_08-57-46/sctC.search_hmm.out hmm output
+    # gene: sctC extract from /Users/bob/txsscan_results/txsscan-20130128_08-57-46/sctC.search_hmm.out hmm output
     # profile length= 544
     # i_evalue threshold= 0.001000
     # coverage threshold= 0.500000
@@ -40,6 +40,12 @@ Different types of tabular outputs are provided.
 3. Logs and configuration files
 -------------------------------
 
-Blablabla
+A variety of specific output files are built to store info on the TXSScan execution. 
+
+ * txsscan.conf
+ 
+ * txsscan.log
+ 
+ * txsscan.info
 
 
