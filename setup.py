@@ -382,32 +382,32 @@ class install_conf(install_data):
                 self.outfiles.append(out)
             else:
                 # it's a tuple with path to install to and a list of files
-                dir = convert_path(f[0])
-                if not os.path.isabs(dir):
-                    dir = os.path.join(self.install_dir, dir)
+                _dir = convert_path(f[0])
+                if not os.path.isabs(_dir):
+                    _dir = os.path.join(self.install_dir, _dir)
                 elif self.root:
-                    dir = change_root(self.root, dir)
-                self.mkpath(dir)
+                    _dir = change_root(self.root, _dir)
+                self.mkpath(_dir)
 
                 if f[1] == []:
                     # If there are no files listed, the user must be
                     # trying to create an empty directory, so add the
                     # directory to the list of output files.
-                    self.outfiles.append(dir)
+                    self.outfiles.append(_dir)
                 else:
                     # Copy files, adding them to the list of output files.
                     for conf in f[1]:
                         conf = convert_path(conf)
-                        (out, _) = self.copy_file(conf, dir)
+                        dest = os.path.join(_dir,os.path.basename(conf) + ".new" )
+                        (out, _) = self.copy_file(conf, dest)
                         if conf in self.distribution.fix_conf:
                             input_file = out
                             output_file =  input_file + '.tmp'
                             subst_vars(input_file, output_file, vars_2_subst)
-                            new_file = input_file + ".new"
-                            if os.path.exists(new_file):
-                                os.unlink(new_file)
-                            self.move_file(output_file, new_file)
-                            self.outfiles.append(new_file)
+                            if os.path.exists(input_file):
+                                os.unlink(input_file)
+                            self.move_file(output_file, input_file)
+                            self.outfiles.append(input_file)
 
 
 class Uninstall(Command):
@@ -434,20 +434,25 @@ class Uninstall(Command):
                 value = self.parser.get('install', attr)
             except(NoSectionError, NoOptionError):
                 continue
+            print "setattr(self, ",attr,", ",value,")"
             setattr(self, attr, value)
 
     def run(self):
         prefixes = []
         for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
             prefixes.append( getattr(self, attr))
-
+        print "prefixes = ", prefixes
+        ##################################################################################         
         def clean_tree(_dir):
+            find_prefix = False
             for prefix in prefixes:
-                find_prefix = False
-                if _dir.find(prefix) != -1:
+                print "== ", prefix,".find(",_dir,") = ",prefix.find(_dir)
+                if prefix.find(_dir) != -1:
                     find_prefix = True
-                    break
-            if not find_prefix:
+                    return prefix
+                
+            print "find_prefix =",prefix
+            if find_prefix:
                 return
             try:
                 if not self.dry_run:
@@ -455,12 +460,13 @@ class Uninstall(Command):
                 log.info( "remove dir {}".format(_dir))
             except OSError as err:
                 if err.errno == os.errno.ENOTEMPTY:
+                    log.info( "REPERTOIRE NON VIDE dir {}".format(_dir))
                     return
                 else:
                     self.warn(err)
                     return
             clean_tree(os.path.dirname(_dir))
-
+        #################################################################################### 
         try:
             with open(self.distribution.uninstall_files) as record_file:
                 for path in record_file:
