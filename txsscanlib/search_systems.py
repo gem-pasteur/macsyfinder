@@ -1413,8 +1413,6 @@ def search_systems(hits, systems, cfg):
         print "******************************************"
     
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
-        #rep_db = RepliconDB(cfg)
-        #rep_info = rep_db[RepliconDB.unordered_replicon_name]
         
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
         systems_occurences_list=[]
@@ -1440,12 +1438,6 @@ def search_systems(hits, systems, cfg):
         #report.json_output(json_filename)
         print "******************************************"
        
-    #elif cfg.db_type == 'unordered_replicon':
-    #    # implement a new function "analyze_cluster" => Fills a systemOccurence per system
-    #    pass
-    #elif cfg.db_type == 'unordered':
-    #    # Same as 'unordered_replicon' ? Yes ! 
-    #    pass
     else:
         raise ValueError("Invalid database type. ")
 
