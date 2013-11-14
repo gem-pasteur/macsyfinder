@@ -77,8 +77,11 @@ def search_genes(genes, cfg):
             gene.profile.hmm_raw_output = hmm_new_path
             if cfg.db_type == 'gembase':
                 report = GembaseHMMReport(gene, hmm_new_path, cfg )
+            elif cfg.db_type == 'ordered_replicon':
+                report = OrderedHMMReport(gene, hmm_new_path, cfg )
             else:
                 report = GeneralHMMReport(gene, hmm_new_path, cfg )
+            
             report.extract()
             report.save_extract()
             all_reports.append(report)

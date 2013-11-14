@@ -188,15 +188,61 @@ class HMMReport(object):
                         raise ValueError(msg)
 
     
-    
-class GeneralHMMReport(HMMReport):
+                     
+class GeneralHMMReport(HMMReport):   
     """
-    handle HMM report. extract a synthetic report from the raw hmmer output
+    Handle HMM report. Extract a synthetic report from the raw hmmer output.
+    Dedicated to any type of 'unordered' datasets.
     """
     #pass
     def extract(self):
         """
         Parse the output file of hmmer compute from an unordered genes base
+        and produced a new synthetic report file.
+        """
+        
+        with self._lock:
+            # so the extract of a given HMM output is executed only once per run
+            # if this method is called several times the first call induce the parsing of HMM out
+            # the other calls do nothing
+            if self.hits:
+                return
+
+            idx = Indexes(self.cfg)
+            txsscan_idx = idx.find_my_indexes()
+            my_db = self._build_my_db(self._hmmer_raw_out)
+            self._fill_my_db(txsscan_idx, my_db)
+
+            with open(self._hmmer_raw_out, 'r') as hmm_out:
+                i_evalue_sel = self.cfg.i_evalue_sel
+                coverage_treshold = self.cfg.coverage_profile
+                gene_profile_lg = len(self.gene.profile)
+                hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
+                #drop summary
+                hmm_hits.next()
+                for hmm_hit in hmm_hits:
+                    hit_id = self._parse_hmm_header(hmm_hit)
+                    seq_lg, position_hit = my_db[hit_id]
+                    
+                    #replicon_name = self.cfg. # Define a variable in further devt
+                    replicon_name = "Unordered"
+                    
+                    body = hmm_hits.next()
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    self.hits += h
+                self.hits.sort()
+                return self.hits
+
+
+class OrderedHMMReport(HMMReport):                    
+    """
+    Handle HMM report. Extract a synthetic report from the raw hmmer output.
+    Dedicated to 'ordered_replicon' datasets.
+    """
+    #pass
+    def extract(self):
+        """
+        Parse the output file of hmmer compute from an ordered set of sequences
         and produced a new synthetic report file.
         """
         
@@ -236,12 +282,13 @@ class GeneralHMMReport(HMMReport):
 
 class GembaseHMMReport(HMMReport):
     """
-    handle HMM report. extract a synthetic report from the raw hmmer output
+    Handle HMM report. Extract a synthetic report from the raw hmmer output.
+    Dedicated to 'gembase' format datasets.
     """
 
     def extract(self):
         """
-        Parse the output file of hmmer compute from an unordered genes base
+        Parse the output file of hmmer compute from a "gembase" format set of sequences        
         and produced a new synthetic report file.
         """
         with self._lock:
