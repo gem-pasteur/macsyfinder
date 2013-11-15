@@ -33,7 +33,67 @@ for instance::
 2. Systems detection results
 ----------------------------
 
-Different types of tabular outputs are provided. 
+Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
+
+  * txsscan.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase"). It provides a summary of the number of each type of systems that have been detected. 
+  
+  * txsscan.report - contains all the sequence identifiers of proteins detected as being part of a system, along with statistics on the Hmmer hit, and the status of the component in the system. 
+  
+  * txsscan.summary - contains a line of information for each detected system.
+
+
+txsscan.tab
+***********
+For each replicon, a line gives the occurrences of systems that were asked for detection. For example, if the Flagellum and the T6SS were asked, the output will look like::
+
+  #Replicon Flagellum_single_locus Flagellum_multi_loci T6SS_single_locus T6SS_multi_loci	
+  escherichia06 1   1   1   0
+
+which means that this "escherichia06" genome harbors 1 flagellum in a single locus, 1 flagellum scattered on multiple loci, and 1 T6SS in a single locus. 
+
+txsscan.report
+**************
+Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
+    * Hit_Id - the sequence identifier of the hit
+    * Replicon_name	- the name of the replicon it belongs to
+    * Position - the position of the sequence in the replicon
+    * Sequence_length - the length of the sequence
+    * Gene - the name of the components matched with the profile
+    * Reference_system - the system that includes the component matched
+    * Predicted_system - the system assigned
+    * System_Id - the unique identifier attributed to the detected system
+    * System_status	- the status of the detected system
+    * Gene_status - the status of the component in the assigned system's definition 
+    * i-evalue - Hmmer statistics, the indepent-evalue
+    * Score	- Hmmer score
+    * Profile_coverage - the percentage of the profile covered by the alignment with the sequence
+    * Sequence_coverage - the percentage of the sequence covered by the alignment with the profile
+    * Begin_match - the position in the sequence where the profile match begins
+    * End_match - the position in the sequence where the profile match ends
+
+txsscan.summary
+***************
+Each line corresponds to a system that has been detected. It includes:
+    * Replicon_name	- the name of the replicon 
+    * System_Id	- the unique identifier attributed to the detected system
+    * Reference_system - the type of system detected	
+    * System_status	- the status of the system
+    * Nb_loci - the number of loci that constitutes the system
+    * Nb_Ref_mandatory - the number of mandatory genes in the system definition
+    * Nb_Ref_allowed - the number of allowed genes in the system definition
+    * Nb_Ref_Genes_detected_NR - the number of different components (allowed+mandatory) in the system 
+    * Nb_Genes_with_match - the number of components detected with the profiles in the system
+    * System_length	- the full number of components (with match or not) in the locus (or loci) that constitutes the system 
+    * Nb_Mandatory_NR - the number of different mandatory components matched  
+    * Nb_Allowed_NR - the number of different allowed components matched 
+    * Nb_missing_mandatory - the number of mandatory components from the system definition with no match in this system occurrence
+    * Nb_missing_allowed - the number of allowed components from the system definition with no match in this system occurrence	
+    * List_missing_mandatory - the list of the missing mandatory components
+    * List_missing_allowed - the list of the missing allowed components
+    * Loci_positions - the sequence position (rank of the fasta sequence in the input sequence file) of the different loci encoding the system 
+    * Occur_Mandatory - counts of the mandatory components
+    * Occur_Allowed - counts of the allowed components
+    * Occur_Forbidden - counts of the forbidden components
 
 
 
@@ -42,10 +102,10 @@ Different types of tabular outputs are provided.
 
 A variety of specific output files are built to store info on the TXSScan execution. 
 
- * txsscan.conf
+ * txsscan.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  
- * txsscan.log
+ * txsscan.log - the log file. Please send it to us with any bug report. 
  
- * txsscan.info
+ * txsscan.info - contains raw information on systems detection.  
 
 

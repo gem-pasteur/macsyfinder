@@ -7,7 +7,7 @@
 Welcome to TXSScan's documentation! 
 ===================================
 	
-  TXSScan is a program that detects bacterial protein secretion systems (T1-T6SS) and related appendages (the flagellum, the type  IV pilus, and the tad pilus). These systems have evolutionarily conserved features: their component content, and their genetic architecture, often in compact loci. We modelled these systems to reflect these features and to allow their efficient detection. 
+  TXSScan is a program that detects bacterial protein secretion systems (T1-T6SS) and related appendages (the flagellum, the type  IV pilus, and the Tad pilus). These systems have evolutionarily conserved features: their component content, and their genetic architecture, often in compact loci. We modelled these systems to reflect these features and to allow their efficient detection. 
   
   Criteria for systems detection thus includes **component content (quorum)**, and **genomic co-localization**. Each component corresponds to a hidden Markov model (HMM) protein profile to perform homology searches with the program Hmmer. 
    

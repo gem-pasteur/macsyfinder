@@ -56,3 +56,11 @@ database API reference
    :private-members:
    :special-members:
 
+
+In-house input files
+====================
+.. toctree::
+   :maxdepth: 1
+
+   gembase_convention 
+

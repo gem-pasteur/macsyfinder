@@ -54,3 +54,6 @@ For example::
   ChromosomeA : linear
   ChromosomeB : circular
   
+.. note::
+    A topology file can be specified on the command-line with the "``--topology-file``" parameter.
+    

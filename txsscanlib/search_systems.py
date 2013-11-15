@@ -1385,7 +1385,7 @@ def search_systems(hits, systems, cfg):
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
-            report.json_output(json_filename, rep_db)
+            #report.json_output(json_filename, rep_db)
             print "******************************************"
             
             header_print = False
@@ -1409,7 +1409,7 @@ def search_systems(hits, systems, cfg):
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
-        report.json_output(json_filename, rep_db)
+        #report.json_output(json_filename, rep_db)
         print "******************************************"
     
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
