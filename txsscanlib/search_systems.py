@@ -90,9 +90,11 @@ class Cluster(object):
     """
     Stores a set of contiguous hits. The Cluster object can have different states regarding 
     its content in different genes' systems: 
-        - ineligible: not a cluster to analyze
-        - clear: a single system is represented in the cluster
-        - ambiguous: several systems are represented in the cluster => might need a disambiguation
+    
+      - ineligible: not a cluster to analyze
+      - clear: a single system is represented in the cluster
+      - ambiguous: several systems are represented in the cluster => might need a disambiguation
+      
     """
     
     def __init__(self):
@@ -281,11 +283,11 @@ class SystemOccurence(object):
     A decision can then be made according to the parameters defined *e.g.* quorum of genes. 
 
     The SystemOccurence object has a "state" parameter, with the possible following values: 
-        - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
-        - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
-        - "single_locus" 
-        - "multi_loci" 
-        - "uncomplete"
+      - "empty" if the SystemOccurence has not yet been filled with genes of the decision rule of the system
+      - "no_decision" if the filling process has started but the decision rule has not yet been applied to this occurence
+      - "single_locus" 
+      - "multi_loci" 
+      - "uncomplete"
         
     """
     def __init__(self, system):

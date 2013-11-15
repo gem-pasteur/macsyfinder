@@ -278,7 +278,12 @@ class Gene(object):
         
     def get_compatible_systems(self, system_list):
         """
+        Test every system in system_list for compatibility with the gene using the is_authorized function.
         
+        :param system_list: a list of system names to test
+        :type system_list: list of strings
+        :return: the list of compatible systems
+        :rtype: list of string, or void list if none compatible
         """
         compatibles=[]
         for s in system_list:
