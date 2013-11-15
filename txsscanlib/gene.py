@@ -126,8 +126,8 @@ class Gene(object):
 
     def __str__(self):
     	"""
-	Print the name of the gene and of its homologs.
-	"""
+        Print the name of the gene and of its homologs.
+        """
         s = "name : %s" % self.name
         if self.homologs:
             s += "\n    homologs: "
@@ -210,7 +210,7 @@ class Gene(object):
     def is_homolog(self, gene):
         """
         :return: True if the two genes are homologs, False otherwise.
-	:param gene: the query of the test
+        :param gene: the query of the test
         :type gene: :class:`txsscanlib.gene.Gene` object.
         :rtype: boolean.
         """
@@ -227,7 +227,7 @@ class Gene(object):
     def is_mandatory(self, system):
     	"""
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
-	:param system: the query of the test
+        :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
@@ -239,7 +239,7 @@ class Gene(object):
     def is_allowed(self, system):
         """
         :return: True if the gene is within the *allowed* genes of the system, False otherwise.
-	:param system: the query of the test
+        :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
@@ -251,7 +251,7 @@ class Gene(object):
     def is_forbidden(self, system):
         """
         :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
-	:param system: the query of the test
+        :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
@@ -263,22 +263,28 @@ class Gene(object):
     def is_authorized(self, system):        
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
-	:param system: the query of the test
+        :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
         #for m in (system.mandatory_genes+system.allowed_genes):
-	#print "=>is %s authorized in %s ??"%(self.name, system.name)
-	for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
+        #print "=>is %s authorized in %s ??"%(self.name, system.name)
+        for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
             if self == m:
-	    	#print "Yes"
                 return True
             if m.exchangeable and m.is_homolog(self):
-	    	#print "Yes"
-                return True
-        
-	#print "No !"    
+                return True        
         return False
+        
+    def get_compatible_systems(self, system_list):
+        """
+        
+        """
+        compatibles=[]
+        for s in system_list:
+            if self.is_authorized(s):
+                compatibles.append(s)
+        return compatibles
         
 class Homolog(object):
     """
@@ -392,8 +398,8 @@ class Profile(object):
 
     def __str__(self):
     	"""
-	Print the name of the corresponding gene and the path to the HMM profile.
-	"""
+        Print the name of the corresponding gene and the path to the HMM profile.
+        """
         return "%s : %s" % (self.gene.name, self.path)
 
 
