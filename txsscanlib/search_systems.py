@@ -20,6 +20,7 @@ from operator import attrgetter # To be used with "sorted"
 
 from txsscan_error import TxsscanError, SystemDetectionError
 from database import RepliconDB
+from system import system_bank
 
 _log = logging.getLogger('txsscan.' + __name__)
 
@@ -176,15 +177,15 @@ class Cluster(object):
         The execution of this function can be forced, even if it has already run for the cluster with the option force=True.
         """
 	if not self.putative_system or force:
-            # First compiute the "Majoritary" system
+            # First compute the "Majoritary" system
             systems={} # Counter of occcurrences of systems in the cluster
             genes=[]
-            systems_object={} # Store systems object. 
+            #systems_object={} # Store systems object. # To be replaced by "system_bank"? Yep ! done
             for h in self.hits:
                 syst=h.system.name
                 if not systems.has_key(syst):
                     systems[syst]=1
-                    systems_object[syst]=h.system
+                    #systems_object[syst]=h.system
                 else:
                     systems[syst]+=1
                 if genes.count(h.gene.name) == 0:
@@ -209,16 +210,29 @@ class Cluster(object):
                     self._state = "clear"
                 else:
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
-                    def try_system(hits, putative_system, systems):
+                    #def try_system(hits, putative_system, systems):
+                    def try_system(hits, putative_system, counter_systems_in_clust):   
+                        """
+                        Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
+                        
+                        :param hits: a list of hits
+                        :type hits: a list of :class:`txsscanlib.report.Hit`
+                        :param putative_system: the name of a putative system to consider
+                        :type putative_system: string
+                        :return: the "state" of the set of hits regarding the putative system
+                        :rtype: string
+                        
+                        """
                         foreign_allowed = 0
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
                         for h in hits:
                             #print h
                             #print putative_system
-                            if h.system.name != putative_system and h.gene.is_authorized(systems_object[putative_system]):
+                            #if h.system.name != putative_system and h.gene.is_authorized(systems_object[putative_system]):
+                            if h.system.name != putative_system and h.gene.is_authorized(system_bank[putative_system]):
                                 foreign_allowed+=1
-                    	if foreign_allowed == sum(systems.values())-systems[putative_system]:
+                    	if foreign_allowed == sum(counter_systems_in_clust.values())-systems[putative_system]:
                             # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
                             state = "clear"
                     	else:
