@@ -77,13 +77,17 @@ class ClustersHandler(object):
 
             #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
             if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
-                # Need to circularize ! 
-                print " A cluster needs to be \"circularized\" ! "
+                # Need to circularize !
+                print "A cluster needs to be \"circularized\" ! "
+                msg="A cluster needs to be \"circularized\" ! "
                 self.clusters.pop(0)
                 for h in clust_first.hits:
                     clust_last.add(h)
                 clust_last.save(True) # Force to re-save the updated cluster
                 print clust_last
+                msg+=str(clust_last)
+                _log.info(msg)
+                
 
 
 class Cluster(object):
@@ -276,20 +280,10 @@ class Cluster(object):
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
                         for h in hits:
-                            #print h
-                            #print putative_system
-                            #if h.system.name != putative_system and h.gene.is_authorized(systems_object[putative_system]):
-                            #if h.system.name != putative_system and h.gene.is_authorized(system_bank[putative_system.name]):
-                            # Too complex !
-                            #if h.system.name != putative_system and h.gene.is_authorized(system_bank[putative_system]): 
-                            #    foreign_allowed+=1
-                            #if h.gene.is_authorized(system_bank[putative_system]):
                             # Exclude the consideration of "forbidden" genes !
                             #if h.gene.is_authorized(system_bank[putative_system], False):
                             if h.gene.is_authorized(system_bank[putative_system], True):
                                 auth+=1
-                    	#if foreign_allowed == sum(counter_systems_in_clust.values())-systems[putative_system]:
-                    	#if foreign_allowed == sum(counter_systems_in_clust.values())-counter_systems_in_clust[putative_system]: # Nope ! Too much complicated !
                     	if auth == len(hits):
                             # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
                             state = "clear"
@@ -297,14 +291,11 @@ class Cluster(object):
                             state = "ambiguous"
                         return state
 
-                    #for putative_system in systems.keys():
                     # Sort systems to consider by decreasing counts.
                     cluster_compatible_systems = []
                     for putative_system in systems_compat.keys():
                         # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
-                        #state=try_system(self.hits, putative_system, systems)
                         state=try_system(self.hits, putative_system, systems_compat)
-                        #state=try_system(self.hits, putative_system.name, systems_compat)
                         if state == "clear":
                             #print "BUENO SYSTEMO %s"%putative_system
                             #self._state="clear" 
@@ -684,8 +675,8 @@ class SystemOccurence(object):
                     self.valid_hits.append(valid_hit)
                 else:
                     msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
-                    print msg
-                    #_log.info(msg)
+                    #print msg
+                    _log.info(msg)
 
         if included:
             # Update the number of loci included in the system
@@ -732,8 +723,8 @@ class SystemOccurence(object):
                     self.valid_hits.append(valid_hit)
                 else:
                     msg="Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
-                    print msg
-                    #_log.info(msg)
+                    #print msg
+                    _log.info(msg)
                     
     def fill_with_multi_systems_genes(self, multi_systems_hits):
         """
@@ -1094,21 +1085,21 @@ class systemDetectionReportUnordered(object):
 
 
 
-def get_compatible_systems(systems_liste1, systems_liste2):
+def get_compatible_systems(systems_list1, systems_list2):
     """
-    Returns the intersection of the two input lists.s
+    Returns the intersection of the two input systems lists.
+    
+    :param systems_list1, systems_list2: two lists of systems 
+    :type systems_list1, systems_list2: two lists of :class:`txsscanlib.system.System`
+    :return: a list of systems, or an empty list if no common system
+    :rtype: a list of :class:`txsscanlib.system.System`
+    
     """
     inter=[]
-    #print "\nliste 1"
-    #print [ system.name for system in systems_liste1]
-    #print "liste 2"
-    #print [ system.name for system in systems_liste2]
-    for el in systems_liste1:
-        if el in systems_liste2:
+    for el in systems_list1:
+        if el in systems_list2:
             if not el in inter:
                 inter.append(el)
-    #print "=> inter"
-    #print [ system.name for system in inter]
     return inter
 
 
@@ -1122,10 +1113,8 @@ def disambiguate_cluster(cluster):
 
     """
     res_clusters = []               
-    syst_dico = cluster.systems # useless, to rm
     counter_genes_compat_systems={}
     print "Disambiguation step:"
-    #print syst_dico
      
     cur_cluster=Cluster(cluster.systems_to_detect) # New
     cur_cluster.add(cluster.hits[0])
@@ -1133,7 +1122,6 @@ def disambiguate_cluster(cluster):
     cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect)
     
     for h in cluster.hits[1:]:
-        #print h.gene.name
         compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect)
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
 
@@ -1143,22 +1131,19 @@ def disambiguate_cluster(cluster):
             cur_compatible = compat_list
         else:
             # Deal with "allowed foreign genes", and system attribution when the current gene can be in both aside systems! 
-            # Case 1: the current gene can not be found in the last system
-            # Former cluster (now to close) is considered.
+            # Former cluster (now to save) is considered.
             # Check cluster status before storing it or not:
             cur_cluster.save() # Check if it updates compatible systems?? right?
             if cur_cluster.state == "clear":
                 # Update counts of compatible systems with the current cluster to store
                 res_clusters.append(cur_cluster)
-                #for syst in compatible_systems: # Good list of compatible??
                 for syst in cur_compatible: # Good list of compatible??
                     if not counter_genes_compat_systems.has_key(syst.name):
                         counter_genes_compat_systems[syst.name] = len(cur_cluster.hits)
                     else:
                         counter_genes_compat_systems[syst.name]+= len(cur_cluster.hits)
             else:
-                #print "ELSY!"
-                # Update counts of compatibles systems for all the hits
+                 # Update counts of compatibles systems for all the hits
                 for h_clust in cur_cluster.hits:
                     h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect)
                     for syst in h_compat:  
@@ -1175,10 +1160,6 @@ def disambiguate_cluster(cluster):
     # Check cluster status before storing it or not:
     if cur_cluster.state == "clear":
         res_clusters.append(cur_cluster) 
-        #print "Save 2!"
-        #print cur_cluster
-        #print cur_cluster.state
-        #print cur_cluster.compatible_systems                
         for syst in cur_compatible: # Good list of compatible??
             if not counter_genes_compat_systems.has_key(syst.name):
                 counter_genes_compat_systems[syst.name] = len(cur_cluster.hits)
@@ -1196,13 +1177,7 @@ def disambiguate_cluster(cluster):
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res=[]
-    #print "-- final disambig step --"
-    #print counter_genes_compat_systems
     for r in res_clusters:
-        #print "______________"
-        #print r
-        #compat_systems = r.compatible_systems
-        #print r.compatible_systems
         nb_genes = len(r.hits)
         #print nb_genes
         store=True
@@ -1211,8 +1186,7 @@ def disambiguate_cluster(cluster):
                 store=False       
         if store:
             real_res.append(r)
-    
-            
+                
     for r in real_res:
         print r
                                    
@@ -1311,26 +1285,6 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                 print "=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0]
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
                 
-            """ OLD CODE
-            if clust.putative_system in syst_dict.keys():
-                so = SystemOccurence(syst_dict[clust.putative_system])
-                so.fill_with_cluster(clust)
-                # NEW!
-                if clust.putative_system in multi_systems_genes.keys():
-                    so.fill_with_multi_systems_genes(multi_systems_genes[clust.putative_system])
-                so.decision_rule()
-                so_state = so.state
-                if so_state != "exclude":
-                    if so_state != "single_locus":            
-                        # Store it to pool genes found with genes from other clusters.
-                        # Do not do it if the so has a forbidden gene !!!
-                        print "...\nStored for later treatment of scattered systems.\n"
-                        systems_occurences_scattered[clust.putative_system].fill_with_cluster(clust)
-                    else: 
-                        print "...\nComplete system stored.\n"
-                        systems_occurences_list.append(so)
-            """
-                    
         elif clust.state == "ambiguous":
             # Implement a way to "clean" the clusters. For instance :
             # - split the cluster in two if it seems that two systems are nearby
@@ -1458,9 +1412,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 #print "cinq - ADD cur_cluster"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
-                #print(cur_cluster)
                      
-                #cur_cluster = Cluster()     
                 cur_cluster = Cluster(systems_to_detect)
                 loner_state = False
             
@@ -1482,10 +1434,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     
                     positions.append(prev.position)
                     loner_state = False  
-                    #cur_cluster = Cluster() 
                     cur_cluster = Cluster(systems_to_detect) 
                 
-            #cur_cluster = Cluster() 
             cur_cluster = Cluster(systems_to_detect)     
             
         prev=cur
@@ -1494,7 +1444,6 @@ def build_clusters(hits, systems_to_detect, rep_info):
         clusters.add(cur_cluster)
     
     if rep_info.topology == "circular":
-        #print "Circ TEST"
         clusters.circularize(rep_info)
         
     return (clusters,multi_system_genes_system_wise)
