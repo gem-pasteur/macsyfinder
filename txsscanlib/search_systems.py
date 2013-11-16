@@ -13,7 +13,7 @@ import threading
 import logging
 from report import Hit # required? 
 import os.path
-from collections import namedtuple, Counter
+from collections import namedtuple, Counter, OrderedDict
 import itertools, operator
 import json
 from operator import attrgetter # To be used with "sorted"
@@ -221,7 +221,9 @@ class Cluster(object):
             # NEW Version with hits all "compatible" systems
             systems_compat={} # Counter of occcurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
             for h in self.hits:
-                syst_list=h.gene.get_compatible_systems(self.systems_to_detect) # Need the list of systems (obj!) to be detected... in the cfg?
+                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect) # Need the list of systems (obj!) to be detected... in the cfg?
+                # Now exclude forbidden genes from those that define the list of compatible systems
+                syst_list=h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg?
                 for syst in syst_list:
                     syst_name=syst.name
                     if not systems_compat.has_key(syst_name):
@@ -232,8 +234,11 @@ class Cluster(object):
                     if genes.count(h.gene.name) == 0:
                         genes.append(h.gene.name)
             
-
-
+            #print systems_compat
+            # We sort the list of compatible systems per decreasing nb of systems occurrences
+            systems_compat=OrderedDict(sorted(systems_compat.items(), reverse=True, key=lambda t: t[1]))
+            #print systems_compat
+            
             if len(genes) == 1 and self.hits[0].gene.loner == False:                            
                 self._state = "ineligible"
             else:
@@ -276,7 +281,9 @@ class Cluster(object):
                             # Too complex !
                             #if h.system.name != putative_system and h.gene.is_authorized(system_bank[putative_system]): 
                             #    foreign_allowed+=1
-                            if h.gene.is_authorized(system_bank[putative_system]):
+                            #if h.gene.is_authorized(system_bank[putative_system]):
+                            # Exclude the consideration of "forbidden" genes !
+                            if h.gene.is_authorized(system_bank[putative_system], False):
                                 auth+=1
                     	#if foreign_allowed == sum(counter_systems_in_clust.values())-systems[putative_system]:
                     	#if foreign_allowed == sum(counter_systems_in_clust.values())-counter_systems_in_clust[putative_system]: # Nope ! Too much complicated !
@@ -793,13 +800,13 @@ class SystemOccurence(object):
 
                 msg += "\nYeah complete system \"%s\"."%self.state
                 msg += "\n******************************************\n"
-                print msg
+                #print msg
                 #_log.info(msg)
 
             elif self.nb_syst_genes > 0:
                 msg += "\nuncomplete system."
                 msg += "\n******************************************\n"
-                print msg
+                #print msg
                 #_log.info(msg)
                 self._state = "uncomplete"
 
@@ -812,7 +819,7 @@ class SystemOccurence(object):
         else:
             msg += "\nexclude."
             msg += "\n******************************************\n"
-            print msg
+            #print msg
             #_log.info(msg)
             self._state = "exclude"
 
@@ -1179,9 +1186,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             # Local Hits collector
             # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
-            print clust.compatible_systems
+            #print clust.compatible_systems
+            # Arbitratily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
+            first=True
+            store_scattered=True
+            store_clust=None
+            store_so=None
             for putative_system in clust.compatible_systems:
-                print putative_system
+                print "Considering %s - compatible system"%putative_system
                 if putative_system in syst_dict.keys():
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
@@ -1195,12 +1207,23 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             # Store it to pool genes found with genes from other clusters.
                             # Do not do it if the so has a forbidden gene !!!
                             # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
-                            print "...\nStored for later treatment of scattered systems.\n"
-                            systems_occurences_scattered[putative_system].fill_with_cluster(clust)
-                        else: 
-                            print "...\nComplete system stored.\n"
+                            if first:
+                                store_clust=clust
+                                store_so=so
+                            #print "...\nStored for later treatment of scattered systems.\n"
+                            #systems_occurences_scattered[putative_system].fill_with_cluster(clust)
+                        else:
+                            print so 
+                            #print so_state
+                            print "...\nComplete %s %s system stored.\n"%(putative_system, so_state)
                             systems_occurences_list.append(so)
+                            store_scattered=False
                             break
+            if store_scattered:
+                print store_so
+                print "...\nPutative %s locus stored for later treatment of scattered systems.\n"%clust.compatible_systems[0]
+                systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
+                
             """ OLD CODE
             if clust.putative_system in syst_dict.keys():
                 so = SystemOccurence(syst_dict[clust.putative_system])

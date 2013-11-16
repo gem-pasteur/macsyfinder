@@ -260,28 +260,41 @@ class Gene(object):
         else:
             return False
     
-    def is_authorized(self, system):        
+    #def is_authorized(self, system): 
+    def is_authorized(self, system, include_forbidden=True):       
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
         :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
+        :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
+        :type include_forbidden: boolean
         :rtype: boolean.
         """
         #for m in (system.mandatory_genes+system.allowed_genes):
         #print "=>is %s authorized in %s ??"%(self.name, system.name)
-        for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
-            if self == m:
-                return True
-            if m.exchangeable and m.is_homolog(self):
-                return True        
+        if include_forbidden:
+            for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
+                if self == m:
+                    return True
+                if m.exchangeable and m.is_homolog(self):
+                    return True
+        else:            
+            for m in (system.mandatory_genes+system.allowed_genes):
+                if self == m:
+                    return True
+                if m.exchangeable and m.is_homolog(self):
+                    return True
         return False
         
-    def get_compatible_systems(self, system_list):
+    #def get_compatible_systems(self, system_list):
+    def get_compatible_systems(self, system_list, include_forbidden=True):
         """
         Test every system in system_list for compatibility with the gene using the is_authorized function.
         
         :param system_list: a list of system names to test
-        :type system_list: list of strings
+        :type system_list: list of strings        
+        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
+        :type include_forbidden: boolean
         :return: the list of compatible systems
         :rtype: list of string, or void list if none compatible
         """
