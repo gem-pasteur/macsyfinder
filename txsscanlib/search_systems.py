@@ -65,6 +65,9 @@ class ClustersHandler(object):
         """
         This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
         It has to be called only if the replicon_topology is set to \"circular\".
+        
+        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
         """
         # We assume this function is called when appropriate (i.e. for circular replicons)
         if len(self.clusters) > 1:
@@ -103,6 +106,10 @@ class Cluster(object):
     
     #def __init__(self):
     def __init__(self, systems_to_detect):
+        """
+        :param systems_to_detect: the list of systems to be detected in this run
+        :type systems_to_detect: a list of :class:`txsscanlib.system.System`
+        """
         self.hits = []
         self.systems_to_detect = systems_to_detect # NEW
         self.systems = {}
@@ -114,9 +121,16 @@ class Cluster(object):
         self._compatible_systems = [] # NEW!
 
     def __len__(self):
+        """
+        :return: the length of the Cluster, *i.e.*, the number of hits stored in it
+        :rtype: integer
+        """
         return len(self.hits)
 
     def __str__(self):
+        """
+        print of the Cluster's hits stored in terms of components, and corresponding sequence identifier and positions
+        """
         pos = []
         seq_ids = []
         gene_names = [] 
@@ -133,7 +147,7 @@ class Cluster(object):
     @property
     def state(self):
         """
-        :return: the state of the cluster of hits
+        :return: the state of the Cluster of hits
         :rtype: string
         """
         return self._state
@@ -156,7 +170,12 @@ class Cluster(object):
 
     def add(self, hit):
         """
+        Add a Hit to a Cluster.
         Hits are always added at the end of the cluster (appended to the list of hits). Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
+        
+        :param hit: the Hit to add
+        :type hit: a :class:`txsscanlib.report.Hit`
+        :raise: a :class:`txsscanlib.txsscan_error.SystemDetectionError`
         """
         # need to update cluster bounds
         if len(self.hits) == 0:
@@ -167,15 +186,6 @@ class Cluster(object):
         else:
             if(self.replicon_name == hit.replicon_name):
                 # To be updated !! make this work also with "circularized" clusters
-                """
-                if hit.get_position() < self.begin:
-                    self.begin = hit.get_position()
-                elif hit.get_position() > self.end:
-                    self.end = hit.get_position()
-                else:
-                    if hit.get_position() > self.begin and hit.get_position() < self.end:
-                        _log.debug("Weird cluster inclusion hit : %s"%hit)
-                """
                 # The end position only is updated, as Hits are always appended.
                 self.end = hit.get_position()
                 self.hits.append(hit)
@@ -260,7 +270,6 @@ class Cluster(object):
                     
                 else:
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
-                    #def try_system(hits, putative_system, systems):
                     def try_system(hits, putative_system, counter_systems_in_clust):   
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust) 
@@ -321,6 +330,16 @@ class SystemNameGenerator(object):
     name_bank={}
 
     def getSystemName(self, replicon, system):
+        """
+        Generates a unique system name based on the replicon's name and the system's name.
+        
+        :param replicon: the replicon name
+        :type replicon: string
+        :param system: the system name
+        :type system: string
+        :return: a unique system name
+        :rtype: string
+        """
         basename = self._computeBasename(replicon, system)
         if basename in self.name_bank:
             self.name_bank[basename]+=1
@@ -331,6 +350,16 @@ class SystemNameGenerator(object):
         return system_name
 
     def _computeBasename(self, replicon, system):
+        """
+        Computes the base name to be used for unique name generation
+                
+        :param replicon: the replicon name
+        :type replicon: string
+        :param system: the system name
+        :type system: string
+        :return: the base name
+        :rtype: string
+        """
         return replicon+"_"+system+"_"
 
 system_name_generator = SystemNameGenerator()
@@ -401,6 +430,11 @@ class SystemOccurence(object):
             self.forbidden_genes[g.name] = 0 
 
     def __str__(self):
+        """
+        Print information of the component content of the SystemOccurence
+        
+        :rtype: string
+        """        
         out=""
         if self.mandatory_genes: 
             out+="Mandatory genes: \n"
@@ -425,7 +459,10 @@ class SystemOccurence(object):
     #def get_gene_counter_output(self):
     def get_gene_counter_output(self, forbid_exclude=False):
         """
-        Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden if specified) occurences in the system occurrence        
+        Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden if specified) occurences in the system occurrence 
+        
+        :param forbid_exclude: exclude the forbidden components if set to True. False by default 
+        :type forbid_exclude: boolean  
         """
         out=""
         out+=str(self.mandatory_genes)
@@ -439,7 +476,7 @@ class SystemOccurence(object):
     @property
     def state(self):
         """
-        :return: the state of a system occurence
+        :return: the state of the systemOccurrence
         :rtype: string
         """
         return self._state
@@ -449,6 +486,8 @@ class SystemOccurence(object):
         Attributes unique name to the system occurrence with the class :class:`txsscanlib.search_systems.SystemNameGenerator`.
         Generates the name if not already set. 
         
+        :param replicon_name: the name of the replicon
+        :type replicon_name: string
         :return: the unique name of the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
@@ -460,6 +499,8 @@ class SystemOccurence(object):
         """
         Attributes a name to the system occurrence for an "unordered" dataset => generating a generic name based on the system name and the suffix given. 
         
+        :param suffix: the suffix to be used for generating the systemOccurrence's name
+        :type suffix: string
         :return: a name for a system in an "unordered" dataset to the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
@@ -469,6 +510,10 @@ class SystemOccurence(object):
     def compute_system_length(self, rep_info):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
+        
+        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :rtype: integer
         """
         length=0
         # To be updated to deal with "circular" clusters
@@ -505,6 +550,10 @@ class SystemOccurence(object):
     def count_genes(self, gene_dict):
         """
         Counts the nb of genes with at least one occurrence in a dictionary with a counter of genes. 
+        
+        :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
+        :type gene_dict: dict
+        :rtype: integer
         """
         total = 0
         for v in gene_dict.values():
@@ -514,7 +563,11 @@ class SystemOccurence(object):
 
     def count_genes_tot(self, gene_dict):
         """
-        Counts the nb of matches in a dictionary with a counter of genes, independently of the nb of genes matched.
+        Counts the nb of matches in a dictionary with a counter of genes, independently of the nb of genes matched.        
+        
+        :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
+        :type gene_dict: dict
+        :rtype: integer
         """
         total = 0
         for v in gene_dict.values():
@@ -522,7 +575,9 @@ class SystemOccurence(object):
         return total
 
     def compute_missing_genes_list(self, gene_dict):
-        """
+        """        
+        :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
+        :type gene_dict: dict
         :returns: the list of genes with no occurence in the gene counter. 
         :rtype: list
         """
@@ -536,13 +591,21 @@ class SystemOccurence(object):
     def count_missing_genes(self, gene_dict):
         """
         Counts the number of genes with no occurence in the gene counter.
-
+        
+        :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
+        :type gene_dict: dict
         :rtype: integer
         """
         return len(self.compute_missing_genes_list(gene_dict))
 
 
     def is_complete(self):
+        """
+        Test for SystemOccurrence completeness.
+        
+        :returns: True if the state of the SystemOccurrence is "single_locus" or "multi_loci", False otherwise.
+        :rtype: boolean
+        """
         if self.state == "single_locus" or self.state == "multi_loci":
             return True
         else:
@@ -560,7 +623,11 @@ class SystemOccurence(object):
     def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
-
+        
+        :param replicon_name: the name of the replicon
+        :type replicon_name: string
+        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`        
         :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
@@ -595,7 +662,9 @@ class SystemOccurence(object):
     def get_summary_unordered(self, replicon_name):
         """
         Gives a summary of the system occurrence in terms of gene content only (specific of "unordered" datasets).
-
+        
+        :param replicon_name: the name of the replicon
+        :type replicon_name: string
         :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
         :rtype: string
         """
@@ -686,7 +755,7 @@ class SystemOccurence(object):
 
     def fill_with_hits(self, hits):
         """
-        Adds hits to a system occurence, and check which are their status according to the system definition.
+        Adds hits to a system occurence, and check what are their status according to the system definition.
         Set the system occurence state to "no_decision" after calling of this function. 
         
         .. note::
@@ -770,6 +839,7 @@ class SystemOccurence(object):
             
         When a decision is made, the status (self.status) of the 
         :class:`txsscanlib.search_systems.SystemOccurence` is set either to:
+        
             - "\single_locus\" when a complete system in the form of a single cluster was found
             - "\multi_loci\" when a complete system in the form of several clusters was found
             - "\uncomplete\" when no system was assessed (quorum not reached)
@@ -837,6 +907,15 @@ class validSystemHit(object):
         
     """
     def __init__(self, hit, detected_system, gene_status):
+        """
+        :param hit: a hit to base the validSystemHit on
+        :type hit: :class:`txsscanlib.report.Hit`
+        :param detected_system: the name of the predicted System
+        :type detected_system: string
+        :param gene_status: the "role" of the gene in the predicted system
+        :type gene_status: string
+        
+        """
         self._hit = hit
         self.predicted_system = detected_system
         self.reference_system = hit.system.name
@@ -881,6 +960,10 @@ class validSystemHit(object):
 
 
     def output_system_header(self):
+        """
+        :return: the header for the output file
+        :rtype: string
+        """
         return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
 
 
@@ -892,7 +975,14 @@ class systemDetectionReport(object):
     
     """
     
-    def __init__(self, replicon_name, systems_occurences_list, systems):
+    #def __init__(self, replicon_name, systems_occurences_list, systems):
+    def __init__(self, replicon_name, systems_occurences_list):
+        """
+        :param replicon_name: the name of the replicon
+        :type replicon_name: string
+        :param systems_occurences_list: the list of system's occurrences to consider
+        :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
+        """
         self._systems_occurences_list = systems_occurences_list
         #self._system_textlist = []
         self.replicon_name = replicon_name
@@ -900,6 +990,9 @@ class systemDetectionReport(object):
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
+        
+        :return: the counter of systems
+        :rtype: Counter
         """
         system_textlist=[]
         for so in self._systems_occurences_list:
@@ -910,6 +1003,10 @@ class systemDetectionReport(object):
     def tabulated_output_header(self, system_occurence_states, system_names):
         """
         Returns a string containing the header of the tabulated output
+        
+        :param system_occurence_states: the different forms of detected systems to consider
+        :type system_occurence_states: list of string
+        :rtype: string
         """
         # Can be done intra-class 
         header = "#Replicon"
@@ -923,7 +1020,16 @@ class systemDetectionReport(object):
 
     def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
         """
-        Write a tabulated output with number of detected systems for each replicon. 
+        Write a tabulated output with number of detected systems for each replicon.         
+        
+        :param system_occurence_states: the different forms of detected systems to consider
+        :type system_occurence_states: list of string
+        :param reportfilename: the output file name 
+        :type reportfilename: string
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+        :rtype: string
+
         """
         system_counter=self.counter_output()
         print system_counter    
@@ -947,7 +1053,13 @@ class systemDetectionReport(object):
     def report_output(self, reportfilename, print_header = False):
         """
         Writes a report of sequences forming the detected systems, with information in their status in the system, 
-        their localization on replicons, and statistics on the Hits. 
+        their localization on replicons, and statistics on the Hits.         
+        
+        :param reportfilename: the output file name 
+        :type reportfilename: string
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+        
         """
         report_str=""
         for so in self._systems_occurences_list:
@@ -969,7 +1081,12 @@ class systemDetectionReport(object):
             - the number of mandatory/allowed genes detected
             - the number and list of missing genes
             - the number of loci encoding the system
-            
+        
+        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+    
         """
         
         report_str = ""
@@ -989,7 +1106,7 @@ class systemDetectionReport(object):
 
         :param path: the path to a file where to write the report in json format
         :type path: string
-        :param rep_db: the replicons database
+        :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
         with open(path, 'w') as _file:
@@ -1037,7 +1154,12 @@ class systemDetectionReportUnordered(object):
     
     """
     
-    def __init__(self, systems_occurences_list, systems):
+    #def __init__(self, systems_occurences_list, systems):
+    def __init__(self, systems_occurences_list):
+        """
+        :param systems_occurences_list: the list of system's occurrences to consider
+        :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
+        """
         self._systems_occurences_list = systems_occurences_list
         #self.replicon_name = replicon_name            
 
@@ -1045,7 +1167,13 @@ class systemDetectionReportUnordered(object):
     def report_output(self, reportfilename, print_header = False):
         """
         Writes a report of sequences forming the detected systems, with information in their status in the system, 
-        their localization on replicons, and statistics on the Hits. 
+        their localization on replicons, and statistics on the Hits.
+                
+        :param reportfilename: the output file name 
+        :type reportfilename: string
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+ 
         """
         report_str=""
         for so in self._systems_occurences_list:
@@ -1066,8 +1194,13 @@ class systemDetectionReportUnordered(object):
         Writes a report with the summary for putative systems in an unordered dataset. For each system, a summary is done including: 
                    
             - the number of mandatory/allowed genes in the reference system (as defined in XML files)
-            - the number of mandatory/allowed genes detected
-            
+            - the number of mandatory/allowed genes detected        
+                
+        :param reportfilename: the output file name 
+        :type reportfilename: string
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+
         """
         
         report_str = ""
@@ -1111,6 +1244,9 @@ def disambiguate_cluster(cluster):
     - splits the cluster in two if it seems that two systems are nearby
     - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster in this case, check that they are not "loners", cause "loners" can be stored.
 
+    :param cluster: the cluster to "disambiguate"
+    :type cluster: :class:`txsscanlib.search_systems.Cluster`
+    
     """
     res_clusters = []               
     counter_genes_compat_systems={}
@@ -1330,6 +1466,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
     :type systems_to_detect: a list of :class:`txsscanlib.system.System`
     :param cfg: the configuration object built from default and user parameters.
     :type cfg: :class:`txsscanlib.config.Config`
+    :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+    :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
     :return: a set of clusters and a dictionary with \"multi_system\" genes stored in a system-wise way for further utilization.
     :rtype: :class:`txsscanlib.search_systems.ClustersHandler`
     """    
@@ -1450,7 +1588,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
 def get_best_hits(hits, tosort=False, criterion="score"):
     """
-    Returns from a putatively redundant list of hits a list of best matching hits.
+    Returns from a putatively redundant list of hits, a list of best matching hits.
     Analyzes quorum and co-localization if required for system detection. 
     By default, hits are already sorted by position, and the hit with the best score is kept. Possible criteria are:
         
@@ -1458,6 +1596,13 @@ def get_best_hits(hits, tosort=False, criterion="score"):
     - minimal i-evalue (criterion=\"i_eval\")
     - maximal percentage of the profile covered by the alignment with the query sequence (criterion=\"profile_coverage\")
     
+    :param tosort: tells if the hits have to be sorted
+    :type tosort: boolean
+    :param criterion: the criterion to base the sorting on 
+    :type criterion: string
+    :return: the list of best matching hits
+    :rtype: list of :class:`txsscanlib.report.Hit`
+    :raise: a :class:`txsscanlib.txsscan_error.TxsscanError`
     """
     if tosort:
         hits = sorted(hits, key=attrgetter('position'))
@@ -1562,7 +1707,8 @@ def search_systems(hits, systems, cfg):
             print "******************************************"
             #print "Reporting systems for %s : \n"%k
             print "Building reports for %s: \n"%k
-            report = systemDetectionReport(k, systems_occurences_list, systems)
+            #report = systemDetectionReport(k, systems_occurences_list, systems)
+            report = systemDetectionReport(k, systems_occurences_list)
                 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
@@ -1589,7 +1735,8 @@ def search_systems(hits, systems, cfg):
         print "******************************************"
         #print "Reporting detected systems : \n"
         print "Building reports of detected systems\n "
-        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)            
+        #report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)  
+        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list)           
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
@@ -1617,7 +1764,8 @@ def search_systems(hits, systems, cfg):
                 systems_occurences_list.append(so)
         print "******************************************"
         print "Building reports of detected systems "
-        report = systemDetectionReportUnordered(systems_occurences_list, systems)
+        #report = systemDetectionReportUnordered(systems_occurences_list, systems)
+        report = systemDetectionReportUnordered(systems_occurences_list)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         #report.json_output(json_filename)
