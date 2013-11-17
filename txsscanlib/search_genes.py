@@ -19,8 +19,8 @@ from report import GembaseHMMReport, GeneralHMMReport
 
 def search_genes(genes, cfg):
     """
-    For each gene of the list, use the corresponding profile to perform an HMMer search, and parse the output
-    to generate a HMMReport that is saved in a file after Hit filtering. These tasks are performed in parrallel using threads.
+    For each gene of the list, use the corresponding profile to perform an Hmmer search, and parse the output
+    to generate a HMMReport that is saved in a file after Hit filtering. These tasks are performed in parallel using threads.
     The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
     
     :param genes: the genes to search in the input sequence dataset
@@ -37,12 +37,12 @@ def search_genes(genes, cfg):
     
     def search(gene, all_reports, sema):
         """
-        search gene in base (execute \"hmmsearch\") and produce a report
+        Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
         
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object
-        :param all_reports: a container to append the generated Report object
-        :type all_reports: list
+        :param all_reports: a container to append the generated HMMReport objects
+        :type all_reports: list of `txsscanlib.report.HMMReport` object (derived class depending on the input dataset type)
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore
         """
@@ -56,18 +56,18 @@ def search_genes(genes, cfg):
             
     def recover(gene, all_reports, cfg, sema):
         """
-        recover hmmoutput from a previous run and produce a report
+        Recover Hmmer output from a previous run, and produce a report
         
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object
-        :param all_reports: a container to append the generated Report object
+        :param all_reports: a container to append the generated HMMReport object
         :type all_reports: list
         :param cfg: the configuration 
         :type cfg: :class:`txsscanlib.config.Config` object
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore.
-        :return: the list of all HMMReports. 
-        :rtype: list of `txsscanlib.report.HMMReport` object.
+        :return: the list of all HMMReports (derived class depending on the input dataset type)
+        :rtype: list of `txsscanlib.report.HMMReport` object
         """
         with sema:
             hmm_old_path = os.path.join(cfg.previous_run, gene.name + cfg.res_search_suffix)

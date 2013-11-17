@@ -46,9 +46,9 @@ class GeneBank(object):
         """
         Implement the membership test operator
         
-        :param gene:
-        :type gene:
-        :return: True if the gene.name is in, False otherwise
+        :param gene: the gene to test
+        :type gene: :class:`txsscanlib.gene.Gene` object
+        :return: True if the gene is in, False otherwise
         :rtype: boolean
         
         """

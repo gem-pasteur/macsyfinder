@@ -12,7 +12,7 @@
 
 class TxsscanError(Exception):
     """
-    The base class for txsscan specific exceptions.
+    The base class for TXSScan specific exceptions.
     """
     pass
 

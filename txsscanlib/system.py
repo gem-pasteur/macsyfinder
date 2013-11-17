@@ -16,11 +16,11 @@ from txsscan_error import SystemInconsistencyError
 
 class SystemBank(object):
     """
-    build and cached all systems objects. Systems must not be instanciate directly.
-    the system_factory must be used. The system factory ensure there is only one instance
-    of system for a given name.
-    To get a system use the method get_system. if the gene is already cached this instance is returned
-    otherwise a new system is build, cached then returned.
+    Build and store all Systems objects. Systems must not be instanciated directly.
+    This system factory must be used. It ensures there is a unique instance
+    of a system for a given system name.
+    To get a system, use the method __getitem__ via the "[]". If the System is already cached in the SystemBank, it is returned.
+    Otherwise a new system is built, stored and then returned.
     """
 
     _system_bank = {}
@@ -30,10 +30,10 @@ class SystemBank(object):
         """
         :param name: the name of the system
         :type name: string
-        :param cfg: the configuration
+        :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
-        :return: return system corresponding to the name.
-         If the system already exists return it otherwise build it an d returni
+        :return: the system corresponding to the name.
+         If the system already exists, return it, otherwise build it and return it.
         :rtype: :class:`txsscanlib.system.System` object
         """
         if name in self._system_bank:
@@ -44,24 +44,25 @@ class SystemBank(object):
 
     def __contains__(self, system):
         """
-        implement membership test operators
+        Implement the membership test operator
         
-        :param system:
-        :type system:
-        :return: True if the system.name is in , False otherwise
+        :param system: the system to test
+        :type system: :class:`txsscanlib.system.System` object
+        :return: True if the system is in, False otherwise
         :rtype: boolean
         """
         return system in self._system_bank.values()
 
     def __iter__(self):
         """
+        Return an iterator object on the systems contained in the bank
         """
         return self._system_bank.itervalues()
     
     def __len__(self):
         """
-        :return: the number of system store in the bank
-        :rtype: int
+        :return: the number of systems stored in the bank
+        :rtype: integer
         """
         return len(self._system_bank)
     
@@ -70,15 +71,15 @@ class SystemBank(object):
         """
         :param name: the name of the system
         :type name: string
-        :param cfg: the configuration
+        :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
-        :return: return system corresponding to the name.
-         If the system already exists return it otherwise build it an d return
+        :return: the system corresponding to the system's name passed as an argument
+         If the system already exists, return it. Otherwise, build it and return it. 
         :rtype: :class:`txsscanlib.system.System` object
-        :raise: KeyError if a system with the same name is already registered
+        :raise: KeyError if a system with the same name is already registered.
         """
         if system in self._system_bank:
-            raise KeyError, "a system named %s is already registered" % system.name
+            raise KeyError, "a system named %s is already registered in the systems' bank" % system.name
         else:
             self._system_bank[system.name] = system
 
@@ -87,20 +88,20 @@ system_bank = SystemBank()
 
 class System(object):
     """
-    handle a secretion system.
+    Handle a secretion system.
     """
 
     def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None):
         """
-        :param cfg: the configuration
+        :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
         :param name: the name of the system
         :type name: string
-        :param inter_gene_max_space: the maximum distance between two genes
+        :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
         :type inter_gene_max_space: integer
-        :param min_mandatory_genes_required: the quorum of mandatory genes to defined this system
+        :param min_mandatory_genes_required: the quorum of mandatory genes to define this system
         :type min_mandatory_genes_required: integer
-        :param min_genes_required: the quorum of genes to defined system
+        :param min_genes_required: the quorum of genes to define this system
         :type min_genes_required: integer
         """
         self.cfg = cfg
@@ -144,7 +145,7 @@ class System(object):
     @property
     def min_genes_required(self):
         """
-        :return: get the quorum of genes required for this system
+        :return: get the quorum of genes (mandatory+allowed) required for this system
         :rtype: integer
         """
         cfg_min_genes_required = self.cfg.min_genes_required(self.name)
@@ -157,27 +158,27 @@ class System(object):
 
     def add_mandatory_gene(self, gene):
         """
-        add a gene in the list of mandatory genes
+        Add a gene to the list of mandatory genes
 
-        :param gene: gene which are mandatory for this system
+        :param gene: gene that is mandatory for this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
         self._mandatory_genes.append(gene)
 
     def add_allowed_gene(self, gene):
         """
-        add a gene in the list of allowed genes
+        Add a gene to the list of allowed genes
 
-        :param gene: gene which should be present in this system
+        :param gene: gene that is allowed to be present in this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
         self._allowed_genes.append(gene)
 
     def add_forbidden_gene(self, gene):
         """
-        add a gene in the list of forbidden genes
+        Add a gene to the list of forbidden genes
 
-        :param gene: gene which must not be present in this system
+        :param gene: gene that must not be found in this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
         self._forbidden_genes.append(gene)
@@ -185,23 +186,23 @@ class System(object):
     @property
     def mandatory_genes(self):
         """
-        :return: the list of genes which are mandatory for this secretion system 
-        :rtype: list of :class:`txsscanlib.secretion.Gene` object
+        :return: the list of genes that are mandatory in this secretion system 
+        :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._mandatory_genes
 
     @property
     def allowed_genes(self):
         """
-        :return: the list of genes which should be present in this secretion system 
-        :rtype: list of :class:`txsscanlib.secretion.Gene` object
+        :return: the list of genes that are allowed in this secretion system 
+        :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._allowed_genes
 
     @property
     def forbidden_genes(self):
         """
-        :return: the list of genes which cannot be present in this secretion system 
+        :return: the list of genes that are forbidden in this secretion system 
         :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._forbidden_genes

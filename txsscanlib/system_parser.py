@@ -22,15 +22,19 @@ from txsscan_error import TxsscanError, SystemInconsistencyError
 
 class SystemParser(object):
     """
-    build a System instance from System definition write in XML and build a 
+    Build a System instance from the corresponding System definition described in the XML file (named after the system's name) found at the dedicated location ("-d" command-line option). 
     """
 
     def __init__(self, cfg, system_bank, gene_bank):
         """
         Constructor
 
-        :param cfg: the configuration of this run
+        :param cfg: the configuration object of this run
         :type cfg: :class:`txsscanlib.config.Config` object
+        :param cfg: the system factory
+        :type cfg: :class:`txsscanlib.system.SystemBank` object
+        :param cfg: the gene factory
+        :type cfg: :class:`txsscanlib.gene.GeneBank` object
         """
         self.cfg = cfg
         self.system_bank = system_bank
@@ -43,7 +47,7 @@ class SystemParser(object):
         """
         :param sys_2_detect: the list of systems to detect
         :type sys_2_detect: [string, ...]
-        :return: the list of systems name to parse
+        :return: the list of systems' names to parse
         :rtype: [string, ...]
         """
         systems_2_parse = {}
@@ -67,7 +71,7 @@ class SystemParser(object):
 
     def _create_system(self, system_name, system_node):
         """
-        :param system_name: the name of system. This name must match a file in Definitions directory
+        :param system_name: the name of the system to create. This name must match a XML file in the definition directory ("-d" option in the command-line)
         :type param: string
         :return: the system corresponding to the name
         :rtype: :class:`txsscanlib.system.System` object 
@@ -110,9 +114,9 @@ class SystemParser(object):
 
     def _create_genes(self, system, system_node):
         """
-        Create genes belonging to the systems. Be careful, the return genes have not their homologs.
+        Create genes belonging to the systems. Be careful, the returned genes have not their homologs set yet.
         
-        :param gene_name:
+        :param gene_name: 
         :type gene_name: string
         :param system:
         :type system: :class:`txsscanlib.system.System` object
@@ -126,7 +130,7 @@ class SystemParser(object):
         for node in gene_nodes:
             name = node.get("name")
             if not name:
-                msg = "Invalid system definition: gene without name"
+                msg = "Invalid system definition: gene without a name"
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -154,10 +158,11 @@ class SystemParser(object):
 
     def _fill(self, system, system_node):
         """
-        fill system with genes found in this system. Add homolgs to the genes if necessary
+        Fill the system with genes found in this system definition. Add homolgs to the genes if necessary.
+        
         :param system: the system to fill
         :type system: :class:`txsscanlib.system.System` object
-        :param system_node: the node of the document corresonding to the system
+        :param system_node: the "node" in the XML hierarchy corresponding to the system
         :type system_node: :class"`ET.ElementTree` object
         """
         genes_nodes = system_node.findall("gene")
@@ -185,9 +190,9 @@ class SystemParser(object):
 
     def _parse_homolog(self, node, gene_ref, curr_system):
         """
-        parse a xml element gene and build the corresponding object
+        Parse a xml element gene and build the corresponding object
 
-        :param node: a node corresponding to gene element
+        :param node: a "node" corresponding to the gene element in the XML hierarchy
         :type node: :class:`xml.etree.ElementTree.Element` object 
         :return: the gene object corresponding to the node
         :rtype: :class:`txsscanlib.gene.Homolog` object 
@@ -203,19 +208,19 @@ class SystemParser(object):
         elif aligned in (None, "0", "false", "False"):
             aligned = False
         else:
-            msg = 'Invalid system definition: invalid value for attribute type for gene %s: %s allowed values are "1", "true", "True", "0", "false", "False"'% (aligned, name)
+            msg = 'Invalid system definition: invalid value for an attribute of gene %s: %s allowed values are "1", "true", "True", "0", "false", "False"'% (aligned, name)
             _log.error(msg)
             raise SyntaxError(msg)
         try:
             gene = self.gene_bank[name]
         except KeyError:
-            msg = "the gene %s describe as homolog of %s in system %s in is not in the bank" % (name, gene_ref.name, curr_system.name)
+            msg = "The gene %s described as homolog of %s in system %s is not in the \"GeneBank\" gene factory" % (name, gene_ref.name, curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
         #if system_ref != gene.system.name:     
         if system_ref != None and system_ref != gene.system.name:
-            msg = "inconsitency in systems definitions: the gene %s describe as homolog of %s with system_ref %s has an other system in bank(%s)" % (name, gene_ref.name, system_ref, gene.system.name)
+            msg = "Inconsistency in systems definitions: the gene %s described as homolog of %s with system_ref %s has an other system in bank (%s)" % (name, gene_ref.name, system_ref, gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref, aligned)
@@ -227,52 +232,63 @@ class SystemParser(object):
 
     def check_consitency(self, systems, cfg):
         """
+        Check the consistency of the co-localization features between the different values given as an input: 
+        between XML definitions, configuration file, and command-line options.
+        
         :param systems: the list of systems to check
         :type systems: list of `class:txssnalib.system.System` object
-        :param cfg: the configuration
-        :type cfg: a `class:txsscan.config.Config` object
-        :raise: SystemInconsistencyError if one test fail
+        :param cfg: the configuration object
+        :type cfg: a :class:`txsscanlib.config.Config` object
+        :raise: :class:`txsscanlib.txsscan_error.SystemInconsistencyError` if one test fails
 
-        see `feature <https://projets.pasteur.fr/issues/1850>`_
-
-          - min_mandatory_genes_required = None  ; min_genes_required = None
-          - min_mandatory_genes_required = min_genes_required = len(mandatory_genes)
-          always True by Systems design
-
-          - min_mandatory_genes_required = value  ; min_genes_required = None
-          - min_mandatory_genes_required = len(mandatory_genes) 
-          - AND len(allowed_genes + mandatory_genes) >= min_genes_required >= len(mandatory_genes)
-          always True By design
-
-          - min_mandatory_genes_required =  None ; min_genes_required = Value
-          - min_genes_required = min_mandatory_genes_required 
-          - AND min_mandatory_genes_required <= len(mandatory_genes)
-          - min_mandatory_genes_required <= len(mandatory_genes)
-
-          - min_mandatory_genes_required =  Value ; min_genes_required = Value
-          - len(allowed_genes+mandatory_genes) >= min_genes_required 
-          - AND min_mandatory_genes_required <= len(mandatory_genes) 
-          - AND min_genes_required >= min_mandatory_genes_required
+        (see `feature <https://projets.pasteur.fr/issues/1850>`_)
           
+        In the different possible situations, different requirements need to be fulfilled ("mandatory_genes" and "allowed_genes" consist of lists of genes defined as such in the system definition):
+          
+          - **If:** min_mandatory_genes_required = None  ; min_genes_required = None
+          - **Then:** min_mandatory_genes_required = min_genes_required = len(mandatory_genes)
+          
+          *always True by Systems design*
+
+          - **If:** min_mandatory_genes_required = value  ; min_genes_required = None
+          - **Then:** min_mandatory_genes_required <= len(mandatory_genes) 
+          - AND min_genes_required = min_mandatory_genes_required
+          
+          *always True by design*
+
+          - **If:** min_mandatory_genes_required =  None ; min_genes_required = Value
+          - **Then:** min_mandatory_genes_required = len(mandatory_genes)
+          - AND min_genes_required >= min_mandatory_genes_required 
+          - AND min_genes_required <= len(mandatory_genes+allowed_genes)
+          
+          *to be checked*
+
+          - **If:** min_mandatory_genes_required =  Value ; min_genes_required = Value
+          - **Then:** min_genes_required <= len(allowed_genes+mandatory_genes)
+          - AND min_genes_required >= min_mandatory_genes_required
+          - AND min_mandatory_genes_required <= len(mandatory_genes)
+           
+          *to be checked*   
+                 
         """
         for system in systems:
             len_allowed_genes = len(system.allowed_genes)
             len_mandatory_genes = len(system.mandatory_genes)
             if not (system.min_genes_required <= (len_allowed_genes + len_mandatory_genes)) :
-                msg = "systems %s is not consistent min_genes_required %d must be lesser or equal than allowed_genes + mandatory_genes %d" %(system.name, 
+                msg = "system %s is not consistent: min_genes_required %d must be lesser or equal than the number of \"allowed\" and \"mandatory\" components in the system: %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
                                                                                                                                       len_allowed_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
             if not (system.min_mandatory_genes_required <= len_mandatory_genes):
-                msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than mandatory_genes %d" %(system.name, 
+                msg = "system %s is not consistent: min_mandatory_genes_required %d must be lesser or equal than the number of \"mandatory\" components in the system: %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
             if not(system.min_mandatory_genes_required <= system.min_genes_required):
-                msg = "systems %s is not consistent min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
+                msg = "system %s is not consistent: min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
                                                                                                                       system.min_mandatory_genes_required, 
                                                                                                                       system.min_genes_required)
                 _log.critical(msg)
@@ -281,12 +297,10 @@ class SystemParser(object):
 
     def parse(self, systems_2_detect):
         """
-        parse  systems definition in xml format to build the corresponding objects
+        Parse systems definition in XML format to build the corresponding system objects, and add them to the system factory.
 
-        :param systems_name: the name of the system to parse
-        :type systems_name: string
-        :return: the system corresponding to the name 
-        :rtype: :class:`txsscanlib.secretion.System` object 
+        :param systems_2_detect: a list with the names of the systems to parse
+        :type systems_2_detect: list of string
         """
         systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
         for system_name in systems_2_parse:
