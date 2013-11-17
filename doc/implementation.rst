@@ -3,7 +3,7 @@
 TXSScan implementation overview
 ===============================
 
-TXSScan is implemented with an object-oriented architecture. The objects are described in the current API documentation. An overview of main classes to model the systems to detect is provided below.
+TXSScan is implemented with an object-oriented architecture. The objects are described in the current API documentation. An overview of the main classes used to model the systems to be detected is provided below.
   
 .. digraph:: system_overview
 

@@ -14,7 +14,7 @@ to see full options.
 "``txsscan all --db_type unordered --sequence_db metagenome.fasta``" 
 to detect all secretion systems and related appendages in a metagenomic dataset
 
-* On a completely assembled genome (and thus order of genes makes sense): 
+* On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 "``txsscan T2SS Tad --db_type ordered_replicon --sequence_db mygenome.fasta``" 
 to detect the T2SS secretion system and the Tad pilus in a complete genome
 

@@ -48,7 +48,7 @@ class SystemBank(object):
         
         :param system: the system to test
         :type system: :class:`txsscanlib.system.System` object
-        :return: True if the system is in, False otherwise
+        :return: True if the system is in the System factory, False otherwise
         :rtype: boolean
         """
         return system in self._system_bank.values()

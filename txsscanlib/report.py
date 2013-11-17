@@ -50,7 +50,7 @@ class HMMReport(object):
     def extract(self):
         """
         Parse the raw Hmmer output file and produce a new synthetic report file by applying a filter on hits.
-        Contain selected and sorted hits ( **abstract method to be implemented in inherited classes** )
+        Contain selected and sorted hits ( **this abstract method is implemented in inherited classes** )
         """
         pass
 

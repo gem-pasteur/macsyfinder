@@ -5,7 +5,7 @@ The System object
 *****************
 
 It represents a macromolecular system to detect. 
-It is defined by a definition file in XML stored in a dedicated location that can be specified *via* the configuration of the command-line. See :ref:`system-definition-grammar-label` for more details on the XML grammar. 
+It is defined by a definition file in XML stored in a dedicated location that can be specified *via* the configuration file, or the command-line (`-d` parameter). See :ref:`system-definition-grammar-label` for more details on the XML grammar. 
 The XML syntax is
 for instance::
 
@@ -38,15 +38,15 @@ A system has an attribute inter_gene_max_space which is an integer,
 and three kind of components are listed in function of their presence in the system:
 
 * The genes that must be present in the genome to defined this system ("mandatory").
-* The genes that can be present, but do not have to be found in every cases ("allowed").
+* The genes that can be present, but do not have to be found in every case ("allowed").
 * The genes that must not be present in the system ("forbiden").
 
 .. note:: 
     
-    a complete description of the secretion system modelling is available here :ref:`system_definition`
+    a complete description of the secretion system modelling is available in the section :ref:`system_definition`
 
 SystemBank API reference
-===========================
+========================
  .. automodule:: txsscanlib.system
    :members: SystemBank
    :private-members:
