@@ -16,16 +16,16 @@ Phase 2.
 
    * For each system to parse 
    
-     * create the system
-     * add this system to the system_bank
-     * create the genes defined in this system with their attributes but not their homologs
-     * add these genes in the gene_bank
+     * create the System
+     * add this System to the system_bank
+     * create the Genes defined in this System with their attributes but not their Homologs
+     * add these Genes in the gene_bank
     
 Phase 3. 
 
-   * For each system to search
+   * For each System to search
    
-     * For each gene defined in this system:
+     * For each Gene defined in this System:
      
          * create the Homologs by encapsulating Genes from the gene_bank
          * add the Gene to the System
@@ -66,7 +66,7 @@ With the example above:
 * gene_B attributes from the Syst_2 are used to build the Gene
 * the Syst_2 has attributes as defined in the corresponding XML file (inter_gene_max_space ,...)
 
-countrariwise: 
+Contrariwise: 
 
 * the gene_B has no Homologs
 * the Syst_2 has no Genes

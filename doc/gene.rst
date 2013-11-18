@@ -10,7 +10,7 @@ The Gene object represents genes encoding the protein components of a System. Se
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in gene_bank.
     gene_bank is a :class:`txsscanlib.gene.GeneBank` object. 
-    The gene_bank and system bank are filled by a system_parser (:class:`txsscanlib.system_parser.SystemParser`)
+    The gene_bank and system_bank (:class:`txsscanlib.system.SystemBank` object) are filled by a system_parser (:class:`txsscanlib.system_parser.SystemParser`)
 
 Example to get a gene object: ::
   
