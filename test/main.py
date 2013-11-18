@@ -55,7 +55,7 @@ if __name__ == '__main__':
     else:
         TXSSCAN_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 
-    from argparse import ArgumentParser    
+    from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument("tests",
                         nargs = '*',
