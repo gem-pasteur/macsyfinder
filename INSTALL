@@ -45,7 +45,7 @@ unpack the archive
 tar -xzf txsscan-x.x.tar.gz
 cd txsscan-x.x
 
-TXSScan installation follows classical “pythonic” installation procedure (see http://docs.python.org/2/install/):
+TXSScan installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/):
 
  python setup.py build
  python setup.py test -vv
