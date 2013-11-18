@@ -11,7 +11,7 @@ TXSScan relies on the definition of models of secretion systems and related appe
 A system is defined in a dedicated file named after the system (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used for **content description**. Some components are specific to the system, and some are possibly from other systems. In the latter case, the full description of the gene with its attributes must be defined in the XML file of the original system. 
 Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
 
-Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profile. 
+Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profiles. 
 
 * **Mandatory** components represent essential components to be found to infer the System presence.
 * **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 

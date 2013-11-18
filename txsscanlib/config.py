@@ -27,8 +27,9 @@ import logging
 
 class Config(object):
     """
-    parse configuration files and handle the configuration according to the following file location precedence:
+    Parse configuration files and handle the configuration according to the following file location precedence:
     /etc/txsscan/txsscan.conf < ~/.txsscan/txsscan.conf < .txsscan.conf
+    
     If a configuration file is given on the command-line, this file will be used.
     *In fine* the arguments passed on the command-line have the highest priority.
     """

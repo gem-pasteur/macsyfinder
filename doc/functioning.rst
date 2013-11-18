@@ -11,6 +11,7 @@ Searching for "gene" components
 Initially, TXSScan **searches for the components** of a system using Hmmer with the corresponding protein profiles. This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option). See :ref:`the search_genes API <search_genes>`. 
 
 From the list of systems to detect, a non-redundant list of components (and corresponding HMM protein profiles) to search with Hmmer is built. For each system, the search is performed for:
+
     - mandatory components
     - allowed components
     - forbidden components
@@ -32,7 +33,7 @@ When the gene order is unknown the power of the analysis is more limited. In thi
 For *ordered* datasets: 
 -----------------------
 
-1. The search starts first with the formation of clusters of contiguous hits **(co-localization criterion)**. Two hits are said contiguous if their genomic location is separated by less than D protein-encoding gene, D being the maximum of the parameter "inter_gene_max_space" from the two genes with hits (system-specific, of gene-specific parameter). 
+1. The search starts first with the formation of clusters of contiguous hits **(co-localization criterion)** for each replicon. Two hits are said contiguous if their genomic location is separated by less than D protein-encoding gene, D being the maximum of the parameter "inter_gene_max_space" from the two genes with hits (system-specific, of gene-specific parameter). 
 
 2. Clusters are then scanned, and those containing only genes from a single system are kept for further analyses (step 4.), wether those with multiple systems represented are analysed with a disambiguation step (step 3.).
 
@@ -43,7 +44,7 @@ For *ordered* datasets:
 5. When all clusters, "loner" genes and "multi_system" genes were scanned for inclusion in system occurrences, a decision is made for every system occurrence regarding the **quorum rules** defined for the corresponding system. 
 
 .. note::
-   A single "multi-loci" system is assessed per replicon. Thus, the "single-locus" systems correspond to a most powerful mode of detection.
+   A single "multi-loci" system is assessed per replicon, even if it could correspond to multiple scattered systems. Thus, the "single-locus" systems correspond to a most powerful mode of detection.
 
 
 For *unordered* datasets: 

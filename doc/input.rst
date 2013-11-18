@@ -17,7 +17,7 @@ The :ref:`base section<config-base-label>` in the configuration file (:ref:`conf
   Four types of protein datasets are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
-        * *unordered_replicon* : a set of sequences corresponding to a complete replicon (*e.g.* an unassembled complete genome)
+        * *unordered_replicon* : a set of sequences corresponding to a complete genome (*e.g.* an unassembled complete genome)
         * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered (*e.g.* an assembled complete genome)
         * *gembase* : a set of multiple ordered replicons, which format follows the convention we adopted (see :ref:`gembase_convention`).
       
@@ -187,22 +187,22 @@ Three locations are parsed to find configuration files:
  
  * ./txsscan.conf  
  
- Moreover these three locations options can be passed on the command line.
+Moreover these three locations options can be passed on the command-line.
  
- Each file can defined options, at the end all options are added. if an option is specified several times.
+Each file can define options, at the end all options are added. If an option is specified several times:
  
- .. note::
+.. note::
     The precedence rules from the less important to the more important are:
  
     $PREFIX/etc/txsscan/txsscan.conf < $(HOME)/.txsscan/txsscan.conf < ./txsscan.conf < "command-line" options
    
-    This means that command-line options will always bypass those from the configuration files. In the same flavor, options altering the definition of systems found in the command-line or the configuration file will always overwhelm values from XML definition files.   
+This means that command-line options will always bypass those from the configuration files. In the same flavor, options altering the definition of systems found in the command-line or the configuration file will always overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.   
  
- The configuration files must follow the Python "ini" file syntax.
- The Config object provides some default values and performs some validations of the values, for instance:
+The configuration files must follow the Python "ini" file syntax.
+The Config object provides some default values and performs some validations of the values, for instance:
  
  
- In TXSScan, five sections are defined:
+In TXSScan, five sections are defined:
  
  .. _config-base-label:
  
@@ -259,7 +259,7 @@ Three locations are parsed to find configuration files:
         ========    ==========
     * *log_file* = (default = txsscan.log in directory of the run)
  
-  Example of a configuration file::
+Example of a configuration file::
   
     [base]
     prefix = /path/to/txsscan/home/
@@ -291,6 +291,10 @@ Three locations are parsed to find configuration files:
    [general]
    log_level = debug
 
+
+.. note::
+
+    After a run, the corresponding configuration file ("txsscan.conf") is generated as a (re-usable) output file that stores every options used in the run. It is stored in the results' directory (see :ref:`the output section <outputs>`). 
 
 
 In-house input files

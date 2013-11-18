@@ -100,7 +100,7 @@ Each line corresponds to a system that has been detected. It includes:
 Logs and configuration files
 ----------------------------
 
-Two specific output files are built to store info on the TXSScan execution: 
+Two specific output files are built to store information on the TXSScan execution: 
 
  * txsscan.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  
