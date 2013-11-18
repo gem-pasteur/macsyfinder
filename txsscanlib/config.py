@@ -27,8 +27,9 @@ import logging
 
 class Config(object):
     """
-    parse configuration files and handle the configuration according to the following file location precedence:
+    Parse configuration files and handle the configuration according to the following file location precedence:
     /etc/txsscan/txsscan.conf < ~/.txsscan/txsscan.conf < .txsscan.conf
+    
     If a configuration file is given on the command-line, this file will be used.
     *In fine* the arguments passed on the command-line have the highest priority.
     """
@@ -100,11 +101,11 @@ class Config(object):
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
-        :param res_search_dir: à déterminer
+        :param res_search_dir: the path to the directory where to store TXSScan search results directories.
         :type  res_search_dir: string
-        :param res_search_suffix: à déterminer
+        :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
-        :param res_extract_suffix: à déterminer
+        :param res_extract_suffix: the suffix to give to filtered hits output files
         :type  res_extract_suffix: string
         :param profile_dir: path to the profiles directory
         :type  profile_dir: string
@@ -119,7 +120,7 @@ class Config(object):
         :param build_indexes: build the indexes from the sequence dataset in fasta format
         :type build_indexes: boolean
         """
-        
+
         self._new_cfg_name = "txsscan.conf"
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
@@ -179,7 +180,7 @@ class Config(object):
         if 'sequence_db' in cmde_line_opt:
             cmde_line_opt['file'] = cmde_line_opt['sequence_db']
 
-        try:      
+        try:
             options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
         except NoSectionError:
             if 'res_search_dir' in cmde_line_opt:
@@ -290,7 +291,11 @@ class Config(object):
                     options['topology_file'] = self.parser.get( 'base', 'topology_file') 
                 except (NoSectionError, NoOptionError):
                     options['topology_file'] = None
-
+            if options['topology_file'] is not None:
+                if not os.path.exists(options['topology_file']):
+                    raise ValueError('topology_file cannot access {}: No such file'.format(options['topology_file']))
+                elif not os.path.isfile(options['topology_file']):
+                    raise ValueError('topology_file {} is not a regular file'.format(options['topology_file']))
             if self.parser.has_option("system", "inter_gene_max_space"):
                 options['inter_gene_max_space'] = {}
                 inter_gene_max_space = self.parser.get("system", "inter_gene_max_space" ) 

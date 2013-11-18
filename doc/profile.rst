@@ -1,11 +1,10 @@
 .. _profile:
-.. _profile-label:
 
-********************
-HMM protein profiles
-********************
+***********
+Profile API
+***********
 
-Each *"Gene"* component corresponds to a profile. A *"Profile"* must match a HMM file, which name is based on the profile name. For instance, the *gspG* gene has the corresponding "gspG.hmm" profile file provided at a dedicated location.  
+The :ref:`Profile object <profile-implementation>` is used for the search of the gene with Hmmer. A *"Profile"* must match a HMM protein profile file, which name is based on the profile name. For instance, the *gspG* gene has the corresponding "gspG.hmm" profile file provided at a dedicated location.  
  
 
 ProfileFactory API reference

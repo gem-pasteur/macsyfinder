@@ -1,12 +1,12 @@
 .. _HMMReport:
 
-******************************
-Reporting Hmmer search results
-******************************
+*************
+HMMReport API
+*************
 
-A *"HMMReport"* object represents the results of a Hmmer program search on a dataset with a hidden Markov model protein profile.
-This object has methods to extract information relevant for systems presence assessment in the dataset. See :ref:`hmmer-outputs-label` for details on corresponding output files. 
-For matches selected with the filtering parameters, *"Hit"* objects are built. 
+A *"HMMReport"* object represents the results of a Hmmer program search on a dataset with a hidden Markov model protein profile (see :ref:`this section <report-implementation>`).
+This object has methods to extract and filter Hmmer raw outputs (see :ref:`generated output files <hmmer-outputs-label>`), and then build Hits relevant for system detection. 
+For matches selected with the filtering parameters, *"Hit"* objects (:class:`txsscanlib.HMMReport.Hit`) are built. 
 
 
 
@@ -18,21 +18,31 @@ HMMReport API reference
    :private-members:
    :special-members:
 
-UnOrderedHMMReport
-==================
+GeneralHMMReport API reference
+==============================
 
 .. automodule:: txsscanlib.report
-   :members: UnOrderedHMMReport
+   :members: GeneralHMMReport
    :private-members:
    :special-members:
-   
-OrderedHMMReport 
+
+OrderedHMMReport
 ================
 
 .. automodule:: txsscanlib.report
    :members: OrderedHMMReport
    :private-members:
    :special-members:
+   
+GembaseHMMReport 
+================
+
+.. automodule:: txsscanlib.report
+   :members: GembaseHMMReport
+   :private-members:
+   :special-members:
+
+.. _hit-label:
 
 Hit 
 ===

@@ -7,7 +7,7 @@
 Welcome to TXSScan's documentation! 
 ===================================
 	
-  TXSScan is a program that detects bacterial protein secretion systems (T1-T6SS) and related appendages (the flagellum, the type  IV pilus, and the tad pilus). These systems have evolutionarily conserved features: their component content, and their genetic architecture, often in compact loci. We modelled these systems to reflect these features and to allow their efficient detection. 
+  TXSScan is a program that detects bacterial protein secretion systems (T1-T6SS) and related appendages (the flagellum, the type  IV pilus, and the Tad pilus). These systems are evolutionarily conserved. They are made of conserved components, and are often encoded  in compact loci (conserved genetic architecture). We modelled these systems to reflect these features and to allow their efficient detection. 
   
   Criteria for systems detection thus includes **component content (quorum)**, and **genomic co-localization**. Each component corresponds to a hidden Markov model (HMM) protein profile to perform homology searches with the program Hmmer. 
    
@@ -16,20 +16,40 @@ Welcome to TXSScan's documentation!
     - defined **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-TXSScan documentation contents   
-==============================
+Running TXSScan    
+===============
 .. toctree::
    :maxdepth: 2
 
    installation 
    quickstart
-   implementation
-   system_definition
-   system_parser  
-   functioning
-   config
-   database 
+   input 
    outputs
+   
+TXSScan functioning    
+===================  
+.. toctree::
+   :maxdepth: 2
+
+   system_definition
+   implementation 
+   functioning
+
+
+TXSScan API documentation    
+=========================
+.. toctree::
+   :maxdepth: 2
+ 
+   config
+   database
+   system
+   system_parser
+   gene
+   profile
+   HMMReport
+   search_genes
+   search_systems
    txsscan_error
 
 Indices and tables

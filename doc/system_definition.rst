@@ -4,11 +4,14 @@
 Secretion systems definition
 ****************************
 
+Principles
+----------
+
 TXSScan relies on the definition of models of secretion systems and related appendages with a **XML grammar** that is described below. 
 A system is defined in a dedicated file named after the system (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used for **content description**. Some components are specific to the system, and some are possibly from other systems. In the latter case, the full description of the gene with its attributes must be defined in the XML file of the original system. 
 Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
 
-Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profile. 
+Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profiles. 
 
 * **Mandatory** components represent essential components to be found to infer the System presence.
 * **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
@@ -35,7 +38,7 @@ The XML hierarchy
    * must have an attribute "presence" which can take three values "mandatory", "allowed", "forbidden".
    * may have an attribute "system_ref" which is a reference to the secretion system from where the gene comes from (this attribute is used for forbidden gene and homologs gene). If system_ref is not specified, it means the gene is from the current system.
    * may have an attribute "loner" which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
-   * may have an attribute "exchangeable" which is a boolean. If a gene is exchangeable that means this gene or one of the homologs can be found without impacts on the secretion system ( *default false* ).
+   * may have an attribute "exchangeable" which is a boolean. If a gene is exchangeable that means this gene or one of its homologs can be interchanged for the assessment of the presence of the secretion system ( *default false* ).
    * may have an attribute "multi_system" which is a boolean. If a gene is "multi_system", it means that it can be used by multiple systems. Thus, during the phase of systems assessment, a same occurrence of this component will be used multiple times to "fill" systems and be counted in the quorum in the case they lack this gene ( *default false* ).
    * "aligned" which is a boolean (this attribute is used only for homologs).
    * "inter_gene_max_space" which is an integer. 
