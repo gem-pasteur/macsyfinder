@@ -8,15 +8,20 @@ Installation
 
 TXSScan dependencies
 ====================
-TXSScan has two dependencies, as it requires running the formatdb or the makeblastdb tools provided with the Blast suite of programs (http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) and the program Hmmer version 3.0 (http://hmmer.janelia.org/). Python version 2.7 is required to run TXSScan. Thus formatdb or makeblastdb and hmmsearch programs must be installed (*e.g.*, in the PATH) in order to use TXSScan. 
+TXSScan has two dependencies, as it requires running the formatdb (>=2.2.26)or 
+the makeblastdb (2.2.28) tools provided with the Blast suite of programs 
+(http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) 
+and the program Hmmer version 3.0 (http://hmmer.janelia.org/). 
+Python version 2.7 is required to run TXSScan. 
+Thus formatdb or makeblastdb and hmmsearch programs must be installed (*e.g.*, in the PATH) in order to use TXSScan. 
 
 
 Installation procedure
 ======================
 First unarchive the source codes package, and enter the extracted folder::
 
-  tar -xzvf txsscan-20131111.tar.gz
-  cd txsscan-20131111
+  tar -xzvf txsscan-x.x.tar.gz
+  cd txsscan-x.x
   
 TXSScan installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/)::
 
@@ -26,11 +31,15 @@ TXSScan installation follows classical "pythonic" installation procedure (see ht
 It is **highly recommanded** to run tests before performing the full installation::
 
   python setup.py build
-  python setup.py -vv test 
+  python setup.py test -vv
   (sudo) python setup.py install 
   
 .. note::
   super-user privileges (*i.e.*, ``sudo``) are necesserary if you want to install it in the general file architecture.
+  
+.. note::
+  If you have not the privileges, or you don't want, to install TXSScan in the python libraries of your system, 
+  you can install TXSScan in a virtualenv (http://www.virtualenv.org/)
   
 Procedures specific to TXSScan can be used instead of default. Please run the command for full options::
 
