@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-Created on Nov 5, 2012
+#===================================
+#Created on Nov 5, 2012
+#
+#@author: bneron
+#@contact: bneron@pasteur.fr
+#@organization: Institut Pasteur
+#@license: license
+#=====================================
 
-@author: bneron
-@contact: bneron@pasteur.fr
-@organization: Institut Pasteur
-@license: license
-"""
 import sys
 import os
 import argparse
@@ -16,9 +17,9 @@ import logging
 
 if 'TXSSCAN_HOME' in os.environ:
     TXSSCAN_HOME = os.environ.get('TXSSCAN_HOME')
-    TXSSCAN_HOME = os.path.abspath( os.path.realpath(TXSSCAN_HOME))
+    TXSSCAN_HOME = os.path.abspath(os.path.realpath(TXSSCAN_HOME))
     if TXSSCAN_HOME not in sys.path:
-        sys.path.append( TXSSCAN_HOME )
+        sys.path.insert(0, TXSSCAN_HOME)
 try:
     from txsscanlib.config import Config
 except ImportError , err:
@@ -67,8 +68,8 @@ genome_options.add_argument(  "--replicon_topology" ,
                        dest = "replicon_topology",
                        default = None,
                        help = "The topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
-genome_options.add_argument(  "--topology-file" ,
-                       dest = "topology-file",
+genome_options.add_argument(  "--topology_file" ,
+                       dest = "topology_file",
                        default = None,
                        help = "Topology file path. The topology file allows to specify a topology (linear or circular) for each replicon (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. A topology file is a tabular file with two columns: the 1st is the replicon name, and the 2nd the corresponding topology:\n\"RepliconA\tlinear\" ")
 genome_options.add_argument(  "--idx" ,
@@ -220,13 +221,13 @@ elif args.verbosity == 2:
     log_level = logging.INFO
 elif args.verbosity == 3:
     log_level = logging.DEBUG
-
 config = Config(previous_run = args.previous_run,
                 cfg_file = args.cfg_file,
                 sequence_db = args.sequence_db,
                 db_type = args.db_type,
                 build_indexes = args.build_indexes,
                 replicon_topology = args.replicon_topology,
+                topology_file = args.topology_file,
                 inter_gene_max_space = args.inter_gene_max_space,
                 min_mandatory_genes_required = args.min_mandatory_genes_required,
                 min_genes_required = args.min_genes_required,
