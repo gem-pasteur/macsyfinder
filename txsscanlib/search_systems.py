@@ -509,7 +509,7 @@ class SystemOccurence(object):
 
     def compute_system_length(self, rep_info):
         """
-        Returns the length of the system, all loci gathered, in terms of protein number (even those non matching any system gene)
+        Returns the length of the system, all loci gathered, in terms of protein number (even those not matching any system gene)
         
         :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
         :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
@@ -549,7 +549,7 @@ class SystemOccurence(object):
 
     def count_genes(self, gene_dict):
         """
-        Counts the nb of genes with at least one occurrence in a dictionary with a counter of genes. 
+        Counts the number of genes with at least one occurrence in a dictionary with a counter of genes. 
         
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict
@@ -563,7 +563,7 @@ class SystemOccurence(object):
 
     def count_genes_tot(self, gene_dict):
         """
-        Counts the nb of matches in a dictionary with a counter of genes, independently of the nb of genes matched.        
+        Counts the number of matches in a dictionary with a counter of genes, independently of the nb of genes matched.        
         
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict

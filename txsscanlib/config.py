@@ -166,7 +166,7 @@ class Config(object):
 
     def _validate(self, cmde_line_opt, cmde_line_values):
         """
-        Get all configuration values and check the validity of their values
+        Get all configuration values and check the validity of their values.
         Create the working directory
 
         :param cmde_line_opt: the options from the command line
