@@ -41,6 +41,8 @@ For instance::
   ....
 
 
+.. _topology-files:
+
 **************
 Topology files
 **************

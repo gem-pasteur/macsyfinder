@@ -16,20 +16,40 @@ Welcome to TXSScan's documentation!
     - defined **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-TXSScan documentation    
-=====================
+Running TXSScan    
+===============
 .. toctree::
    :maxdepth: 2
 
    installation 
    quickstart
-   implementation
-   system_definition
-   system_parser  
-   functioning
-   config
-   database 
+   input 
    outputs
+   
+TXSScan functioning    
+===================  
+.. toctree::
+   :maxdepth: 2
+
+   system_definition
+   implementation 
+   functioning
+
+
+TXSScan API documentation    
+=========================
+.. toctree::
+   :maxdepth: 2
+ 
+   config
+   database
+   system
+   system_parser
+   gene
+   profile
+   HMMReport
+   search_genes
+   search_systems
    txsscan_error
 
 Indices and tables

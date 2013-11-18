@@ -8,8 +8,8 @@ TXSScan provides different types of outputs. At each run, TXSScan creates a new 
 
 .. _hmmer-outputs-label:
 
-1. Hmmer results outputs 
-------------------------
+Hmmer results outputs 
+---------------------
 Raw Hmmer outputs are provided, as long with processed tabular outputs that includes hits filtered as specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract". 
 
 The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for hits filtering and relevant information on the matches, as 
@@ -30,8 +30,8 @@ for instance::
     Each tabular output file contains a header line describing each column in the output.
 
 
-2. Systems detection results
-----------------------------
+Systems detection results
+-------------------------
 
 Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
 
@@ -97,15 +97,14 @@ Each line corresponds to a system that has been detected. It includes:
 
 
 
-3. Logs and configuration files
--------------------------------
+Logs and configuration files
+----------------------------
 
-A variety of specific output files are built to store info on the TXSScan execution. 
+Two specific output files are built to store info on the TXSScan execution: 
 
  * txsscan.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  
- * txsscan.log - the log file. Please send it to us with any bug report. 
- 
- * txsscan.info - contains raw information on systems detection.  
+ * txsscan.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
+  
 
 
