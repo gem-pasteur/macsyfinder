@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 # matit
-#SPHINXBUILD   = sphinx-build-2.7
+SPHINXBUILD   = sphinx-build
 # to be used !
 SPHINXBUILD   = sphinx-build
 PAPER         =
