@@ -24,3 +24,4 @@ include test/txsscan.conf
 
 include etc/txsscan.conf
 
+include INSTALL
