@@ -255,10 +255,8 @@ idx.build(force = config.build_indexes)
 
 parser = SystemParser(config, system_bank, gene_bank)
 if ('all' or 'All' or 'ALL') in args.systems:
-#if 'all' in args.systems:
     import glob
     systems_name_to_detect = glob.glob( os.path.join(config.def_dir, '*.xml'))
-    #systems_to_detect = [ os.path.basename(s) for s in systems_to_detect]
     systems_name_to_detect = [ os.path.basename(s)[:-4] for s in systems_name_to_detect]
 else:
     systems_name_to_detect = args.systems
@@ -271,7 +269,7 @@ for system in systems_to_detect:
     # Exchangeable homologs are also added cause they can "replace" an important gene...
     h_genes=[]
     for g in genes:
-    	if g.exchangeable:
+        if g.exchangeable:
             homologs=g.get_homologs()
             for h in homologs:
                 h_genes.append(h.gene)
