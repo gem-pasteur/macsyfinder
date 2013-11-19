@@ -37,11 +37,13 @@ It is **highly recommanded** to run tests before performing the full installatio
 .. note::
   super-user privileges (*i.e.*, ``sudo``) are necesserary if you want to install it in the general file architecture.
   
+  
 .. note::
   If you have not the privileges, or you don't want, to install TXSScan in the python libraries of your system, 
   you can install TXSScan in a virtualenv (http://www.virtualenv.org/)
-  
+
 Procedures specific to TXSScan can be used instead of default. Please run the command for full options::
+  
 
   python setup.py --help
 

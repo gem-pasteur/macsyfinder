@@ -4,7 +4,7 @@
 Output format
 *************
 
-TXSScan provides different types of outputs. At each run, TXSScan creates a new folder, which name is based on a fixed prefix and a random suffix, for instance "txsscan-20130128_08-57-46". TXSScan outputs are stored in this run-specific folder. 
+TXSScan provides different types of outputs. At each run, TXSScan creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "txsscan-20130128_08-57-46". TXSScan outputs are stored in this run-specific folder. 
 
 .. _hmmer-outputs-label:
 
@@ -44,7 +44,7 @@ Different types of tabular outputs are provided. Headers are provided with the c
 
 txsscan.tab
 ***********
-For each replicon, a line gives the occurrences of systems that were asked for detection. For example, if the Flagellum and the T6SS were asked, the output will look like::
+For each replicon, a line gives the occurrences of systems that were asked for detection. For example, if the detection was run for the Flagellum and the T6SS, the output will look like::
 
   #Replicon Flagellum_single_locus Flagellum_multi_loci T6SS_single_locus T6SS_multi_loci	
   escherichia06 1   1   1   0
