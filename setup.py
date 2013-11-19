@@ -442,7 +442,7 @@ class Uninstall(Command):
         for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
             prefixes.append( getattr(self, attr))
         print "prefixes = ", prefixes
-        ##################################################################################         
+                 
         def clean_tree(_dir):
             find_prefix = False
             for prefix in prefixes:
@@ -460,13 +460,12 @@ class Uninstall(Command):
                 log.info( "remove dir {}".format(_dir))
             except OSError as err:
                 if err.errno == os.errno.ENOTEMPTY:
-                    log.info( "REPERTOIRE NON VIDE dir {}".format(_dir))
                     return
                 else:
                     self.warn(err)
                     return
             clean_tree(os.path.dirname(_dir))
-        #################################################################################### 
+         
         try:
             with open(self.distribution.uninstall_files) as record_file:
                 for path in record_file:
@@ -574,7 +573,8 @@ require_packages = []
 
 setup(name        = 'txsscan',
       version     =  time.strftime("%Y%m%d"),
-      description  = """ """,
+      description  = """Txsscan is a tool for the detection of protein secretion systems 
+of diderm bacteria from a protein dataset. """,
       classifiers = [
                      'Operating System :: POSIX' ,
                      'Programming Language :: Python' ,
