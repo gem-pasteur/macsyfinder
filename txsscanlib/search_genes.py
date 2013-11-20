@@ -12,7 +12,8 @@
 import threading
 import logging
 _log = logging.getLogger('txsscan.' + __name__)
-
+import signal
+import sys
 import shutil
 import os.path
 from report import GembaseHMMReport, GeneralHMMReport
@@ -34,11 +35,20 @@ def search_genes(genes, cfg):
     _log.debug("worker_nb = %d" % worker_nb)
     sema = threading.BoundedSemaphore(value = worker_nb)
     all_reports = []
-    
+
+    def stop(signum, frame):
+        """stop the main process, its threads and subprocesses"""
+        _log.critical('KILL all Processes')
+        proc_grp_id = os.getpgid(0)
+        os.killpg(proc_grp_id, signum)
+        sys.exit(-1 * signum)
+
+    signal.signal(signal.SIGTERM, stop)
+
     def search(gene, all_reports, sema):
         """
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
-        
+
         :param gene: the gene to search
         :type gene: a :class:`txsscanlib.gene.Gene` object
         :param all_reports: a container to append the generated HMMReport objects
@@ -50,9 +60,10 @@ def search_genes(genes, cfg):
             _log.info("search gene %s" % gene.name)
             profile = gene.profile
             report = profile.execute()
-            report.extract()
-            report.save_extract()
-            all_reports.append(report)
+            if report:
+                report.extract()
+                report.save_extract()
+                all_reports.append(report)
             
     def recover(gene, all_reports, cfg, sema):
         """
@@ -81,11 +92,11 @@ def search_genes(genes, cfg):
                 report = OrderedHMMReport(gene, hmm_new_path, cfg )
             else:
                 report = GeneralHMMReport(gene, hmm_new_path, cfg )
-            
-            report.extract()
-            report.save_extract()
-            all_reports.append(report)
-            
+            if report:
+                report.extract()
+                report.save_extract()
+                all_reports.append(report)
+
     #there is only one instance of gene per name but the same instance can be
     #in all genes several times        
     #hmmsearch and extract should be execute only once per run
@@ -99,11 +110,13 @@ def search_genes(genes, cfg):
         else:
             t = threading.Thread(target = search, args = (gene, all_reports, sema))
         t.start()
-        
-    main_thread = threading.currentThread()    
-    for t in threading.enumerate():
-        if t is main_thread:
-            continue
-        t.join()
+
+    main_thread = threading.currentThread()   
+    while threading.activeCount() > 1:
+        for t in threading.enumerate():
+            if t is main_thread:
+                continue
+            t.join(10)
+
     _log.debug("end searching genes")
     return all_reports

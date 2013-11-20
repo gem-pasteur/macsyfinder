@@ -462,9 +462,14 @@ class Profile(object):
 
                 hmmer.wait()
             if hmmer.returncode != 0:
+                if hmmer.returncode == -15:
+                    msg = "the Hmmer execution was aborted: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                    _log.critical(msg)
+                    return
                 msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
-                _log.critical( msg, exc_info = True )
-                raise RuntimeError(msg)
+                _log.debug(msg, exc_info = True )
+                _log.critical(msg)
+                return
             self.hmm_raw_output = output_path
             if self.cfg.db_type == 'gembase':
                 report = GembaseHMMReport(self.gene, output_path, self.cfg )
