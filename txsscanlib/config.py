@@ -145,7 +145,7 @@ class Config(object):
                           'res_extract_suffix' : '.res_hmm_extract',
                           'profile_dir' : os.path.join( _prefix_data, 'profiles'),
                           'profile_suffix' : '.fasta-aln_edit.hmm', 
-                          'log_level': '0',
+                          'log_level': logging.WARNING,
                           'worker_nb' : '0'
                           }
         self.parser = SafeConfigParser(defaults = self._defaults)
@@ -202,7 +202,7 @@ class Config(object):
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
         except (AttributeError, NoSectionError):
-            log_level = logging.ERROR
+            log_level = self._defaults['log_level']
         else:
             try:
                 log_level = int(log_level)
