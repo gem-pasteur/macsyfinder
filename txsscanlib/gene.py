@@ -300,7 +300,7 @@ class Gene(object):
         """
         compatibles=[]
         for s in system_list:
-            if self.is_authorized(s):
+            if self.is_authorized(s, include_forbidden):
                 compatibles.append(s)
         return compatibles
         
