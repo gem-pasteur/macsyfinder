@@ -44,8 +44,5 @@ The systems available for detection are the:
     Systems have to be spelled as above to run their detection from the command-line. The "all" keyword also allows to detect all available systems in a single run. See the :ref:`Command-line options <command-line-label>`.
 
     
-.. note::
-
-    As some of the above systems have homologous components, the most powerful mode of detection consists in searching "all" the available systems in order to have the most refined assessment, using all the HMM profiles at hand for components detection.
 
 
