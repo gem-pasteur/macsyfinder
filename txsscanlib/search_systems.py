@@ -1265,18 +1265,18 @@ def disambiguate_cluster(cluster):
     #cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
     cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
     
-    print cluster.hits[0]
-    print [syst.name for syst in cur_compatible]
+    #print cluster.hits[0]
+    #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
         #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
         compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
 
-        print h
-        print "Hit's:"
-        print [syst.name for syst in compatible_systems]
-        print "Inter:"
-        print [syst.name for syst in compat_list]
+        #print h
+        #print "Hit's:"
+        #print [syst.name for syst in compatible_systems]
+        #print "Inter:"
+        #print [syst.name for syst in compat_list]
         if compat_list:
             # The two consecutive genes have at least one common compatible system
             cur_cluster.add(h)
@@ -1288,19 +1288,19 @@ def disambiguate_cluster(cluster):
             cur_cluster.save() # Check if it updates compatible systems?? right?
             if cur_cluster.state == "clear":
                 # Update counts of compatible systems with the current cluster to store
-                print "\nclear to store: "
-                print cur_cluster
+                #print "\nclear to store: "
+                #print cur_cluster
                 res_clusters.append(cur_cluster)
                 for syst in cur_compatible: # Good list of compatible??
                     if not counter_genes_compat_systems.has_key(syst.name):
                         counter_genes_compat_systems[syst.name] = len(cur_cluster.hits)
                     else:
                         counter_genes_compat_systems[syst.name]+= len(cur_cluster.hits)
-                    print counter_genes_compat_systems
+                    #print counter_genes_compat_systems
             else:
                  # Update counts of compatibles systems for all the hits
-                print "\nnope to store: "
-                print cur_cluster
+                #print "\nnope to store: "
+                #print cur_cluster
                 for h_clust in cur_cluster.hits:
                     #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
                     h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
@@ -1309,7 +1309,7 @@ def disambiguate_cluster(cluster):
                             counter_genes_compat_systems[syst.name] = 1
                         else:
                             counter_genes_compat_systems[syst.name]+=1
-                    print counter_genes_compat_systems
+                    #print counter_genes_compat_systems
                     
                         
             cur_compatible=compatible_systems
@@ -1319,8 +1319,8 @@ def disambiguate_cluster(cluster):
     cur_cluster.save()
     # Check cluster status before storing it or not:
     if cur_cluster.state == "clear":
-        print "\nclear to store: "
-        print cur_cluster
+        #print "\nclear to store: "
+        #print cur_cluster
         res_clusters.append(cur_cluster) 
         for syst in cur_compatible: # Good list of compatible??
             if not counter_genes_compat_systems.has_key(syst.name):
@@ -1328,8 +1328,8 @@ def disambiguate_cluster(cluster):
             else:
                 counter_genes_compat_systems[syst.name] += len(cur_cluster.hits)
     else:
-        print "\nnope to store: "
-        print cur_cluster
+        #print "\nnope to store: "
+        #print cur_cluster
         for h_clust in cur_cluster.hits:
             #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
             h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
@@ -1339,27 +1339,27 @@ def disambiguate_cluster(cluster):
                 else:
                     counter_genes_compat_systems[syst.name]+=1
     
-    print counter_genes_compat_systems
+    #print counter_genes_compat_systems
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res=[]
     for r in res_clusters:
-        print "\nres_cluster : "
-        print r
+        #print "\nres_cluster : "
+        #print r
         nb_genes = len(r.hits)
-        print nb_genes
+        #print nb_genes
         store=True
         for c in r.compatible_systems:
-            print "%s"%r.compatible_systems
-            print "%d"%counter_genes_compat_systems[c]
+            #print "%s"%r.compatible_systems
+            #print "%d"%counter_genes_compat_systems[c]
             if counter_genes_compat_systems[c]!=nb_genes:
                 store=False
-                print "=> do not store"    
+                #print "=> do not store"    
         if store:
-            print "=> store !" 
+            #print "=> store !" 
             real_res.append(r)
                 
     for r in real_res:
-        "Store"
+        print "Store: "
         print r
                                    
     #return res_clusters           
