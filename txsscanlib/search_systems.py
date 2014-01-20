@@ -1722,6 +1722,8 @@ def search_systems(hits, systems, cfg):
         # Construction of the replicon database storing info on replicons: 
         rep_db = RepliconDB(cfg)
         
+        replicons_w_hits=[]
+        
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
@@ -1754,6 +1756,20 @@ def search_systems(hits, systems, cfg):
             print "******************************************"
             
             header_print = False
+            
+            # To add replicons with no systems in the 
+            replicons_w_hits.append(k)
+        
+        print "\n--- Replicons with no hits: ---"
+        with open(tabfilename, 'a') as _f:
+            for replicon in rep_db.replicon_names():
+                if not replicon in replicons_w_hits:
+                    print replicon
+                    texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
+                    #print texte.strip()
+                    _f.write(texte)
+                
+                
             
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
