@@ -91,7 +91,7 @@ class System(object):
     Handle a secretion system.
     """
 
-    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None):
+    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None, multi_loci = False):
         """
         :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
@@ -103,6 +103,8 @@ class System(object):
         :type min_mandatory_genes_required: integer
         :param min_genes_required: the quorum of genes to define this system
         :type min_genes_required: integer
+        :param multi_loci: 
+        :type multi_loci: boolean
         """
         self.cfg = cfg
         self.name = name
@@ -112,6 +114,7 @@ class System(object):
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
                 raise SystemInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
+        self._multi_loci = multi_loci
         self._mandatory_genes = []
         self._allowed_genes = []
         self._forbidden_genes = []
@@ -155,7 +158,19 @@ class System(object):
             return len(self._mandatory_genes)
         else:
             return self._min_genes_required
-
+    
+    @property
+    def multi_loci(self):
+        """
+        :return: True if the system is multi loci, False otherwise
+        :rtype: boolean
+        """
+        cfg_multi_loci = self.cfg.multi_loci(self.name)
+        if cfg_multi_loci:
+            return cfg_multi_loci
+        else:
+            return self._multi_loci
+        
     def add_mandatory_gene(self, gene):
         """
         Add a gene to the list of mandatory genes

@@ -70,6 +70,8 @@ class Test(unittest.TestCase):
         self.assertEqual(s1.inter_gene_max_space, 20)
         self.assertEqual(s1.min_mandatory_genes_required, 4)
         self.assertEqual(s1.min_genes_required, 6)
+        self.assertTrue(s1.multi_loci)
+        self.assertFalse(s2.multi_loci)
         self.assertEqual(len(s1.mandatory_genes), 5)
         mandatory_genes_name = [ g.name for g in s1.mandatory_genes ]
         mandatory_genes_name.sort()

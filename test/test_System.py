@@ -75,7 +75,17 @@ class Test(unittest.TestCase):
         #see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
         self.assertEqual(system.min_mandatory_genes_required , len(system.mandatory_genes))
-        
+
+    def test_multi_loci(self):
+        name = 'True'
+        inter_gene_max_space = 40
+        system = System(self.cfg, name, inter_gene_max_space, multi_loci = True)
+        self.assertTrue(system.multi_loci)
+        name = 'False'
+        inter_gene_max_space = 40
+        system = System(self.cfg, name, inter_gene_max_space)
+        self.assertFalse(system.multi_loci)
+
     def test_add_mandatory_gene(self):
         system = System("foo", self.cfg, 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
