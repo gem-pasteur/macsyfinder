@@ -1107,7 +1107,7 @@ class systemDetectionReport(object):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        with open(path, 'w') as _file:
+        with open(path, 'a') as _file:
             all_systems_occurences = []
             for so in self._systems_occurences_list:
                 system = {}
