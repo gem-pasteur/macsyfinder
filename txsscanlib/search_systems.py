@@ -236,8 +236,8 @@ class Cluster(object):
             for h in self.hits:
                 #syst_list=h.gene.get_compatible_systems(self.systems_to_detect) # Need the list of systems (obj!) to be detected... in the cfg?
                 # Now exclude forbidden genes from those that define the list of compatible systems
-                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg?
-                syst_list = h.gene.get_compatible_systems(self.systems_to_detect, True) # Need the list of systems (obj!) to be detected... in the cfg?
+                syst_list=h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
+                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect, True) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before yep
                 for syst in syst_list:
                     syst_name = syst.name
                     if not systems_compat.has_key(syst_name):
@@ -258,15 +258,16 @@ class Cluster(object):
             else:
                 # Check for foreign "allowed" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
                 # Also deal with foreign "exchangeable" genes for the same reasons... NB !! Maybe just not add the system to the list if exchangeable?  
-                if len(systems.keys()) == 1:
+                #if len(systems.keys()) == 1:
+                if len(systems_compat.keys()) == 1:
                     self._state = "clear"
-                    syst = systems.keys()[0]
+                    #syst = systems.keys()[0]
+                    syst = systems_compat.keys()[0]
                     #print syst
                     self._putative_system = syst
                     #self._compatible_systems.append(system_bank[syst])
                     # Store only compatible systems that are searched for !!
                     self._compatible_systems.append(syst)
-
                 else:
                     # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
                     def try_system(hits, putative_system, counter_systems_in_clust):   
@@ -289,8 +290,8 @@ class Cluster(object):
                         #print systems
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
-                            #if h.gene.is_authorized(system_bank[putative_system], False):
-                            if h.gene.is_authorized(system_bank[putative_system], True):
+                            if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
+                            #if h.gene.is_authorized(system_bank[putative_system], True):
                                 auth += 1
                     	if auth == len(hits):
                             # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
@@ -311,15 +312,17 @@ class Cluster(object):
                             #break
                             cluster_compatible_systems.append(putative_system)
                         #else:
-                        #    self._state="ambiguous"
+                        #    self._state="ambiguous" # tmp before nope
                         #    # Aoutch in this case no putative_system?!
-                        #    #print "YAPABON...%s"%putative_system
+                        #    print "YAPABON...%s"%putative_system
                     if len(cluster_compatible_systems) >= 1:
                         self._state = "clear"
                         self._putative_system = cluster_compatible_systems[0]
                         self._compatible_systems = cluster_compatible_systems
                     else:
                         self._state = "ambiguous"
+        #print self._compatible_systems
+                                        
 
 
 class SystemNameGenerator(object):
@@ -1253,12 +1256,26 @@ def disambiguate_cluster(cluster):
     cur_cluster = Cluster(cluster.systems_to_detect) # New
     cur_cluster.add(cluster.hits[0])
     # Now more complex, deals with compatible systems also for disambiguation.
+<<<<<<< .working
     cur_compatible = cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect)
 
+=======
+    #cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
+    cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
+    
+>>>>>>> .merge-right.r411
+    #print cluster.hits[0]
+    #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
-        compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect)
+        #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
+        compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
 
+        #print h
+        #print "Hit's:"
+        #print [syst.name for syst in compatible_systems]
+        #print "Inter:"
+        #print [syst.name for syst in compat_list]
         if compat_list:
             # The two consecutive genes have at least one common compatible system
             cur_cluster.add(h)
@@ -1270,16 +1287,22 @@ def disambiguate_cluster(cluster):
             cur_cluster.save() # Check if it updates compatible systems?? right?
             if cur_cluster.state == "clear":
                 # Update counts of compatible systems with the current cluster to store
+                #print "\nclear to store: "
+                #print cur_cluster
                 res_clusters.append(cur_cluster)
                 for syst in cur_compatible: # Good list of compatible??
                     if not counter_genes_compat_systems.has_key(syst.name):
                         counter_genes_compat_systems[syst.name] = len(cur_cluster.hits)
                     else:
                         counter_genes_compat_systems[syst.name] += len(cur_cluster.hits)
+                    #print counter_genes_compat_systems
             else:
                 # Update counts of compatibles systems for all the hits
+                #print "\nnope to store: "
+                #print cur_cluster
                 for h_clust in cur_cluster.hits:
-                    h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect)
+                    #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
+                    h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
                     for syst in h_compat:
                         if not counter_genes_compat_systems.has_key(syst.name):
                             counter_genes_compat_systems[syst.name] = 1
@@ -1293,6 +1316,8 @@ def disambiguate_cluster(cluster):
     cur_cluster.save()
     # Check cluster status before storing it or not:
     if cur_cluster.state == "clear":
+        #print "\nclear to store: "
+        #print cur_cluster
         res_clusters.append(cur_cluster) 
         for syst in cur_compatible: # Good list of compatible??
             if not counter_genes_compat_systems.has_key(syst.name):
@@ -1300,18 +1325,23 @@ def disambiguate_cluster(cluster):
             else:
                 counter_genes_compat_systems[syst.name] += len(cur_cluster.hits)
     else:
+        #print "\nnope to store: "
+        #print cur_cluster
         for h_clust in cur_cluster.hits:
-            h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect)
+            #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
+            h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
             for syst in h_compat:
                 if not counter_genes_compat_systems.has_key(syst.name):
                     counter_genes_compat_systems[syst.name] = 1
                 else:
                     counter_genes_compat_systems[syst.name] += 1
-
+    #print counter_genes_compat_systems
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res = []
     for r in res_clusters:
+        #print "\nres_cluster : "
+        #print r
         nb_genes = len(r.hits)
         #print nb_genes
         store = True
@@ -1319,9 +1349,11 @@ def disambiguate_cluster(cluster):
             if counter_genes_compat_systems[c] != nb_genes:
                 store = False
         if store:
+            #print "=> store !" 
             real_res.append(r)
 
     for r in real_res:
+        print "Store: "
         print r
 
     #return res_clusters
@@ -1684,6 +1716,8 @@ def search_systems(hits, systems, cfg):
         # Construction of the replicon database storing info on replicons: 
         rep_db = RepliconDB(cfg)
 
+        replicons_w_hits=[]
+        
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
@@ -1717,6 +1751,20 @@ def search_systems(hits, systems, cfg):
 
             header_print = False
 
+            # To add replicons with no systems in the 
+            replicons_w_hits.append(k)
+        
+        print "\n--- Replicons with no hits: ---"
+        with open(tabfilename, 'a') as _f:
+            for replicon in rep_db.replicon_names():
+                if not replicon in replicons_w_hits:
+                    print replicon
+                    texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
+                    #print texte.strip()
+                    _f.write(texte)
+                
+                
+            
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
         rep_db = RepliconDB(cfg)

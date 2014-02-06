@@ -218,9 +218,8 @@ class SystemParser(object):
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
-        if system_ref is None:
-            system_ref = curr_system.name
-        if system_ref != gene.system.name:
+        #if system_ref != gene.system.name:     
+        if system_ref != None and system_ref != gene.system.name:
             msg = "Inconsistency in systems definitions: the gene %s described as homolog of %s with system_ref %s has an other system in bank (%s)" % (name, gene_ref.name, system_ref, gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
@@ -268,6 +267,9 @@ class SystemParser(object):
           - **Then:** min_genes_required <= len(allowed_genes+mandatory_genes)
           - AND min_genes_required >= min_mandatory_genes_required
           - AND min_mandatory_genes_required <= len(mandatory_genes)
+           
+          *to be checked*   
+                 
         """
         for system in systems:
             len_allowed_genes = len(system.allowed_genes)

@@ -19,6 +19,7 @@ from threading import Lock
 from report import GembaseHMMReport, GeneralHMMReport
 from txsscan_error import TxsscanError
 
+
 class GeneBank(object):
     """
     Store all Gene objects. Ensure that genes are instanciated only once.
@@ -299,7 +300,7 @@ class Gene(object):
         """
         compatibles=[]
         for s in system_list:
-            if self.is_authorized(s):
+            if self.is_authorized(s, include_forbidden):
                 compatibles.append(s)
         return compatibles
         
