@@ -95,6 +95,13 @@ system_options.add_argument( "--min-mandatory-genes-required",
                              help = "The minimal number of mandatory genes required for system assessment. The first value must correspond to a system name, the second value to an integer.\
                               This option can be repeated several times:\n \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                              )
+system_options.add_argument( "--multi-loci",
+                             action = 'store',
+                             dest = 'multi_loci',
+                             default = None,
+                             help = "trigger the storage of multi-loci for the specified systems.\
+                              The systems are specified as a comma separated list (--multi-systems sys1,sys2) default is False"
+                             )
 system_options.add_argument( "--min-genes-required",
                              action = 'append',
                              nargs = 2,
@@ -103,6 +110,7 @@ system_options.add_argument( "--min-genes-required",
                              help = "The minimal number of genes required for system assessment (includes both 'mandatory' and 'allowed' components). The first value must correspond to a system name, the second value to an integer.\
                               This option can be repeated several times:\n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                              )
+
 hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
 hmmer_options.add_argument( '--hmmer', 
                             action = 'store',
@@ -231,6 +239,7 @@ config = Config(previous_run = args.previous_run,
                 inter_gene_max_space = args.inter_gene_max_space,
                 min_mandatory_genes_required = args.min_mandatory_genes_required,
                 min_genes_required = args.min_genes_required,
+                multi_loci = args.multi_loci,
                 hmmer_exe = args.hmmer_exe,
                 index_db_exe = args.index_db_exe,
                 e_value_res = args.e_value_res,

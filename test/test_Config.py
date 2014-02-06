@@ -52,8 +52,8 @@ class Test(unittest.TestCase):
                         build_indexes = True
                         )
         self.assertTrue(config.build_indexes)
-
-
+ 
+ 
     def test_default(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -63,8 +63,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp'
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
-
-
+ 
+ 
     def test_coverage_profile(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -95,8 +95,8 @@ class Test(unittest.TestCase):
                   'res_search_dir' : '/tmp'
         }
         self.assertRaises(ValueError, Config, **kwargs)
-
-
+ 
+ 
     def test_def_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
                   }
         real_def_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'DEF'),
         self.assertRaises(ValueError, Config, **kwargs)
-        
+         
         def_dir = os.path.join('/tmp', 'txsscan_DEF')
         if not os.path.exists(def_dir):
             os.mkdir(def_dir)
@@ -130,8 +130,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )  
         self.assertEqual( def_dir, self.cfg.def_dir)
-
-
+ 
+ 
     def test_e_value_res(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -171,8 +171,8 @@ class Test(unittest.TestCase):
                   'res_search_dir' : '/tmp',
         }
         self.assertRaises(ValueError, Config, **kwargs)
-        
-        
+         
+         
     def test_hmmer_exe(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -192,9 +192,9 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'truc')
-    
-    
-    
+     
+     
+     
     def test_index_db_exe(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -214,9 +214,9 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.index_db_exe, 'truc')
-    
-    
-    
+     
+     
+     
     def test_i_value_sel(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -256,8 +256,8 @@ class Test(unittest.TestCase):
                   'res_search_dir' : '/tmp',
         }
         self.assertRaises(ValueError, Config, **kwargs)
-      
-      
+       
+       
     def test_db_type(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -276,8 +276,8 @@ class Test(unittest.TestCase):
                   'res_search_dir' : '/tmp',
         }
         self.assertRaises(ValueError, Config, **kwargs)
-        
-        
+         
+         
     def test_previous_run(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -311,8 +311,8 @@ class Test(unittest.TestCase):
                 shutil.rmtree(new_cfg.working_dir)
             except:
                 pass
-            
-            
+             
+             
     def test_profile_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -331,8 +331,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.profile_dir , profile_dir)
-         
-         
+          
+          
     def test_profile_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -353,8 +353,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.profile_suffix, profile_suffix)
-    
-    
+     
+     
     def test_replicon_topology(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -383,8 +383,8 @@ class Test(unittest.TestCase):
                   'replicon_topology' : 'foo'
         }
         self.assertRaises(ValueError, Config, **kwargs)
-
-
+ 
+ 
     def test_inter_gene_max_space(self):
         inter_gene_max_space = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -398,8 +398,8 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.inter_gene_max_space('T2SS'), 32)
         self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
         self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
-    
-    
+     
+     
     def test_min_genes_required(self):
         min_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -413,8 +413,8 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.min_genes_required('T2SS'), 32)
         self.assertEqual(self.cfg.min_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_genes_required('Foo'))
-    
-    
+     
+     
     def test_min_mandatory_genes_required(self):
         min_mandatory_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -428,7 +428,21 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.min_mandatory_genes_required('T2SS'), 32)
         self.assertEqual(self.cfg.min_mandatory_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_mandatory_genes_required('Foo'))
-        
+         
+         
+    def test_multi_loci(self):
+       multi_loci = "T2SS,Flagellum"
+       self.cfg = Config(cfg_file = "nimportnaoik",
+                         sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
+                         db_type = 'gembase',
+                         def_dir = os.path.join(self._data_dir, 'DEF'),
+                         profile_dir = os.path.join(self._data_dir, 'profiles'),
+                         multi_loci = multi_loci,
+                         res_search_dir = '/tmp',
+                         )
+       self.assertTrue(self.cfg.multi_loci('T2SS'))
+       self.assertTrue(self.cfg.multi_loci('Flagellum'))
+       self.assertFalse(self.cfg.multi_loci('Foo'))
         
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -450,8 +464,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.res_extract_suffix, res_extract_suffix)
-        
-        
+         
+         
     def test_res_search_dir(self):
         kwargs = {'cfg_file' : "nimportnaoik",
                   'sequence_db' : os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -470,8 +484,8 @@ class Test(unittest.TestCase):
                           res_search_dir = res_search_dir
                           )
         self.assertEqual(self.cfg.res_search_dir , res_search_dir)
-
-
+ 
+ 
     def test_res_search_suffix(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -492,7 +506,7 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )
         self.assertEqual(self.cfg.res_search_suffix, res_search_suffix)
-    
+     
 #    def test_save(self):
 #        pass 
 #      
@@ -523,8 +537,8 @@ class Test(unittest.TestCase):
                           res_search_dir = '/tmp',
                           )  
         self.assertEqual(self.cfg.sequence_db, sequence_db)
-
-
+ 
+ 
     def test_worker_nb(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
@@ -554,5 +568,5 @@ class Test(unittest.TestCase):
                   'worker_nb' : '2.3'
         }
         self.assertRaises(ValueError, Config, **kwargs)   
-
+ 
 

@@ -35,7 +35,7 @@ class Config(object):
     """
     
     #if a new option is added think to add it also (if needed) in save
-    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file' ,'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
+    options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file' ,'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'multi_loci', 
                 'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                 'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
@@ -48,6 +48,7 @@ class Config(object):
                 inter_gene_max_space = None,
                 min_mandatory_genes_required = None,
                 min_genes_required = None,
+                multi_loci = None,
                 hmmer_exe = None,
                 index_db_exe = None,
                 e_value_res = None,
@@ -89,6 +90,8 @@ class Config(object):
         :type min_mandatory_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
         :param min_genes_required:
         :type min_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
+        :param multi_loci: 
+        :type multi_loci: boolean
         :param hmmer_exe: the Hmmer \"hmmsearch\" executable
         :type hmmer_exe: string
         :param index_db_exe: the indexer executable (\"makeblastdb\" or \"formatdb\")
@@ -521,6 +524,17 @@ class Config(object):
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
                         raise ValueError( "the min genes required for system %s must be an integer, you provided %s on command line" % (system, quorum_genes))
+
+            if self.parser.has_option("system", "multi_loci"):
+                options['multi_loci'] = self.parser.get("system", "multi_loci").split(',') 
+            else:
+                options['multi_loci'] = []
+            if 'multi_loci' in cmde_line_values and cmde_line_values['multi_loci'] is not None:
+                if not 'min_genes_required' in options:
+                    options['multi_loci'] = []
+                for item in cmde_line_values['multi_loci'].split(','):
+                    options['multi_loci'].append(item)
+
             try:
                 options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars = cmde_line_opt)
             except NoSectionError:
@@ -656,7 +670,7 @@ class Config(object):
         parser.set( 'base', 'file', str(self.options['sequence_db']))
         parser.set( 'base', 'type', str(self.options['db_type']).lower())
         cfg_opts = [('base' ,('replicon_topology', 'topology_file', 'index_db_exe',)),
-                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required')),
+                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'multi_loci')),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile' )),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
@@ -749,6 +763,18 @@ class Config(object):
             return self.options['min_genes_required'][system] 
         except KeyError:
             return None
+        
+
+    def multi_loci(self, system):
+        """
+        :return: the genes (mandatory+allowed) quorum to assess the system presence
+        :rtype: boolean
+        """
+        try:
+            return system in self.options['multi_loci'] 
+        except KeyError:
+            return False
+           
 
     @property
     def hmmer_exe(self):
