@@ -95,13 +95,7 @@ system_options.add_argument( "--min-mandatory-genes-required",
                              help = "The minimal number of mandatory genes required for system assessment. The first value must correspond to a system name, the second value to an integer.\
                               This option can be repeated several times:\n \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                              )
-system_options.add_argument( "--multi-loci",
-                             action = 'store',
-                             dest = 'multi_loci',
-                             default = None,
-                             help = "trigger the storage of multi-loci for the specified systems.\
-                              The systems are specified as a comma separated list (--multi-systems sys1,sys2) default is False"
-                             )
+
 system_options.add_argument( "--min-genes-required",
                              action = 'append',
                              nargs = 2,
@@ -109,6 +103,23 @@ system_options.add_argument( "--min-genes-required",
                              default = None,
                              help = "The minimal number of genes required for system assessment (includes both 'mandatory' and 'allowed' components). The first value must correspond to a system name, the second value to an integer.\
                               This option can be repeated several times:\n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
+                             )
+
+system_options.add_argument( "--max-nb-genes",
+                             action = 'append',
+                             nargs = 2,
+                             dest = 'max_nb_genes',
+                             default = None,
+                             help = "The maximal number of genes required for system assessment. The first value must correspond to a system name, the second value to an integer.\
+                              This option can be repeated several times:\n \"--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
+                             )
+
+system_options.add_argument( "--multi-loci",
+                             action = 'store',
+                             dest = 'multi_loci',
+                             default = None,
+                             help = "trigger the storage of multi-loci for the specified systems.\
+                              The systems are specified as a comma separated list (--multi-systems sys1,sys2) default is False"
                              )
 
 hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
@@ -182,7 +193,7 @@ general_options.add_argument("-w", "--worker",
                     dest = 'worker_nb',
                     type = int,
                     default = None,
-                    help = "Number of workers to be used by TXSScan. In the case the user wants to run TXSScan in a multi-thread mode.")
+                    help = "Number of workers to be used by TXSScan. In the case the user wants to run TXSScan in a multi-thread mode. (0 mean all cores will be used, default 1)")
 general_options.add_argument( "-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
@@ -239,6 +250,7 @@ config = Config(previous_run = args.previous_run,
                 inter_gene_max_space = args.inter_gene_max_space,
                 min_mandatory_genes_required = args.min_mandatory_genes_required,
                 min_genes_required = args.min_genes_required,
+                max_nb_genes = args.max_nb_genes,
                 multi_loci = args.multi_loci,
                 hmmer_exe = args.hmmer_exe,
                 index_db_exe = args.index_db_exe,

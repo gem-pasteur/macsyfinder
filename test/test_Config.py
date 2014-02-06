@@ -414,7 +414,21 @@ class Test(unittest.TestCase):
         self.assertEqual(self.cfg.min_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_genes_required('Foo'))
      
-     
+    def test_max_nb_genes(self):
+        max_nb_genes = (["T2SS", 32], ['Flagellum', 64])
+        self.cfg = Config(cfg_file = "nimportnaoik",
+                          sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type = 'gembase',
+                          def_dir = os.path.join(self._data_dir, 'DEF'),
+                          profile_dir = os.path.join(self._data_dir, 'profiles'),
+                          max_nb_genes = max_nb_genes,
+                          res_search_dir = '/tmp',
+                          )
+        self.assertEqual(self.cfg.max_nb_genes('T2SS'), 32)
+        self.assertEqual(self.cfg.max_nb_genes('Flagellum'), 64)
+        self.assertIsNone(self.cfg.max_nb_genes('Foo'))
+        
+        
     def test_min_mandatory_genes_required(self):
         min_mandatory_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -547,7 +561,7 @@ class Test(unittest.TestCase):
                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                           res_search_dir = '/tmp'
                           )
-        self.assertEqual(self.cfg.worker_nb, 0)
+        self.assertEqual(self.cfg.worker_nb, 1)
         self.tearDown()
         self.cfg = Config(cfg_file = "nimportnaoik",
                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),

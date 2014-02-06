@@ -52,7 +52,7 @@ class Test(unittest.TestCase):
         name = 'foo'
         inter_gene_max_space = 40
         system = System(self.cfg, name, inter_gene_max_space)
-        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space )
+        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space)
 
     def test_min_genes_required(self):
         name = 'foo'
@@ -63,7 +63,7 @@ class Test(unittest.TestCase):
         self.assertEqual(system.min_genes_required, min_genes_required)
         #see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
-        self.assertEqual(system.min_genes_required , len(system.mandatory_genes))
+        self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
         
     def test_min_mandatory_genes_required(self):
         name = 'foo'
@@ -71,10 +71,10 @@ class Test(unittest.TestCase):
         system = System(self.cfg, name, 10, min_mandatory_genes_required = min_mandatory_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
         system.add_mandatory_gene( gene )
-        self.assertEqual( system.min_mandatory_genes_required , min_mandatory_genes_required )    
+        self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required)    
         #see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
-        self.assertEqual(system.min_mandatory_genes_required , len(system.mandatory_genes))
+        self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
 
     def test_multi_loci(self):
         name = 'True'
