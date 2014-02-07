@@ -1256,14 +1256,8 @@ def disambiguate_cluster(cluster):
     cur_cluster = Cluster(cluster.systems_to_detect) # New
     cur_cluster.add(cluster.hits[0])
     # Now more complex, deals with compatible systems also for disambiguation.
-<<<<<<< .working
     cur_compatible = cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect)
 
-=======
-    #cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
-    cur_compatible=cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
-    
->>>>>>> .merge-right.r411
     #print cluster.hits[0]
     #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:

@@ -394,7 +394,6 @@ class Profile(object):
         self._report = None
         self._lock = Lock()
 
-
     def __len__(self):
         """
         :return: the length of the HMM protein profile
@@ -435,8 +434,8 @@ class Profile(object):
             # the other calls return directly this report
             if self._report is not None:
                 return self._report
-            output_path = os.path.join( self.cfg.working_dir, self.gene.name + self.cfg.res_search_suffix)
-            err_path = os.path.join(self.cfg.working_dir, self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err" )
+            output_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, self.gene.name + self.cfg.res_search_suffix)
+            err_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err" )
 
             with  open(err_path, 'w') as err_file:
                 options = { "hmmer_exe" : self.cfg.hmmer_exe,
@@ -462,15 +461,17 @@ class Profile(object):
                     raise err
 
                 hmmer.wait()
+
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
                     msg = "the Hmmer execution was aborted: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
                     _log.critical(msg)
                     return
-                msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
-                _log.debug(msg, exc_info = True )
-                _log.critical(msg)
-                return
+                else:
+                    msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                    _log.debug(msg, exc_info = True )
+                    _log.critical(msg)
+                    raise RuntimeError(msg)
             self.hmm_raw_output = output_path
             if self.cfg.db_type == 'gembase':
                 report = GembaseHMMReport(self.gene, output_path, self.cfg )

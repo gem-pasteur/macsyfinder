@@ -206,6 +206,12 @@ class Config(object):
             raise ValueError("cannot create TXSScan working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
+        hmmer_path = os.path.join(working_dir, self.hmmer_dir)
+        try:
+            os.mkdir(hmmer_path)
+        except OSError, err:
+            raise ValueError("cannot create TXSScan hmmer directory %s : %s" % (hmmer_path, err))
+
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
         except (AttributeError, NoSectionError):
@@ -268,6 +274,7 @@ class Config(object):
             if not os.path.exists(options['sequence_db']):
                 raise ValueError( "%s: The input sequence file does not exist " % options['sequence_db'])
 
+            options['sequence_db'] = os.path.abspath(options['sequence_db'])
             val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
             if 'db_type' in cmde_line_opt:
                 options['db_type'] = cmde_line_opt['db_type']
@@ -328,7 +335,7 @@ class Config(object):
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
                         raise ValueError("The 'inter_gene_max_space for system %s must be an integer, but you provided %s on command line" % (system, interval))
-            
+
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
                 min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required" ) 
@@ -344,7 +351,7 @@ class Config(object):
                             raise ValueError( "The value for 'min_mandatory_genes_required' option for system %s must be an integer, but you provided %s in the configuration file" % (system, quorum_mandatory_genes))
                 except StopIteration:
                     raise ValueError( "Invalid syntax for 'min_mandatory_genes_required': you must have a list of systems and corresponding 'min_mandatory_genes_required' separated by spaces")
-            
+
             if 'min_mandatory_genes_required' in cmde_line_values and cmde_line_values['min_mandatory_genes_required'] is not None: 
                 if not 'min_mandatory_genes_required' in options:
                     options['min_mandatory_genes_required'] = {}
@@ -359,7 +366,7 @@ class Config(object):
 
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
-                min_genes_required = self.parser.get("system", "min_genes_required") 
+                min_genes_required = self.parser.get("system", "min_genes_required")
                 min_genes_required = min_genes_required.split()
                 it = iter(min_genes_required)
                 try:
@@ -433,7 +440,7 @@ class Config(object):
                 if 'index_db_exe' in cmde_line_opt:
                     options['index_db_exe'] = cmde_line_opt['index_db_exe']
                 else:
-                    options['index_db_exe'] = self._defaults['index_db_exe']        
+                    options['index_db_exe'] = self._defaults['index_db_exe']
 
             try:
                 e_value_res = self.parser.get('hmmer', 'e_value_res', vars = cmde_line_opt)
@@ -782,7 +789,7 @@ class Config(object):
         :rtype: int
         """
         return self.options.get('worker_nb', None)
-    
+
     @property
     def previous_run(self):
         """
@@ -790,3 +797,11 @@ class Config(object):
         :rtype: string
         """
         return self.options.get('previous_run', None)
+
+    @property
+    def hmmer_dir(self):
+        """
+        :return: the name of the directory where the hmmer results are stored
+        :rtype: string
+        """
+        return "hmmer_results"
