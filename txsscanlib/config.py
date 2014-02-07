@@ -620,6 +620,8 @@ class Config(object):
 
     def inter_gene_max_space(self, system):
         """
+        :param system: the name of a system 
+        :type system: string
         :return: the maximum number of components with no match allowed between two genes with a match to consider them contiguous(at the system level)
         :rtype: integer 
         """
@@ -630,6 +632,8 @@ class Config(object):
 
     def min_mandatory_genes_required(self, system):
         """
+        :param system: the name of a system 
+        :type system: string
         :return: the mandatory genes quorum to assess the system presence
         :rtype: integer 
         """
@@ -640,6 +644,8 @@ class Config(object):
 
     def min_genes_required(self, system):
         """
+        :param system: the name of a system 
+        :type system: string
         :return: the genes (mandatory+allowed) quorum to assess the system presence
         :rtype: integer
         """
@@ -650,7 +656,9 @@ class Config(object):
 
     def max_nb_genes(self, system):
         """
-        :return: the maximu number of genes to assess the system presence
+        :param system: the name of a system 
+        :type system: string
+        :return: the maximum number of genes to assess the system presence
         :rtype: integer
         """
         try:
@@ -660,6 +668,8 @@ class Config(object):
         
     def multi_loci(self, system):
         """
+        :param system: the name of a system 
+        :type system: string
         :return: the genes (mandatory+allowed) quorum to assess the system presence
         :rtype: boolean
         """

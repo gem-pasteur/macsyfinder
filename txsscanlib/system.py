@@ -91,7 +91,7 @@ class System(object):
     Handle a secretion system.
     """
 
-    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None, multi_loci = False):
+    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None, max_nb_genes = None, multi_loci = False):
         """
         :param cfg: the configuration object
         :type cfg: :class:`txsscanlib.config.Config` object
@@ -103,6 +103,8 @@ class System(object):
         :type min_mandatory_genes_required: integer
         :param min_genes_required: the quorum of genes to define this system
         :type min_genes_required: integer
+        :param max_nb_genes: 
+        :type max_nb_genes: integer
         :param multi_loci: 
         :type multi_loci: boolean
         """
@@ -114,6 +116,7 @@ class System(object):
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
                 raise SystemInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
+        self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
         self._mandatory_genes = []
         self._allowed_genes = []
@@ -148,17 +151,29 @@ class System(object):
     @property
     def min_genes_required(self):
         """
-        :return: get the quorum of genes (mandatory+allowed) required for this system
+        :return: get the maximum number of genes to assess for the system presence.
         :rtype: integer
         """
-        cfg_min_genes_required = self.cfg.min_genes_required(self.name)
-        if cfg_min_genes_required is not None:
-            return cfg_min_genes_required
+        cfg_max_nb_genes = self.cfg.max_nb_genes(self.name)
+        if cfg_max_nb_genes is not None:
+            return cfg_max_nb_genes
         elif self._min_genes_required is None:
             return len(self._mandatory_genes)
         else:
             return self._min_genes_required
-    
+
+    @property
+    def max_nb_genes(self):
+        """
+        :return: the maximum number of genes to assess the system presence.
+        :rtype: int (or None)
+        """
+        cfg_max_nb_genes = self.cfg.max_nb_genes(self.name)
+        if cfg_max_nb_genes:
+            return cfg_max_nb_genes
+        else:
+            return self._max_nb_genes
+
     @property
     def multi_loci(self):
         """

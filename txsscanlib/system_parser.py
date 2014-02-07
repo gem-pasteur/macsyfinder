@@ -109,13 +109,28 @@ class SystemParser(object):
                 msg = "Invalid system definition: min_genes_required must be an integer: %s" % min_genes_required
                 _log.critical(msg)
                 raise SyntaxError(msg)
-        
+
+        max_nb_genes = root.get('max_nb_genes')
+        if max_nb_genes is not None:
+            try:
+                max_nb_genes = int(max_nb_genes)
+            except ValueError:
+                msg = "Invalid system definition: max_nb_genes must be an integer: %s" % max_nb_genes
+                _log.critical(msg)
+                raise SyntaxError(msg)
+
         multi_loci = root.get('multi_loci')
         if multi_loci is not None:
-            multi_loci = multi_loci.lower() in ("1", "true")  
+            multi_loci = multi_loci.lower() in ("1", "true")
         else:
             multi_loci = False
-        system = System(self.cfg, system_name, inter_gene_max_space, min_mandatory_genes_required, min_genes_required, multi_loci)
+        system = System(self.cfg,
+                        system_name,
+                        inter_gene_max_space,
+                        min_mandatory_genes_required,
+                        min_genes_required,
+                        max_nb_genes,
+                        multi_loci)
         return system
 
     def _create_genes(self, system, system_node):
