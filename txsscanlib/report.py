@@ -76,7 +76,7 @@ class HMMReport(object):
         """
         with self._lock:
             extract_out_name = self.gene.name + self.cfg.res_extract_suffix
-            self._extract_out = os.path.join(self.cfg.working_dir, extract_out_name)
+            self._extract_out = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, extract_out_name)
             with open(self._extract_out, 'w') as _file:
                 _file.write(str(self))
 
