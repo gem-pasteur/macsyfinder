@@ -103,7 +103,7 @@ class Cluster(object):
       - ambiguous: several systems are represented in the cluster => might need a disambiguation
 
     """
-    
+
     def __init__(self, systems_to_detect):
         """
         :param systems_to_detect: the list of systems to be detected in this run
@@ -253,7 +253,7 @@ class Cluster(object):
             systems_compat = OrderedDict(sorted(systems_compat.items(), reverse = True, key = lambda t: t[1]))
             #print systems_compat
 
-            if len(genes) == 1 and self.hits[0].gene.loner == False:                            
+            if len(genes) == 1 and self.hits[0].gene.loner == False:
                 self._state = "ineligible"
             else:
                 # Check for foreign "allowed" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
@@ -322,12 +322,12 @@ class Cluster(object):
                     else:
                         self._state = "ambiguous"
         #print self._compatible_systems
-                                        
+
 
 
 class SystemNameGenerator(object):
     """
-    Creates and stores the names of detected systems. Ensures the uniqueness of the names.  
+    Creates and stores the names of detected systems. Ensures the uniqueness of the names.
     """
     name_bank = {}
 
@@ -348,7 +348,7 @@ class SystemNameGenerator(object):
         else:
             self.name_bank[basename] = 1
 
-        system_name =  basename + str(self.name_bank[basename])   
+        system_name =  basename + str(self.name_bank[basename])
         return system_name
 
     def _computeBasename(self, replicon, system):
@@ -379,7 +379,7 @@ class SystemOccurence(object):
       - "single_locus" 
       - "multi_loci" 
       - "uncomplete"
-        
+
     """
     def __init__(self, system):
         """
@@ -429,7 +429,7 @@ class SystemOccurence(object):
 
         self.forbidden_genes = {}
         for g in system.forbidden_genes:
-            self.forbidden_genes[g.name] = 0 
+            self.forbidden_genes[g.name] = 0
 
     def __str__(self):
         """
@@ -536,7 +536,7 @@ class SystemOccurence(object):
     def nb_syst_genes(self):
         """
         This value is set after a decision was made on the system in :func:`txsscanlib.search_systems.SystemOccurence:decision_rule`
-        
+
         :return: the number of mandatory and allowed genes with at least one occurence (number of different allowed genes)
         :rtype: integer
         """
@@ -551,7 +551,7 @@ class SystemOccurence(object):
     def count_genes(self, gene_dict):
         """
         Counts the number of genes with at least one occurrence in a dictionary with a counter of genes. 
-        
+
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict
         :rtype: integer
@@ -565,7 +565,7 @@ class SystemOccurence(object):
     def count_genes_tot(self, gene_dict):
         """
         Counts the number of matches in a dictionary with a counter of genes, independently of the nb of genes matched.        
-        
+
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict
         :rtype: integer
@@ -592,7 +592,7 @@ class SystemOccurence(object):
     def count_missing_genes(self, gene_dict):
         """
         Counts the number of genes with no occurence in the gene counter.
-        
+
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict
         :rtype: integer
@@ -603,7 +603,7 @@ class SystemOccurence(object):
     def is_complete(self):
         """
         Test for SystemOccurrence completeness.
-        
+
         :returns: True if the state of the SystemOccurrence is "single_locus" or "multi_loci", False otherwise.
         :rtype: boolean
         """
@@ -624,7 +624,7 @@ class SystemOccurence(object):
     def get_summary(self, replicon_name, rep_info):
         """
         Gives a summary of the system occurrence in terms of gene content and localization.
-        
+
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
@@ -663,7 +663,7 @@ class SystemOccurence(object):
     def get_summary_unordered(self, replicon_name):
         """
         Gives a summary of the system occurrence in terms of gene content only (specific of "unordered" datasets).
-        
+
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
@@ -675,14 +675,14 @@ class SystemOccurence(object):
         report_str = replicon_name+"\t"+self.get_system_name_unordered()
         report_str += "\t%s"%self.system_name
         report_str += "\t%s"%self.state
-        
+
         #report_str+="\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
         report_str += "\tNone"# No loci in unordered
         report_str += "\t%d"%len(self.mandatory_genes) # Nb mandatory_genes in the definition of the system
         report_str += "\t%d"%len(self.allowed_genes) # Nb allowed_genes in the definition of the system
         report_str += "\t%d"%self.nb_syst_genes # Nb syst genes NR
         report_str += "\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
-        
+
         #report_str+="\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
         report_str += "\tNone" # No loci in unordered
 
@@ -795,15 +795,15 @@ class SystemOccurence(object):
                     msg = "Foreign gene %s in cluster %s"%(hit.gene.name, self.system_name)
                     #print msg
                     _log.info(msg)
-                    
+
     def fill_with_multi_systems_genes(self, multi_systems_hits):
         """
         This function fills the SystemOccurrence with genes putatively coming from other systems (feature "multi_system").
         Those genes are used only if the occurrence of the corresponding gene was not yet filled with a gene from a cluster of the system. 
-        
+
         :param multi_systems_hits: a list of hits of genes that are "multi_system" which correspond to mandatory or allowed genes from the current system for which to fill a SystemOccurrence 
         :type list of: :class:`txsscanlib.report.Hit`
-        
+
         """
         # For each "multi_system" gene missing:
         for g in self.multi_syst_genes:
@@ -819,14 +819,14 @@ class SystemOccurence(object):
                         #self.allowed_genes[hit.gene.name]+=1
                         #valid_hit=validSystemHit(hit, self.system_name, "allowed")
                         #self.valid_hits.append(valid_hit)
-                        
+
                     elif g in self.mandatory_genes.keys():
                         self.mandatory_genes[g] += 1
                         # Add a valid_hit with a special status? e.g "mandatory_multi_system"?
                         #self.mandatory_genes[hit.gene.name]+=1
                         #valid_hit=validSystemHit(hit, self.system_name, "mandatory")
                         #self.valid_hits.append(valid_hit)
-                        
+
                     print "Gene %s supplied from a multi_system gene"%g
         #all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
     
@@ -837,18 +837,18 @@ class SystemOccurence(object):
             - the absence of forbidden genes is checked
             - the minimal number of mandatory genes is checked (\"min_mandatory_genes_required\")
             - the minimal number of genes in the system is checked (\"min_genes_required\")
-            
+
         When a decision is made, the status (self.status) of the 
         :class:`txsscanlib.search_systems.SystemOccurence` is set either to:
-        
+
             - "\single_locus\" when a complete system in the form of a single cluster was found
             - "\multi_loci\" when a complete system in the form of several clusters was found
             - "\uncomplete\" when no system was assessed (quorum not reached)
             - "\empty\" when no gene for this system was found
-            - "\exclude\" when no system was assessed (at least one forbidden gene was found)   
-            
+            - "\exclude\" when no system was assessed (at least one forbidden gene was found)
+
         :return: a printable message of the output decision with this SystemOccurrence
-        :rtype: string         
+        :rtype: string
         """
         nb_forbid = self.count_genes(self.forbidden_genes)
         nb_mandat = self.count_genes(self.mandatory_genes)
@@ -890,22 +890,21 @@ class SystemOccurence(object):
             #print msg
             #_log.info(msg)
             self._state = "exclude"
-            
+
         return msg
 
 class validSystemHit(object):
     """
     Encapsulates a :class:`txsscanlib.report.Hit`
     This class stores a Hit that has been attributed to a detected system. Thus, it also stores:  
-    
+
     - the system, 
     - the status of the gene in this system,
-    
+
     It also aims at storing information for results extraction:
-    
+
     - system extraction (e.g. genomic positions)
     - sequence extraction
-        
     """
     def __init__(self, hit, detected_system, gene_status):
         """
@@ -1033,7 +1032,7 @@ class systemDetectionReport(object):
 
         """
         system_counter = self.counter_output()
-        print system_counter    
+        print system_counter
         report_str = self.replicon_name
         for s in system_names:
             for o in system_occurence_states:
@@ -1043,7 +1042,7 @@ class systemDetectionReport(object):
                     report_str += str(system_counter[index])
                 else:
                     report_str += "\t0"
-        report_str += "\n"      
+        report_str += "\n"
 
         with open(reportfilename, 'a') as _file:
             if print_header:
@@ -1415,7 +1414,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                     so_state = so.state
                     print "-> %s" % so_state
                     if so_state != "exclude":
-                        if so_state != "single_locus":            
+                        if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
                             # Do not do it if the so has a forbidden gene !!!
                             # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
@@ -1517,13 +1516,13 @@ def build_clusters(hits, systems_to_detect, rep_info):
         cur_max_dist = cur.get_syst_inter_gene_max_space()
         inter_gene = cur.get_position() - prev.get_position() - 1
 
-        tmp="\n****\n"
-        tmp+="prev_max_dist : %d\n"%(prev_max_dist)
-        tmp+="cur_max_dist : %d\n"%(cur_max_dist)
-        tmp+="Intergene space : %d\n"%(inter_gene)
-        tmp+="Cur : %s"%cur
-        tmp+="Prev : %s"%prev
-        tmp+="Len cluster: %d\n"%len(cur_cluster)
+        tmp = "\n****\n"
+        tmp += "prev_max_dist : %d\n"%(prev_max_dist)
+        tmp += "cur_max_dist : %d\n"%(cur_max_dist)
+        tmp += "Intergene space : %d\n"%(inter_gene)
+        tmp += "Cur : %s"%cur
+        tmp += "Prev : %s"%prev
+        tmp += "Len cluster: %d\n"%len(cur_cluster)
         #print tmp
 
         # First condition removes duplicates (hits for the same sequence)
@@ -1685,7 +1684,6 @@ def search_systems(hits, systems, cfg):
     :type systems: list of :class:`txsscanlib.system.System`
     :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config`
-
     """
 
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
@@ -1711,7 +1709,7 @@ def search_systems(hits, systems, cfg):
         rep_db = RepliconDB(cfg)
 
         replicons_w_hits=[]
-        
+
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
@@ -1747,7 +1745,7 @@ def search_systems(hits, systems, cfg):
 
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
-        
+
         print "\n--- Replicons with no hits: ---"
         with open(tabfilename, 'a') as _f:
             for replicon in rep_db.replicon_names():
@@ -1756,9 +1754,9 @@ def search_systems(hits, systems, cfg):
                     texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
                     #print texte.strip()
                     _f.write(texte)
-                
-                
-            
+
+
+
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
         rep_db = RepliconDB(cfg)
