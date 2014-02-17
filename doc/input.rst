@@ -62,11 +62,13 @@ Input dataset options::
                         a metagenomic dataset, "ordered_replicon" to an
                         assembled genome, and "gembase" to a set of replicons
                         where sequence identifiers follow this convention:
-                        ">RepliconName SequenceID".
+                        ">RepliconName SequenceID"
+                        
   --replicon_topology {linear,circular}
                         The topology of the replicons (this option is
                         meaningful only if the db_type is 'ordered_replicon'
-                        or 'gembase'.
+                        or 'gembase'
+                        
   --topology-file TOPOLOGY-FILE
                         Topology file path. The topology file allows to
                         specify a topology (linear or circular) for each
@@ -75,6 +77,7 @@ Input dataset options::
                         file is a tabular file with two columns: the 1st is
                         the replicon name, and the 2nd the corresponding
                         topology: "RepliconA linear"
+                        
   --idx                 Forces to build the indexes for the sequence dataset
                         even if they were presviously computed and present at
                         the dataset location (default = False)
@@ -92,6 +95,7 @@ Systems detection options::
                         second to a number of components. This option can be
                         repeated several times: "--inter-gene-max-space T2SS
                         12 --inter-gene-max-space Flagellum 20"
+                        
   --min-mandatory-genes-required SYSTEM VALUE
                         The minimal number of mandatory genes required for
                         system assessment. The first value must correspond to
@@ -99,6 +103,7 @@ Systems detection options::
                         option can be repeated several times: "--min-
                         mandatory-genes-required T2SS 15 --min-mandatory-
                         genes-required Flagellum 10"
+                        
   --min-genes-required SYSTEM VALUE
                         The minimal number of genes required for system
                         assessment (includes both 'mandatory' and 'allowed'
@@ -106,22 +111,33 @@ Systems detection options::
                         system name, the second value to an integer. This
                         option can be repeated several times: "--min-genes-
                         required T2SS 15 --min-genes-required Flagellum 10"
+                        
+  --max-nb-genes SYSTEM VALUE
+                        The maximal number of genes allowed in the system. 
+
+  --multi-loci SYSTEM 
+                        Specifies if the system can be detected as a 'scattered'
+                        system. (default: False)
 
 .. _hmmer-options:
 
 Options for Hmmer execution and hits filtering::
 
   --hmmer HMMER_EXE     Path to the Hmmer program.
+  
   --index_db INDEX_DB_EXE
                         The indexer to be used for Hmmer. The value can be
                         either 'makeblastdb' or 'formatdb' or the path to one
-                        of these binary (default = makeblastb)
+                        of these binary (default = makeblastb).
+                        
   --e_value_search E_VALUE_RES
                         Maximal e-value for hits to be reported during Hmmer
                         search. (default = 1)
+                        
   --i_evalue_select I_EVALUE_SEL
                         Maximal independent e-value for Hmmer hits to be
                         selected for system detection. (default = 0.001)
+                        
   --coverage_profile COVERAGE_PROFILE
                         Minimal profile coverage required in the hit alignment
                         to allow the hit selection for system detection.
@@ -131,15 +147,20 @@ Path options::
 
   -d DEF_DIR, --d DEF_DIR
                         Path to the systems definition files.
+                        
   -r RES_SEARCH_DIR, --research-search RES_SEARCH_DIR
                         Path to the directory where to store TXSScan search
                         results directories.
+                        
   --research-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files.
+                        
   --research-extract-suffix RES_EXTRACT_SUFFIX
                         The suffix to give to filtered hits output files.
+                        
   -p PROFILE_DIR, --profile_dir PROFILE_DIR
                         Path to the profiles directory.
+                        
   --profile-suffix PROFILE_SUFFIX
                         The suffix of profile files. For each 'Gene' element,
                         the corresponding profile is searched in the
@@ -154,13 +175,17 @@ General options::
   -w WORKER_NB, --worker WORKER_NB
                         Number of workers to be used by TXSScan. In the case
                         the user wants to run TXSScan in a multi-thread mode.
+                        
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
                         Error messages (default), Warning (-v), Info (-vv) and
                         Debug.(-vvv)
+                        
   --log LOG_FILE        Path to the directory where to store the 'txsscan.log'
                         log file.
+                        
   --config CFG_FILE     Path to a putative TXSScan configuration file to be
                         used.
+                        
   --previous-run PREVIOUS_RUN
                         Path to a previous TXSScan run directory. It allows to
                         skip the Hmmer search step on same dataset, as it uses
