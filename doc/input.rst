@@ -174,7 +174,8 @@ General options::
 
   -w WORKER_NB, --worker WORKER_NB
                         Number of workers to be used by TXSScan. In the case
-                        the user wants to run TXSScan in a multi-thread mode.
+                        the user wants to run TXSScan in a multi-thread mode. 
+                        All workers can be used with the value '0'. (default = 1)
                         
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
                         Error messages (default), Warning (-v), Info (-vv) and
