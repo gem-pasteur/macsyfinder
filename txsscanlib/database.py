@@ -46,10 +46,9 @@ def fasta_iter(fasta_file):
 class Indexes(object):
     """
     Handle the indexes for txsscan:
-    
+
      - find the indexes for hmmer, or build them using formatdb or makeblastdb external tools
-     - find the indexes required by txsscan to compute some scores, or build them 
-      
+     - find the indexes required by txsscan to compute some scores, or build them.
     """
 
 
@@ -72,7 +71,7 @@ class Indexes(object):
         """
         Build the indexes from the sequence dataset in fasta format
 
-        :param force: If True, force the index building even if the index files are present in the sequence dataset folder 
+        :param force: If True, force the index building even if the index files are present in the sequence dataset folder
         :type force: boolean
         """
         hmmer_indexes = self.find_hmmer_indexes()
@@ -117,6 +116,7 @@ class Indexes(object):
         self._my_indexes = self.find_my_indexes()
         assert self._hmmer_indexes , "failed to create hmmer indexes"
         assert self._my_indexes, "failed create txsscan indexes"
+
 
     def find_hmmer_indexes(self):
         """
@@ -163,13 +163,12 @@ class Indexes(object):
             return path
 
 
- 
     def _build_hmmer_indexes(self):
         """
         build the index files for hmmer using the formatdb or makeblastdb tool
         """
         index_dir = os.path.dirname(self.cfg.sequence_db)
-        
+
         if self.cfg.index_db_exe.find('makeblast') != -1:
             command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
                                                                       self.name,
@@ -229,7 +228,7 @@ class Indexes(object):
 
 
 """handle name, topology type, and min/max positions in the sequence dataset for a replicon"""
-RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max')
+RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
 
 
 class RepliconDB(object):
@@ -288,11 +287,15 @@ class RepliconDB(object):
         :type default_topology: string
         """
         _min = 1
+        #self.sequence_idx is a file with the following structure seq_id;seq_length;seq_rank\n
         with open(self.sequence_idx) as idx_f:
             _max = 0
+            genes = []
             for l in idx_f:
+                seq_id, _, _ = l.split(";")
+                genes.append(seq_id)
                 _max += 1
-            self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max)
+            self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
     def _fill_gembase_min_max(self, topology, default_topology):
@@ -312,22 +315,27 @@ class RepliconDB(object):
         def parse_entry(entry):
             entry = entry.rstrip()
             seq_id, length, rank = entry.split(';')
-            replicon_name = seq_id.split('_')[0]
-            return replicon_name, int(rank)
+            replicon_name , seq_name = seq_id.split('_')
+            return replicon_name, seq_name, int(rank)
 
         with open(self.sequence_idx) as idx_f:
             replicons = (x[1] for x in groupby(idx_f, grp_replicon))
             for replicon in replicons:
+                genes = []
                 entry = replicon.next()
-                replicon_name, _min = parse_entry(entry)
+                replicon_name, seq_name, _min = parse_entry(entry)
+                genes.append(seq_name)
                 for entry in replicon:
                     #pass all sequence of the replicon until the last one
                     pass
-                _, _max = parse_entry(entry)
+                    _, seq_name, _ = parse_entry(entry)
+                    genes.append(seq_name)
+                _, seq_name, _max = parse_entry(entry)
+                genes.append(seq_name)
                 if replicon_name in topology:
-                    self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max)
+                    self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)
                 else:
-                    self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max)
+                    self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
     def __contains__(self, replicon_name):
@@ -338,8 +346,8 @@ class RepliconDB(object):
         :rtype: boolean
         """
         return replicon_name in self._DB
-    
-    
+
+
     def __getitem__(self, replicon_name):
         """
         :param replicon_name: the name of the replicon to get information on
@@ -349,6 +357,7 @@ class RepliconDB(object):
         :raise: KeyError if replicon_name is not in repliconDB
         """
         return self._DB[replicon_name]
+
 
     def get(self, replicon_name, default = None):
         """
@@ -361,11 +370,13 @@ class RepliconDB(object):
         """
         return self._DB.get(replicon_name, default)
 
+
     def items(self):
         """
         :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs
         """
         return self._DB.items()
+
 
     def iteritems(self):
         """
@@ -373,12 +384,14 @@ class RepliconDB(object):
         """
         return self._DB.iteritems()
 
+
     def replicon_names(self):
         """
         :return: a copy of the RepliconDB as a list of replicon_names
         """
         return self._DB.keys()
-    
+
+
     def replicon_infos(self):
         """
         :return: a copy of the RepliconDB as list of replicons info
