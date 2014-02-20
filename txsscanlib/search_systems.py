@@ -1115,8 +1115,8 @@ class systemDetectionReport(object):
                 system = {}
                 system['name'] = so.unique_name
                 system['replicon'] = {}
-                system['replicon']['name'] = so.valid_hits[0].replicon_name
-                rep_info = rep_db[system['replicon']['name']]
+                system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
+                rep_info = rep_db[system['replicon']['name']] 
                 system['replicon']['length'] = rep_info.max - rep_info.min
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
@@ -1774,7 +1774,7 @@ def search_systems(hits, systems, cfg):
         #print "Reporting detected systems : \n"
         print "Building reports of detected systems\n "
         #report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)  
-        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list)           
+        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list)      
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)

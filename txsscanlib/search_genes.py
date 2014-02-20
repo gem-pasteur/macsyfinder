@@ -16,7 +16,7 @@ import signal
 import sys
 import shutil
 import os.path
-from report import GembaseHMMReport, GeneralHMMReport
+from report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport 
 
 def search_genes(genes, cfg):
     """
