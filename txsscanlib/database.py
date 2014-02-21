@@ -233,7 +233,7 @@ RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
 
 class RepliconDB(object):
     """
-    Stores information (topology, min, max) for all replicons in the sequence_db
+    Stores information (topology, min, max, [genes]) for all replicons in the sequence_db
     the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'
     """
 
