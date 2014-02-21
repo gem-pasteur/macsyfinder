@@ -1122,51 +1122,40 @@ class systemDetectionReport(object):
         gene = {'id': gene_name}
         return gene
 
-    def _gembase_to_json(self, path, rep_db):
+    def _ordrerd_base_to_json(self, path, rep_db):
         """
+        Generates the report in json format
+
+        :param path: the path to a file where to write the report in json format
+        :type path: string
+        :param rep_db: the replicon database
+        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        print "#"*20
-        print "#"*20
-        print "#"*20
-        print "#"*20
-        print "rep_db = ",   rep_db.replicon_names()
-        print "so.valid_hits[0]",self._systems_occurences_list[0].valid_hits[0]
-        print "#"*20
-        print "#"*20
-        print "#"*20
-        print "#"*20
         for so in self._systems_occurences_list:
             json_path = os.path.join(path, so.unique_name + '.json')
             with open(json_path, 'w') as _file:
                 system = {}
                 system['name'] = so.unique_name
                 system['replicon'] = {}
-                system['replicon']['name'] = so.valid_hits[0].replicon_name
-                rep_info = rep_db[system['replicon']['name']]
+                system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
+                rep_info = rep_db[system['replicon']['name']] 
                 system['replicon']['length'] = rep_info.max - rep_info.min
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
-                min_valid = so.valid_hits[0].position
-                max_valid = so.valid_hits[-1].position
-                valid_hits = {vh.id: vh for vh in so.valid_hits}
-                print "#"*20
-                print "#"*20
-                print "#"*20
-                print "#"*20
-                print "valid_hits.keys() = ", valid_hits.keys()
-                print "rep_info.genes[max(0, min_valid -6) : max_valid + 5] = ", rep_info.genes
-                print "#"*20
-                print "#"*20
-                print "#"*20
-                print "#"*20
-                
-                for gene_name in rep_info.genes[max(0, min_valid -6) : max_valid + 5]:
-                    gene_id = "{}_{}".format(system['replicon']['name'], gene_name)
-                    if gene_id in valid_hits:
-                        gene = self._match2json(valid_hits[gene_id])
-                    else:
-                        gene = self._gene2json(gene_id      )
-                    system['genes'].append(gene)
+                if so.valid_hits:
+                    min_valid = so.valid_hits[0].position
+                    max_valid = so.valid_hits[-1].position
+                    valid_hits = {vh.id: vh for vh in so.valid_hits}
+                    for gene_name in rep_info.genes[max(0, min_valid -6) : max_valid + 5]:
+                        if self.cfg.db_type == 'gembase':
+                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name)
+                        else:
+                            gene_id = gene_name
+                        if gene_id in valid_hits:
+                            gene = self._match2json(valid_hits[gene_id])
+                        else:
+                            gene = self._gene2json(gene_id      )
+                        system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['exmandatory_genes'] = so.exmandatory_genes
@@ -1186,10 +1175,8 @@ class systemDetectionReport(object):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        if self.cfg.db_type == 'gembase':
-            self._gembase_to_json(path, rep_db)
-        elif self.cfg.db_type == 'ordered_replicon':
-            self._gembase_to_json(path, rep_db)
+        if self.cfg.db_type in ('gembase', 'ordered_replicon'):
+            self._ordrerd_base_to_json(path, rep_db)
         else:
             print "json_output"
             
