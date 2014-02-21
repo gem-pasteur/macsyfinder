@@ -52,6 +52,23 @@ class Test(unittest.TestCase):
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
         
+        self.ESCO030p01_genes =['000010', '000020', '000030', '000040', '000050', '000060', '000070', '000080', '000090',
+                                '000100', '000110', '000120', '000130', '000140', '000150', '000160', '000170', '000180',
+                                '000190', '000200', '000210', '000220', '000230', '000240', '000250', '000260', '000270',
+                                '000280', '000290', '000300', '000310', '000320', '000330', '000340', '000350', '000360',
+                                '000370', '000380', '000390', '000400', '000410', '000420', '000430', '000440', '000450',
+                                '000460', '000470', '000480', '000490', '000500', '000510', '000520', '000530', '000540',
+                                '000550', '000560', '000570', '000580', '000590', '000600', '000610', '000620', '000630',
+                                '000640', '000650', '000660', '000670', '000670']
+        self.PSAE001c01_genes = ['006940', '013980', '017350', '018920', '026600', '031420', '043580', '051090', '055870', 
+                                 '055880', '055890', '055900', '055910', '055920', '055930', '055940', '055950', '055960', 
+                                 '055970', '055980', '055990', '056000', '056010', '056020', '056030', '056040', '056050', 
+                                 '056060', '056070', '056080', '056090', '056100', '056110', '056120', '056130', '056140', 
+                                 '056150', '056160', '056170', '056180', '056190', '056200', '056210', '056220', '056230', 
+                                 '056240', '056250', '056260', '056270', '056280', '056290', '056300', '056310', '056320', 
+                                 '056330', '056340', '056350', '056360', '056370', '056380', '056390', '056400', '056410', 
+                                 '056420', '056430', '056440', '056440']
+        
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
 
@@ -152,16 +169,16 @@ class Test(unittest.TestCase):
  
     def test_getitem(self):
         db = RepliconDB(self.cfg)
-        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         self.assertEqual(ESCO030p01, db['ESCO030p01'])
         self.assertEqual(PSAE001c01, db['PSAE001c01'])
         self.assertRaises(KeyError, db.__getitem__, 'foo')
  
     def test_get(self):
         db = RepliconDB(self.cfg)
-        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         self.assertEqual(ESCO030p01, db.get('ESCO030p01'))
         self.assertEqual(PSAE001c01, db.get('PSAE001c01'))
         self.assertIsNone(db.get('foo'))
@@ -169,10 +186,10 @@ class Test(unittest.TestCase):
 
     def test_items(self):
         db = RepliconDB(self.cfg)
-        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01),('PSAE001c01',PSAE001c01)])
         db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 67)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133)
+        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         
