@@ -119,7 +119,7 @@ system_options.add_argument( "--multi-loci",
                              dest = 'multi_loci',
                              default = None,
                              help = "trigger the storage of multi-loci for the specified systems.\
-                              The systems are specified as a comma separated list (--multi-systems sys1,sys2) default is False"
+                              The systems are specified as a comma separated list (--multi-loci sys1,sys2) default is False"
                              )
 
 hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
