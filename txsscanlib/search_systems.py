@@ -456,8 +456,8 @@ class SystemOccurence(object):
             for k, g in self.multi_syst_genes.iteritems():
                 out += "%s\t%d\n"%(k, g)
         return out
+    
 
-    #def get_gene_counter_output(self):
     def get_gene_counter_output(self, forbid_exclude = False):
         """
         Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden if specified) occurences in the system occurrence 
@@ -660,6 +660,7 @@ class SystemOccurence(object):
 
         return report_str
 
+
     def get_summary_unordered(self, replicon_name):
         """
         Gives a summary of the system occurrence in terms of gene content only (specific of "unordered" datasets).
@@ -703,6 +704,7 @@ class SystemOccurence(object):
 
         return report_str
 
+
     def fill_with_cluster(self, cluster):
         """
         Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
@@ -723,7 +725,7 @@ class SystemOccurence(object):
                 self.valid_hits.append(valid_hit)
                 # NEW
                 if hit.gene.multi_system:
-                    self.multi_syst_genes[hit.gene.name] += 1                    
+                    self.multi_syst_genes[hit.gene.name] += 1
             elif hit.gene.is_allowed(self.system):
                 self.allowed_genes[hit.gene.name] += 1
                 valid_hit = validSystemHit(hit, self.system_name, "allowed")
@@ -750,7 +752,7 @@ class SystemOccurence(object):
 
         if included:
             # Update the number of loci included in the system
-            self.nb_cluster += 1            
+            self.nb_cluster += 1
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
 
@@ -829,8 +831,8 @@ class SystemOccurence(object):
 
                     print "Gene %s supplied from a multi_system gene"%g
         #all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
-    
-    
+
+
     def decision_rule(self):
         """
         This function applies the decision rules for system assessment in terms of quorum:
@@ -914,7 +916,7 @@ class validSystemHit(object):
         :type detected_system: string
         :param gene_status: the "role" of the gene in the predicted system
         :type gene_status: string
-        
+
         """
         self._hit = hit
         self.predicted_system = detected_system
@@ -923,7 +925,7 @@ class validSystemHit(object):
 
     def __getattr__(self, attr_name):
         return getattr(self._hit, attr_name)
-    
+
     def __str__(self):
         return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
                                                      self.replicon_name,
@@ -975,8 +977,7 @@ class systemDetectionReport(object):
 
     """
 
-    #def __init__(self, replicon_name, systems_occurences_list, systems):
-    def __init__(self, replicon_name, systems_occurences_list):
+    def __init__(self, replicon_name, systems_occurences_list, cfg):
         """
         :param replicon_name: the name of the replicon
         :type replicon_name: string
@@ -984,9 +985,9 @@ class systemDetectionReport(object):
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
         self._systems_occurences_list = systems_occurences_list
-        #self._system_textlist = []
         self.replicon_name = replicon_name
-
+        self.cfg = cfg
+        
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
@@ -1100,6 +1101,82 @@ class systemDetectionReport(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
 
+
+    def _match2json(self, valid_hit):
+        gene = {}
+        gene['id'] = valid_hit.id
+        gene['position'] = valid_hit.position
+        gene['sequence_length'] = valid_hit.seq_length
+        gene['system'] = valid_hit.reference_system
+        gene['match'] = valid_hit.gene.name
+        gene['gene_status'] = valid_hit.gene_status
+        gene['i_eval'] = valid_hit.i_eval
+        gene['score'] = valid_hit.score
+        gene['profile_coverage'] = valid_hit.profile_coverage
+        gene['sequence_coverage'] = valid_hit.sequence_coverage
+        gene['begin_match'] = valid_hit.begin_match
+        gene['end_match'] = valid_hit.end_match
+        return gene
+
+    def _gene2json(self, gene_name):
+        gene = {'id': gene_name}
+        return gene
+
+    def _gembase_to_json(self, path, rep_db):
+        """
+        """
+        print "#"*20
+        print "#"*20
+        print "#"*20
+        print "#"*20
+        print "rep_db = ",   rep_db.replicon_names()
+        print "so.valid_hits[0]",self._systems_occurences_list[0].valid_hits[0]
+        print "#"*20
+        print "#"*20
+        print "#"*20
+        print "#"*20
+        for so in self._systems_occurences_list:
+            json_path = os.path.join(path, so.unique_name + '.json')
+            with open(json_path, 'w') as _file:
+                system = {}
+                system['name'] = so.unique_name
+                system['replicon'] = {}
+                system['replicon']['name'] = so.valid_hits[0].replicon_name
+                rep_info = rep_db[system['replicon']['name']]
+                system['replicon']['length'] = rep_info.max - rep_info.min
+                system['replicon']['topology'] = rep_info.topology
+                system['genes'] = []
+                min_valid = so.valid_hits[0].position
+                max_valid = so.valid_hits[-1].position
+                valid_hits = {vh.id: vh for vh in so.valid_hits}
+                print "#"*20
+                print "#"*20
+                print "#"*20
+                print "#"*20
+                print "valid_hits.keys() = ", valid_hits.keys()
+                print "rep_info.genes[max(0, min_valid -6) : max_valid + 5] = ", rep_info.genes
+                print "#"*20
+                print "#"*20
+                print "#"*20
+                print "#"*20
+                
+                for gene_name in rep_info.genes[max(0, min_valid -6) : max_valid + 5]:
+                    gene_id = "{}_{}".format(system['replicon']['name'], gene_name)
+                    if gene_id in valid_hits:
+                        gene = self._match2json(valid_hits[gene_id])
+                    else:
+                        gene = self._gene2json(gene_id      )
+                    system['genes'].append(gene)
+                system['summary'] = {}
+                system['summary']['mandatory'] = so.mandatory_genes
+                system['summary']['exmandatory_genes'] = so.exmandatory_genes
+                system['summary']['allowed'] = so.allowed_genes
+                system['summary']['exallowed_genes'] = so.exallowed_genes
+                system['summary']['forbiden'] = so.forbidden_genes
+                system['summary']['state'] = so._state
+                json.dump(system, _file, indent = 2)
+
+
     def json_output(self, path, rep_db):
         """
         Generates the report in json format
@@ -1109,42 +1186,14 @@ class systemDetectionReport(object):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        with open(path, 'a') as _file:
-            all_systems_occurences = []
-            for so in self._systems_occurences_list:
-                system = {}
-                system['name'] = so.unique_name
-                system['replicon'] = {}
-                system['replicon']['name'] = so.valid_hits[0].replicon_name
-                rep_info = rep_db[system['replicon']['name']]
-                system['replicon']['length'] = rep_info.max - rep_info.min
-                system['replicon']['topology'] = rep_info.topology
-                system['genes'] = []
-                for valid_hit in so.valid_hits:
-                    gene = {}
-                    gene['id'] = valid_hit.id
-                    gene['position'] = valid_hit.position
-                    gene['sequence_length'] = valid_hit.seq_length
-                    gene['system'] = valid_hit.reference_system
-                    gene['match'] = valid_hit.gene.name
-                    gene['gene_status'] = valid_hit.gene_status
-                    gene['i_eval'] = valid_hit.i_eval
-                    gene['score'] = valid_hit.score
-                    gene['profile_coverage'] = valid_hit.profile_coverage
-                    gene['sequence_coverage'] = valid_hit.sequence_coverage
-                    gene['begin_match'] = valid_hit.begin_match
-                    gene['end_match'] = valid_hit.end_match
-                    system['genes'].append(gene)
-                system['summary'] = {}
-                system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['exmandatory_genes'] = so.exmandatory_genes
-                system['summary']['allowed'] = so.allowed_genes
-                system['summary']['exallowed_genes'] = so.exallowed_genes
-                system['summary']['forbiden'] = so.forbidden_genes
-                system['summary']['state'] = so._state
-                all_systems_occurences.append(system)
-            json.dump(all_systems_occurences, _file, indent = 2)
-
+        if self.cfg.db_type == 'gembase':
+            self._gembase_to_json(path, rep_db)
+        elif self.cfg.db_type == 'ordered_replicon':
+            self._gembase_to_json(path, rep_db)
+        else:
+            print "json_output"
+            
+            
 class systemDetectionReportUnordered(object):
     """
     Stores a report for putative detected systems gathering all hits from a search in an unordered dataset: 
@@ -1689,8 +1738,9 @@ def search_systems(hits, systems, cfg):
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-    json_filename = os.path.join(cfg.working_dir, 'txsscan.json')
-
+    json_dir = os.path.join(cfg.working_dir, 'json')
+    os.mkdir(json_dir)
+    
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     system_occurences_states = ['single_locus', 'multi_loci']
     system_names = []
@@ -1732,13 +1782,13 @@ def search_systems(hits, systems, cfg):
             #print "Reporting systems for %s : \n"%k
             print "Building reports for %s: \n"%k
             #report = systemDetectionReport(k, systems_occurences_list, systems)
-            report = systemDetectionReport(k, systems_occurences_list)
+            report = systemDetectionReport(k, systems_occurences_list, cfg)
 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
-            report.json_output(json_filename, rep_db)
+            report.json_output(json_dir, rep_db)
             print "******************************************"
 
             header_print = False
@@ -1773,12 +1823,11 @@ def search_systems(hits, systems, cfg):
         print "******************************************"
         #print "Reporting detected systems : \n"
         print "Building reports of detected systems\n "
-        #report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, systems)  
-        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list)           
+        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg)           
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
-        report.json_output(json_filename, rep_db)
+        report.json_output(json_dir, rep_db)
         print "******************************************"
 
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
@@ -1806,7 +1855,7 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReportUnordered(systems_occurences_list)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
-        report.json_output(json_filename)
+        report.json_output(json_dir)
         print "******************************************"
 
     else:
