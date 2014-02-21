@@ -9,9 +9,8 @@
 # @license: GPLv3
 ################################
 
-import threading
 import logging
-from report import Hit # required? 
+import abc
 import os.path
 from collections import namedtuple, Counter, OrderedDict
 import itertools, operator
@@ -969,13 +968,72 @@ class validSystemHit(object):
         return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
 
 
+
 class systemDetectionReport(object):
+
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, systems_occurences_list, cfg):
+        self._systems_occurences_list = systems_occurences_list
+        self.cfg = cfg
+        self.json_ext = '.sfmatch.json'
+        self._indent = None #improve performance of txssview
+        #self._indent = 2 #human readable json for debugging purpose
+
+
+    @abc.abstractmethod
+    def report_output(self, reportfilename, print_header = False):
+        """
+        Writes a report of sequences forming the detected systems, with information in their status in the system, 
+        their localization on replicons, and statistics on the Hits.         
+
+        :param reportfilename: the output file name 
+        :type reportfilename: string
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+
+        """
+        pass
+
+    @abc.abstractmethod
+    def summary_output(self, reportfilename, rep_info, print_header = False):
+        """
+        Writes a report with the summary of systems detected in replicons. For each system, a summary is done including: 
+
+            - the number of mandatory/allowed genes in the reference system (as defined in XML files)
+            - the number of mandatory/allowed genes detected
+            - the number and list of missing genes
+            - the number of loci encoding the system
+
+        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param print_header: True if the header has to be written. False otherwise
+        :type print_header: boolean
+
+        """
+        pass
+
+    @abc.abstractmethod
+    def json_output(self, path, rep_db):
+        """
+        Generates the report in json format
+
+        :param path: the path to a file where to write the report in json format
+        :type path: string
+        :param rep_db: the replicon database
+        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
+        """
+        pass
+
+
+class systemDetectionReportOrdered(systemDetectionReport):
     """
     Stores the detected systems to report for each replicon: 
         - by system name, 
         - by state of the systems (single vs multi loci)
 
     """
+
 
     def __init__(self, replicon_name, systems_occurences_list, cfg):
         """
@@ -984,10 +1042,10 @@ class systemDetectionReport(object):
         :param systems_occurences_list: the list of system's occurrences to consider
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
-        self._systems_occurences_list = systems_occurences_list
+        super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
         self.replicon_name = replicon_name
-        self.cfg = cfg
-        
+
+
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
@@ -1021,7 +1079,7 @@ class systemDetectionReport(object):
 
     def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
         """
-        Write a tabulated output with number of detected systems for each replicon.         
+        Write a tabulated output with number of detected systems for each replicon.
 
         :param system_occurence_states: the different forms of detected systems to consider
         :type system_occurence_states: list of string
@@ -1122,7 +1180,8 @@ class systemDetectionReport(object):
         gene = {'id': gene_name}
         return gene
 
-    def _ordrerd_base_to_json(self, path, rep_db):
+
+    def json_output(self, path, rep_db):
         """
         Generates the report in json format
 
@@ -1132,7 +1191,7 @@ class systemDetectionReport(object):
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
         for so in self._systems_occurences_list:
-            json_path = os.path.join(path, so.unique_name + '.json')
+            json_path = os.path.join(path, so.unique_name + self.json_ext)
             with open(json_path, 'w') as _file:
                 system = {}
                 system['name'] = so.unique_name
@@ -1163,25 +1222,12 @@ class systemDetectionReport(object):
                 system['summary']['exallowed_genes'] = so.exallowed_genes
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
-                json.dump(system, _file, indent = 2)
+                json.dump(system, _file, indent = self._indent)
 
 
-    def json_output(self, path, rep_db):
-        """
-        Generates the report in json format
 
-        :param path: the path to a file where to write the report in json format
-        :type path: string
-        :param rep_db: the replicon database
-        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
-        """
-        if self.cfg.db_type in ('gembase', 'ordered_replicon'):
-            self._ordrerd_base_to_json(path, rep_db)
-        else:
-            print "json_output"
-            
-            
-class systemDetectionReportUnordered(object):
+
+class systemDetectionReportUnordered(systemDetectionReport):
     """
     Stores a report for putative detected systems gathering all hits from a search in an unordered dataset: 
         - by system.
@@ -1190,14 +1236,12 @@ class systemDetectionReportUnordered(object):
 
     """
 
-    #def __init__(self, systems_occurences_list, systems):
-    def __init__(self, systems_occurences_list):
+    def __init__(self, systems_occurences_list, cfg):
         """
         :param systems_occurences_list: the list of system's occurrences to consider
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
-        self._systems_occurences_list = systems_occurences_list
-        #self.replicon_name = replicon_name
+        super(systemDetectionReportUnordered, self).__init__(systems_occurences_list, cfg)
 
 
     def report_output(self, reportfilename, print_header = False):
@@ -1224,6 +1268,7 @@ class systemDetectionReportUnordered(object):
 
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
+
 
     def summary_output(self, reportfilename, print_header = False):
         """
@@ -1252,6 +1297,46 @@ class systemDetectionReportUnordered(object):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
 
+
+
+    def json_output(self, path):
+        """
+        Generates the report in json format
+
+        :param path: the path to a file where to write the report in json format
+        :type path: string
+        """
+        for so in self._systems_occurences_list:
+            if not so.unique_name:
+                so.unique_name = so.get_system_name_unordered()
+            json_path = os.path.join(path, so.unique_name + self.json_ext)
+            with open(json_path, 'w') as _file:
+                system = {}
+                system['name'] = so.unique_name
+                system['genes'] = []
+                for valid_hit in so.valid_hits:
+                    gene = {}
+                    gene['id'] = valid_hit.id
+                    gene['position'] = valid_hit.position
+                    gene['sequence_length'] = valid_hit.seq_length
+                    gene['system'] = valid_hit.reference_system
+                    gene['match'] = valid_hit.gene.name
+                    gene['gene_status'] = valid_hit.gene_status
+                    gene['i_eval'] = valid_hit.i_eval
+                    gene['score'] = valid_hit.score
+                    gene['profile_coverage'] = valid_hit.profile_coverage
+                    gene['sequence_coverage'] = valid_hit.sequence_coverage
+                    gene['begin_match'] = valid_hit.begin_match
+                    gene['end_match'] = valid_hit.end_match
+                    system['genes'].append(gene)
+                system['summary'] = {}
+                system['summary']['mandatory'] = so.mandatory_genes
+                system['summary']['exmandatory_genes'] = so.exmandatory_genes
+                system['summary']['allowed'] = so.allowed_genes
+                system['summary']['exallowed_genes'] = so.exallowed_genes
+                system['summary']['forbiden'] = so.forbidden_genes
+                system['summary']['state'] = so._state
+                json.dump(system, _file, indent = self._indent)
 
 
 def get_compatible_systems(systems_list1, systems_list2):
@@ -1700,9 +1785,6 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
             #print "******* ****** ****"
 
     best_hits.append(prev_hit)
-
-    #settupkes=[(h, pos) for h in hits for pos in [getattr(z, 'position') for z in hits]]
-
     return best_hits
 
 
@@ -1735,7 +1817,7 @@ def search_systems(hits, systems, cfg):
         syst_name = s.name
         system_names.append(syst_name)
 
-    # Specify to build_clusters the rep_info (min, max positions), and replicon_type... 
+    # Specify to build_clusters the rep_info (min, max positions,[gene_name,...), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
     #RepInfo= namedtuple('RepInfo', ['topology', 'min', 'max'])
     #rep_info=RepInfo("circular", 1, 5569)
@@ -1769,7 +1851,7 @@ def search_systems(hits, systems, cfg):
             #print "Reporting systems for %s : \n"%k
             print "Building reports for %s: \n"%k
             #report = systemDetectionReport(k, systems_occurences_list, systems)
-            report = systemDetectionReport(k, systems_occurences_list, cfg)
+            report = systemDetectionReportOrdered(k, systems_occurences_list, cfg)
 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
@@ -1810,7 +1892,7 @@ def search_systems(hits, systems, cfg):
         print "******************************************"
         #print "Reporting detected systems : \n"
         print "Building reports of detected systems\n "
-        report = systemDetectionReport(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg)           
+        report = systemDetectionReportOrdered(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg)           
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
@@ -1839,7 +1921,7 @@ def search_systems(hits, systems, cfg):
         print "******************************************"
         print "Building reports of detected systems "
         #report = systemDetectionReportUnordered(systems_occurences_list, systems)
-        report = systemDetectionReportUnordered(systems_occurences_list)
+        report = systemDetectionReportUnordered(systems_occurences_list, cfg)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         report.json_output(json_dir)
