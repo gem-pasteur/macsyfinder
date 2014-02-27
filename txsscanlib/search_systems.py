@@ -976,7 +976,8 @@ class systemDetectionReport(object):
     def __init__(self, systems_occurences_list, cfg):
         self._systems_occurences_list = systems_occurences_list
         self.cfg = cfg
-        self.json_ext = '.sfmatch.json'
+        #self.json_ext = '.sfmatch.json'
+        self.json_ext = '.mfun.json' # txssview needs to be able to know the type of dataset from extensions. Here, for unordered database... has to be defined in inheriting classes
         self._indent = None #improve performance of txssview
         #self._indent = 2 #human readable json for debugging purpose
 
@@ -1043,6 +1044,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
+        self.json_ext = '.mfor.json' # Extension for ordered datasets (i.e. gembase and ordered_replicon)
         self.replicon_name = replicon_name
 
 
