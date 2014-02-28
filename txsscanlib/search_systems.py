@@ -1573,7 +1573,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                                 store_clust = clust
                                 store_so = so
                                 store_scattered = True
-                                store_msg
+                                #store_msg
                             #print "...\nStored for later treatment of scattered systems.\n"
                             #systems_occurences_scattered[putative_system].fill_with_cluster(clust)
                         else:
@@ -1614,14 +1614,18 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
     for system in systems:
         #print systems_occurences[system]
-        so = systems_occurences_scattered[system.name]
-        msg = so.decision_rule()
-        so_state = so.state
-        #print "-- %s --"%so.system_name
-        #print so
-        print msg
-        if so.is_complete():
-            systems_occurences_list.append(so)
+        
+        # So new: Add support for the multi_loci parameter:
+        if system.multi_loci:
+        
+            so = systems_occurences_scattered[system.name]
+            msg = so.decision_rule()
+            so_state = so.state
+            #print "-- %s --"%so.system_name
+            #print so
+            print msg
+            if so.is_complete():
+                systems_occurences_list.append(so)
     print "******************************************\n"
 
     # Stores results in this list? Or code a new object : systemDetectionReport ? 
@@ -1841,11 +1845,19 @@ def search_systems(hits, systems, cfg):
     os.mkdir(json_dir)
     
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
-    system_occurences_states = ['single_locus', 'multi_loci']
+    # Update to fit only to the states looked for:
+    #system_occurences_states = ['single_locus', 'multi_loci']
+    system_occurences_states = ['single_locus']
     system_names = []
+    multi_loci = False
     for s in systems:
         syst_name = s.name
         system_names.append(syst_name)
+        if s.multi_loci:
+            multi_loci = True
+            
+    if multi_loci:        
+        system_occurences_states.append('multi_loci')
 
     # Specify to build_clusters the rep_info (min, max positions,[gene_name,...), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569

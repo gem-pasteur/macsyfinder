@@ -118,7 +118,7 @@ system_options.add_argument( "--multi-loci",
                              action = 'store',
                              dest = 'multi_loci',
                              default = None,
-                             help = "trigger the storage of multi-loci for the specified systems.\
+                             help = "Allow the storage of multi-loci systems for the specified systems.\
                               The systems are specified as a comma separated list (--multi-loci sys1,sys2) default is False"
                              )
 

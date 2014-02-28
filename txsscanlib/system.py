@@ -177,7 +177,7 @@ class System(object):
     @property
     def multi_loci(self):
         """
-        :return: True if the system is multi loci, False otherwise
+        :return: True if the system is authorized to be inferred from multiple loci, False otherwise
         :rtype: boolean
         """
         cfg_multi_loci = self.cfg.multi_loci(self.name)
