@@ -1249,8 +1249,8 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 #system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['forbidden'] = so.forbidden_genes # SO correc
                 system['summary']['state'] = so._state
-                #json.dump(system, _file, indent = self._indent) # SO : a remettre!
-                json.dump(system, _file, indent = 2) # So TEST
+                json.dump(system, _file, indent = self._indent) # SO : a remettre!
+                #json.dump(system, _file, indent = 2) # So TEST
 
 
         #print "########## ######### ##########" # SO TEST
