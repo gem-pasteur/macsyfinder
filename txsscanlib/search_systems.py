@@ -712,7 +712,7 @@ class SystemOccurence(object):
         :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
         :type cluster: :class:`txsscanlib.search_systems.Cluster`
         """
-        included = True
+        included = True 
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
@@ -734,7 +734,7 @@ class SystemOccurence(object):
                     self.multi_syst_genes[hit.gene.name] += 1  
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
-                included = False
+                included = False 
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]] += 1
@@ -755,7 +755,8 @@ class SystemOccurence(object):
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
 
-    def fill_with_hits(self, hits):
+    #def fill_with_hits(self, hits):
+    def fill_with_hits(self, hits, include_forbidden):
         """
         Adds hits to a system occurence, and check what are their status according to the system definition.
         Set the system occurence state to "no_decision" after calling of this function. 
@@ -782,6 +783,11 @@ class SystemOccurence(object):
                 self.valid_hits.append(valid_hit)
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
+                
+                # SO New: now forbidden genes may be included in the reports:
+                if include_forbidden:
+                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")                
+                    self.valid_hits.append(valid_hit)
                 included = False
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
@@ -1950,11 +1956,23 @@ def search_systems(hits, systems, cfg):
         # Then system-wise treatment:
         hits = sorted(hits, key = attrgetter('system'))
         for k, g in itertools.groupby(hits, operator.attrgetter('system')):
+            # SO new : if we want to include forbidden genes, we have to get the corresponding list of hits at this point, even if this is not their original system... Need to compute the list of forbidden genes from hits for each system... 
             if k in systems:
-                sub_hits = list(g)
+            
+                # SO new: get the list of forbidden genes... Then have from hits 
+                forbidden_genes = k.forbidden_genes # Should better rewrite this part of the code to have a single process of the hits...           
+                forbidden_hits = []
+                for h in hits:
+                    if h.gene.is_forbidden(k):
+                        forbidden_hits.append(h)
+                
+                #sub_hits = list(g)
+                sub_hits = list(g) + forbidden_hits # So new
+                
                 so = SystemOccurence(k)
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
-                so.fill_with_hits(sub_hits)
+                #so.fill_with_hits(sub_hits)
+                so.fill_with_hits(sub_hits, True) # SO new parameter to say wether forbidden genes should be included or not. 
                 print "******************************************"
                 print k.name
                 print "******************************************"
