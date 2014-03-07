@@ -1673,6 +1673,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
     multi_system_genes_system_wise={}
     
     # Before the case where there is a single hit was not treated...
+    """
     if len(hits)==1 and prev.gene.loner:
         #print "LONELY HITS LONER..."
         if positions.count(prev.position) == 0:
@@ -1685,7 +1686,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     multi_system_genes_system_wise[prev.system.name].append(prev)
 
             positions.append(prev.position)
-
+    """
+    
     tmp = ""
     for cur in hits[1:]:
 
@@ -1782,6 +1784,18 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         clusters.add(cur_cluster)
+
+    # Deal both with the case of single loner hits, and of last hits that are loners... YES!
+    #print len(cur_cluster)
+    if len(cur_cluster) == 0 and prev.gene.loner:
+        #print "FIFO or LIFO?"
+        cur_cluster.add(prev)
+        clusters.add(cur_cluster)
+        # New : Storage of multi_system genes:
+        if prev.gene.multi_system:
+            if not prev.system.name in multi_system_genes_system_wise.keys():
+                multi_system_genes_system_wise[prev.system.name] = []
+                multi_system_genes_system_wise[prev.system.name].append(prev)
 
     if rep_info.topology == "circular":
         clusters.circularize(rep_info)
