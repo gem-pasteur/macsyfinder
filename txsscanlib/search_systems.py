@@ -176,6 +176,7 @@ class Cluster(object):
         :raise: a :class:`txsscanlib.txsscan_error.SystemDetectionError`
         """
         # need to update cluster bounds
+        print hit
         if len(self.hits) == 0:
             self.begin = hit.get_position()
             self.end = self.begin
@@ -1661,6 +1662,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
     # Deals with different dataset types using Pipeline ?? 
     clusters = ClustersHandler()
     prev = hits[0]
+    #print "build_clusters prev: %s"%str(prev)   
+    
     #cur_cluster = Cluster()
     cur_cluster = Cluster(systems_to_detect)
     positions = []
@@ -1668,6 +1671,20 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     # New: storage of multi_system genes:
     multi_system_genes_system_wise={}
+    
+    # Before the case where there is a single hit was not treated...
+    if len(hits)==1 and prev.gene.loner:
+        #print "LONELY HITS LONER..."
+        if positions.count(prev.position) == 0:
+            cur_cluster.add(prev)
+            #clusters.add(cur_cluster)
+            # New : Storage of multi_system genes:
+            if prev.gene.multi_system:
+                if not prev.system.name in multi_system_genes_system_wise.keys():
+                    multi_system_genes_system_wise[prev.system.name] = []
+                    multi_system_genes_system_wise[prev.system.name].append(prev)
+
+            positions.append(prev.position)
 
     tmp = ""
     for cur in hits[1:]:
@@ -1719,6 +1736,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = True
         else:
             # Storage of the previous cluster
+            #print "ELSE"
             if len(cur_cluster) > 1:
                 #print cur_cluster
                 #print "quatre - ADD cur_cluster"
@@ -1843,7 +1861,7 @@ def search_systems(hits, systems, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config`
     """
-
+    
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
@@ -1881,6 +1899,7 @@ def search_systems(hits, systems, cfg):
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits = list(g)
+            
             rep_info = rep_db[k]
             #print rep_info
 
