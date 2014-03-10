@@ -176,7 +176,7 @@ class Cluster(object):
         :raise: a :class:`txsscanlib.txsscan_error.SystemDetectionError`
         """
         # need to update cluster bounds
-        print hit
+        #print hit
         if len(self.hits) == 0:
             self.begin = hit.get_position()
             self.end = self.begin
