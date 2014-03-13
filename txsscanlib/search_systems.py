@@ -755,7 +755,7 @@ class SystemOccurence(object):
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
 
-    def fill_with_hits(self, hits):
+    def fill_with_hits(self, hits, include_forbidden):
         """
         Adds hits to a system occurence, and check what are their status according to the system definition.
         Set the system occurence state to "no_decision" after calling of this function. 
@@ -782,6 +782,11 @@ class SystemOccurence(object):
                 self.valid_hits.append(valid_hit)
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
+                
+                # SO New: now forbidden genes may be included in the reports:
+                if include_forbidden:
+                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")                
+                    self.valid_hits.append(valid_hit)
                 included = False
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
@@ -976,7 +981,8 @@ class systemDetectionReport(object):
     def __init__(self, systems_occurences_list, cfg):
         self._systems_occurences_list = systems_occurences_list
         self.cfg = cfg
-        self.json_ext = '.sfmatch.json'
+        #self.json_ext = '.sfmatch.json'
+        self.json_ext = '.mfun.json' # txssview needs to be able to know the type of dataset from extensions. Here, for unordered database... has to be defined in inheriting classes
         self._indent = None #improve performance of txssview
         #self._indent = 2 #human readable json for debugging purpose
 
@@ -1043,6 +1049,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
+        self.json_ext = '.mfor.json' # Extension for ordered datasets (i.e. gembase and ordered_replicon)
         self.replicon_name = replicon_name
 
 
@@ -1198,28 +1205,31 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 rep_info = rep_db[system['replicon']['name']] 
-                system['replicon']['length'] = rep_info.max - rep_info.min
+                system['replicon']['length'] = rep_info.max - rep_info.min + 1
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
                     min_valid = so.valid_hits[0].position
                     max_valid = so.valid_hits[-1].position
+                    positions = [s.position for s in so.valid_hits]
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    for gene_name in rep_info.genes[max(0, min_valid -6) : max_valid + 5]:
+                    min_valid = max(0, min(positions)-rep_info.min)
+                    max_valid = max(positions)-rep_info.min               
+                    for gene_name in rep_info.genes[max(0, min_valid -5) : min(max_valid + 6, system['replicon']['length'] -1)]: 
+                        # 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
                         if self.cfg.db_type == 'gembase':
-                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name)
+                            # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
+                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
                         else:
                             gene_id = gene_name
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
                         else:
-                            gene = self._gene2json(gene_id      )
+                            gene = self._gene2json(gene_id)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['exmandatory_genes'] = so.exmandatory_genes
                 system['summary']['allowed'] = so.allowed_genes
-                system['summary']['exallowed_genes'] = so.exallowed_genes
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 json.dump(system, _file, indent = self._indent)
@@ -1331,9 +1341,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                     system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['exmandatory_genes'] = so.exmandatory_genes
                 system['summary']['allowed'] = so.allowed_genes
-                system['summary']['exallowed_genes'] = so.exallowed_genes
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 json.dump(system, _file, indent = self._indent)
@@ -1543,7 +1551,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                                 store_clust = clust
                                 store_so = so
                                 store_scattered = True
-                                store_msg
+                                #store_msg
                             #print "...\nStored for later treatment of scattered systems.\n"
                             #systems_occurences_scattered[putative_system].fill_with_cluster(clust)
                         else:
@@ -1584,14 +1592,18 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
     for system in systems:
         #print systems_occurences[system]
-        so = systems_occurences_scattered[system.name]
-        msg = so.decision_rule()
-        so_state = so.state
-        #print "-- %s --"%so.system_name
-        #print so
-        print msg
-        if so.is_complete():
-            systems_occurences_list.append(so)
+        
+        # So new: Add support for the multi_loci parameter:
+        if system.multi_loci:
+        
+            so = systems_occurences_scattered[system.name]
+            msg = so.decision_rule()
+            so_state = so.state
+            #print "-- %s --"%so.system_name
+            #print so
+            print msg
+            if so.is_complete():
+                systems_occurences_list.append(so)
     print "******************************************\n"
 
     # Stores results in this list? Or code a new object : systemDetectionReport ? 
@@ -1628,7 +1640,23 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     # New: storage of multi_system genes:
     multi_system_genes_system_wise={}
+    
+    # Before the case where there is a single hit was not treated...
+    """
+    if len(hits)==1 and prev.gene.loner:
+        #print "LONELY HITS LONER..."
+        if positions.count(prev.position) == 0:
+            cur_cluster.add(prev)
+            #clusters.add(cur_cluster)
+            # New : Storage of multi_system genes:
+            if prev.gene.multi_system:
+                if not prev.system.name in multi_system_genes_system_wise.keys():
+                    multi_system_genes_system_wise[prev.system.name] = []
+                    multi_system_genes_system_wise[prev.system.name].append(prev)
 
+            positions.append(prev.position)
+    """
+    
     tmp = ""
     for cur in hits[1:]:
 
@@ -1725,6 +1753,18 @@ def build_clusters(hits, systems_to_detect, rep_info):
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         clusters.add(cur_cluster)
 
+    # Deal both with the case of single loner hits, and of last hits that are loners... YES!
+    #print len(cur_cluster)
+    if len(cur_cluster) == 0 and prev.gene.loner:
+        #print "FIFO or LIFO?"
+        cur_cluster.add(prev)
+        clusters.add(cur_cluster)
+        # New : Storage of multi_system genes:
+        if prev.gene.multi_system:
+            if not prev.system.name in multi_system_genes_system_wise.keys():
+                multi_system_genes_system_wise[prev.system.name] = []
+                multi_system_genes_system_wise[prev.system.name].append(prev)
+
     if rep_info.topology == "circular":
         clusters.circularize(rep_info)
 
@@ -1803,7 +1843,7 @@ def search_systems(hits, systems, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config`
     """
-
+    
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
@@ -1811,11 +1851,19 @@ def search_systems(hits, systems, cfg):
     os.mkdir(json_dir)
     
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
-    system_occurences_states = ['single_locus', 'multi_loci']
+    # Update to fit only to the states looked for:
+    #system_occurences_states = ['single_locus', 'multi_loci']
+    system_occurences_states = ['single_locus']
     system_names = []
+    multi_loci = False
     for s in systems:
         syst_name = s.name
         system_names.append(syst_name)
+        if s.multi_loci:
+            multi_loci = True
+            
+    if multi_loci:        
+        system_occurences_states.append('multi_loci')
 
     # Specify to build_clusters the rep_info (min, max positions,[gene_name,...), and replicon_type... 
     # Test with psae_circular_test.prt: pos_min = 1 , pos_max = 5569
@@ -1834,7 +1882,6 @@ def search_systems(hits, systems, cfg):
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits = list(g)
             rep_info = rep_db[k]
-            print rep_info
 
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
@@ -1908,11 +1955,24 @@ def search_systems(hits, systems, cfg):
         # Then system-wise treatment:
         hits = sorted(hits, key = attrgetter('system'))
         for k, g in itertools.groupby(hits, operator.attrgetter('system')):
-            if k in systems:
-                sub_hits = list(g)
+            # SO new : if we want to include forbidden genes, 
+            # we have to get the corresponding list of hits at this point, 
+            # even if this is not their original system... 
+            # Need to compute the list of forbidden genes from hits for each system... 
+            if k in systems:            
+                # SO new: get the list of forbidden genes... Then have from hits 
+                # Should better rewrite this part of the code to have a single process of the hits...     
+                forbidden_genes = k.forbidden_genes       
+                forbidden_hits = []
+                for h in hits:
+                    if h.gene.is_forbidden(k):
+                        forbidden_hits.append(h)
+                sub_hits = list(g) + forbidden_hits
+                
                 so = SystemOccurence(k)
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
-                so.fill_with_hits(sub_hits)
+                #so.fill_with_hits(sub_hits)
+                so.fill_with_hits(sub_hits, True) # SO new parameter to say wether forbidden genes should be included or not. 
                 print "******************************************"
                 print k.name
                 print "******************************************"
