@@ -176,7 +176,6 @@ class Cluster(object):
         :raise: a :class:`txsscanlib.txsscan_error.SystemDetectionError`
         """
         # need to update cluster bounds
-        #print hit
         if len(self.hits) == 0:
             self.begin = hit.get_position()
             self.end = self.begin
@@ -713,7 +712,7 @@ class SystemOccurence(object):
         :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
         :type cluster: :class:`txsscanlib.search_systems.Cluster`
         """
-        included = True 
+        included = True
         self._state = "no_decision"
         for hit in cluster.hits:
             # Need to check first that this cluster is eligible for system inclusion
@@ -735,7 +734,7 @@ class SystemOccurence(object):
                     self.multi_syst_genes[hit.gene.name] += 1  
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
-                included = False 
+                included = False
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]] += 1
@@ -756,7 +755,6 @@ class SystemOccurence(object):
             # Update the positions of the system
             self.loci_positions.append((cluster.begin, cluster.end))
 
-    #def fill_with_hits(self, hits):
     def fill_with_hits(self, hits, include_forbidden):
         """
         Adds hits to a system occurence, and check what are their status according to the system definition.
@@ -1199,68 +1197,44 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        #print "########## JSON DEBUG ##########" # SO TEST
-        
         for so in self._systems_occurences_list:
             json_path = os.path.join(path, so.unique_name + self.json_ext)
             with open(json_path, 'w') as _file:
                 system = {}
                 system['name'] = so.unique_name
-                
-                #print "****** SYSTEM %s\n"%so.unique_name # SO TEST
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 rep_info = rep_db[system['replicon']['name']] 
-                #system['replicon']['length'] = rep_info.max - rep_info.min # SO CORREC of the lg
                 system['replicon']['length'] = rep_info.max - rep_info.min + 1
-               
-                #print rep_info # SO TEST
-                #print rep_info.min # SO TEST
-                #print rep_info.max  # SO TEST              
-               
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
-                    #min_valid = so.valid_hits[0].position # SO CORREC
-                    #max_valid = so.valid_hits[-1].position # SO CORREC
-                    positions = [s.position for s in so.valid_hits] # SO CORREC
+                    min_valid = so.valid_hits[0].position
+                    max_valid = so.valid_hits[-1].position
+                    positions = [s.position for s in so.valid_hits]
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    min_valid = max(0, min(positions)-rep_info.min) # SO CORREC
-                    max_valid = max(positions)-rep_info.min # SO CORREC                    
-
-                    # SO TEST # OK ! Now included in the code above. 
-                    #min_valid = max (0, min_valid-rep_info.min) # SO TEST
-                    #max_valid -= rep_info.min # SO TEST
-                    #print "min_valid : %s"%str(min_valid) # SO TEST
-                    #print "max_valid : %s"%str(max_valid) # SO TEST
-                    #print "valid_hits\t\"%s\""%str(valid_hits) # SO TEST
-                    
-                    #for gene_name in rep_info.genes[max(0, min_valid -6) : max_valid + 5]: # SO CORREC
-                    for gene_name in rep_info.genes[max(0, min_valid -5) : min(max_valid + 6, system['replicon']['length'] -1)]: # SO CORREC => 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
+                    min_valid = max(0, min(positions)-rep_info.min)
+                    max_valid = max(positions)-rep_info.min               
+                    for gene_name in rep_info.genes[max(0, min_valid -5) : min(max_valid + 6, system['replicon']['length'] -1)]: 
+                        # 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
                         if self.cfg.db_type == 'gembase':
-                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name) # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
+                            # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
+                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
                         else:
                             gene_id = gene_name
-                        #print"\n gene_id \t => \"%s\""%str( gene_id) # SO TEST
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
-                            #print "\n -- OUAH IN --\n%s\n"%str(gene) # SO TEST
                         else:
                             gene = self._gene2json(gene_id)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
-                #system['summary']['exmandatory_genes'] = so.exmandatory_genes # SO correc
                 system['summary']['allowed'] = so.allowed_genes
-                #system['summary']['exallowed_genes'] = so.exallowed_genes # SO correc
-                #system['summary']['forbiden'] = so.forbidden_genes
-                system['summary']['forbidden'] = so.forbidden_genes # SO correc
+                system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
-                json.dump(system, _file, indent = self._indent) # SO : a remettre!
-                #json.dump(system, _file, indent = 2) # So TEST
+                json.dump(system, _file, indent = self._indent)
 
 
-        #print "########## ######### ##########" # SO TEST
 
 
 class systemDetectionReportUnordered(systemDetectionReport):
@@ -1367,11 +1341,8 @@ class systemDetectionReportUnordered(systemDetectionReport):
                     system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
-                #system['summary']['exmandatory_genes'] = so.exmandatory_genes # SO correc
                 system['summary']['allowed'] = so.allowed_genes
-                #system['summary']['exallowed_genes'] = so.exallowed_genes # SO correc
-                #system['summary']['forbiden'] = so.forbidden_genes
-                system['summary']['forbidden'] = so.forbidden_genes # SO correc
+                system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 json.dump(system, _file, indent = self._indent)
 
@@ -1662,8 +1633,6 @@ def build_clusters(hits, systems_to_detect, rep_info):
     # Deals with different dataset types using Pipeline ?? 
     clusters = ClustersHandler()
     prev = hits[0]
-    #print "build_clusters prev: %s"%str(prev)   
-    
     #cur_cluster = Cluster()
     cur_cluster = Cluster(systems_to_detect)
     positions = []
@@ -1738,7 +1707,6 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = True
         else:
             # Storage of the previous cluster
-            #print "ELSE"
             if len(cur_cluster) > 1:
                 #print cur_cluster
                 #print "quatre - ADD cur_cluster"
@@ -1913,9 +1881,7 @@ def search_systems(hits, systems, cfg):
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits = list(g)
-            
             rep_info = rep_db[k]
-            #print rep_info
 
             # The following applies to any "replicon"
             #print "\n************\nBuilding clusters for %s \n************\n"%k
@@ -1989,18 +1955,19 @@ def search_systems(hits, systems, cfg):
         # Then system-wise treatment:
         hits = sorted(hits, key = attrgetter('system'))
         for k, g in itertools.groupby(hits, operator.attrgetter('system')):
-            # SO new : if we want to include forbidden genes, we have to get the corresponding list of hits at this point, even if this is not their original system... Need to compute the list of forbidden genes from hits for each system... 
-            if k in systems:
-            
+            # SO new : if we want to include forbidden genes, 
+            # we have to get the corresponding list of hits at this point, 
+            # even if this is not their original system... 
+            # Need to compute the list of forbidden genes from hits for each system... 
+            if k in systems:            
                 # SO new: get the list of forbidden genes... Then have from hits 
-                forbidden_genes = k.forbidden_genes # Should better rewrite this part of the code to have a single process of the hits...           
+                # Should better rewrite this part of the code to have a single process of the hits...     
+                forbidden_genes = k.forbidden_genes       
                 forbidden_hits = []
                 for h in hits:
                     if h.gene.is_forbidden(k):
                         forbidden_hits.append(h)
-                
-                #sub_hits = list(g)
-                sub_hits = list(g) + forbidden_hits # So new
+                sub_hits = list(g) + forbidden_hits
                 
                 so = SystemOccurence(k)
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
