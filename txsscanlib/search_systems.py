@@ -782,10 +782,10 @@ class SystemOccurence(object):
                 self.valid_hits.append(valid_hit)
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
-                
+
                 # SO New: now forbidden genes may be included in the reports:
                 if include_forbidden:
-                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")                
+                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")
                     self.valid_hits.append(valid_hit)
                 included = False
             else:
@@ -981,11 +981,17 @@ class systemDetectionReport(object):
     def __init__(self, systems_occurences_list, cfg):
         self._systems_occurences_list = systems_occurences_list
         self.cfg = cfg
-        #self.json_ext = '.sfmatch.json'
-        self.json_ext = '.mfun.json' # txssview needs to be able to know the type of dataset from extensions. Here, for unordered database... has to be defined in inheriting classes
         self._indent = None #improve performance of txssview
         #self._indent = 2 #human readable json for debugging purpose
 
+
+    @abc.abstractproperty
+    def json_ext(self):
+        """
+        txssview needs to be able to know the type of dataset from extensions. 
+        has to be defined in inheriting classes
+        """
+        pass
 
     @abc.abstractmethod
     def report_output(self, reportfilename, print_header = False):
@@ -1049,8 +1055,16 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
-        self.json_ext = '.mfor.json' # Extension for ordered datasets (i.e. gembase and ordered_replicon)
         self.replicon_name = replicon_name
+
+
+    @property
+    def json_ext(self):
+        """
+        txssview needs to be able to know the type of dataset from extensions. 
+        Extension for ordered datasets (i.e. gembase and ordered_replicon)
+        """
+        return '.mfor.json'
 
 
     def counter_output(self):
@@ -1252,6 +1266,16 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
         """
         super(systemDetectionReportUnordered, self).__init__(systems_occurences_list, cfg)
+
+
+
+    @property
+    def json_ext(self):
+        """
+        txssview needs to be able to know the type of dataset from extensions. 
+        Extension for ordered datasets (i.e. gembase and ordered_replicon)
+        """
+        return '.mfun.json'
 
 
     def report_output(self, reportfilename, print_header = False):
