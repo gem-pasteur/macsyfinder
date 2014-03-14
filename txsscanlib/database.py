@@ -316,22 +316,22 @@ class RepliconDB(object):
             entry = entry.rstrip()
             seq_id, length, rank = entry.split(';')
             replicon_name , seq_name = seq_id.split('_')
-            return replicon_name, seq_name, int(rank)
+            return replicon_name, seq_name, length, int(rank)
 
         with open(self.sequence_idx) as idx_f:
             replicons = (x[1] for x in groupby(idx_f, grp_replicon))
             for replicon in replicons:
                 genes = []
                 entry = replicon.next()
-                replicon_name, seq_name, _min = parse_entry(entry)
-                genes.append(seq_name)
+                replicon_name, seq_name, seq_lenght, _min = parse_entry(entry)
+                genes.append((seq_name, seq_lenght))
                 for entry in replicon:
                     #pass all sequence of the replicon until the last one
                     pass
-                    _, seq_name, _ = parse_entry(entry)
-                    genes.append(seq_name)
-                _, seq_name, _max = parse_entry(entry)
-                genes.append(seq_name)
+                    _, seq_name, seq_lenght, _ = parse_entry(entry)
+                    genes.append((seq_name, seq_lenght))
+                _, seq_name, seq_lenght, _max = parse_entry(entry)
+                genes.append((seq_name, seq_lenght))
                 if replicon_name in topology:
                     self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)
                 else:
