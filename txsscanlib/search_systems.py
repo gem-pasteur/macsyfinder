@@ -981,8 +981,10 @@ class systemDetectionReport(object):
     def __init__(self, systems_occurences_list, cfg):
         self._systems_occurences_list = systems_occurences_list
         self.cfg = cfg
-        self._indent = None #improve performance of txssview
-        #self._indent = 2 #human readable json for debugging purpose
+        if 'TXSSCAN_DEBUG' in os.environ and os.environ['TXSSCAN_DEBUG']:
+            self._indent = 2 #human readable json for debugging purpose
+        else:
+            self._indent = None #improve performance of txssview
 
 
     @abc.abstractproperty
