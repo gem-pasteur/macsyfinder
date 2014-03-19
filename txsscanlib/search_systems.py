@@ -1199,9 +1199,10 @@ class systemDetectionReportOrdered(systemDetectionReport):
         gene['end_match'] = valid_hit.end_match
         return gene
 
-    def _gene2json(self, gene_name, sequence_length):
+    def _gene2json(self, gene_name, sequence_length, position):
         gene = {'id': gene_name,
-                'sequence_length' : sequence_length
+                'sequence_length' : sequence_length,
+                'position': position
                 }
         return gene
 
@@ -1232,8 +1233,12 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     positions = [s.position for s in so.valid_hits]
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
                     min_valid = max(0, min(positions)-rep_info.min)
-                    max_valid = max(positions)-rep_info.min               
-                    for gene_info in rep_info.genes[max(0, min_valid -5) : min(max_valid + 6, system['replicon']['length'] -1)]: 
+                    max_valid = max(positions)-rep_info.min
+                    min_position =  max(0, min_valid -5)
+                    max_position =  min(max_valid + 6, system['replicon']['length'] -1)
+                    curr_position = min_position
+                    for gene_info in rep_info.genes[min_position : max_position]:
+                        curr_position += 1
                         gene_name, gene_lenght = gene_info
                         # 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
                         if self.cfg.db_type == 'gembase':
@@ -1244,7 +1249,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
                         else:
-                            gene = self._gene2json(gene_id, gene_lenght)
+                            gene = self._gene2json(gene_id, gene_lenght, curr_position)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes

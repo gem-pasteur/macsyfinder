@@ -292,8 +292,8 @@ class RepliconDB(object):
             _max = 0
             genes = []
             for l in idx_f:
-                seq_id, _, _ = l.split(";")
-                genes.append(seq_id)
+                seq_id, length, _rank = l.split(";")
+                genes.append((seq_id, length))
                 _max += 1
             self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
