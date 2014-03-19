@@ -1225,6 +1225,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 rep_info = rep_db[system['replicon']['name']] 
                 system['replicon']['length'] = rep_info.max - rep_info.min + 1
+                print "rep min = ",rep_info.min ," rep max = ",rep_info.max
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
@@ -1234,28 +1235,21 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     positions = [s.position for s in so.valid_hits]
                     print "positions = ", positions
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-
-                    if positions[0] - 5 > rep_info.min:
-                        before_ctx = range(positions[0] - 5, positions[0])
+                    
+                    pos_min = positions[0] - 5 
+                    if pos_min < rep_info.min:
+                        pos_min = rep_info.max + positions[0] - 5
+                    
+                    pos_max = positions[-1] + 5
+                    if pos_max > rep_info.max:
+                        pos_max = rep_info.max - positions[-1] + 5 
+                        
+                    if pos_min < pos_max: 
+                        pos_in_bk_2_display = range( pos_min, pos_max + 1 )
                     else:
-                        cur_pos = rep_info.max + positions[0] - 6
-                        before_ctx = []
-                        for _ in range(5):
-                            cur_pos +=1 
-                            if cur_pos > rep_info.max:
-                                cur_pos =1
-                            before_ctx.append(cur_pos)
-                    if positions[-1] + 5 > rep_info.max:
-                        cur_pos = positions[-1]
-                        after_ctx = []
-                        for _ in range(5):
-                            cur_pos +=1 
-                            if cur_pos > rep_info.max:
-                                cur_pos =1
-                            after_ctx.append(cur_pos)
-                    else:
-                        after_ctx = range( positions[-1]+1, positions[-1] + 6)
-
+                        before_orig = range( pos_min, rep_info.max +1)
+                        after_orig = range(rep_info.min , pos_max + 1)
+                        pos_in_bk_2_display = before_orig + after_orig
                     #min_position =  max(0, min_valid -5)
                     #max_position =  min(max_valid + 6, rep_info.max )
                     
@@ -1264,7 +1258,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     
                     #before_ctx
                     #after_ctx
-                    pos_in_bk_2_display = before_ctx + positions + after_ctx
                     print "pos_in_bk_2_display = ", pos_in_bk_2_display
                     pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
                     print "pos_in_rep_2_display = ", pos_in_rep_2_display
