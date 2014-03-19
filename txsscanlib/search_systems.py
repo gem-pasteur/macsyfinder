@@ -1230,17 +1230,46 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 if so.valid_hits:
                     min_valid = so.valid_hits[0].position
                     max_valid = so.valid_hits[-1].position
+                    print 'MIN = ', min_valid,'  MAX = ', max_valid
                     positions = [s.position for s in so.valid_hits]
+                    print "positions = ", positions
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    min_valid = max(0, min(positions)-rep_info.min)
-                    max_valid = max(positions)-rep_info.min
-                    min_position =  max(0, min_valid -5)
-                    max_position =  min(max_valid + 6, system['replicon']['length'] -1)
-                    curr_position = min_position
-                    for gene_info in rep_info.genes[min_position : max_position]:
-                        curr_position += 1
-                        gene_name, gene_lenght = gene_info
-                        # 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
+
+                    if positions[0] - 5 > rep_info.min:
+                        before_ctx = range(positions[0] - 5, positions[0])
+                    else:
+                        cur_pos = rep_info.max + positions[0] - 6
+                        before_ctx = []
+                        for _ in range(5):
+                            cur_pos +=1 
+                            if cur_pos > rep_info.max:
+                                cur_pos =1
+                            before_ctx.append(cur_pos)
+                    if positions[-1] + 5 > rep_info.max:
+                        cur_pos = positions[-1]
+                        after_ctx = []
+                        for _ in range(5):
+                            cur_pos +=1 
+                            if cur_pos > rep_info.max:
+                                cur_pos =1
+                            after_ctx.append(cur_pos)
+                    else:
+                        after_ctx = range( positions[-1]+1, positions[-1] + 6)
+
+                    #min_position =  max(0, min_valid -5)
+                    #max_position =  min(max_valid + 6, rep_info.max )
+                    
+                    #position = position dans la bank
+                    #rep_position = position dans le replicon
+                    
+                    #before_ctx
+                    #after_ctx
+                    pos_in_bk_2_display = before_ctx + positions + after_ctx
+                    print "pos_in_bk_2_display = ", pos_in_bk_2_display
+                    pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
+                    print "pos_in_rep_2_display = ", pos_in_rep_2_display
+                    for curr_position in pos_in_rep_2_display:
+                        gene_name, gene_lenght = rep_info.genes[curr_position]
                         if self.cfg.db_type == 'gembase':
                             # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
                             gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
@@ -1249,7 +1278,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
                         else:
-                            gene = self._gene2json(gene_id, gene_lenght, curr_position)
+                            gene = self._gene2json(gene_id, gene_lenght, curr_position  + rep_info.min)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
