@@ -278,19 +278,19 @@ class Gene(object):
                     return True
                 if m.exchangeable and m.is_homolog(self):
                     return True
-        else:            
+        else:
             for m in (system.mandatory_genes+system.allowed_genes):
                 if self == m:
                     return True
                 if m.exchangeable and m.is_homolog(self):
                     return True
         return False
-        
-    #def get_compatible_systems(self, system_list):
+
+
     def get_compatible_systems(self, system_list, include_forbidden=True):
         """
         Test every system in system_list for compatibility with the gene using the is_authorized function.
-        
+
         :param system_list: a list of system names to test
         :type system_list: list of strings        
         :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
@@ -298,7 +298,7 @@ class Gene(object):
         :return: the list of compatible systems
         :rtype: list of string, or void list if none compatible
         """
-        compatibles=[]
+        compatibles = []
         for s in system_list:
             if self.is_authorized(s, include_forbidden):
                 compatibles.append(s)
