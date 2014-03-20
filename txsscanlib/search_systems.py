@@ -1250,14 +1250,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         before_orig = range( pos_min, rep_info.max +1)
                         after_orig = range(rep_info.min , pos_max + 1)
                         pos_in_bk_2_display = before_orig + after_orig
-                    #min_position =  max(0, min_valid -5)
-                    #max_position =  min(max_valid + 6, rep_info.max )
-                    
-                    #position = position dans la bank
-                    #rep_position = position dans le replicon
-                    
-                    #before_ctx
-                    #after_ctx
                     print "pos_in_bk_2_display = ", pos_in_bk_2_display
                     pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
                     print "pos_in_rep_2_display = ", pos_in_rep_2_display
@@ -1372,6 +1364,26 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :param path: the path to a file where to write the report in json format
         :type path: string
         """
+        def cmp_so(so, vh_1, vh_2):
+            if vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_mandatory(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_allowed(so.system):
+                return -1
+            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_forbidden(so.system):
+                return -1
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_mandatory(so.system):
+                return 1
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_allowed(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_forbidden(so.system):
+                return -1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_mandatory(so.system):
+                return 1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_allowed(so.system):
+                return 1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_forbidden(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+
         for so in self._systems_occurences_list:
             if not so.unique_name:
                 so.unique_name = so.get_system_name_unordered()
@@ -1380,6 +1392,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system = {}
                 system['name'] = so.unique_name
                 system['genes'] = []
+                so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
                     gene = {}
                     gene['id'] = valid_hit.id
