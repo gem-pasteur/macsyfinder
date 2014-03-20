@@ -151,12 +151,12 @@ class System(object):
     @property
     def min_genes_required(self):
         """
-        :return: get the maximum number of genes to assess for the system presence.
+        :return: get the minimum number of genes to assess for the system presence.
         :rtype: integer
         """
-        cfg_max_nb_genes = self.cfg.max_nb_genes(self.name)
-        if cfg_max_nb_genes is not None:
-            return cfg_max_nb_genes
+        cfg_min_genes_requireds = self.cfg.min_genes_required(self.name)
+        if cfg_min_genes_requireds is not None:
+            return cfg_min_genes_requireds
         elif self._min_genes_required is None:
             return len(self._mandatory_genes)
         else:
