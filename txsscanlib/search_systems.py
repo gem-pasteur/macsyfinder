@@ -1229,30 +1229,29 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
-                    min_valid = so.valid_hits[0].position
-                    max_valid = so.valid_hits[-1].position
-                    print 'MIN = ', min_valid,'  MAX = ', max_valid
                     positions = [s.position for s in so.valid_hits]
-                    print "positions = ", positions
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    
-                    pos_min = positions[0] - 5 
+                    pos_min = positions[0] - 5
                     if pos_min < rep_info.min:
-                        pos_min = rep_info.max + positions[0] - 5
-                    
+                        if rep_info.topology == 'circular':
+                            pos_min = rep_info.max + positions[0] - 5
+                        else:
+                            pos_min = rep_info.min
                     pos_max = positions[-1] + 5
                     if pos_max > rep_info.max:
-                        pos_max = rep_info.max - positions[-1] + 5 
-                        
+                        if rep_info.topology == 'circular':
+                            pos_max = rep_info.max - positions[-1] + 5
+                        else:
+                            pos_max =  rep_info.max
+                    
                     if pos_min < pos_max: 
                         pos_in_bk_2_display = range( pos_min, pos_max + 1 )
                     else:
                         before_orig = range( pos_min, rep_info.max +1)
                         after_orig = range(rep_info.min , pos_max + 1)
                         pos_in_bk_2_display = before_orig + after_orig
-                    print "pos_in_bk_2_display = ", pos_in_bk_2_display
                     pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
-                    print "pos_in_rep_2_display = ", pos_in_rep_2_display
+                    
                     for curr_position in pos_in_rep_2_display:
                         gene_name, gene_lenght = rep_info.genes[curr_position]
                         if self.cfg.db_type == 'gembase':
