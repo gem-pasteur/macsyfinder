@@ -1225,7 +1225,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 rep_info = rep_db[system['replicon']['name']] 
                 system['replicon']['length'] = rep_info.max - rep_info.min + 1
-                print "rep min = ",rep_info.min ," rep max = ",rep_info.max
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
@@ -1262,7 +1261,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
                         else:
-                            gene = self._gene2json(gene_id, gene_lenght, curr_position  + rep_info.min)
+                            gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
