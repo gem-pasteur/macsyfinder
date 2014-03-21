@@ -1228,19 +1228,31 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['replicon']['topology'] = rep_info.topology
                 system['genes'] = []
                 if so.valid_hits:
-                    min_valid = so.valid_hits[0].position
-                    max_valid = so.valid_hits[-1].position
                     positions = [s.position for s in so.valid_hits]
                     valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    min_valid = max(0, min(positions)-rep_info.min)
-                    max_valid = max(positions)-rep_info.min
-                    min_position =  max(0, min_valid -5)
-                    max_position =  min(max_valid + 6, system['replicon']['length'] -1)
-                    curr_position = min_position
-                    for gene_info in rep_info.genes[min_position : max_position]:
-                        curr_position += 1
-                        gene_name, gene_lenght = gene_info
-                        # 5 before, 5 after. CHECK WE DON'T OVERPASS THE LIMIT OF GENES !!!
+                    pos_min = positions[0] - 5
+                    if pos_min < rep_info.min:
+                        if rep_info.topology == 'circular':
+                            pos_min = rep_info.max + positions[0] - 5
+                        else:
+                            pos_min = rep_info.min
+                    pos_max = positions[-1] + 5
+                    if pos_max > rep_info.max:
+                        if rep_info.topology == 'circular':
+                            pos_max = rep_info.max - positions[-1] + 5
+                        else:
+                            pos_max =  rep_info.max
+                    
+                    if pos_min < pos_max: 
+                        pos_in_bk_2_display = range( pos_min, pos_max + 1 )
+                    else:
+                        before_orig = range( pos_min, rep_info.max +1)
+                        after_orig = range(rep_info.min , pos_max + 1)
+                        pos_in_bk_2_display = before_orig + after_orig
+                    pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
+                    
+                    for curr_position in pos_in_rep_2_display:
+                        gene_name, gene_lenght = rep_info.genes[curr_position]
                         if self.cfg.db_type == 'gembase':
                             # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
                             gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
@@ -1249,7 +1261,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         if gene_id in valid_hits:
                             gene = self._match2json(valid_hits[gene_id])
                         else:
-                            gene = self._gene2json(gene_id, gene_lenght, curr_position)
+                            gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
                         system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
@@ -1257,7 +1269,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 json.dump(system, _file, indent = self._indent)
-
 
 
 
@@ -1350,6 +1361,26 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :param path: the path to a file where to write the report in json format
         :type path: string
         """
+        def cmp_so(so, vh_1, vh_2):
+            if vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_mandatory(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_allowed(so.system):
+                return -1
+            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_forbidden(so.system):
+                return -1
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_mandatory(so.system):
+                return 1
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_allowed(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_forbidden(so.system):
+                return -1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_mandatory(so.system):
+                return 1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_allowed(so.system):
+                return 1
+            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_forbidden(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+
         for so in self._systems_occurences_list:
             if not so.unique_name:
                 so.unique_name = so.get_system_name_unordered()
@@ -1358,6 +1389,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system = {}
                 system['name'] = so.unique_name
                 system['genes'] = []
+                so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
                     gene = {}
                     gene['id'] = valid_hit.id
