@@ -339,7 +339,7 @@ class Hit(object):
         :param hit_id: the identifier of the hit
         :type hit_id: string
         :param hit_seq_length: the length of the hit sequence
-        :type hit_id: integer
+        :type hit_seq_length: integer
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :param position_hit: the rank of the sequence matched in the input dataset file
