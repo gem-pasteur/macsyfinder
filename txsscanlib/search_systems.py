@@ -410,8 +410,9 @@ class SystemOccurence(object):
             self.mandatory_genes[g.name] = 0
             if g.exchangeable:
                 homologs=g.get_homologs()
-                for h in homologs:
-                    self.exmandatory_genes[h.name] = g.name
+                analogs=g.get_analogs()
+                for ex in homologs+analogs:
+                    self.exmandatory_genes[ex.name] = g.name
             if g.multi_system:
                 self.multi_syst_genes[g.name] = 0
 
@@ -421,8 +422,9 @@ class SystemOccurence(object):
             self.allowed_genes[g.name] = 0
             if g.exchangeable:
                 homologs = g.get_homologs()
-                for h in homologs:
-                    self.exallowed_genes[h.name] = g.name
+                analogs=g.get_analogs()
+                for ex in homologs+analogs:
+                    self.exallowed_genes[ex.name] = g.name
             if g.multi_system:
                 self.multi_syst_genes[g.name] = 0
 
