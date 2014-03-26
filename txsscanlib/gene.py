@@ -213,7 +213,7 @@ class Gene(object):
         self.analogs.append(analog)
 
 
-    def get_homologs(self):
+    def get_analogs(self):
         """
         :return: the Gene analogs
         :type: list of :class:`txsscanlib.gene.Analog` object
