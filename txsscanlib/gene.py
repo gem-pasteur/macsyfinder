@@ -387,7 +387,7 @@ class Analog(object):
     Handle analogs, encapsulate a Gene
     """
 
-    def __init__(self, gene, gene_ref, aligned = False ):
+    def __init__(self, gene, gene_ref):
         """
         :param gene: the gene
         :type gene: :class:`txsscanlib.gene.Gene` object.

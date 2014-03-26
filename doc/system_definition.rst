@@ -30,7 +30,7 @@ The XML hierarchy
      * "min_mandatory_genes_required": an integer representing the minimal number of mandatory genes required to infer the system presence.
      * "min_genes_required": an integer representing the minimal number of mandatory or allowed genes (whose corresponding proteins match a profile of the system) required to infer the system presence.
      * "max_nb_genes": an integer representing the maximal number of mandatory or allowed genes in the system.
-     * "multi_loci": a boolean set to True ("1") to allow the definition of "scattered" systems (systems encoded by different loci). If not specified, *default value is false*.  
+     * "multi_loci": a boolean set to True ("1", "true" or "True") to allow the definition of "scattered" systems (systems encoded by different loci). If not specified, *default value is false*.  
      
   * The system contains one or more element "gene".
   
@@ -44,26 +44,30 @@ The XML hierarchy
 
    * "system_ref": which is a reference to the secretion system from where the gene comes from (this attribute is used for forbidden gene and homologs gene). If system_ref is not specified, it means the gene is from the current system.
    * "loner": which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
-   * "exchangeable": which is a boolean. If a gene is exchangeable that means this gene or one of its homologs can be interchanged for the assessment of the presence of the secretion system ( *default false* ).
-   * "multi_system": which is a boolean. If a gene is "multi_system" (value set to "1"), it means that it can be used to fill by multiple systems occurencess. ( *default false* ).
+   * "exchangeable": which is a boolean. If a gene is exchangeable (value set to "1", "true" or "True") that means this gene or one of its homologs or analogs can be interchanged for the assessment of the presence of the secretion system ( *default false* ).
+   * "multi_system": which is a boolean. If a gene is "multi_system" (value set to "1", "true" or "True"), it means that it can be used to fill by multiple systems occurrences. ( *default false* ).
    * "aligned": which is a boolean (this attribute is used only for homologs).
    * "inter_gene_max_space": an integer that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). 
-   * an element "homologs".
+   * an element "homologs" that contains a list of homologous genes that can potentially match the same sequences. They can potentially be functionally equivalent to the reference gene if it was declared "exchangeable"
+   * an element "analogs" that contains a list of analogous genes that can potentially be functionally equivalent, if the parent gene was declared "exchangeable".
    
-* The element "homologs" contains one or more element "gene".
+* The elements "homologs" and "analogs" can contain one or more element "gene".
 
 Example of a system definition in XML: ::
   
   <system inter_gene_max_space="5"> 
-    <gene name="gspD" presence="mandatory" exchangeable="1">
+    <gene name="gspD" presence="mandatory">
        <homologs>
            <gene name="sctC" system_ref="T3SS"/>
        </homologs>
     </gene>
-    <gene name="sctN_FLG" presence="mandatory" loner="1"/>
+    <gene name="sctN_FLG" presence="mandatory" loner="1" exchangeable="1"/>       
+       <analogs>
+           <gene name="gspE" system_ref="T2SS"/>
+           <gene name="pilT" system_ref="T4P"/>
+       </analogs>
     <gene name="sctV_FLG" presence="mandatory"/>
     <gene name="flp" presence="allowed"/>
-    <gene name="sctC" presence="forbidden" system_ref="T3SS"/>
   </system>
 
 .. warning::
