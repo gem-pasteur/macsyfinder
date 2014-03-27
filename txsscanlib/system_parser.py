@@ -179,7 +179,7 @@ class SystemParser(object):
 
     def _fill(self, system, system_node):
         """
-        Fill the system with genes found in this system definition. Add homolgs to the genes if necessary.
+        Fill the system with genes found in this system definition. Add homologs to the genes if necessary.
         
         :param system: the system to fill
         :type system: :class:`txsscanlib.system.System` object

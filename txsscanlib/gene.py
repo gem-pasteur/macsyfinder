@@ -124,6 +124,7 @@ class Gene(object):
         self._exchangeable = exchangeable
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
+        #print self # To be removed
 
     def __str__(self):
     	"""
@@ -140,6 +141,7 @@ class Gene(object):
             for a in self.analogs:
                 s += a.name + ", "
             s = s[:-2]
+        #s+= "\tinter_gene_max_space = %s"%str(self._inter_gene_max_space) # To be removed
         return s
 
     @property

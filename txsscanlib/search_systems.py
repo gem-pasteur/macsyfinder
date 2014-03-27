@@ -78,7 +78,8 @@ class ClustersHandler(object):
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
 
             #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
-            if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
+            #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
+            if (dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits)-1].gene.inter_gene_max_space)):
                 # Need to circularize !
                 print "A cluster needs to be \"circularized\" ! "
                 msg = "A cluster needs to be \"circularized\" ! "
@@ -1729,8 +1730,10 @@ def build_clusters(hits, systems_to_detect, rep_info):
     for cur in hits[1:]:
 
         _log.debug("Hit %s"%str(cur))
-        prev_max_dist = prev.get_syst_inter_gene_max_space()
-        cur_max_dist = cur.get_syst_inter_gene_max_space()
+        #prev_max_dist = prev.get_syst_inter_gene_max_space()
+        #cur_max_dist = cur.get_syst_inter_gene_max_space()
+        prev_max_dist = prev.gene.inter_gene_max_space
+        cur_max_dist = cur.gene.inter_gene_max_space
         inter_gene = cur.get_position() - prev.get_position() - 1
 
         tmp = "\n****\n"
@@ -1740,7 +1743,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         tmp += "Cur : %s"%cur
         tmp += "Prev : %s"%prev
         tmp += "Len cluster: %d\n"%len(cur_cluster)
-        #print tmp
+        print tmp
 
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
@@ -1750,7 +1753,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         #if(inter_gene <= smaller_dist ):
             #print "zero"
             if positions.count(prev.position) == 0:
-                #print "un - ADD prev in cur_cluster"
+                print "un - ADD prev in cur_cluster"
                 cur_cluster.add(prev)
                 positions.append(prev.position)
                 # New : Storage of multi_system genes:
@@ -1760,7 +1763,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     multi_system_genes_system_wise[prev.system.name].append(prev)
 
             if positions.count(cur.position) == 0:
-                #print "deux - ADD cur in cur_cluster"
+                print "deux - ADD cur in cur_cluster"
                 cur_cluster.add(cur)
                 positions.append(cur.position)
                 # New : Storage of multi_system genes:
@@ -1770,14 +1773,14 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     multi_system_genes_system_wise[cur.system.name].append(cur)
 
             if prev.gene.loner:
-                #print "trois - loner_state"
+                print "trois - loner_state"
                 #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
                 loner_state = True
         else:
             # Storage of the previous cluster
             if len(cur_cluster) > 1:
                 #print cur_cluster
-                #print "quatre - ADD cur_cluster"
+                print "quatre - ADD cur_cluster"
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
 
@@ -1787,7 +1790,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print cur_cluster
-                #print "cinq - ADD cur_cluster"
+                print "cinq - ADD cur_cluster"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
 
@@ -1795,11 +1798,11 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = False
 
             if prev.gene.loner:
-                #print "six - check"
-                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                print "six - check"
+                print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
-                    #print "six - ADD prev in cur_cluster, ADD cur_cluster"
+                    print "six - ADD prev in cur_cluster, ADD cur_cluster"
                     cur_cluster.add(prev)
                     clusters.add(cur_cluster)
                     #print(cur_cluster)
@@ -1817,14 +1820,16 @@ def build_clusters(hits, systems_to_detect, rep_info):
             cur_cluster = Cluster(systems_to_detect)
 
         prev = cur
+        print "Now prev is %s"%(prev.gene.name)
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
+        print "Recap clusters"
         clusters.add(cur_cluster)
 
     # Deal both with the case of single loner hits, and of last hits that are loners... YES!
     #print len(cur_cluster)
     if len(cur_cluster) == 0 and prev.gene.loner:
-        #print "FIFO or LIFO?"
+        print "FIFO or LIFO?"
         cur_cluster.add(prev)
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
