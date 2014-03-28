@@ -1414,7 +1414,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['allowed'] = so.allowed_genes
-                system['summary']['forbiden'] = so.forbidden_genes
+                system['summary']['forbidden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 systems.append(system)
             json.dump(systems, _file, indent = self._indent)
