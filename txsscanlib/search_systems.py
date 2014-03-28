@@ -1392,8 +1392,9 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 if not so.unique_name:
                     so.unique_name = so.get_system_name_unordered()
                 system = {}
-                system['repliconName'] = so.unique_name
                 system['name'] = so.unique_name
+                system['replicon'] = {}
+                system['replicon']['name'] = 
                 system['genes'] = []
                 so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
