@@ -1216,60 +1216,65 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
+        #json_path = path + self.json_ext
+        #with open(json_path, 'a') as _file:
+        systems = []
         for so in self._systems_occurences_list:
-            json_path = os.path.join(path, so.unique_name + self.json_ext)
-            with open(json_path, 'w') as _file:
-                system = {}
-                system['name'] = so.unique_name
-                system['replicon'] = {}
-                system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
-                rep_info = rep_db[system['replicon']['name']] 
-                system['replicon']['length'] = rep_info.max - rep_info.min + 1
-                system['replicon']['topology'] = rep_info.topology
-                system['genes'] = []
-                if so.valid_hits:
-                    positions = [s.position for s in so.valid_hits]
-                    valid_hits = {vh.id: vh for vh in so.valid_hits}
-                    pos_min = positions[0] - 5
-                    if pos_min < rep_info.min:
-                        if rep_info.topology == 'circular':
-                            pos_min = rep_info.max + positions[0] - 5
-                        else:
-                            pos_min = rep_info.min
-                    pos_max = positions[-1] + 5
-                    if pos_max > rep_info.max:
-                        if rep_info.topology == 'circular':
-                            pos_max = rep_info.max - positions[-1] + 5
-                        else:
-                            pos_max =  rep_info.max
-                    
-                    if pos_min < pos_max: 
-                        pos_in_bk_2_display = range( pos_min, pos_max + 1 )
+            system = {}
+            repliconName, systemName, occurencesNumber = so.unique_name.split('_')
+            system['repliconName'] = repliconName
+            system['systemName'] = systemName
+            system['occurencesNumber'] = occurencesNumber
+            system['replicon'] = {}
+            system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
+            rep_info = rep_db[system['replicon']['name']] 
+            system['replicon']['length'] = rep_info.max - rep_info.min + 1
+            system['replicon']['topology'] = rep_info.topology
+            system['genes'] = []
+            if so.valid_hits:
+                positions = [s.position for s in so.valid_hits]
+                valid_hits = {vh.id: vh for vh in so.valid_hits}
+                pos_min = positions[0] - 5
+                if pos_min < rep_info.min:
+                    if rep_info.topology == 'circular':
+                        pos_min = rep_info.max + positions[0] - 5
                     else:
-                        before_orig = range( pos_min, rep_info.max +1)
-                        after_orig = range(rep_info.min , pos_max + 1)
-                        pos_in_bk_2_display = before_orig + after_orig
-                    pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
-                    
-                    for curr_position in pos_in_rep_2_display:
-                        gene_name, gene_lenght = rep_info.genes[curr_position]
-                        if self.cfg.db_type == 'gembase':
-                            # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
-                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
-                        else:
-                            gene_id = gene_name
-                        if gene_id in valid_hits:
-                            gene = self._match2json(valid_hits[gene_id])
-                        else:
-                            gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
-                        system['genes'].append(gene)
-                system['summary'] = {}
-                system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['allowed'] = so.allowed_genes
-                system['summary']['forbiden'] = so.forbidden_genes
-                system['summary']['state'] = so._state
-                json.dump(system, _file, indent = self._indent)
-
+                        pos_min = rep_info.min
+                pos_max = positions[-1] + 5
+                if pos_max > rep_info.max:
+                    if rep_info.topology == 'circular':
+                        pos_max = rep_info.max - positions[-1] + 5
+                    else:
+                        pos_max =  rep_info.max
+                
+                if pos_min < pos_max: 
+                    pos_in_bk_2_display = range( pos_min, pos_max + 1 )
+                else:
+                    before_orig = range( pos_min, rep_info.max +1)
+                    after_orig = range(rep_info.min , pos_max + 1)
+                    pos_in_bk_2_display = before_orig + after_orig
+                pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
+                
+                for curr_position in pos_in_rep_2_display:
+                    gene_name, gene_lenght = rep_info.genes[curr_position]
+                    if self.cfg.db_type == 'gembase':
+                        # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
+                        gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
+                    else:
+                        gene_id = gene_name
+                    if gene_id in valid_hits:
+                        gene = self._match2json(valid_hits[gene_id])
+                    else:
+                        gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
+                    system['genes'].append(gene)
+            system['summary'] = {}
+            system['summary']['mandatory'] = so.mandatory_genes
+            system['summary']['allowed'] = so.allowed_genes
+            system['summary']['forbidden'] = so.forbidden_genes
+            system['summary']['state'] = so._state
+            systems.append(system)
+            #json.dump(systems, _file, indent = self._indent)
+        return systems
 
 
 class systemDetectionReportUnordered(systemDetectionReport):
@@ -1380,13 +1385,15 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 return 1
             elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_forbidden(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
-
-        for so in self._systems_occurences_list:
-            if not so.unique_name:
-                so.unique_name = so.get_system_name_unordered()
-            json_path = os.path.join(path, so.unique_name + self.json_ext)
-            with open(json_path, 'w') as _file:
+            
+        json_path = path + self.json_ext
+        with open(json_path, 'w') as _file:
+            systems = []
+            for so in self._systems_occurences_list:
+                if not so.unique_name:
+                    so.unique_name = so.get_system_name_unordered()
                 system = {}
+                system['repliconName'] = so.unique_name
                 system['name'] = so.unique_name
                 system['genes'] = []
                 so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
@@ -1410,7 +1417,8 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['summary']['allowed'] = so.allowed_genes
                 system['summary']['forbiden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
-                json.dump(system, _file, indent = self._indent)
+                systems.append(system)
+            json.dump(systems, _file, indent = self._indent)
 
 
 def get_compatible_systems(systems_list1, systems_list2):
@@ -1942,7 +1950,8 @@ def search_systems(hits, systems, cfg):
         rep_db = RepliconDB(cfg)
 
         replicons_w_hits=[]
-
+        
+        json_all_systems = []
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
@@ -1970,14 +1979,19 @@ def search_systems(hits, systems, cfg):
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
-            report.json_output(json_dir, rep_db)
+            
+            json_all_systems += report.json_output(json_dir, rep_db)
             print "******************************************"
 
             header_print = False
 
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
-
+        
+        json_path = json_dir + report.json_ext
+        with open(json_path, 'w') as _file:
+            json.dump(json_all_systems, _file, indent = report._indent)
+        
         print "\n--- Replicons with no hits: ---"
         with open(tabfilename, 'a') as _f:
             for replicon in rep_db.replicon_names():
