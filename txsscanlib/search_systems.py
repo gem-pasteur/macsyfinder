@@ -1182,6 +1182,13 @@ class systemDetectionReportOrdered(systemDetectionReport):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
 
+  
+    def json_output(self, json_path, json_data):
+        """
+        """
+        with open(json_path, 'w') as _file:
+            json.dump(json_data, _file, indent = self._indent)
+
 
     def _match2json(self, valid_hit):
         gene = {}
@@ -1207,7 +1214,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         return gene
 
 
-    def json_output(self, path, rep_db):
+    def system_2_json(self, rep_db):
         """
         Generates the report in json format
 
@@ -1216,14 +1223,12 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
-        #json_path = path + self.json_ext
-        #with open(json_path, 'a') as _file:
         systems = []
         for so in self._systems_occurences_list:
             system = {}
-            _, systemName, occurencesNumber = so.unique_name.split('_')
+            _, systemName, occurenceNumber = so.unique_name.split('_')
             system['systemName'] = systemName
-            system['occurencesNumber'] = occurencesNumber
+            system['occurenceNumber'] = occurenceNumber
             system['replicon'] = {}
             system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
             rep_info = rep_db[system['replicon']['name']] 
@@ -1245,7 +1250,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         pos_max = rep_info.max - positions[-1] + 5
                     else:
                         pos_max =  rep_info.max
-                
+
                 if pos_min < pos_max: 
                     pos_in_bk_2_display = range( pos_min, pos_max + 1 )
                 else:
@@ -1253,7 +1258,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     after_orig = range(rep_info.min , pos_max + 1)
                     pos_in_bk_2_display = before_orig + after_orig
                 pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
-                
+
                 for curr_position in pos_in_rep_2_display:
                     gene_name, gene_lenght = rep_info.genes[curr_position]
                     if self.cfg.db_type == 'gembase':
@@ -1272,7 +1277,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
             system['summary']['forbidden'] = so.forbidden_genes
             system['summary']['state'] = so._state
             systems.append(system)
-            #json.dump(systems, _file, indent = self._indent)
         return systems
 
 
@@ -1666,10 +1670,10 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
     for system in systems:
         #print systems_occurences[system]
-        
+
         # So new: Add support for the multi_loci parameter:
         if system.multi_loci:
-        
+
             so = systems_occurences_scattered[system.name]
             msg = so.decision_rule()
             so_state = so.state
@@ -1714,7 +1718,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     # New: storage of multi_system genes:
     multi_system_genes_system_wise={}
-    
+
     # Before the case where there is a single hit was not treated...
     """
     if len(hits)==1 and prev.gene.loner:
@@ -1730,7 +1734,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             positions.append(prev.position)
     """
-    
+
     tmp = ""
     for cur in hits[1:]:
 
@@ -1902,7 +1906,6 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
     return best_hits
 
 
- 
 def search_systems(hits, systems, cfg):
     """
     Runs search of systems from a set of hits. Criteria for system assessment will depend on the kind of input dataset provided: 
@@ -1917,13 +1920,13 @@ def search_systems(hits, systems, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config`
     """
-    
+
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
     json_dir = os.path.join(cfg.working_dir, 'json')
     os.mkdir(json_dir)
-    
+
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     # Update to fit only to the states looked for:
     #system_occurences_states = ['single_locus', 'multi_loci']
@@ -1935,8 +1938,8 @@ def search_systems(hits, systems, cfg):
         system_names.append(syst_name)
         if s.multi_loci:
             multi_loci = True
-            
-    if multi_loci:        
+
+    if multi_loci:
         system_occurences_states.append('multi_loci')
 
     # Specify to build_clusters the rep_info (min, max positions,[gene_name,...), and replicon_type... 
@@ -1948,9 +1951,7 @@ def search_systems(hits, systems, cfg):
     if cfg.db_type == 'gembase':
         # Construction of the replicon database storing info on replicons: 
         rep_db = RepliconDB(cfg)
-
         replicons_w_hits=[]
-        
         json_all_systems = []
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
@@ -1979,19 +1980,16 @@ def search_systems(hits, systems, cfg):
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
-            
-            json_all_systems += report.json_output(json_dir, rep_db)
+
+            json_all_systems += report.system_2_json(rep_db)
             print "******************************************"
-
             header_print = False
-
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
-        
+
         json_path = json_dir + report.json_ext
-        with open(json_path, 'w') as _file:
-            json.dump(json_all_systems, _file, indent = report._indent)
-        
+        report.json_output(json_path, json_all_systems)
+
         print "\n--- Replicons with no hits: ---"
         with open(tabfilename, 'a') as _f:
             for replicon in rep_db.replicon_names():
@@ -2000,8 +1998,6 @@ def search_systems(hits, systems, cfg):
                     texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
                     #print texte.strip()
                     _f.write(texte)
-
-
 
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
@@ -2023,7 +2019,10 @@ def search_systems(hits, systems, cfg):
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
-        report.json_output(json_dir, rep_db)
+
+        json_all_systems = report.system_2_json(rep_db)
+        json_path = json_dir + report.json_ext
+        report.json_output(json_path, json_all_systems)
         print "******************************************"
 
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
@@ -2039,16 +2038,16 @@ def search_systems(hits, systems, cfg):
             # we have to get the corresponding list of hits at this point, 
             # even if this is not their original system... 
             # Need to compute the list of forbidden genes from hits for each system... 
-            if k in systems:            
+            if k in systems:
                 # SO new: get the list of forbidden genes... Then have from hits 
-                # Should better rewrite this part of the code to have a single process of the hits...     
-                forbidden_genes = k.forbidden_genes       
+                # Should better rewrite this part of the code to have a single process of the hits...
+                forbidden_genes = k.forbidden_genes
                 forbidden_hits = []
                 for h in hits:
                     if h.gene.is_forbidden(k):
                         forbidden_hits.append(h)
                 sub_hits = list(g) + forbidden_hits
-                
+
                 so = SystemOccurence(k)
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
                 #so.fill_with_hits(sub_hits)
@@ -2069,7 +2068,6 @@ def search_systems(hits, systems, cfg):
 
     else:
         raise ValueError("Invalid database type. ")
-
 
 
 
