@@ -985,15 +985,8 @@ class systemDetectionReport(object):
             self._indent = 2 #human readable json for debugging purpose
         else:
             self._indent = None #improve performance of txssview
+        self.json_file_name = 'results.macsyfinder.json'
 
-
-    @abc.abstractproperty
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        has to be defined in inheriting classes
-        """
-        pass
 
     @abc.abstractmethod
     def report_output(self, reportfilename, print_header = False):
@@ -1059,14 +1052,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
         self.replicon_name = replicon_name
 
-
-    @property
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        Extension for ordered datasets (i.e. gembase and ordered_replicon)
-        """
-        return '.mfor.json'
 
 
     def counter_output(self):
@@ -1227,7 +1212,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         for so in self._systems_occurences_list:
             system = {}
             _, systemName, occurenceNumber = so.unique_name.split('_')
-            system['systemName'] = systemName
+            system['name'] = systemName
             system['occurenceNumber'] = occurenceNumber
             system['replicon'] = {}
             system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
@@ -1298,15 +1283,6 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
 
 
-    @property
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        Extension for ordered datasets (i.e. gembase and ordered_replicon)
-        """
-        return '.mfun.json'
-
-
     def report_output(self, reportfilename, print_header = False):
         """
         Writes a report of sequences forming the detected systems, with information in their status in the system, 
@@ -1362,7 +1338,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
 
 
-    def json_output(self, path):
+    def json_output(self, json_path):
         """
         Generates the report in json format
 
@@ -1388,8 +1364,19 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 return 1
             elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_forbidden(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
-            
-        json_path = path + self.json_ext
+            else:
+                print "@@ BRANCHE MORTE"
+                print "@@ ", vh_1.gene.is_mandatory(so.system)
+                print "@@ ", vh_1.gene.is_allowed(so.system)
+                print "@@ ", vh_1.gene.is_forbidden(so.system)
+                print "@@ ", vh_2.gene.is_mandatory(so.system)
+                print "@@ ", vh_2.gene.is_allowed(so.system)
+                print "@@ ", vh_2.gene.is_forbidden(so.system)
+                print "@@ ", so.system.name
+                print "@@ ", vh_1.gene.name
+                print "@@ ", vh_2.gene.name
+
+
         with open(json_path, 'w') as _file:
             systems = []
             for so in self._systems_occurences_list:
@@ -1400,6 +1387,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
+                print "@@ lambda x,y:cmp_so(so, x, y ) = ", lambda x,y:cmp_so(so, x, y )
                 so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
                     gene = {}
@@ -1924,8 +1912,7 @@ def search_systems(hits, systems, cfg):
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-    json_dir = os.path.join(cfg.working_dir, 'json')
-    os.mkdir(json_dir)
+    
 
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     # Update to fit only to the states looked for:
@@ -1987,7 +1974,7 @@ def search_systems(hits, systems, cfg):
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
 
-        json_path = json_dir + report.json_ext
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
         report.json_output(json_path, json_all_systems)
 
         print "\n--- Replicons with no hits: ---"
@@ -2021,7 +2008,7 @@ def search_systems(hits, systems, cfg):
         report.summary_output(summaryfilename, rep_info, header_print)
 
         json_all_systems = report.system_2_json(rep_db)
-        json_path = json_dir + report.json_ext
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
         report.json_output(json_path, json_all_systems)
         print "******************************************"
 
@@ -2063,7 +2050,8 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReportUnordered(systems_occurences_list, cfg)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
-        report.json_output(json_dir)
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        report.json_output(json_path)
         print "******************************************"
 
     else:
