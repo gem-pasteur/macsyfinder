@@ -60,32 +60,99 @@ class ClustersHandler(object):
 
         return to_print
 
-    def circularize(self, rep_info):
+    #def circularize(self, rep_info):
+    def circularize(self, rep_info, end_hits, systems_to_detect):
         """
         This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
         It has to be called only if the replicon_topology is set to \"circular\".
 
         :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
         :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param end_hits: a set of hits at ends of the replicon that were not introduced in clusters, and that might be part of a system overlapping the two "ends" of the replicon
+        :type end_hits: a list of :class:`txsscanlib.report.Hit`
+        :param systems_to_detect: the set of systems to detect in this run
+        :type systems_to_detect: a list of :class:`txsscanlib.system.System
         """
-        # We assume this function is called when appropriate (i.e. for circular replicons)
-        if len(self.clusters) > 1:
+        # We assume this function is called when appropriate (i.e. for circular replicons)            
+        
+        pos_min = rep_info.min
+        pos_max = rep_info.max
+        
+        check_clust = True  
+        
+        if len(self.clusters) >= 1:
+            
+            # Here they might be the same !
             clust_first = self.clusters[0]
             clust_last = self.clusters[len(self.clusters)-1]
-
-            pos_min = rep_info.min
-            pos_max = rep_info.max
+            
+            #check_clust = True
+            # Case 1: none of the two end hits is part of a cluster => they might form a new cluster together. 
+            if len(end_hits) == 2:
+                first = end_hits[0]
+                second = end_hits[1]
+                #if(first.gene.position > second.gene.position): # Genes do not have positions ! But Hits do!
+                if(first.position > second.position):
+                    tmp = first
+                    first = second
+                    second = first
+                dist = second.position - pos_min + pos_max - first.position 
+                if(dist <= max(first.gene.inter_gene_max_space, second.gene.inter_gene_max_space)):
+                    # If true, this means that there is no need to circularize other clusters as this cluster already overlaps the "Ori". => check_clust is thus set to False
+                    new_clust = Cluster(systems_to_detect)
+                    new_clust.add(second)
+                    new_clust.add(first)
+                    new_clust.save()
+                    self.clusters.append(new_clust)
+                    check_clust = False
+                    
+            if check_clust:
+                for h in end_hits:
+                    # Two cases: we are at one end, or the other
+                    if h.position > clust_first.hits[0].position:
+                        # Case 2: The end hit is at the terminal end of the replicon. Try to cluster it with the 1st stored cluster.
+                        print "The end hit is at the TERMINAL end of the replicon. Test if it must be clustered with the 1st stored cluster."
+                        dist_end_hit = clust_first.begin - pos_min + pos_max - h.position # OK?
+                        if(dist_end_hit <= max(clust_first.hits[0].gene.inter_gene_max_space, h.gene.inter_gene_max_space)):
+                            check_clust = False
+                            print "Cluster them !"
+                            
+                            new_clust = Cluster(systems_to_detect)
+                            new_clust.add(h)
+                            for hit_clust in clust_first.hits:
+                                new_clust.add(hit_clust)
+                            
+                            new_clust.save()
+                            self.clusters.pop(0)
+                            self.clusters.append(new_clust)                                                        
+                    else:
+                        # Case 3: The end hit is at the initial end of the replicon. Try to cluster it with the last stored cluster.
+                        print "The end hit is at the INITIAL end of the replicon. Test if it must be clustered with the last stored cluster."
+                        dist_end_hit = h.position - pos_min + pos_max - clust_last.end 
+                        if(dist_end_hit <= max(clust_last.hits[len(clust_last.hits)-1].gene.inter_gene_max_space, h.gene.inter_gene_max_space)):
+                            check_clust = False
+                            print "Cluster them !"
+                            clust_last.add(h)
+                            clust_last.save(True) # Force to re-save the updated cluster
+                
+        if check_clust and (len(self.clusters) > 1):
+            clust_first = self.clusters[0]
+            clust_last = self.clusters[len(self.clusters)-1]
+            
+            # Case 4: when putative end hits have been dealt with, now remain cases where clusters are at both ends, and might be fused.                     
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
-
+               
             #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
             #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
             if (dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits)-1].gene.inter_gene_max_space)):
                 # Need to circularize !
                 print "A cluster needs to be \"circularized\" ! "
                 msg = "A cluster needs to be \"circularized\" ! "
-                self.clusters.pop(0)
+                # The "1st" cluster on the replicon is removed, as its hits will be appended to the "last" cluster on the replicon.
+                #self.clusters.pop(0) 
                 for h in clust_first.hits:
                     clust_last.add(h)
+                self.clusters.pop(0) 
                 clust_last.save(True) # Force to re-save the updated cluster
                 print clust_last
                 msg += str(clust_last)
@@ -1743,7 +1810,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         tmp += "Cur : %s"%cur
         tmp += "Prev : %s"%prev
         tmp += "Len cluster: %d\n"%len(cur_cluster)
-        print tmp
+        #print tmp
 
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
@@ -1753,7 +1820,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         #if(inter_gene <= smaller_dist ):
             #print "zero"
             if positions.count(prev.position) == 0:
-                print "un - ADD prev in cur_cluster"
+                #print "un - ADD prev in cur_cluster"
                 cur_cluster.add(prev)
                 positions.append(prev.position)
                 # New : Storage of multi_system genes:
@@ -1763,7 +1830,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     multi_system_genes_system_wise[prev.system.name].append(prev)
 
             if positions.count(cur.position) == 0:
-                print "deux - ADD cur in cur_cluster"
+                #print "deux - ADD cur in cur_cluster"
                 cur_cluster.add(cur)
                 positions.append(cur.position)
                 # New : Storage of multi_system genes:
@@ -1773,14 +1840,14 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     multi_system_genes_system_wise[cur.system.name].append(cur)
 
             if prev.gene.loner:
-                print "trois - loner_state"
+                #print "trois - loner_state"
                 #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
                 loner_state = True
         else:
             # Storage of the previous cluster
             if len(cur_cluster) > 1:
                 #print cur_cluster
-                print "quatre - ADD cur_cluster"
+                #print "quatre - ADD cur_cluster"
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
 
@@ -1790,7 +1857,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print cur_cluster
-                print "cinq - ADD cur_cluster"
+                #print "cinq - ADD cur_cluster"
                 #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
 
@@ -1798,11 +1865,11 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = False
 
             if prev.gene.loner:
-                print "six - check"
-                print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                #print "six - check"
+                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
-                    print "six - ADD prev in cur_cluster, ADD cur_cluster"
+                    #print "six - ADD prev in cur_cluster, ADD cur_cluster"
                     cur_cluster.add(prev)
                     clusters.add(cur_cluster)
                     #print(cur_cluster)
@@ -1820,16 +1887,16 @@ def build_clusters(hits, systems_to_detect, rep_info):
             cur_cluster = Cluster(systems_to_detect)
 
         prev = cur
-        print "Now prev is %s"%(prev.gene.name)
+        #print "Now prev is %s"%(prev.gene.name)
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
-        print "Recap clusters"
+        #print "Recap clusters"
         clusters.add(cur_cluster)
 
     # Deal both with the case of single loner hits, and of last hits that are loners... YES!
     #print len(cur_cluster)
     if len(cur_cluster) == 0 and prev.gene.loner:
-        print "FIFO or LIFO?"
+        #print "FIFO or LIFO?"
         cur_cluster.add(prev)
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
@@ -1839,7 +1906,20 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 multi_system_genes_system_wise[prev.system.name].append(prev)
 
     if rep_info.topology == "circular":
-        clusters.circularize(rep_info)
+        # Need to take into account the possibility of a single gene at both extremity, that should be considered as part of a cluster (and was not with previous steps)! 
+        first = hits[0]
+        last = hits[-1]
+        hitstoconsider=[]
+        print "\n*** Check if single hits at ends are to consider for circularization ***\n"
+        if positions.count(first.position) == 0:
+            hitstoconsider.append(first)
+        if positions.count(last.position) == 0:
+            hitstoconsider.append(last)
+            
+        for h in hitstoconsider:
+            print h
+        #clusters.circularize(rep_info)
+        clusters.circularize(rep_info, hitstoconsider, systems_to_detect)
 
     return (clusters, multi_system_genes_system_wise)
 
