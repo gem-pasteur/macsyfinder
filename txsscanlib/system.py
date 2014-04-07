@@ -253,9 +253,10 @@ class System(object):
                     return g
                 else:
                     homolgs = g.get_homologs()
-                    for h in homolgs:
-                        if h.name == gene_name:
-                            return h
+                    analogs = g.get_analogs()
+                    for ex in homolgs + analogs:
+                        if ex.name == gene_name:
+                            return ex
         raise KeyError("System {0} does not contain gene {1}".format(self.name, gene_name))
 
 
