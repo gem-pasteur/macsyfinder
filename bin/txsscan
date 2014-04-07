@@ -291,14 +291,10 @@ for system in systems_to_detect:
     ex_genes=[]
     for g in genes:
         if g.exchangeable:
-            homologs=g.get_homologs()
-            for h in homologs:
-                ex_genes.append(h.gene)
-            analogs=g.get_analogs()
-            for a in analogs:
-                ex_genes.append(a.gene)
+            genes += g.get_homologs()
+            genes += g.get_analogs()
     all_genes += genes
-    all_genes += ex_genes
+
 #############################################
 # this part of code is executed in parallel
 #############################################

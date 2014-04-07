@@ -15,6 +15,7 @@ import shutil
 from txsscanlib.config import Config
 from txsscanlib.system import System
 from txsscanlib.gene import Gene
+from txsscanlib.gene import Homolog
 from txsscanlib.registries import ProfilesRegistry
 
 
@@ -131,12 +132,41 @@ class Test(unittest.TestCase):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
         system.add_allowed_gene( gene )
-        self.assertEqual( system.allowed_genes, [gene])
+        self.assertEqual(system.allowed_genes, [gene])
 
     def test_forbidden_genes(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
         system.add_forbidden_gene( gene )
-        self.assertEqual( system.forbidden_genes, [gene])
+        self.assertEqual(system.forbidden_genes, [gene])
 
+    def test_get_gene(self):
+        system = System(self.cfg, "foo", 10)
+        gene_name = 'sctJ_FLG'
+        gene = Gene(self.cfg, gene_name, system, self.profile_registry)
+        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+            system._mandatory_genes = []
+            system._allowed_genes = []
+            system._forbidden_genes = []
+            meth(gene)
+            self.assertEqual(gene, system.get_gene(gene_name))
+        self.assertRaises(KeyError, system.get_gene, 'bar')
 
+    def test_get_gene_ref(self):
+        system = System(self.cfg, "foo", 10)
+        gene_name = 'sctJ_FLG'
+        gene_ref = Gene(self.cfg, gene_name, system, self.profile_registry)
+        homolog_name = 'sctJ'
+        gene_homolg = Gene(self.cfg, homolog_name, system, self.profile_registry)
+        homolog = Homolog(gene_homolg, gene_ref)
+
+        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+            system._mandatory_genes = []
+            system._allowed_genes = []
+            system._forbidden_genes = []
+            meth(gene_ref)
+            self.assertEqual(gene_ref, system.get_gene_ref(homolog))
+        self.assertIsNone(gene_ref)
+        gene_ukn = Gene(self.cfg, 'abc', system, self.profile_registry)
+        self.assertRaises(KeyError, system.get_gene_ref, gene_ukn)
+        

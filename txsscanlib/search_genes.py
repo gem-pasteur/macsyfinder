@@ -81,9 +81,9 @@ def search_genes(genes, cfg):
         :rtype: list of `txsscanlib.report.HMMReport` object
         """
         with sema:
-            hmm_old_path = os.path.join(cfg.previous_run, gene.name + cfg.res_search_suffix)
+            hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
             _log.info("recover hmm %s" % hmm_old_path)
-            hmm_new_path = os.path.join(cfg.working_dir, gene.name + cfg.res_search_suffix)
+            hmm_new_path = os.path.join(cfg.working_dir, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
             shutil.copy(hmm_old_path, hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
             if cfg.db_type == 'gembase':
@@ -105,7 +105,7 @@ def search_genes(genes, cfg):
     _log.debug("start searching genes")
     previous_run = cfg.previous_run
     for gene in genes:
-        if previous_run and os.path.exists(os.path.join(previous_run, gene.name + cfg.res_search_suffix)):
+        if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)):
             t = threading.Thread(target = recover, args = (gene, all_reports, cfg, sema))
         else:
             t = threading.Thread(target = search, args = (gene, all_reports, sema))

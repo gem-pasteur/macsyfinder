@@ -480,7 +480,7 @@ class Config(object):
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
-            try:     
+            try:
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars = cmde_line_opt)
             except NoSectionError:
                 if 'def_dir' in cmde_line_opt:
@@ -524,7 +524,7 @@ class Config(object):
                     options['profile_suffix'] = self._defaults['profile_suffix']
             try:
                 worker_nb = self.parser.get('general', 'worker_nb', vars = cmde_line_opt)
-                
+
             except NoSectionError:
                 if 'worker_nb' in cmde_line_opt:
                     worker_nb = cmde_line_opt['worker_nb']
@@ -566,13 +566,13 @@ class Config(object):
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
-                                                    
-        for section , directives in cfg_opts:
+
+        for section, directives in cfg_opts:
             if not parser.has_section(section):
                 parser.add_section(section)
             for directive in directives:
                 try:
-                    if self.options[directive]:
+                    if self.options[directive] is not None:
                         if directive in ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes'):
                             s = ''
                             for system, space in self.options[directive].items():
@@ -600,7 +600,7 @@ class Config(object):
         :rtype: string
         """
         return self.options['db_type']
-    
+
     @property
     def build_indexes(self):
         """
@@ -672,7 +672,7 @@ class Config(object):
             return self.options['max_nb_genes'][system] 
         except KeyError:
             return None
-        
+
     def multi_loci(self, system):
         """
         :param system: the name of a system 
@@ -684,7 +684,7 @@ class Config(object):
             return system in self.options['multi_loci'] 
         except KeyError:
             return False
-           
+
 
     @property
     def hmmer_exe(self):

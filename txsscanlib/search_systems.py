@@ -60,7 +60,6 @@ class ClustersHandler(object):
 
         return to_print
 
-    #def circularize(self, rep_info):
     def circularize(self, rep_info, end_hits, systems_to_detect):
         """
         This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
@@ -150,9 +149,7 @@ class ClustersHandler(object):
             
             # Case 4: when putative end hits have been dealt with, now remain cases where clusters are at both ends, and might be fused.                     
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
-               
-            #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_first.hits)-1].get_syst_inter_gene_max_space())):
-            #if (dist_clust <= max(clust_first.hits[0].get_syst_inter_gene_max_space(), clust_last.hits[len(clust_last.hits)-1].get_syst_inter_gene_max_space())):
+    
             if (dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits)-1].gene.inter_gene_max_space)):
                 # Need to circularize !
                 #print "A cluster needs to be \"circularized\" ! "
@@ -1066,15 +1063,8 @@ class systemDetectionReport(object):
             self._indent = 2 #human readable json for debugging purpose
         else:
             self._indent = None #improve performance of txssview
+        self.json_file_name = 'results.macsyfinder.json'
 
-
-    @abc.abstractproperty
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        has to be defined in inheriting classes
-        """
-        pass
 
     @abc.abstractmethod
     def report_output(self, reportfilename, print_header = False):
@@ -1140,14 +1130,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
         self.replicon_name = replicon_name
 
-
-    @property
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        Extension for ordered datasets (i.e. gembase and ordered_replicon)
-        """
-        return '.mfor.json'
 
 
     def counter_output(self):
@@ -1263,6 +1245,13 @@ class systemDetectionReportOrdered(systemDetectionReport):
         with open(reportfilename, 'a') as _file:
             _file.write(report_str)
 
+  
+    def json_output(self, json_path, json_data):
+        """
+        """
+        with open(json_path, 'w') as _file:
+            json.dump(json_data, _file, indent = self._indent)
+
 
     def _match2json(self, valid_hit):
         gene = {}
@@ -1288,7 +1277,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         return gene
 
 
-    def json_output(self, path, rep_db):
+    def system_2_json(self, rep_db):
         """
         Generates the report in json format
 
@@ -1297,6 +1286,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param rep_db: the replicon database
         :type rep_db: a class:`txsscanlib.database.RepliconDB` object
         """
+        systems = []
         for so in self._systems_occurences_list:
             json_path = os.path.join(path, so.unique_name + self.json_ext)
             with open(json_path, 'w') as _file:
@@ -1327,30 +1317,41 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     if pos_min < pos_max: 
                         pos_in_bk_2_display = range( pos_min, pos_max + 1 )
                     else:
-                        before_orig = range( pos_min, rep_info.max +1)
-                        after_orig = range(rep_info.min , pos_max + 1)
-                        pos_in_bk_2_display = before_orig + after_orig
-                    pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
-                    
-                    for curr_position in pos_in_rep_2_display:
-                        gene_name, gene_lenght = rep_info.genes[curr_position]
-                        if self.cfg.db_type == 'gembase':
-                            # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
-                            gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
-                        else:
-                            gene_id = gene_name
-                        if gene_id in valid_hits:
-                            gene = self._match2json(valid_hits[gene_id])
-                        else:
-                            gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
-                        system['genes'].append(gene)
-                system['summary'] = {}
-                system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['allowed'] = so.allowed_genes
-                system['summary']['forbiden'] = so.forbidden_genes
-                system['summary']['state'] = so._state
-                json.dump(system, _file, indent = self._indent)
+                        pos_min = rep_info.min
+                pos_max = positions[-1] + 5
+                if pos_max > rep_info.max:
+                    if rep_info.topology == 'circular':
+                        pos_max = rep_info.max - positions[-1] + 5
+                    else:
+                        pos_max =  rep_info.max
 
+                if pos_min < pos_max: 
+                    pos_in_bk_2_display = range( pos_min, pos_max + 1 )
+                else:
+                    before_orig = range( pos_min, rep_info.max +1)
+                    after_orig = range(rep_info.min , pos_max + 1)
+                    pos_in_bk_2_display = before_orig + after_orig
+                pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
+
+                for curr_position in pos_in_rep_2_display:
+                    gene_name, gene_lenght = rep_info.genes[curr_position]
+                    if self.cfg.db_type == 'gembase':
+                        # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
+                        gene_id = "{}_{}".format(system['replicon']['name'], gene_name) 
+                    else:
+                        gene_id = gene_name
+                    if gene_id in valid_hits:
+                        gene = self._match2json(valid_hits[gene_id])
+                    else:
+                        gene = self._gene2json(gene_id, int(gene_lenght), curr_position  + rep_info.min)
+                    system['genes'].append(gene)
+            system['summary'] = {}
+            system['summary']['mandatory'] = so.mandatory_genes
+            system['summary']['allowed'] = so.allowed_genes
+            system['summary']['forbidden'] = so.forbidden_genes
+            system['summary']['state'] = so._state
+            systems.append(system)
+        return systems
 
 
 class systemDetectionReportUnordered(systemDetectionReport):
@@ -1369,15 +1370,6 @@ class systemDetectionReportUnordered(systemDetectionReport):
         """
         super(systemDetectionReportUnordered, self).__init__(systems_occurences_list, cfg)
 
-
-
-    @property
-    def json_ext(self):
-        """
-        txssview needs to be able to know the type of dataset from extensions. 
-        Extension for ordered datasets (i.e. gembase and ordered_replicon)
-        """
-        return '.mfun.json'
 
 
     def report_output(self, reportfilename, print_header = False):
@@ -1435,7 +1427,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
 
 
-    def json_output(self, path):
+    def json_output(self, json_path):
         """
         Generates the report in json format
 
@@ -1443,33 +1435,76 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :type path: string
         """
         def cmp_so(so, vh_1, vh_2):
-            if vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_mandatory(so.system):
-                return cmp(vh_1.gene.name, vh_2.gene.name)
-            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_allowed(so.system):
-                return -1
-            elif vh_1.gene.is_mandatory(so.system) and vh_2.gene.is_forbidden(so.system):
-                return -1
-            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_mandatory(so.system):
-                return 1
-            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_allowed(so.system):
-                return cmp(vh_1.gene.name, vh_2.gene.name)
-            elif vh_1.gene.is_allowed(so.system) and vh_2.gene.is_forbidden(so.system):
-                return -1
-            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_mandatory(so.system):
-                return 1
-            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_allowed(so.system):
-                return 1
-            elif vh_1.gene.is_forbidden(so.system) and vh_2.gene.is_forbidden(so.system):
-                return cmp(vh_1.gene.name, vh_2.gene.name)
+            print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+            print "@@ vh_1 = ", vh_1.__class__
+            print "@@ vh_1.gene = ", vh_1.gene, " ", vh_1.gene.__class__
+            print "@@ vh_1._hit.gene = ", vh_1._hit.gene, " ", vh_1._hit.gene.__class__
+            print "@@ dir( vh_1.gene ) = ", dir( vh_1.gene )
+            print "@@ dir( vh_1._hit.gene ) = ", dir( vh_1._hit.gene )
+            if hasattr(vh_1.gene, "gene_ref"):
+                gene_1 = vh_1.gene.gene_ref
+            else:
+                gene_1 = vh_1.gene
+            print "@@ gene_1 = ", gene_1.name
 
-        for so in self._systems_occurences_list:
-            if not so.unique_name:
-                so.unique_name = so.get_system_name_unordered()
-            json_path = os.path.join(path, so.unique_name + self.json_ext)
-            with open(json_path, 'w') as _file:
+            print "@@ vh_2 = ", vh_2.__class__
+            print "@@ vh_2.gene = ", vh_2.gene, " ", vh_2.gene.__class__
+            print "@@ vh_2._hit.gene = ", vh_2._hit.gene, " ", vh_2._hit.gene.__class__
+            print "@@ dir( vh_2.gene ) = ", dir( vh_2.gene )
+            print "@@ dir( vh_2._hit.gene ) = ", dir( vh_2._hit.gene )
+            if hasattr(vh_2.gene, "gene_ref"):
+                gene_2 = vh_2.gene.gene_ref
+            else:
+                gene_2 = vh_2.gene
+            print "@@ gene_2 = ", gene_2.name
+            print "@@ so.system.mandatory_genes = ", so.system.mandatory_genes
+            print "@@ so.system.allowed_genes = ", so.system.allowed_genes
+            print "@@ so.system.forbidden_genes = ", so.system.forbidden_genes
+
+            if gene_1.is_mandatory(so.system) and gene_2.is_mandatory(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif gene_1.is_mandatory(so.system) and gene_2.is_allowed(so.system):
+                return -1
+            elif gene_1.is_mandatory(so.system) and gene_2.is_forbidden(so.system):
+                return -1
+
+            elif gene_1.is_allowed(so.system) and gene_2.is_mandatory(so.system):
+                return 1
+            elif gene_1.is_allowed(so.system) and gene_2.is_allowed(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            elif gene_1.is_allowed(so.system) and gene_2.is_forbidden(so.system):
+                return -1
+
+            elif gene_1.is_forbidden(so.system) and gene_2.is_mandatory(so.system):
+                return 1
+            elif gene_1.is_forbidden(so.system) and gene_2.is_allowed(so.system):
+                return 1
+            elif gene_1.is_forbidden(so.system) and gene_2.is_forbidden(so.system):
+                return cmp(vh_1.gene.name, vh_2.gene.name)
+            else:
+                print "@@ BRANCHE MORTE"
+                print "@@ ",gene_1," is_mandatory ", gene_1.is_mandatory(so.system)
+                print "@@ ",gene_1," is_allowed ", gene_1.is_allowed(so.system)
+                print "@@ ",gene_1," is_forbidden ", gene_1.is_forbidden(so.system)
+                print "@@ ",gene_2," is_mandatory ", gene_2.is_mandatory(so.system)
+                print "@@ ",gene_2," is_allowed ", gene_2.is_allowed(so.system)
+                print "@@ ",gene_2," is_forbidden ", gene_2.is_forbidden(so.system)
+                print "@@ ", so.system.name
+                print "@@ ", vh_1.gene.name
+                print "@@ ", vh_2.gene.name
+
+
+        with open(json_path, 'w') as _file:
+            systems = []
+            for so in self._systems_occurences_list:
+                if not so.unique_name:
+                    so.unique_name = so.get_system_name_unordered()
                 system = {}
                 system['name'] = so.unique_name
+                system['replicon'] = {}
+                system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
+                print "@@ lambda x,y:cmp_so(so, x, y ) = ", lambda x,y:cmp_so(so, x, y )
                 so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
                     gene = {}
@@ -1489,9 +1524,10 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['allowed'] = so.allowed_genes
-                system['summary']['forbiden'] = so.forbidden_genes
+                system['summary']['forbidden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
-                json.dump(system, _file, indent = self._indent)
+                systems.append(system)
+            json.dump(systems, _file, indent = self._indent)
 
 
 def get_compatible_systems(systems_list1, systems_list2):
@@ -1739,10 +1775,10 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
     for system in systems:
         #print systems_occurences[system]
-        
+
         # So new: Add support for the multi_loci parameter:
         if system.multi_loci:
-        
+
             so = systems_occurences_scattered[system.name]
             msg = so.decision_rule()
             so_state = so.state
@@ -1787,7 +1823,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     # New: storage of multi_system genes:
     multi_system_genes_system_wise={}
-    
+
     # Before the case where there is a single hit was not treated...
     """
     if len(hits)==1 and prev.gene.loner:
@@ -1803,7 +1839,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             positions.append(prev.position)
     """
-    
+
     tmp = ""
     for cur in hits[1:]:
 
@@ -1992,7 +2028,6 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
     return best_hits
 
 
- 
 def search_systems(hits, systems, cfg):
     """
     Runs search of systems from a set of hits. Criteria for system assessment will depend on the kind of input dataset provided: 
@@ -2007,13 +2042,12 @@ def search_systems(hits, systems, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`txsscanlib.config.Config`
     """
-    
+
     tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
     reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
     summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
-    json_dir = os.path.join(cfg.working_dir, 'json')
-    os.mkdir(json_dir)
     
+
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
     # Update to fit only to the states looked for:
     #system_occurences_states = ['single_locus', 'multi_loci']
@@ -2025,8 +2059,8 @@ def search_systems(hits, systems, cfg):
         system_names.append(syst_name)
         if s.multi_loci:
             multi_loci = True
-            
-    if multi_loci:        
+
+    if multi_loci:
         system_occurences_states.append('multi_loci')
 
     # Specify to build_clusters the rep_info (min, max positions,[gene_name,...), and replicon_type... 
@@ -2038,9 +2072,8 @@ def search_systems(hits, systems, cfg):
     if cfg.db_type == 'gembase':
         # Construction of the replicon database storing info on replicons: 
         rep_db = RepliconDB(cfg)
-
         replicons_w_hits=[]
-
+        json_all_systems = []
         # Use of the groupby() function from itertools : allows to group Hits by replicon_name, 
         # and then apply the same build_clusters functions to replicons from "gembase" and "ordered_replicon" types of databases.
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
@@ -2068,13 +2101,15 @@ def search_systems(hits, systems, cfg):
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
             report.report_output(reportfilename, header_print)
             report.summary_output(summaryfilename, rep_info, header_print)
-            report.json_output(json_dir, rep_db)
+
+            json_all_systems += report.system_2_json(rep_db)
             print "******************************************"
-
             header_print = False
-
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
+
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        report.json_output(json_path, json_all_systems)
 
         print "\n--- Replicons with no hits: ---"
         with open(tabfilename, 'a') as _f:
@@ -2084,8 +2119,6 @@ def search_systems(hits, systems, cfg):
                     texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
                     #print texte.strip()
                     _f.write(texte)
-
-
 
     elif cfg.db_type == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
@@ -2107,7 +2140,10 @@ def search_systems(hits, systems, cfg):
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
-        report.json_output(json_dir, rep_db)
+
+        json_all_systems = report.system_2_json(rep_db)
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        report.json_output(json_path, json_all_systems)
         print "******************************************"
 
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
@@ -2123,16 +2159,16 @@ def search_systems(hits, systems, cfg):
             # we have to get the corresponding list of hits at this point, 
             # even if this is not their original system... 
             # Need to compute the list of forbidden genes from hits for each system... 
-            if k in systems:            
+            if k in systems:
                 # SO new: get the list of forbidden genes... Then have from hits 
-                # Should better rewrite this part of the code to have a single process of the hits...     
-                forbidden_genes = k.forbidden_genes       
+                # Should better rewrite this part of the code to have a single process of the hits...
+                forbidden_genes = k.forbidden_genes
                 forbidden_hits = []
                 for h in hits:
                     if h.gene.is_forbidden(k):
                         forbidden_hits.append(h)
                 sub_hits = list(g) + forbidden_hits
-                
+
                 so = SystemOccurence(k)
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
                 #so.fill_with_hits(sub_hits)
@@ -2148,12 +2184,12 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReportUnordered(systems_occurences_list, cfg)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
-        report.json_output(json_dir)
+        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        report.json_output(json_path)
         print "******************************************"
 
     else:
         raise ValueError("Invalid database type. ")
-
 
 
 
