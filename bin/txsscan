@@ -287,12 +287,14 @@ systems_to_detect = [system_bank[system_name] for system_name  in systems_name_t
 all_genes = []
 for system in systems_to_detect:
     genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
-    # Exchangeable homologs are also added cause they can "replace" an important gene...
+    # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
+    ex_genes=[]
     for g in genes:
         if g.exchangeable:
             genes += g.get_homologs()
+            genes += g.get_analogs()
     all_genes += genes
-    
+
 #############################################
 # this part of code is executed in parallel
 #############################################

@@ -10,6 +10,8 @@ TXSScan is implemented with an object-oriented architecture. The objects are des
      "System" -> "Gene" -> "Homolog";
      "Gene" -> "System";
      "Homolog" -> "Gene";
+     "Gene" -> "Analog";
+     "Analog" -> "Gene";
      "Gene" -> "Profile";
      "Gene" -> "HMMReport" -> "Hit";
      "Hit" -> "Gene";
@@ -65,7 +67,7 @@ The Gene object
 The :ref:`Gene object <gene>` represents genes encoding the protein components of a System. 
 Each Gene points out its System of origin (:class:`txsscanlib.system.System`). A Gene must have a correponding HMM protein profile. These profiles are represented by Profile objects (:class:`txsscanlib.gene.Profile`), and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file. See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`. 
 
-A Gene may have Homologs. An *"Homolog"* object encapsulates a Gene and has a reference to the Gene it is homolog to. See the :ref:`Homolog API <homolog-api>` for more details. 
+A Gene may have Homologs or Analogs. An *"Homolog"* (resp. *"Analog"*) object encapsulates a Gene and has a reference to the Gene it is homolog (resp. *"analog"*) to. See the :ref:`Homolog API <homolog-api>` and :ref:`Analog API <analog-api>` for more details. 
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in a *"gene_bank"*.

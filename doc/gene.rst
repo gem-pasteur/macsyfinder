@@ -62,5 +62,16 @@ Homolog API reference
    :members: Homolog
    :private-members:
    :special-members:
+
+
+.. _analog-API:   
+
+Analog API reference  
+====================
+
+.. automodule:: txsscanlib.gene
+   :members: Analog
+   :private-members:
+   :special-members:
    
-   
+ 
