@@ -498,8 +498,8 @@ class SystemOccurence(object):
             self.allowed_genes[g.name] = 0
             if g.exchangeable:
                 homologs = g.get_homologs()
-                analogs=g.get_analogs()
-                for ex in homologs+analogs:
+                analogs = g.get_analogs()
+                for ex in homologs + analogs:
                     self.exallowed_genes[ex.name] = g.name
             if g.multi_system:
                 self.multi_syst_genes[g.name] = 0
@@ -507,6 +507,11 @@ class SystemOccurence(object):
         self.forbidden_genes = {}
         for g in system.forbidden_genes:
             self.forbidden_genes[g.name] = 0
+
+
+    def get_gene_ref(self, gene):
+        return self.system.get_gene_ref(gene)
+
 
     def __str__(self):
         """
@@ -1313,7 +1318,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                             pos_max = rep_info.max - positions[-1] + 5
                         else:
                             pos_max =  rep_info.max
-                    
+
                     if pos_min < pos_max: 
                         pos_in_bk_2_display = range( pos_min, pos_max + 1 )
                     else:
@@ -1435,32 +1440,12 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :type path: string
         """
         def cmp_so(so, vh_1, vh_2):
-            print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-            print "@@ vh_1 = ", vh_1.__class__
-            print "@@ vh_1.gene = ", vh_1.gene, " ", vh_1.gene.__class__
-            print "@@ vh_1._hit.gene = ", vh_1._hit.gene, " ", vh_1._hit.gene.__class__
-            print "@@ dir( vh_1.gene ) = ", dir( vh_1.gene )
-            print "@@ dir( vh_1._hit.gene ) = ", dir( vh_1._hit.gene )
-            if hasattr(vh_1.gene, "gene_ref"):
-                gene_1 = vh_1.gene.gene_ref
-            else:
+            gene_1 = so.get_gene_ref(vh_1.gene)
+            if not gene_1:
                 gene_1 = vh_1.gene
-            print "@@ gene_1 = ", gene_1.name
-
-            print "@@ vh_2 = ", vh_2.__class__
-            print "@@ vh_2.gene = ", vh_2.gene, " ", vh_2.gene.__class__
-            print "@@ vh_2._hit.gene = ", vh_2._hit.gene, " ", vh_2._hit.gene.__class__
-            print "@@ dir( vh_2.gene ) = ", dir( vh_2.gene )
-            print "@@ dir( vh_2._hit.gene ) = ", dir( vh_2._hit.gene )
-            if hasattr(vh_2.gene, "gene_ref"):
-                gene_2 = vh_2.gene.gene_ref
-            else:
+            gene_2 = so.get_gene_ref(vh_2.gene)
+            if not gene_2:
                 gene_2 = vh_2.gene
-            print "@@ gene_2 = ", gene_2.name
-            print "@@ so.system.mandatory_genes = ", so.system.mandatory_genes
-            print "@@ so.system.allowed_genes = ", so.system.allowed_genes
-            print "@@ so.system.forbidden_genes = ", so.system.forbidden_genes
-
             if gene_1.is_mandatory(so.system) and gene_2.is_mandatory(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
             elif gene_1.is_mandatory(so.system) and gene_2.is_allowed(so.system):
@@ -1481,17 +1466,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 return 1
             elif gene_1.is_forbidden(so.system) and gene_2.is_forbidden(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
-            else:
-                print "@@ BRANCHE MORTE"
-                print "@@ ",gene_1," is_mandatory ", gene_1.is_mandatory(so.system)
-                print "@@ ",gene_1," is_allowed ", gene_1.is_allowed(so.system)
-                print "@@ ",gene_1," is_forbidden ", gene_1.is_forbidden(so.system)
-                print "@@ ",gene_2," is_mandatory ", gene_2.is_mandatory(so.system)
-                print "@@ ",gene_2," is_allowed ", gene_2.is_allowed(so.system)
-                print "@@ ",gene_2," is_forbidden ", gene_2.is_forbidden(so.system)
-                print "@@ ", so.system.name
-                print "@@ ", vh_1.gene.name
-                print "@@ ", vh_2.gene.name
+            assert False, "problem during hit comparison"
 
 
         with open(json_path, 'w') as _file:
@@ -1504,7 +1479,6 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
-                print "@@ lambda x,y:cmp_so(so, x, y ) = ", lambda x,y:cmp_so(so, x, y )
                 so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y ))
                 for valid_hit in so.valid_hits:
                     gene = {}
