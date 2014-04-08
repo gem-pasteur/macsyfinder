@@ -1,10 +1,10 @@
 .. _quickstart:
 
 
-TXSScan Quick Start 
-===================
+MacSyFinder Quick Start 
+=======================
 
-In order to run TXSScan on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
+In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
 
 * Type: 
   "``txsscan -h``"

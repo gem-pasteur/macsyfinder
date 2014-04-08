@@ -1,9 +1,9 @@
 .. _implementation:
 
-TXSScan implementation overview
-===============================
+MacSyFinder implementation overview
+===================================
 
-TXSScan is implemented with an object-oriented architecture. The objects are described in the current :ref:`API documentation <config>`. An overview of the main classes used to model the systems to be detected is provided below.
+MacSyFinder is implemented with an object-oriented architecture. The objects are described in the current :ref:`API documentation <config>`. An overview of the main classes used to model the systems to be detected is provided below.
   
 .. digraph:: system_overview
 

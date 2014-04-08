@@ -1,8 +1,8 @@
 .. _input:
 
-****************************
-Input and Options of TXSScan
-****************************
+********************************
+Input and Options of MacSyFinder
+********************************
 
 
 .. _input-dataset-label:
@@ -21,7 +21,7 @@ The :ref:`base section<config-base-label>` in the configuration file (:ref:`conf
         * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered (*e.g.* an assembled complete genome)
         * *gembase* : a set of multiple ordered replicons, which format follows the convention we adopted (see :ref:`gembase_convention`).
       
-For "ordered" ("ordered_replicon" or "gembase") datasets only, TXSScan can take into account the **shape of the genome**: "linear", or "circular". The default is set to "linear". 
+For "ordered" ("ordered_replicon" or "gembase") datasets only, MacSyFinder can take into account the **shape of the genome**: "linear", or "circular". The default is set to "linear". 
   
   This can be set with the `--replicon_topology` parameter from :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`), or in the configuration in the :ref:`base section<config-base-label>`.
   
@@ -149,7 +149,7 @@ Path options::
                         Path to the systems definition files.
                         
   -r RES_SEARCH_DIR, --research-search RES_SEARCH_DIR
-                        Path to the directory where to store TXSScan search
+                        Path to the directory where to store MacSyFinder search
                         results directories.
                         
   --research-search-suffix RES_SEARCH_SUFFIX
@@ -173,8 +173,8 @@ Path options::
 General options::
 
   -w WORKER_NB, --worker WORKER_NB
-                        Number of workers to be used by TXSScan. In the case
-                        the user wants to run TXSScan in a multi-thread mode. 
+                        Number of workers to be used by MacSyFinder. In the case
+                        the user wants to run MacSyFinder in a multi-thread mode. 
                         All workers can be used with the value '0'. (default = 1)
                         
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
@@ -184,11 +184,11 @@ General options::
   --log LOG_FILE        Path to the directory where to store the 'txsscan.log'
                         log file.
                         
-  --config CFG_FILE     Path to a putative TXSScan configuration file to be
+  --config CFG_FILE     Path to a putative MacSyFinder configuration file to be
                         used.
                         
   --previous-run PREVIOUS_RUN
-                        Path to a previous TXSScan run directory. It allows to
+                        Path to a previous MacSyFinder run directory. It allows to
                         skip the Hmmer search step on same dataset, as it uses
                         previous run results and thus parameters regarding
                         Hmmer detection. The configuration file from this
@@ -204,7 +204,7 @@ General options::
 Configuration file
 ==================
 
-Options to run TXSScan can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for TXSScan.
+Options to run MacSyFinder can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/txsscan/txsscan.conf
@@ -228,7 +228,7 @@ The configuration files must follow the Python "ini" file syntax.
 The Config object provides some default values and performs some validations of the values, for instance:
  
  
-In TXSScan, five sections are defined:
+In MacSyFinder, five sections are defined:
  
  .. _config-base-label:
  

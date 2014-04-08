@@ -1,8 +1,8 @@
 .. _txsscan_error:
 
-**************
-TXSScan errors
-**************
+******************
+MacSyFinder errors
+******************
 
  
 txsscan_error API reference

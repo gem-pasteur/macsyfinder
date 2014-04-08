@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Txsscan'
+project = u'MacSyFinder'
 copyright = u'2013, Sophie Abby, Bertrand Néron'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -115,7 +115,7 @@ html_theme = 'default'
 #html_title = None
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = "TXSScan documentation"
+html_short_title = "MacSyFinder documentation"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -173,7 +173,7 @@ html_short_title = "TXSScan documentation"
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Txsscandoc'
+htmlhelp_basename = 'Macsydoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -192,13 +192,13 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Txsscan.tex', u'Txsscan Documentation',
+  ('index', 'Macsyfinder.tex', u'MacSyFinder Documentation',
    u'Sophie Abby, Bertrand Néron', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-latex_logo = "images/logo_buen.jpg"
+latex_logo = "images/logo_macsyfinder.png"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -222,7 +222,7 @@ latex_use_parts = True
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'txsscan', u'Txsscan Documentation',
+    ('index', 'macsyfinder', u'MacsSyFinder Documentation',
      [u'Sophie Abby, Bertrand Néron'], 1)
 ]
 
@@ -236,8 +236,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Txsscan', u'Txsscan Documentation',
-   u'Sophie Abby, Bertrand Néron', 'Txsscan', 'One line description of project.',
+  ('index', 'MacSyFinder', u'MacSyFinder Documentation',
+   u'Sophie Abby, Bertrand Néron', 'MacSyFinder', 'A tool for macromolecular systems\' modelling and detection.',
    'Miscellaneous'),
 ]
 

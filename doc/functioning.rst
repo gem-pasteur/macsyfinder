@@ -1,14 +1,14 @@
 .. _functioning:
 
 
-TXSScan functioning
-===================
+MacSyFinder functioning
+=======================
 
 *******************************
 Searching for "gene" components
 *******************************
 
-Initially, TXSScan **searches for the components** of a system using Hmmer with the corresponding protein profiles. This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option). See :ref:`the search_genes API <search_genes>`. 
+Initially, MacSyFinder **searches for the components** of a system using Hmmer with the corresponding protein profiles. This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option). See :ref:`the search_genes API <search_genes>`. 
 
 From the list of systems to detect, a non-redundant list of components (and corresponding HMM protein profiles) to search with Hmmer is built. For each system, the search is performed for:
 
