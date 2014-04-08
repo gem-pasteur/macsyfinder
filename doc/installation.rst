@@ -56,7 +56,7 @@ The main ones are::
 => It will install MacSyFinder and required data (profiles folder and systems definition folders) in the Home directory of "bob", in the "my_progams" folder (useful if you do not have super-user privileges).
 
 .. warning::
-  When installing a new version of MacSyFinder, do not forget to uninstall the latter version installed ! 
+  When installing a new version of MacSyFinder, do not forget to uninstall the previous version installed ! 
 
 Uninstalling MacSyFinder
 ========================
