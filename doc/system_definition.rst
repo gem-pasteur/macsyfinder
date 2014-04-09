@@ -42,9 +42,9 @@ The XML hierarchy
 
  The element "gene" may have other attributes: 
 
-   * "system_ref": which is a reference to the secretion system from where the gene comes from (this attribute is used for forbidden gene and homologs gene). If system_ref is not specified, it means the gene is from the current system.
+   * "system_ref": which is a reference to the macromolecular system from where the gene comes from (this attribute is used for forbidden gene and homologs gene). If system_ref is not specified, it means the gene is from the current system.
    * "loner": which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
-   * "exchangeable": which is a boolean. If a gene is exchangeable (value set to "1", "true" or "True") that means this gene or one of its homologs or analogs can be interchanged for the assessment of the presence of the secretion system ( *default false* ).
+   * "exchangeable": which is a boolean. If a gene is exchangeable (value set to "1", "true" or "True") that means this gene or one of its homologs or analogs can be interchanged for the assessment of the presence of the macromolecular system ( *default false* ).
    * "multi_system": which is a boolean. If a gene is "multi_system" (value set to "1", "true" or "True"), it means that it can be used to fill by multiple systems occurrences. ( *default false* ).
    * "aligned": which is a boolean (this attribute is used only for homologs).
    * "inter_gene_max_space": an integer that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). 
