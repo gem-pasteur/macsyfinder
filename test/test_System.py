@@ -16,6 +16,7 @@ from txsscanlib.config import Config
 from txsscanlib.system import System
 from txsscanlib.gene import Gene
 from txsscanlib.gene import Homolog
+from txsscanlib.gene import Analog
 from txsscanlib.registries import ProfilesRegistry
 
 
@@ -101,7 +102,7 @@ class Test(unittest.TestCase):
     def test_add_mandatory_gene(self):
         system = System("foo", self.cfg, 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_mandatory_gene( gene )
+        system.add_mandatory_gene(gene)
         self.assertEqual(system._mandatory_genes, [gene])
         self.assertEqual(system._allowed_genes, [])
         self.assertEqual(system._forbidden_genes, [])
@@ -109,7 +110,7 @@ class Test(unittest.TestCase):
     def test_add_allowed_gene(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_allowed_gene( gene )
+        system.add_allowed_gene(gene)
         self.assertEqual(system._allowed_genes, [gene])
         self.assertEqual(system._mandatory_genes, [])
         self.assertEqual(system._forbidden_genes, [])
@@ -117,7 +118,7 @@ class Test(unittest.TestCase):
     def test_add_forbidden_gene(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_forbidden_gene( gene )
+        system.add_forbidden_gene(gene)
         self.assertEqual(system._forbidden_genes, [gene])
         self.assertEqual(system._allowed_genes, [])
         self.assertEqual(system._mandatory_genes, [])
@@ -125,19 +126,19 @@ class Test(unittest.TestCase):
     def test_mandatory_genes(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_mandatory_gene( gene )
+        system.add_mandatory_gene(gene)
         self.assertEqual(system.mandatory_genes, [gene])
 
     def test_allowed_genes(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_allowed_gene( gene )
+        system.add_allowed_gene(gene)
         self.assertEqual(system.allowed_genes, [gene])
 
     def test_forbidden_genes(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_forbidden_gene( gene )
+        system.add_forbidden_gene(gene)
         self.assertEqual(system.forbidden_genes, [gene])
 
     def test_get_gene(self):
@@ -150,7 +151,30 @@ class Test(unittest.TestCase):
             system._forbidden_genes = []
             meth(gene)
             self.assertEqual(gene, system.get_gene(gene_name))
+
         self.assertRaises(KeyError, system.get_gene, 'bar')
+
+        homolog_name = 'sctJ'
+        gene_homolog = Gene(self.cfg, homolog_name, system, self.profile_registry)
+        homolog = Homolog(gene_homolog, gene)
+        gene.add_homolog(homolog)
+        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+            system._mandatory_genes = []
+            system._allowed_genes = []
+            system._forbidden_genes = []
+            meth(gene)
+            self.assertEqual(homolog, system.get_gene(homolog_name))
+
+        analog_name = 'sctC'
+        gene_analog = Gene(self.cfg, analog_name, system, self.profile_registry)
+        analog = Analog(gene_analog, gene)
+        gene.add_analog(analog)
+        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+            system._mandatory_genes = []
+            system._allowed_genes = []
+            system._forbidden_genes = []
+            meth(gene)
+            self.assertEqual(analog, system.get_gene(analog_name))
 
     def test_get_gene_ref(self):
         system = System(self.cfg, "foo", 10)
@@ -159,6 +183,7 @@ class Test(unittest.TestCase):
         homolog_name = 'sctJ'
         gene_homolg = Gene(self.cfg, homolog_name, system, self.profile_registry)
         homolog = Homolog(gene_homolg, gene_ref)
+        gene_ref.add_homolog(homolog)
 
         for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
@@ -166,7 +191,7 @@ class Test(unittest.TestCase):
             system._forbidden_genes = []
             meth(gene_ref)
             self.assertEqual(gene_ref, system.get_gene_ref(homolog))
-        self.assertIsNone(gene_ref)
+        self.assertIsNone(system.get_gene_ref(gene_ref))
         gene_ukn = Gene(self.cfg, 'abc', system, self.profile_registry)
         self.assertRaises(KeyError, system.get_gene_ref, gene_ukn)
         

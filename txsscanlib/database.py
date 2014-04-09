@@ -168,7 +168,6 @@ class Indexes(object):
         build the index files for hmmer using the formatdb or makeblastdb tool
         """
         index_dir = os.path.dirname(self.cfg.sequence_db)
-
         if self.cfg.index_db_exe.find('makeblast') != -1:
             command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
                                                                       self.name,
@@ -186,7 +185,7 @@ class Indexes(object):
         else:
             raise TxsscanError("%s is not supported to index the sequence dataset. Please use makeblastdb or formatdb." % self.cfg.sequence_db)
 
-
+        _log.debug("hmmer index command: {0}".format(command))
         err_path = os.path.join(index_dir, "formatdb.err")
         with  open(err_path, 'w') as err_file:
             try:
@@ -198,7 +197,7 @@ class Indexes(object):
                                   close_fds = False ,
                                   )
             except Exception, err:
-                msg = "unable to format the sequence dataset : %s : %s" % (command, err)
+                msg = "unable to index the sequence dataset : %s : %s" % (command, err)
                 _log.critical( msg, exc_info = True )
                 raise err
             return formatdb
