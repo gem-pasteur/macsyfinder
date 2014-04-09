@@ -7,7 +7,8 @@ Macromolecular systems definition
 Principles
 ----------
 
-MacSyFinder relies on the definition of models of macromolecular systems with an **XML grammar** that is described below. 
+MacSyFinder relies on the definition of models of macromolecular systems with an **XML grammar** that is described :ref:`below<system-definition-grammar-label>`. 
+
 A system is defined in a dedicated file named after the system (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used for **content description**. Some components are specific to the system, and some are possibly from other systems. In the latter case, the full description of the gene with its attributes must be defined in the XML file of the original system. 
 Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
 
@@ -18,7 +19,7 @@ Three distinct types of components can be used to model a given system content, 
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
 
-    .. image:: images/FigureS1_figure_system_no_mb.png
+    .. image:: images/FigureS1_figure_system_no_mb.*
      :height: 500px
      :align: left
 
