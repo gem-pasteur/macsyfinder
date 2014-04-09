@@ -25,6 +25,7 @@ Running MacSyFinder
    quickstart
    input 
    outputs
+   macsyview
    
 MacSyFinder functioning    
 ======================= 
