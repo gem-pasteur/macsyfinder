@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
-#===============================================================================
-# Created on Nov 29, 2012
-# 
-# @author: bneron
-# @contact: user_email
-# @organization: organization_name
-# @license: license
-#===============================================================================
+################################################################################
+# MacSyFinder - Detection of protein secretion systems                         #
+#               of diderm bacteria from a protein dataset.                     #
+# Authors: Sophie Abby, Bertrand Néron                                         #
+# Created on Nov 29, 2012                                                      #
+# Copyright © 2014  Institut Pasteur, Paris.                                   #
+# See the COPYRIGHT file for details                                           #
+#                                                                              #
+# MacsyFinder is distributed under the terms of the GNU General Public License #
+# (GPLv3). See the COPYING file for details.                                   #
+################################################################################
+
 
 
 import logging
