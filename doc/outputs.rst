@@ -95,6 +95,9 @@ Each line corresponds to a system that has been detected. It includes:
     * Occur_Allowed - counts of the allowed components
     * Occur_Forbidden - counts of the forbidden components
 
+txsscan.json
+************
+This file is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
 
 
 Logs and configuration files
