@@ -1,14 +1,14 @@
 MacSyFinder/MacSyView - Detection and visualisation of protein 
 secretion systems of diderm bacteria from a protein dataset.
-Copyright © 2014 Institut Pasteur.
+Copyright © 2014 Institut Pasteur, Paris.
 ------------------------------------------------------------------
 
 The code includes contributions and input from: 
 
    Sophie Abby          Microbial Evolutionary Genomics Unit,
-                        Institut Pasteur
-   Bertrand Néron    	Biology IT Center, Institut Pasteur
-   Hervé Ménager       	Biology IT Center, Institut Pasteur
+                                           Institut Pasteur, Paris.
+   Bertrand Néron    	Biology IT Center, Institut Pasteur, Paris.
+   Hervé Ménager       	Biology IT Center, Institut Pasteur, Paris.
 
 
    
@@ -17,25 +17,25 @@ copyrighted and licensed code and technology:
 
 - JQuery
   File:
-  Url:
+  Url: http://jquery.com/
   Author:
   License:  MIT (see website for details)
 
 - JQuery-mousewheel
   File:
-  Url:
+  Url: https://github.com/brandonaaron/jquery-mousewheel
   Author: Brandon Aaron
   License:  MIT (see website for details)
 
 - Raphael
   File:
-  Url:
+  Url: http://raphaeljs.com/
   Author: Dmitry Baranovskiy
   License: Apache License, Version 2.0
 
 - Bootstrap
   File:
-  Url:
+  Url: http://getbootstrap.com/
   Author: Mark Otto, Jacob Thornton
   License:  MIT (see website for details)
 
