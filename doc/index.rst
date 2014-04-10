@@ -7,6 +7,7 @@
 Welcome to MacSyFinder's documentation! 
 =======================================
 
+
 	
   MacSyFinder is a program to model and detect macromolecular systems, genetic pathways... In prokaryotes, these systems have often evolutionarily conserved properties: they are made of conserved components, and are encoded in compact loci (conserved genetic architecture). The user models these systems with MacSyFinder to reflect these conserved features, and to allow their efficient detection. 
   
