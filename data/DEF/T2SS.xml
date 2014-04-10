@@ -1,4 +1,4 @@
-<system inter_gene_max_space="5" min_mandatory_genes_required="6" min_genes_required="9">
+<system inter_gene_max_space="5" min_mandatory_genes_required="6" min_genes_required="9" multi_loci="1">
     <gene name="gspD" presence="mandatory">
     	<homologs>
     	    <gene name="pilQ" system_ref="T4P" aligned="1"/>
