@@ -17,6 +17,12 @@ Three distinct types of components can be used to model a given system content, 
 * **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
+
+    .. image:: images/FigureS1_figure_system_no_mb.png
+     :height: 500px
+     :align: left
+
+
 .. _system-definition-grammar-label:
 
 The XML hierarchy
