@@ -1311,38 +1311,25 @@ class systemDetectionReportOrdered(systemDetectionReport):
                         pos_max = rep_info.max - positions[-1] + 5
                     else:
                         pos_max = rep_info.max
-
-                if pos_min < pos_max: 
+                if pos_min < pos_max:
                     pos_in_bk_2_display = range(pos_min, pos_max + 1)
                 else:
-                    pos_min = rep_info.min
-            pos_max = positions[-1] + 5
-            if pos_max > rep_info.max:
-                if rep_info.topology == 'circular':
-                    pos_max = rep_info.max - positions[-1] + 5
-                else:
-                    pos_max = rep_info.max
-
-            if pos_min < pos_max:
-                pos_in_bk_2_display = range(pos_min, pos_max + 1)
-            else:
-                before_orig = range(pos_min, rep_info.max +1)
-                after_orig = range(rep_info.min, pos_max + 1)
-                pos_in_bk_2_display = before_orig + after_orig
-            pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
-
-            for curr_position in pos_in_rep_2_display:
-                gene_name, gene_lenght = rep_info.genes[curr_position]
-                if self.cfg.db_type == 'gembase':
-                    # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits. 
-                    gene_id = "{0}_{1}".format(system['replicon']['name'], gene_name)
-                else:
-                    gene_id = gene_name
-                if gene_id in valid_hits:
-                    gene = self._match2json(valid_hits[gene_id])
-                else:
-                    gene = self._gene2json(gene_id, int(gene_lenght), curr_position + rep_info.min)
-                system['genes'].append(gene)
+                    before_orig = range(pos_min, rep_info.max + 1)
+                    after_orig = range(rep_info.min, pos_max + 1)
+                    pos_in_bk_2_display = before_orig + after_orig
+                pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
+                for curr_position in pos_in_rep_2_display:
+                    gene_name, gene_lenght = rep_info.genes[curr_position]
+                    if self.cfg.db_type == 'gembase':
+                        # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits.
+                        gene_id = "{0}_{1}".format(system['replicon']['name'], gene_name)
+                    else:
+                        gene_id = gene_name
+                    if gene_id in valid_hits:
+                        gene = self._match2json(valid_hits[gene_id])
+                    else:
+                        gene = self._gene2json(gene_id, int(gene_lenght), curr_position + rep_info.min)
+                    system['genes'].append(gene)
 
             system['summary'] = {}
             system['summary']['mandatory'] = so.mandatory_genes
