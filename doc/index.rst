@@ -17,7 +17,7 @@ Welcome to TXSScan's documentation!
     - defined **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-    .. image:: images/figure_main-2.png
+    .. image:: images/figure_main-2.*
      :height: 500px
      :align: left
 
