@@ -8,7 +8,7 @@ It represents a macromolecular system to detect. See :ref:`system-implementation
 
 .. note:: 
     
-    a complete description of the secretion system modelling is available in the section :ref:`system_definition`
+    a complete description of macromolecular systems modelling is available in the section :ref:`system_definition`
     
 
 SystemBank API reference

@@ -15,7 +15,7 @@ _log = logging.getLogger('txsscan.' + __name__)
 
 from system import System
 from gene import Gene
-from gene import Homolog
+from gene import Homolog, Analog
 from registries import ProfilesRegistry, DefinitionsRegistry
 from txsscan_error import TxsscanError, SystemInconsistencyError
 
@@ -135,7 +135,7 @@ class SystemParser(object):
 
     def _create_genes(self, system, system_node):
         """
-        Create genes belonging to the systems. Be careful, the returned genes have not their homologs set yet.
+        Create genes belonging to the systems. Be careful, the returned genes have not their homologs/analogs set yet.
         
         :param gene_name: 
         :type gene_name: string
@@ -179,7 +179,7 @@ class SystemParser(object):
 
     def _fill(self, system, system_node):
         """
-        Fill the system with genes found in this system definition. Add homolgs to the genes if necessary.
+        Fill the system with genes found in this system definition. Add homologs to the genes if necessary.
         
         :param system: the system to fill
         :type system: :class:`txsscanlib.system.System` object
@@ -197,6 +197,8 @@ class SystemParser(object):
             gene = self.gene_bank[gene_name]
             for homolog_node in gene_node.findall("homologs/gene"):
                 gene.add_homolog(self._parse_homolog(homolog_node, gene, system))
+            for analog_node in gene_node.findall("analogs/gene"):
+                gene.add_analog(self._parse_analog(analog_node, gene, system))
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
             elif presence == 'allowed':
@@ -250,6 +252,36 @@ class SystemParser(object):
             homolog.add_homolog(h2)
         return homolog
 
+    def _parse_analog(self, node, gene_ref, curr_system):
+        """
+        Parse a xml element gene and build the corresponding object
+
+        :param node: a "node" corresponding to the gene element in the XML hierarchy
+        :type node: :class:`xml.etree.ElementTree.Element` object 
+        :return: the gene object corresponding to the node
+        :rtype: :class:`txsscanlib.gene.Analog` object 
+        """
+        name = node.get("name")
+        if not name:
+            msg = "Invalid system definition: gene without name"
+            _log.error(msg)
+            raise SyntaxError(msg)
+        try:
+            gene = self.gene_bank[name]
+        except KeyError:
+            msg = "The gene %s described as analog of %s in system %s is not in the \"GeneBank\" gene factory" % (name, gene_ref.name, curr_system.name)
+            _log.critical(msg)
+            raise SystemInconsistencyError(msg)
+        system_ref = node.get("system_ref")       
+        if system_ref != None and system_ref != gene.system.name:
+            msg = "Inconsistency in systems definitions: the gene %s described as analog of %s with system_ref %s has an other system in bank (%s)" % (name, gene_ref.name, system_ref, gene.system.name)
+            _log.critical(msg)
+            raise SystemInconsistencyError(msg)
+        analog = Analog(gene, gene_ref)
+        for analog_node in node.findall("analogs/gene"):
+            h2 = self._parse_analog(analog_node , gene, curr_system)
+            analog.add_analog(h2)
+        return analog
 
     def check_consitency(self, systems, cfg):
         """

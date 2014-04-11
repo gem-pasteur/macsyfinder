@@ -6,14 +6,16 @@ Installation
 ************
 
 
-TXSScan dependencies
-====================
-TXSScan has two dependencies, as it requires running the formatdb (>=2.2.26)or 
-the makeblastdb (2.2.28) tools provided with the Blast suite of programs 
+MacSyFinder dependencies
+========================
+MacSyFinder has two dependencies:
+ - the *formatdb* (>=2.2.26) or *makeblastdb* (>=2.2.28) tools provided with the Blast suite of programs 
 (http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) 
-and the program Hmmer version 3.0 (http://hmmer.janelia.org/). 
-Python version 2.7 is required to run TXSScan. 
-Thus formatdb or makeblastdb and hmmsearch programs must be installed (*e.g.*, in the PATH) in order to use TXSScan. 
+ - the program *Hmmer* version 3.0 (http://hmmer.janelia.org/). 
+
+*formatdb* or *makeblastdb* and *hmmsearch* programs should be installed (*e.g.*, in the PATH) in order to use MacSyFinder. Otherwise, the paths to these executables must be specified in the command-line: see the :ref:`command-line options <hmmer-options>`. 
+ 
+**Python version 2.7** is required to run MacSyFinder: https://docs.python.org/2.7/index.html 
 
 
 Installation procedure
@@ -23,7 +25,7 @@ First unarchive the source codes package, and enter the extracted folder::
   tar -xzvf txsscan-x.x.tar.gz
   cd txsscan-x.x
   
-TXSScan installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/)::
+MacSyFinder installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/)::
 
   python setup.py build
   (sudo) python setup.py install 
@@ -35,14 +37,14 @@ It is **highly recommanded** to run tests before performing the full installatio
   (sudo) python setup.py install 
   
 .. note::
-  super-user privileges (*i.e.*, ``sudo``) are necesserary if you want to install it in the general file architecture.
+  Super-user privileges (*i.e.*, ``sudo``) are necesserary if you want to install the program in the general file architecture.
   
   
 .. note::
-  If you have not the privileges, or you don't want, to install TXSScan in the python libraries of your system, 
-  you can install TXSScan in a virtualenv (http://www.virtualenv.org/)
+  If you do not have the privileges, or if you do not want to install MacSyFinder in the Python libraries of your system, 
+  you can install MacSyFinder in a virtual environment (http://www.virtualenv.org/).
 
-Procedures specific to TXSScan can be used instead of default. Please run the command for full options::
+Procedures specific to MacSyFinder can be used instead of default. Please run the command for full options::
   
 
   python setup.py --help
@@ -51,9 +53,15 @@ The main ones are::
  
   python setup.py install --prefix /usr/local/home/bob/my_programs # Specifies an installation path
 
-which will install TXSScan and required data (profiles folder and systems definition folders) in the Home directory of "bob", in the "my_progams" folder (useful if you do not have super-user privileges)
+=> It will install MacSyFinder and required data (profiles folder and systems definition folders) in the Home directory of "bob", in the "my_progams" folder (useful if you do not have super-user privileges).
 
-To uninstall TXSScan (the last version installed), run::
+.. warning::
+  When installing a new version of MacSyFinder, do not forget to uninstall the previous version installed ! 
+
+Uninstalling MacSyFinder
+========================
+
+To uninstall MacSyFinder (the last version installed), run::
 
   (sudo) python setup.py uninstall 
 

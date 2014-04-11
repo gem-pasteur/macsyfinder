@@ -1,29 +1,33 @@
 .. _quickstart:
 
 
-TXSScan Quick Start 
-===================
+MacSyFinder Quick Start 
+=======================
 
-In order to run TXSScan on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
+In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
 
 * Type: 
-  "``txsscan -h``"
+  "``macsyfinder -h``"
   to see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
 
 
 * On a "metagenomic" dataset for example: 
-  "``txsscan all --db_type unordered --sequence_db metagenome.fasta``" 
-  will detect all secretion systems and related appendages in a metagenomic dataset.
 
+  "``macsyfinder --db_type unordered --sequence_db metagenome.fasta all``" 
+  will detect all systems modelled in .xml files placed in the default definition folder in a metagenomic dataset.
+
+  "``macsyfinder --db_type unordered --sequence_db metagenome.fasta -d mydefinitions/ all``" 
+  will detect all systems modelled in .xml files placed in the *"mydefinitions"* folder.
 
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
-  "``txsscan T2SS Tad --db_type ordered_replicon --sequence_db mygenome.fasta``" 
-  will detect the T2SS secretion system and the Tad pilus in a complete genome.
+
+  "``macsyfinder --db_type ordered_replicon --sequence_db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
+  will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"* definition files placed in the folder *"mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input dataset. 
 
 
-The systems available for detection are the:
+.. The systems available for detection are the:
     - "Flagellum" -- the bacterial flagellum, involved in motility
     - "T1SS" -- the type 1 secretion system, involved in the secretion of degrading enzymes, toxins,...
     - "T2SS" -- the type 2 secretion system, also involved in the secretion of degrading enzymes, toxins,...
@@ -41,7 +45,9 @@ The systems available for detection are the:
 
 .. note::
 
-    Systems have to be spelled as above to run their detection from the command-line. The "all" keyword also allows to detect all available systems in a single run. See the :ref:`Command-line options <command-line-label>`.
+    Systems have to be spelled in a case-sensitive way to run their detection from the command-line. The name of the system corresponds to the suffix defined for xml files (.xml by default), for example *"toto"* for a system defined in *"toto.xml"*. 
+    
+    The *"all"* keyword allows to detect all systems available in the definition folder in a single run. See the :ref:`Command-line options <command-line-label>`.
 
     
 

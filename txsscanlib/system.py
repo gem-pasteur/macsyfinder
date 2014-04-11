@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
-#===============================================================================
-# Created on Nov 29, 2012
-# 
-# @author: bneron
-# @contact: user_email
-# @organization: organization_name
-# @license: license
-#===============================================================================
+################################################################################
+# MacSyFinder - Detection of macromolecular systems in protein datasets        #
+#               by systems modelling and similarity search a protein dataset.  #
+# Authors: Sophie Abby, Bertrand Néron                                        #
+# Created on Nov 29, 2012                                                      #
+# Copyright © 2014  Institut Pasteur, Paris.                                  #
+# See the COPYRIGHT file for details                                           #
+#                                                                              #
+# MacsyFinder is distributed under the terms of the GNU General Public License #
+# (GPLv3). See the COPYING file for details.                                   #
+################################################################################
+
 
 
 import logging
@@ -177,7 +181,7 @@ class System(object):
     @property
     def multi_loci(self):
         """
-        :return: True if the system is multi loci, False otherwise
+        :return: True if the system is authorized to be inferred from multiple loci, False otherwise
         :rtype: boolean
         """
         cfg_multi_loci = self.cfg.multi_loci(self.name)
@@ -216,7 +220,7 @@ class System(object):
     @property
     def mandatory_genes(self):
         """
-        :return: the list of genes that are mandatory in this secretion system 
+        :return: the list of genes that are mandatory in this secretion system
         :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._mandatory_genes
@@ -224,7 +228,7 @@ class System(object):
     @property
     def allowed_genes(self):
         """
-        :return: the list of genes that are allowed in this secretion system 
+        :return: the list of genes that are allowed in this secretion system
         :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._allowed_genes
@@ -232,9 +236,45 @@ class System(object):
     @property
     def forbidden_genes(self):
         """
-        :return: the list of genes that are forbidden in this secretion system 
+        :return: the list of genes that are forbidden in this secretion system
         :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
         return self._forbidden_genes
 
-      
+
+    def get_gene(self, gene_name):
+        """
+        :param gene_name: the name of the gene to get
+        :type gene_name: string
+        :return: the gene corresponding to gene_name.
+        :rtype: a :class:`txsscanlib.secretion.Gene` object.
+        :raise: KeyError the system does not contain any gene with name gene_name.
+        """
+        all_genes = (self.mandatory_genes, self.allowed_genes, self.forbidden_genes)
+        for g_list in all_genes:
+            for g in g_list:
+                if g.name == gene_name:
+                    return g
+                else:
+                    homolgs = g.get_homologs()
+                    analogs = g.get_analogs()
+                    for ex in homolgs + analogs:
+                        if ex.name == gene_name:
+                            return ex
+        raise KeyError("System {0} does not contain gene {1}".format(self.name, gene_name))
+
+
+    def get_gene_ref(self, gene):
+        """
+        :param gene: the gene to get the gene reference.
+        :type gene: a :class:`txsscanlib.secretion.Gene` or txsscanlib.secretion.Homolog` or txsscanlib.secretion.Analog` object.
+        :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
+        :rtype: :class:`txsscanlib.secretion.Gene` object or None
+        :raise: KeyError if gene is not in the system
+        """
+        g = self.get_gene(gene.name)
+        try:
+            return g.gene_ref
+        except AttributeError:
+            return None
+        

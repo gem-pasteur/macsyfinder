@@ -1,24 +1,26 @@
 .. _implementation:
 
-TXSScan implementation overview
-===============================
+MacSyFinder implementation overview
+===================================
 
-TXSScan is implemented with an object-oriented architecture. The objects are described in the current :ref:`API documentation <config>`. An overview of the main classes used to model the systems to be detected is provided below.
+MacSyFinder is implemented with an object-oriented architecture. The objects are described in the current :ref:`API documentation <config>`. An overview of the main classes used to model the systems to be detected is provided below.
   
 .. digraph:: system_overview
 
      "System" -> "Gene" -> "Homolog";
      "Gene" -> "System";
      "Homolog" -> "Gene";
+     "Gene" -> "Analog";
+     "Analog" -> "Gene";
      "Gene" -> "Profile";
      "Gene" -> "HMMReport" -> "Hit";
      "Hit" -> "Gene";
      "Hit" -> "System";
      "Profile" -> "HMMReport"; 
      
-The *"System"* class models the systems to detect and contains a list of instances of the *"Gene"* class, which models each component of a given System. The *"Homolog"* class encapsulates a "Gene" and models relationships of homology between components. 
+The *"System"* class models the systems to detect and contains a list of instances of the *"Gene"* class, which models each component of a given System. The *"Homolog"* and *"Analog"* classes encapsulate a "Gene" and model respectively relationships of homology and analogy between components. 
 
-A *"Gene"* represents a component from the System and refers to an instance of the *"Profile"* object that corresponds to an hidden Markov model protein profile (used for homology search with the Hmmer program). 
+A *"Gene"* represents a component from the System and refers to an instance of the *"Profile"* object that corresponds to an hidden Markov model protein profile (used for sequence similarity search with the Hmmer program). 
 
 The *"Config"* class (see the :ref:`config`) handles the program parameters, including Hmmer search parameters, and the set of sequences to query (represented by the "Database" object). 
 
@@ -53,7 +55,7 @@ and three kind of components are listed in function of their presence in the sys
 
 .. note:: 
     
-    a complete description of the secretion system modelling is available in the section :ref:`system_definition`
+    a complete description of macromolecular systems modelling is available in the section :ref:`system_definition`
 
 
 .. _gene-implementation:
@@ -65,7 +67,7 @@ The Gene object
 The :ref:`Gene object <gene>` represents genes encoding the protein components of a System. 
 Each Gene points out its System of origin (:class:`txsscanlib.system.System`). A Gene must have a correponding HMM protein profile. These profiles are represented by Profile objects (:class:`txsscanlib.gene.Profile`), and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file. See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`. 
 
-A Gene may have Homologs. An *"Homolog"* object encapsulates a Gene and has a reference to the Gene it is homolog to. See the :ref:`Homolog API <homolog-api>` for more details. 
+A Gene may have Homologs or Analogs. An *"Homolog"* (resp. *"Analog"*) object encapsulates a Gene and has a reference to the Gene it is homolog (resp. *"analog"*) to. See the :ref:`Homolog API <homolog-api>` and :ref:`Analog API <analog-api>` for more details. 
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in a *"gene_bank"*.

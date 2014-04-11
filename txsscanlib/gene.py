@@ -106,7 +106,7 @@ class Gene(object):
         :type profiles_registry: :class:`txsscanlib.registries.ProfilesRegistry` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this Gene can be replaced with one of its homologs whithout any effects on the system assessment, False otherwise.
+        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs whithout any effects on the system assessment, False otherwise.
         :type exchangeable: boolean.
         :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
@@ -118,15 +118,17 @@ class Gene(object):
         """:ivar profile: The HMM protein Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
 
         self.homologs = []
+        self.analogs = []
         self._system = system
         self._loner = loner
         self._exchangeable = exchangeable
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
+        #print self # To be removed
 
     def __str__(self):
     	"""
-        Print the name of the gene and of its homologs.
+        Print the name of the gene and of its homologs/analogs.
         """
         s = "name : %s" % self.name
         if self.homologs:
@@ -134,6 +136,12 @@ class Gene(object):
             for h in self.homologs:
                 s += h.name + ", "
             s = s[:-2]
+        if self.analogs:
+            s += "\n    analogs: "
+            for a in self.analogs:
+                s += a.name + ", "
+            s = s[:-2]
+        #s+= "\tinter_gene_max_space = %s"%str(self._inter_gene_max_space) # To be removed
         return s
 
     @property
@@ -155,7 +163,7 @@ class Gene(object):
     @property
     def exchangeable(self):
         """
-        :return: True if this gene can be replaced with one of its homologs whithout any effects on the system, False otherwise.
+        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the system, False otherwise.
         :rtype: boolean.
         """
         return self._exchangeable
@@ -193,9 +201,26 @@ class Gene(object):
     def get_homologs(self):
         """
         :return: the Gene homologs
-        :type: list of :class:`txsscanlib.gene.Gene` object
+        :type: list of :class:`txsscanlib.gene.Homolog` object
         """
         return self.homologs
+
+    def add_analog(self, analog):
+        """
+        Add an analogous gene to the Gene
+
+        :param analog: analog to add
+        :type analog:  :class:`txsscanlib.gene.Analog` object 
+        """
+        self.analogs.append(analog)
+
+
+    def get_analogs(self):
+        """
+        :return: the Gene analogs
+        :type: list of :class:`txsscanlib.gene.Analog` object
+        """
+        return self.analogs
     
     def __eq__(self, gene):
         """
@@ -223,7 +248,24 @@ class Gene(object):
                     return True
                
         return False       
-    
+
+    def is_analog(self, gene):
+        """
+        :return: True if the two genes are analogs, False otherwise.
+        :param gene: the query of the test
+        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :rtype: boolean.
+        """
+
+        if self == gene:
+            return True
+        else:
+            for h in self.analogs:
+                if gene == h.gene:
+                    return True
+               
+        return False  
+            
     def is_mandatory(self, system):
     	"""
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
@@ -276,13 +318,13 @@ class Gene(object):
             for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
                 if self == m:
                     return True
-                if m.exchangeable and m.is_homolog(self):
+                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
                     return True
         else:
             for m in (system.mandatory_genes+system.allowed_genes):
                 if self == m:
                     return True
-                if m.exchangeable and m.is_homolog(self):
+                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
                     return True
         return False
 
@@ -338,6 +380,34 @@ class Homolog(object):
     def gene_ref(self):
         """
         :return: the gene to which this one is homolog to (reference gene)
+        :rtype: :class:`txsscanlib.gene.Gene` object
+        """
+        return self.ref
+
+class Analog(object):
+    """
+    Handle analogs, encapsulate a Gene
+    """
+
+    def __init__(self, gene, gene_ref):
+        """
+        :param gene: the gene
+        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :param gene_ref: the gene to which the current is analog.
+        :type gene_ref: :class:`txsscanlib.gene.Gene` object.
+        """
+        self.gene = gene 
+        """:ivar gene: gene """
+
+        self.ref = gene_ref 
+
+    def __getattr__(self, name):
+        return getattr(self.gene, name)
+
+    @property
+    def gene_ref(self):
+        """
+        :return: the gene to which this one is analog to (reference gene)
         :rtype: :class:`txsscanlib.gene.Gene` object
         """
         return self.ref

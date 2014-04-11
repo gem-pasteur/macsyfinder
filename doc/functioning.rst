@@ -1,14 +1,14 @@
 .. _functioning:
 
 
-TXSScan functioning
-===================
+MacSyFinder functioning
+=======================
 
 *******************************
 Searching for "gene" components
 *******************************
 
-Initially, TXSScan **searches for the components** of a system using Hmmer with the corresponding protein profiles. This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option). See :ref:`the search_genes API <search_genes>`. 
+Initially, MacSyFinder **searches for the components** of a system using Hmmer with the corresponding protein profiles. This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option). See :ref:`the search_genes API <search_genes>`. 
 
 From the list of systems to detect, a non-redundant list of components (and corresponding HMM protein profiles) to search with Hmmer is built. For each system, the search is performed for:
 
@@ -44,7 +44,10 @@ For *ordered* datasets:
 5. When all clusters, "loner" genes and "multi_system" genes were scanned for inclusion in system occurrences, a decision is made for every system occurrence regarding the **quorum rules** defined for the corresponding system. 
 
 .. note::
-   A single "multi-loci" system is assessed per replicon, even if it could correspond to multiple scattered systems. Thus, the "single-locus" systems correspond to a most powerful mode of detection.
+   When the "multi_loci" option is turned on, a single "multi-loci" system is assessed per replicon, even if it could correspond to multiple scattered systems. Thus, the "single-locus" systems correspond to a more powerful mode of detection.
+
+.. warning::
+    Cases where systems are consecutive will be treated, and separate systems will be detected, but complex cases of detection, *i.e.* when systems' components are intermingled will not be considered.
 
 
 For *unordered* datasets: 

@@ -4,7 +4,7 @@
 Output format
 *************
 
-TXSScan provides different types of outputs. At each run, TXSScan creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "txsscan-20130128_08-57-46". TXSScan outputs are stored in this run-specific folder. 
+MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "txsscan-20130128_08-57-46". MacSyFinder outputs are stored in this run-specific folder. 
 
 .. _hmmer-outputs-label:
 
@@ -95,12 +95,15 @@ Each line corresponds to a system that has been detected. It includes:
     * Occur_Allowed - counts of the allowed components
     * Occur_Forbidden - counts of the forbidden components
 
+txsscan.json
+************
+This file is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
 
 
 Logs and configuration files
 ----------------------------
 
-Two specific output files are built to store information on the TXSScan execution: 
+Two specific output files are built to store information on the MacSyFinder execution: 
 
  * txsscan.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  

@@ -1,8 +1,8 @@
 .. _input:
 
-****************************
-Input and Options of TXSScan
-****************************
+********************************
+Input and Options of MacSyFinder
+********************************
 
 
 .. _input-dataset-label:
@@ -12,16 +12,16 @@ Input dataset
 
 The input dataset must be a set of protein sequences in **Fasta format** (see http://en.wikipedia.org/wiki/FASTA_format). 
 
-The :ref:`base section<config-base-label>` in the configuration file (:ref:`config-definition-label`) can be used to specify the path and the type of dataset to deal with, as well as the `--db_type` parameter from :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`).
+The :ref:`base section<config-base-label>` in the configuration file (see :ref:`config-definition-label`) can be used to specify **the path** and the **type of dataset** to deal with, as well as the `--sequence_db` and `--db_type` parameters respectively, described in the :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`).
  
   Four types of protein datasets are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
         * *unordered_replicon* : a set of sequences corresponding to a complete genome (*e.g.* an unassembled complete genome)
-        * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered (*e.g.* an assembled complete genome)
-        * *gembase* : a set of multiple ordered replicons, which format follows the convention we adopted (see :ref:`gembase_convention`).
+        * *ordered_replicon* : a set of sequences corresponding to an ordered complete replicon (*e.g.* an assembled complete genome)
+        * *gembase* : a set of multiple ordered replicons, which format follows the convention described in :ref:`gembase_convention`.
       
-For "ordered" ("ordered_replicon" or "gembase") datasets only, TXSScan can take into account the **shape of the genome**: "linear", or "circular". The default is set to "linear". 
+For "ordered" ("ordered_replicon" or "gembase") datasets only, MacSyFinder can take into account the **shape of the genome**: "linear", or "circular" for detection. The default is set to "circular". 
   
   This can be set with the `--replicon_topology` parameter from :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`), or in the configuration in the :ref:`base section<config-base-label>`.
   
@@ -39,15 +39,14 @@ Command-line options
 Positional arguments::
 
   systems               The systems to detect. This is an obligatory option
-                        with no keyword associated to it. To detect all the
-                        protein secretion systems and related appendages: set
-                        to "all" (case insensitive). Otherwise, a single or
-                        multiple systems can be specified. For example: "T2SS
-                        T4P".
+                        with no keyword associated to it. To detect all systems 
+                        described in .xml available, set to "all" (case insensitive). 
+                        Otherwise, a single or multiple systems can be specified. 
+                        For example: "SystemA SystemB".
 
 Optional arguments::
 
-  -h, --help            show this help message and exit
+  -h, --help            Show the help message and exit
 
 
 .. _cmd-input-label:
@@ -62,7 +61,7 @@ Input dataset options::
                         a metagenomic dataset, "ordered_replicon" to an
                         assembled genome, and "gembase" to a set of replicons
                         where sequence identifiers follow this convention:
-                        ">RepliconName SequenceID"
+                        ">RepliconName_SequenceID"
                         
   --replicon_topology {linear,circular}
                         The topology of the replicons (this option is
@@ -91,26 +90,25 @@ Systems detection options::
                         components non-matched by a profile allowed between
                         two matched components for them to be considered
                         contiguous. Option only meaningful for 'ordered'
-                        datasets. The fisrt value must match to a system, the
-                        second to a number of components. This option can be
-                        repeated several times: "--inter-gene-max-space T2SS
-                        12 --inter-gene-max-space Flagellum 20"
+                        datasets. The first value must match a system name, 
+                        the second a number of components. This option can be
+                        repeated several times: 
+                        "--inter-gene-max-space T3SS 12 --inter-gene-max-space Flagellum 20"
                         
   --min-mandatory-genes-required SYSTEM VALUE
                         The minimal number of mandatory genes required for
                         system assessment. The first value must correspond to
                         a system name, the second value to an integer. This
-                        option can be repeated several times: "--min-
-                        mandatory-genes-required T2SS 15 --min-mandatory-
-                        genes-required Flagellum 10"
+                        option can be repeated several times: 
+                        "--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
                         
   --min-genes-required SYSTEM VALUE
                         The minimal number of genes required for system
                         assessment (includes both 'mandatory' and 'allowed'
                         components). The first value must correspond to a
                         system name, the second value to an integer. This
-                        option can be repeated several times: "--min-genes-
-                        required T2SS 15 --min-genes-required Flagellum 10"
+                        option can be repeated several times: 
+                        "--min-genes-required T2SS 15 --min-genes-required Flagellum 10"
                         
   --max-nb-genes SYSTEM VALUE
                         The maximal number of genes allowed in the system. 
@@ -149,7 +147,7 @@ Path options::
                         Path to the systems definition files.
                         
   -r RES_SEARCH_DIR, --research-search RES_SEARCH_DIR
-                        Path to the directory where to store TXSScan search
+                        Path to the directory where to store MacSyFinder search
                         results directories.
                         
   --research-search-suffix RES_SEARCH_SUFFIX
@@ -167,35 +165,40 @@ Path options::
                         'profile_dir', in a file which name is based on the
                         Gene name + the profile suffix. For instance, if the
                         Gene is named 'gspG' and the suffix is '.hmm3', then
-                        the profile should be placed at the specified location
-                        and be named 'gspG.hmm3'
+                        the profile should be placed in the specified folder 
+                        'profile_dir' and be named 'gspG.hmm3'
 
 General options::
 
   -w WORKER_NB, --worker WORKER_NB
-                        Number of workers to be used by TXSScan. In the case
-                        the user wants to run TXSScan in a multi-thread mode. 
+                        Number of workers to be used by MacSyFinder. In the case
+                        the user wants to run MacSyFinder in a multi-thread mode. 
                         All workers can be used with the value '0'. (default = 1)
                         
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
                         Error messages (default), Warning (-v), Info (-vv) and
-                        Debug.(-vvv)
+                        Debug(-vvv).
                         
   --log LOG_FILE        Path to the directory where to store the 'txsscan.log'
                         log file.
                         
-  --config CFG_FILE     Path to a putative TXSScan configuration file to be
+  --config CFG_FILE     Path to a putative MacSyFinder configuration file to be
                         used.
                         
   --previous-run PREVIOUS_RUN
-                        Path to a previous TXSScan run directory. It allows to
+                        Path to a previous MacSyFinder run directory. It allows to
                         skip the Hmmer search step on same dataset, as it uses
                         previous run results and thus parameters regarding
                         Hmmer detection. The configuration file from this
-                        previous run will be used. (conflict with options
-                        --cfg-file, --sequence_db, --profile_suffix,
-                        --res_extract_suffix, --e_value_res, --db_type,
-                        --hmmer_exe)
+                        previous run will be used. 
+                        It is in conflict with options:
+                        --cfg-file, 
+                        --sequence_db, 
+                        --profile_suffix,
+                        --res_extract_suffix, 
+                        --e_value_res, 
+                        --db_type,
+                        --hmmer_exe
 
 
 
@@ -204,7 +207,7 @@ General options::
 Configuration file
 ==================
 
-Options to run TXSScan can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for TXSScan.
+Options to run MacSyFinder can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/txsscan/txsscan.conf
@@ -228,7 +231,7 @@ The configuration files must follow the Python "ini" file syntax.
 The Config object provides some default values and performs some validations of the values, for instance:
  
  
-In TXSScan, five sections are defined:
+In MacSyFinder, five sections are defined:
  
  .. _config-base-label:
  
@@ -244,7 +247,7 @@ In TXSScan, five sections are defined:
         
       (*no default value*)
       
-    * *replicon_topology* : the topology of the replicon under study. Two topologies are supported: 'linear' and 'circular' (*default* = 'linear')
+    * *replicon_topology* : the topology of the replicon under study. Two topologies are supported: 'linear' and 'circular' (*default* = 'circular')
       This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
   
   * **system**
@@ -289,7 +292,7 @@ Example of a configuration file::
   
     [base]
     prefix = /path/to/txsscan/home/
-    file = %(prefix)s/test/datatest/prru_psae.001.c01.fasta
+    file = %(prefix)s/dataset/prru_psae.001.c01.fasta
     type = gembase
     replicon_topology = circular
     
@@ -308,11 +311,11 @@ Example of a configuration file::
     [directories]
     prefix = /path/to/txsscan/home/
     def_dir = %(prefix)s/data/DEF
-    res_search_dir = %(prefix)s/test/datatest/res_search/
-    res_search_suffix = .search_hmm.out
+    res_search_dir = %(prefix)s/dataset/res_search/
+    res_search_suffix = .raw_hmm
     profile_dir = %(prefix)s/data/profiles
-    profile_suffix = .fasta-aln_edit.hmm
-    res_extract_suffix = .res_hmm_extract
+    profile_suffix = .fasta-aln.hmm
+    res_extract_suffix = .res_hmm
 
    [general]
    log_level = debug

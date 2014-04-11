@@ -5,7 +5,7 @@ Gembase format
 **************
 
 
-In order to allow the users running TXSScan on a bunch of genomes in a single run, we propose to adopt the following convention to fulfill the requirements for the "gembase db_type". It consists in providing for each protein, both the replicon name and a protein identifier separated by a "_" in the first field of fasta headers. 
+In order to allow the users running MacSyFinder on a bunch of genomes in a single run, we propose to adopt the following convention to fulfill the requirements for the "gembase db_type". It consists in providing for each protein, both the replicon name and a protein identifier separated by a "_" in the first field of fasta headers. 
 For instance::
 
   >PlasmidA_0001 YP_003225072.1_ | putative stcE protein 
