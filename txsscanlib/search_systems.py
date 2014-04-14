@@ -1253,7 +1253,13 @@ class systemDetectionReportOrdered(systemDetectionReport):
             json.dump(json_data, _file, indent = self._indent)
 
 
-    def _match2json(self, valid_hit):
+    def _match2json(self, valid_hit, so):
+        """
+        :param valid_hit: the valid hit to transform in to json.
+        :type valid_hit: class:`txsscanlib.search_system.ValidHit` object.
+        :param so: the system occurence where the valid hit come from.
+        :type so: class:`txsscanlib.search_system.SystemOccurence.`
+        """
         gene = {}
         gene['id'] = valid_hit.id
         gene['position'] = valid_hit.position
@@ -1267,6 +1273,9 @@ class systemDetectionReportOrdered(systemDetectionReport):
         gene['sequence_coverage'] = valid_hit.sequence_coverage
         gene['begin_match'] = valid_hit.begin_match
         gene['end_match'] = valid_hit.end_match
+        gene_ref = so.get_gene_ref(valid_hit.gene)
+        if gene_ref:
+            gene['function'] = gene_ref.name
         return gene
 
     def _gene2json(self, gene_name, sequence_length, position):
@@ -1289,7 +1298,11 @@ class systemDetectionReportOrdered(systemDetectionReport):
         systems = []
         for so in self._systems_occurences_list:
             system = {}
-            system['name'] = so.unique_name
+            repliconName, systemName, occurenceNumber = so.unique_name.split('_')
+            occurenceNumber = int(occurenceNumber)
+            system['occurenceNumber'] = occurenceNumber
+            system['name'] = systemName
+            system['id'] = so.unique_name
             system['replicon'] = {}
             system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
             rep_info = rep_db[system['replicon']['name']]
@@ -1326,7 +1339,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     else:
                         gene_id = gene_name
                     if gene_id in valid_hits:
-                        gene = self._match2json(valid_hits[gene_id])
+                        gene = self._match2json(valid_hits[gene_id], so)
                     else:
                         gene = self._gene2json(gene_id, int(gene_lenght), curr_position + rep_info.min)
                     system['genes'].append(gene)
@@ -1460,7 +1473,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
-                so.valid_hits.sort(cmp = lambda x,y:cmp_so(so, x, y))
+                so.valid_hits.sort(cmp = lambda x, y:cmp_so(so, x, y))
                 for valid_hit in so.valid_hits:
                     gene = {}
                     gene['id'] = valid_hit.id
@@ -1475,6 +1488,9 @@ class systemDetectionReportUnordered(systemDetectionReport):
                     gene['sequence_coverage'] = valid_hit.sequence_coverage
                     gene['begin_match'] = valid_hit.begin_match
                     gene['end_match'] = valid_hit.end_match
+                    gene_ref = so.get_gene_ref(valid_hit.gene)
+                    if gene_ref:
+                        gene['function'] = gene_ref.name
                     system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
