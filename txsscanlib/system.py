@@ -4,7 +4,6 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                        #
-# Created on Nov 29, 2012                                                      #
 # Copyright © 2014  Institut Pasteur, Paris.                                  #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
