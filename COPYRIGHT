@@ -1,11 +1,11 @@
-MacSyFinder/MacSyView - Detection and visualisation of protein 
-secretion systems of diderm bacteria from a protein dataset.
+MacSyFinder/MacSyView - Detection of macromolecular systems 
+in protein datasets using systems modelling and similarity search.
 Copyright © 2014 Institut Pasteur, Paris.
 ------------------------------------------------------------------
 
 The code includes contributions and input from: 
 
-   Sophie Abby          Microbial Evolutionary Genomics Unit,
+   Sophie Abby          Microbial Evolutionary Genomics Unit, UMR CNRS 3525,
                                            Institut Pasteur, Paris.
    Bertrand Néron    	Biology IT Center, Institut Pasteur, Paris.
    Hervé Ménager       	Biology IT Center, Institut Pasteur, Paris.
