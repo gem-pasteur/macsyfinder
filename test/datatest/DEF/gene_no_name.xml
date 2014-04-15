@@ -4,7 +4,7 @@
             <gene name="sctJ" system_ref="system_1"/>
        </homologs>
      </gene>  
-     <gene presence="allowed"/>
-    <gene name="sctC" presence="allowed"/>
+     <gene presence="accessory"/>
+    <gene name="sctC" presence="accessory"/>
 </system>
 

@@ -629,7 +629,7 @@ class Config(object):
         """
         :param system: the name of a system 
         :type system: string
-        :return: the maximum number of components with no match allowed between two genes with a match to consider them contiguous(at the system level)
+        :return: the maximum number of components with no match allowed between two genes with a match to consider them contiguous (at the system level)
         :rtype: integer 
         """
         try:
@@ -653,7 +653,7 @@ class Config(object):
         """
         :param system: the name of a system 
         :type system: string
-        :return: the genes (mandatory+allowed) quorum to assess the system presence
+        :return: the genes (mandatory+accessory) quorum to assess the system presence
         :rtype: integer
         """
         try:
@@ -677,7 +677,7 @@ class Config(object):
         """
         :param system: the name of a system 
         :type system: string
-        :return: the genes (mandatory+allowed) quorum to assess the system presence
+        :return: the genes (mandatory+accessory) quorum to assess the system presence
         :rtype: boolean
         """
         try:

@@ -50,8 +50,8 @@ A system has an attribute `inter_gene_max_space` which is an integer,
 and three kind of components are listed in function of their presence in the system:
 
 * The genes that must be present in the genome to define this system ("mandatory").
-* The genes that can be present, but do not have to be found in every case ("allowed").
-* The genes that must not be present in the system ("forbiden").
+* The genes that can be present, but do not have to be found in every case ("accessory").
+* The genes that must not be present in the system ("forbidden").
 
 .. note:: 
     

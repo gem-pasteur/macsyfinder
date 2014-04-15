@@ -201,12 +201,12 @@ class SystemParser(object):
                 gene.add_analog(self._parse_analog(analog_node, gene, system))
             if presence == 'mandatory':
                 system.add_mandatory_gene(gene)
-            elif presence == 'allowed':
-                system.add_allowed_gene(gene)
+            elif presence == 'accessory':
+                system.add_accessory_gene(gene)
             elif presence == 'forbidden':
                 system.add_forbidden_gene(gene)
             else:
-                msg = "Invalid system definition: presence value must be either [mandatory, allowed, forbidden] not %s" % presence
+                msg = "Invalid system definition: presence value must be either [mandatory, accessory, forbidden] not %s" % presence
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -296,7 +296,7 @@ class SystemParser(object):
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)
           
-        In the different possible situations, different requirements need to be fulfilled ("mandatory_genes" and "allowed_genes" consist of lists of genes defined as such in the system definition):
+        In the different possible situations, different requirements need to be fulfilled ("mandatory_genes" and "accessory_genes" consist of lists of genes defined as such in the system definition):
           
           - **If:** min_mandatory_genes_required = None  ; min_genes_required = None
           - **Then:** min_mandatory_genes_required = min_genes_required = len(mandatory_genes)
@@ -312,12 +312,12 @@ class SystemParser(object):
           - **If:** min_mandatory_genes_required =  None ; min_genes_required = Value
           - **Then:** min_mandatory_genes_required = len(mandatory_genes)
           - AND min_genes_required >= min_mandatory_genes_required 
-          - AND min_genes_required <= len(mandatory_genes+allowed_genes)
+          - AND min_genes_required <= len(mandatory_genes+accessory_genes)
           
           *to be checked*
 
           - **If:** min_mandatory_genes_required =  Value ; min_genes_required = Value
-          - **Then:** min_genes_required <= len(allowed_genes+mandatory_genes)
+          - **Then:** min_genes_required <= len(accessory_genes+mandatory_genes)
           - AND min_genes_required >= min_mandatory_genes_required
           - AND min_mandatory_genes_required <= len(mandatory_genes)
            
@@ -325,12 +325,12 @@ class SystemParser(object):
                  
         """
         for system in systems:
-            len_allowed_genes = len(system.allowed_genes)
+            len_accessory_genes = len(system.accessory_genes)
             len_mandatory_genes = len(system.mandatory_genes)
-            if not (system.min_genes_required <= (len_allowed_genes + len_mandatory_genes)) :
-                msg = "system %s is not consistent: min_genes_required %d must be lesser or equal than the number of \"allowed\" and \"mandatory\" components in the system: %d" %(system.name, 
+            if not (system.min_genes_required <= (len_accessory_genes + len_mandatory_genes)) :
+                msg = "system %s is not consistent: min_genes_required %d must be lesser or equal than the number of \"accessory\" and \"mandatory\" components in the system: %d" %(system.name, 
                                                                                                                                       system.min_genes_required, 
-                                                                                                                                      len_allowed_genes + len_mandatory_genes)
+                                                                                                                                      len_accessory_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 

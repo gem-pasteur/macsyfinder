@@ -11,7 +11,7 @@
     <gene name="tadC" presence="mandatory"/>
     <gene name="tadV" presence="mandatory"/>
     <gene name="tadZ" presence="mandatory"/>
-    <gene name="flp" presence="allowed"/>
-    <gene name="tadE" presence="allowed"/>
-    <gene name="tadF" presence="allowed"/>
+    <gene name="flp" presence="accessory"/>
+    <gene name="tadE" presence="accessory"/>
+    <gene name="tadF" presence="accessory"/>
 </system>

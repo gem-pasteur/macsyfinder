@@ -80,19 +80,19 @@ Each line corresponds to a system that has been detected. It includes:
     * System_status	- the status of the system
     * Nb_loci - the number of loci that constitutes the system
     * Nb_Ref_mandatory - the number of mandatory genes in the system definition
-    * Nb_Ref_allowed - the number of allowed genes in the system definition
-    * Nb_Ref_Genes_detected_NR - the number of different components (allowed+mandatory) in the system 
+    * Nb_Ref_accessory - the number of accessory genes in the system definition
+    * Nb_Ref_Genes_detected_NR - the number of different components (accessory+mandatory) in the system 
     * Nb_Genes_with_match - the number of components detected with the profiles in the system
     * System_length	- the full number of components (with match or not) in the locus (or loci) that constitutes the system 
     * Nb_Mandatory_NR - the number of different mandatory components matched  
-    * Nb_Allowed_NR - the number of different allowed components matched 
+    * Nb_Accessory_NR - the number of different accessory components matched 
     * Nb_missing_mandatory - the number of mandatory components from the system definition with no match in this system occurrence
-    * Nb_missing_allowed - the number of allowed components from the system definition with no match in this system occurrence	
+    * Nb_missing_accessory - the number of accessory components from the system definition with no match in this system occurrence	
     * List_missing_mandatory - the list of the missing mandatory components
-    * List_missing_allowed - the list of the missing allowed components
+    * List_missing_accessory - the list of the missing accessory components
     * Loci_positions - the sequence position (rank of the fasta sequence in the input sequence file) of the different loci encoding the system 
     * Occur_Mandatory - counts of the mandatory components
-    * Occur_Allowed - counts of the allowed components
+    * Occur_Accessory - counts of the accessory components
     * Occur_Forbidden - counts of the forbidden components
 
 txsscan.json
