@@ -84,7 +84,7 @@ system_options.add_argument( "--inter-gene-max-space",
                              nargs = 2,
                              dest = 'inter_gene_max_space',
                              default = None,
-                             help = "Co-localization criterion: maximum number of components non-matched by a profile allowed between two matched components for them to be considered contiguous. Option only meaningful for 'ordered' datasets. The fisrt value must match to a system, the second to a number of components.\
+                             help = "Co-localization criterion: maximum number of components non-matched by a profile allowed between two matched components for them to be considered contiguous. Option only meaningful for 'ordered' datasets. The first value must match to a system, the second to a number of components.\
                               This option can be repeated several times:\n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
                              )
 system_options.add_argument( "--min-mandatory-genes-required",
@@ -101,7 +101,7 @@ system_options.add_argument( "--min-genes-required",
                              nargs = 2,
                              dest = 'min_genes_required',
                              default = None,
-                             help = "The minimal number of genes required for system assessment (includes both 'mandatory' and 'allowed' components). The first value must correspond to a system name, the second value to an integer.\
+                             help = "The minimal number of genes required for system assessment (includes both 'mandatory' and 'accessory' components). The first value must correspond to a system name, the second value to an integer.\
                               This option can be repeated several times:\n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                              )
 
@@ -286,7 +286,7 @@ parser.parse(systems_name_to_detect)
 systems_to_detect = [system_bank[system_name] for system_name  in systems_name_to_detect]
 all_genes = []
 for system in systems_to_detect:
-    genes = system.mandatory_genes + system.allowed_genes + system.forbidden_genes
+    genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
     # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
     ex_genes = []
 
