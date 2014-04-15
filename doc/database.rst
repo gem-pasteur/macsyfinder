@@ -26,7 +26,7 @@ The begin and end positions of each replicon are computed from the sequence file
   
 database API reference
 ======================
-.. automodule:: txsscanlib.database
+.. automodule:: macsypy.database
    :members:
    :private-members:
    :special-members:

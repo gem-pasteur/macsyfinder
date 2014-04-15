@@ -4,7 +4,7 @@
 search_systems API reference
 ============================
 
-.. automodule:: txsscanlib.search_systems
+.. automodule:: macsypy.search_systems
    :members: 
    :private-members:
    :special-members:

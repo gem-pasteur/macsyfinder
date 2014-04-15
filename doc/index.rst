@@ -1,7 +1,12 @@
-.. Macsyfinder documentation master file, created by
-   sphinx-quickstart on Thu Nov 29 18:18:43 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. MacSyFinder - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.            
+    Authors: Sophie Abby, Bertrand Néron                                 
+    Copyright © 2014  Institut Pasteur, Paris.                           
+    See the COPYRIGHT file for details                                    
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
+    See the COPYING file for details.  
+    
+    Macsyfinder documentation master file, created by sphinx-quickstart 
 
 
 Welcome to MacSyFinder's documentation! 
@@ -58,7 +63,7 @@ MacSyFinder API documentation
    HMMReport
    search_genes
    search_systems
-   txsscan_error
+   macsypy_error
 
 Indices and tables
 ==================

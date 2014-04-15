@@ -5,7 +5,7 @@
 search_genes API reference
 **************************
 
-.. automodule:: txsscanlib.search_genes
+.. automodule:: macsypy.search_genes
    :members: 
    :private-members:
    :special-members:

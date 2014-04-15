@@ -77,7 +77,7 @@ Contrariwise:
 
 SystemParser API reference
 ==========================
-.. automodule:: txsscanlib.system_parser
+.. automodule:: macsypy.system_parser
    :members:
    :private-members:
    :special-members:

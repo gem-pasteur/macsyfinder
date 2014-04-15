@@ -22,8 +22,8 @@ Installation procedure
 ======================
 First unarchive the source codes package, and enter the extracted folder::
 
-  tar -xzvf txsscan-x.x.tar.gz
-  cd txsscan-x.x
+  tar -xzvf macsyfinder-x.x.tar.gz
+  cd macsyfinder-x.x
   
 MacSyFinder installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/)::
 

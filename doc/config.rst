@@ -12,7 +12,7 @@ Options to run MacSyFinder can be specified in a :ref:`Configuration file <confi
  
 Config API reference
 ====================
-.. automodule:: txsscanlib.config
+.. automodule:: macsypy.config
    :members:
    :private-members:
    :special-members:

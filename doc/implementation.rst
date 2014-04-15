@@ -65,14 +65,14 @@ The Gene object
 ***************
 
 The :ref:`Gene object <gene>` represents genes encoding the protein components of a System. 
-Each Gene points out its System of origin (:class:`txsscanlib.system.System`). A Gene must have a correponding HMM protein profile. These profiles are represented by Profile objects (:class:`txsscanlib.gene.Profile`), and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file. See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`. 
+Each Gene points out its System of origin (:class:`macsypy.system.System`). A Gene must have a correponding HMM protein profile. These profiles are represented by Profile objects (:class:`macsypy.gene.Profile`), and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file. See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`. 
 
 A Gene may have Homologs or Analogs. An *"Homolog"* (resp. *"Analog"*) object encapsulates a Gene and has a reference to the Gene it is homolog (resp. *"analog"*) to. See the :ref:`Homolog API <homolog-api>` and :ref:`Analog API <analog-api>` for more details. 
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in a *"gene_bank"*.
-    gene_bank is a :class:`txsscanlib.gene.GeneBank` object. 
-    The gene_bank and system_bank are filled by the system_parser (:class:`txsscanlib.system_parser.SystemParser`)
+    gene_bank is a :class:`macsypy.gene.GeneBank` object. 
+    The gene_bank and system_bank are filled by the system_parser (:class:`macsypy.system_parser.SystemParser`)
 
 
 .. _profile-implementation:
@@ -90,7 +90,7 @@ Each *"Gene"* component corresponds to a *"Profile"*. The *"Profile"* object is 
 Reporting Hmmer search results
 ******************************
 
-A *"HMMReport"* (:class:`txsscanlib.report.HMMReport`) object represents the results of a Hmmer program search on the input dataset with a hidden Markov model protein profile. 
+A *"HMMReport"* (:class:`macsypy.report.HMMReport`) object represents the results of a Hmmer program search on the input dataset with a hidden Markov model protein profile. 
 This object has methods to extract and build *"Hits"* that are then analyzed for systems assessment. 
 
 It analyses Hmmer raw outputs, and applies filters on the matches (according to :ref:`Hmmer options<hmmer-options>`). See :ref:`hmmer-outputs-label` for details on the resulting output files. 

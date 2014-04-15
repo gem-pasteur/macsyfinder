@@ -39,7 +39,7 @@ For *ordered* datasets:
 
 3. The disambiguation step consists in splitting clusters that contains genes from different systems into sub-clusters that contain genes from a single system. Valid sub-clusters are then analysed like other clusters (step 2.). In the complex cases where genes from a same system are scattered into the cluster, then corresponding sub-clusters will not be further analysed for system detection.
 
-4. Valid clusters are used to fill system occurrences (:class:`txsscanlib.search_systems.SystemOccurence`). In this step, the **quorum** criteria for the system assessment are checked according to the system's definition. In the case a single locus fills a complete system occurrence, it is stored and reported in the output files (**"single-locus"** occurrence). Otherwise, if the cluster corresponds to a valid but incomplete system, it is stored for inclusion in a scattered system occurrence (**"multi-loci"** occurrence).
+4. Valid clusters are used to fill system occurrences (:class:`macsypy.search_systems.SystemOccurence`). In this step, the **quorum** criteria for the system assessment are checked according to the system's definition. In the case a single locus fills a complete system occurrence, it is stored and reported in the output files (**"single-locus"** occurrence). Otherwise, if the cluster corresponds to a valid but incomplete system, it is stored for inclusion in a scattered system occurrence (**"multi-loci"** occurrence).
 
 5. When all clusters, "loner" genes and "multi_system" genes were scanned for inclusion in system occurrences, a decision is made for every system occurrence regarding the **quorum rules** defined for the corresponding system. 
 
@@ -54,7 +54,7 @@ For *unordered* datasets:
 -------------------------
 
 1. The Hits are grouped by system. 
-2. They are used to fill a single system occurrence (:class:`txsscanlib.search_systems.SystemOccurence`) per system type.
+2. They are used to fill a single system occurrence (:class:`macsypy.search_systems.SystemOccurence`) per system type.
 
 .. note::
     The "unordered" mode of detection is less powerful, as a single occurrence of a given system is filled for an entire dataset with hits that origin is unknown. Please consider "systems assessments" with caution in this mode. 

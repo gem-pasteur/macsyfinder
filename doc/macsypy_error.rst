@@ -1,13 +1,13 @@
-.. _txsscan_error:
+.. _macsypy_error:
 
 ******************
 MacSyFinder errors
 ******************
 
  
-txsscan_error API reference
+macsypy_error API reference
 ============================
-.. automodule:: txsscanlib.txsscan_error
+.. automodule:: macsypy.macsypy_error
    :members:
    :private-members:
    :special-members:

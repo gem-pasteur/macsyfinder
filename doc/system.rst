@@ -13,7 +13,7 @@ It represents a macromolecular system to detect. See :ref:`system-implementation
 
 SystemBank API reference
 ========================
- .. automodule:: txsscanlib.system
+ .. automodule:: macsypy.system
    :members: SystemBank
    :private-members:
    :special-members:
@@ -23,12 +23,12 @@ SystemBank API reference
 
    Don't instanciate your own SystemBank use the system_bank at the top level of the module. ::
      
-     from txsscanlib.system import system_bank
+     from macsypy.system import system_bank
  
 System API reference
 ====================
 
-.. automodule:: txsscanlib.system
+.. automodule:: macsypy.system
    :members: System
    :private-members:
    :special-members:
