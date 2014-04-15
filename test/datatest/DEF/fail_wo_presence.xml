@@ -8,7 +8,7 @@
     <gene name="flgB" presence="mandatory"/>
     <gene name="flgC" presence="mandatory"/>
     <gene name="fliE" presence="mandatory"/>
-    <gene name="tadZ" presence="allowed" system_ref="system_2"/>
+    <gene name="tadZ" presence="accessory" system_ref="system_2"/>
     <gene name="sctC" presence="forbidden" system_ref="system_2"/>
 </system>
 

@@ -104,14 +104,14 @@ class Test(unittest.TestCase):
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
         system.add_mandatory_gene(gene)
         self.assertEqual(system._mandatory_genes, [gene])
-        self.assertEqual(system._allowed_genes, [])
+        self.assertEqual(system._accessory_genes, [])
         self.assertEqual(system._forbidden_genes, [])
 
-    def test_add_allowed_gene(self):
+    def test_add_accessory_gene(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_allowed_gene(gene)
-        self.assertEqual(system._allowed_genes, [gene])
+        system.add_accessory_gene(gene)
+        self.assertEqual(system._accessory_genes, [gene])
         self.assertEqual(system._mandatory_genes, [])
         self.assertEqual(system._forbidden_genes, [])
 
@@ -120,7 +120,7 @@ class Test(unittest.TestCase):
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
         system.add_forbidden_gene(gene)
         self.assertEqual(system._forbidden_genes, [gene])
-        self.assertEqual(system._allowed_genes, [])
+        self.assertEqual(system._accessory_genes, [])
         self.assertEqual(system._mandatory_genes, [])
 
     def test_mandatory_genes(self):
@@ -129,11 +129,11 @@ class Test(unittest.TestCase):
         system.add_mandatory_gene(gene)
         self.assertEqual(system.mandatory_genes, [gene])
 
-    def test_allowed_genes(self):
+    def test_accessory_genes(self):
         system = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_allowed_gene(gene)
-        self.assertEqual(system.allowed_genes, [gene])
+        system.add_accessory_gene(gene)
+        self.assertEqual(system.accessory_genes, [gene])
 
     def test_forbidden_genes(self):
         system = System(self.cfg, "foo", 10)
@@ -145,9 +145,9 @@ class Test(unittest.TestCase):
         system = System(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.cfg, gene_name, system, self.profile_registry)
-        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
-            system._allowed_genes = []
+            system._accessory_genes = []
             system._forbidden_genes = []
             meth(gene)
             self.assertEqual(gene, system.get_gene(gene_name))
@@ -158,9 +158,9 @@ class Test(unittest.TestCase):
         gene_homolog = Gene(self.cfg, homolog_name, system, self.profile_registry)
         homolog = Homolog(gene_homolog, gene)
         gene.add_homolog(homolog)
-        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
-            system._allowed_genes = []
+            system._accessory_genes = []
             system._forbidden_genes = []
             meth(gene)
             self.assertEqual(homolog, system.get_gene(homolog_name))
@@ -169,9 +169,9 @@ class Test(unittest.TestCase):
         gene_analog = Gene(self.cfg, analog_name, system, self.profile_registry)
         analog = Analog(gene_analog, gene)
         gene.add_analog(analog)
-        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
-            system._allowed_genes = []
+            system._accessory_genes = []
             system._forbidden_genes = []
             meth(gene)
             self.assertEqual(analog, system.get_gene(analog_name))
@@ -185,9 +185,9 @@ class Test(unittest.TestCase):
         homolog = Homolog(gene_homolg, gene_ref)
         gene_ref.add_homolog(homolog)
 
-        for meth in (system.add_forbidden_gene, system.add_allowed_gene, system.add_mandatory_gene):
+        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
-            system._allowed_genes = []
+            system._accessory_genes = []
             system._forbidden_genes = []
             meth(gene_ref)
             self.assertEqual(gene_ref, system.get_gene_ref(homolog))
