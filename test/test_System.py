@@ -12,12 +12,12 @@
 import os
 import unittest
 import shutil
-from txsscanlib.config import Config
-from txsscanlib.system import System
-from txsscanlib.gene import Gene
-from txsscanlib.gene import Homolog
-from txsscanlib.gene import Analog
-from txsscanlib.registries import ProfilesRegistry
+from macsypy.config import Config
+from macsypy.system import System
+from macsypy.gene import Gene
+from macsypy.gene import Homolog
+from macsypy.gene import Analog
+from macsypy.registries import ProfilesRegistry
 
 
 class Test(unittest.TestCase):

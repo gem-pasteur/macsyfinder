@@ -7,13 +7,13 @@ Created on Nov 30, 2012
 import os
 import unittest
 import shutil
-from txsscanlib.gene import profile_factory
-from txsscanlib.gene import Profile
-from txsscanlib.gene import Gene
-from txsscanlib.system import System
-from txsscanlib.config import Config
-from txsscanlib.registries import ProfilesRegistry
-from txsscanlib.txsscan_error import TxsscanError
+from macsypy.gene import profile_factory
+from macsypy.gene import Profile
+from macsypy.gene import Gene
+from macsypy.system import System
+from macsypy.config import Config
+from macsypy.registries import ProfilesRegistry
+from macsypy.macsypy_error import MacsypyError
 
 
 class Test(unittest.TestCase):
@@ -61,5 +61,5 @@ class Test(unittest.TestCase):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         gene.name = "foo"
-        self.assertRaises(TxsscanError, profile_factory.get_profile, gene, self.cfg, self.profile_registry)
+        self.assertRaises(MacsypyError, profile_factory.get_profile, gene, self.cfg, self.profile_registry)
 

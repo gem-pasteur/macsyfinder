@@ -12,11 +12,11 @@
 import os
 import unittest
 import shutil
-from txsscanlib.config import Config
-from txsscanlib.system import SystemBank
-from txsscanlib.gene import GeneBank
-from txsscanlib.system_parser import SystemParser
-from txsscanlib.txsscan_error import TxsscanError, SystemInconsistencyError
+from macsypy.config import Config
+from macsypy.system import SystemBank
+from macsypy.gene import GeneBank
+from macsypy.system_parser import SystemParser
+from macsypy.macsypy_error import MacsypyError, SystemInconsistencyError
 
 
 class Test(unittest.TestCase):
@@ -53,7 +53,7 @@ class Test(unittest.TestCase):
         system_2_parse.sort()
         self.assertListEqual(system_2_parse, ['system_1', 'system_2'])
         system_2_detect = ['nimportnaoik']
-        with self.assertRaises(TxsscanError) as context:
+        with self.assertRaises(MacsypyError) as context:
             self.parser.system_to_parse(system_2_detect)
 
     def test_parse(self):

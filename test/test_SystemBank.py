@@ -13,9 +13,9 @@
 import os
 import unittest
 import shutil
-from txsscanlib.system import system_bank
-from txsscanlib.system import System
-from txsscanlib.config import Config
+from macsypy.system import system_bank
+from macsypy.system import System
+from macsypy.config import Config
 
 
 class Test(unittest.TestCase):

@@ -12,7 +12,7 @@
 
 import os
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 
 
 import abc
@@ -33,11 +33,11 @@ class HMMReport(object):
     def __init__(self, gene, hmmer_output, cfg):
         """
         :param gene: the gene corresponding to the profile search reported here
-        :type gene: :class:`txsscanlib.gene.Gene` object
+        :type gene: :class:`macsypy.gene.Gene` object
         :param hmmer_output: The path to the raw Hmmer output file
         :type hmmer_output: string
         :param cfg: the configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         """
         self.gene = gene
         self._hmmer_raw_out = hmmer_output
@@ -108,11 +108,11 @@ class HMMReport(object):
                 d[self._parse_hmm_header(h)] = None
         return d
 
-    def _fill_my_db(self, txsscan_idx, db):
+    def _fill_my_db(self, macsyfinder_idx, db):
         """
         Fill the dictionary with information on the matched sequences 
         """
-        with open(txsscan_idx, 'r') as idx:
+        with open(macsyfinder_idx, 'r') as idx:
             for l in idx:
                 #print l
                 seqid, length, rank = l.split(';')
@@ -148,7 +148,7 @@ class HMMReport(object):
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a set of hits
-        :rtype: list of :class:`txsscanlib.report.Hit` objects
+        :rtype: list of :class:`macsypy.report.Hit` objects
 
         """
         first_line = b_grp.next()
@@ -211,9 +211,9 @@ class GeneralHMMReport(HMMReport):
                 return
 
             idx = Indexes(self.cfg)
-            txsscan_idx = idx.find_my_indexes()
+            macsyfinder_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
-            self._fill_my_db(txsscan_idx, my_db)
+            self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
@@ -256,9 +256,9 @@ class OrderedHMMReport(HMMReport):
                 return
 
             idx = Indexes(self.cfg)
-            txsscan_idx = idx.find_my_indexes()
+            macsyfinder_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
-            self._fill_my_db(txsscan_idx, my_db)
+            self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
@@ -301,9 +301,9 @@ class GembaseHMMReport(HMMReport):
                 return
 
             idx = Indexes(self.cfg)
-            txsscan_idx = idx.find_my_indexes()
+            macsyfinder_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
-            self._fill_my_db(txsscan_idx, my_db)
+            self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
@@ -333,9 +333,9 @@ class Hit(object):
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
-        :type gene: :class:`txsscanlib.gene.Gene` object
+        :type gene: :class:`macsypy.gene.Gene` object
         :param system: the system to which this gene belongs
-        :type system: :class:`txsscanlib.system.System` object
+        :type system: :class:`macsypy.system.System` object
         :param hit_id: the identifier of the hit
         :type hit_id: string
         :param hit_seq_length: the length of the hit sequence
@@ -392,7 +392,7 @@ class Hit(object):
         Compare two Hits. If the sequence identifier is the same, do the comparison on the score. Otherwise, do it on alphabetical comparison of the sequence identifier.
         
         :param other: the hit to compare to the current object
-        :type other: :class:`txsscanlib.report.Hit` object
+        :type other: :class:`macsypy.report.Hit` object
         :return: the result of the comparison
         """
         if self.id == other.id:
@@ -407,7 +407,7 @@ class Hit(object):
         Return True if two hits are totally equivalent, False otherwise.
         
         :param other: the hit to compare to the current object
-        :type other: :class:`txsscanlib.report.Hit` object
+        :type other: :class:`macsypy.report.Hit` object
         :return: the result of the comparison
         :rtype: boolean
         """

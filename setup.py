@@ -151,7 +151,7 @@ class test(Command):
                 self.build_lib = self.build_platlib
 
         log.info("running test")
-        os.environ['TXSSCAN_HOME'] = os.path.dirname(os.path.abspath(__file__))
+        os.environ['MACSY_HOME'] = os.path.dirname(os.path.abspath(__file__))
         test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
         kind_of_skipped = {}
         for test in test_res.skipped:
@@ -162,14 +162,14 @@ class test(Command):
 #####################################################################
 neither makeblast nor formatdb found in PATH
 You'll have to provide the full path of 
-makeblastdb or formatdb in config file or command line to run txsscan
+makeblastdb or formatdb in config file or command line to run macsyfinder
 #####################################################################"""
             elif skip_reason == "hmmsearch not found in PATH":
                 msg = """
 ########################################################
 hmmsearch not found in PATH
 You'll have to provide the full path of 
-hmmsearch in config file or command line to run txsscan
+hmmsearch in config file or command line to run macsyfinder
 ########################################################"""
             else:
                 msg = skip_reason
@@ -179,7 +179,7 @@ hmmsearch in config file or command line to run txsscan
 
 
 
-class install_txsscan(install):
+class install_macsyfinder(install):
 
     #I use record to store all installed files and reuse this record file for uninstall
     #so this option is not available anymore for the users 
@@ -199,9 +199,9 @@ class install_txsscan(install):
     def run(self):
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'PREFIX': inst.get('prefix', ''),
-                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
-                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
-                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
+                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
+                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
+                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder')
                         }
         for _file in self.distribution.fix_prefix:
             input_file = os.path.join(self.build_lib, _file)
@@ -365,9 +365,9 @@ class install_conf(install_data):
         self.mkpath(self.install_dir)
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
-                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'txsscan'),
-                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'txsscan'),
-                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'txsscan')
+                        'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
+                        'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
+                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder')
                         }
         for f in self.conf_files:
             if isinstance(f, str):
@@ -427,7 +427,7 @@ class Uninstall(Command):
     def finalize_options(self):
         self.parser = SafeConfigParser()
         if not os.path.exists(self.distribution.uninstall_prefix):
-            raise DistutilsFileError( "Cannot unistall txsscan.\n{}: No such file".format(self.distribution.uninstall_prefix))
+            raise DistutilsFileError( "Cannot unistall macsyfinder.\n{}: No such file".format(self.distribution.uninstall_prefix))
         used_files = self.parser.read(self.distribution.uninstall_prefix)
         for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
             try:
@@ -479,7 +479,7 @@ class Uninstall(Command):
                     _dir = os.path.dirname(path)
                     clean_tree(_dir)
         except IOError, err:
-            msg = "Cannot unistall txsscan.\n"
+            msg = "Cannot unistall macsyfinder.\n"
             if err.errno == os.errno.ENOENT:
                 msg += "Cannot access \"{}\": No such file".format(self.distribution.uninstall_files) 
             elif err.errno == os.errno.EACCES:
@@ -571,29 +571,29 @@ require_packages = []
 
 
 
-setup(name        = 'txsscan',
+setup(name        = 'macsyfinder',
       version     =  time.strftime("%Y%m%d"),
-      description  = """Txsscan is a tool for the detection of protein secretion systems 
-of diderm bacteria from a protein dataset. """,
+      description  = """MacSyFinder: Detection of macromolecular systems 
+in protein datasets using systems modelling and similarity search""",
       classifiers = [
                      'Operating System :: POSIX' ,
                      'Programming Language :: Python' ,
                      'Topic :: Bioinformatics' ,
                     ] ,
-      packages    = ['txsscanlib'],
-      scripts     = [ 'bin/txsscan' ] ,
-      data_files = [('txsscan/DEF', ['data/DEF/']),
-                    ('txsscan/profiles', ['data/profiles/'])
+      packages    = ['macsypy'],
+      scripts     = [ 'bin/macsyfinder' ] ,
+      data_files = [('macsyfinder/DEF', ['data/DEF/']),
+                    ('macsyfinder/profiles', ['data/profiles/'])
                     ],
-      conf_files = [('txsscan', ['etc/txsscan.conf'])],
-      doc_files = [('txsscan/html', ['doc/_build/html/']),
-             ('txsscan/pdf', ['doc/_build/latex/Txsscan.pdf']),
+      conf_files = [('macsyfinder', ['etc/macsyfinder.conf'])],
+      doc_files = [('macsyfinder/html', ['doc/_build/html/']),
+             ('macsyfinder/pdf', ['doc/_build/latex/Macsyfinder.pdf']),
              ],
-      fix_conf = ['etc/txsscan.conf'],#file where some variable must be fix by install_conf
-      fix_prefix = ['txsscanlib/config.py', 'txsscanlib/registries.py'],#file where some variable must be fix by txsscan_install
+      fix_conf = ['etc/macsyfinder.conf'],#file where some variable must be fix by install_conf
+      fix_prefix = ['macsypy/config.py', 'macsypy/registries.py'],#file where some variable must be fix by macsyfinder_install
       cmdclass= { 'build' : check_and_build ,
                   'test': test,
-                  'install' : install_txsscan,
+                  'install' : install_macsyfinder,
                   'install_data' : install_data,
                   'install_conf' : install_conf,
                   'install_doc'  : install_doc,

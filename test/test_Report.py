@@ -13,12 +13,12 @@
 import os
 import unittest
 import shutil
-from txsscanlib.report import HMMReport, GeneralHMMReport, GembaseHMMReport, Hit
-from txsscanlib.gene import Gene
-from txsscanlib.system import System
-from txsscanlib.config import Config
-from txsscanlib.database import Indexes
-from txsscanlib.registries import ProfilesRegistry
+from macsypy.report import HMMReport, GeneralHMMReport, GembaseHMMReport, Hit
+from macsypy.gene import Gene
+from macsypy.system import System
+from macsypy.config import Config
+from macsypy.database import Indexes
+from macsypy.registries import ProfilesRegistry
 
 
 class Test(unittest.TestCase):

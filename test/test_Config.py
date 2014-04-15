@@ -13,7 +13,7 @@ import os
 import unittest
 import shutil
 import time
-from txsscanlib.config import Config
+from macsypy.config import Config
 
 class Test(unittest.TestCase):
 
@@ -108,7 +108,7 @@ class Test(unittest.TestCase):
         real_def_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'DEF'),
         self.assertRaises(ValueError, Config, **kwargs)
 
-        def_dir = os.path.join('/tmp', 'txsscan_DEF')
+        def_dir = os.path.join('/tmp', 'macsyfinder_DEF')
         if not os.path.exists(def_dir):
             os.mkdir(def_dir)
         self.cfg = Config(cfg_file = "nimportnaoik",

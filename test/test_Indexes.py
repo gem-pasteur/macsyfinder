@@ -14,8 +14,8 @@ import os
 import sys
 import unittest
 import shutil
-from txsscanlib.config import Config
-from txsscanlib.database import Indexes
+from macsypy.config import Config
+from macsypy.database import Indexes
 
 from test import which
 

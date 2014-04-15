@@ -1,14 +1,7 @@
-exclude txsscanlib/pool.py
-exclude txsscanlib/secretion-old.py
-exclude txsscanlib/detect_SS.py
-exclude txsscanlib/test_*.py
-exclude txsscanlib/shuffle_seqid.py
-exclude txsscanlib/hmm_parsing_in_memory.py
-exclude txsscanlib/hmm_parsing_w_DB.*
-exclude txsscanlib/min_max_proto.py
+exclude macsypy/test_*.py
 
 recursive-include doc/_build/html *
-include doc/_build/latex/Txsscan.pdf
+include doc/_build/latex/Macsyfinder.pdf
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
@@ -20,8 +13,10 @@ include test/datatest/DEF/*.xml
 include test/datatest/base/*
 include test/datatest/hmm/*
 include test/datatest/profiles/*
-include test/txsscan.conf
+include test/macsyfinder.conf
 
-include etc/txsscan.conf
+include etc/macsyfinder.conf
 
 include INSTALL
+include COPYING
+include COPYRIGHT
