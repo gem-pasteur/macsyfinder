@@ -17,11 +17,11 @@ import itertools, operator
 import json
 from operator import attrgetter # To be used with "sorted"
 
-from txsscan_error import TxsscanError, SystemDetectionError
+from macsypy_error import MacsypyError, SystemDetectionError
 from database import RepliconDB
 from system import system_bank
 
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 
 class ClustersHandler(object):
     """
@@ -31,7 +31,7 @@ class ClustersHandler(object):
     def __init__(self):
         """
         :param cfg: The configuration object built from default and user parameters.
-        :type cfg: :class:`txsscanlib.config.Config` 
+        :type cfg: :class:`macsypy.config.Config` 
         """
         self.clusters = []
         self.replicon_name = ""
@@ -65,12 +65,12 @@ class ClustersHandler(object):
         This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
         It has to be called only if the replicon_topology is set to \"circular\".
 
-        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
         :param end_hits: a set of hits at ends of the replicon that were not introduced in clusters, and that might be part of a system overlapping the two "ends" of the replicon
-        :type end_hits: a list of :class:`txsscanlib.report.Hit`
+        :type end_hits: a list of :class:`macsypy.report.Hit`
         :param systems_to_detect: the set of systems to detect in this run
-        :type systems_to_detect: a list of :class:`txsscanlib.system.System
+        :type systems_to_detect: a list of :class:`macsypy.system.System
         """
         # We assume this function is called when appropriate (i.e. for circular replicons)
 
@@ -182,7 +182,7 @@ class Cluster(object):
     def __init__(self, systems_to_detect):
         """
         :param systems_to_detect: the list of systems to be detected in this run
-        :type systems_to_detect: a list of :class:`txsscanlib.system.System`
+        :type systems_to_detect: a list of :class:`macsypy.system.System`
         """
         self.hits = []
         self.systems_to_detect = systems_to_detect # NEW
@@ -248,8 +248,8 @@ class Cluster(object):
         Hits are always added at the end of the cluster (appended to the list of hits). Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
 
         :param hit: the Hit to add
-        :type hit: a :class:`txsscanlib.report.Hit`
-        :raise: a :class:`txsscanlib.txsscan_error.SystemDetectionError`
+        :type hit: a :class:`macsypy.report.Hit`
+        :raise: a :class:`macsypy.macsypy_error.SystemDetectionError`
         """
         # need to update cluster bounds
         if len(self.hits) == 0:
@@ -350,7 +350,7 @@ class Cluster(object):
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
 
                         :param hits: a list of hits
-                        :type hits: a list of :class:`txsscanlib.report.Hit`
+                        :type hits: a list of :class:`macsypy.report.Hit`
                         :param putative_system: the name of a putative system to consider
                         :type putative_system: string
                         :param counter_systems_in_clust: a dictionary with systems occurrences when exploring the hits
@@ -459,7 +459,7 @@ class SystemOccurence(object):
     def __init__(self, system):
         """
         :param system: the system to \"fill\" with hits.
-        :type system: :class:`txsscanlib.system.System` 
+        :type system: :class:`macsypy.system.System` 
         """
         self.system = system
         self.system_name = system.name
@@ -565,12 +565,12 @@ class SystemOccurence(object):
 
     def get_system_unique_name(self, replicon_name):
         """
-        Attributes unique name to the system occurrence with the class :class:`txsscanlib.search_systems.SystemNameGenerator`.
+        Attributes unique name to the system occurrence with the class :class:`macsypy.search_systems.SystemNameGenerator`.
         Generates the name if not already set. 
 
         :param replicon_name: the name of the replicon
         :type replicon_name: string
-        :return: the unique name of the :class:`txsscanlib.search_systems.SystemOccurence`
+        :return: the unique name of the :class:`macsypy.search_systems.SystemOccurence`
         :rtype: string
         """
         if not self.unique_name:
@@ -583,7 +583,7 @@ class SystemOccurence(object):
 
         :param suffix: the suffix to be used for generating the systemOccurrence's name
         :type suffix: string
-        :return: a name for a system in an "unordered" dataset to the :class:`txsscanlib.search_systems.SystemOccurence`
+        :return: a name for a system in an "unordered" dataset to the :class:`macsypy.search_systems.SystemOccurence`
         :rtype: string
         """
         return self.system_name + suffix
@@ -593,8 +593,8 @@ class SystemOccurence(object):
         """
         Returns the length of the system, all loci gathered, in terms of protein number (even those not matching any system gene)
 
-        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
         :rtype: integer
         """
         length=0
@@ -616,7 +616,7 @@ class SystemOccurence(object):
     @property
     def nb_syst_genes(self):
         """
-        This value is set after a decision was made on the system in :func:`txsscanlib.search_systems.SystemOccurence:decision_rule`
+        This value is set after a decision was made on the system in :func:`macsypy.search_systems.SystemOccurence:decision_rule`
 
         :return: the number of mandatory and accessory genes with at least one occurence (number of different accessory genes)
         :rtype: integer
@@ -708,9 +708,9 @@ class SystemOccurence(object):
 
         :param replicon_name: the name of the replicon
         :type replicon_name: string
-        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`        
-        :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
+        :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`        
+        :return: a tabulated summary of the :class:`macsypy.search_systems.SystemOccurence`
         :rtype: string
         """
 
@@ -748,7 +748,7 @@ class SystemOccurence(object):
 
         :param replicon_name: the name of the replicon
         :type replicon_name: string
-        :return: a tabulated summary of the :class:`txsscanlib.search_systems.SystemOccurence`
+        :return: a tabulated summary of the :class:`macsypy.search_systems.SystemOccurence`
         :rtype: string
         """
 
@@ -791,8 +791,8 @@ class SystemOccurence(object):
         Adds hits from a cluster to a system occurence, and check which are their status according to the system definition.
         Set the system occurence state to "no_decision" after calling of this function.
 
-        :param cluster: the set of contiguous genes to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion. 
-        :type cluster: :class:`txsscanlib.search_systems.Cluster`
+        :param cluster: the set of contiguous genes to treat for :class:`macsypy.search_systems.SystemOccurence` inclusion. 
+        :type cluster: :class:`macsypy.search_systems.Cluster`
         """
         included = True
         self._state = "no_decision"
@@ -845,8 +845,8 @@ class SystemOccurence(object):
         .. note::
             Forbidden genes will only be included if they do belong to the current system (and not to another specified with "system_ref" in the current system's definition). 
 
-        :param hits: a list of Hits to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion.
-        :type list of: :class:`txsscanlib.report.Hit`
+        :param hits: a list of Hits to treat for :class:`macsypy.search_systems.SystemOccurence` inclusion.
+        :type list of: :class:`macsypy.report.Hit`
         """
         self._state = "no_decision"
         for hit in hits:
@@ -887,7 +887,7 @@ class SystemOccurence(object):
         Those genes are used only if the occurrence of the corresponding gene was not yet filled with a gene from a cluster of the system. 
 
         :param multi_systems_hits: a list of hits of genes that are "multi_system" which correspond to mandatory or accessory genes from the current system for which to fill a SystemOccurrence 
-        :type list of: :class:`txsscanlib.report.Hit`
+        :type list of: :class:`macsypy.report.Hit`
 
         """
         # For each "multi_system" gene missing:
@@ -924,7 +924,7 @@ class SystemOccurence(object):
             - the minimal number of genes in the system is checked (\"min_genes_required\")
 
         When a decision is made, the status (self.status) of the 
-        :class:`txsscanlib.search_systems.SystemOccurence` is set either to:
+        :class:`macsypy.search_systems.SystemOccurence` is set either to:
 
             - "\single_locus\" when a complete system in the form of a single cluster was found
             - "\multi_loci\" when a complete system in the form of several clusters was found
@@ -980,7 +980,7 @@ class SystemOccurence(object):
 
 class validSystemHit(object):
     """
-    Encapsulates a :class:`txsscanlib.report.Hit`
+    Encapsulates a :class:`macsypy.report.Hit`
     This class stores a Hit that has been attributed to a detected system. Thus, it also stores:
 
     - the system,
@@ -994,7 +994,7 @@ class validSystemHit(object):
     def __init__(self, hit, detected_system, gene_status):
         """
         :param hit: a hit to base the validSystemHit on
-        :type hit: :class:`txsscanlib.report.Hit`
+        :type hit: :class:`macsypy.report.Hit`
         :param detected_system: the name of the predicted System
         :type detected_system: string
         :param gene_status: the "role" of the gene in the predicted system
@@ -1060,7 +1060,7 @@ class systemDetectionReport(object):
     def __init__(self, systems_occurences_list, cfg):
         self._systems_occurences_list = systems_occurences_list
         self.cfg = cfg
-        if 'TXSSCAN_DEBUG' in os.environ and os.environ['TXSSCAN_DEBUG']:
+        if 'MACSY_DEBUG' in os.environ and os.environ['MACSY_DEBUG']:
             self._indent = 2 #human readable json for debugging purpose
         else:
             self._indent = None #improve performance of txssview
@@ -1091,8 +1091,8 @@ class systemDetectionReport(object):
             - the number and list of missing genes
             - the number of loci encoding the system
 
-        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
         :param print_header: True if the header has to be written. False otherwise
         :type print_header: boolean
 
@@ -1107,7 +1107,7 @@ class systemDetectionReport(object):
         :param path: the path to a file where to write the report in json format
         :type path: string
         :param rep_db: the replicon database
-        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
+        :type rep_db: a class:`macsypy.database.RepliconDB` object
         """
         pass
 
@@ -1126,7 +1126,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :param systems_occurences_list: the list of system's occurrences to consider
-        :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
+        :type systems_occurences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
         super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
         self.replicon_name = replicon_name
@@ -1227,8 +1227,8 @@ class systemDetectionReportOrdered(systemDetectionReport):
             - the number and list of missing genes
             - the number of loci encoding the system
 
-        :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-        :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+        :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+        :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
         :param print_header: True if the header has to be written. False otherwise
         :type print_header: boolean
 
@@ -1255,9 +1255,9 @@ class systemDetectionReportOrdered(systemDetectionReport):
     def _match2json(self, valid_hit, so):
         """
         :param valid_hit: the valid hit to transform in to json.
-        :type valid_hit: class:`txsscanlib.search_system.ValidHit` object.
+        :type valid_hit: class:`macsypy.search_system.ValidHit` object.
         :param so: the system occurence where the valid hit come from.
-        :type so: class:`txsscanlib.search_system.SystemOccurence.`
+        :type so: class:`macsypy.search_system.SystemOccurence.`
         """
         gene = {}
         gene['id'] = valid_hit.id
@@ -1292,7 +1292,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :param path: the path to a file where to write the report in json format
         :type path: string
         :param rep_db: the replicon database
-        :type rep_db: a class:`txsscanlib.database.RepliconDB` object
+        :type rep_db: a class:`macsypy.database.RepliconDB` object
         """
         systems = []
         for so in self._systems_occurences_list:
@@ -1364,7 +1364,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
     def __init__(self, systems_occurences_list, cfg):
         """
         :param systems_occurences_list: the list of system's occurrences to consider
-        :type systems_occurences_list: list of :class:`txsscanlib.search_systems.SystemOccurence`
+        :type systems_occurences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
         super(systemDetectionReportUnordered, self).__init__(systems_occurences_list, cfg)
 
@@ -1505,9 +1505,9 @@ def get_compatible_systems(systems_list1, systems_list2):
     Returns the intersection of the two input systems lists.
 
     :param systems_list1, systems_list2: two lists of systems 
-    :type systems_list1, systems_list2: two lists of :class:`txsscanlib.system.System`
+    :type systems_list1, systems_list2: two lists of :class:`macsypy.system.System`
     :return: a list of systems, or an empty list if no common system
-    :rtype: a list of :class:`txsscanlib.system.System`
+    :rtype: a list of :class:`macsypy.system.System`
 
     """
     inter = []
@@ -1527,7 +1527,7 @@ def disambiguate_cluster(cluster):
     - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster in this case, check that they are not "loners", cause "loners" can be stored.
 
     :param cluster: the cluster to "disambiguate"
-    :type cluster: :class:`txsscanlib.search_systems.Cluster`
+    :type cluster: :class:`macsypy.search_systems.Cluster`
 
     """
     res_clusters = []
@@ -1648,12 +1648,12 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     Reports systems occurence.
 
     :param clusters: the set of clusters to analyze
-    :type clusters: :class:`txsscanlib.search_systems.ClustersHandler` 
+    :type clusters: :class:`macsypy.search_systems.ClustersHandler` 
     :param systems: the set of systems to detect
-    :type systems: a list of :class:`txsscanlib.system.System`
+    :type systems: a list of :class:`macsypy.system.System`
     :param multi_systems_genes: a dictionary with genes that could belong to multiple systems (keys are system names)
     :return: a set of systems occurence filled with hits found in clusters
-    :rtype: a list of :class:`txsscanlib.search_systems.SystemOccurence` 
+    :rtype: a list of :class:`macsypy.search_systems.SystemOccurence` 
 
     """
 
@@ -1768,15 +1768,15 @@ def build_clusters(hits, systems_to_detect, rep_info):
     Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets.
 
     :param hits: a list of Hmmer hits to analyze 
-    :type hits: a list of :class:`txsscanlib.report.Hit`
+    :type hits: a list of :class:`macsypy.report.Hit`
     :param systems_to_detect: the list of systems to detect 
-    :type systems_to_detect: a list of :class:`txsscanlib.system.System`
+    :type systems_to_detect: a list of :class:`macsypy.system.System`
     :param cfg: the configuration object built from default and user parameters.
-    :type cfg: :class:`txsscanlib.config.Config`
-    :param rep_info: an entry extracted from the :class:`txsscanlib.database.RepliconDB`
-    :type rep_info: a namedTuple "RepliconInfo" :class:`txsscanlib.database.RepliconInfo`
+    :type cfg: :class:`macsypy.config.Config`
+    :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
+    :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
     :return: a set of clusters and a dictionary with \"multi_system\" genes stored in a system-wise way for further utilization.
-    :rtype: :class:`txsscanlib.search_systems.ClustersHandler`
+    :rtype: :class:`macsypy.search_systems.ClustersHandler`
     """
 
     _log.debug("Starting cluster detection with build_clusters... ")
@@ -1952,8 +1952,8 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
     :param criterion: the criterion to base the sorting on 
     :type criterion: string
     :return: the list of best matching hits
-    :rtype: list of :class:`txsscanlib.report.Hit`
-    :raise: a :class:`txsscanlib.txsscan_error.TxsscanError`
+    :rtype: list of :class:`macsypy.report.Hit`
+    :raise: a :class:`macsypy.macsypy_error.MacsypyError`
     """
     if tosort:
         hits = sorted(hits, key = attrgetter('position'))
@@ -1984,7 +1984,7 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
                 if getattr(prev_hit, 'profile_coverage') < getattr(h, 'profile_coverage'):
                     prev_hit = h
             else:
-                raise TxsscanError("The criterion for Hits comparison % does not exist or is not available. \nIt must be either \"score\", \"i_eval\" or \"profile_coverage\"."%criterion)
+                raise MacsypyError("The criterion for Hits comparison % does not exist or is not available. \nIt must be either \"score\", \"i_eval\" or \"profile_coverage\"."%criterion)
 
             #print "BEST"
             #print prev_hit
@@ -2002,16 +2002,16 @@ def search_systems(hits, systems, cfg):
       - analyze **quorum only** (and in a limited way) for "unordered_replicon" and "unordered" datasets.
 
     :param hits: the list of hits for input systems components
-    :type hits: list of :class:`txsscanlib.report.Hit`
+    :type hits: list of :class:`macsypy.report.Hit`
     :param systems: the list of systems asked for detection
-    :type systems: list of :class:`txsscanlib.system.System`
+    :type systems: list of :class:`macsypy.system.System`
     :param cfg: the configuration object
-    :type cfg: :class:`txsscanlib.config.Config`
+    :type cfg: :class:`macsypy.config.Config`
     """
 
-    tabfilename = os.path.join(cfg.working_dir, 'txsscan.tab')
-    reportfilename = os.path.join(cfg.working_dir, 'txsscan.report')
-    summaryfilename = os.path.join(cfg.working_dir, 'txsscan.summary')
+    tabfilename = os.path.join(cfg.working_dir, 'macsyfinder.tab')
+    reportfilename = os.path.join(cfg.working_dir, 'macsyfinder.report')
+    summaryfilename = os.path.join(cfg.working_dir, 'macsyfinder.summary')
 
 
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 

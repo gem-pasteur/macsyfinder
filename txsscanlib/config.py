@@ -18,17 +18,17 @@ from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
 _prefix_path = '$PREFIX'
 _prefix_conf = '$PREFIXCONF'
 _prefix_data = '$PREFIXDATA'
-if 'TXSSCAN_HOME' in os.environ and os.environ['TXSSCAN_HOME']:
-    _prefix_path = os.environ['TXSSCAN_HOME']
-    _prefix_conf = os.path.join(os.environ['TXSSCAN_HOME'], 'etc')
-    _prefix_data = os.path.join(os.environ['TXSSCAN_HOME'], 'data')
+if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
+    _prefix_path = os.environ['MACSY_HOME']
+    _prefix_conf = os.path.join(os.environ['MACSY_HOME'], 'etc')
+    _prefix_data = os.path.join(os.environ['MACSY_HOME'], 'data')
 
 import logging
 
 class Config(object):
     """
     Parse configuration files and handle the configuration according to the following file location precedence:
-    /etc/txsscan/txsscan.conf < ~/.txsscan/txsscan.conf < .txsscan.conf
+    /etc/macsyfinder/macsyfinder.conf < ~/.macsyfinder/macsyfinder.conf < .macsyfinder.conf
     
     If a configuration file is given on the command-line, this file will be used.
     *In fine* the arguments passed on the command-line have the highest priority.
@@ -70,7 +70,7 @@ class Config(object):
                 build_indexes = None
                 ):
         """
-        :param cfg_file: the path to the TXSScan configuration file to use 
+        :param cfg_file: the path to the MacSyFinder configuration file to use 
         :type cfg_file: string
         :param previous_run: the path to the results directory of a previous run
         :type previous_run: string 
@@ -108,7 +108,7 @@ class Config(object):
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
-        :param res_search_dir: the path to the directory where to store TXSScan search results directories.
+        :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
         :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
@@ -120,7 +120,7 @@ class Config(object):
         :type  profile_suffix: string
         :param log_level: the level of log output
         :type log_level: int
-        :param log_file: the path to the directory to write TXSScan log files
+        :param log_file: the path to the directory to write MacSyFinder log files
         :type log_file: string
         :param worker_nb: maximal number of processes to be used in parallel (multi-thread run, 0 use all cores availables)
         :type worker_nb: int
@@ -128,7 +128,7 @@ class Config(object):
         :type build_indexes: boolean
         """
 
-        self._new_cfg_name = "txsscan.conf"
+        self._new_cfg_name = "macsyfinder.conf"
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
             if not os.path.exists(prev_config):
@@ -137,9 +137,9 @@ class Config(object):
         elif cfg_file:
             config_files = [cfg_file]
         else:
-            config_files = [os.path.join( _prefix_conf, 'txsscan.conf'),
-                           os.path.expanduser('~/.txsscan/txsscan.conf'),
-                           'txsscan.conf']
+            config_files = [os.path.join( _prefix_conf, 'macsyfinder.conf'),
+                           os.path.expanduser('~/.macsyfinder/macsyfinder.conf'),
+                           'macsyfinder.conf']
         self._defaults = {'replicon_topology': 'circular',
                           'hmmer_exe' : 'hmmsearch',
                           'index_db_exe': 'makeblastdb',
@@ -199,18 +199,18 @@ class Config(object):
         if not os.access(options['res_search_dir'], os.W_OK):
             raise ValueError("The results directory (%s) is not writable" % options['res_search_dir'])
 
-        working_dir = os.path.join(options['res_search_dir'], "txsscan-" + strftime("%Y%m%d_%H-%M-%S"))
+        working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))
         try:
             os.mkdir(working_dir)
         except OSError, err:
-            raise ValueError("cannot create TXSScan working directory %s : %s" % (working_dir, err))
+            raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
         hmmer_path = os.path.join(working_dir, self.hmmer_dir)
         try:
             os.mkdir(hmmer_path)
         except OSError, err:
-            raise ValueError("cannot create TXSScan hmmer directory %s : %s" % (hmmer_path, err))
+            raise ValueError("cannot create MacSyFinder hmmer directory %s : %s" % (hmmer_path, err))
 
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
@@ -235,7 +235,7 @@ class Config(object):
             if not isinstance(err, NoOptionError):
                 log_error.append(err)
             try:
-                log_file = os.path.join( options['working_dir'], 'txsscan.log' )
+                log_file = os.path.join( options['working_dir'], 'macsyfinder.log' )
                 log_handler = logging.FileHandler(log_file)
                 options['log_file'] = log_file
             except Exception , err:
@@ -250,11 +250,11 @@ class Config(object):
         root = logging.getLogger()
         root.setLevel( logging.NOTSET )
 
-        logger = logging.getLogger('txsscan')
+        logger = logging.getLogger('macsyfinder')
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
 
-        self._log = logging.getLogger('txsscan.config')
+        self._log = logging.getLogger('macsyfinder.config')
         for error in log_error:
             self._log.warn(error)
         try:
@@ -578,7 +578,7 @@ class Config(object):
                             for system, space in self.options[directive].items():
                                 s += " %s %s" % (system, space)
                             parser.set(section, directive, s)
-                        elif directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'txsscan.log'):
+                        elif directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'macsyfinder.log'):
                             parser.set(section, directive, str(self.options[directive]))
                 except KeyError:
                     pass
@@ -737,7 +737,7 @@ class Config(object):
     @property
     def res_search_dir(self):
         """
-        :return the path to the directory to store results of TXSScan runs
+        :return the path to the directory to store results of MacSyFinder runs
         :rtype: string
         """
         return self.options['res_search_dir']

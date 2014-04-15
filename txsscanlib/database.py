@@ -16,9 +16,9 @@ from collections import namedtuple
 from glob import glob
 import os.path
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 from subprocess import Popen
-from txsscan_error import TxsscanError
+from macsypy_error import MacsypyError
 
 def fasta_iter(fasta_file):
     """
@@ -45,10 +45,10 @@ def fasta_iter(fasta_file):
 
 class Indexes(object):
     """
-    Handle the indexes for txsscan:
+    Handle the indexes for macsyfinder:
 
      - find the indexes for hmmer, or build them using formatdb or makeblastdb external tools
-     - find the indexes required by txsscan to compute some scores, or build them.
+     - find the indexes required by macsyfinder to compute some scores, or build them.
     """
 
 
@@ -59,7 +59,7 @@ class Indexes(object):
         Launch the indexes building. 
 
         :param cfg: the configuration 
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         """
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db
@@ -115,7 +115,7 @@ class Indexes(object):
         self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
         assert self._hmmer_indexes , "failed to create hmmer indexes"
-        assert self._my_indexes, "failed create txsscan indexes"
+        assert self._my_indexes, "failed create macsyfinder indexes"
 
 
     def find_hmmer_indexes(self):
@@ -155,7 +155,7 @@ class Indexes(object):
 
     def find_my_indexes(self):
         """
-        :return: the file of txsscan indexes if it exists in the dataset folder, None otherwise. 
+        :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
         """ 
         path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
@@ -183,7 +183,7 @@ class Indexes(object):
                                                       self.cfg.sequence_db
                                                           )
         else:
-            raise TxsscanError("%s is not supported to index the sequence dataset. Please use makeblastdb or formatdb." % self.cfg.sequence_db)
+            raise MacsypyError("%s is not supported to index the sequence dataset. Please use makeblastdb or formatdb." % self.cfg.sequence_db)
 
         _log.debug("hmmer index command: {0}".format(command))
         err_path = os.path.join(index_dir, "formatdb.err")
@@ -205,7 +205,7 @@ class Indexes(object):
 
     def _build_my_indexes(self):
         """
-        Build txsscan indexes. These indexes are stored in a file.
+        Build macsyfinder indexes. These indexes are stored in a file.
 
         The file format is the following:
          - one entry per line, with each line having this format:
@@ -241,7 +241,7 @@ class RepliconDB(object):
     def __init__(self, cfg):
         """
         :param cfg: The configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
 
         .. note ::
             This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 

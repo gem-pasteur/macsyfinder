@@ -1,7 +1,7 @@
-exclude txsscanlib/test_*.py
+exclude macsypy/test_*.py
 
 recursive-include doc/_build/html *
-include doc/_build/latex/Txsscan.pdf
+include doc/_build/latex/Macsyfinder.pdf
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
@@ -13,9 +13,9 @@ include test/datatest/DEF/*.xml
 include test/datatest/base/*
 include test/datatest/hmm/*
 include test/datatest/profiles/*
-include test/txsscan.conf
+include test/macsyfinder.conf
 
-include etc/txsscan.conf
+include etc/macsyfinder.conf
 
 include INSTALL
 include COPYING

@@ -13,11 +13,11 @@
 import os
 import unittest
 import shutil
-from txsscanlib.gene import Profile
-from txsscanlib.gene import Gene
-from txsscanlib.system import System
-from txsscanlib.config import Config
-from txsscanlib.registries import ProfilesRegistry
+from macsypy.gene import Profile
+from macsypy.gene import Gene
+from macsypy.system import System
+from macsypy.config import Config
+from macsypy.registries import ProfilesRegistry
 from test import which
 
 class Test(unittest.TestCase):

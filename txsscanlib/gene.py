@@ -12,12 +12,12 @@
 
 import os
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 
 from subprocess import Popen
 from threading import Lock
 from report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
-from txsscan_error import TxsscanError
+from macsypy_error import MacsypyError
 
 
 class GeneBank(object):
@@ -31,10 +31,10 @@ class GeneBank(object):
         :param name: the name of the Gene
         :type name: string
         :param cfg: the configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :return: return the Gene corresponding to the name.
           If the Gene already exists, return it, otherwise, build it and return it
-        :rtype: :class:`txsscanlib.gene.Gene` object
+        :rtype: :class:`macsypy.gene.Gene` object
         """
         if name in self._genes_bank:
             return self._genes_bank[name]
@@ -47,7 +47,7 @@ class GeneBank(object):
         Implement the membership test operator
         
         :param gene: the gene to test
-        :type gene: :class:`txsscanlib.gene.Gene` object
+        :type gene: :class:`macsypy.gene.Gene` object
         :return: True if the gene is in, False otherwise
         :rtype: boolean
         
@@ -66,10 +66,10 @@ class GeneBank(object):
         :param name: the name of the gene
         :type name: string
         :param cfg: the configuration
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :return: return gene corresponding to the name.
           If the gene already exists, return it, otherwise, build it and return it
-        :rtype: :class:`txsscanlib.gene.Gene` object
+        :rtype: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
         if gene in self._genes_bank:
@@ -97,13 +97,13 @@ class Gene(object):
         handle gene
 
         :param cfg: the configuration object. 
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the Gene.
         :type name: string.
         :param system: the system that owns this Gene
-        :type system: :class:`txsscanlib.system.System` object.
+        :type system: :class:`macsypy.system.System` object.
         :param profiles_registry: where all the paths profiles where register.
-        :type profiles_registry: :class:`txsscanlib.registries.ProfilesRegistry` object.
+        :type profiles_registry: :class:`macsypy.registries.ProfilesRegistry` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs whithout any effects on the system assessment, False otherwise.
@@ -115,7 +115,7 @@ class Gene(object):
         """
         self.name = name 
         self.profile = profile_factory.get_profile(self, cfg, profiles_registry)
-        """:ivar profile: The HMM protein Profile corresponding to this gene :class:`txsscanlib.gene.Profile` object"""
+        """:ivar profile: The HMM protein Profile corresponding to this gene :class:`macsypy.gene.Profile` object"""
 
         self.homologs = []
         self.analogs = []
@@ -148,7 +148,7 @@ class Gene(object):
     def system(self):
         """
         :return: the (secretion) System that owns this Gene
-        :rtype: :class:`txsscanlib.system.System` object
+        :rtype: :class:`macsypy.system.System` object
         """
         return self._system
 
@@ -193,7 +193,7 @@ class Gene(object):
         Add a homolog gene to the Gene
 
         :param homolog: homolog to add
-        :type homolog:  :class:`txsscanlib.gene.Homolog` object 
+        :type homolog:  :class:`macsypy.gene.Homolog` object 
         """
         self.homologs.append(homolog)
 
@@ -201,7 +201,7 @@ class Gene(object):
     def get_homologs(self):
         """
         :return: the Gene homologs
-        :type: list of :class:`txsscanlib.gene.Homolog` object
+        :type: list of :class:`macsypy.gene.Homolog` object
         """
         return self.homologs
 
@@ -210,7 +210,7 @@ class Gene(object):
         Add an analogous gene to the Gene
 
         :param analog: analog to add
-        :type analog:  :class:`txsscanlib.gene.Analog` object 
+        :type analog:  :class:`macsypy.gene.Analog` object 
         """
         self.analogs.append(analog)
 
@@ -218,7 +218,7 @@ class Gene(object):
     def get_analogs(self):
         """
         :return: the Gene analogs
-        :type: list of :class:`txsscanlib.gene.Analog` object
+        :type: list of :class:`macsypy.gene.Analog` object
         """
         return self.analogs
     
@@ -226,7 +226,7 @@ class Gene(object):
         """
         :return: True if the gene names (gene.name) are the same, False otherwise.
 	:param gene: the query of the test
-        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.Gene` object.
         :rtype: boolean.
         """
         return self.name == gene.name
@@ -236,7 +236,7 @@ class Gene(object):
         """
         :return: True if the two genes are homologs, False otherwise.
         :param gene: the query of the test
-        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.Gene` object.
         :rtype: boolean.
         """
 
@@ -253,7 +253,7 @@ class Gene(object):
         """
         :return: True if the two genes are analogs, False otherwise.
         :param gene: the query of the test
-        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.Gene` object.
         :rtype: boolean.
         """
 
@@ -270,7 +270,7 @@ class Gene(object):
     	"""
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`txsscanlib.system.System` object.
+        :type system: :class:`macsypy.system.System` object.
         :rtype: boolean.
         """
         if self in system.mandatory_genes:
@@ -282,7 +282,7 @@ class Gene(object):
         """
         :return: True if the gene is within the *accessory* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`txsscanlib.system.System` object.
+        :type system: :class:`macsypy.system.System` object.
         :rtype: boolean.
         """
         if self in system.accessory_genes:
@@ -294,7 +294,7 @@ class Gene(object):
         """
         :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`txsscanlib.system.System` object.
+        :type system: :class:`macsypy.system.System` object.
         :rtype: boolean.
         """
         if self in system.forbidden_genes:
@@ -307,7 +307,7 @@ class Gene(object):
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
         :param system: the query of the test
-        :type system: :class:`txsscanlib.system.System` object.
+        :type system: :class:`macsypy.system.System` object.
         :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
         :type include_forbidden: boolean
         :rtype: boolean.
@@ -354,9 +354,9 @@ class Homolog(object):
     def __init__(self, gene, gene_ref, aligned = False ):
         """
         :param gene: the gene
-        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.Gene` object.
         :param gene_ref: the gene to which the current is homolog.
-        :type gene_ref: :class:`txsscanlib.gene.Gene` object.
+        :type gene_ref: :class:`macsypy.gene.Gene` object.
         :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile. Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
         """
@@ -380,7 +380,7 @@ class Homolog(object):
     def gene_ref(self):
         """
         :return: the gene to which this one is homolog to (reference gene)
-        :rtype: :class:`txsscanlib.gene.Gene` object
+        :rtype: :class:`macsypy.gene.Gene` object
         """
         return self.ref
 
@@ -392,9 +392,9 @@ class Analog(object):
     def __init__(self, gene, gene_ref):
         """
         :param gene: the gene
-        :type gene: :class:`txsscanlib.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.Gene` object.
         :param gene_ref: the gene to which the current is analog.
-        :type gene_ref: :class:`txsscanlib.gene.Gene` object.
+        :type gene_ref: :class:`macsypy.gene.Gene` object.
         """
         self.gene = gene 
         """:ivar gene: gene """
@@ -408,7 +408,7 @@ class Analog(object):
     def gene_ref(self):
         """
         :return: the gene to which this one is analog to (reference gene)
-        :rtype: :class:`txsscanlib.gene.Gene` object
+        :rtype: :class:`macsypy.gene.Gene` object
         """
         return self.ref
 
@@ -428,14 +428,14 @@ class ProfileFactory():
         """
         :return: the profile corresponding to the name.
                  If the profile already exists, return it. Otherwise build it, store it and return it.
-        :rtype: :class:`txsscanlib.gene.Profile` object
+        :rtype: :class:`macsypy.gene.Profile` object
         """
         if gene.name in self._profiles:
             profile = self._profiles[gene.name]
         else:
             path = profiles_registry.get(gene.name)
             if path is None:
-                raise TxsscanError( "%s: No such profile" % gene.name)
+                raise MacsypyError( "%s: No such profile" % gene.name)
             profile = Profile(gene, cfg, path)
             self._profiles[gene.name] = profile
         return profile 
@@ -452,9 +452,9 @@ class Profile(object):
         """
 
         :param gene: the gene corresponding to this profile
-        :type gene_name: :class:`txsscanlib.secretion.Gene` object
+        :type gene_name: :class:`macsypy.secretion.Gene` object
         :param cfg: the configuration 
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         """
         self.gene = gene 
         self.path = path
@@ -495,7 +495,7 @@ class Profile(object):
         Launch the Hmmer search (hmmsearch executable) with this profile
 
         :return: an object storing information on th results of the HMM search (HMMReport)
-        :rtype:  :class:`txsscanlib.report.HMMReport` object
+        :rtype:  :class:`macsypy.report.HMMReport` object
         """
         with self._lock:
             # the results of HMM is cached 

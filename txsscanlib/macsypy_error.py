@@ -10,20 +10,20 @@
 ###################################
 
 
-class TxsscanError(Exception):
+class MacsypyError(Exception):
     """
-    The base class for TXSScan specific exceptions.
+    The base class for MacSyFinder specific exceptions.
     """
     pass
 
 
-class SystemInconsistencyError(TxsscanError):
+class SystemInconsistencyError(MacsypyError):
     """
     Raised when a secretion system is not consistent.
     """
     pass
 
-class SystemDetectionError(TxsscanError):
+class SystemDetectionError(MacsypyError):
     """
     Raised when the detection of systems from Hits encountered a problem.
     """

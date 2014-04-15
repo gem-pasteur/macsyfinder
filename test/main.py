@@ -19,7 +19,7 @@ def run(lib, tests, verbosity = 0):
     """
     run the unit tests and print the results on stderr
     
-    :param lib: the path where is the txsscanlib
+    :param lib: the path where is the macsypy
     :type lib: string
     :param tests: the name of test to run. if tests is empty list, discover recursively tests form this directory.
                   a test is python module with the test_*.py pattern
@@ -50,10 +50,10 @@ def run(lib, tests, verbosity = 0):
 
 if __name__ == '__main__':
 
-    if 'TXSSCAN_HOME' in os.environ:
-        TXSSCAN_HOME = os.environ['TXSSCAN_HOME']
+    if 'MACSY_HOME' in os.environ:
+        MACSY_HOME = os.environ['MACSY_HOME']
     else:
-        TXSSCAN_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
+        MACSY_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 
     from argparse import ArgumentParser
     parser = ArgumentParser()
@@ -70,5 +70,5 @@ if __name__ == '__main__':
                         )
 
     args = parser.parse_args()
-    res = run(TXSSCAN_HOME, args.tests, args.verbosity)
+    res = run(MACSY_HOME, args.tests, args.verbosity)
     

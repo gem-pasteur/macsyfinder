@@ -11,13 +11,13 @@
 import os
 import xml.etree.ElementTree as ET
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 
 from system import System
 from gene import Gene
 from gene import Homolog, Analog
 from registries import ProfilesRegistry, DefinitionsRegistry
-from txsscan_error import TxsscanError, SystemInconsistencyError
+from macsypy_error import MacsypyError, SystemInconsistencyError
 
 
 class SystemParser(object):
@@ -30,11 +30,11 @@ class SystemParser(object):
         Constructor
 
         :param cfg: the configuration object of this run
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :param cfg: the system factory
-        :type cfg: :class:`txsscanlib.system.SystemBank` object
+        :type cfg: :class:`macsypy.system.SystemBank` object
         :param cfg: the gene factory
-        :type cfg: :class:`txsscanlib.gene.GeneBank` object
+        :type cfg: :class:`macsypy.gene.GeneBank` object
         """
         self.cfg = cfg
         self.system_bank = system_bank
@@ -55,7 +55,7 @@ class SystemParser(object):
             systems_2_parse[system_name] = None
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             if not os.path.exists(path):
-                raise TxsscanError("%s: No such system definitions" % path)
+                raise MacsypyError("%s: No such system definitions" % path)
             try:
                 tree = ET.parse(path)
                 root = tree.getroot()
@@ -65,7 +65,7 @@ class SystemParser(object):
             except Exception, err:
                 msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
                 _log.critical(msg)
-                raise TxsscanError(msg)
+                raise MacsypyError(msg)
             
         return systems_2_parse.keys()
 
@@ -74,7 +74,7 @@ class SystemParser(object):
         :param system_name: the name of the system to create. This name must match a XML file in the definition directory ("-d" option in the command-line)
         :type param: string
         :return: the system corresponding to the name
-        :rtype: :class:`txsscanlib.system.System` object 
+        :rtype: :class:`macsypy.system.System` object 
         """
         path = os.path.join(self.cfg.def_dir, system_name + ".xml")
         if not os.path.exists(path):
@@ -140,9 +140,9 @@ class SystemParser(object):
         :param gene_name: 
         :type gene_name: string
         :param system:
-        :type system: :class:`txsscanlib.system.System` object
+        :type system: :class:`macsypy.system.System` object
         :return: a list of the genes belonging to the system.
-        :rtype: [:class:`txsscanlib.gene.Gene`, ...]
+        :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
         genes = []
         #gene_nodes = system_node.findall(".//gene[not(@system_ref)]")
@@ -182,7 +182,7 @@ class SystemParser(object):
         Fill the system with genes found in this system definition. Add homologs to the genes if necessary.
         
         :param system: the system to fill
-        :type system: :class:`txsscanlib.system.System` object
+        :type system: :class:`macsypy.system.System` object
         :param system_node: the "node" in the XML hierarchy corresponding to the system
         :type system_node: :class"`ET.ElementTree` object
         """
@@ -218,7 +218,7 @@ class SystemParser(object):
         :param node: a "node" corresponding to the gene element in the XML hierarchy
         :type node: :class:`xml.etree.ElementTree.Element` object 
         :return: the gene object corresponding to the node
-        :rtype: :class:`txsscanlib.gene.Homolog` object 
+        :rtype: :class:`macsypy.gene.Homolog` object 
         """
         name = node.get("name")
         if not name:
@@ -259,7 +259,7 @@ class SystemParser(object):
         :param node: a "node" corresponding to the gene element in the XML hierarchy
         :type node: :class:`xml.etree.ElementTree.Element` object 
         :return: the gene object corresponding to the node
-        :rtype: :class:`txsscanlib.gene.Analog` object 
+        :rtype: :class:`macsypy.gene.Analog` object 
         """
         name = node.get("name")
         if not name:
@@ -291,8 +291,8 @@ class SystemParser(object):
         :param systems: the list of systems to check
         :type systems: list of `class:txssnalib.system.System` object
         :param cfg: the configuration object
-        :type cfg: a :class:`txsscanlib.config.Config` object
-        :raise: :class:`txsscanlib.txsscan_error.SystemInconsistencyError` if one test fails
+        :type cfg: a :class:`macsypy.config.Config` object
+        :raise: :class:`macsypy.macsypy_error.SystemInconsistencyError` if one test fails
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)
           
@@ -359,7 +359,7 @@ class SystemParser(object):
         for system_name in systems_2_parse:
             path = self.definitions_registry.get(system_name)
             if path is None:
-                raise TxsscanError("%s: No such system definitions" % path)
+                raise MacsypyError("%s: No such system definitions" % path)
             tree = ET.parse(path)
             system_node = tree.getroot()
             sys = self._create_system(system_name, system_node)  # une ouverture par fichier

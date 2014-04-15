@@ -15,27 +15,27 @@ import os
 import argparse
 import logging
 
-if 'TXSSCAN_HOME' in os.environ:
-    TXSSCAN_HOME = os.environ.get('TXSSCAN_HOME')
-    TXSSCAN_HOME = os.path.abspath(os.path.realpath(TXSSCAN_HOME))
-    if TXSSCAN_HOME not in sys.path:
-        sys.path.insert(0, TXSSCAN_HOME)
+if 'MACSY_HOME' in os.environ:
+    MACSY_HOME = os.environ.get('MACSY_HOME')
+    MACSY_HOME = os.path.abspath(os.path.realpath(MACSY_HOME))
+    if MACSY_HOME not in sys.path:
+        sys.path.insert(0, MACSY_HOME)
 try:
-    from txsscanlib.config import Config
+    from macsypy.config import Config
 except ImportError , err:
-    msg = "Cannot import txsscanlib, check your installation or your TXSSCAN_HOME variable : {0!s}".format( err )
+    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 
 from operator import attrgetter # To be used with "sorted"
 from textwrap import dedent
-from txsscanlib.system_parser import SystemParser
-from txsscanlib.search_genes import search_genes
-from txsscanlib.database import Indexes
-from txsscanlib.search_systems import search_systems
-from txsscanlib.system import system_bank
-from txsscanlib.gene import gene_bank
+from macsypy.system_parser import SystemParser
+from macsypy.search_genes import search_genes
+from macsypy.database import Indexes
+from macsypy.search_systems import search_systems
+from macsypy.system import system_bank
+from macsypy.gene import gene_bank
 
-parser = argparse.ArgumentParser(epilog="For more details, visit the TXSScan website and see the TXSScan documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
+parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
      description=dedent('''
 
 =================================================== Outer Membrane
@@ -44,7 +44,7 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the TXSScan web
            |_| /_/\_\___/___/\__\__,_|_||_|
 =================================================== Inner Membrane
                            
-Txsscan is a tool for the detection of protein secretion systems 
+MacSyFinder is a tool for the detection of protein secretion systems 
 of diderm bacteria from a protein dataset.   
      ''') )
 #, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -165,7 +165,7 @@ dir_options.add_argument('-r', '--research-search',
                     action = 'store',
                     dest = 'res_search_dir',
                     default = None,
-                    help = 'Path to the directory where to store TXSScan search results directories.')
+                    help = 'Path to the directory where to store MacSyFinder search results directories.')
 dir_options.add_argument( '--research-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
@@ -193,7 +193,7 @@ general_options.add_argument("-w", "--worker",
                     dest = 'worker_nb',
                     type = int,
                     default = None,
-                    help = "Number of workers to be used by TXSScan. In the case the user wants to run TXSScan in a multi-thread mode. (0 mean all cores will be used, default 1)")
+                    help = "Number of workers to be used by MacSyFinder. In the case the user wants to run MacSyFinder in a multi-thread mode. (0 mean all cores will be used, default 1)")
 general_options.add_argument( "-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
@@ -203,17 +203,17 @@ general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
                     default = None,
-                    help = "Path to the directory where to store the 'txsscan.log' log file.")
+                    help = "Path to the directory where to store the 'macsyfinder.log' log file.")
 general_options.add_argument("--config",
                     action = 'store',
                     dest = 'cfg_file',
                     default = None,
-                    help = "Path to a putative TXSScan configuration file to be used.")
+                    help = "Path to a putative MacSyFinder configuration file to be used.")
 general_options.add_argument("--previous-run",
                     action = 'store',
                     dest = 'previous_run',
                     default = None,
-                    help = """Path to a previous TXSScan run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
+                    help = """Path to a previous MacSyFinder run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
 (conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
 --e_value_res, --db_type, --hmmer_exe)""")
 
@@ -267,7 +267,7 @@ config = Config(previous_run = args.previous_run,
                 log_file = args.log_file,
                 worker_nb = args.worker_nb
                 )
-logger = logging.getLogger('txsscan')
+logger = logging.getLogger('macsyfinder')
 config.save(config.working_dir)
 
 #build indexes

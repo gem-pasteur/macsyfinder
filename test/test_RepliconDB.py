@@ -13,8 +13,8 @@
 import os
 import unittest
 import shutil
-from txsscanlib.config import Config
-from txsscanlib.database import RepliconDB, Indexes, RepliconInfo
+from macsypy.config import Config
+from macsypy.database import RepliconDB, Indexes, RepliconInfo
 
 
 class Test(unittest.TestCase):

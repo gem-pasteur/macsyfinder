@@ -14,8 +14,8 @@
 
 
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
-from txsscan_error import SystemInconsistencyError
+_log = logging.getLogger('macsyfinder.' + __name__)
+from macsypy_error import SystemInconsistencyError
 
 class SystemBank(object):
     """
@@ -34,10 +34,10 @@ class SystemBank(object):
         :param name: the name of the system
         :type name: string
         :param cfg: the configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :return: the system corresponding to the name.
          If the system already exists, return it, otherwise build it and return it.
-        :rtype: :class:`txsscanlib.system.System` object
+        :rtype: :class:`macsypy.system.System` object
         """
         if name in self._system_bank:
             return self._system_bank[name]
@@ -50,7 +50,7 @@ class SystemBank(object):
         Implement the membership test operator
         
         :param system: the system to test
-        :type system: :class:`txsscanlib.system.System` object
+        :type system: :class:`macsypy.system.System` object
         :return: True if the system is in the System factory, False otherwise
         :rtype: boolean
         """
@@ -75,10 +75,10 @@ class SystemBank(object):
         :param name: the name of the system
         :type name: string
         :param cfg: the configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :return: the system corresponding to the system's name passed as an argument
          If the system already exists, return it. Otherwise, build it and return it. 
-        :rtype: :class:`txsscanlib.system.System` object
+        :rtype: :class:`macsypy.system.System` object
         :raise: KeyError if a system with the same name is already registered.
         """
         if system in self._system_bank:
@@ -97,7 +97,7 @@ class System(object):
     def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None, max_nb_genes = None, multi_loci = False):
         """
         :param cfg: the configuration object
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the system
         :type name: string
         :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
@@ -194,7 +194,7 @@ class System(object):
         Add a gene to the list of mandatory genes
 
         :param gene: gene that is mandatory for this system
-        :type gene: :class:`txsscanlib.secretion.Gene` object
+        :type gene: :class:`macsypy.secretion.Gene` object
         """
         self._mandatory_genes.append(gene)
 
@@ -203,7 +203,7 @@ class System(object):
         Add a gene to the list of accessory genes
 
         :param gene: gene that is allowed to be present in this system
-        :type gene: :class:`txsscanlib.secretion.Gene` object
+        :type gene: :class:`macsypy.secretion.Gene` object
         """
         self._accessory_genes.append(gene)
 
@@ -212,7 +212,7 @@ class System(object):
         Add a gene to the list of forbidden genes
 
         :param gene: gene that must not be found in this system
-        :type gene: :class:`txsscanlib.secretion.Gene` object
+        :type gene: :class:`macsypy.secretion.Gene` object
         """
         self._forbidden_genes.append(gene)
 
@@ -220,7 +220,7 @@ class System(object):
     def mandatory_genes(self):
         """
         :return: the list of genes that are mandatory in this secretion system
-        :rtype: list of :class:`txsscanlib.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.secretion.Gene` objects
         """
         return self._mandatory_genes
 
@@ -228,7 +228,7 @@ class System(object):
     def accessory_genes(self):
         """
         :return: the list of genes that are allowed in this secretion system
-        :rtype: list of :class:`txsscanlib.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.secretion.Gene` objects
         """
         return self._accessory_genes
 
@@ -236,7 +236,7 @@ class System(object):
     def forbidden_genes(self):
         """
         :return: the list of genes that are forbidden in this secretion system
-        :rtype: list of :class:`txsscanlib.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.secretion.Gene` objects
         """
         return self._forbidden_genes
 
@@ -246,7 +246,7 @@ class System(object):
         :param gene_name: the name of the gene to get
         :type gene_name: string
         :return: the gene corresponding to gene_name.
-        :rtype: a :class:`txsscanlib.secretion.Gene` object.
+        :rtype: a :class:`macsypy.secretion.Gene` object.
         :raise: KeyError the system does not contain any gene with name gene_name.
         """
         all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
@@ -266,9 +266,9 @@ class System(object):
     def get_gene_ref(self, gene):
         """
         :param gene: the gene to get the gene reference.
-        :type gene: a :class:`txsscanlib.secretion.Gene` or txsscanlib.secretion.Homolog` or txsscanlib.secretion.Analog` object.
+        :type gene: a :class:`macsypy.secretion.Gene` or macsypy.secretion.Homolog` or macsypy.secretion.Analog` object.
         :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
-        :rtype: :class:`txsscanlib.secretion.Gene` object or None
+        :rtype: :class:`macsypy.secretion.Gene` object or None
         :raise: KeyError if gene is not in the system
         """
         g = self.get_gene(gene.name)

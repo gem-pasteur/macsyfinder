@@ -11,7 +11,7 @@
 
 import threading
 import logging
-_log = logging.getLogger('txsscan.' + __name__)
+_log = logging.getLogger('macsyfinder.' + __name__)
 import signal
 import sys
 import shutil
@@ -25,9 +25,9 @@ def search_genes(genes, cfg):
     The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
 
     :param genes: the genes to search in the input sequence dataset
-    :type genes: list of :class:`txsscanlib.gene.Gene` objects
+    :type genes: list of :class:`macsypy.gene.Gene` objects
     :param cfg: the configuration object
-    :type cfg: :class:`txsscanlib.config.Config` object
+    :type cfg: :class:`macsypy.config.Config` object
     """
     worker_nb = cfg.worker_nb
     if not worker_nb:
@@ -50,9 +50,9 @@ def search_genes(genes, cfg):
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
         :param gene: the gene to search
-        :type gene: a :class:`txsscanlib.gene.Gene` object
+        :type gene: a :class:`macsypy.gene.Gene` object
         :param all_reports: a container to append the generated HMMReport objects
-        :type all_reports: list of `txsscanlib.report.HMMReport` object (derived class depending on the input dataset type)
+        :type all_reports: list of `macsypy.report.HMMReport` object (derived class depending on the input dataset type)
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore
         """
@@ -70,15 +70,15 @@ def search_genes(genes, cfg):
         Recover Hmmer output from a previous run, and produce a report
 
         :param gene: the gene to search
-        :type gene: a :class:`txsscanlib.gene.Gene` object
+        :type gene: a :class:`macsypy.gene.Gene` object
         :param all_reports: a container to append the generated HMMReport object
         :type all_reports: list
         :param cfg: the configuration 
-        :type cfg: :class:`txsscanlib.config.Config` object
+        :type cfg: :class:`macsypy.config.Config` object
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore.
         :return: the list of all HMMReports (derived class depending on the input dataset type)
-        :rtype: list of `txsscanlib.report.HMMReport` object
+        :rtype: list of `macsypy.report.HMMReport` object
         """
         with sema:
             hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
