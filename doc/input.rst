@@ -104,7 +104,7 @@ Systems detection options::
                         
   --min-genes-required SYSTEM VALUE
                         The minimal number of genes required for system
-                        assessment (includes both 'mandatory' and 'allowed'
+                        assessment (includes both 'mandatory' and 'accessory'
                         components). The first value must correspond to a
                         system name, the second value to an integer. This
                         option can be repeated several times: 

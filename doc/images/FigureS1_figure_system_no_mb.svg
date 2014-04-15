@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="438.6875"
-   height="364.8125"
+   width="442.59375"
+   height="368.8125"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="Figure1_figure_system_no_mb.svg"
+   sodipodi:docname="FigureS1_figure_system_no_mb.svg"
    inkscape:export-filename="/Users/sabby/Dropbox/Secretion/system_finder/figures/Figure1_figure_system_no_mb.png"
    inkscape:export-xdpi="800"
    inkscape:export-ydpi="800">
@@ -365,21 +365,21 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.979899"
-     inkscape:cx="286.89586"
-     inkscape:cy="208.47338"
+     inkscape:cx="287.36461"
+     inkscape:cy="170.06728"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="false"
-     inkscape:window-width="1218"
-     inkscape:window-height="946"
-     inkscape:window-x="177"
-     inkscape:window-y="17"
+     inkscape:window-width="1916"
+     inkscape:window-height="1156"
+     inkscape:window-x="4"
+     inkscape:window-y="0"
      inkscape:window-maximized="0"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2">
     <inkscape:grid
        type="xygrid"
        id="grid3994"
@@ -396,7 +396,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -404,7 +404,7 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-30.71875,-0.90625)">
+     transform="translate(-30.25,1.09375)">
     <rect
        style="color:#000000;fill:#ffffff;fill-opacity:0.98823529;fill-rule:nonzero;stroke:#000000;stroke-width:0.99999994;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3158"
@@ -548,23 +548,23 @@
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
-       style="font-size:9.98670577999999942px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold;stroke-width:0.50000001;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-size:9.98670578px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
        x="261.05536"
        y="206.34715"
        id="text4082"
        sodipodi:linespacing="125%"
        transform="scale(1.0002234,0.99977661)"><tspan
-         style="fill:#008000;stroke-width:0.50000001;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#008000"
          sodipodi:role="line"
          id="tspan4084"
          x="261.05536"
          y="206.34715">C1</tspan><tspan
-         style="fill:#008000;stroke-width:0.50000001;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#008000"
          sodipodi:role="line"
          x="261.05536"
          y="218.83054"
          id="tspan4086">C2</tspan><tspan
-         style="fill:#008000;stroke-width:0.50000001;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#008000"
          sodipodi:role="line"
          x="261.05536"
          y="231.31392"
@@ -573,7 +573,7 @@
          x="261.05536"
          y="243.7973"
          id="tspan4090">(C4)</tspan><tspan
-         style="fill:#ff0000;stroke:#000000;stroke-width:0.50000001;stroke-miterlimit:4;stroke-dasharray:none"
+         style="fill:#ff0000;stroke:#000000;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
          sodipodi:role="line"
          x="261.05536"
          y="256.28067"
@@ -751,7 +751,7 @@
        id="rect3872"
        style="color:#000000;fill:#7f2dfd;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     <rect
-       style="color:#000000;fill:#ffe680;fill-opacity:0.98823529000000021;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3,3;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#ffe680;fill-opacity:0.98823529;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3, 3;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="rect3874"
        width="27.944675"
        height="11.291965"
@@ -904,7 +904,7 @@
        height="11.291965"
        width="27.944675"
        id="rect3860"
-       style="color:#000000;fill:#ffe680;fill-opacity:0.98823529000000021;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3,3;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+       style="color:#000000;fill:#ffe680;fill-opacity:0.98823529;fill-rule:nonzero;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3, 3;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 191.79205,151.39549 c -3.37023,4.16208 -8.52584,6.82665 -13.87041,7.16862 -5.9769,0.38243 -12.0723,-2.18103 -15.97937,-6.72023"
@@ -1016,7 +1016,7 @@
            x="129.54807"
            y="345.32364"
            style="font-size:7.08300924px"
-           id="tspan3943">  &lt;gene name=&quot;c4&quot; presence=&quot;allowed&quot;/&gt;</tspan><tspan
+           id="tspan3943">  &lt;gene name=&quot;c4&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
            sodipodi:role="line"
            x="129.54807"
            y="354.1774"
@@ -1088,7 +1088,7 @@
              x="129.54807"
              y="431.50314"
              style="font-size:7.08300924px"
-             id="tspan3971">  &lt;gene name=&quot;c4&quot; presence=&quot;allowed&quot;/&gt;</tspan><tspan
+             id="tspan3971">  &lt;gene name=&quot;c4&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
              sodipodi:role="line"
              x="129.54807"
              y="440.3569"

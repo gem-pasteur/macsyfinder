@@ -15,7 +15,7 @@ Features regarding **co-localization** parameters for system detection are also 
 Three distinct types of components can be used to model a given system content, and which corresponds to Gene objects, and the corresponding HMM protein profiles. 
 
 * **Mandatory** components represent essential components to be found to infer the System presence.
-* **Allowed** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
+* **Accessory** components correspond to components that can be found in some systems occurrence, or fastly evolving components that are hard to detect with a single profile. 
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
 
@@ -35,8 +35,8 @@ The XML hierarchy
   * The element "system" may have attributes:
   
      * "min_mandatory_genes_required": an integer representing the minimal number of mandatory genes required to infer the system presence.
-     * "min_genes_required": an integer representing the minimal number of mandatory or allowed genes (whose corresponding proteins match a profile of the system) required to infer the system presence.
-     * "max_nb_genes": an integer representing the maximal number of mandatory or allowed genes in the system.
+     * "min_genes_required": an integer representing the minimal number of mandatory or accessory genes (whose corresponding proteins match a profile of the system) required to infer the system presence.
+     * "max_nb_genes": an integer representing the maximal number of mandatory or accessory genes in the system.
      * "multi_loci": a boolean set to True ("1", "true" or "True") to allow the definition of "scattered" systems (systems encoded by different loci). If not specified, *default value is false*.  
      
   * The system contains one or more element "gene".
@@ -44,7 +44,7 @@ The XML hierarchy
 * The element "gene" has several mandatory attributes: 
 
    * "name": which must match to a profile in the profile directory.
-   * "presence": which can take three values "mandatory", "allowed", "forbidden".
+   * "presence": which can take three values "mandatory", "accessory", "forbidden".
 
 
  The element "gene" may have other attributes: 
@@ -74,7 +74,7 @@ Example of a system definition in XML: ::
            <gene name="pilT" system_ref="T4P"/>
        </analogs>
     <gene name="sctV_FLG" presence="mandatory"/>
-    <gene name="flp" presence="allowed"/>
+    <gene name="flp" presence="accessory"/>
   </system>
 
 .. warning::
