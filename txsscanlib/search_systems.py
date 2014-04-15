@@ -330,7 +330,7 @@ class Cluster(object):
             if len(genes) == 1 and self.hits[0].gene.loner == False:
                 self._state = "ineligible"
             else:
-                # Check for foreign "allowed" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
+                # Check for foreign "accessory" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
                 # Also deal with foreign "exchangeable" genes for the same reasons... NB !! Maybe just not add the system to the list if exchangeable?  
                 #if len(systems.keys()) == 1:
                 if len(systems_compat.keys()) == 1:
@@ -343,7 +343,7 @@ class Cluster(object):
                     # Store only compatible systems that are searched for !!
                     self._compatible_systems.append(syst)
                 else:
-                    # Check for foreign "allowed" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are allowed foreign genes. 
+                    # Check for foreign "accessory" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are accessory foreign genes. 
                     def try_system(hits, putative_system, counter_systems_in_clust):
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
@@ -358,7 +358,7 @@ class Cluster(object):
                         :rtype: string
 
                         """
-                        foreign_allowed = 0
+                        foreign_accessory = 0
                         auth = 0 # counts nb of hits that are authorized in the putative system
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
@@ -368,7 +368,7 @@ class Cluster(object):
                             #if h.gene.is_authorized(system_bank[putative_system], True):
                                 auth += 1
                     	if auth == len(hits):
-                            # Case where all foreign genes are allowed in the majoritary system => considered as a clear case, does not need disambiguation.
+                            # Case where all foreign genes are accessory in the majoritary system => considered as a clear case, does not need disambiguation.
                             state = "clear"
                     	else:
                             state = "ambiguous"
@@ -478,7 +478,7 @@ class SystemOccurence(object):
         self.mandatory_genes = {}
         self.exmandatory_genes = {} # List of 'exchanged' mandatory genes
 
-        # New ! Add of a list of "multi_system" genes, fed only from mandatory and allowed genes from the actual system (and not 'exchanged')
+        # New ! Add of a list of "multi_system" genes, fed only from mandatory and accessory genes from the actual system (and not 'exchanged')
         self.multi_syst_genes = {}
 
         for g in system.mandatory_genes:
@@ -491,15 +491,15 @@ class SystemOccurence(object):
             if g.multi_system:
                 self.multi_syst_genes[g.name] = 0
 
-        self.allowed_genes = {}
-        self.exallowed_genes = {} # List of 'exchanged' allowed genes
-        for g in system.allowed_genes:
-            self.allowed_genes[g.name] = 0
+        self.accessory_genes = {}
+        self.exaccessory_genes = {} # List of 'exchanged' accessory genes
+        for g in system.accessory_genes:
+            self.accessory_genes[g.name] = 0
             if g.exchangeable:
                 homologs = g.get_homologs()
                 analogs = g.get_analogs()
                 for ex in homologs + analogs:
-                    self.exallowed_genes[ex.name] = g.name
+                    self.exaccessory_genes[ex.name] = g.name
             if g.multi_system:
                 self.multi_syst_genes[g.name] = 0
 
@@ -523,9 +523,9 @@ class SystemOccurence(object):
             out += "Mandatory genes: \n"
             for k, g in self.mandatory_genes.iteritems():
                 out += "%s\t%d\n" % (k, g) 
-        if self.allowed_genes:
-            out += "Allowed genes: \n"
-            for k, g in self.allowed_genes.iteritems():
+        if self.accessory_genes:
+            out += "Accessory genes: \n"
+            for k, g in self.accessory_genes.iteritems():
                 out += "%s\t%d\n" % (k, g)
         if self.forbidden_genes:
             out += "Forbidden genes: \n"
@@ -540,14 +540,14 @@ class SystemOccurence(object):
 
     def get_gene_counter_output(self, forbid_exclude = False):
         """
-        Returns a dictionary ready for printing in system summary, with genes (mandatory, allowed and forbidden if specified) occurences in the system occurrence 
+        Returns a dictionary ready for printing in system summary, with genes (mandatory, accessory and forbidden if specified) occurences in the system occurrence 
 
         :param forbid_exclude: exclude the forbidden components if set to True. False by default 
         :type forbid_exclude: boolean
         """
         out = ""
         out += str(self.mandatory_genes)
-        out += "\t%s"%str(self.allowed_genes)
+        out += "\t%s"%str(self.accessory_genes)
         if not forbid_exclude:
             out += "\t%s"%str(self.forbidden_genes)
         else:
@@ -617,16 +617,16 @@ class SystemOccurence(object):
         """
         This value is set after a decision was made on the system in :func:`txsscanlib.search_systems.SystemOccurence:decision_rule`
 
-        :return: the number of mandatory and allowed genes with at least one occurence (number of different allowed genes)
+        :return: the number of mandatory and accessory genes with at least one occurence (number of different accessory genes)
         :rtype: integer
         """
         return self._nb_syst_genes
 
     def compute_nb_syst_genes(self):
-        return self.count_genes(self.mandatory_genes) + self.count_genes(self.allowed_genes)
+        return self.count_genes(self.mandatory_genes) + self.count_genes(self.accessory_genes)
 
     def compute_nb_syst_genes_tot(self):
-        return self.count_genes_tot(self.mandatory_genes) + self.count_genes_tot(self.allowed_genes)
+        return self.count_genes_tot(self.mandatory_genes) + self.count_genes_tot(self.accessory_genes)
 
     def count_genes(self, gene_dict):
         """
@@ -698,7 +698,7 @@ class SystemOccurence(object):
 
         :rtype: string
         """
-        return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_allowed\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Allowed_NR\tNb_missing_mandatory\tNb_missing_allowed\tList_missing_mandatory\tList_missing_allowed\tLoci_positions\tOccur_Mandatory\tOccur_Allowed\tOccur_Forbidden"
+        return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_accessory\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Accessory_NR\tNb_missing_mandatory\tNb_missing_accessory\tList_missing_mandatory\tList_missing_accessory\tLoci_positions\tOccur_Mandatory\tOccur_Accessory\tOccur_Forbidden"
 
 
     def get_summary(self, replicon_name, rep_info):
@@ -718,25 +718,25 @@ class SystemOccurence(object):
         report_str += "\t%s"%self.state
         report_str += "\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
         report_str += "\t%d"%len(self.mandatory_genes) # Nb mandatory_genes in the definition of the system
-        report_str += "\t%d"%len(self.allowed_genes) # Nb allowed_genes in the definition of the system
+        report_str += "\t%d"%len(self.accessory_genes) # Nb accessory_genes in the definition of the system
         report_str += "\t%d"%self.nb_syst_genes # Nb syst genes NR
         report_str += "\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
         #report_str += "\t%d"%self.compute_system_length() # The total length of the locus in protein number, delimited by hits for profiles of the system.
         report_str += "\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
 
         report_str += "\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
-        report_str += "\t%d"%self.count_genes(self.allowed_genes) # Nb allowed_genes matched at least once
+        report_str += "\t%d"%self.count_genes(self.accessory_genes) # Nb accessory_genes matched at least once
 
         missing_mandatory = self.compute_missing_genes_list(self.mandatory_genes)        
-        missing_allowed = self.compute_missing_genes_list(self.allowed_genes)
+        missing_accessory = self.compute_missing_genes_list(self.accessory_genes)
 
         report_str += "\t%d"%len(missing_mandatory) # Nb mandatory_genes with no occurrence in the system
-        report_str += "\t%d"%len(missing_allowed) # Nb allowed_genes with no occurrence in the system
+        report_str += "\t%d"%len(missing_accessory) # Nb accessory_genes with no occurrence in the system
         report_str += "\t%s"%str(missing_mandatory) # List of mandatory genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_allowed) # List of allowed genes with no occurrence in the system
+        report_str += "\t%s"%str(missing_accessory) # List of accessory genes with no occurrence in the system
 
         report_str += "\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
-        report_str += "\t%s"%self.get_gene_counter_output() # A dico per type of gene 'Mandatory, Allowed, Forbidden' with gene occurrences in the system
+        report_str += "\t%s"%self.get_gene_counter_output() # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
 
         return report_str
 
@@ -760,7 +760,7 @@ class SystemOccurence(object):
         #report_str+="\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
         report_str += "\tNone"# No loci in unordered
         report_str += "\t%d"%len(self.mandatory_genes) # Nb mandatory_genes in the definition of the system
-        report_str += "\t%d"%len(self.allowed_genes) # Nb allowed_genes in the definition of the system
+        report_str += "\t%d"%len(self.accessory_genes) # Nb accessory_genes in the definition of the system
         report_str += "\t%d"%self.nb_syst_genes # Nb syst genes NR
         report_str += "\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
 
@@ -768,19 +768,19 @@ class SystemOccurence(object):
         report_str += "\tNone" # No loci in unordered
 
         report_str += "\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
-        report_str += "\t%d"%self.count_genes(self.allowed_genes) # Nb allowed_genes matched at least once
+        report_str += "\t%d"%self.count_genes(self.accessory_genes) # Nb accessory_genes matched at least once
 
         missing_mandatory = self.compute_missing_genes_list(self.mandatory_genes)        
-        missing_allowed = self.compute_missing_genes_list(self.allowed_genes)
+        missing_accessory = self.compute_missing_genes_list(self.accessory_genes)
 
         report_str += "\t%d"%len(missing_mandatory) # Nb mandatory_genes with no occurrence in the system
-        report_str += "\t%d"%len(missing_allowed) # Nb allowed_genes with no occurrence in the system
+        report_str += "\t%d"%len(missing_accessory) # Nb accessory_genes with no occurrence in the system
         report_str += "\t%s"%str(missing_mandatory) # List of mandatory genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_allowed) # List of allowed genes with no occurrence in the system
+        report_str += "\t%s"%str(missing_accessory) # List of accessory genes with no occurrence in the system
 
         #report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
         report_str += "\tNone" # No loci in unordered
-        report_str += "\t%s"%self.get_gene_counter_output(True) # A dico per type of gene 'Mandatory, Allowed, Forbidden' with gene occurrences in the system
+        report_str += "\t%s"%self.get_gene_counter_output(True) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
 
         return report_str
 
@@ -806,9 +806,9 @@ class SystemOccurence(object):
                 # NEW
                 if hit.gene.multi_system:
                     self.multi_syst_genes[hit.gene.name] += 1
-            elif hit.gene.is_allowed(self.system):
-                self.allowed_genes[hit.gene.name] += 1
-                valid_hit = validSystemHit(hit, self.system_name, "allowed")
+            elif hit.gene.is_accessory(self.system):
+                self.accessory_genes[hit.gene.name] += 1
+                valid_hit = validSystemHit(hit, self.system_name, "accessory")
                 self.valid_hits.append(valid_hit)
                 # NEW
                 if hit.gene.multi_system:
@@ -821,9 +821,9 @@ class SystemOccurence(object):
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]] += 1
                     valid_hit = validSystemHit(hit, self.system_name, "mandatory")
                     self.valid_hits.append(valid_hit)
-                elif hit.gene.name in self.exallowed_genes.keys():
-                    self.allowed_genes[self.exallowed_genes[hit.gene.name]] += 1
-                    valid_hit = validSystemHit(hit, self.system_name, "allowed")
+                elif hit.gene.name in self.exaccessory_genes.keys():
+                    self.accessory_genes[self.exaccessory_genes[hit.gene.name]] += 1
+                    valid_hit = validSystemHit(hit, self.system_name, "accessory")
                     self.valid_hits.append(valid_hit)
                 else:
                     msg = "Foreign gene {0} in cluster {1}".format(hit.gene.name, self.system_name)
@@ -857,9 +857,9 @@ class SystemOccurence(object):
                 self.mandatory_genes[hit.gene.name] += 1
                 valid_hit = validSystemHit(hit, self.system_name, "mandatory")
                 self.valid_hits.append(valid_hit)
-            elif hit.gene.is_allowed(self.system):
-                self.allowed_genes[hit.gene.name] += 1
-                valid_hit = validSystemHit(hit, self.system_name, "allowed")
+            elif hit.gene.is_accessory(self.system):
+                self.accessory_genes[hit.gene.name] += 1
+                valid_hit = validSystemHit(hit, self.system_name, "accessory")
                 self.valid_hits.append(valid_hit)
             elif hit.gene.is_forbidden(self.system):
                 self.forbidden_genes[hit.gene.name] += 1
@@ -874,9 +874,9 @@ class SystemOccurence(object):
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]] += 1
                     valid_hit = validSystemHit(hit, self.system_name, "mandatory")
                     self.valid_hits.append(valid_hit)
-                elif hit.gene.name in self.exallowed_genes.keys():
-                    self.allowed_genes[self.exallowed_genes[hit.gene.name]] += 1
-                    valid_hit = validSystemHit(hit, self.system_name, "allowed")
+                elif hit.gene.name in self.exaccessory_genes.keys():
+                    self.accessory_genes[self.exaccessory_genes[hit.gene.name]] += 1
+                    valid_hit = validSystemHit(hit, self.system_name, "accessory")
                     self.valid_hits.append(valid_hit)
                 else:
                     msg = "Foreign gene {0} in cluster {1}".format(hit.gene.name, self.system_name)
@@ -887,7 +887,7 @@ class SystemOccurence(object):
         This function fills the SystemOccurrence with genes putatively coming from other systems (feature "multi_system").
         Those genes are used only if the occurrence of the corresponding gene was not yet filled with a gene from a cluster of the system. 
 
-        :param multi_systems_hits: a list of hits of genes that are "multi_system" which correspond to mandatory or allowed genes from the current system for which to fill a SystemOccurrence 
+        :param multi_systems_hits: a list of hits of genes that are "multi_system" which correspond to mandatory or accessory genes from the current system for which to fill a SystemOccurrence 
         :type list of: :class:`txsscanlib.report.Hit`
 
         """
@@ -899,11 +899,11 @@ class SystemOccurence(object):
                 #if g in multi_gene_names in [multi_gene.name for multi_gene in [hit.gene for hit in multi_systems_hits]]:
                 if g in [multi_gene.name for multi_gene in [hit.gene for hit in multi_systems_hits]]:
                     # If so, then the SystemOccurrence is filled with this:
-                    if g in self.allowed_genes.keys():
-                        self.allowed_genes[g] += 1
-                        # Add a valid_hit with a special status? e.g "allowed_multi_system"?
-                        #self.allowed_genes[hit.gene.name]+=1
-                        #valid_hit=validSystemHit(hit, self.system_name, "allowed")
+                    if g in self.accessory_genes.keys():
+                        self.accessory_genes[g] += 1
+                        # Add a valid_hit with a special status? e.g "accessory_multi_system"?
+                        #self.accessory_genes[hit.gene.name]+=1
+                        #valid_hit=validSystemHit(hit, self.system_name, "accessory")
                         #self.valid_hits.append(valid_hit)
 
                     elif g in self.mandatory_genes.keys():
@@ -938,12 +938,12 @@ class SystemOccurence(object):
         """
         nb_forbid = self.count_genes(self.forbidden_genes)
         nb_mandat = self.count_genes(self.mandatory_genes)
-        nb_allowed = self.count_genes(self.allowed_genes)
+        nb_accessory = self.count_genes(self.accessory_genes)
         self._nb_syst_genes = self.compute_nb_syst_genes()
 
         msg = "====> Decision rule for putative system %s:\n" % self.system_name
         msg += str(self)
-        msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_allowed : %d" % (nb_forbid, nb_mandat, nb_allowed)
+        msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_accessory : %d" % (nb_forbid, nb_mandat, nb_accessory)
 
         if (nb_forbid == 0):
             if (nb_mandat >= self.system.min_mandatory_genes_required) and (self.nb_syst_genes >= self.system.min_genes_required) and (self.nb_syst_genes  >= 1):
@@ -1087,8 +1087,8 @@ class systemDetectionReport(object):
         """
         Writes a report with the summary of systems detected in replicons. For each system, a summary is done including: 
 
-            - the number of mandatory/allowed genes in the reference system (as defined in XML files)
-            - the number of mandatory/allowed genes detected
+            - the number of mandatory/accessory genes in the reference system (as defined in XML files)
+            - the number of mandatory/accessory genes detected
             - the number and list of missing genes
             - the number of loci encoding the system
 
@@ -1223,8 +1223,8 @@ class systemDetectionReportOrdered(systemDetectionReport):
         """
         Writes a report with the summary of systems detected in replicons. For each system, a summary is done including:
 
-            - the number of mandatory/allowed genes in the reference system (as defined in XML files)
-            - the number of mandatory/allowed genes detected
+            - the number of mandatory/accessory genes in the reference system (as defined in XML files)
+            - the number of mandatory/accessory genes detected
             - the number and list of missing genes
             - the number of loci encoding the system
 
@@ -1346,7 +1346,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
             system['summary'] = {}
             system['summary']['mandatory'] = so.mandatory_genes
-            system['summary']['allowed'] = so.allowed_genes
+            system['summary']['accessory'] = so.accessory_genes
             system['summary']['forbidden'] = so.forbidden_genes
             system['summary']['state'] = so._state
             systems.append(system)
@@ -1358,7 +1358,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
     Stores a report for putative detected systems gathering all hits from a search in an unordered dataset: 
         - by system.
 
-    Mandatory and allowed genes only are reported in the "json" and "report" output, but all hits matching a system component are reported in the "summary".  
+    Mandatory and accessory genes only are reported in the "json" and "report" output, but all hits matching a system component are reported in the "summary".  
 
     """
 
@@ -1401,8 +1401,8 @@ class systemDetectionReportUnordered(systemDetectionReport):
         """
         Writes a report with the summary for putative systems in an unordered dataset. For each system, a summary is done including:
 
-            - the number of mandatory/allowed genes in the reference system (as defined in XML files)
-            - the number of mandatory/allowed genes detected
+            - the number of mandatory/accessory genes in the reference system (as defined in XML files)
+            - the number of mandatory/accessory genes detected
 
         :param reportfilename: the output file name 
         :type reportfilename: string
@@ -1442,21 +1442,21 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 gene_2 = vh_2.gene
             if gene_1.is_mandatory(so.system) and gene_2.is_mandatory(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
-            elif gene_1.is_mandatory(so.system) and gene_2.is_allowed(so.system):
+            elif gene_1.is_mandatory(so.system) and gene_2.is_accessory(so.system):
                 return -1
             elif gene_1.is_mandatory(so.system) and gene_2.is_forbidden(so.system):
                 return -1
 
-            elif gene_1.is_allowed(so.system) and gene_2.is_mandatory(so.system):
+            elif gene_1.is_accessory(so.system) and gene_2.is_mandatory(so.system):
                 return 1
-            elif gene_1.is_allowed(so.system) and gene_2.is_allowed(so.system):
+            elif gene_1.is_accessory(so.system) and gene_2.is_accessory(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
-            elif gene_1.is_allowed(so.system) and gene_2.is_forbidden(so.system):
+            elif gene_1.is_accessory(so.system) and gene_2.is_forbidden(so.system):
                 return -1
 
             elif gene_1.is_forbidden(so.system) and gene_2.is_mandatory(so.system):
                 return 1
-            elif gene_1.is_forbidden(so.system) and gene_2.is_allowed(so.system):
+            elif gene_1.is_forbidden(so.system) and gene_2.is_accessory(so.system):
                 return 1
             elif gene_1.is_forbidden(so.system) and gene_2.is_forbidden(so.system):
                 return cmp(vh_1.gene.name, vh_2.gene.name)
@@ -1494,7 +1494,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                     system['genes'].append(gene)
                 system['summary'] = {}
                 system['summary']['mandatory'] = so.mandatory_genes
-                system['summary']['allowed'] = so.allowed_genes
+                system['summary']['accessory'] = so.accessory_genes
                 system['summary']['forbidden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 systems.append(system)
@@ -1557,7 +1557,7 @@ def disambiguate_cluster(cluster):
             cur_cluster.add(h)
             cur_compatible = compat_list
         else:
-            # Deal with "allowed foreign genes", and system attribution when the current gene can be in both aside systems! 
+            # Deal with "accessory foreign genes", and system attribution when the current gene can be in both aside systems! 
             # Former cluster (now to save) is considered.
             # Check cluster status before storing it or not:
             cur_cluster.save() # Check if it updates compatible systems?? right?
@@ -1643,7 +1643,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     - split clusters if needed
     - delete them if they are not relevant
     - add eventual genes from other systems "multi_system" genes
-    - check the QUORUM for each system to detect, *i.e.* mandatory + allowed - forbidden
+    - check the QUORUM for each system to detect, *i.e.* mandatory + accessory - forbidden
 
     Only for \"ordered\" datasets representing a whole replicon.
     Reports systems occurence.

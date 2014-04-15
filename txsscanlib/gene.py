@@ -278,14 +278,14 @@ class Gene(object):
         else:
             return False    
     
-    def is_allowed(self, system):
+    def is_accessory(self, system):
         """
-        :return: True if the gene is within the *allowed* genes of the system, False otherwise.
+        :return: True if the gene is within the *accessory* genes of the system, False otherwise.
         :param system: the query of the test
         :type system: :class:`txsscanlib.system.System` object.
         :rtype: boolean.
         """
-        if self in system.allowed_genes:
+        if self in system.accessory_genes:
             return True
         else:
             return False
@@ -312,16 +312,16 @@ class Gene(object):
         :type include_forbidden: boolean
         :rtype: boolean.
         """
-        #for m in (system.mandatory_genes+system.allowed_genes):
+        #for m in (system.mandatory_genes+system.accessory_genes):
         #print "=>is %s authorized in %s ??"%(self.name, system.name)
         if include_forbidden:
-            for m in (system.mandatory_genes+system.allowed_genes+system.forbidden_genes):
+            for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
                 if self == m:
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
                     return True
         else:
-            for m in (system.mandatory_genes+system.allowed_genes):
+            for m in (system.mandatory_genes+system.accessory_genes):
                 if self == m:
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):

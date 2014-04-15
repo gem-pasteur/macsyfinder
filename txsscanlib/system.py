@@ -122,7 +122,7 @@ class System(object):
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
         self._mandatory_genes = []
-        self._allowed_genes = []
+        self._accessory_genes = []
         self._forbidden_genes = []
 
     @property
@@ -198,14 +198,14 @@ class System(object):
         """
         self._mandatory_genes.append(gene)
 
-    def add_allowed_gene(self, gene):
+    def add_accessory_gene(self, gene):
         """
-        Add a gene to the list of allowed genes
+        Add a gene to the list of accessory genes
 
         :param gene: gene that is allowed to be present in this system
         :type gene: :class:`txsscanlib.secretion.Gene` object
         """
-        self._allowed_genes.append(gene)
+        self._accessory_genes.append(gene)
 
     def add_forbidden_gene(self, gene):
         """
@@ -225,12 +225,12 @@ class System(object):
         return self._mandatory_genes
 
     @property
-    def allowed_genes(self):
+    def accessory_genes(self):
         """
         :return: the list of genes that are allowed in this secretion system
         :rtype: list of :class:`txsscanlib.secretion.Gene` objects
         """
-        return self._allowed_genes
+        return self._accessory_genes
 
     @property
     def forbidden_genes(self):
@@ -249,7 +249,7 @@ class System(object):
         :rtype: a :class:`txsscanlib.secretion.Gene` object.
         :raise: KeyError the system does not contain any gene with name gene_name.
         """
-        all_genes = (self.mandatory_genes, self.allowed_genes, self.forbidden_genes)
+        all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
         for g_list in all_genes:
             for g in g_list:
                 if g.name == gene_name:
