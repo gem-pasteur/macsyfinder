@@ -94,7 +94,8 @@ class ClustersHandler(object):
                 if(first.position > second.position):
                     tmp = first
                     first = second
-                    second = first
+                    #second = first
+                    second = tmp
                 dist = second.position - pos_min + pos_max - first.position 
                 if(dist <= max(first.gene.inter_gene_max_space, second.gene.inter_gene_max_space)):
                     # If true, this means that there is no need to circularize other clusters as this cluster already overlaps the "Ori". => check_clust is thus set to False
@@ -358,7 +359,7 @@ class Cluster(object):
                         :rtype: string
 
                         """
-                        foreign_accessory = 0
+                        #foreign_accessory = 0
                         auth = 0 # counts nb of hits that are authorized in the putative system
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
@@ -847,7 +848,6 @@ class SystemOccurence(object):
         :param hits: a list of Hits to treat for :class:`txsscanlib.search_systems.SystemOccurence` inclusion.
         :type list of: :class:`txsscanlib.report.Hit`
         """
-        included = True
         self._state = "no_decision"
         for hit in hits:
             # Need to check first that this cluster is eligible for system inclusion
@@ -868,7 +868,6 @@ class SystemOccurence(object):
                 if include_forbidden:
                     valid_hit = validSystemHit(hit, self.system_name, "forbidden")
                     self.valid_hits.append(valid_hit)
-                included = False
             else:
                 if hit.gene.name in self.exmandatory_genes.keys():
                     self.mandatory_genes[self.exmandatory_genes[hit.gene.name]] += 1
@@ -1681,9 +1680,9 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #store_scattered=True
             store_scattered = False
             store_clust = None
-            store_so = None
-            store_msg = ""
-            exclude = False
+            #store_so = None # unused_var
+            #store_msg = "" # unused_var
+            #exclude = False # unused_var
             #for putative_system in clust.compatible_systems:
             for putative_system in [s.name for s in systems_to_consider]:
                 print "Considering %s: " % putative_system
@@ -1703,7 +1702,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
                             if first:
                                 store_clust = clust
-                                store_so = so
+                                #store_so = so
                                 store_scattered = True
                                 #store_msg
                             #print "...\nStored for later treatment of scattered systems.\n"
@@ -1716,13 +1715,13 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             systems_occurences_list.append(so)
                             store_scattered = False
                             break
-                    else:
-                        exclude = True
-                        #store_scattered=True
+                    #else:
+                    #    exclude = True
+                    #    #store_scattered=True
             #if store_scattered and not exclude:
             if store_scattered:
                 #print store_so
-                print store_msg
+                #print store_msg
                 #print "...\nPutative %s locus stored for later treatment of scattered systems.\n"%clust.compatible_systems[0]
                 print "=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0]
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
@@ -2124,7 +2123,7 @@ def search_systems(hits, systems, cfg):
             if k in systems:
                 # SO new: get the list of forbidden genes... Then have from hits 
                 # Should better rewrite this part of the code to have a single process of the hits...
-                forbidden_genes = k.forbidden_genes
+                #forbidden_genes = k.forbidden_genes # unused_var
                 forbidden_hits = []
                 for h in hits:
                     if h.gene.is_forbidden(k):
