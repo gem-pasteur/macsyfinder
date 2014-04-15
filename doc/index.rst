@@ -24,7 +24,7 @@ Welcome to MacSyFinder's documentation!
 
 
     .. image:: images/figure_main-2.*
-     :height: 500px
+     :height: 600px
      :align: left
 
 
