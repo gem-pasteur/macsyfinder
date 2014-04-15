@@ -9,15 +9,15 @@
     	    <gene name="tcpA" system_ref="cT4SS"/>
     	</homologs>
     </gene>
-    <gene name="T_virB1" presence="allowed"/>
-    <gene name="T_virB10" presence="allowed"/>
-    <gene name="T_virB11" presence="allowed"/>
-    <gene name="T_virB2" presence="allowed"/>
-    <gene name="T_virB3" presence="allowed"/>
-    <gene name="T_virB5" presence="allowed"/>
-    <gene name="T_virB6" presence="allowed"/>
-    <gene name="T_virB8" presence="allowed"/>
-    <gene name="T_virB9" presence="allowed"/>
+    <gene name="T_virB1" presence="accessory"/>
+    <gene name="T_virB10" presence="accessory"/>
+    <gene name="T_virB11" presence="accessory"/>
+    <gene name="T_virB2" presence="accessory"/>
+    <gene name="T_virB3" presence="accessory"/>
+    <gene name="T_virB5" presence="accessory"/>
+    <gene name="T_virB6" presence="accessory"/>
+    <gene name="T_virB8" presence="accessory"/>
+    <gene name="T_virB9" presence="accessory"/>
     <gene name="MOBB" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
     <gene name="MOBC" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
     <gene name="MOBF" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>

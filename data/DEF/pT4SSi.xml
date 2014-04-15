@@ -9,21 +9,21 @@
     	    <gene name="tcpA" system_ref="cT4SS"/>
     	</homologs>
     </gene>
-    <gene name="I_traE" presence="allowed"/>
-    <gene name="I_traI" presence="allowed"/>
-    <gene name="I_traK" presence="allowed"/>
-    <gene name="I_traL" presence="allowed"/>
-    <gene name="I_traM" presence="allowed"/>
-    <gene name="I_traN" presence="allowed"/>
-    <gene name="I_traO" presence="allowed"/>
-    <gene name="I_traP" presence="allowed"/>
-    <gene name="I_traQ" presence="allowed"/>
-    <gene name="I_traR" presence="allowed"/>
-    <gene name="I_traT" presence="allowed"/>
-    <gene name="I_traW" presence="allowed"/>
-    <gene name="I_traY" presence="allowed"/>
-    <gene name="I_trbA" presence="allowed"/>
-    <gene name="I_trbB" presence="allowed"/>
+    <gene name="I_traE" presence="accessory"/>
+    <gene name="I_traI" presence="accessory"/>
+    <gene name="I_traK" presence="accessory"/>
+    <gene name="I_traL" presence="accessory"/>
+    <gene name="I_traM" presence="accessory"/>
+    <gene name="I_traN" presence="accessory"/>
+    <gene name="I_traO" presence="accessory"/>
+    <gene name="I_traP" presence="accessory"/>
+    <gene name="I_traQ" presence="accessory"/>
+    <gene name="I_traR" presence="accessory"/>
+    <gene name="I_traT" presence="accessory"/>
+    <gene name="I_traW" presence="accessory"/>
+    <gene name="I_traY" presence="accessory"/>
+    <gene name="I_trbA" presence="accessory"/>
+    <gene name="I_trbB" presence="accessory"/>
     <gene name="MOBB" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
     <gene name="MOBC" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
     <gene name="MOBF" presence="forbidden" inter_gene_max_space="60" system_ref="cT4SS"/>
