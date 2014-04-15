@@ -1,11 +1,4 @@
-exclude txsscanlib/pool.py
-exclude txsscanlib/secretion-old.py
-exclude txsscanlib/detect_SS.py
 exclude txsscanlib/test_*.py
-exclude txsscanlib/shuffle_seqid.py
-exclude txsscanlib/hmm_parsing_in_memory.py
-exclude txsscanlib/hmm_parsing_w_DB.*
-exclude txsscanlib/min_max_proto.py
 
 recursive-include doc/_build/html *
 include doc/_build/latex/Txsscan.pdf
@@ -25,3 +18,5 @@ include test/txsscan.conf
 include etc/txsscan.conf
 
 include INSTALL
+include COPYING
+include COPYRIGHT
