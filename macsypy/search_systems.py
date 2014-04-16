@@ -1472,7 +1472,8 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 if not so.unique_name:
                     so.unique_name = so.get_system_name_unordered()
                 system = {}
-                system['name'] = so.unique_name
+                system['name'] = so.system_name
+                system['id'] = so.unique_name
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
