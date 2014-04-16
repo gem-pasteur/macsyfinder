@@ -1,10 +1,18 @@
+.. MacSyFinder - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.            
+    Authors: Sophie Abby, Bertrand Néron                                 
+    Copyright © 2014  Institut Pasteur, Paris.                           
+    See the COPYRIGHT file for details                                    
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
+    See the COPYING file for details.  
+    
 .. _outputs:
 
 *************
 Output format
 *************
 
-MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "txsscan-20130128_08-57-46". MacSyFinder outputs are stored in this run-specific folder. 
+MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46". MacSyFinder outputs are stored in this run-specific folder. 
 
 .. _hmmer-outputs-label:
 
@@ -15,7 +23,7 @@ Raw Hmmer outputs are provided, as long with processed tabular outputs that incl
 The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for hits filtering and relevant information on the matches, as 
 for instance::
 
-    # gene: sctC extract from /Users/bob/txsscan_results/txsscan-20130128_08-57-46/sctC.search_hmm.out hmm output
+    # gene: sctC extract from /Users/bob/macsyfinder_results/macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
     # profile length= 544
     # i_evalue threshold= 0.001000
     # coverage threshold= 0.500000
@@ -35,15 +43,15 @@ Systems detection results
 
 Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
 
-  * txsscan.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase"). It provides a summary of the number of each type of systems that have been detected. 
+  * macsyfinder.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase"). It provides a summary of the number of each type of systems that have been detected. 
   
-  * txsscan.report - contains all the sequence identifiers of proteins detected as being part of a system, along with statistics on the Hmmer hit, and the status of the component in the system. 
+  * macsyfinder.report - contains all the sequence identifiers of proteins detected as being part of a system, along with statistics on the Hmmer hit, and the status of the component in the system. 
   
-  * txsscan.summary - contains a line of information for each detected system.
+  * macsyfinder.summary - contains a line of information for each detected system.
 
 
-txsscan.tab
-***********
+macsyfinder.tab
+***************
 For each replicon, a line gives the occurrences of systems that were asked for detection. For example, if the detection was run for the Flagellum and the T6SS, the output will look like::
 
   #Replicon Flagellum_single_locus Flagellum_multi_loci T6SS_single_locus T6SS_multi_loci	
@@ -51,8 +59,8 @@ For each replicon, a line gives the occurrences of systems that were asked for d
 
 which means that this "escherichia06" genome harbors 1 flagellum in a single locus, 1 flagellum scattered on multiple loci, and 1 T6SS in a single locus. 
 
-txsscan.report
-**************
+macsyfinder.report
+******************
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
     * Hit_Id - the sequence identifier of the hit
     * Replicon_name	- the name of the replicon it belongs to
@@ -71,8 +79,8 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * Begin_match - the position in the sequence where the profile match begins
     * End_match - the position in the sequence where the profile match ends
 
-txsscan.summary
-***************
+macsyfinder.summary
+*******************
 Each line corresponds to a system that has been detected. It includes:
     * Replicon_name	- the name of the replicon 
     * System_Id	- the unique identifier attributed to the detected system
@@ -95,8 +103,8 @@ Each line corresponds to a system that has been detected. It includes:
     * Occur_Accessory - counts of the accessory components
     * Occur_Forbidden - counts of the forbidden components
 
-txsscan.json
-************
+results.macsyfinder.json
+************************
 This file is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
 
 
@@ -105,9 +113,9 @@ Logs and configuration files
 
 Two specific output files are built to store information on the MacSyFinder execution: 
 
- * txsscan.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
+ * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  
- * txsscan.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
+ * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
   
 
 

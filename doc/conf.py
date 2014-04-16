@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Txsscan documentation build configuration file, created by
-# sphinx-quickstart on Thu Nov 29 18:18:43 2012.
+# MacSyFinder documentation build configuration file, created by sphinx-quickstart 
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -50,7 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'MacSyFinder'
-copyright = u'2013, Sophie Abby, Bertrand Néron'
+#copyright = u'2014, Sophie Abby, Bertrand Néron'
+copyright = u'2014, Sophie Abby, Bertrand Néron'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

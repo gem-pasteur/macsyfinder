@@ -1,3 +1,11 @@
+.. MacSyFinder - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.            
+    Authors: Sophie Abby, Bertrand Néron                                 
+    Copyright © 2014  Institut Pasteur, Paris.                           
+    See the COPYRIGHT file for details                                    
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
+    See the COPYING file for details.  
+    
 .. _gene:
 
 ********
@@ -9,14 +17,14 @@ The Gene object represents genes encoding the protein components of a System. Se
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems, each gene must be instanciated only once, and stored in gene_bank.
-    gene_bank is a :class:`txsscanlib.gene.GeneBank` object. 
-    The gene_bank and system_bank (:class:`txsscanlib.system.SystemBank` object) are filled by a system_parser (:class:`txsscanlib.system_parser.SystemParser`)
+    gene_bank is a :class:`macsypy.gene.GeneBank` object. 
+    The gene_bank and system_bank (:class:`macsypy.system.SystemBank` object) are filled by a system_parser (:class:`macsypy.system_parser.SystemParser`)
 
 Example to get a gene object: ::
   
-    from txsscanlib.system import system_bank
-    from txsscanlib.config import Config
-    from txsscanlib.gene import gene_bank
+    from macsypy.system import system_bank
+    from macsypy.config import Config
+    from macsypy.gene import gene_bank
       
       
     #get a system  
@@ -28,7 +36,7 @@ Example to get a gene object: ::
  
 GeneBank API reference
 =========================
- .. automodule:: txsscanlib.gene
+ .. automodule:: macsypy.gene
    :members: GeneBank
    :private-members:
    :special-members:
@@ -37,12 +45,12 @@ GeneBank API reference
 
    Don't instanciate your own GeneFactory use the gene_bank at the top level of the module. ::
      
-     from txsscanlib.gene import gene_bank
+     from macsypy.gene import gene_bank
 
 Gene API reference
 ==================
 
-.. automodule:: txsscanlib.gene
+.. automodule:: macsypy.gene
    :members: Gene
    :private-members:
    :special-members:
@@ -58,7 +66,7 @@ Gene API reference
 Homolog API reference  
 =====================
 
-.. automodule:: txsscanlib.gene
+.. automodule:: macsypy.gene
    :members: Homolog
    :private-members:
    :special-members:
@@ -69,7 +77,7 @@ Homolog API reference
 Analog API reference  
 ====================
 
-.. automodule:: txsscanlib.gene
+.. automodule:: macsypy.gene
    :members: Analog
    :private-members:
    :special-members:

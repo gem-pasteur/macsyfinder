@@ -6,15 +6,17 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
     
-.. _search_genes:
+.. _macsypy_error:
 
+******************
+MacSyFinder errors
+******************
 
-**************************
-search_genes API reference
-**************************
-
-.. automodule:: macsypy.search_genes
-   :members: 
+ 
+macsypy_error API reference
+============================
+.. automodule:: macsypy.macsypy_error
+   :members:
    :private-members:
    :special-members:
-  
+

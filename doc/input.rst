@@ -1,3 +1,11 @@
+.. MacSyFinder - Detection of macromolecular systems in protein datasets
+    using systems modelling and similarity search.            
+    Authors: Sophie Abby, Bertrand Néron                                 
+    Copyright © 2014  Institut Pasteur, Paris.                           
+    See the COPYRIGHT file for details                                    
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
+    See the COPYING file for details.  
+    
 .. _input:
 
 ********************************
@@ -179,7 +187,7 @@ General options::
                         Error messages (default), Warning (-v), Info (-vv) and
                         Debug(-vvv).
                         
-  --log LOG_FILE        Path to the directory where to store the 'txsscan.log'
+  --log LOG_FILE        Path to the directory where to store the 'macsyfinder.log'
                         log file.
                         
   --config CFG_FILE     Path to a putative MacSyFinder configuration file to be
@@ -210,11 +218,11 @@ Configuration file
 Options to run MacSyFinder can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
- * $PREFIX/etc/txsscan/txsscan.conf
+ * $PREFIX/etc/macsyfinder/macsyfinder.conf
  
- * $(HOME)/.txsscan/txsscan.conf
+ * $(HOME)/.macsyfinder/macsyfinder.conf
  
- * ./txsscan.conf  
+ * ./macsyfinder.conf  
  
 Moreover these three locations options can be passed on the command-line.
  
@@ -223,7 +231,7 @@ Each file can define options, at the end all options are added. If an option is 
 .. note::
     The precedence rules from the less important to the more important are:
  
-    $PREFIX/etc/txsscan/txsscan.conf < $(HOME)/.txsscan/txsscan.conf < ./txsscan.conf < "command-line" options
+    $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < ./macsyfinder.conf < "command-line" options
    
 This means that command-line options will always bypass those from the configuration files. In the same flavor, options altering the definition of systems found in the command-line or the configuration file will always overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.   
  
@@ -286,12 +294,12 @@ In MacSyFinder, five sections are defined:
         DEBUG 	    10
         NOTSET 	    0
         ========    ==========
-    * *log_file* = (default = txsscan.log in directory of the run)
+    * *log_file* = (default = macsyfinder.log in directory of the run)
  
 Example of a configuration file::
   
     [base]
-    prefix = /path/to/txsscan/home/
+    prefix = /path/to/macsyfinder/home/
     file = %(prefix)s/dataset/prru_psae.001.c01.fasta
     type = gembase
     replicon_topology = circular
@@ -309,7 +317,7 @@ Example of a configuration file::
     coverage_profile = 0.5
 
     [directories]
-    prefix = /path/to/txsscan/home/
+    prefix = /path/to/macsyfinder/home/
     def_dir = %(prefix)s/data/DEF
     res_search_dir = %(prefix)s/dataset/res_search/
     res_search_suffix = .raw_hmm
@@ -323,7 +331,7 @@ Example of a configuration file::
 
 .. note::
 
-    After a run, the corresponding configuration file ("txsscan.conf") is generated as a (re-usable) output file that stores every options used in the run. It is stored in the results' directory (see :ref:`the output section <outputs>`). 
+    After a run, the corresponding configuration file ("macsyfinder.conf") is generated as a (re-usable) output file that stores every options used in the run. It is stored in the results' directory (see :ref:`the output section <outputs>`). 
 
 
 In-house input files
