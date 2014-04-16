@@ -268,7 +268,7 @@ class System(object):
         :param gene: the gene to get the gene reference.
         :type gene: a :class:`macsypy.secretion.Gene` or macsypy.secretion.Homolog` or macsypy.secretion.Analog` object.
         :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
-        :rtype: :class:`macsypy.secretion.Gene` object or None
+        :rtype: :class:`macsypy.gene.Gene` object or None
         :raise: KeyError if gene is not in the system
         """
         g = self.get_gene(gene.name)
@@ -276,4 +276,3 @@ class System(object):
             return g.gene_ref
         except AttributeError:
             return None
-        
