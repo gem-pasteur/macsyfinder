@@ -210,7 +210,8 @@ class SystemParser(object):
             elif presence == 'forbidden':
                 system.add_forbidden_gene(gene)
             else:
-                msg = "Invalid system definition: presence value must be either [mandatory, accessory, forbidden] not %s" % presence
+                msg = "Invalid system {0} definition: presence value must be either [mandatory, accessory, forbidden] not {1}".format(gene_name,
+                                                                                                                                      presence)
                 _log.error(msg)
                 raise SyntaxError(msg)
 

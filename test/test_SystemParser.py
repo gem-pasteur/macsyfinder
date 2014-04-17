@@ -106,7 +106,7 @@ class Test(unittest.TestCase):
         system_2_detect = ['fail_invalid_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, "Invalid system definition: presence value must be either [mandatory, accessory, forbidden] not foo_bar")
+        self.assertEqual(context.exception.message, "Invalid system sctN_FLG definition: presence value must be either [mandatory, accessory, forbidden] not foo_bar")
 
     def test_gene_no_name(self):
         system_2_detect = ['gene_no_name']
