@@ -57,21 +57,21 @@ parser.add_argument("systems",
                     nargs = '+',
                     help = "The systems to detect. This is an obligatory option with no keyword associated to it. To detect all the protein secretion systems and related appendages: set to \"all\" (case insensitive). Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
 genome_options =  parser.add_argument_group(title = "Input dataset options")
-genome_options.add_argument("--sequence_db",
+genome_options.add_argument("--sequence-db",
                     action = 'store',
                     dest = 'sequence_db',
                     help = "Path to the sequence dataset in fasta format.")
-genome_options.add_argument(  "--db_type" ,
+genome_options.add_argument(  "--db-type" ,
                        choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                        dest = "db_type",
                        default = None,
                        help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName SequenceID\"." )
-genome_options.add_argument(  "--replicon_topology" ,
+genome_options.add_argument(  "--replicon-topology" ,
                        choices = ['linear', 'circular'],
                        dest = "replicon_topology",
                        default = None,
                        help = "The topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
-genome_options.add_argument(  "--topology_file" ,
+genome_options.add_argument(  "--topology-file" ,
                        dest = "topology_file",
                        default = None,
                        help = "Topology file path. The topology file allows to specify a topology (linear or circular) for each replicon (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. A topology file is a tabular file with two columns: the 1st is the replicon name, and the 2nd the corresponding topology:\n\"RepliconA\tlinear\" ")
@@ -131,27 +131,27 @@ hmmer_options.add_argument( '--hmmer',
                             dest = 'hmmer_exe',
                             default = None, 
                             help = 'Path to the Hmmer program.')
-hmmer_options.add_argument( '--index_db', 
+hmmer_options.add_argument( '--index-db', 
                             action = 'store',
                             dest = 'index_db_exe',
                             default = None, 
                             help = "The indexer to be used for Hmmer. The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary (default = makeblastb)")
 
-hmmer_options.add_argument( '--e_value_search',
+hmmer_options.add_argument( '--e-value-search',
                      action = 'store',
                      dest = 'e_value_res',
                      type = float,
                      default = None,
                      help = 'Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
 
-hmmer_options.add_argument('--i_evalue_select',
+hmmer_options.add_argument('--i-evalue-select',
                      action = 'store',
                     dest = 'i_evalue_sel',
                     type = float,
                     default = None , 
                     help = 'Maximal independent e-value for Hmmer hits to be selected for system detection. (default = 0.001)')
 
-hmmer_options.add_argument('--coverage_profile',
+hmmer_options.add_argument('--coverage-profile',
                      action = 'store',
                     dest = 'coverage_profile',
                     type = float,
@@ -159,7 +159,7 @@ hmmer_options.add_argument('--coverage_profile',
                     help = 'Minimal profile coverage required in the hit alignment to allow the hit selection for system detection. (default = 0.5)')
 
 dir_options =  parser.add_argument_group(title = "Path options", description = None)
-dir_options.add_argument('-d', '--d',
+dir_options.add_argument('-d', '--def',
                     action = 'store',
                     dest = 'def_dir',
                     default = None,
@@ -179,7 +179,7 @@ dir_options.add_argument('--research-extract-suffix',
                     dest = 'res_extract_suffix',
                     default = None,
                     help = 'The suffix to give to filtered hits output files.')
-dir_options.add_argument('-p', '--profile_dir',
+dir_options.add_argument('-p', '--profile-dir',
                     action = 'store',
                     dest = 'profile_dir',
                     default = None,
@@ -217,8 +217,8 @@ general_options.add_argument("--previous-run",
                     dest = 'previous_run',
                     default = None,
                     help = """Path to a previous MacSyFinder run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
-(conflict with options  --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, 
---e_value_res, --db_type, --hmmer_exe)""")
+(conflict with options  --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, 
+--e-value-res, --db-type, --hmmer-exe)""")
 
 args = parser.parse_args()
 if args.previous_run and (args.cfg_file or
@@ -229,7 +229,7 @@ if args.previous_run and (args.cfg_file or
                           args.e_value_res or
                           args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run conficts with --cfg-file, --sequence_db, --profile_suffix, --res_extract_suffix, --e_value_res, --db_type, --hmmer_exe""")
+    parser.error(""" --previous-run conficts with --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer-exe""")
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)

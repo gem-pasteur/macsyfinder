@@ -87,13 +87,13 @@ class SystemParser(object):
         root = tree.getroot()
         inter_gene_max_space = root.get('inter_gene_max_space')
         if inter_gene_max_space is None:
-            msg = "Invalid system definition (%s): inter_gene_max_space must be defined" % path
+            msg = "Invalid system definition ({0}): inter_gene_max_space must be defined".format(path)
             _log.critical(msg)
             raise SyntaxError(msg)
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
-            msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
+            msg = "Invalid system definition ({0}): inter_gene_max_space must be an integer: {1}".format(path, inter_gene_max_space)
             _log.critical(msg)
             raise SyntaxError(msg)
         min_mandatory_genes_required = root.get('min_mandatory_genes_required')
@@ -101,7 +101,7 @@ class SystemParser(object):
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
             except ValueError:
-                msg = "Invalid system definition: min_mandatory_genes_required must be an integer: %s" % min_mandatory_genes_required
+                msg = "Invalid system definition ({0}): min_mandatory_genes_required must be an integer:{1}".format(path, min_mandatory_genes_required)
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -110,7 +110,7 @@ class SystemParser(object):
             try:
                 min_genes_required = int(min_genes_required)
             except ValueError:
-                msg = "Invalid system definition: min_genes_required must be an integer: %s" % min_genes_required
+                msg = "Invalid system definition ({0}): min_genes_required must be an integer: {1}".format(path, min_genes_required)
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -119,7 +119,7 @@ class SystemParser(object):
             try:
                 max_nb_genes = int(max_nb_genes)
             except ValueError:
-                msg = "Invalid system definition: max_nb_genes must be an integer: %s" % max_nb_genes
+                msg = "Invalid system definition ({0}): max_nb_genes must be an integer: {1}".format(path, max_nb_genes)
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -141,8 +141,6 @@ class SystemParser(object):
         """
         Create genes belonging to the systems. Be careful, the returned genes have not their homologs/analogs set yet.
         
-        :param gene_name: 
-        :type gene_name: string
         :param system:
         :type system: :class:`macsypy.system.System` object
         :return: a list of the genes belonging to the system.
@@ -155,7 +153,7 @@ class SystemParser(object):
         for node in gene_nodes:
             name = node.get("name")
             if not name:
-                msg = "Invalid system definition: gene without a name"
+                msg = "Invalid system definition '{0}': gene without a name".format(system.name)
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -171,7 +169,7 @@ class SystemParser(object):
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
             except ValueError:
-                msg = "Invalid system definition: inter_gene_max_space must be an integer: %s" % inter_gene_max_space
+                msg = "Invalid system definition '{0}': inter_gene_max_space must be an integer: %s".format(system.name, inter_gene_max_space)
                 _log.critical(msg)
                 raise SyntaxError(msg)
             except TypeError:#if None
@@ -194,7 +192,7 @@ class SystemParser(object):
         for gene_node in genes_nodes:
             presence = gene_node.get("presence")
             if not presence:
-                msg = "Invalid system definition: gene without presence"
+                msg = "Invalid system definition '{0}': gene without presence".format(system.name)
                 _log.error(msg)
                 raise SyntaxError(msg)
             gene_name = gene_node.get('name')
@@ -210,7 +208,8 @@ class SystemParser(object):
             elif presence == 'forbidden':
                 system.add_forbidden_gene(gene)
             else:
-                msg = "Invalid system definition: presence value must be either [mandatory, accessory, forbidden] not %s" % presence
+                msg = "Invalid system '{0}' definition: presence value must be either [mandatory, accessory, forbidden] not {1}".format(system.name,
+                                                                                                                                      presence)
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -235,19 +234,27 @@ class SystemParser(object):
         elif aligned in (None, "0", "false", "False"):
             aligned = False
         else:
-            msg = 'Invalid system definition: invalid value for an attribute of gene %s: %s allowed values are "1", "true", "True", "0", "false", "False"'% (aligned, name)
+            msg = 'Invalid system definition \'{0}\': invalid value for an attribute of gene \'{1}\': \'{2}\' allowed values are "1", "true", "True", "0", "false", "False"'.format(curr_system.name,
+                                                                                                                                                                        aligned,
+                                                                                                                                                                        name)
             _log.error(msg)
             raise SyntaxError(msg)
         try:
             gene = self.gene_bank[name]
         except KeyError:
-            msg = "The gene %s described as homolog of %s in system %s is not in the \"GeneBank\" gene factory" % (name, gene_ref.name, curr_system.name)
+            msg = "Invalid system definition '{0}': The gene '{1}' described as homolog of '{2}' in system '{3}' is not in the \"GeneBank\" gene factory".format(curr_system.name,
+                                                                                                                                                         name, 
+                                                                                                                                                         gene_ref.name, 
+                                                                                                                                                         curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
         #if system_ref != gene.system.name:     
         if system_ref != None and system_ref != gene.system.name:
-            msg = "Inconsistency in systems definitions: the gene %s described as homolog of %s with system_ref %s has an other system in bank (%s)" % (name, gene_ref.name, system_ref, gene.system.name)
+            msg = "Inconsistency in systems definitions: the gene '{0}' described as homolog of '{1}' with system_ref '{2}' has an other system in bank ({3})".format(name, 
+                                                                                                                                                            gene_ref.name, 
+                                                                                                                                                            system_ref, 
+                                                                                                                                                            gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref, aligned)
@@ -267,18 +274,23 @@ class SystemParser(object):
         """
         name = node.get("name")
         if not name:
-            msg = "Invalid system definition: gene without name"
+            msg = "Invalid system definition '{0}': gene without name".format(curr_system.name)
             _log.error(msg)
             raise SyntaxError(msg)
         try:
             gene = self.gene_bank[name]
         except KeyError:
-            msg = "The gene %s described as analog of %s in system %s is not in the \"GeneBank\" gene factory" % (name, gene_ref.name, curr_system.name)
+            msg = "The gene '{0}' described as analog of '{1}' in system '{2}' is not in the \"GeneBank\" gene factory".format(name, 
+                                                                                                                         gene_ref.name, 
+                                                                                                                         curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
         if system_ref != None and system_ref != gene.system.name:
-            msg = "Inconsistency in systems definitions: the gene %s described as analog of %s with system_ref %s has an other system in bank (%s)" % (name, gene_ref.name, system_ref, gene.system.name)
+            msg = "Inconsistency in systems definitions: the gene '{0}' described as analog of '{1}' with system_ref '{2}' has an other system in bank ({3})" % (name, 
+                                                                                                                                                           gene_ref.name, 
+                                                                                                                                                           system_ref, 
+                                                                                                                                                           gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         analog = Analog(gene, gene_ref)
@@ -332,22 +344,22 @@ class SystemParser(object):
             len_accessory_genes = len(system.accessory_genes)
             len_mandatory_genes = len(system.mandatory_genes)
             if not (system.min_genes_required <= (len_accessory_genes + len_mandatory_genes)) :
-                msg = "system %s is not consistent: min_genes_required %d must be lesser or equal than the number of \"accessory\" and \"mandatory\" components in the system: %d" %(system.name, 
-                                                                                                                                      system.min_genes_required, 
-                                                                                                                                      len_accessory_genes + len_mandatory_genes)
+                msg = "system '{0}' is not consistent: min_genes_required {1:d} must be lesser or equal than the number of \"accessory\" and \"mandatory\" components in the system: {2:d}".format(system.name, 
+                                                                                                                                                                                                 system.min_genes_required, 
+                                                                                                                                                                                                 len_accessory_genes + len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
             if not (system.min_mandatory_genes_required <= len_mandatory_genes):
-                msg = "system %s is not consistent: min_mandatory_genes_required %d must be lesser or equal than the number of \"mandatory\" components in the system: %d" %(system.name, 
-                                                                                                                      system.min_mandatory_genes_required, 
-                                                                                                                      len_mandatory_genes)
+                msg = "system '{0}' is not consistent: min_mandatory_genes_required {1:d} must be lesser or equal than the number of \"mandatory\" components in the system: {2:d}".format(system.name, 
+                                                                                                                                                                                         system.min_mandatory_genes_required, 
+                                                                                                                                                                                         len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
             if not(system.min_mandatory_genes_required <= system.min_genes_required):
-                msg = "system %s is not consistent: min_mandatory_genes_required %d must be lesser or equal than min_genes_required %d" %(system.name, 
-                                                                                                                      system.min_mandatory_genes_required, 
-                                                                                                                      system.min_genes_required)
+                msg = "system '{0}' is not consistent: min_mandatory_genes_required {1:d} must be lesser or equal than min_genes_required {2:d}".format(system.name, 
+                                                                                                                                               system.min_mandatory_genes_required, 
+                                                                                                                                               system.min_genes_required)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
 
