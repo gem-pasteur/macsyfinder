@@ -100,49 +100,49 @@ class Test(unittest.TestCase):
         system_2_detect = ['fail_wo_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, "Invalid system definition: gene without presence")
+        self.assertEqual(context.exception.message, "Invalid system definition 'fail_wo_presence': gene without presence")
 
     def test_invalid_presence(self):
         system_2_detect = ['fail_invalid_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, "Invalid system sctN_FLG definition: presence value must be either [mandatory, accessory, forbidden] not foo_bar")
+        self.assertEqual(context.exception.message, "Invalid system 'fail_invalid_presence' definition: presence value must be either [mandatory, accessory, forbidden] not foo_bar")
 
     def test_gene_no_name(self):
         system_2_detect = ['gene_no_name']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,"Invalid system definition: gene without a name")
+        self.assertEqual(context.exception.message,"Invalid system definition 'gene_no_name': gene without a name")
 
     def test_invalid_aligned(self):
         system_2_detect = ['invalid_aligned']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,'Invalid system definition: invalid value for an attribute of gene foo_bar: sctJ allowed values are "1", "true", "True", "0", "false", "False"')
+        self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene \'foo_bar\': \'sctJ\' allowed values are "1", "true", "True", "0", "false", "False"')
  
     def test_invalid_homolg(self):
         system_2_detect = ['invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,  'The gene foo_bar described as homolog of sctJ in system invalid_homolog is not in the "GeneBank" gene factory')
+        self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_homolog\': The gene \'foo_bar\' described as homolog of \'sctJ\' in system \'invalid_homolog\' is not in the "GeneBank" gene factory')
 
     def test_bad_sys_ref(self):
         system_2_detect = ['bad_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,'Inconsistency in systems definitions: the gene sctJ described as homolog of sctJ with system_ref system_1 has an other system in bank (bad_sys_ref)')
+        self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ' with system_ref 'system_1' has an other system in bank (bad_sys_ref)")
 
     def test_bad_min_genes_required(self):
         system_2_detect = ['bad_min_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'system bad_min_genes_required is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
+        self.assertEqual(context.exception.message, 'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
     def test_bad_min_mandatory_genes_required(self):
         system_2_detect = ['bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'system bad_min_mandatory_genes_required is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
+        self.assertEqual(context.exception.message, 'system \'bad_min_mandatory_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
     def test_bad_min_mandatory_genes_required_2(self):
         system_2_detect = ['bad_min_mandatory_genes_required_2']
@@ -154,4 +154,4 @@ class Test(unittest.TestCase):
         system_2_detect = ['bad_max_nb_genes']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'Invalid system definition: max_nb_genes must be an integer: HOHOHO')
+        self.assertEqual(context.exception.message, 'Invalid system definition (/home/bneron/Projects/txsscan/branches/bertrand/test/datatest/DEF/bad_max_nb_genes.xml): max_nb_genes must be an integer: HOHOHO')
