@@ -154,4 +154,4 @@ class Test(unittest.TestCase):
         system_2_detect = ['bad_max_nb_genes']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'Invalid system definition (/home/bneron/Projects/txsscan/branches/bertrand/test/datatest/DEF/bad_max_nb_genes.xml): max_nb_genes must be an integer: HOHOHO')
+        self.assertEqual(context.exception.message, "Invalid system definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(os.path.join(self.cfg.def_dir, system_2_detect[0])))
