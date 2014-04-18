@@ -164,17 +164,17 @@ dir_options.add_argument('-d', '--def',
                     dest = 'def_dir',
                     default = None,
                     help = 'Path to the systems definition files.')
-dir_options.add_argument('-r', '--research-search',
+dir_options.add_argument('-r', '--res-search-dir',
                     action = 'store',
                     dest = 'res_search_dir',
                     default = None,
                     help = 'Path to the directory where to store MacSyFinder search results directories.')
-dir_options.add_argument( '--research-search-suffix',
+dir_options.add_argument( '--res-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
                     default = None,
                     help = 'The suffix to give to Hmmer raw output files.')
-dir_options.add_argument('--research-extract-suffix',
+dir_options.add_argument('--res-extract-suffix',
                     action = 'store',
                     dest = 'res_extract_suffix',
                     default = None,
@@ -217,8 +217,8 @@ general_options.add_argument("--previous-run",
                     dest = 'previous_run',
                     default = None,
                     help = """Path to a previous MacSyFinder run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
-(conflict with options  --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, 
---e-value-res, --db-type, --hmmer-exe)""")
+(conflict with options  --config, --sequence-db, --profile-suffix, --res-extract-suffix, 
+--e-value-res, --db-type, --hmmer)""")
 
 args = parser.parse_args()
 if args.previous_run and (args.cfg_file or
@@ -229,7 +229,7 @@ if args.previous_run and (args.cfg_file or
                           args.e_value_res or
                           args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run conficts with --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer-exe""")
+    parser.error(""" --previous-run conficts with --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)

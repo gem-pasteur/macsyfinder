@@ -155,14 +155,14 @@ Path options::
   -d DEF_DIR, --def DEF_DIR
                         Path to the systems definition files.
                         
-  -r RES_SEARCH_DIR, --results-search-dir RES_SEARCH_DIR
+  -r RES_SEARCH_DIR, --res-search-dir RES_SEARCH_DIR
                         Path to the directory where to store MacSyFinder search
                         results directories.
                         
-  --results-search-suffix RES_SEARCH_SUFFIX
+  --res-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files.
                         
-  --results-extract-suffix RES_EXTRACT_SUFFIX
+  --res-extract-suffix RES_EXTRACT_SUFFIX
                         The suffix to give to filtered hits output files.
                         
   -p PROFILE_DIR, --profile-dir PROFILE_DIR
@@ -201,7 +201,7 @@ General options::
                         Hmmer detection. The configuration file from this
                         previous run will be used. 
                         It is in conflict with options:
-                        --cfg-file, 
+                        --config, 
                         --sequence_db, 
                         --profile-suffix,
                         --res-extract-suffix, 
