@@ -20,3 +20,4 @@ include etc/macsyfinder.conf
 include INSTALL
 include COPYING
 include COPYRIGHT
+recursive-include macsyview/app *

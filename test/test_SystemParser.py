@@ -26,7 +26,7 @@ from macsypy.macsypy_error import MacsypyError, SystemInconsistencyError
 class Test(unittest.TestCase):
 
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
-    
+
     def setUp(self):
         self.cfg = Config(sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type = "gembase", 
