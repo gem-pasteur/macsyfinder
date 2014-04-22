@@ -299,7 +299,7 @@ for system in systems_to_detect:
             ex_genes += h_s
             a_s = g.get_analogs()
             ex_genes += a_s
-    all_genes +=  genes + ex_genes
+    all_genes +=  (genes + ex_genes)
 #############################################
 # this part of code is executed in parallel
 #############################################
