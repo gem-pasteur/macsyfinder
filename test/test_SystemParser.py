@@ -26,7 +26,7 @@ from macsypy.macsypy_error import MacsypyError, SystemInconsistencyError
 class Test(unittest.TestCase):
 
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
-    
+
     def setUp(self):
         self.cfg = Config(sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type = "gembase", 
@@ -154,4 +154,4 @@ class Test(unittest.TestCase):
         system_2_detect = ['bad_max_nb_genes']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'Invalid system definition (/home/bneron/Projects/txsscan/branches/bertrand/test/datatest/DEF/bad_max_nb_genes.xml): max_nb_genes must be an integer: HOHOHO')
+        self.assertEqual(context.exception.message, "Invalid system definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(os.path.join(self.cfg.def_dir, system_2_detect[0])))

@@ -29,12 +29,16 @@ from distutils.dist import Distribution
 from distutils.command.build import build
 from distutils.command.install import install
 from distutils.command.install_data import install_data as _install_data
+from distutils.command.build_scripts import build_scripts as _build_scripts
+from distutils.command.install_scripts import install_scripts as _install_scripts
+from distutils.command.sdist import sdist
 from distutils.errors import DistutilsFileError, DistutilsOptionError, DistutilsPlatformError
 from distutils.versionpredicate import VersionPredicate
 from distutils.util import subst_vars as distutils_subst_vars
 from distutils.util import get_platform, change_root, convert_path
 
 class check_and_build( build ):
+    
     def run(self):
         chk = True
         for req in require_python:
@@ -73,6 +77,12 @@ to run test, run 'python setup.py test -vv'""")
         except:
             pass
         return True
+
+class build_scripts(_build_scripts):
+    
+    def finalize_options (self):
+        _build_scripts.finalize_options(self)
+        self.scripts = self.distribution.scripts + self.distribution.viewer
 
 
 class test(Command):
@@ -200,6 +210,9 @@ class install_macsyfinder(install):
         if opt[0] == 'record=':
             install.user_options.pop(i)
 
+    def initialize_options(self):
+        install.initialize_options(self)
+
     def finalize_options(self):
         install.finalize_options(self)
         self.record = self.distribution.uninstall_files
@@ -214,7 +227,7 @@ class install_macsyfinder(install):
         vars_2_subst = {'PREFIX': inst.get('prefix', ''),
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
                         'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
-                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder')
+                        'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder'),
                         }
         for _file in self.distribution.fix_prefix:
             input_file = os.path.join(self.build_lib, _file)
@@ -223,6 +236,8 @@ class install_macsyfinder(install):
             os.unlink(input_file)
             self.move_file(output_file, input_file)
         install.run(self)
+
+
 
 
 class install_data(_install_data):
@@ -423,6 +438,51 @@ class install_conf(install_data):
                             self.outfiles.append(input_file)
 
 
+class install_viewer(_install_scripts):
+
+    install.sub_commands += [('install_viewer', lambda self: not self.no_viewer)]
+
+    description = 'Install MacSyView, MacSyView allow to view graphically results of MacSyFinder (need a web browser to work).'
+
+    setattr(install, 'no_viewer', None)
+    install.user_options.append(('no-viewer', None, 'do not install MacSyView'))
+
+    user_options = [ ('no-viewer', None, )]
+
+    def initialize_options(self):
+        _install_scripts.initialize_options(self)
+        self.no_viewer =  False
+
+    def finalize_options(self):
+        _install_scripts.finalize_options(self)
+        inst = self.distribution.command_options.get('install')
+        self.no_viewer = inst.get('no_viewer', ('command line', False))[1]
+
+
+    def run(self):
+        def subst(src_file, dest_file, local_vars):
+            with open(src_file , 'r') as f_in:
+                with open(dest_file, 'w') as f_out:
+                    for line in f_in:
+                        for var in local_vars:
+                            new_line = line.replace('$'+var, local_vars[var])
+                        f_out.write(new_line)
+
+        print "@@ install_viewer run"
+        inst = self.distribution.command_options.get('install')
+        vars_2_subst = {'MACSYVIEW'  :os.path.join(get_install_data_dir(inst), 'macsyfinder', 'macsyview', 'app', 'index.html')}
+
+        for _file in self.distribution.fix_viewer:
+            input_file = os.path.join(self.build_dir, _file)
+            output_file = input_file + '.tmp'
+            subst(input_file, output_file, vars_2_subst)
+            os.unlink(input_file)
+            self.move_file(output_file, input_file)
+        print "@@ subst done"
+        _install_scripts.run(self)
+
+
+
 class Uninstall(Command):
 
     description = "remove installed files"
@@ -447,7 +507,6 @@ class Uninstall(Command):
                 value = self.parser.get('install', attr)
             except(NoSectionError, NoOptionError):
                 continue
-            print "setattr(self, ",attr,", ",value,")"
             setattr(self, attr, value)
 
     def run(self):
@@ -455,22 +514,22 @@ class Uninstall(Command):
         for attr in [ attr for attr in vars(self) if attr.startswith('install_')]:
             prefixes.append( getattr(self, attr))
         print "prefixes = ", prefixes
-                 
+
         def clean_tree(_dir):
             find_prefix = False
             for prefix in prefixes:
-                print "== ", prefix,".find(",_dir,") = ",prefix.find(_dir)
+                print "== ", prefix, ".find(",_dir,") = ",prefix.find(_dir)
                 if prefix.find(_dir) != -1:
                     find_prefix = True
                     return prefix
-                
+
             print "find_prefix =",prefix
             if find_prefix:
                 return
             try:
                 if not self.dry_run:
                     os.rmdir(_dir)
-                log.info( "remove dir {}".format(_dir))
+                log.info("remove dir {}".format(_dir))
             except OSError as err:
                 if err.errno == os.errno.ENOTEMPTY:
                     return
@@ -478,7 +537,7 @@ class Uninstall(Command):
                     self.warn(err)
                     return
             clean_tree(os.path.dirname(_dir))
-         
+
         try:
             with open(self.distribution.uninstall_files) as record_file:
                 for path in record_file:
@@ -502,6 +561,71 @@ class Uninstall(Command):
             raise DistutilsFileError(msg)
 
 
+
+
+###################################
+#                                 #
+# creation of source distribution #
+#                                 #
+###################################
+
+class sdist_macsy(sdist):
+
+    user_options = [('macsyview-dir=', None, 'The location of the macsyview project')] + sdist.user_options
+
+    def initialize_options(self):
+        sdist.initialize_options(self)
+        self.macsyview_dir = None
+        self.macsyview_link_name = None
+
+    def run(self):
+        inst = self.distribution.command_options.get('sdist')
+        if not inst.has_key('macsyview_dir'):
+            sys.exit('Missing mandatory macsyview-dir to specify the location of macsyview project')
+        self.macsyview_link_name = 'macsyview'
+        self.must_clean = False
+        self.set_up()
+        #self.update_mktemplate()
+        #self.build_macsyview
+        sdist.run(self)
+        self.clean_up()
+
+    def update_mktemplate(self):
+        with open('MANIFEST.in', 'a') as f:
+            f.write('recursive-include {0} *\n'.format(os.path.join(self.macsyview_link_name, 'app')))
+
+    def set_up(self):
+        if os.path.exists( self.macsyview_link_name ):
+            if os.path.realpath(self.macyview_link_name) == os.path.realpath(self.macsyview_dir):
+                self.must_clean = False
+                return
+            else:
+                raise RuntimeError( "there already exist a 'macsyview' path in %s and is different than %s"%( os.getcwd(), self.macsyview_dir) )
+        os.symlink( self.macsyview_dir , self.macsyview_link_name )
+        self.must_clean = True
+
+    def clean_up(self):
+        if self.must_clean:  
+            os.unlink( self.macsyview_link_name )
+
+
+#    def build_macsyview(self):
+#        from subprocess import Popen, PIPE
+#        process_ = Popen( 
+#                      command,
+#                      shell = True ,
+#                      stdout= sys.stdout,
+#                      stdin = None ,
+#                      stderr = sys.stderr,
+#                      cwd = self.niaid_home_dir
+#                      )
+#        process_.wait()
+#        if process_.returncode != 0:
+#            raise RuntimeError
+
+
+
+
 class UsageDistribution(Distribution):
 
     def __init__(self, attrs = None):
@@ -509,8 +633,10 @@ class UsageDistribution(Distribution):
         #otherwise AttributeError: UsageDistribution instance has no attribute 'conf_files'
         self.conf_files = None
         self.doc_files = None
+        self.viewer = None
         self.fix_prefix = None
         self.fix_conf = None
+        self.fix_viewer = None
         self.uninstall_prefix = os.path.join(os.path.dirname(__file__), "uninstall.cfg")
         self.uninstall_files = os.path.join(os.path.dirname(__file__), "uninstall_files")
         Distribution.__init__(self, attrs = attrs)
@@ -594,23 +720,32 @@ in protein datasets using systems modelling and similarity search""",
                      'Topic :: Bioinformatics' ,
                     ] ,
       packages    = ['macsypy'],
-      scripts     = [ 'bin/macsyfinder' ] ,
+      scripts     = [ 'bin/macsyfinder'] ,
+      viewer      = ['bin/macsyview'],
+      #(dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files = [('macsyfinder/DEF', ['data/DEF/']),
-                    ('macsyfinder/profiles', ['data/profiles/'])
+                    ('macsyfinder/profiles', ['data/profiles/']),
+                    ('macsyfinder/macsyview', ['macsyview/'])
                     ],
       conf_files = [('macsyfinder', ['etc/macsyfinder.conf'])],
       doc_files = [('macsyfinder/html', ['doc/_build/html/']),
              ('macsyfinder/pdf', ['doc/_build/latex/Macsyfinder.pdf']),
              ],
-      fix_conf = ['etc/macsyfinder.conf'],#file where some variable must be fix by install_conf
-      fix_prefix = ['macsypy/config.py', 'macsypy/registries.py'],#file where some variable must be fix by macsyfinder_install
+      #file where some variable must be fix by install_conf
+      fix_conf = ['etc/macsyfinder.conf'],
+      #file where some variable must be fix by macsyfinder_install
+      fix_prefix = ['macsypy/config.py', 'macsypy/registries.py' ],
+      fix_viewer = ['macsyview'],
       cmdclass= { 'build' : check_and_build ,
+                  'build_scripts' : build_scripts,
                   'test': test,
                   'install' : install_macsyfinder,
+                  'install_viewer' : install_viewer,
                   'install_data' : install_data,
                   'install_conf' : install_conf,
                   'install_doc'  : install_doc,
                   'uninstall'    : Uninstall,
+                  'sdist': sdist_macsy,
                  },
       distclass = UsageDistribution
       )
