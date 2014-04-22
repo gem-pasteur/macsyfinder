@@ -1,0 +1,21 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+<gene name="cas1_TypeI-II-III" presence="forbidden"  system_ref="CAS"/>
+<gene name="cas2_TypeI-II-III" presence="forbidden"  system_ref="CAS"/>
+
+<gene name="cas6_TypeI-III" presence="forbidden"  system_ref="CAS"/>
+<gene name="cas4_TypeI-II" presence="forbidden"  system_ref="CAS"/>
+<gene name="cas5_TypeI" presence="forbidden"  system_ref="CAS"/>
+
+<gene name="cas3_TypeI" presence="accessory"  system_ref="CAS"/>
+<gene name="cas3a_TypeI" presence="forbidden"  system_ref="CAS"/>
+
+
+<gene name="cas1_TypeIF" presence="mandatory"/>
+<gene name="cas3-cas2_TypeIF" presence="mandatory"/>
+<gene name="csy1_TypeIF" presence="mandatory"/>
+<gene name="csy2_TypeIF" presence="mandatory"/>
+<gene name="csy3_TypeIF" presence="mandatory"/>
+<gene name="cas6_TypeIF" presence="mandatory"/>
+
+</system>

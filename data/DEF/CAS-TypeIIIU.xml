@@ -1,0 +1,44 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+<gene name="cas1_TypeI-II-III" presence="accessory"  system_ref="CAS"/>
+<gene name="cas1_TypeIA" presence="accessory"  system_ref="CAS-TypeIA"/>
+<gene name="cas1_TypeIB" presence="accessory"  system_ref="CAS-TypeIB"/>
+<gene name="cas1_TypeIC" presence="accessory"  system_ref="CAS-TypeIC"/>
+<gene name="cas1_TypeID" presence="accessory"  system_ref="CAS-TypeID"/>
+<gene name="cas1_TypeIE" presence="accessory"  system_ref="CAS-TypeIE"/>
+<gene name="cas1_TypeIF" presence="accessory"  system_ref="CAS-TypeIF"/>
+<gene name="cas1_TypeII" presence="accessory"  system_ref="CAS-TypeIIU"/>
+
+<gene name="cas2_TypeI-II-III" presence="accessory"  system_ref="CAS"/>
+
+<gene name="cas6_TypeI-III" presence="accessory"  system_ref="CAS"/>
+
+<gene name="cas3_TypeI" presence="forbidden"  system_ref="CAS"/>
+<gene name="cas3a_TypeI" presence="forbidden"  system_ref="CAS"/>
+
+<gene name="cas9_TypeII" presence="forbidden" system_ref="CAS-TypeIIU"/>
+<gene name="cas9_TypeIIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+
+<gene name="cas10_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm2_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm3_TypeIIIA" presence="accessory"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm4_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm5_TypeIIIA" presence="forbidden" system_ref="CAS-TypeIIIA"/>
+<gene name="csm6_TypeIIIA" presence="forbidden" system_ref="CAS-TypeIIIA"/>
+<gene name="csx1u2_TypeIIIU" presence="accessory"/>
+
+<gene name="cmr1_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+<gene name="cas10_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+<gene name="cmr3_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+<gene name="cmr4_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+<gene name="cmr5_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+<gene name="cmr6_TypeIIIB" presence="forbidden" system_ref="CAS-TypeIIIB"/>
+
+<gene name="csx10_TypeIIIU" presence="mandatory"/>
+<gene name="csx16_TypeIIIU" presence="mandatory"/>
+<gene name="csx1u_TypeIIIU" presence="mandatory"/>
+<gene name="csx3_TypeIIIU" presence="mandatory"/>
+
+
+
+</system>
