@@ -468,7 +468,6 @@ class install_viewer(_install_scripts):
                             new_line = line.replace('$'+var, local_vars[var])
                         f_out.write(new_line)
 
-        print "@@ install_viewer run"
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'MACSYVIEW'  :os.path.join(get_install_data_dir(inst), 'macsyfinder', 'macsyview', 'app', 'index.html')}
 
@@ -478,7 +477,6 @@ class install_viewer(_install_scripts):
             subst(input_file, output_file, vars_2_subst)
             os.unlink(input_file)
             self.move_file(output_file, input_file)
-        print "@@ subst done"
         _install_scripts.run(self)
 
 
