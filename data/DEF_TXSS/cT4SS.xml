@@ -1,0 +1,46 @@
+<system inter_gene_max_space="30" min_mandatory_genes_required="2" min_genes_required="2">
+    <gene name="virB4" presence="mandatory" exchangeable="1">        
+        <homologs>
+    	    <gene name="traU" system_ref="pT4SSi"/>
+        </homologs>
+    </gene>
+    <gene name="virD4" presence="accessory" exchangeable="1">       
+    	<homologs>
+    	    <gene name="tcpA"/>
+    	</homologs>
+    </gene>
+    <gene name="MOBB" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBC" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBF" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBH" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP1" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP2" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBP3" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBQ" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBT" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="MOBV" presence="mandatory" inter_gene_max_space="60"/>
+    <gene name="I_traE" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traI" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traK" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traL" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traM" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traN" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traO" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traP" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traQ" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traR" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traT" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traW" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_traY" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_trbA" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="I_trbB" presence="accessory" system_ref="pT4SSi"/>
+    <gene name="T_virB1" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB10" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB11" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB2" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB3" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB5" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB6" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB8" presence="accessory" system_ref="pT4SSt"/>
+    <gene name="T_virB9" presence="accessory" system_ref="pT4SSt"/>
+</system>
