@@ -32,7 +32,7 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
   "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
   will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"* definition files placed in the folder *"mydefinitions"*.
 
-See :ref:`input-dataset-label` for more on input dataset. 
+See :ref:`input-dataset-label` for more on input datasets. 
 
 
 .. The systems available for detection are the:
@@ -61,9 +61,9 @@ See :ref:`input-dataset-label` for more on input dataset.
 First trial with a test dataset
 *******************************
 
-We included a test dataset in the MacSyFinder package. By default, it will be installed in XXXX. 
+We included a test dataset in the MacSyFinder package. By default, it will be installed in /share/macsyfinder or /usr/share/macsyfinder. 
 
-This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the XXXX folder, using the profiles in the XXXX folder. This classification was previously described in REF, and the profiles are from PFAM (REF) and some of them were specifically designed for CRISPR-Cas classification (REF). The definitions are detailed in the MacSyFinder's paper.
+This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the /usr/share/macsyfinder/DEF folder, using the profiles in the /usr/share/macsyfinder/profiles folder. This classification was previously described in REF, and the profiles are from PFAM (REF) and some of them were specifically designed for CRISPR-Cas classification (REF). The definitions are detailed in the MacSyFinder's paper.
 
 As a sequence dataset, we propose three replicons in XXX/sequence_data/datatest_gembase.fasta: 
     - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a). Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
@@ -72,18 +72,18 @@ As a sequence dataset, we propose three replicons in XXX/sequence_data/datatest_
 
 They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`, and thus MacSyfinder will treat the three different replicons separately for systems inference. 
 
-To run the detection and classification of all SubTypes, type:
+To run the detection and classification of all subtypes, type:
 
-"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta all``"
+"``macsyfinder --db-type gembase --sequence-db /usr/share/macsyfinder/sequence_data/datatest_gembase.fasta all``"
 
 To run the detection of the Type-IE subtype only, type:
 
-"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta CAS-TypeIE``"
+"``macsyfinder --db-type gembase --sequence-db /usr/share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE``"
 
-A sample topology file is included XXX/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
+A sample topology file is included /usr/share/macsyfinder/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
 
 To run the detection using the topology file, type:
 
-"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta --topology-file XXX/sequence_data/datatest_gembase.topology all``"
+"``macsyfinder --db-type gembase --sequence-db /usr/share/macsyfinder/sequence_data/datatest_gembase.fasta --topology-file /usr/share/macsyfinder/sequence_data/datatest_gembase.topology all``"
 
 
