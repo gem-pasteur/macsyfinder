@@ -79,10 +79,24 @@ to run test, run 'python setup.py test -vv'""")
         return True
 
 class build_scripts(_build_scripts):
-    
-    def finalize_options (self):
+
+    def finalize_options(self):
         _build_scripts.finalize_options(self)
-        self.scripts = self.distribution.scripts + self.distribution.viewer
+        self.scripts = self.distribution.scripts 
+        self.viewer = self.distribution.viewer
+
+    def run(self):
+        self.mkpath(self.build_dir)
+        must_clean = []
+        for _file in self.distribution.viewer:
+            #if the link already exists (build already ran don't try to create it
+            if not os.path.exists(_file):
+                os.symlink(os.path.abspath(os.path.join('macsyview', _file)), _file)
+                must_clean.append(_file)
+        self.scripts += self.viewer
+        _build_scripts.run(self)
+        for _link in must_clean:
+            os.unlink(_link)
 
 
 class test(Command):
@@ -468,7 +482,6 @@ class install_viewer(_install_scripts):
                             new_line = line.replace('$'+var, local_vars[var])
                         f_out.write(new_line)
 
-        print "@@ install_viewer run"
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'MACSYVIEW'  :os.path.join(get_install_data_dir(inst), 'macsyfinder', 'macsyview', 'app', 'index.html')}
 
@@ -478,7 +491,6 @@ class install_viewer(_install_scripts):
             subst(input_file, output_file, vars_2_subst)
             os.unlink(input_file)
             self.move_file(output_file, input_file)
-        print "@@ subst done"
         _install_scripts.run(self)
 
 
@@ -580,13 +592,13 @@ class sdist_macsy(sdist):
 
     def run(self):
         inst = self.distribution.command_options.get('sdist')
-        if not inst.has_key('macsyview_dir'):
-            sys.exit('Missing mandatory macsyview-dir to specify the location of macsyview project')
         self.macsyview_link_name = 'macsyview'
-        self.must_clean = False
-        self.set_up()
-        #self.update_mktemplate()
-        #self.build_macsyview
+        if not inst.has_key('macsyview_dir'):
+            self.must_clean = False
+            if not os.path.exists(self.macsyview_link_name):
+                sys.exit('Missing mandatory macsyview-dir to specify the location of macsyview project')
+        else:
+            self.set_up()
         sdist.run(self)
         self.clean_up()
 
@@ -596,7 +608,7 @@ class sdist_macsy(sdist):
 
     def set_up(self):
         if os.path.exists( self.macsyview_link_name ):
-            if os.path.realpath(self.macyview_link_name) == os.path.realpath(self.macsyview_dir):
+            if os.path.realpath(self.macsyview_link_name) == os.path.realpath(self.macsyview_dir):
                 self.must_clean = False
                 return
             else:
@@ -714,6 +726,8 @@ setup(name        = 'macsyfinder',
       version     =  time.strftime("%Y%m%d"),
       description  = """MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
+      author  = "Sophie Abby, Bertrand Néron",
+      author_email = "sabby@pasteur.fr, bneron@pasteur.fr",
       classifiers = [
                      'Operating System :: POSIX' ,
                      'Programming Language :: Python' ,
@@ -725,7 +739,7 @@ in protein datasets using systems modelling and similarity search""",
       #(dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files = [('macsyfinder/DEF', ['data/DEF/']),
                     ('macsyfinder/profiles', ['data/profiles/']),
-                    ('macsyfinder/macsyview', ['macsyview/'])
+                    ('macsyfinder/macsyview/app', ['macsyview/app/'])
                     ],
       conf_files = [('macsyfinder', ['etc/macsyfinder.conf'])],
       doc_files = [('macsyfinder/html', ['doc/_build/html/']),
