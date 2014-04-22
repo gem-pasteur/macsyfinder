@@ -21,3 +21,4 @@ include INSTALL
 include COPYING
 include COPYRIGHT
 recursive-include macsyview/app *
+recursive-include macsyview/bin *
