@@ -63,7 +63,7 @@ First trial with a test dataset
 
 We included a test dataset in the MacSyFinder package. By default, it will be installed in /share/macsyfinder or /usr/share/macsyfinder. 
 
-This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the /usr/share/macsyfinder/DEF folder, using the profiles in the /usr/share/macsyfinder/profiles folder. This classification was previously described in REF, and the profiles are from PFAM (REF) and some of them were specifically designed for CRISPR-Cas classification (REF). The definitions are detailed in the MacSyFinder's paper.
+This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the /usr/share/macsyfinder/DEF folder, using the profiles in the /usr/share/macsyfinder/profiles folder. This classification was previously described in `Makarova et al. 2011 <http://www.ncbi.nlm.nih.gov/pubmed/21552286>`_, and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_ (release 13 of August 15 2012) and some of them were specifically designed for CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_). The definitions are detailed in the MacSyFinder's paper.
 
 As a sequence dataset, we propose three replicons in XXX/sequence_data/datatest_gembase.fasta: 
     - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a). Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
@@ -85,5 +85,10 @@ A sample topology file is included /usr/share/macsyfinder/sequence_data/datatest
 To run the detection using the topology file, type:
 
 "``macsyfinder --db-type gembase --sequence-db /usr/share/macsyfinder/sequence_data/datatest_gembase.fasta --topology-file /usr/share/macsyfinder/sequence_data/datatest_gembase.topology all``"
+
+Visualizing expected results with MacSyView
+*******************************************
+
+To have an idea of what should be detected with the above test dataset, the user can run MacSyView, and open the expected JSON result file with MacSyView: /usr/share/macsyfinder/sequence_data/results.macsyfinder.json.
 
 
