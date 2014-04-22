@@ -58,5 +58,32 @@ See :ref:`input-dataset-label` for more on input dataset.
     The *"all"* keyword allows to detect all systems available in the definition folder in a single run. See the :ref:`Command-line options <command-line-label>`.
 
     
+First trial with a test dataset
+*******************************
+
+We included a test dataset in the MacSyFinder package. By default, it will be installed in XXXX. 
+
+This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the XXXX folder, using the profiles in the XXXX folder. This classification was previously described in REF, and the profiles are from PFAM (REF) and some of them were specifically designed for CRISPR-Cas classification (REF). The definitions are detailed in the MacSyFinder's paper.
+
+As a sequence dataset, we propose three replicons in XXX/sequence_data/datatest_gembase.fasta: 
+    - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a). Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
+    - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a). Genbank accession number: `NC_006392 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006392>`_.
+    - *Legionella pneumophila* str. Paris, complete genome (LEPN003c01a). Genbank accession number: `NC_006368 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006368>`_.
+
+They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`, and thus MacSyfinder will treat the three different replicons separately for systems inference. 
+
+To run the detection and classification of all SubTypes, type:
+
+"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta all``"
+
+To run the detection of the Type-IE subtype only, type:
+
+"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta CAS-TypeIE``"
+
+A sample topology file is included XXX/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
+
+To run the detection using the topology file, type:
+
+"``macsyfinder --db-type gembase --sequence-db XXX/sequence_data/datatest_gembase.fasta --topology-file XXX/sequence_data/datatest_gembase.topology all``"
 
 
