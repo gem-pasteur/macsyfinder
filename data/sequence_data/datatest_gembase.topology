@@ -1,0 +1,7 @@
+# This test dataset contains three replicons:
+# Escherichia coli str. K-12 substr. MG1655 chromosome (ESCO001c01a)
+# Haloarcula marismortui ATCC 43049 plasmid pNG400 (HAMA001p04a)
+# Legionella pneumophila str. Paris, complete genome (LEPN003c01a)
+ESCO001c01a : circular
+HAMA001p04a : circular
+LEPN003c01a : circular
