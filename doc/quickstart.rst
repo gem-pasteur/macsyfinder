@@ -21,15 +21,15 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
 
 * On a "metagenomic" dataset for example: 
 
-  "``macsyfinder --db_type unordered --sequence_db metagenome.fasta all``" 
+  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta all``" 
   will detect all systems modelled in .xml files placed in the default definition folder in a metagenomic dataset.
 
-  "``macsyfinder --db_type unordered --sequence_db metagenome.fasta -d mydefinitions/ all``" 
+  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta -d mydefinitions/ all``" 
   will detect all systems modelled in .xml files placed in the *"mydefinitions"* folder.
 
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 
-  "``macsyfinder --db_type ordered_replicon --sequence_db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
+  "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
   will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"* definition files placed in the folder *"mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input dataset. 

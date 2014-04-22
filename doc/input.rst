@@ -61,9 +61,10 @@ Optional arguments::
 
 Input dataset options::
 
-  --sequence_db SEQUENCE_DB
+  --sequence-db SEQUENCE_DB
                         Path to the sequence dataset in fasta format.
-  --db_type {unordered_replicon,ordered_replicon,gembase,unordered}
+                        
+  --db-type {unordered_replicon,ordered_replicon,gembase,unordered}
                         The type of dataset to deal with. "unordered_replicon"
                         corresponds to a non-assembled genome, "unordered" to
                         a metagenomic dataset, "ordered_replicon" to an
@@ -71,7 +72,7 @@ Input dataset options::
                         where sequence identifiers follow this convention:
                         ">RepliconName_SequenceID"
                         
-  --replicon_topology {linear,circular}
+  --replicon-topology {linear,circular}
                         The topology of the replicons (this option is
                         meaningful only if the db_type is 'ordered_replicon'
                         or 'gembase'
@@ -131,40 +132,40 @@ Options for Hmmer execution and hits filtering::
 
   --hmmer HMMER_EXE     Path to the Hmmer program.
   
-  --index_db INDEX_DB_EXE
+  --index-db INDEX_DB_EXE
                         The indexer to be used for Hmmer. The value can be
                         either 'makeblastdb' or 'formatdb' or the path to one
                         of these binary (default = makeblastb).
                         
-  --e_value_search E_VALUE_RES
+  --e-value-search E_VALUE_RES
                         Maximal e-value for hits to be reported during Hmmer
                         search. (default = 1)
                         
-  --i_evalue_select I_EVALUE_SEL
+  --i-evalue-select I_EVALUE_SEL
                         Maximal independent e-value for Hmmer hits to be
                         selected for system detection. (default = 0.001)
                         
-  --coverage_profile COVERAGE_PROFILE
+  --coverage-profile COVERAGE_PROFILE
                         Minimal profile coverage required in the hit alignment
                         to allow the hit selection for system detection.
                         (default = 0.5)
 
 Path options::
 
-  -d DEF_DIR, --d DEF_DIR
+  -d DEF_DIR, --def DEF_DIR
                         Path to the systems definition files.
                         
-  -r RES_SEARCH_DIR, --research-search RES_SEARCH_DIR
+  -r RES_SEARCH_DIR, --res-search-dir RES_SEARCH_DIR
                         Path to the directory where to store MacSyFinder search
                         results directories.
                         
-  --research-search-suffix RES_SEARCH_SUFFIX
+  --res-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files.
                         
-  --research-extract-suffix RES_EXTRACT_SUFFIX
+  --res-extract-suffix RES_EXTRACT_SUFFIX
                         The suffix to give to filtered hits output files.
                         
-  -p PROFILE_DIR, --profile_dir PROFILE_DIR
+  -p PROFILE_DIR, --profile-dir PROFILE_DIR
                         Path to the profiles directory.
                         
   --profile-suffix PROFILE_SUFFIX
@@ -200,13 +201,13 @@ General options::
                         Hmmer detection. The configuration file from this
                         previous run will be used. 
                         It is in conflict with options:
-                        --cfg-file, 
+                        --config, 
                         --sequence_db, 
-                        --profile_suffix,
-                        --res_extract_suffix, 
-                        --e_value_res, 
-                        --db_type,
-                        --hmmer_exe
+                        --profile-suffix,
+                        --res-extract-suffix, 
+                        --e-value-res, 
+                        --db-type,
+                        --hmmer
 
 
 
