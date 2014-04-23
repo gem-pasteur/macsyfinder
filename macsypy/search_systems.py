@@ -334,6 +334,7 @@ class Cluster(object):
             # We sort the list of compatible systems per decreasing nb of systems occurrences
             systems_compat = OrderedDict(sorted(systems_compat.items(), reverse = True, key = lambda t: t[1]))
             #print systems_compat
+            print self
 
             if len(genes) == 1 and self.hits[0].gene.loner == False:
                 self._state = "ineligible"
@@ -368,6 +369,7 @@ class Cluster(object):
                         """
                         #foreign_accessory = 0
                         auth = 0 # counts nb of hits that are authorized in the putative system
+                        forbid = 0
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
                         for h in hits:
@@ -375,11 +377,31 @@ class Cluster(object):
                             if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
                             #if h.gene.is_authorized(system_bank[putative_system], True):
                                 auth += 1
-                        if auth == len(hits):
-                            # Case where all foreign genes are accessory in the majoritary system => considered as a clear case, does not need disambiguation.
-                            state = "clear"
+                            if h.gene.is_forbidden(system_bank[putative_system]):
+                                forbid +=1
+                        
+                        if forbid == 0:
+                            if auth == len(hits):
+                                state = "clear"
+                                print "clear %s"%putative_system
+                            else:
+                                state = "ambiguous"
+                                print "ambiguous %s"%putative_system
                         else:
-                            state = "ambiguous"
+                            state = "ineligible"
+                            print "ineligible %s"%putative_system
+                            
+                        """        
+                        if auth == len(hits) and forbid == 0:
+                            # Case where all foreign genes are accessory in the majoritary system => considered as a clear case, does not need disambiguation.
+                            print "case1 %s"%putative_system
+                            state = "clear"
+                        elif forbid == 0:
+                            state = "ambiguous"                            
+                            print "case1 %s"%putative_system
+                        else:
+                            state = "ineligible"
+                        """
                         return state
 
                     # Sort systems to consider by decreasing counts.
@@ -388,7 +410,7 @@ class Cluster(object):
                         # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
                         state = try_system(self.hits, putative_system, systems_compat)
                         if state == "clear":
-                            #print "BUENO SYSTEMO %s"%putative_system
+                            print "BUENO SYSTEMO %s"%putative_system
                             #self._state="clear" 
                             #self._putative_system=putative_system 
                             #break
@@ -398,6 +420,7 @@ class Cluster(object):
                         #    # Aoutch in this case no putative_system?!
                         #    print "YAPABON...%s"%putative_system
                     if len(cluster_compatible_systems) >= 1:
+                        print cluster_compatible_systems
                         self._state = "clear"
                         self._putative_system = cluster_compatible_systems[0]
                         self._compatible_systems = cluster_compatible_systems
@@ -2076,7 +2099,7 @@ def search_systems(hits, systems, cfg):
 
             # The following applies to any "replicon"
             (clusters, multi_syst_genes) = build_clusters(sub_hits, systems, rep_info)          
-            _log_out.info("\n************************************\n Analyzing clusters for {0} \n************************************{0}".format(k))
+            _log_out.info("\n************************************\n Analyzing clusters for {0} \n************************************".format(k))
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
             # 
