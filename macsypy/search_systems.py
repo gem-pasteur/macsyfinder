@@ -334,7 +334,7 @@ class Cluster(object):
             # We sort the list of compatible systems per decreasing nb of systems occurrences
             systems_compat = OrderedDict(sorted(systems_compat.items(), reverse = True, key = lambda t: t[1]))
             #print systems_compat
-            print self
+            #print self
 
             if len(genes) == 1 and self.hits[0].gene.loner == False:
                 self._state = "ineligible"
@@ -383,13 +383,13 @@ class Cluster(object):
                         if forbid == 0:
                             if auth == len(hits):
                                 state = "clear"
-                                print "clear %s"%putative_system
+                                #print "clear %s"%putative_system
                             else:
                                 state = "ambiguous"
-                                print "ambiguous %s"%putative_system
+                                #print "ambiguous %s"%putative_system
                         else:
                             state = "ineligible"
-                            print "ineligible %s"%putative_system
+                            #print "ineligible %s"%putative_system
                             
                         """        
                         if auth == len(hits) and forbid == 0:
@@ -410,7 +410,7 @@ class Cluster(object):
                         # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
                         state = try_system(self.hits, putative_system, systems_compat)
                         if state == "clear":
-                            print "BUENO SYSTEMO %s"%putative_system
+                            #print "BUENO SYSTEMO %s"%putative_system
                             #self._state="clear" 
                             #self._putative_system=putative_system 
                             #break
@@ -420,7 +420,7 @@ class Cluster(object):
                         #    # Aoutch in this case no putative_system?!
                         #    print "YAPABON...%s"%putative_system
                     if len(cluster_compatible_systems) >= 1:
-                        print cluster_compatible_systems
+                        #print cluster_compatible_systems
                         self._state = "clear"
                         self._putative_system = cluster_compatible_systems[0]
                         self._compatible_systems = cluster_compatible_systems
@@ -1976,14 +1976,14 @@ def build_clusters(hits, systems_to_detect, rep_info):
         first = hits[0]
         last = hits[-1]
         hitstoconsider=[]
-        _log_out.info("\n*** Check if single hits at ends are to consider for circularization ***\n")
+        #_log_out.info("\n*** Check if single hits at ends are to consider for circularization ***\n")
         if positions.count(first.position) == 0:
             hitstoconsider.append(first)
         if positions.count(last.position) == 0:
             hitstoconsider.append(last)
 
-        for h in hitstoconsider:
-            _log_out.info(h)
+        #for h in hitstoconsider:
+        #    _log_out.info(h)
         clusters.circularize(rep_info, hitstoconsider, systems_to_detect)
 
     return (clusters, multi_system_genes_system_wise)
