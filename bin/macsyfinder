@@ -41,6 +41,7 @@ from macsypy.gene import gene_bank
 parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
      description=dedent('''
 
+
      *            *               *                   *
 *           *               *   *   *  *    **                *   *
   **     *    *   *  *     *                    *               *   
@@ -53,6 +54,7 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder
  *      *   * *     *   **         *   *  *           * 
   *      *         *        *    *              *  
              *                           *  *           *     *
+
                                
 MacSyFinder is a tool for the detection of protein secretion systems 
 of diderm bacteria from a protein dataset.   
