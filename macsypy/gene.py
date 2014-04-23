@@ -323,18 +323,26 @@ class Gene(object):
         :type include_forbidden: boolean
         :rtype: boolean.
         """
+        
+        #print "\n- is_authorized? -"
+        #print "%s in %s"%(self, system.name)
         if include_forbidden:
             for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
                 if self == m:
+                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
+                    #print "Yes - via exchang"
                     return True
         else:
             for m in (system.mandatory_genes+system.accessory_genes):
                 if self == m:
+                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    return True
+                    #print "Yes - via exchang"
+                    return True 
+        #print "No!"
         return False
 
 
