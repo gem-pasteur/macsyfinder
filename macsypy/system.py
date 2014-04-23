@@ -68,7 +68,7 @@ class SystemBank(object):
         return len(self._system_bank)
     
     
-    def add_system(self, system ):
+    def add_system(self, system):
         """
         :param system: the system to add
         :type system: :class:`macsypy.system.System` object
