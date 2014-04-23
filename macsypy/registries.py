@@ -23,13 +23,17 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 
 class ProfilesRegistry(object):
     """
-    classdocs
+    ProfilesRegistry register all profiles available.
     """
 
 
     def __init__(self, cfg):
-        """    
-        Constructor
+        """
+        get all profiles available in global macsyfinder share data location ( depending installation /usr/share/data/profile)
+        and overload it with the location specify in the macsyfinder configuration (either in config file or command line)
+
+        :param cfg: the macsyfinder configuration
+        :type cfg: :class:`macsypy.config.Config` object
         """
         self._register = {}
         global_path = os.path.join(_prefix_data, 'macsyfinder' , 'profiles')
@@ -37,26 +41,30 @@ class ProfilesRegistry(object):
         local_path = cfg.profile_dir
         if local_path:
             self._fill_profile(local_path, cfg)
-        
+
     def _fill_profile(self, dir_path, cfg):
         for path in glob.glob(os.path.join(dir_path, '*' + cfg.profile_suffix)):
             name = os.path.basename(path)
             name = name[:-1 * len(cfg.profile_suffix)]
             self._register[name] = path
-            
+
     def __getattr__(self, name):
         return getattr(self._register, name)
 
 
 class DefinitionsRegistry(object):
     """
-    classdocs
+    DefinitionsRegistry register all definition systems available.
     """
 
 
     def __init__(self, cfg):
-        """    
-        Constructor
+        """
+        get all systems defitions available in global macsyfinder share data location ( depending installation /usr/share/data/DEF)
+        and overload it with the location specify in the macsyfinder configuration (either in config file or command line)
+
+        :param cfg: the macsyfinder configuration
+        :type cfg: :class:`macsypy.config.Config` object
         """
         self._register = {}
         global_path = os.path.join(_prefix_data, 'macsyfinder' , 'DEF')
@@ -64,14 +72,14 @@ class DefinitionsRegistry(object):
         local_path = cfg.def_dir
         if local_path:
             self._fill_def(local_path, cfg)
-        
+
     def _fill_def(self, dir_path, cfg):
         for path in glob.glob(os.path.join(dir_path, '*.xml')):
             name = os.path.basename(path)
             name = os.path.splitext(name)[0]
             self._register[name] = path
-            
+
     def __getattr__(self, name):
         return getattr(self._register, name)
-        
-        
+
+
