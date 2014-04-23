@@ -311,10 +311,17 @@ class RepliconDB(object):
         :type default_topology: string
         """
         def grp_replicon(line):
-            #
+            """
+            in gembase the idtentifier of fasta sequence follow the following schema: replicon_name_seq_name 
+            so grp_replicon allow to group sequences belonging to the same replicon.
+            """
             return line.split('_')[0]
 
         def parse_entry(entry):
+            """
+            parse an entry in the index file (.idx)
+            an entry have the folowing format sequence_id;sequence lenght;sequence rank in replicon
+            """
             entry = entry.rstrip()
             seq_id, length, rank = entry.split(';')
             replicon_name , seq_name = seq_id.split('_')
@@ -329,7 +336,6 @@ class RepliconDB(object):
                 genes.append((seq_name, seq_lenght))
                 for entry in replicon:
                     #pass all sequence of the replicon until the last one
-                    pass
                     _, seq_name, seq_lenght, _ = parse_entry(entry)
                     genes.append((seq_name, seq_lenght))
                 _, seq_name, seq_lenght, _max = parse_entry(entry)

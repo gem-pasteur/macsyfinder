@@ -35,18 +35,18 @@ class SystemParser(object):
 
         :param cfg: the configuration object of this run
         :type cfg: :class:`macsypy.config.Config` object
-        :param cfg: the system factory
-        :type cfg: :class:`macsypy.system.SystemBank` object
-        :param cfg: the gene factory
-        :type cfg: :class:`macsypy.gene.GeneBank` object
+        :param system_bank: the system factory
+        :type system_bank: :class:`macsypy.system.SystemBank` object
+        :param gene_bank: the gene factory
+        :type gene_bank: :class:`macsypy.gene.GeneBank` object
         """
         self.cfg = cfg
         self.system_bank = system_bank
         self.gene_bank = gene_bank
         self.profiles_registry = ProfilesRegistry(cfg)
         self.definitions_registry = DefinitionsRegistry(cfg)
-        
-        
+
+
     def system_to_parse(self, sys_2_detect):
         """
         :param sys_2_detect: the list of systems to detect
@@ -70,22 +70,21 @@ class SystemParser(object):
                 msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
                 _log.critical(msg)
                 raise MacsypyError(msg)
-            
+
         return systems_2_parse.keys()
 
     def _create_system(self, system_name, system_node):
         """
-        :param system_name: the name of the system to create. This name must match a XML file in the definition directory ("-d" option in the command-line)
+        :param system_name: the name of the system to create.\
+          This name must match a XML file in the definition directory ("-d" option in the command-line)
         :type param: string
-        :return: the system corresponding to the name
-        :rtype: :class:`macsypy.system.System` object 
+        :param system_node: the node corresponding to the system.
+        :type system_node: :class"`ET.ElementTree` object.
+        :return: the system corresponding to the name.
+        :rtype: :class:`macsypy.system.System` object.
         """
         path = os.path.join(self.cfg.def_dir, system_name + ".xml")
-        if not os.path.exists(path):
-            raise Exception("%s: No such system definitions" % path)
-        tree = ET.parse(path)
-        root = tree.getroot()
-        inter_gene_max_space = root.get('inter_gene_max_space')
+        inter_gene_max_space = system_node.get('inter_gene_max_space')
         if inter_gene_max_space is None:
             msg = "Invalid system definition ({0}): inter_gene_max_space must be defined".format(path)
             _log.critical(msg)
@@ -96,7 +95,7 @@ class SystemParser(object):
             msg = "Invalid system definition ({0}): inter_gene_max_space must be an integer: {1}".format(path, inter_gene_max_space)
             _log.critical(msg)
             raise SyntaxError(msg)
-        min_mandatory_genes_required = root.get('min_mandatory_genes_required')
+        min_mandatory_genes_required = system_node.get('min_mandatory_genes_required')
         if min_mandatory_genes_required is not None:
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
@@ -105,7 +104,7 @@ class SystemParser(object):
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        min_genes_required = root.get('min_genes_required')
+        min_genes_required = system_node.get('min_genes_required')
         if min_genes_required is not None:
             try:
                 min_genes_required = int(min_genes_required)
@@ -114,7 +113,7 @@ class SystemParser(object):
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        max_nb_genes = root.get('max_nb_genes')
+        max_nb_genes = system_node.get('max_nb_genes')
         if max_nb_genes is not None:
             try:
                 max_nb_genes = int(max_nb_genes)
@@ -123,7 +122,7 @@ class SystemParser(object):
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        multi_loci = root.get('multi_loci')
+        multi_loci = system_node.get('multi_loci')
         if multi_loci is not None:
             multi_loci = multi_loci.lower() in ("1", "true")
         else:
@@ -140,14 +139,15 @@ class SystemParser(object):
     def _create_genes(self, system, system_node):
         """
         Create genes belonging to the systems. Be careful, the returned genes have not their homologs/analogs set yet.
-        
-        :param system:
+
+        :param system: the System currently parsing
         :type system: :class:`macsypy.system.System` object
+        :param system_node: the element gene
+        :type system_node: :class"`ET.ElementTree` object
         :return: a list of the genes belonging to the system.
         :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
         genes = []
-        #gene_nodes = system_node.findall(".//gene[not(@system_ref)]")
         gene_nodes = system_node.findall(".//gene")
         gene_nodes = [gene_node for gene_node in gene_nodes if gene_node.get("system_ref") is None ]
         for node in gene_nodes:
@@ -219,7 +219,9 @@ class SystemParser(object):
         Parse a xml element gene and build the corresponding object
 
         :param node: a "node" corresponding to the gene element in the XML hierarchy
-        :type node: :class:`xml.etree.ElementTree.Element` object 
+        :type node: :class:`xml.etree.ElementTree.Element` object.
+        :param gene_ref: the gene which this gene is homolog to
+        :type gene_ref: class:`macsypy.gene.Gene` object
         :return: the gene object corresponding to the node
         :rtype: :class:`macsypy.gene.Homolog` object 
         """
@@ -268,7 +270,9 @@ class SystemParser(object):
         Parse a xml element gene and build the corresponding object
 
         :param node: a "node" corresponding to the gene element in the XML hierarchy
-        :type node: :class:`xml.etree.ElementTree.Element` object 
+        :type node: :class:`xml.etree.ElementTree.Element` object.
+        :param gene_ref: the gene which this gene is homolog to
+        :type gene_ref: class:`macsypy.gene.Gene` object.
         :return: the gene object corresponding to the node
         :rtype: :class:`macsypy.gene.Analog` object 
         """
@@ -299,15 +303,13 @@ class SystemParser(object):
             analog.add_analog(h2)
         return analog
 
-    def check_consitency(self, systems, cfg):
+    def check_consistency(self, systems):
         """
         Check the consistency of the co-localization features between the different values given as an input: 
         between XML definitions, configuration file, and command-line options.
         
         :param systems: the list of systems to check
         :type systems: list of `class:txssnalib.system.System` object
-        :param cfg: the configuration object
-        :type cfg: a :class:`macsypy.config.Config` object
         :raise: :class:`macsypy.macsypy_error.SystemInconsistencyError` if one test fails
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)
@@ -366,8 +368,9 @@ class SystemParser(object):
 
     def parse(self, systems_2_detect):
         """
-        Parse systems definition in XML format to build the corresponding system objects, and add them to the system factory.
-
+        Parse systems definition in XML format to build the corresponding system objects,\
+         and add them to the system factory after checking it's consistency.
+        To get the system ask it to system_bank
         :param systems_2_detect: a list with the names of the systems to parse
         :type systems_2_detect: list of string
         """
@@ -390,5 +393,5 @@ class SystemParser(object):
             system_node = tree.getroot()
             self._fill(system, system_node)
         system_2_check = [self.system_bank[s] for s in systems_2_detect]
-        self.check_consitency(system_2_check, self.cfg)
+        self.check_consistency(system_2_check)
 

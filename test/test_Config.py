@@ -343,7 +343,7 @@ class Test(unittest.TestCase):
                           profile_dir = os.path.join(self._data_dir, 'profiles'),
                           res_search_dir = '/tmp'
                           )
-        self.assertEqual(self.cfg.profile_suffix, '.fasta-aln_edit.hmm')
+        self.assertEqual(self.cfg.profile_suffix, '.hmm')
         self.tearDown()
         profile_suffix = 'foo'
         self.cfg = Config(cfg_file = "nimportnaoik",

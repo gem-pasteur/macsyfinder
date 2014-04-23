@@ -154,7 +154,7 @@ class Config(object):
                           'res_search_suffix' : '.search_hmm.out',
                           'res_extract_suffix' : '.res_hmm_extract',
                           'profile_dir' : os.path.join( _prefix_data, 'profiles'),
-                          'profile_suffix' : '.fasta-aln_edit.hmm', 
+                          'profile_suffix' : '.hmm', 
                           'log_level': logging.WARNING,
                           'worker_nb' : '1'
                           }

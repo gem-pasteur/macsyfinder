@@ -27,6 +27,7 @@ class SystemInconsistencyError(MacsypyError):
     """
     pass
 
+
 class SystemDetectionError(MacsypyError):
     """
     Raised when the detection of systems from Hits encountered a problem.

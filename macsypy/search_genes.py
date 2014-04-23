@@ -40,6 +40,7 @@ def search_genes(genes, cfg):
     sema = threading.BoundedSemaphore(value = worker_nb)
     all_reports = []
 
+
     def stop(signum, frame):
         """stop the main process, its threads and subprocesses"""
         _log.critical('KILL all Processes')
@@ -47,7 +48,9 @@ def search_genes(genes, cfg):
         os.killpg(proc_grp_id, signum)
         sys.exit(-1 * signum)
 
+
     signal.signal(signal.SIGTERM, stop)
+
 
     def search(gene, all_reports, sema):
         """
@@ -68,6 +71,7 @@ def search_genes(genes, cfg):
                 report.extract()
                 report.save_extract()
                 all_reports.append(report)
+
 
     def recover(gene, all_reports, cfg, sema):
         """

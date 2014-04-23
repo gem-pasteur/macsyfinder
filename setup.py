@@ -739,6 +739,7 @@ in protein datasets using systems modelling and similarity search""",
       #(dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files = [('macsyfinder/DEF', ['data/DEF/']),
                     ('macsyfinder/profiles', ['data/profiles/']),
+                    ('macsyfinder/sequence_data', ['data/sequence_data/']),
                     ('macsyfinder/macsyview/app', ['macsyview/app/'])
                     ],
       conf_files = [('macsyfinder', ['etc/macsyfinder.conf'])],
