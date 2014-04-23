@@ -41,12 +41,19 @@ from macsypy.gene import gene_bank
 parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
      description=dedent('''
 
-=================================================== Outer Membrane
-         |_   _\ \/ / __/ __| __ __ _ _ _  
-========== | |  >  <\__ \__ \/ _/ _` | ' \ ======== Periplsam 
-           |_| /_/\_\___/___/\__\__,_|_||_|
-=================================================== Inner Membrane
-                           
+     *            *               *                   *
+*           *               *   *   *  *    **                *   *
+  **     *    *   *  *     *                    *               *   
+    __  __  *              ____ *        *  *  *    **     *           
+|| |  \/  | __ _  ___  || / ___| _   _  ||   ___ _         _        *  
+|| | |\/| |/ _` |/ __| || \___ \| | | | ||  | __(_)_ _  __| |___ _ _ 
+|| | |  | | (_| | (__  ||  ___) | |_| | ||  | _|| | ' \/ _` / -_) '_|
+|| |_|  |_|\__,_|\___| || |____/ \__, | ||  |_| |_|_||_\__,_\___|_|   
+           *             *       |___/         *                   *    
+ *      *   * *     *   **         *   *  *           * 
+  *      *         *        *    *              *  
+             *                           *  *           *     *
+                               
 MacSyFinder is a tool for the detection of protein secretion systems 
 of diderm bacteria from a protein dataset.   
      ''') )
