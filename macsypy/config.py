@@ -257,6 +257,21 @@ class Config(object):
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
 
+        f_out_log_handler = logging.FileHandler(os.path.join(working_dir, 'macsyfinder.out'))
+        f_out_handler_formatter = logging.Formatter("%(message)s")
+        f_out_log_handler.setFormatter(f_out_handler_formatter)
+        f_out_log_handler.setLevel(logging.INFO)
+        
+        c_out_log_handler = logging.StreamHandler(sys.stdout)
+        c_out_handler_formatter = logging.Formatter("%(message)s")
+        c_out_log_handler.setFormatter(f_out_handler_formatter)
+        c_out_log_handler.setLevel(logging.INFO)
+        
+        out_logger = logging.getLogger('macsyfinder.out')
+        out_logger.setLevel(logging.INFO)
+        out_logger.addHandler(f_out_log_handler)
+        out_logger.addHandler(c_out_log_handler)
+
         self._log = logging.getLogger('macsyfinder.config')
         for error in log_error:
             self._log.warn(error)
