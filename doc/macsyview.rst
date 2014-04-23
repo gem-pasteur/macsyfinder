@@ -11,14 +11,18 @@
 MacSyView: visualizing MacSyFinder's results!
 ===============================================
 
-MacSyView is a browser application allowing to visualize MacSyFinder's detected systems. 
+MacSyView is a standalone web-browser application to visualize MacSyFinder's detected systems. MacSyView relies on JSON files outputted by MacSyFinder to display the list of detected systems, and a detailed view of each system. It allows visualizing the content of systems, their genomic context, and generates SVG files that can be exported for drawing purpose. 
 
 ****************
 MacSyView How To
 ****************
 
 1. Run MacSyFinder to detect your favorite system!
-2. Launch MacSyView
+2. Launch MacSyView: 
+
+ * Either, **run the wrapper `macsyview`** installed with MacSyFinder's binaries (*i.e.*, `macsyfinder`). 
+ * Or **open with your web-browser the html page**: /usr/share/macsyview/index.html or /share/macsyview/index.html (or in the path specified during installation for data associated with MacSyFinder). 
+
 3. Select the .json output file in the output directory of the run
 4. Choose the system you want to visualize in the list...
 5. ...and here it is! 
@@ -44,6 +48,15 @@ The content of the system view depends on the type of the input dataset.
 Technology used
 ***************
 
+MacSyView was coded in Javascript and uses third-party libraries that are all accredited in the COPYRIGHT file distributed with the MacSyFinder/MacSyView package. 
 
+It includes among others:
+ 
+ * the `Raphael library <http://raphaeljs.com/>`_ for systems drawing, 
+ * the `Bootstrap library <http://getbootstrap.com/>`_ for HTML design and 
+ * the `Mustache library <http://github.com/janl/mustache.js>`_ for HTML templating in Javascript. 
+ 
+ The `JQuery <http://jquery.com/>`_, `JQuery-mousewheel <https://github.com/brandonaaron/jquery-mousewheel>`_ and `Raphael.Export <http://github.com/ElbertF/Raphael.Export>`_ libraries were also used.
+It was tested on Chromium and Firefox for Linux, and on Chrome, Firefox and Safari for Mac OS X. 
 
 

@@ -61,7 +61,7 @@ See :ref:`input-dataset-label` for more on input datasets.
 First trial with a test dataset
 *******************************
 
-We included a test dataset in the MacSyFinder package. By default, it will be installed in /share/macsyfinder or /usr/share/macsyfinder. 
+We included a test dataset in the MacSyFinder package. **By default, it will be installed** in /share/macsyfinder or /usr/share/macsyfinder. But it can be located elsewhere if it was specified during installation.  
 
 This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the /usr/share/macsyfinder/DEF folder, using the profiles in the /usr/share/macsyfinder/profiles folder. This classification was previously described in `Makarova et al. 2011 <http://www.ncbi.nlm.nih.gov/pubmed/21552286>`_, and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_ (release 13 of August 15 2012) and some of them were specifically designed for CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_). The definitions are detailed in the MacSyFinder's paper.
 
@@ -89,6 +89,6 @@ To run the detection using the topology file, type:
 Visualizing expected results with MacSyView
 *******************************************
 
-To have an idea of what should be detected with the above test dataset, the user can run MacSyView, and open the expected JSON result file with MacSyView: /usr/share/macsyfinder/sequence_data/results.macsyfinder.json.
+To have an idea of what should be detected with the above test dataset, run :ref:`MacSyView <macsyview>`, the web-browser application for MacSyFinder's results visualization. To do that, open the expected JSON result file with MacSyView: /usr/share/macsyfinder/sequence_data/results.macsyfinder.json.
 
 
