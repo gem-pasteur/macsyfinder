@@ -1,10 +1,12 @@
-INSTALLATION INSTRUCTIONS FOR TXSSCAN
-*************************************
+INSTALLATION INSTRUCTIONS FOR MacSyFinder and MacSyView
+*******************************************************
 
 
-1 - Requirements:
-=================
+1 - Requirements :
+==================
 
+for MacSyFinder :
+-----------------
 - Any machine running a unix-like Operating System.
 - Python, (>=2.7 & <3.0)
 - makeblastdb (>= 2.2.28) or formatdb (>=2.2.26)
@@ -13,15 +15,18 @@ INSTALLATION INSTRUCTIONS FOR TXSSCAN
    + formatdb 
 - hmmsearch 3.0 (http://hmmer.janelia.org/)
 
+for MacSyView :
+---------------
+- chromium or firefox web browser.
 
 2 - Archive overview:
 =====================
-bin => contain the executables (txsscan)
+bin => contain the executables (macsyfinder)
 data => the hmm profiles and the systems definitions
 doc => the documentation in html and pdf
-etc => a template of txsscan configuration file
+etc => a template of macsyfinder configuration file
 test => all needed for unit tests
-txsscanlib => the txsscan python library
+macsypy => the macsyfinder python library
 setup.py => the installation script
 
 3 - Installation steps:
@@ -29,10 +34,10 @@ setup.py => the installation script
 
 3.1 - Make sure every required dependence/software is present.
 --------------------------------------------------------------
-by default TXSScan will search if makeblastdb is on your PATH if not it will looking for formatdb.
+by default MacSyFinder will search if makeblastdb is on your PATH if not it will looking for formatdb.
 if neither makeblastdb nor formatdb are in your path you have to set the absolute path toward one of 
 these tools in the configuration file.
-by default TXSScan will try to use hmmsearch in your PATH, if hmmsearch is not in the PATH, 
+by default MacSyFinder will try to use hmmsearch in your PATH, if hmmsearch is not in the PATH, 
 you have to set the absolute path to the hmmsearch in configuration.
 If the tools are not in the path, some test will be skipped and a warning will be raised.
 
@@ -42,10 +47,10 @@ If the tools are not in the path, some test will be skipped and a warning will b
 
 unpack the archive
 
-tar -xzf txsscan-x.x.tar.gz
-cd txsscan-x.x
+tar -xzf macsyfinder-x.x.tar.gz
+cd macsyfinder-x.x
 
-TXSScan installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/):
+macsyfinder installation follows classical "pythonic" installation procedure (see http://docs.python.org/2/install/):
 
  python setup.py build
  python setup.py test -vv
@@ -61,19 +66,23 @@ and specific options with python setup.py cmd --help
 
 4 Configuration.
 ================
-txsscan have some options that can be set in configuration file 
- + system wide $prefix/etc/txsscan/txsscan.conf
- + user wide ~/.txsscan/txsscan.conf
- + for project ./txsscan.conf
+macsyfinder have some options that can be set in configuration file 
+ + system wide $prefix/etc/macsyfinder/macsyfinder.conf
+ + user wide ~/.macsyfinder/macsyfinder.conf
+ + for project ./macsyfinder.conf
 or on the command line.
 
 for all options see documentation 
- + ($prefix or /usr)/share/doc/txsscan/html/index.html
- + ($prefix or /usr)/share/doc/txsscan/pdf/Txsscan.pdf
+ + ($prefix or /usr)/share/doc/macsyfinder/html/index.html
+ + ($prefix or /usr)/share/doc/macsyfinder/pdf/Macsyfinder.pdf
  
  
 5 Uninstalation.
 ================
 
-To uninstall TXSScan (the last version installed), run:
+To uninstall MacSyFinder (the last version installed), run:
 (sudo) python setup.py uninstall
+
+
+To get started after installation, see the Running MacSyFinder section in the
+ User's Guide (Userguide.pdf)
