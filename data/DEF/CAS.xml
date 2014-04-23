@@ -1,0 +1,114 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+<gene name="cas1_TypeI-II-III" presence="mandatory"/>
+<gene name="cas2_TypeI-II-III" presence="mandatory"/>
+
+<gene name="cas6_TypeI-III" presence="mandatory"/>
+<gene name="cas4_TypeI-II" presence="mandatory"/>
+<gene name="cas5_TypeI" presence="forbidden"/>
+
+<gene name="cas3_TypeI" presence="forbidden"/>
+<gene name="cas3a_TypeI" presence="forbidden"/>
+
+<gene name="cas7_TypeI" presence="forbidden"/>
+
+<gene name="cas5a_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas4_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas7_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="casRa_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas8a2a_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas8a2a2_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="csa5_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="csaX_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+
+<gene name="cas1_TypeIA" presence="accessory"  system_ref="CAS-TypeIA"/>
+<gene name="cas8a1a2_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas8a1a3_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas5a2_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+<gene name="cas6_TypeIA" presence="forbidden"  system_ref="CAS-TypeIA"/>
+
+
+<gene name="cas1_TypeIB" presence="accessory"  system_ref="CAS-TypeIB"/>
+<gene name="cas5b_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas8a1b_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas7b_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas5b2_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas8b_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas7b2_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas8a1b2_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+<gene name="cas8a1b3_TypeIB" presence="forbidden" system_ref="CAS-TypeIB"/>
+<gene name="cas7b3_TypeIB" presence="forbidden"  system_ref="CAS-TypeIB"/>
+
+
+<gene name="cas1_TypeIC" presence="accessory"  system_ref="CAS-TypeIC"/>
+<gene name="cas5c_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+<gene name="cas8c_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+<gene name="cas7c_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+<gene name="cas5c2_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+<gene name="cas7c2_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+<gene name="cas8c2_TypeIC" presence="forbidden"  system_ref="CAS-TypeIC"/>
+
+<gene name="cas1_TypeID" presence="accessory"  system_ref="CAS-TypeID"/>
+<gene name="cas3_TypeID" presence="forbidden"  system_ref="CAS-TypeID"/>
+<gene name="csc1_TypeID" presence="forbidden"  system_ref="CAS-TypeID"/>
+<gene name="csc2_TypeID" presence="forbidden"  system_ref="CAS-TypeID"/>
+<gene name="cas10d_TypeID" presence="forbidden"  system_ref="CAS-TypeID"/>
+
+<gene name="cas1_TypeIE" presence="accessory"  system_ref="CAS-TypeIE"/>
+<gene name="cas2_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+<gene name="cas5_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+<gene name="cse1_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+<gene name="cse2_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+<gene name="cas6_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+<gene name="cas7_TypeIE" presence="forbidden"  system_ref="CAS-TypeIE"/>
+
+<gene name="cas1_TypeIF" presence="accessory"  system_ref="CAS-TypeIF"/>
+<gene name="cas3-cas2_TypeIF" presence="forbidden"  system_ref="CAS-TypeIF"/>
+<gene name="csy1_TypeIF" presence="forbidden"  system_ref="CAS-TypeIF"/>
+<gene name="csy2_TypeIF" presence="forbidden"  system_ref="CAS-TypeIF"/>
+<gene name="csy3_TypeIF" presence="forbidden"  system_ref="CAS-TypeIF"/>
+<gene name="cas6_TypeIF" presence="forbidden"  system_ref="CAS-TypeIF"/>
+
+<gene name="cas3_TypeIU" presence="forbidden"  system_ref="CAS-TypeIU"/>
+<gene name="csb1_TypeIU" presence="forbidden"  system_ref="CAS-TypeIU"/>
+<gene name="csb2_TypeIU" presence="forbidden"  system_ref="CAS-TypeIU"/>
+<gene name="csb3_TypeIU" presence="forbidden"  system_ref="CAS-TypeIU"/>
+<gene name="csx17_TypeIU" presence="forbidden"  system_ref="CAS-TypeIU"/>
+
+
+<gene name="cas1_TypeII" presence="forbidden"  system_ref="CAS-TypeIIU"/>
+<gene name="cas9_TypeII" presence="forbidden"  system_ref="CAS-TypeIIU"/>
+<gene name="cas9_TypeIIB" presence="forbidden"  system_ref="CAS-TypeIIB"/>
+<gene name="csn2_TypeIIA" presence="forbidden"  system_ref="CAS-TypeIIA"/>
+
+<gene name="cas10_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm2_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm3_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm4_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm5_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+<gene name="csm6_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIIIA"/>
+
+<gene name="cmr1_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+<gene name="cas10_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+<gene name="cmr3_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+<gene name="cmr4_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+<gene name="cmr5_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+<gene name="cmr6_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIIIB"/>
+
+<gene name="csx10_TypeIIIU" presence="forbidden"  system_ref="CAS-TypeIIIU"/>
+<gene name="csx16_TypeIIIU" presence="forbidden"  system_ref="CAS-TypeIIIU"/>
+<gene name="csx1u_TypeIIIU" presence="forbidden"  system_ref="CAS-TypeIIIU"/>
+<gene name="csx1u2_TypeIIIU" presence="forbidden" system_ref="CAS-TypeIIIU"/>
+<gene name="csx3_TypeIIIU" presence="forbidden"  system_ref="CAS-TypeIIIU"/>
+
+
+<gene name="csf1_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="csf2_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="csf3_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="csf4_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="cas1_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="cas4_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+<gene name="cpf1_TypeU" presence="forbidden"  system_ref="CAS-TypeU"/>
+
+
+</system>
