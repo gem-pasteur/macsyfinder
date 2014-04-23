@@ -5,6 +5,7 @@ include doc/_build/latex/Macsyfinder.pdf
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
+include data/sequence_data/*
 
 include test/test_*.py
 include test/main.py
