@@ -16,34 +16,34 @@ MacSyView also includes contributions from others, including
 copyrighted and licensed code and technology:
 
 - JQuery
-  File:
   Url: http://jquery.com/
   Author:
   License:  MIT (see website for details)
 
 - JQuery-mousewheel
-  File:
   Url: https://github.com/brandonaaron/jquery-mousewheel
   Author: Brandon Aaron
   License:  MIT (see website for details)
 
 - Raphael
-  File:
   Url: http://raphaeljs.com/
   Author: Dmitry Baranovskiy
   License: Apache License, Version 2.0
 
 - Bootstrap
-  File:
   Url: http://getbootstrap.com/
   Author: Mark Otto, Jacob Thornton
   License:  MIT (see website for details)
 
 - Mustache
-  File: 
   Url: http://github.com/janl/mustache.js
   Author: Jan Lehnardt
   License:  MIT (see website for details)
+  
+- Mustache.export
+  Url: https://github.com/ElbertF/Raphael.Export
+  Author: ElbertF
+  License:  MIT (see website for details)  
 
 -----------------------------------------------------------------
 The source code of MacSyFinder and MacSyView is distributed 
