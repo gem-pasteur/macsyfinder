@@ -27,6 +27,8 @@ from system import system_bank
 
 _log = logging.getLogger('macsyfinder.' + __name__)
 
+_log_out = logging.getLogger('macsyfinder.out')
+
 class ClustersHandler(object):
     """
     Deals with sets of clusters found in a dataset. Conceived to store only clusters from a same replicon.
@@ -935,7 +937,7 @@ class SystemOccurence(object):
                         #valid_hit=validSystemHit(hit, self.system_name, "mandatory")
                         #self.valid_hits.append(valid_hit)
 
-                    print "Gene {0} supplied from a multi_system gene".format(g)
+                    _log_out.info("Gene {0} supplied from a multi_system gene".format(g))
         #all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
 
@@ -1199,7 +1201,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
         """
         system_counter = self.counter_output()
-        print system_counter
+        _log_out.info(system_counter)
         report_str = self.replicon_name
         for s in system_names:
             for o in system_occurence_states:
@@ -1556,7 +1558,7 @@ def disambiguate_cluster(cluster):
     """
     res_clusters = []
     counter_genes_compat_systems = {}
-    print "Disambiguation step:"
+    _log_out.info("Disambiguation step:")
 
     cur_cluster = Cluster(cluster.systems_to_detect) # New
     cur_cluster.add(cluster.hits[0])
@@ -1652,8 +1654,8 @@ def disambiguate_cluster(cluster):
             real_res.append(r)
 
     for r in real_res:
-        print "Store: "
-        print r
+        _log_out.info("Store: ")
+        _log_out.info(r)
 
     #return res_clusters
     return real_res
@@ -1691,7 +1693,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
         systems_occurences_scattered[system.name] = SystemOccurence(system)
 
     for clust in clusters.clusters:
-        print "\n{0}".format(clust)
+        _log_out.info("\n{0}".format(clust))
         #if clust.state == "clear":
         systems_to_consider = get_compatible_systems([system_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
         if clust.state == "clear" and len(systems_to_consider) > 0:
@@ -1709,7 +1711,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #exclude = False # unused_var
             #for putative_system in clust.compatible_systems:
             for putative_system in [s.name for s in systems_to_consider]:
-                print "Considering %s: " % putative_system
+                _log_out.info("Considering %s: " % putative_system)
                 if putative_system in syst_dict.keys():
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
@@ -1718,7 +1720,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
                     msg = so.decision_rule()
                     so_state = so.state
-                    print "-> %s" % so_state
+                    _log_out.info("-> %s" % so_state)
                     if so_state != "exclude":
                         if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
@@ -1735,7 +1737,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             #print so 
                             #print so_state
                             #print "...\nComplete %s %s system stored.\n"%(putative_system, so_state)
-                            print msg
+                            _log_out.info(msg)
                             systems_occurences_list.append(so)
                             store_scattered = False
                             break
@@ -1747,7 +1749,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                 #print store_so
                 #print store_msg
                 #print "...\nPutative %s locus stored for later treatment of scattered systems.\n"%clust.compatible_systems[0]
-                print "=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0]
+                _log_out.info("=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0])
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
 
         elif clust.state == "ambiguous":
@@ -1760,13 +1762,13 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             for c in disamb_clusters:
                 clusters.add(c)
             if disamb_clusters:
-                print "=> disambiguated cluster(s) stored for later treatment"
+                _log_out.info("=> disambiguated cluster(s) stored for later treatment")
             else:
-                print "=> none kept"
+                _log_out.info("=> none kept")
 
         else:
-            print "------- next -------"
-    print "\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n"
+            _log_out.info("------- next -------")
+    _log_out.info("\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n")
     for system in systems:
         #print systems_occurences[system]
 
@@ -1778,10 +1780,10 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             so_state = so.state
             #print "-- %s --"%so.system_name
             #print so
-            print msg
+            _log_out.info(msg)
             if so.is_complete():
                 systems_occurences_list.append(so)
-    print "******************************************\n"
+    _log_out.info("******************************************\n")
 
     # Stores results in this list? Or code a new object : systemDetectionReport ? 
     return systems_occurences_list
@@ -1949,14 +1951,14 @@ def build_clusters(hits, systems_to_detect, rep_info):
         first = hits[0]
         last = hits[-1]
         hitstoconsider=[]
-        print "\n*** Check if single hits at ends are to consider for circularization ***\n"
+        _log_out.info("\n*** Check if single hits at ends are to consider for circularization ***\n")
         if positions.count(first.position) == 0:
             hitstoconsider.append(first)
         if positions.count(last.position) == 0:
             hitstoconsider.append(last)
 
         for h in hitstoconsider:
-            print h
+            _log_out.info(h)
         clusters.circularize(rep_info, hitstoconsider, systems_to_detect)
 
     return (clusters, multi_system_genes_system_wise)
@@ -2072,14 +2074,14 @@ def search_systems(hits, systems, cfg):
 
             # The following applies to any "replicon"
             (clusters, multi_syst_genes) = build_clusters(sub_hits, systems, rep_info)          
-            print "\n************************************\n Analyzing clusters for {0} \n************************************{0}".format(k)
+            _log_out.info("\n************************************\n Analyzing clusters for {0} \n************************************{0}".format(k))
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
             # 
             systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)  
 
-            print "******************************************"
-            print "Building reports for {0}: \n".format(k)
+            _log_out.info("******************************************")
+            _log_out.info("Building reports for {0}: \n".format(k))
             report = systemDetectionReportOrdered(k, systems_occurences_list, cfg)
 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
@@ -2088,7 +2090,7 @@ def search_systems(hits, systems, cfg):
             report.summary_output(summaryfilename, rep_info, header_print)
 
             json_all_systems += report.system_2_json(rep_db)
-            print "******************************************"
+            _log_out.info("******************************************")
             header_print = False
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
@@ -2096,11 +2098,11 @@ def search_systems(hits, systems, cfg):
         json_path = os.path.join(cfg.working_dir, report.json_file_name)
         report.json_output(json_path, json_all_systems)
 
-        print "\n--- Replicons with no hits: ---"
+        _log_out.info("\n--- Replicons with no hits: ---")
         with open(tabfilename, 'a') as _f:
             for replicon in rep_db.replicon_names():
                 if not replicon in replicons_w_hits:
-                    print replicon
+                    _log_out.info(replicon)
                     texte = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
                     #print texte.strip()
                     _f.write(texte)
@@ -2115,12 +2117,12 @@ def search_systems(hits, systems, cfg):
         #for syst in multi_syst_genes:
         #    for g in multi_syst_genes[syst]:
         #        print g
-        print "\n************************************\n Analyzing clusters \n************************************\n"
+        _log_out.info("\n************************************\n Analyzing clusters \n************************************\n")
         #systems_occurences_list = analyze_clusters_replicon(clusters, systems)
         systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)
-        print "******************************************"
+        _log_out.info("******************************************")
         #print "Reporting detected systems : \n"
-        print "Building reports of detected systems\n "
+        _log_out.info("Building reports of detected systems\n ")
         report = systemDetectionReportOrdered(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg)
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
@@ -2129,7 +2131,7 @@ def search_systems(hits, systems, cfg):
         json_all_systems = report.system_2_json(rep_db)
         json_path = os.path.join(cfg.working_dir, report.json_file_name)
         report.json_output(json_path, json_all_systems)
-        print "******************************************"
+        _log_out.info("******************************************")
 
     elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
 
@@ -2158,20 +2160,20 @@ def search_systems(hits, systems, cfg):
                 #resy=so.fill_with_hits(sub_hits) # does not return anything
                 #so.fill_with_hits(sub_hits)
                 so.fill_with_hits(sub_hits, True) # SO new parameter to say wether forbidden genes should be included or not. 
-                print "******************************************"
-                print k.name
-                print "******************************************"
-                print so
+                _log_out.info("******************************************")
+                _log_out.info(k.name)
+                _log_out.info("******************************************")
+                _log_out.info(so)
                 systems_occurences_list.append(so)
-        print "******************************************"
-        print "Building reports of detected systems "
+        _log_out.info("******************************************")
+        _log_out.info("Building reports of detected systems ")
         #report = systemDetectionReportUnordered(systems_occurences_list, systems)
         report = systemDetectionReportUnordered(systems_occurences_list, cfg)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         json_path = os.path.join(cfg.working_dir, report.json_file_name)
         report.json_output(json_path)
-        print "******************************************"
+        _log_out.info("******************************************")
 
     else:
         raise ValueError("Invalid database type. ")
