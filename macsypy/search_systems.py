@@ -1035,20 +1035,22 @@ class validSystemHit(object):
         return getattr(self._hit, attr_name)
 
     def __str__(self):
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
-                                                     self.replicon_name,
-                                                     self.position,
-                                                     self.seq_length,
-                                                     self.gene.name,
-                                                     self.reference_system,
-                                                     self.predicted_system,
-                                                     self.gene_status,
-                                                     self.i_eval,
-                                                     self.score,
-                                                     self.profile_coverage,
-                                                     self.sequence_coverage,
-                                                     self.begin_match,
-                                                     self.end_match)
+        return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
+\t{g_status}\t{i_eval}\t{score}\t{prof_cov:f}\t{seq_cov:f}\
+\t{begin_match:d}\t{end_match:d}\n".format(id = self.id,
+                                           rpl_name = self.replicon_name,
+                                           pos = self.position,
+                                           seq_l = self.seq_length,
+                                           gene_name = self.gene.name,
+                                           ref_sys = self.reference_system,
+                                           predict_sys = self.predicted_system,
+                                           g_status = self.gene_status,
+                                           i_eval = self.i_eval,
+                                           score = self.score,
+                                           prof_cov = self.profile_coverage,
+                                           seq_cov = self.sequence_coverage,
+                                           begin_match = self.begin_match,
+                                           end_match = self.end_match)
 
     def output_system(self, system_name, system_status):
         return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,

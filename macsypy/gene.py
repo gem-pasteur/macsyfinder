@@ -49,12 +49,11 @@ class GeneBank(object):
     def __contains__(self, gene):
         """
         Implement the membership test operator
-        
+
         :param gene: the gene to test
         :type gene: :class:`macsypy.gene.Gene` object
         :return: True if the gene is in, False otherwise
         :rtype: boolean
-        
         """
         return gene in self._genes_bank.values()
 
@@ -110,7 +109,8 @@ class Gene(object):
         :type profiles_registry: :class:`macsypy.registries.ProfilesRegistry` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs whithout any effects on the system assessment, False otherwise.
+        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs \
+          whithout any effects on the system assessment, False otherwise.
         :type exchangeable: boolean.
         :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
@@ -128,10 +128,10 @@ class Gene(object):
         self._exchangeable = exchangeable
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
-        #print self # To be removed
+
 
     def __str__(self):
-    	"""
+        """
         Print the name of the gene and of its homologs/analogs.
         """
         s = "name : %s" % self.name
@@ -145,16 +145,17 @@ class Gene(object):
             for a in self.analogs:
                 s += a.name + ", "
             s = s[:-2]
-        #s+= "\tinter_gene_max_space = %s"%str(self._inter_gene_max_space) # To be removed
         return s
+
 
     @property
     def system(self):
         """
-        :return: the (secretion) System that owns this Gene
+        :return: the System that owns this Gene
         :rtype: :class:`macsypy.system.System` object
         """
         return self._system
+
 
     @property
     def loner(self):
@@ -164,6 +165,7 @@ class Gene(object):
         """
         return self._loner
 
+
     @property
     def exchangeable(self):
         """
@@ -172,6 +174,7 @@ class Gene(object):
         """
         return self._exchangeable
 
+
     @property
     def multi_system(self):
         """
@@ -179,7 +182,8 @@ class Gene(object):
         :rtype: boolean.
         """
         return self._multi_system
-    
+
+
     @property
     def inter_gene_max_space(self):
         """
@@ -191,7 +195,8 @@ class Gene(object):
             return self._inter_gene_max_space
         else:
             return self._system.inter_gene_max_space
-    
+
+
     def add_homolog(self, homolog):
         """
         Add a homolog gene to the Gene
@@ -225,17 +230,17 @@ class Gene(object):
         :type: list of :class:`macsypy.gene.Analog` object
         """
         return self.analogs
-    
+
     def __eq__(self, gene):
         """
         :return: True if the gene names (gene.name) are the same, False otherwise.
-	:param gene: the query of the test
+        :param gene: the query of the test
         :type gene: :class:`macsypy.gene.Gene` object.
         :rtype: boolean.
         """
         return self.name == gene.name
-        
-        
+
+
     def is_homolog(self, gene):
         """
         :return: True if the two genes are homologs, False otherwise.
@@ -250,8 +255,8 @@ class Gene(object):
             for h in self.homologs:
                 if gene == h.gene:
                     return True
-               
-        return False       
+        return False
+
 
     def is_analog(self, gene):
         """
@@ -267,11 +272,11 @@ class Gene(object):
             for h in self.analogs:
                 if gene == h.gene:
                     return True
-               
-        return False  
-            
+        return False
+
+
     def is_mandatory(self, system):
-    	"""
+        """
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
         :param system: the query of the test
         :type system: :class:`macsypy.system.System` object.
@@ -280,8 +285,9 @@ class Gene(object):
         if self in system.mandatory_genes:
             return True
         else:
-            return False    
-    
+            return False
+
+
     def is_accessory(self, system):
         """
         :return: True if the gene is within the *accessory* genes of the system, False otherwise.
@@ -293,7 +299,8 @@ class Gene(object):
             return True
         else:
             return False
-            
+
+
     def is_forbidden(self, system):
         """
         :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
@@ -305,9 +312,9 @@ class Gene(object):
             return True
         else:
             return False
-    
-    #def is_authorized(self, system): 
-    def is_authorized(self, system, include_forbidden=True):       
+
+
+    def is_authorized(self, system, include_forbidden = True):
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
         :param system: the query of the test
@@ -316,8 +323,6 @@ class Gene(object):
         :type include_forbidden: boolean
         :rtype: boolean.
         """
-        #for m in (system.mandatory_genes+system.accessory_genes):
-        #print "=>is %s authorized in %s ??"%(self.name, system.name)
         if include_forbidden:
             for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
                 if self == m:
@@ -349,7 +354,8 @@ class Gene(object):
             if self.is_authorized(s, include_forbidden):
                 compatibles.append(s)
         return compatibles
-        
+
+
 class Homolog(object):
     """
     Handle homologs, encapsulate a Gene
@@ -361,7 +367,8 @@ class Homolog(object):
         :type gene: :class:`macsypy.gene.Gene` object.
         :param gene_ref: the gene to which the current is homolog.
         :type gene_ref: :class:`macsypy.gene.Gene` object.
-        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile. Otherwise, only partial overlapping between the profiles. 
+        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.\ 
+          Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
         """
         self.gene = gene 
@@ -430,6 +437,11 @@ class ProfileFactory():
 
     def get_profile(self, gene, cfg, profiles_registry):
         """
+        :param gene: the gene associated to this profile
+        :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
+        :param profiles_registry: the registry where are stored the path of the profiles
+        :type profiles_registry: the registry of profiles
+        :param profiles_registry: :class:`macsypy.registries.ProfilesRegistry` instance.
         :return: the profile corresponding to the name.
                  If the profile already exists, return it. Otherwise build it, store it and return it.
         :rtype: :class:`macsypy.gene.Profile` object
@@ -439,10 +451,10 @@ class ProfileFactory():
         else:
             path = profiles_registry.get(gene.name)
             if path is None:
-                raise MacsypyError( "%s: No such profile" % gene.name)
+                raise MacsypyError("{0}: No such profile".format(gene.name))
             profile = Profile(gene, cfg, path)
             self._profiles[gene.name] = profile
-        return profile 
+        return profile
 
 profile_factory = ProfileFactory()
 
@@ -459,6 +471,8 @@ class Profile(object):
         :type gene_name: :class:`macsypy.secretion.Gene` object
         :param cfg: the configuration 
         :type cfg: :class:`macsypy.config.Config` object
+        :param path: the path to the hmm profile.
+        :type path: string
         """
         self.gene = gene 
         self.path = path
@@ -488,7 +502,7 @@ class Profile(object):
         return length
 
     def __str__(self):
-    	"""
+        """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
         return "%s : %s" % (self.gene.name, self.path)
@@ -519,8 +533,8 @@ class Profile(object):
                             "sequence_db" : self.cfg.sequence_db,
                            }
                 #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
-                command = "%(hmmer_exe)s --cpu 0 -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s " % options
-                _log.info( "%s Hmmer command line : %s" % (self.gene.name, command))
+                command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
+                _log.info( "{0} Hmmer command line : {1}".format(self.gene.name, command))
                 try:
                     hmmer = Popen( command ,
                                    shell = True ,
@@ -555,4 +569,4 @@ class Profile(object):
                 report = GeneralHMMReport(self.gene, output_path, self.cfg )
             self._report = report
             return report
-            
+

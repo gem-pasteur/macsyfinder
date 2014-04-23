@@ -33,8 +33,6 @@ class SystemBank(object):
         """
         :param name: the name of the system
         :type name: string
-        :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         :return: the system corresponding to the name.
          If the system already exists, return it, otherwise build it and return it.
         :rtype: :class:`macsypy.system.System` object
@@ -70,15 +68,10 @@ class SystemBank(object):
         return len(self._system_bank)
     
     
-    def add_system(self, system ):
+    def add_system(self, system):
         """
-        :param name: the name of the system
-        :type name: string
-        :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
-        :return: the system corresponding to the system's name passed as an argument
-         If the system already exists, return it. Otherwise, build it and return it. 
-        :rtype: :class:`macsypy.system.System` object
+        :param system: the system to add
+        :type system: :class:`macsypy.system.System` object
         :raise: KeyError if a system with the same name is already registered.
         """
         if system in self._system_bank:
@@ -194,7 +187,7 @@ class System(object):
         Add a gene to the list of mandatory genes
 
         :param gene: gene that is mandatory for this system
-        :type gene: :class:`macsypy.secretion.Gene` object
+        :type gene: :class:`macsypy.gene.Gene` object
         """
         self._mandatory_genes.append(gene)
 
@@ -203,7 +196,7 @@ class System(object):
         Add a gene to the list of accessory genes
 
         :param gene: gene that is allowed to be present in this system
-        :type gene: :class:`macsypy.secretion.Gene` object
+        :type gene: :class:`macsypy.gene.Gene` object
         """
         self._accessory_genes.append(gene)
 
@@ -212,7 +205,7 @@ class System(object):
         Add a gene to the list of forbidden genes
 
         :param gene: gene that must not be found in this system
-        :type gene: :class:`macsypy.secretion.Gene` object
+        :type gene: :class:`macsypy.genen.Gene` object
         """
         self._forbidden_genes.append(gene)
 
@@ -220,7 +213,7 @@ class System(object):
     def mandatory_genes(self):
         """
         :return: the list of genes that are mandatory in this secretion system
-        :rtype: list of :class:`macsypy.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._mandatory_genes
 
@@ -228,7 +221,7 @@ class System(object):
     def accessory_genes(self):
         """
         :return: the list of genes that are allowed in this secretion system
-        :rtype: list of :class:`macsypy.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._accessory_genes
 
@@ -236,7 +229,7 @@ class System(object):
     def forbidden_genes(self):
         """
         :return: the list of genes that are forbidden in this secretion system
-        :rtype: list of :class:`macsypy.secretion.Gene` objects
+        :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._forbidden_genes
 
@@ -246,7 +239,7 @@ class System(object):
         :param gene_name: the name of the gene to get
         :type gene_name: string
         :return: the gene corresponding to gene_name.
-        :rtype: a :class:`macsypy.secretion.Gene` object.
+        :rtype: a :class:`macsypy.gene.Gene` object.
         :raise: KeyError the system does not contain any gene with name gene_name.
         """
         all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
@@ -266,7 +259,7 @@ class System(object):
     def get_gene_ref(self, gene):
         """
         :param gene: the gene to get the gene reference.
-        :type gene: a :class:`macsypy.secretion.Gene` or macsypy.secretion.Homolog` or macsypy.secretion.Analog` object.
+        :type gene: a :class:`macsypy.gene.Gene` or macsypy.gene.Homolog` or macsypy.gene.Analog` object.
         :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
         :rtype: :class:`macsypy.gene.Gene` object or None
         :raise: KeyError if gene is not in the system

@@ -40,7 +40,7 @@ class Test(unittest.TestCase):
                            res_search_dir = "/tmp",
                            res_search_suffix = "",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".fasta-aln_edit.hmm",
+                           profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
                            log_file = '/dev/null'
