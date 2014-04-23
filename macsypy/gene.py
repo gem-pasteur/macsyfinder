@@ -131,7 +131,7 @@ class Gene(object):
 
 
     def __str__(self):
-    	"""
+        """
         Print the name of the gene and of its homologs/analogs.
         """
         s = "name : %s" % self.name
@@ -276,7 +276,7 @@ class Gene(object):
 
 
     def is_mandatory(self, system):
-    	"""
+        """
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
         :param system: the query of the test
         :type system: :class:`macsypy.system.System` object.
@@ -502,7 +502,7 @@ class Profile(object):
         return length
 
     def __str__(self):
-    	"""
+        """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
         return "%s : %s" % (self.gene.name, self.path)

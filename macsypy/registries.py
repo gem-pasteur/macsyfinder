@@ -29,7 +29,7 @@ class ProfilesRegistry(object):
 
     def __init__(self, cfg):
         """
-        get all profiles available in global macsyfinder share data location ( depending installation /usr/share/data/profile)
+        get all profiles available in global macsyfinder share data location (depending installation /usr/share/data/profile)
         and overload it with the location specify in the macsyfinder configuration (either in config file or command line)
 
         :param cfg: the macsyfinder configuration
@@ -68,12 +68,12 @@ class DefinitionsRegistry(object):
         """
         self._register = {}
         global_path = os.path.join(_prefix_data, 'macsyfinder' , 'DEF')
-        self._fill_def(global_path , cfg)
+        self._fill_def(global_path)
         local_path = cfg.def_dir
         if local_path:
-            self._fill_def(local_path, cfg)
+            self._fill_def(local_path)
 
-    def _fill_def(self, dir_path, cfg):
+    def _fill_def(self, dir_path):
         for path in glob.glob(os.path.join(dir_path, '*.xml')):
             name = os.path.basename(path)
             name = os.path.splitext(name)[0]

@@ -56,33 +56,33 @@ of diderm bacteria from a protein dataset.
 parser.add_argument("systems",
                     nargs = '+',
                     help = "The systems to detect. This is an obligatory option with no keyword associated to it. To detect all the protein secretion systems and related appendages: set to \"all\" (case insensitive). Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
-genome_options =  parser.add_argument_group(title = "Input dataset options")
+genome_options = parser.add_argument_group(title = "Input dataset options")
 genome_options.add_argument("--sequence-db",
                     action = 'store',
                     dest = 'sequence_db',
                     help = "Path to the sequence dataset in fasta format.")
-genome_options.add_argument(  "--db-type" ,
+genome_options.add_argument("--db-type" ,
                        choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                        dest = "db_type",
                        default = None,
                        help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName SequenceID\"." )
-genome_options.add_argument(  "--replicon-topology" ,
+genome_options.add_argument("--replicon-topology" ,
                        choices = ['linear', 'circular'],
                        dest = "replicon_topology",
                        default = None,
                        help = "The topology of the replicons (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
-genome_options.add_argument(  "--topology-file" ,
+genome_options.add_argument("--topology-file" ,
                        dest = "topology_file",
                        default = None,
                        help = "Topology file path. The topology file allows to specify a topology (linear or circular) for each replicon (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. A topology file is a tabular file with two columns: the 1st is the replicon name, and the 2nd the corresponding topology:\n\"RepliconA\tlinear\" ")
-genome_options.add_argument(  "--idx" ,
+genome_options.add_argument("--idx" ,
                        action = 'store_true',
                        dest = "build_indexes",
                        default = False,
                        help = "Forces to build the indexes for the sequence dataset even if they were presviously computed and present at the dataset location (default = False)")
 
 system_options =  parser.add_argument_group(title = "Systems detection options")
-system_options.add_argument( "--inter-gene-max-space",
+system_options.add_argument("--inter-gene-max-space",
                              action = 'append',
                              nargs = 2,
                              dest = 'inter_gene_max_space',
@@ -90,7 +90,7 @@ system_options.add_argument( "--inter-gene-max-space",
                              help = "Co-localization criterion: maximum number of components non-matched by a profile allowed between two matched components for them to be considered contiguous. Option only meaningful for 'ordered' datasets. The first value must match to a system, the second to a number of components.\
                               This option can be repeated several times:\n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
                              )
-system_options.add_argument( "--min-mandatory-genes-required",
+system_options.add_argument("--min-mandatory-genes-required",
                              action = 'append',
                              nargs = 2,
                              dest = 'min_mandatory_genes_required',
@@ -99,7 +99,7 @@ system_options.add_argument( "--min-mandatory-genes-required",
                               This option can be repeated several times:\n \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                              )
 
-system_options.add_argument( "--min-genes-required",
+system_options.add_argument("--min-genes-required",
                              action = 'append',
                              nargs = 2,
                              dest = 'min_genes_required',
@@ -108,7 +108,7 @@ system_options.add_argument( "--min-genes-required",
                               This option can be repeated several times:\n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                              )
 
-system_options.add_argument( "--max-nb-genes",
+system_options.add_argument("--max-nb-genes",
                              action = 'append',
                              nargs = 2,
                              dest = 'max_nb_genes',
@@ -117,7 +117,7 @@ system_options.add_argument( "--max-nb-genes",
                               This option can be repeated several times:\n \"--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
                              )
 
-system_options.add_argument( "--multi-loci",
+system_options.add_argument("--multi-loci",
                              action = 'store',
                              dest = 'multi_loci',
                              default = None,
@@ -126,18 +126,18 @@ system_options.add_argument( "--multi-loci",
                              )
 
 hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
-hmmer_options.add_argument( '--hmmer', 
+hmmer_options.add_argument('--hmmer', 
                             action = 'store',
                             dest = 'hmmer_exe',
                             default = None, 
                             help = 'Path to the Hmmer program.')
-hmmer_options.add_argument( '--index-db', 
+hmmer_options.add_argument('--index-db', 
                             action = 'store',
                             dest = 'index_db_exe',
                             default = None, 
                             help = "The indexer to be used for Hmmer. The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary (default = makeblastb)")
 
-hmmer_options.add_argument( '--e-value-search',
+hmmer_options.add_argument('--e-value-search',
                      action = 'store',
                      dest = 'e_value_res',
                      type = float,
@@ -169,7 +169,7 @@ dir_options.add_argument('-r', '--res-search-dir',
                     dest = 'res_search_dir',
                     default = None,
                     help = 'Path to the directory where to store MacSyFinder search results directories.')
-dir_options.add_argument( '--res-search-suffix',
+dir_options.add_argument('--res-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
                     default = None,
@@ -197,7 +197,7 @@ general_options.add_argument("-w", "--worker",
                     type = int,
                     default = None,
                     help = "Number of workers to be used by MacSyFinder. In the case the user wants to run MacSyFinder in a multi-thread mode. (0 mean all cores will be used, default 1)")
-general_options.add_argument( "-v" , "--verbosity",
+general_options.add_argument("-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
                       default = 0,
@@ -280,8 +280,8 @@ idx.build(force = config.build_indexes)
 parser = SystemParser(config, system_bank, gene_bank)
 if ('all' or 'All' or 'ALL') in args.systems:
     import glob
-    systems_name_to_detect = glob.glob( os.path.join(config.def_dir, '*.xml'))
-    systems_name_to_detect = [ os.path.basename(s)[:-4] for s in systems_name_to_detect]
+    systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
+    systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
 else:
     systems_name_to_detect = args.systems
 parser.parse(systems_name_to_detect)
@@ -309,11 +309,11 @@ all_reports = search_genes(all_genes, config)
 #############################################
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
-if len(all_hits)> 0:
-    all_hits=sorted(all_hits, key=attrgetter('score'), reverse=True)
-    all_hits=sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+if len(all_hits) > 0:
+    all_hits = sorted(all_hits, key = attrgetter('score'), reverse = True)
+    all_hits = sorted(all_hits, key = attrgetter('replicon_name', 'position'))
 
-    systems_to_detect=sorted(systems_to_detect, key=attrgetter('name'))
+    systems_to_detect = sorted(systems_to_detect, key = attrgetter('name'))
     search_systems(all_hits, systems_to_detect, config)
 else:
     logger.info("No hits found in this dataset.")

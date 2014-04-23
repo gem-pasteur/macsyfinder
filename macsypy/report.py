@@ -49,6 +49,7 @@ class HMMReport(object):
         self.cfg = cfg
         self._lock = Lock()
 
+
     @abc.abstractmethod
     def extract(self):
         """
@@ -56,6 +57,7 @@ class HMMReport(object):
         Contain selected and sorted hits ( **this abstract method is implemented in inherited classes** )
         """
         pass
+
 
     def __str__(self):
         """
@@ -72,6 +74,7 @@ class HMMReport(object):
             s += str(h)
         return s
 
+
     def save_extract(self):
         """
         Write the string representation of the extact report in a file.
@@ -82,6 +85,7 @@ class HMMReport(object):
             self._extract_out = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, extract_out_name)
             with open(self._extract_out, 'w') as _file:
                 _file.write(str(self))
+
 
     def best_hit(self):
         """
@@ -95,14 +99,23 @@ class HMMReport(object):
 
     def _hit_start(self, line):
         """
-        Store the string signaling the begining of a new hit in Hmmer raw output files
+        :param line: the line to parse
+        :type line: string
+        :return: True if it's the begining of a new hit in Hmmer raw output files.\
+         False otherwise
+        :rtype: boolean.
         """
         return line.startswith(">>")
 
 
     def _build_my_db(self, hmm_output):
         """
-        Build the keys of a dictionary object to store sequence identifiers of hits 
+        Build the keys of a dictionary object to store sequence identifiers of hits.
+
+        :param hmm_output: the path to the hmmsearch output to parse.
+        :type hmm_output: string
+        :return: a dictionary containing a key for each sequence id of the hits
+        :rtype: dict
         """
         d = {}
         with open(hmm_output) as hmm_file:
@@ -111,20 +124,29 @@ class HMMReport(object):
                 d[self._parse_hmm_header(h)] = None
         return d
 
+
     def _fill_my_db(self, macsyfinder_idx, db):
         """
-        Fill the dictionary with information on the matched sequences 
+        Fill the dictionary with information on the matched sequences
+
+        :param macsyfinder_idx: the path the macsyfinder index corresponding to the dataset
+        :type  macsyfinder_idx: string
+        :param db: the database containing all sequence id of the hits.
+        :type db: dict
         """
         with open(macsyfinder_idx, 'r') as idx:
             for l in idx:
-                #print l
                 seqid, length, rank = l.split(';')
                 if seqid in db:
                     db[seqid] = (int(length), int(rank))
 
+
     def _parse_hmm_header(self, h_grp):
         """
-        Returns the sequence identifier from a set of lines that corresponds to a single hit
+        :param h_grp: the sequence of string return by groupby function representing the header of a hit 
+        :type h_grp: sequence of string
+        :returns: the sequence identifier from a set of lines that corresponds to a single hit
+        :rtype: string
         """
         for line in h_grp:
             hit_id = line.split()[1]
@@ -133,7 +155,7 @@ class HMMReport(object):
     def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, b_grp):
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected ("coverage_profile" and "i_evalue_select" command-line parameters) 
-        
+
         :param hit_id: the sequence identifier
         :type hit_id: string 
         :param gene_profile_lg: the length of the profile matched
@@ -192,9 +214,9 @@ class HMMReport(object):
                         _log.debug(msg)
                         raise ValueError(msg)
 
-    
-                     
-class GeneralHMMReport(HMMReport):   
+
+
+class GeneralHMMReport(HMMReport):
     """
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to any type of 'unordered' datasets.
@@ -205,7 +227,7 @@ class GeneralHMMReport(HMMReport):
         Parse the output file of hmmer compute from an unordered genes base
         and produced a new synthetic report file.
         """
-        
+
         with self._lock:
             # so the extract of a given HMM output is executed only once per run
             # if this method is called several times the first call induce the parsing of HMM out
@@ -228,10 +250,10 @@ class GeneralHMMReport(HMMReport):
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
-                    
+
                     #replicon_name = self.cfg. # Define a variable in further devt
                     replicon_name = "Unordered"
-                    
+
                     body = hmm_hits.next()
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
@@ -239,7 +261,7 @@ class GeneralHMMReport(HMMReport):
                 return self.hits
 
 
-class OrderedHMMReport(HMMReport):                    
+class OrderedHMMReport(HMMReport):
     """
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to 'ordered_replicon' datasets.
@@ -250,7 +272,7 @@ class OrderedHMMReport(HMMReport):
         Parse the output file of Hmmer obtained from a search in an ordered set of sequences
         and produce a new synthetic report file.
         """
-        
+
         with self._lock:
             # so the extract of a given HMM output is executed only once per run
             # if this method is called several times the first call induce the parsing of HMM out
@@ -273,11 +295,8 @@ class OrderedHMMReport(HMMReport):
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
-                    
-                    #fields_hit = hit_id.split('_')
-                    #replicon_name = fields_hit[0]
                     replicon_name = RepliconDB.ordered_replicon_name
-                    
+
                     body = hmm_hits.next()
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
@@ -331,7 +350,7 @@ class Hit(object):
     """
     Handle the hits filtered from the Hmmer search. The hits are instanciated by :py:meth:`HMMReport.extract` method
     """
-    
+
     def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name,
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
@@ -393,7 +412,7 @@ class Hit(object):
     def __cmp__(self, other):
         """
         Compare two Hits. If the sequence identifier is the same, do the comparison on the score. Otherwise, do it on alphabetical comparison of the sequence identifier.
-        
+
         :param other: the hit to compare to the current object
         :type other: :class:`macsypy.report.Hit` object
         :return: the result of the comparison
@@ -408,13 +427,13 @@ class Hit(object):
     def __eq__(self, other):
         """
         Return True if two hits are totally equivalent, False otherwise.
-        
+
         :param other: the hit to compare to the current object
         :type other: :class:`macsypy.report.Hit` object
         :return: the result of the comparison
         :rtype: boolean
         """
-        return ( 
+        return (
                 self.gene.name == other.gene.name and
                 self.system.name == other.system.name and
                 self.id == other.id and
