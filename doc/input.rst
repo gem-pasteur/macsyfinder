@@ -109,7 +109,8 @@ Systems detection options::
                         system assessment. The first value must correspond to
                         a system name, the second value to an integer. This
                         option can be repeated several times: 
-                        "--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
+                        "--min-mandatory-genes-required T2SS 15 
+                        --min-mandatory-genes-required Flagellum 10"
                         
   --min-genes-required SYSTEM VALUE
                         The minimal number of genes required for system
@@ -175,7 +176,8 @@ Path options::
                         Gene name + the profile suffix. For instance, if the
                         Gene is named 'gspG' and the suffix is '.hmm3', then
                         the profile should be placed in the specified folder 
-                        'profile_dir' and be named 'gspG.hmm3'
+                        'profile_dir' and be named 'gspG.hmm3'. 
+                        (default: ".hmm")
 
 General options::
 

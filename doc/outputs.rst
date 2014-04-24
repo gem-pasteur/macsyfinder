@@ -23,15 +23,21 @@ Raw Hmmer outputs are provided, as long with processed tabular outputs that incl
 The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for hits filtering and relevant information on the matches, as 
 for instance::
 
-    # gene: sctC extract from /Users/bob/macsyfinder_results/macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
-    # profile length= 544
-    # i_evalue threshold= 0.001000
-    # coverage threshold= 0.500000
-    # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-    PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6   0.588235        0.419676        395     731
-    PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7   0.976103        0.724227        35      596
-    PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7   0.963235        0.844985        49      604
-    PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4   0.571691        0.463585        374     704
+  # gene: sctC extract from /Users/bob/macsyfinder_results/
+        macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
+  # profile length= 544
+  # i_evalue threshold= 0.001000
+  # coverage threshold= 0.500000
+  # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score 
+        profile_coverage sequence_coverage begin end
+  PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6   
+        0.588235  0.419676        395     731
+  PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7   
+        0.976103  0.724227        35      596
+  PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7   
+        0.963235  0.844985        49      604
+  PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4   
+        0.571691  0.463585        374     704
 
 
 .. note::
@@ -103,19 +109,22 @@ Each line corresponds to a system that has been detected. It includes:
     * Occur_Accessory - counts of the accessory components
     * Occur_Forbidden - counts of the forbidden components
 
-results.macsyfinder.json
-************************
-This file is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
-
 
 Logs and configuration files
 ----------------------------
 
-Two specific output files are built to store information on the MacSyFinder execution: 
+Three specific output files are built to store information on the MacSyFinder execution: 
+
+ * macsyfinder.out - contains information on the procedure during systems detection: clusters found, decisions made for system inference... The same information is also displayed on the standard output. 
 
  * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
  
  * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
   
+
+File for MacSyview: results.macsyfinder.json
+--------------------------------------------
+
+This file in JSON format is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
 
 
