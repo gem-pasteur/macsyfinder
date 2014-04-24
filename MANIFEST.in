@@ -5,7 +5,7 @@ include doc/_build/latex/Macsyfinder.pdf
 
 include data/DEF/*.xml
 include data/profiles/*.hmm
-include data/sequence_data/datatest_gembase.fasta
+include data/sequence_data/datatest_gembase.fasta.*
 include data/sequence_data/datatest_gembase.topology
 include data/sequence_data/results.macsyfinder.json
 
