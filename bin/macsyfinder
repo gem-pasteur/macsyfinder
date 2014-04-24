@@ -286,6 +286,11 @@ else:
     systems_name_to_detect = args.systems
 parser.parse(systems_name_to_detect)
 
+out_logger = logging.getLogger('macsyfinder.out')
+out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db))
+for s in systems_name_to_detect:
+    out_logger.info("\t- {}".format(s))
+
 systems_to_detect = [system_bank[system_name] for system_name  in systems_name_to_detect]
 all_genes = []
 for system in systems_to_detect:
