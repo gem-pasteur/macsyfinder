@@ -261,16 +261,18 @@ class Config(object):
         f_out_handler_formatter = logging.Formatter("%(message)s")
         f_out_log_handler.setFormatter(f_out_handler_formatter)
         f_out_log_handler.setLevel(logging.INFO)
-        
+
         c_out_log_handler = logging.StreamHandler(sys.stdout)
         c_out_handler_formatter = logging.Formatter("%(message)s")
         c_out_log_handler.setFormatter(f_out_handler_formatter)
         c_out_log_handler.setLevel(logging.INFO)
-        
+
         out_logger = logging.getLogger('macsyfinder.out')
         out_logger.setLevel(logging.INFO)
         out_logger.addHandler(f_out_log_handler)
         out_logger.addHandler(c_out_log_handler)
+
+        out_logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
 
         self._log = logging.getLogger('macsyfinder.config')
         for error in log_error:
