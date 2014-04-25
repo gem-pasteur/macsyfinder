@@ -272,7 +272,7 @@ class Config(object):
         out_logger.addHandler(f_out_log_handler)
         out_logger.addHandler(c_out_log_handler)
 
-        out_logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
+        
 
         self._log = logging.getLogger('macsyfinder.config')
         for error in log_error:
