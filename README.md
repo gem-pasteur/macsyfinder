@@ -12,10 +12,30 @@ Download distribution
 Installation from distribution
 ------------------------------
 
-See the INSTALL file.
+1. Uncompress and untar the package:
+
+   tar -xzf macsyfinder-x.x.tar.gz
+
+2. go to macsyfinder directory
+ 
+    cd macsyfinder-1.0
+
+3. build and install
+
+    python setup.py build
+    
+    python setup.py test -vv
+    
+    python setup.py install
+
+    to see all installation options "python setup.py --help"
+
+See the INSTALL file for more details.
 
 
 Installation from repository
 ----------------------------
 
  Be careful MacSyView has is own repository: https://github.com/gem-pasteur/macsyview
+ 
+ 
