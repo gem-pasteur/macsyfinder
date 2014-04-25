@@ -1,0 +1,16 @@
+<system inter_gene_max_space="20" min_mandatory_genes_required="11" min_genes_required="11" multi_loci="1">
+    <gene name="evpJ" presence="mandatory"/>
+    <gene name="tssA" presence="mandatory"/>
+    <gene name="tssB" presence="mandatory"/>
+    <gene name="tssC" presence="mandatory"/>
+    <gene name="tssD" presence="mandatory"/>
+    <gene name="tssE" presence="mandatory"/>
+    <gene name="tssF" presence="mandatory"/>
+    <gene name="tssG" presence="mandatory"/>
+    <gene name="tssH" presence="mandatory"/>
+    <gene name="tssI" presence="mandatory"/>
+    <gene name="tssJ" presence="mandatory"/>
+    <gene name="tssK" presence="mandatory"/>
+    <gene name="tssL" presence="mandatory"/>
+    <gene name="tssM" presence="mandatory"/>
+</system>
