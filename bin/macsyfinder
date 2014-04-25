@@ -295,7 +295,9 @@ else:
     systems_name_to_detect = args.systems
 parser.parse(systems_name_to_detect)
 
+
 out_logger = logging.getLogger('macsyfinder.out')
+out_logger.info("MacSyFinder's results will be stored in {0}".format(config.working_dir))
 out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db))
 for s in systems_name_to_detect:
     out_logger.info("\t- {}".format(s))
