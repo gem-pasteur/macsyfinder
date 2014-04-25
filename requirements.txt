@@ -1,3 +1,4 @@
-+hmmer
-+ncbi-blast+
+#macsyfinder dependencies
+hmmer
+ncbi-blast+
 
