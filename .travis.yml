@@ -5,11 +5,18 @@ python:
 branches:
   except:
        - /^feature.*$/
-# command to install dependencies
+       
+# command to install Ubuntu dependencies
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install hmmer
+  - sudo apt-get instal ncbi-blast+
+
+       
+# command to install python dependencies
 install: 
 - "pip install coverage"
 - "pip install python-coveralls"
-- "pip install -r requirements.txt"
 # command to run tests
 script:
 - python setup.py build
