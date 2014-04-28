@@ -91,9 +91,13 @@ class build_scripts(_build_scripts):
         for _file in self.distribution.viewer:
             #if the link already exists (build already ran don't try to create it
             if not os.path.exists(_file):
-                os.symlink(os.path.abspath(os.path.join('macsyview', _file)), _file)
-                must_clean.append(_file)
-        self.scripts += self.viewer
+                macsyview_src = os.path.join('macsyview', _file)
+                if os.path.exists(macsyview_src):
+                    os.symlink(os.path.abspath(os.path.join('macsyview', _file)), _file)
+                    must_clean.append(_file)
+                    self.scripts += self.viewer
+                else:
+                    log.warn("macsyview not found")
         _build_scripts.run(self)
         for _link in must_clean:
             os.unlink(_link)
