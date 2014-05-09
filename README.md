@@ -16,11 +16,11 @@ Installation from distribution
 
    tar -xzf macsyfinder-x.x.tar.gz
 
-2. go to macsyfinder directory
+2. Go to the macsyfinder directory
  
     cd macsyfinder-1.0
 
-3. build and install
+3. Build and install
 
     python setup.py build
     
@@ -36,7 +36,7 @@ See the INSTALL file for more details.
 Installation from repository
 ----------------------------
 
- Be careful MacSyView has is own repository: https://github.com/gem-pasteur/macsyview
+ Be careful MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
  
  
 Unit tests with Travis-CI
