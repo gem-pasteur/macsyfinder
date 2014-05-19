@@ -376,7 +376,6 @@ class SystemParser(object):
         """
         systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
         for system_name in systems_2_parse:
-            print system_name
             path = self.definitions_registry.get(system_name)
             if path is None:
                 raise MacsypyError("%s: No such system definitions" % path)
