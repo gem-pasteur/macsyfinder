@@ -376,6 +376,7 @@ class SystemParser(object):
         """
         systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
         for system_name in systems_2_parse:
+            print system_name
             path = self.definitions_registry.get(system_name)
             if path is None:
                 raise MacsypyError("%s: No such system definitions" % path)
@@ -386,7 +387,8 @@ class SystemParser(object):
             genes = self._create_genes(sys, system_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
-        for system_name in systems_2_detect: #une ouverture par fichier
+        #for system_name in systems_2_detect: #une ouverture par fichier # TMP
+        for system_name in systems_2_parse: #une ouverture par fichier
             system = self.system_bank[system_name]
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             tree = ET.parse(path)
