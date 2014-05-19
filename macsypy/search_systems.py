@@ -369,17 +369,25 @@ class Cluster(object):
                         """
                         #foreign_accessory = 0
                         auth = 0 # counts nb of hits that are authorized in the putative system
-                        forbid = 0
+                        #forbid = 0
                         #print "Unclear state with multiple systems to deal with..."
                         #print systems
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
-                            if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
-                            #if h.gene.is_authorized(system_bank[putative_system], True):
+                            #if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
+                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system has to be considered!
                                 auth += 1
-                            if h.gene.is_forbidden(system_bank[putative_system]):
-                                forbid +=1
-                        
+                            #if h.gene.is_forbidden(system_bank[putative_system]):
+                            #    forbid +=1
+                                                    
+                            if auth == len(hits):
+                                state = "clear"
+                                #print "clear %s"%putative_system
+                            else:
+                                state = "ambiguous"
+                                #print "ambiguous %s"%putative_system
+
+                        """
                         if forbid == 0:
                             if auth == len(hits):
                                 state = "clear"
@@ -390,18 +398,7 @@ class Cluster(object):
                         else:
                             state = "ineligible"
                             #print "ineligible %s"%putative_system
-                            
-                        """        
-                        if auth == len(hits) and forbid == 0:
-                            # Case where all foreign genes are accessory in the majoritary system => considered as a clear case, does not need disambiguation.
-                            print "case1 %s"%putative_system
-                            state = "clear"
-                        elif forbid == 0:
-                            state = "ambiguous"                            
-                            print "case1 %s"%putative_system
-                        else:
-                            state = "ineligible"
-                        """
+                        """    
                         return state
 
                     # Sort systems to consider by decreasing counts.
