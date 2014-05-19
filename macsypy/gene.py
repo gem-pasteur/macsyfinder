@@ -135,6 +135,13 @@ class Gene(object):
         Print the name of the gene and of its homologs/analogs.
         """
         s = "name : %s" % self.name
+        s += "\n%d"%self.inter_gene_max_space
+        if self.loner:
+            s+= "\nloner"
+        if self.multi_system:
+            s+= "\nmulti_system"
+        if self.exchangeable:
+            s+= "\nexchangeable"
         if self.homologs:
             s += "\n    homologs: "
             for h in self.homologs:
