@@ -535,8 +535,17 @@ class SystemOccurence(object):
                 self.multi_syst_genes[g.name] = 0
 
         self.forbidden_genes = {}
+        self.exforbidden_genes = {} # List of 'exchanged' forbidden genes
         for g in system.forbidden_genes:
             self.forbidden_genes[g.name] = 0
+            if g.exchangeable:
+                homologs = g.get_homologs()
+                analogs = g.get_analogs()
+                for ex in homologs + analogs:
+                    self.exforbidden_genes[ex.name] = g.name
+            # Forbidden genes do not play a role in the system, thus they do not have the multi_system feature
+            #if g.multi_system:
+            #    self.multi_syst_genes[g.name] = 0
 
 
     def get_gene_ref(self, gene):
@@ -874,6 +883,11 @@ class SystemOccurence(object):
                     self.accessory_genes[self.exaccessory_genes[hit.gene.name]] += 1
                     valid_hit = validSystemHit(hit, self.system_name, "accessory")
                     self.valid_hits.append(valid_hit)
+                # NEW: exforbidden_genes considered
+                elif hit.gene.name in self.exforbidden_genes.keys():
+                    self.forbidden_genes[self.exforbidden_genes[hit.gene.name]] += 1
+                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")
+                    self.valid_hits.append(valid_hit)                    
                 else:
                     msg = "Foreign gene {0} in cluster {1}".format(hit.gene.name, self.system_name)
                     #print msg
@@ -924,6 +938,11 @@ class SystemOccurence(object):
                 elif hit.gene.name in self.exaccessory_genes.keys():
                     self.accessory_genes[self.exaccessory_genes[hit.gene.name]] += 1
                     valid_hit = validSystemHit(hit, self.system_name, "accessory")
+                    self.valid_hits.append(valid_hit)
+                # NEW: exforbidden_genes considered
+                elif hit.gene.name in self.exforbidden_genes.keys():
+                    self.forbidden_genes[self.exforbidden_genes[hit.gene.name]] += 1
+                    valid_hit = validSystemHit(hit, self.system_name, "forbidden")
                     self.valid_hits.append(valid_hit)
                 else:
                     msg = "Foreign gene {0} in cluster {1}".format(hit.gene.name, self.system_name)
