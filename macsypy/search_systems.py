@@ -1652,16 +1652,19 @@ def disambiguate_cluster(cluster):
                             counter_genes_compat_systems[syst.name] += 1
 
             cur_compatible = compatible_systems
+            #print [syst.name for syst in cur_compatible]            
             cur_cluster = Cluster(cluster.systems_to_detect) # NEW
             cur_cluster.add(h)
 
-    cur_cluster.save()
+    cur_cluster.save()         
+   
     # Check cluster status before storing it or not:
     if cur_cluster.state == "clear":
         #print "\nclear to store: "
         #print cur_cluster
         res_clusters.append(cur_cluster) 
         for syst in cur_compatible: # Good list of compatible??
+            #print syst.name
             if not counter_genes_compat_systems.has_key(syst.name):
                 counter_genes_compat_systems[syst.name] = len(cur_cluster.hits)
             else:
@@ -1673,11 +1676,12 @@ def disambiguate_cluster(cluster):
             #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
             h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
             for syst in h_compat:
+                #print syst.name
                 if not counter_genes_compat_systems.has_key(syst.name):
                     counter_genes_compat_systems[syst.name] = 1
                 else:
                     counter_genes_compat_systems[syst.name] += 1
-    #print counter_genes_compat_systems
+    #print "\n---Counter compatible systems ! ---\n%s"%str(counter_genes_compat_systems)
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res = []
@@ -1688,8 +1692,15 @@ def disambiguate_cluster(cluster):
         #print nb_genes
         store = True
         for c in r.compatible_systems:
-            if counter_genes_compat_systems[c] != nb_genes:
-                store = False
+            #print c
+            if c in counter_genes_compat_systems:
+                if counter_genes_compat_systems[c] != nb_genes:
+                    store = False
+                if counter_genes_compat_systems[c] == nb_genes:
+                    store = True
+                    break
+            else:
+                store = False                    
         if store:
             #print "=> store !"
             real_res.append(r)
