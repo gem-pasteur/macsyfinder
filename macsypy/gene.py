@@ -135,7 +135,7 @@ class Gene(object):
         Print the name of the gene and of its homologs/analogs.
         """
         s = "name : %s" % self.name
-        s += "\n%d"%self.inter_gene_max_space
+        s += "\ninter_gene_max_space: %d"%self.inter_gene_max_space
         if self.loner:
             s+= "\nloner"
         if self.multi_system:
