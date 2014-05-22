@@ -47,32 +47,6 @@ class SystemParser(object):
         self.definitions_registry = DefinitionsRegistry(cfg)
 
 
-    def system_to_parse_OLD(self, sys_2_detect):
-        """
-        :param sys_2_detect: the list of systems to detect
-        :type sys_2_detect: [string, ...]
-        :return: the list of systems' names to parse
-        :rtype: [string, ...]
-        """
-        systems_2_parse = {}
-        for system_name in sys_2_detect:
-            systems_2_parse[system_name] = None
-            path = os.path.join(self.cfg.def_dir, system_name + ".xml")
-            if not os.path.exists(path):
-                raise MacsypyError("%s: No such system definitions" % path)
-            try:
-                tree = ET.parse(path)
-                root = tree.getroot()
-                sys_ref = root.findall(".//gene[@system_ref]")
-                for gene_node in sys_ref:
-                    systems_2_parse[gene_node.get("system_ref")] = None
-            except Exception, err:
-                msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
-                _log.critical(msg)
-                raise MacsypyError(msg)
-
-        return systems_2_parse.keys()
-
     def system_to_parse(self, sys_2_parse, parsed_systems):
         """
         :param sys_2_parse: the list of systems to parse
@@ -82,13 +56,9 @@ class SystemParser(object):
         """
         diff_sys = list(set(parsed_systems.keys())- set(sys_2_parse.keys()))  
         diff_sys_2 = list(set(sys_2_parse.keys()) - set(parsed_systems.keys()))
-        #print "\n--- Loopy !!! ---"
-        #print "parsed: %s"%str(parsed_systems.keys())
-        #print "2parse: %s"%str(sys_2_parse.keys())
         diff_sys += diff_sys_2
         #print diff_sys
         if diff_sys == []:
-            #print "none"
             return sys_2_parse.keys()
         else:            
             for system_name in diff_sys:
@@ -433,8 +403,8 @@ class SystemParser(object):
             genes = self._create_genes(sys, system_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
-        #for system_name in systems_2_detect: #une ouverture par fichier # TMP
-        for system_name in systems_2_parse: #une ouverture par fichier
+        #for system_name in systems_2_detect: #une ouverture par fichier # OLD version: only systems to detect were filled appropriately
+        for system_name in systems_2_parse: #une ouverture par fichier. # Now, all systems related (e.g. via system_ref) to the one to detect are filled appropriately. 
             system = self.system_bank[system_name]
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             tree = ET.parse(path)
