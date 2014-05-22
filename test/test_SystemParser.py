@@ -127,7 +127,7 @@ class Test(unittest.TestCase):
         system_2_detect = ['invalid_aligned']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene \'foo_bar\': \'sctJ\' allowed values are "1", "true", "True", "0", "false", "False"')
+        self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene \'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
  
     def test_invalid_homolg(self):
         system_2_detect = ['invalid_homolog']
