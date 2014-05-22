@@ -52,17 +52,26 @@ class Test(unittest.TestCase):
         shutil.rmtree(self.cfg.working_dir)
 
     def test_system_to_parse(self):
-        system_2_detect = ['system_1']
-        system_2_parse = self.parser.system_to_parse(system_2_detect)
+        #system_2_detect = ['system_1']
+        parsed = {}
+        system_2_detect = {'system_1':None}
+        #system_2_parse = self.parser.system_to_parse(system_2_detect)
+        system_2_parse = self.parser.system_to_parse(system_2_detect, parsed)
         system_2_parse.sort()
         self.assertListEqual(system_2_parse, ['system_1', 'system_2'])
-        system_2_detect = ['nimportnaoik']
+        #system_2_detect = ['nimportnaoik']
+        parsed = {}
+        system_2_detect = {'nimportnaoik': None}
         with self.assertRaises(MacsypyError) as context:
-            self.parser.system_to_parse(system_2_detect)
+            #self.parser.system_to_parse(system_2_detect)
+            self.parser.system_to_parse(system_2_detect, parsed)
 
     def test_parse(self):
         system_2_detect = ['system_1']
-        system_2_parse = self.parser.system_to_parse(system_2_detect)
+        #system_2_parse = self.parser.system_to_parse(system_2_detect)
+        parsed = {}
+        system_2_detect_dict = {'system_1':None}
+        system_2_parse = self.parser.system_to_parse(system_2_detect_dict, parsed)
         self.parser.parse(system_2_detect)
         self.assertEqual(len(self.system_bank), 2)
 
@@ -130,7 +139,8 @@ class Test(unittest.TestCase):
         system_2_detect = ['bad_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ' with system_ref 'system_1' has an other system in bank (bad_sys_ref)")
+        #self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ' with system_ref 'system_1' has an other system in bank (bad_sys_ref)")
+        self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ_FLG' with system_ref 'system_2' has an other system in bank (bad_sys_ref)")
 
     def test_bad_min_genes_required(self):
         system_2_detect = ['bad_min_genes_required']
