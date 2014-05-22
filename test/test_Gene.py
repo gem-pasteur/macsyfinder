@@ -139,5 +139,6 @@ class Test(unittest.TestCase):
         homolog = Homolog( gene_homolog, gene, self.cfg)
         gene.add_homolog( homolog )
         s = """name : sctJ_FLG
+inter_gene_max_space: 10
     homologs: sctJ"""
         self.assertEqual( str(gene) , s )
