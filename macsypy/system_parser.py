@@ -47,7 +47,7 @@ class SystemParser(object):
         self.definitions_registry = DefinitionsRegistry(cfg)
 
 
-    def system_to_parse(self, sys_2_detect):
+    def system_to_parse_OLD(self, sys_2_detect):
         """
         :param sys_2_detect: the list of systems to detect
         :type sys_2_detect: [string, ...]
@@ -72,6 +72,42 @@ class SystemParser(object):
                 raise MacsypyError(msg)
 
         return systems_2_parse.keys()
+
+    def system_to_parse(self, sys_2_parse, parsed_systems):
+        """
+        :param sys_2_parse: the list of systems to parse
+        :type sys_2_parse: [string, ...]
+        :return: the list of systems' names to parse. Scan the whole chain of 'system_ref' in a recursive way.
+        :rtype: [string, ...]
+        """
+        diff_sys = list(set(parsed_systems.keys())- set(sys_2_parse.keys()))  
+        diff_sys_2 = list(set(sys_2_parse.keys()) - set(parsed_systems.keys()))
+        #print "\n--- Loopy !!! ---"
+        #print "parsed: %s"%str(parsed_systems.keys())
+        #print "2parse: %s"%str(sys_2_parse.keys())
+        diff_sys += diff_sys_2
+        #print diff_sys
+        if diff_sys == []:
+            #print "none"
+            return sys_2_parse.keys()
+        else:            
+            for system_name in diff_sys:
+                parsed_systems[system_name] = None
+                path = os.path.join(self.cfg.def_dir, system_name + ".xml")
+                if not os.path.exists(path):
+                    raise MacsypyError("%s: No such system definitions" % path)
+                try:
+                    tree = ET.parse(path)
+                    root = tree.getroot()
+                    sys_ref = root.findall(".//gene[@system_ref]")
+                    for gene_node in sys_ref:
+                        sys_2_parse[gene_node.get("system_ref")] = None
+                except Exception, err:
+                    msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
+                    _log.critical(msg)
+                    raise MacsypyError(msg)
+                    
+            return self.system_to_parse(sys_2_parse, parsed_systems)
 
     def _create_system(self, system_name, system_node):
         """
@@ -369,12 +405,23 @@ class SystemParser(object):
     def parse(self, systems_2_detect):
         """
         Parse systems definition in XML format to build the corresponding system objects,\
-         and add them to the system factory after checking it's consistency.
+         and add them to the system factory after checking its consistency.
         To get the system ask it to system_bank
         :param systems_2_detect: a list with the names of the systems to parse
         :type systems_2_detect: list of string
         """
-        systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
+        #systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
+        parsed_systems = {}
+        systems_2_detect_dict = {}
+        for s in systems_2_detect:
+            systems_2_detect_dict[s] = None
+            
+        systems_2_parse = self.system_to_parse(systems_2_detect_dict, parsed_systems)  # une ouverture fermeture de fichier /systeme
+        msg = "\nSystem(s) to parse (recursive inclusion of 'system_ref'):"
+        for s in systems_2_parse:
+            msg += "\n\t-%s"%s
+        _log.info(msg)
+        
         for system_name in systems_2_parse:
             path = self.definitions_registry.get(system_name)
             if path is None:
