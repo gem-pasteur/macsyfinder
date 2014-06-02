@@ -2019,7 +2019,7 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
     """
     Returns from a putatively redundant list of hits, a list of best matching hits.
     Analyzes quorum and co-localization if required for system detection. 
-    By default, hits are already sorted by position, and the hit with the best score is kept. Possible criteria are:
+    By default, hits are already sorted by position, and the hit with the best score is kept, then the best i-evalue. Possible criteria are:
 
     - maximal score (criterion=\"score\")
     - minimal i-evalue (criterion=\"i_eval\")
@@ -2055,6 +2055,11 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
             if criterion == "score":
                 if prev_hit.score < h.score:
                     prev_hit = h
+                # To be tested before adding it !
+                #if prev_hit.score == h.score:
+                #    print prev_hit
+                #    print h
+                #    prev_hit = get_best_hits([prev_hit,h], False, i_eval)[0]
             elif criterion == "i_eval":
                 if getattr(prev_hit, 'i_eval') > getattr(h, 'i_eval'):
                     prev_hit = h
