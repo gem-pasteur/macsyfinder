@@ -2,6 +2,7 @@
 # Logs and databases #
 ######################
 *\.log
+.DS_Store
 
 ####################
 # Eclipse metadata #
@@ -14,6 +15,8 @@
 # vim files #
 #############
 *\.swp
+*~
+\#*\#
 
 ##########################
 # Python complied source #
@@ -23,3 +26,15 @@
 build/
 dist/
 doc/_build/
+
+###################################
+# MacsyFinder results directories #
+###################################
+bin/macsyfinder-*
+bin/log*
+bin/prru_psae_acav.*
+bin/script.csh
+log*
+test/datatest/DEF_svg/
+bin/formatdb.err
+macsypy/*_svg
