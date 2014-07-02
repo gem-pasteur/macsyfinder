@@ -727,7 +727,7 @@ require_packages = []
 
 
 setup(name        = 'macsyfinder',
-      version     =  time.strftime("1.0"),
+      version     =  time.strftime("1.0.RC2"),
       description  = """MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
       author  = "Sophie Abby, Bertrand Néron",
