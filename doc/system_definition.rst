@@ -27,7 +27,7 @@ Three distinct types of components can be used to model a given system content, 
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
 
-    .. image:: images/FigureS1_figure_system_no_mb.*
+    .. image:: images/Figure1_figure_system_no_mb-new3_2col.*
      :height: 500px
      :align: left
 
