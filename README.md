@@ -6,7 +6,8 @@ MacSyFinder - Detection of macromolecular systems in protein datasets using syst
 
 Download distribution
 ---------------------
- [![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.png)](http://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.RC2.tar.gz)
+ [![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.png)](http://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.0-RC3.tar.gz)
+ 
 
 
 Installation from distribution
