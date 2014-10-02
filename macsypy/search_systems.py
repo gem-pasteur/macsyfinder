@@ -1363,8 +1363,11 @@ class systemDetectionReportOrdered(systemDetectionReport):
         systems = []
         for so in self._systems_occurences_list:
             system = {}
-            repliconName, systemName, occurenceNumber = so.unique_name.split('_')
-            occurenceNumber = int(occurenceNumber)
+            systemName = so.system_name
+            fields = so.unique_name.split('_')
+            repliconName = fields[0]
+            occurenceNumber = int(fields[len(fields)-1])
+            
             system['occurenceNumber'] = occurenceNumber
             system['name'] = systemName
             system['id'] = so.unique_name
