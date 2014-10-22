@@ -12,7 +12,7 @@ http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 Download distribution
 ---------------------
-[![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.png)](http://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.0-RC3.tar.gz)
+[![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.png)](http://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.1.tar.gz)
  
 
 Installation from distribution
