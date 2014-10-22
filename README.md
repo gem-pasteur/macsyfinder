@@ -42,7 +42,7 @@ See the INSTALL file for more details.
 Installation from repository
 ----------------------------
 
- Be careful MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
+ Please be careful, MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
  
  
 Unit tests with Travis-CI
