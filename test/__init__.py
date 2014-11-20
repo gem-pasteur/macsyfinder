@@ -13,6 +13,7 @@
 
 
 import os
+import platform
 
 
 #########################
@@ -26,6 +27,8 @@ def which(name, flags=os.X_OK):
         return []
     for p in os.environ.get('PATH', '').split(os.pathsep):
         p = os.path.join(p, name)
+        if platform.system() == 'Windows':
+            p += '.exe'
         if os.access(p, flags):
             result.append(p)
             break
