@@ -571,6 +571,19 @@ class Config(object):
             raise err
         #build_indexes is not meaningfull in configuration file
         options['build_indexes']  = cmde_line_values['build_indexes']
+
+        # close filehandles before returning or they will become unreachable
+        # and stay open, blocking file deletion in rmtree calls in Windows
+        handlers = logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            logger.removeHandler(handler)
+
+        handlers = out_logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            logger.removeHandler(handler)
+
         return options
 
 
