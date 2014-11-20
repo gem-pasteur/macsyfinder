@@ -218,7 +218,10 @@ class Test(unittest.TestCase):
     def test_build_not_writable(self):
         idx = Indexes(self.cfg)
         idx_dir = os.path.join( os.path.dirname(self.cfg.sequence_db))
-        os.chmod(idx_dir, 0000)
-        self.assertRaises(IOError, idx.build)
-        os.chmod(idx_dir, 0777)    
+
+        # Skip test on Windows, since setting the folder permissions is not affecting files inside
+        if platform.system() != 'Windows':
+            os.chmod(idx_dir, 0000)
+            self.assertRaises(IOError, idx.build)
+            os.chmod(idx_dir, 0777)
 
