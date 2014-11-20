@@ -564,6 +564,19 @@ class Config(object):
             self._log.error(str(err), exc_info= True)
             if working_dir:
                 import shutil
+
+                # close filehandles before returning or they will become unreachable
+                # and stay open, blocking file deletion in rmtree calls in Windows
+                handlers = logger.handlers[:]
+                for handler in handlers:
+                    handler.close()
+                    logger.removeHandler(handler)
+
+                handlers = out_logger.handlers[:]
+                for handler in handlers:
+                    handler.close()
+                    logger.removeHandler(handler)
+
                 try:
                     shutil.rmtree(working_dir)
                 except:
