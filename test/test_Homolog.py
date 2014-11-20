@@ -17,6 +17,8 @@
 import os
 import unittest
 import shutil
+import tempfile
+import platform
 from macsypy.gene import Homolog
 from macsypy.gene import Gene
 from macsypy.system import System
@@ -34,13 +36,13 @@ class Test(unittest.TestCase):
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = "/tmp",
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = "",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
                            )
         self.profile_registry = ProfilesRegistry(self.cfg)
         
