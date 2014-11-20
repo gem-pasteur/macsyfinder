@@ -584,10 +584,19 @@ class Config(object):
         #build_indexes is not meaningfull in configuration file
         options['build_indexes']  = cmde_line_values['build_indexes']
 
-        # keep loggers in a place where they can be accessed to
-        # close the filehandles when necessary (like tearDown)
-        options['logger'] = logger
-        options['out_logger'] = out_logger
+
+        # close filehandles before returning or they will become unreachable
+        # and stay open, blocking file deletion in rmtree calls in Windows
+        handlers = logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            logger.removeHandler(handler)
+
+        handlers = out_logger.handlers[:]
+        for handler in handlers:
+            handler.close()
+            logger.removeHandler(handler)
+
 
         return options
 
