@@ -203,17 +203,19 @@ class Config(object):
             raise ValueError("The results directory (%s) is not writable" % options['res_search_dir'])
 
         working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))
-        try:
-            os.mkdir(working_dir)
-        except OSError, err:
-            raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
+        if not os.path.isdir(working_dir):
+            try:
+                os.mkdir(working_dir)
+            except OSError, err:
+                raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
         hmmer_path = os.path.join(working_dir, self.hmmer_dir)
-        try:
-            os.mkdir(hmmer_path)
-        except OSError, err:
-            raise ValueError("cannot create MacSyFinder hmmer directory %s : %s" % (hmmer_path, err))
+        if not os.path.isdir(hmmer_path):
+            try:
+                os.mkdir(hmmer_path)
+            except OSError, err:
+                raise ValueError("cannot create MacSyFinder hmmer directory %s : %s" % (hmmer_path, err))
 
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
