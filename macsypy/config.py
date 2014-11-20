@@ -563,8 +563,8 @@ class Config(object):
             if working_dir:
                 import shutil
 
-                # close loggers filehandles, so they don't block file deletion
-                # in shutil.rmtree calls in Windows
+                # close filehandles before returning or they will become unreachable
+                # and stay open, blocking file deletion in rmtree calls in Windows
                 handlers = logger.handlers[:]
                 for handler in handlers:
                     handler.close()
@@ -573,7 +573,8 @@ class Config(object):
                 handlers = out_logger.handlers[:]
                 for handler in handlers:
                     handler.close()
-                    out_logger.removeHandler(handler)
+                    logger.removeHandler(handler)
+
 
                 try:
                     shutil.rmtree(working_dir)
