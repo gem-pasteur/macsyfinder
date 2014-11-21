@@ -17,6 +17,8 @@
 import os
 import unittest
 import shutil
+import tempfile
+import platform
 from macsypy.system import system_bank
 from macsypy.system import System
 from macsypy.config import Config
@@ -34,17 +36,32 @@ class Test(unittest.TestCase):
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = "/tmp",
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = "",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
                            )
 
     def tearDown(self):
-        shutil.rmtree(self.cfg.working_dir)
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        handlers = self.cfg.options['logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['logger'].removeHandler(handler)
+
+        handlers = self.cfg.options['out_logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['out_logger'].removeHandler(handler)
+
+        try:
+            shutil.rmtree(self.cfg.working_dir)
+        except:
+            pass
 
     def test_add_get_system(self):
         system_name= 'foo'
