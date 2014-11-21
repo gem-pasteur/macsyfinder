@@ -565,8 +565,8 @@ class Config(object):
             if working_dir:
                 import shutil
 
-                # close filehandles before returning or they will become unreachable
-                # and stay open, blocking file deletion in rmtree calls in Windows
+                # close loggers filehandles, so they don't block file deletion
+                # in shutil.rmtree calls in Windows
                 handlers = logger.handlers[:]
                 for handler in handlers:
                     handler.close()
@@ -575,7 +575,7 @@ class Config(object):
                 handlers = out_logger.handlers[:]
                 for handler in handlers:
                     handler.close()
-                    logger.removeHandler(handler)
+                    out_logger.removeHandler(handler)
 
                 try:
                     shutil.rmtree(working_dir)
@@ -585,17 +585,10 @@ class Config(object):
         #build_indexes is not meaningfull in configuration file
         options['build_indexes']  = cmde_line_values['build_indexes']
 
-        # close filehandles before returning or they will become unreachable
-        # and stay open, blocking file deletion in rmtree calls in Windows
-        handlers = logger.handlers[:]
-        for handler in handlers:
-            handler.close()
-            logger.removeHandler(handler)
-
-        handlers = out_logger.handlers[:]
-        for handler in handlers:
-            handler.close()
-            logger.removeHandler(handler)
+        # keep loggers in a place where they can be accessed to
+        # close the filehandles when necessary (like tearDown)
+        options['logger'] = logger
+        options['out_logger'] = out_logger
 
         return options
 

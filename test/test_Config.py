@@ -25,10 +25,25 @@ class Test(unittest.TestCase):
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except:
-            pass
+        # not all 'self' on this module have a 'cfg' attribute, so check first
+        if hasattr(self, 'cfg'):
+            # close loggers filehandles, so they don't block file deletion
+            # in shutil.rmtree calls in Windows
+            handlers = self.cfg.options['logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                self.cfg.options['logger'].removeHandler(handler)
+
+            handlers = self.cfg.options['out_logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                self.cfg.options['out_logger'].removeHandler(handler)
+
+            try:
+                shutil.rmtree(self.cfg.working_dir)
+            except:
+                pass
+
 
     def test_build_indexes(self):
         self.cfg = Config(cfg_file = "nimportnaoik",
@@ -306,6 +321,26 @@ class Test(unittest.TestCase):
             new_cfg = Config(previous_run = cfg_base.working_dir)
             self.assertEqual(new_cfg.previous_run, cfg_base.working_dir)
         finally:
+            # close loggers filehandles, so they don't block file deletion
+            # in shutil.rmtree calls in Windows
+            handlers = cfg_base.options['logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                cfg_base.options['logger'].removeHandler(handler)
+            handlers = cfg_base.options['out_logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                cfg_base.options['out_logger'].removeHandler(handler)
+
+            handlers = new_cfg.options['logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                new_cfg.options['logger'].removeHandler(handler)
+            handlers = new_cfg.options['out_logger'].handlers[:]
+            for handler in handlers:
+                handler.close()
+                new_cfg.options['out_logger'].removeHandler(handler)
+
             try:
                 shutil.rmtree(cfg_base.working_dir)
             except:
