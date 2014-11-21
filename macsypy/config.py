@@ -562,6 +562,19 @@ class Config(object):
             self._log.error(str(err), exc_info= True)
             if working_dir:
                 import shutil
+
+                # close loggers filehandles, so they don't block file deletion
+                # in shutil.rmtree calls in Windows
+                handlers = logger.handlers[:]
+                for handler in handlers:
+                    handler.close()
+                    logger.removeHandler(handler)
+
+                handlers = out_logger.handlers[:]
+                for handler in handlers:
+                    handler.close()
+                    out_logger.removeHandler(handler)
+
                 try:
                     shutil.rmtree(working_dir)
                 except:
@@ -569,6 +582,12 @@ class Config(object):
             raise err
         #build_indexes is not meaningfull in configuration file
         options['build_indexes']  = cmde_line_values['build_indexes']
+
+        # keep loggers in a place where they can be accessed to
+        # close the filehandles when necessary (like tearDown)
+        options['logger'] = logger
+        options['out_logger'] = out_logger
+
         return options
 
 

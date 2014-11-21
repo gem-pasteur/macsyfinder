@@ -46,8 +46,22 @@ class Test(unittest.TestCase):
         
 
     def tearDown(self):
-        shutil.rmtree(self.cfg.working_dir)
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        handlers = self.cfg.options['logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['logger'].removeHandler(handler)
 
+        handlers = self.cfg.options['out_logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['out_logger'].removeHandler(handler)
+
+        try:
+            shutil.rmtree(self.cfg.working_dir)
+        except:
+            pass
 
     def test_gene_ref(self):
         system = System(self.cfg, "T2SS", 10)

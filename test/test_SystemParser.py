@@ -49,7 +49,22 @@ class Test(unittest.TestCase):
         self.parser = SystemParser(self.cfg, self.system_bank, self.gene_bank)
 
     def tearDown(self):
-        shutil.rmtree(self.cfg.working_dir)
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        handlers = self.cfg.options['logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['logger'].removeHandler(handler)
+
+        handlers = self.cfg.options['out_logger'].handlers[:]
+        for handler in handlers:
+            handler.close()
+            self.cfg.options['out_logger'].removeHandler(handler)
+
+        try:
+            shutil.rmtree(self.cfg.working_dir)
+        except:
+            pass
 
     def test_system_to_parse(self):
         #system_2_detect = ['system_1']
