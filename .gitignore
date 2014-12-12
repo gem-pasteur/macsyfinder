@@ -38,3 +38,8 @@ log*
 test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
+
+##############################
+# MacsyFinder generated file #
+##############################
+MANIFEST
