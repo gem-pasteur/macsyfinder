@@ -115,7 +115,8 @@ class Config(object):
         :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
         :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date}, but this option 
-         allow to override this behavior.
+         allow to override this behavior. If out-dir option is set out-dir wiil be created if outdir already exists it must be empty.
+         if out-dir and res-search-dir are sets res-search-dir will be ignore.  
         :type out_dir: string
         :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
