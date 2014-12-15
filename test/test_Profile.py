@@ -32,6 +32,8 @@ class Test(unittest.TestCase):
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def setUp(self):
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
@@ -53,6 +55,8 @@ class Test(unittest.TestCase):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
         logging.shutdown
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
