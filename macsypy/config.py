@@ -174,6 +174,7 @@ class Config(object):
 
         self.options = self._validate(cmde_line_opt, values)
 
+
     def _validate(self, cmde_line_opt, cmde_line_values):
         """
         Get all configuration values and check the validity of their values.
@@ -235,7 +236,7 @@ class Config(object):
             log_handler = logging.FileHandler(log_file)
             options['log_file'] = log_file
         except Exception , err:
-            if not isinstance(err, NoOptionError):
+            if not isinstance(err, (NoOptionError, NoSectionError)):
                 log_error.append(err)
             try:
                 log_file = os.path.join( options['working_dir'], 'macsyfinder.log' )
@@ -245,7 +246,6 @@ class Config(object):
                 log_error.append(err)
                 log_handler = logging.StreamHandler(sys.stderr)
                 options['log_file'] = ''
-        
         handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
         log_handler.setFormatter(handler_formatter)
         log_handler.setLevel(log_level)
@@ -256,7 +256,7 @@ class Config(object):
         logger = logging.getLogger('macsyfinder')
         logger.setLevel(log_level)
         logger.addHandler(log_handler)
-
+        
         f_out_log_handler = logging.FileHandler(os.path.join(working_dir, 'macsyfinder.out'))
         f_out_handler_formatter = logging.Formatter("%(message)s")
         f_out_log_handler.setFormatter(f_out_handler_formatter)
@@ -275,6 +275,7 @@ class Config(object):
         
 
         self._log = logging.getLogger('macsyfinder.config')
+        
         for error in log_error:
             self._log.warn(error)
         try:
@@ -560,43 +561,18 @@ class Config(object):
 
         except ValueError, err:
             self._log.error(str(err), exc_info= True)
+            logging.shutdown()
+            
             if working_dir:
                 import shutil
-
-                # close filehandles before returning or they will become unreachable
-                # and stay open, blocking file deletion in rmtree calls in Windows
-                handlers = logger.handlers[:]
-                for handler in handlers:
-                    handler.close()
-                    logger.removeHandler(handler)
-
-                handlers = out_logger.handlers[:]
-                for handler in handlers:
-                    handler.close()
-                    logger.removeHandler(handler)
-
-
                 try:
                     shutil.rmtree(working_dir)
                 except:
                     pass
+                
             raise err
         #build_indexes is not meaningfull in configuration file
         options['build_indexes']  = cmde_line_values['build_indexes']
-
-
-        # close filehandles before returning or they will become unreachable
-        # and stay open, blocking file deletion in rmtree calls in Windows
-        handlers = logger.handlers[:]
-        for handler in handlers:
-            handler.close()
-            logger.removeHandler(handler)
-
-        handlers = out_logger.handlers[:]
-        for handler in handlers:
-            handler.close()
-            logger.removeHandler(handler)
-
 
         return options
 

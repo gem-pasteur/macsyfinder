@@ -19,6 +19,7 @@ import unittest
 import shutil
 import tempfile
 import platform
+import logging
 from macsypy.config import Config
 from macsypy.database import RepliconDB, Indexes, RepliconInfo
 
@@ -94,15 +95,7 @@ class Test(unittest.TestCase):
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
-        handlers = self.cfg.options['logger'].handlers[:]
-        for handler in handlers:
-            handler.close()
-            self.cfg.options['logger'].removeHandler(handler)
-
-        handlers = self.cfg.options['out_logger'].handlers[:]
-        for handler in handlers:
-            handler.close()
-            self.cfg.options['out_logger'].removeHandler(handler)
+        logging.shutdown()
 
         try:
             shutil.rmtree(self.cfg.working_dir)
