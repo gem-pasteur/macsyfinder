@@ -41,7 +41,7 @@ class Config(object):
     options = ( 'cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file', 
                 'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci', 
                 'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
-                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 
+                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
     def __init__(self, cfg_file = "",
@@ -65,6 +65,7 @@ class Config(object):
                 profile_dir = None,
                 profile_suffix = None,
                 res_extract_suffix = None,
+                out_dir = None,
                 log_level = None,
                 log_file = None,
                 worker_nb = None,
@@ -113,6 +114,9 @@ class Config(object):
         :type def_dir: string
         :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
+        :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date}, but this option 
+         allow to override this behavior.
+        :type out_dir: string
         :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
         :param res_extract_suffix: the suffix to give to filtered hits output files
@@ -191,23 +195,35 @@ class Config(object):
         if 'sequence_db' in cmde_line_opt:
             cmde_line_opt['file'] = cmde_line_opt['sequence_db']
 
+        
+        # All results and intermediate files are stored in a directory
+        # this directory is specify by out_dir option
+        # for compliance if out_dir option is not specified
+        # the output_dir will be the concatenation of research_dir and "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S")
         try:
-            options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
-        except NoSectionError:
-            if 'res_search_dir' in cmde_line_opt:
-                options['res_search_dir'] = cmde_line_opt['res_search_dir']
+            options['out_dir'] = self.parser.get('directories', 'out_dir', vars = cmde_line_opt)
+            working_dir = options['out_dir']
+        except (NoSectionError, NoOptionError):
+            if 'out_dir' in cmde_line_opt:
+                options['out_dir'] = cmde_line_opt['out_dir']
+                working_dir = options['out_dir']
             else:
-                options['res_search_dir'] = self._defaults['res_search_dir']
-        if not os.path.exists(options['res_search_dir']):
-            raise ValueError( "%s: This results directory does not exist" % options['res_search_dir'])
-        if not os.access(options['res_search_dir'], os.W_OK):
-            raise ValueError("The results directory (%s) is not writable" % options['res_search_dir'])
-
-        working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))
-        try:
-            os.mkdir(working_dir)
-        except OSError, err:
-            raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
+                try:
+                    options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars = cmde_line_opt)
+                except (NoSectionError, NoOptionError):
+                    if 'res_search_dir' in cmde_line_opt:
+                        options['res_search_dir'] = cmde_line_opt['res_search_dir']
+                    else:
+                        options['res_search_dir'] = self._defaults['res_search_dir']
+                working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))  
+        
+        if  os.path.exists(working_dir) and os.listdir(working_dir):
+            raise ValueError( "%s: This results directory already exists and is not empty" % working_dir)
+        elif not os.path.exists(working_dir):
+            try:
+                os.mkdir(working_dir)
+            except OSError, err:
+                raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
         hmmer_path = os.path.join(working_dir, self.hmmer_dir)
@@ -271,8 +287,6 @@ class Config(object):
         out_logger.setLevel(logging.INFO)
         out_logger.addHandler(f_out_log_handler)
         out_logger.addHandler(c_out_log_handler)
-
-        
 
         self._log = logging.getLogger('macsyfinder.config')
         
