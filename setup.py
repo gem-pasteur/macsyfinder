@@ -5,7 +5,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -242,7 +242,7 @@ class install_macsyfinder(install):
 
     def run(self):
         inst = self.distribution.command_options.get('install')
-        vars_2_subst = {'PREFIX': inst.get('prefix', ''),
+        vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
                         'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
                         'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder'),

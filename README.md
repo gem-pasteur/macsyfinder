@@ -48,3 +48,11 @@ Installation from repository
 Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+
+
+Documentation
+-------------
+
+You will find complete documentation for setting up your project at the Read the Docs site.
+
+[![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
