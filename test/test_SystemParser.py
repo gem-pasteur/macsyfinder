@@ -35,9 +35,13 @@ class Test(unittest.TestCase):
         l.manager.loggerDict.clear()
         
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        
+        ## workaround to avoid ugly warning messages
+        ## "No handlers could be found for logger "macsyfinder.masypy.system_parser"
         from macsypy.system_parser import _log
         log_handler = logging.FileHandler(log_file)
         _log.addHandler(log_handler)
+        ## workaround end ##
         
         self.cfg = Config(sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type = "gembase", 
