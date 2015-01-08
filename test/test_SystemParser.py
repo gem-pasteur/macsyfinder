@@ -33,6 +33,16 @@ class Test(unittest.TestCase):
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
+        
+        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        
+        ## workaround to avoid ugly warning messages
+        ## "No handlers could be found for logger "macsyfinder.masypy.system_parser"
+        from macsypy.system_parser import _log
+        log_handler = logging.FileHandler(log_file)
+        _log.addHandler(log_handler)
+        ## workaround end ##
+        
         self.cfg = Config(sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type = "gembase", 
                           hmmer_exe = "",
@@ -45,14 +55,15 @@ class Test(unittest.TestCase):
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                           log_file = log_file
                            )
         self.system_bank = SystemBank()
         self.system_bank._system_bank = {}
         self.gene_bank = GeneBank()
         self.gene_bank._genes_bank = {}
         self.parser = SystemParser(self.cfg, self.system_bank, self.gene_bank)
-
+        
+        
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -78,7 +89,7 @@ class Test(unittest.TestCase):
         with self.assertRaises(MacsypyError) as context:
             #self.parser.system_to_parse(system_2_detect)
             self.parser.system_to_parse(system_2_detect, parsed)
-
+  
     def test_parse(self):
         system_2_detect = ['system_1']
         #system_2_parse = self.parser.system_to_parse(system_2_detect)
@@ -87,10 +98,10 @@ class Test(unittest.TestCase):
         system_2_parse = self.parser.system_to_parse(system_2_detect_dict, parsed)
         self.parser.parse(system_2_detect)
         self.assertEqual(len(self.system_bank), 2)
-
+ 
         s2 = self.system_bank['system_2']
         self.assertEqual(s2.name, 'system_2')
-
+ 
         s1 = self.system_bank['system_1']
         self.assertEqual(s1.name, 'system_1')
         self.assertEqual(s1.inter_gene_max_space, 20)
@@ -117,56 +128,56 @@ class Test(unittest.TestCase):
         self.assertEqual(len(s1.forbidden_genes), 1)
         self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
         self.assertEqual(s1.forbidden_genes[0].system, self.system_bank['system_2'])
-
+ 
     def test_wo_presence(self):
         system_2_detect = ['fail_wo_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, "Invalid system definition 'fail_wo_presence': gene without presence")
-
+ 
     def test_invalid_presence(self):
         system_2_detect = ['fail_invalid_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, "Invalid system 'fail_invalid_presence' definition: presence value must be either [mandatory, accessory, forbidden] not foo_bar")
-
+ 
     def test_gene_no_name(self):
         system_2_detect = ['gene_no_name']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,"Invalid system definition 'gene_no_name': gene without a name")
-
+ 
     def test_invalid_aligned(self):
         system_2_detect = ['invalid_aligned']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene \'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
- 
+  
     def test_invalid_homolg(self):
         system_2_detect = ['invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_homolog\': The gene \'foo_bar\' described as homolog of \'sctJ\' in system \'invalid_homolog\' is not in the "GeneBank" gene factory')
-
+ 
     def test_bad_sys_ref(self):
         system_2_detect = ['bad_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         #self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ' with system_ref 'system_1' has an other system in bank (bad_sys_ref)")
         self.assertEqual(context.exception.message, "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ_FLG' with system_ref 'system_2' has an other system in bank (bad_sys_ref)")
-
+ 
     def test_bad_min_genes_required(self):
         system_2_detect = ['bad_min_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
-
+ 
     def test_bad_min_mandatory_genes_required(self):
         system_2_detect = ['bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'system \'bad_min_mandatory_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
-
+ 
     def test_bad_min_mandatory_genes_required_2(self):
         system_2_detect = ['bad_min_mandatory_genes_required_2']
         with self.assertRaises(SystemInconsistencyError) as context:

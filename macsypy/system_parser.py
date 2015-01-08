@@ -15,7 +15,7 @@
 import os
 import xml.etree.ElementTree as ET
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger('macsyfinder')
 
 from system import System
 from gene import Gene
@@ -76,7 +76,7 @@ class SystemParser(object):
                     msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
                     _log.critical(msg)
                     raise MacsypyError(msg)
-                    
+                 
             return self.system_to_parse(sys_2_parse, parsed_systems)
 
     def _create_system(self, system_name, system_node):
@@ -380,14 +380,16 @@ class SystemParser(object):
         :param systems_2_detect: a list with the names of the systems to parse
         :type systems_2_detect: list of string
         """
-        #systems_2_parse = self.system_to_parse(systems_2_detect)  # une ouverture fermeture de fichier /systeme
+        # one opening/closing file / system
         parsed_systems = {}
         systems_2_detect_dict = {}
         for s in systems_2_detect:
             systems_2_detect_dict[s] = None
-            
-        systems_2_parse = self.system_to_parse(systems_2_detect_dict, parsed_systems)  # une ouverture fermeture de fichier /systeme
+        
+        #one opening /closing file /system            
+        systems_2_parse = self.system_to_parse(systems_2_detect_dict, parsed_systems)
         msg = "\nSystem(s) to parse (recursive inclusion of 'system_ref'):"
+        
         for s in systems_2_parse:
             msg += "\n\t-%s"%s
         _log.info(msg)
@@ -403,8 +405,8 @@ class SystemParser(object):
             genes = self._create_genes(sys, system_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
-        #for system_name in systems_2_detect: #une ouverture par fichier # OLD version: only systems to detect were filled appropriately
-        for system_name in systems_2_parse: #une ouverture par fichier. # Now, all systems related (e.g. via system_ref) to the one to detect are filled appropriately. 
+        # Now, all systems related (e.g. via system_ref) to the one to detect are filled appropriately.
+        for system_name in systems_2_parse:   
             system = self.system_bank[system_name]
             path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             tree = ET.parse(path)
