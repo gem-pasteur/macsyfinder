@@ -35,6 +35,14 @@ class Test(unittest.TestCase):
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
+        
+        #add only one handler to the macsypy logger
+        from macsypy.gene import _log
+        macsy_log = _log.parent
+        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_handler = logging.FileHandler(log_file)
+        macsy_log.addHandler(log_handler)
+        
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
@@ -47,7 +55,7 @@ class Test(unittest.TestCase):
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                           log_file = log_file
                            )
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
