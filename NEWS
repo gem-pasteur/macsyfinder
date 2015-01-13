@@ -1,0 +1,11 @@
+CHANGES IN RELEASE 1.1
+
+# Fix https://github.com/gem-pasteur/macsyfinder/issues/1
+  unit tests to fix "too many file open" 
+  
+# add portability for windows
+  thank's to Francisco J. Ossandon
+    
+# add new option --dir-out 
+  Path to the directory where to store results. 
+  If out-dir is specified res-search-dir will be ignored.
