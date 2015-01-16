@@ -72,7 +72,7 @@ class SystemParser(object):
                     sys_ref = root.findall(".//gene[@system_ref]")
                     for gene_node in sys_ref:
                         sys_2_parse[gene_node.get("system_ref")] = None
-                except Exception, err:
+                except Exception as err:
                     msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
                     _log.critical(msg)
                     raise MacsypyError(msg)

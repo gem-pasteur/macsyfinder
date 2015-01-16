@@ -25,7 +25,7 @@ if 'MACSY_HOME' in os.environ:
         sys.path.insert(0, MACSY_HOME)
 try:
     from macsypy.config import Config
-except ImportError , err:
+except ImportError as err:
     msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format( err )
     sys.exit( msg )
 

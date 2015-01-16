@@ -199,7 +199,7 @@ class Indexes(object):
                                   stderr = err_file ,
                                   close_fds = False ,
                                   )
-            except Exception, err:
+            except Exception as err:
                 msg = "unable to index the sequence dataset : %s : %s" % (command, err)
                 _log.critical( msg, exc_info = True )
                 raise err
@@ -223,7 +223,7 @@ class Indexes(object):
                     for seqid, comment, length in f_iter:
                         seq_nb += 1
                         my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
-        except Exception, err:
+        except Exception as err:
             msg = "unable to index the sequence dataset: %s : %s" % (self.cfg.sequence_db, err)
             _log.critical(msg, exc_info = True)
             raise err

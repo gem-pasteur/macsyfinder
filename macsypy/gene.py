@@ -558,7 +558,7 @@ class Profile(object):
                                    stderr = err_file ,
                                    close_fds = False ,
                                    )
-                except Exception, err:
+                except Exception as err:
                     msg = "Hmmer execution failed: command = %s : %s" % ( command , err)
                     _log.critical( msg, exc_info = True )
                     raise err

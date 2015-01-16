@@ -209,7 +209,7 @@ class HMMReport(object):
                                                 cov_gene,
                                                 begin,
                                                 end))
-                    except ValueError, err:
+                    except ValueError as err:
                         msg = "Invalid line to parse :{0}:{1}".format(line, err)
                         _log.debug(msg)
                         raise ValueError(msg)

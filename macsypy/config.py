@@ -223,14 +223,14 @@ class Config(object):
         elif not os.path.exists(working_dir):
             try:
                 os.mkdir(working_dir)
-            except OSError, err:
+            except OSError as err:
                 raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
         options['working_dir'] = working_dir
 
         hmmer_path = os.path.join(working_dir, self.hmmer_dir)
         try:
             os.mkdir(hmmer_path)
-        except OSError, err:
+        except OSError as err:
             raise ValueError("cannot create MacSyFinder hmmer directory %s : %s" % (hmmer_path, err))
 
         try:
@@ -252,14 +252,14 @@ class Config(object):
             log_file = self.parser.get('general', 'log_file', vars = cmde_line_opt)
             log_handler = logging.FileHandler(log_file)
             options['log_file'] = log_file
-        except Exception , err:
+        except Exception as err:
             if not isinstance(err, (NoOptionError, NoSectionError)):
                 log_error.append(err)
             try:
                 log_file = os.path.join( options['working_dir'], 'macsyfinder.log' )
                 log_handler = logging.FileHandler(log_file)
                 options['log_file'] = log_file
-            except Exception , err:
+            except Exception as err:
                 log_error.append(err)
                 log_handler = logging.StreamHandler(sys.stderr)
                 options['log_file'] = ''
@@ -574,7 +574,7 @@ class Config(object):
                 msg = "the number of worker must be an integer"
                 raise ValueError( msg)
 
-        except ValueError, err:
+        except ValueError as err:
             self._log.error(str(err), exc_info= True)
             logging.shutdown()
             

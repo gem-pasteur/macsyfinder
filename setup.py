@@ -562,11 +562,11 @@ class Uninstall(Command):
                         if not self.dry_run:
                             os.unlink(path)
                         log.info("remove file {}".format(path))
-                    except Exception, err:
+                    except Exception as err:
                         pass
                     _dir = os.path.dirname(path)
                     clean_tree(_dir)
-        except IOError, err:
+        except IOError as err:
             msg = "Cannot unistall macsyfinder.\n"
             if err.errno == os.errno.ENOENT:
                 msg += "Cannot access \"{}\": No such file".format(self.distribution.uninstall_files) 
@@ -709,11 +709,11 @@ def get_install_doc_dir(inst):
 def subst_vars(src, dst, vars):
     try:
         src_file = open(src, "r")
-    except os.error, err:
+    except os.error as err:
         raise DistutilsFileError, "could not open '%s': %s" % (src, err)
     try:
         dest_file = open(dst, "w")
-    except os.error, err:
+    except os.error as err:
         raise DistutilsFileError, "could not create '%s': %s" % (dst, err)
     with src_file:
         with dest_file:
