@@ -122,7 +122,7 @@ class Test(unittest.TestCase):
                    }
         with open(self.cfg.topology_file , 'w') as f:
             for k, v in db_send.items():
-                f.write('%s : %s\n' % (k,v))
+                f.write('{0} : {1}\n'.format(k,v))
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
         rcv_topo = db._fill_topology()

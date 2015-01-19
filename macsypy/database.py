@@ -90,7 +90,7 @@ class Indexes(object):
             #so it must be writable
             #if the directory is not writable, formatdb do a Segmentation fault
             if not os.access(index_dir, os.R_OK|os.W_OK):
-                msg = "cannot build indexes, (%s) is not writable" % index_dir
+                msg = "cannot build indexes, ({0}) is not writable".format(index_dir)
                 _log.critical(msg)
                 raise IOError(msg)
 
@@ -131,7 +131,7 @@ class Indexes(object):
         idx = []
         file_nb = 0
         for suffix in suffixes:
-            index_files = glob( "%s*%s" % (self._fasta_path, suffix))
+            index_files = glob( "{0}*{1}".format(self._fasta_path, suffix))
             nb_of_index = len(index_files)
             if suffix != '.pal':
                 if file_nb and file_nb != nb_of_index:
@@ -172,21 +172,21 @@ class Indexes(object):
         """
         index_dir = os.path.dirname(self.cfg.sequence_db)
         if self.cfg.index_db_exe.find('makeblast') != -1:
-            command = "%s -title %s -in %s -dbtype prot -parse_seqids" % (self.cfg.index_db_exe,
-                                                                      self.name,
-                                                                      self.cfg.sequence_db)
+            command = "{0} -title {1} -in {2} -dbtype prot -parse_seqids".format(self.cfg.index_db_exe,
+                                                                                 self.name,
+                                                                                 self.cfg.sequence_db)
         elif self.cfg.index_db_exe.find('formatdb') != -1:
             # -t  Title for database file [String]
             # -i Input file(s) for formatting [File In]
             # -p T Type of file = protein
             # -o T Parse SeqId and create indexes.
             # -s T Create indexes limited only to accessions
-            command = "%s -t %s -i %s -p T -o T -s T" % ( self.cfg.index_db_exe,
-                                                      self.name,
-                                                      self.cfg.sequence_db
-                                                          )
+            command = "{db_indexer} -t {db_name} -i {db_file} -p T -o T -s T".format(db_indexer = self.cfg.index_db_exe,
+                                                                                     db_name = self.name,
+                                                                                     db_file = self.cfg.sequence_db
+                                                                                    )
         else:
-            raise MacsypyError("%s is not supported to index the sequence dataset. Please use makeblastdb or formatdb." % self.cfg.sequence_db)
+            raise MacsypyError("{0} is not supported to index the sequence dataset. Please use makeblastdb or formatdb.".format(self.cfg.sequence_db))
 
         _log.debug("hmmer index command: {0}".format(command))
         err_path = os.path.join(index_dir, "formatdb.err")
@@ -200,7 +200,7 @@ class Indexes(object):
                                   close_fds = False ,
                                   )
             except Exception as err:
-                msg = "unable to index the sequence dataset : %s : %s" % (command, err)
+                msg = "unable to index the sequence dataset : {0} : {1}".fomat(command, err)
                 _log.critical( msg, exc_info = True )
                 raise err
             return formatdb
@@ -222,9 +222,9 @@ class Indexes(object):
                     seq_nb = 0
                     for seqid, comment, length in f_iter:
                         seq_nb += 1
-                        my_base.write("%s;%d;%d\n" % (seqid, length, seq_nb))
+                        my_base.write("{seq_id};{length:d};{seq_nb:d}\n".format(seq_id = seqid, length = length, seq_nb = seq_nb))
         except Exception as err:
-            msg = "unable to index the sequence dataset: %s : %s" % (self.cfg.sequence_db, err)
+            msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db, err)
             _log.critical(msg, exc_info = True)
             raise err
 

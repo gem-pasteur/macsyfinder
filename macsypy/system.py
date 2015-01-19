@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -75,7 +75,7 @@ class SystemBank(object):
         :raise: KeyError if a system with the same name is already registered.
         """
         if system in self._system_bank:
-            raise KeyError, "a system named %s is already registered in the systems' bank" % system.name
+            raise KeyError, "a system named {0} is already registered in the systems' bank".format(system.name)
         else:
             self._system_bank[system.name] = system
 
@@ -87,7 +87,8 @@ class System(object):
     Handle a secretion system.
     """
 
-    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, min_genes_required = None, max_nb_genes = None, multi_loci = False):
+    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, 
+                 min_genes_required = None, max_nb_genes = None, multi_loci = False):
         """
         :param cfg: the configuration object
         :type cfg: :class:`macsypy.config.Config` object

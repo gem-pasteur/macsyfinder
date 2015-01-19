@@ -45,7 +45,7 @@ def run(lib, tests, verbosity = 0):
                 elif os.path.isdir(test):  
                     suite.addTests(unittest.TestLoader().discover(test)) 
             else:
-                sys.stderr.write(  "%s : no such file or directory\n" % test) 
+                sys.stderr.write(  "{0} : no such file or directory\n".format(test)) 
 
     res = unittest.TextTestRunner(verbosity = verbosity).run(suite)
     return res

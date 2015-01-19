@@ -56,7 +56,7 @@ to run test, run 'python setup.py test -vv'""")
         chk = VersionPredicate(req)
         ver = '.'.join([str(v) for v in sys.version_info[:2]])
         if not chk.satisfied_by(ver):
-            log.error("Invalid python version, expected %s" % req)
+            log.error("Invalid python version, expected {0}".format(req))
             return False
         return True
 
@@ -65,14 +65,14 @@ to run test, run 'python setup.py test -vv'""")
         try:
             mod = __import__(chk.name)
         except:
-            log.error("Missing mandatory %s python module" % chk.name)
+            log.error("Missing mandatory {0} python module".format(chk.name))
             return False
         for v in [ '__version__', 'version' ]:
             ver = getattr(mod, v, None)
             break
         try:
             if ver and not chk.satisfied_by(ver):
-                log.error("Invalid module version, expected %s" % req)
+                log.error("Invalid module version, expected {0}".format(req))
                 return False
         except:
             pass
@@ -110,7 +110,7 @@ class test(Command):
     user_options = [('verbosity' , 'v' , 'verbosity of outputs (cumulative option ex -vv)', 1),
                     ('build-base=', 'b', "base build directory (default: 'build.build-base')"),
                     ('build-lib=', None, "build directory for all modules (default: 'build.build-lib')"),
-                    ('plat-name=', 'p', "platform name to build for, if supported (default: %s)" % get_platform()),
+                    ('plat-name=', 'p', "platform name to build for, if supported (default: {0})".format(get_platform())),
                     ]
 
     help_options = []
@@ -144,7 +144,7 @@ class test(Command):
                             "--plat-name only supported on Windows (try "
                             "using './configure --help' on your platform)")
 
-        plat_specifier = ".%s-%s" % (self.plat_name, sys.version[0:3])
+        plat_specifier = ".{0}-{1}".format(self.plat_name, sys.version[0:3])
 
         # Make it so Python 2.x and Python 2.x with --with-pydebug don't
         # share the same build directories. Doing so confuses the build
@@ -296,8 +296,7 @@ class install_data(_install_data):
                 f = convert_path(f)
                 if self.warn_dir:
                     self.warn("setup script did not provide a directory for "
-                              "'%s' -- installing right in '%s'" %
-                              (f, self.install_dir))
+                              "'{0}' -- installing right in '{1}'".format((f, self.install_dir)))
                 (out, _) = self.copy_file(f, self.install_dir)
                 self.outfiles.append(out)
             else:
@@ -421,8 +420,7 @@ class install_conf(install_data):
                 f = convert_path(f)
                 if self.warn_dir:
                     self.warn("setup script did not provide a directory for "
-                              "'%s' -- installing right in '%s'" %
-                              (f, self.install_dir))
+                              "'{0}' -- installing right in '{1}'".format(f, self.install_dir))
                 dest =  os.path.join(self.install_dir, f +".new" )
                 (out, _) = self.copy_file(f, self.install_dir)
                 self.outfiles.append(out)
@@ -616,7 +614,7 @@ class sdist_macsy(sdist):
                 self.must_clean = False
                 return
             else:
-                raise RuntimeError( "there already exist a 'macsyview' path in %s and is different than %s"%( os.getcwd(), self.macsyview_dir) )
+                raise RuntimeError( "there already exist a 'macsyview' path in {0} and is different than {1}".format( os.getcwd(), self.macsyview_dir))
         os.symlink( self.macsyview_dir , self.macsyview_link_name )
         self.must_clean = True
 
@@ -710,11 +708,11 @@ def subst_vars(src, dst, vars):
     try:
         src_file = open(src, "r")
     except os.error as err:
-        raise DistutilsFileError, "could not open '%s': %s" % (src, err)
+        raise DistutilsFileError, "could not open '{0}': {1)".format(src, err)
     try:
         dest_file = open(dst, "w")
     except os.error as err:
-        raise DistutilsFileError, "could not create '%s': %s" % (dst, err)
+        raise DistutilsFileError, "could not create '{0}': {1}".format(dst, err)
     with src_file:
         with dest_file:
             for line in src_file:

@@ -36,7 +36,7 @@ def search_genes(genes, cfg):
     worker_nb = cfg.worker_nb
     if not worker_nb:
         worker_nb = len(genes)
-    _log.debug("worker_nb = %d" % worker_nb)
+    _log.debug("worker_nb = {0:d}".format(worker_nb))
     sema = threading.BoundedSemaphore(value = worker_nb)
     all_reports = []
 
@@ -64,7 +64,7 @@ def search_genes(genes, cfg):
         :type sema: a threading.BoundedSemaphore
         """
         with sema:
-            _log.info("search gene %s" % gene.name)
+            _log.info("search gene {0}".format(gene.name))
             profile = gene.profile
             report = profile.execute()
             if report:
@@ -90,7 +90,7 @@ def search_genes(genes, cfg):
         """
         with sema:
             hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
-            _log.info("recover hmm %s" % hmm_old_path)
+            _log.info("recover hmm {0}".format(hmm_old_path))
             hmm_new_path = os.path.join(cfg.working_dir, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
             shutil.copy(hmm_old_path, hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path

@@ -140,7 +140,7 @@ class Config(object):
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
             if not os.path.exists(prev_config):
-                raise ValueError("No config file found in dir %s" % previous_run)
+                raise ValueError("No config file found in dir {}".format(previous_run))
             config_files = [prev_config]
         elif cfg_file:
             config_files = [cfg_file]
@@ -219,19 +219,19 @@ class Config(object):
                 working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))  
         
         if  os.path.exists(working_dir) and os.listdir(working_dir):
-            raise ValueError( "%s: This results directory already exists and is not empty" % working_dir)
+            raise ValueError( "{0}: This results directory already exists and is not empty".format(working_dir))
         elif not os.path.exists(working_dir):
             try:
                 os.mkdir(working_dir)
             except OSError as err:
-                raise ValueError("cannot create MacSyFinder working directory %s : %s" % (working_dir, err))
+                raise ValueError("cannot create MacSyFinder working directory {0} : {1}".format(working_dir, err))
         options['working_dir'] = working_dir
 
         hmmer_path = os.path.join(working_dir, self.hmmer_dir)
         try:
             os.mkdir(hmmer_path)
         except OSError as err:
-            raise ValueError("cannot create MacSyFinder hmmer directory %s : %s" % (hmmer_path, err))
+            raise ValueError("cannot create MacSyFinder hmmer directory {0} : {1}".format(hmmer_path, err))
 
         try:
             log_level = self.parser.get('general', 'log_level', vars = cmde_line_opt)
@@ -298,7 +298,7 @@ class Config(object):
                 if os.path.exists(cmde_line_opt['previous_run']):
                     options['previous_run'] = cmde_line_opt['previous_run']
                 else:
-                    raise ValueError( "previous run directory '%s' was not found" % cmde_line_opt['previous_run'])
+                    raise ValueError( "previous run directory '{0}' was not found".format(cmde_line_opt['previous_run']))
             try:
                 options['sequence_db'] = self.parser.get( 'base', 'file', vars = cmde_line_opt )    
             except NoSectionError:
@@ -308,7 +308,7 @@ class Config(object):
                 else:
                     options['sequence_db'] = sequence_db
             if not os.path.exists(options['sequence_db']):
-                raise ValueError( "%s: The input sequence file does not exist " % options['sequence_db'])
+                raise ValueError( "{0}: The input sequence file does not exist ".format(options['sequence_db']))
 
             options['sequence_db'] = os.path.abspath(options['sequence_db'])
             val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
@@ -318,9 +318,9 @@ class Config(object):
                 try:
                     options['db_type'] = self.parser.get( 'base', 'type') 
                 except (NoSectionError, NoOptionError):
-                    raise ValueError( "You must specify the type of the input dataset (%s)." %  ', '.join(val_4_db_type) )
+                    raise ValueError( "You must specify the type of the input dataset ({0}).".format(', '.join(val_4_db_type)))
             if options['db_type'] not in val_4_db_type:
-                raise ValueError( "Allowed values for the input dataset are : %s" % ', '.join(val_4_db_type))    
+                raise ValueError( "Allowed values for the input dataset are : {0}".format(', '.join(val_4_db_type)))    
             val_4_replicon_topology = ('linear', 'circular')
             if 'replicon_topology' in cmde_line_opt:
                 options['replicon_topology'] = cmde_line_opt['replicon_topology']
@@ -330,9 +330,9 @@ class Config(object):
                 except (NoSectionError, NoOptionError):
                     options['replicon_topology'] =  self._defaults['replicon_topology']
             if options['replicon_topology'] not in val_4_replicon_topology:
-                raise ValueError( "Allowed values for dataset replicon_topology are : %s" % ', '.join(val_4_replicon_topology))         
+                raise ValueError( "Allowed values for dataset replicon_topology are : {0}".format(', '.join(val_4_replicon_topology)))         
             if options['replicon_topology'] == 'circular' and options['db_type'] in ( 'unordered_replicon', 'unordered' ):
-                self._log.warning("As the input dataset type 'db_type' is set to %s, the replicon_topology file was ignored")
+                self._log.warning("As the input dataset type 'db_type' is set to {0}, the replicon_topology file was ignored".format(options['db_type']))
             
             if 'topology_file' in cmde_line_opt:
                 options['topology_file'] = cmde_line_opt['topology_file']
@@ -358,7 +358,7 @@ class Config(object):
                             interval = int( interval)
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
-                            raise ValueError("The 'inter_gene_max_space for system %s must be an integer, but you provided %s in the configuration file" % (system, interval))
+                            raise ValueError("The 'inter_gene_max_space for system {0} must be an integer, but you provided {} in the configuration file".format(system, interval))
                 except StopIteration:
                     raise ValueError( "Invalid syntax for 'inter_gene_max_space': you must have a list of systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
@@ -370,7 +370,7 @@ class Config(object):
                         interval = int( interval)
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
-                        raise ValueError("The 'inter_gene_max_space for system %s must be an integer, but you provided %s on command line" % (system, interval))
+                        raise ValueError("The 'inter_gene_max_space for system {0} must be an integer, but you provided {1} on command line".format(system, interval))
 
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
@@ -384,7 +384,7 @@ class Config(object):
                             quorum_mandatory_genes = int(quorum_mandatory_genes)
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
-                            raise ValueError( "The value for 'min_mandatory_genes_required' option for system %s must be an integer, but you provided %s in the configuration file" % (system, quorum_mandatory_genes))
+                            raise ValueError( "The value for 'min_mandatory_genes_required' option for system {0} must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
                 except StopIteration:
                     raise ValueError( "Invalid syntax for 'min_mandatory_genes_required': you must have a list of systems and corresponding 'min_mandatory_genes_required' separated by spaces")
 
@@ -397,7 +397,7 @@ class Config(object):
                         quorum_mandatory_genes = int(quorum_mandatory_genes)
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_mandatory_genes_required' option for system %s must be an integer, but you provided %s on command line" % (system, quorum_mandatory_genes))
+                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {0} must be an integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
 
 
             if self.parser.has_option("system", "min_genes_required"):
@@ -412,7 +412,7 @@ class Config(object):
                             quorum_genes = int(quorum_genes)
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_genes_required' option for system %s must be an integer, but you provided %s in the configuration file" % (system, quorum_genes))
+                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer, but you provided {1} in the configuration file".format(system, quorum_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and corresponding 'min_mandatory_genes_required' separated by spaces")
             if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
@@ -424,7 +424,7 @@ class Config(object):
                         quorum_genes = int( quorum_genes)
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_genes_required' option for system %s must be an integer, but you provided %s on command line" % (system, quorum_genes))
+                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer, but you provided {1} on command line".format(system, quorum_genes))
 
             if self.parser.has_option("system", "max_nb_genes"):
                 options['max_nb_genes'] = {}
@@ -438,7 +438,7 @@ class Config(object):
                             max_genes = int(max_genes)
                             options['max_nb_genes'][system] = max_genes
                         except ValueError:
-                            raise ValueError("The value for 'max_nb_genes' option for system %s must be an integer, but you provided %s in the configuration file" % (system, max_genes))
+                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, but you provided {1} in the configuration file".format(system, max_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and corresponding 'max_nb_genes' separated by spaces")
             if 'max_nb_genes' in cmde_line_values and cmde_line_values['max_nb_genes'] is not None: 
@@ -450,7 +450,7 @@ class Config(object):
                         max_genes = int(max_genes)
                         options['max_nb_genes'][system] = max_genes
                     except ValueError:
-                        raise ValueError("The value for 'max_nb_genes' option for system %s must be an integer, but you provided %s on command line" % (system, max_genes))
+                        raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, but you provided {1} on command line".format(system, max_genes))
 
             if self.parser.has_option("system", "multi_loci"):
                 options['multi_loci'] = self.parser.get("system", "multi_loci").split(',')
@@ -502,7 +502,7 @@ class Config(object):
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
 
             if options['i_evalue_sel'] > options['e_value_res']:
-                raise ValueError( "i_evalue_sel (%f) must be lower or equal than e_value_res (%f)" %( options['i_evalue_sel'], options['e_value_res']) )
+                raise ValueError( "i_evalue_sel ({:f}) must be lower or equal than e_value_res ({:f})".format(options['i_evalue_sel'], options['e_value_res']))
 
             try:
                 coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars = cmde_line_opt)
@@ -524,7 +524,7 @@ class Config(object):
                 else:
                     options['def_dir'] = self._defaults['def_dir']
             if not os.path.exists(options['def_dir']):
-                raise ValueError( "%s: No such definition directory" % options['def_dir'])       
+                raise ValueError( "{0}: No such definition directory".format(options['def_dir']))       
 
 
             try:
@@ -535,7 +535,7 @@ class Config(object):
                 else:
                     options['profile_dir'] = self._defaults['profile_dir']
             if not os.path.exists( options['profile_dir'] ):
-                raise ValueError( "%s: No such profile directory" % options['profile_dir'])
+                raise ValueError( "{0}: No such profile directory".format(options['profile_dir']))
 
             try:
                 options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars = cmde_line_opt)
@@ -616,7 +616,7 @@ class Config(object):
                         if directive in ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes'):
                             s = ''
                             for system, space in self.options[directive].items():
-                                s += " %s %s" % (system, space)
+                                s += " {0} {1}".format(system, space)
                             parser.set(section, directive, s)
                         elif directive != 'log_file' or self.options[directive] != os.path.join( self.options['working_dir'], 'macsyfinder.log'):
                             parser.set(section, directive, str(self.options[directive]))

@@ -76,7 +76,7 @@ class GeneBank(object):
         :raise: KeyError if a gene with the same name is already registered
         """
         if gene in self._genes_bank:
-            raise KeyError("a gene named %s is already registered" % gene.name)
+            raise KeyError("a gene named {0} is already registered".format(gene.name))
         else:
             self._genes_bank[gene.name] = gene
 
@@ -134,8 +134,8 @@ class Gene(object):
         """
         Print the name of the gene and of its homologs/analogs.
         """
-        s = "name : %s" % self.name
-        s += "\ninter_gene_max_space: %d"%self.inter_gene_max_space
+        s = "name : {0}".format(self.name)
+        s += "\ninter_gene_max_space: {:d}".format(self.inter_gene_max_space)
         if self.loner:
             s+= "\nloner"
         if self.multi_system:
@@ -520,7 +520,7 @@ class Profile(object):
         """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
-        return "%s : %s" % (self.gene.name, self.path)
+        return "{0} : {1}".format(self.gene.name, self.path)
 
 
     def execute(self):
@@ -559,7 +559,7 @@ class Profile(object):
                                    close_fds = False ,
                                    )
                 except Exception as err:
-                    msg = "Hmmer execution failed: command = %s : %s" % ( command , err)
+                    msg = "Hmmer execution failed: command = {0} : {1}".format( command , err)
                     _log.critical( msg, exc_info = True )
                     raise err
 
@@ -567,11 +567,11 @@ class Profile(object):
 
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
-                    msg = "the Hmmer execution was aborted: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                    msg = "the Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
                     _log.critical(msg)
                     return
                 else:
-                    msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                    msg = "an error occurred during Hmmer execution: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
                     _log.debug(msg, exc_info = True )
                     _log.critical(msg)
                     raise RuntimeError(msg)

@@ -84,7 +84,7 @@ class Test(unittest.TestCase):
         gene = Gene(self.cfg, "abc", system, self.profile_registry)
         path = self.profile_registry.get("abc")
         profile = Profile(gene, self.cfg, path)
-        s = "%s : %s" % (gene.name, path)
+        s = "{0} : {1}".format(gene.name, path)
         self.assertEqual(str(profile), s)
 
     @unittest.skipIf( not which('hmmsearch'), 'hmmsearch not found in PATH')

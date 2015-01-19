@@ -109,6 +109,6 @@ class Test(unittest.TestCase):
         
         hit = Hit( gene, system, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], 
                    hit_prop['profil_coverage'], hit_prop['sequence_coverage'],hit_prop['begin'],hit_prop['end'])
-        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(hit_seq_len)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(profil_coverage)f\t%(sequence_coverage)f\t%(begin)d\t%(end)d\n" % hit_prop
+        s = "{id}\t{replicon_name}\t{position:d}\t{hit_seq_len:d}\t{gene_name}\t{system_name}\t{i_eval:.3e}\t{score:.3f}\t{profil_coverage:.3f}\t{sequence_coverage:.3f}\t{begin:d}\t{end:d}\n".format(**hit_prop)
         self.assertEqual(s,str(hit))
         

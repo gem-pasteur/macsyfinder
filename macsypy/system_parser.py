@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -65,7 +65,7 @@ class SystemParser(object):
                 parsed_systems[system_name] = None
                 path = os.path.join(self.cfg.def_dir, system_name + ".xml")
                 if not os.path.exists(path):
-                    raise MacsypyError("%s: No such system definitions" % path)
+                    raise MacsypyError("{}: No such system definitions".format(path))
                 try:
                     tree = ET.parse(path)
                     root = tree.getroot()
@@ -175,7 +175,7 @@ class SystemParser(object):
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
             except ValueError:
-                msg = "Invalid system definition '{0}': inter_gene_max_space must be an integer: %s".format(system.name, inter_gene_max_space)
+                msg = "Invalid system definition '{0}': inter_gene_max_space must be an integer: {1}".format(system.name, inter_gene_max_space)
                 _log.critical(msg)
                 raise SyntaxError(msg)
             except TypeError:#if None
@@ -297,10 +297,10 @@ class SystemParser(object):
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
         if system_ref != None and system_ref != gene.system.name:
-            msg = "Inconsistency in systems definitions: the gene '{0}' described as analog of '{1}' with system_ref '{2}' has an other system in bank ({3})" % (name, 
-                                                                                                                                                           gene_ref.name, 
-                                                                                                                                                           system_ref, 
-                                                                                                                                                           gene.system.name)
+            msg = "Inconsistency in systems definitions: the gene '{0}' described as analog of '{1}' with system_ref '{2}' has an other system in bank ({3})".format(name, 
+                                                                                                                                                                     gene_ref.name, 
+                                                                                                                                                                     system_ref, 
+                                                                                                                                                                     gene.system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         analog = Analog(gene, gene_ref)
@@ -391,13 +391,13 @@ class SystemParser(object):
         msg = "\nSystem(s) to parse (recursive inclusion of 'system_ref'):"
         
         for s in systems_2_parse:
-            msg += "\n\t-%s"%s
+            msg += "\n\t-{0}".format(s)
         _log.info(msg)
         
         for system_name in systems_2_parse:
             path = self.definitions_registry.get(system_name)
             if path is None:
-                raise MacsypyError("%s: No such system definitions" % path)
+                raise MacsypyError("{0}: No such system definitions".format(path))
             tree = ET.parse(path)
             system_node = tree.getroot()
             sys = self._create_system(system_name, system_node)  # une ouverture par fichier

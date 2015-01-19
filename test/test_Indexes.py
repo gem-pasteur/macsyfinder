@@ -153,7 +153,7 @@ class Test(unittest.TestCase):
         files_2_find = []
         for s in  suffixes:
             for i in range(2):
-                new_idx = os.path.join("%s.%d.%s" %(self.cfg.sequence_db, i, s))
+                new_idx = os.path.join("{0}.{1:d}.{2}".format(self.cfg.sequence_db, i, s))
                 open(new_idx, 'w')
                 files_2_find.append(new_idx)
         new_idx = os.path.join(self.cfg.sequence_db + '.pal')

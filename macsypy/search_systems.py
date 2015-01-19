@@ -382,10 +382,10 @@ class Cluster(object):
                                                     
                             if auth == len(hits):
                                 state = "clear"
-                                #print "clear %s"%putative_system
+                                #print "clear {0}".format(putative_system)
                             else:
                                 state = "ambiguous"
-                                #print "ambiguous %s"%putative_system
+                                #print "ambiguous {0}".format(putative_system)
 
                         """
                         if forbid == 0:
@@ -407,7 +407,7 @@ class Cluster(object):
                         # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
                         state = try_system(self.hits, putative_system, systems_compat)
                         if state == "clear":
-                            #print "BUENO SYSTEMO %s"%putative_system
+                            #print "BUENO SYSTEMO {0}".format(putative_system)
                             #self._state="clear" 
                             #self._putative_system=putative_system 
                             #break
@@ -415,7 +415,7 @@ class Cluster(object):
                         #else:
                         #    self._state="ambiguous" # tmp before nope
                         #    # Aoutch in this case no putative_system?!
-                        #    print "YAPABON...%s"%putative_system
+                        #    print "YAPABON...{0}".format(putative_system)
                     if len(cluster_compatible_systems) >= 1:
                         #print cluster_compatible_systems
                         self._state = "clear"
@@ -809,33 +809,33 @@ class SystemOccurence(object):
         #report_str = replicon_name+"\t"+self.get_system_unique_name(replicon_name)
         # No replicon name for unordered... get it from the config object in future developments... 
         report_str = replicon_name+"\t"+self.get_system_name_unordered()
-        report_str += "\t%s"%self.system_name
-        report_str += "\t%s"%self.state
+        report_str += "\t{0}".format(self.system_name)
+        report_str += "\t{0}".format(self.state)
 
         #report_str+="\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
         report_str += "\tNone"# No loci in unordered
-        report_str += "\t%d"%len(self.mandatory_genes) # Nb mandatory_genes in the definition of the system
-        report_str += "\t%d"%len(self.accessory_genes) # Nb accessory_genes in the definition of the system
-        report_str += "\t%d"%self.nb_syst_genes # Nb syst genes NR
-        report_str += "\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
+        report_str += "\t{0:d}".format(len(self.mandatory_genes)) # Nb mandatory_genes in the definition of the system
+        report_str += "\t{0:d}".format(len(self.accessory_genes)) # Nb accessory_genes in the definition of the system
+        report_str += "\t{0:d}".format(self.nb_syst_genes) # Nb syst genes NR
+        report_str += "\t{0:d}".format(self.compute_nb_syst_genes_tot()) # Nb syst genes matched
 
         #report_str+="\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
         report_str += "\tNone" # No loci in unordered
 
-        report_str += "\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
-        report_str += "\t%d"%self.count_genes(self.accessory_genes) # Nb accessory_genes matched at least once
+        report_str += "\t{0:d}".format(self.count_genes(self.mandatory_genes)) # Nb mandatory_genes matched at least once
+        report_str += "\t{0:d}".format(self.count_genes(self.accessory_genes)) # Nb accessory_genes matched at least once
 
         missing_mandatory = self.compute_missing_genes_list(self.mandatory_genes)        
         missing_accessory = self.compute_missing_genes_list(self.accessory_genes)
 
-        report_str += "\t%d"%len(missing_mandatory) # Nb mandatory_genes with no occurrence in the system
-        report_str += "\t%d"%len(missing_accessory) # Nb accessory_genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_mandatory) # List of mandatory genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_accessory) # List of accessory genes with no occurrence in the system
+        report_str += "\t{0:d}".format(len(missing_mandatory)) # Nb mandatory_genes with no occurrence in the system
+        report_str += "\t{0:d}".format(len(missing_accessory)) # Nb accessory_genes with no occurrence in the system
+        report_str += "\t{0}".format(str(missing_mandatory)) # List of mandatory genes with no occurrence in the system
+        report_str += "\t{0}".format(str(missing_accessory)) # List of accessory genes with no occurrence in the system
 
         #report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
         report_str += "\tNone" # No loci in unordered
-        report_str += "\t%s"%self.get_gene_counter_output(True) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
+        report_str += "\t{0}".format(self.get_gene_counter_output(True)) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
 
         return report_str
 
@@ -1004,9 +1004,12 @@ class SystemOccurence(object):
         nb_accessory = self.count_genes(self.accessory_genes)
         self._nb_syst_genes = self.compute_nb_syst_genes()
 
-        msg = "====> Decision rule for putative system %s:\n" % self.system_name
+        msg = "====> Decision rule for putative system {0}:\n".format(self.system_name)
         msg += str(self)
-        msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_accessory : %d" % (nb_forbid, nb_mandat, nb_accessory)
+        msg += """
+nb_forbid : {0:d}
+nb_mandat : {1:d}
+nb_accessory : {2:d}""".format(nb_forbid, nb_mandat, nb_accessory)
 
         if (nb_forbid == 0):
             if (nb_mandat >= self.system.min_mandatory_genes_required) and (self.nb_syst_genes >= self.system.min_genes_required) and (self.nb_syst_genes  >= 1):
@@ -1015,7 +1018,7 @@ class SystemOccurence(object):
                 else:
                     self._state = "multi_loci"
 
-                msg += "\nComplete \"%s\" system."%self.state
+                msg += "\nComplete \"{0}\" system.".format(self.state)
                 msg += "\n******************************************\n"
                 #print msg
                 #_log.info(msg)
@@ -1092,22 +1095,24 @@ class validSystemHit(object):
                                            end_match = self.end_match)
 
     def output_system(self, system_name, system_status):
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
-                                                     self.replicon_name,
-                                                     self.position,
-                                                     self.seq_length,
-                                                     self.gene.name,
-                                                     self.reference_system,
-                                                     self.predicted_system,
-                                                     system_name,
-                                                     system_status,
-                                                     self.gene_status,
-                                                     self.i_eval,
-                                                     self.score,
-                                                     self.profile_coverage,
-                                                     self.sequence_coverage,
-                                                     self.begin_match,
-                                                     self.end_match)
+        return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
+        \t{sys_name}\t{sys_status}\t{gene_status}\t{e:i_eval}\t{score:.3f}\t{prof_cov:.3f}\t{seq_cov:.3f}\
+        \t{begin_match:d}\t{end_match:d}\n".format(id = self.id,
+                                                   rpl_name = self.replicon_name,
+                                                   pos = self.position,
+                                                   seq_l = self.seq_length,
+                                                   gene_name = self.gene.name,
+                                                   ref_sys = self.reference_system,
+                                                   predict_sys = self.predicted_system,
+                                                   sys_name = system_name,
+                                                   sys_status = system_status,
+                                                   gene_status = self.gene_status,
+                                                   i_eval = self.i_eval,
+                                                   score = self.score,
+                                                   prof_cov = self.profile_coverage,
+                                                   seq_cov = self.sequence_coverage,
+                                                   begin_match = self.begin_match,
+                                                   end_match = self.end_match)
 
 
     def output_system_header(self):
@@ -1485,7 +1490,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 report_str += "{0}\n".format(so.get_summary_header())
                 print_header = False
 
-            #report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
+            #report_str+="{0}\n".format(so.get_summary(self.replicon_name, rep_info))
             # Get a fake "replicon_name" from the config object in future devt.
             report_str += "{0}\n".format(so.get_summary_unordered("Unordered"))
 
@@ -1766,7 +1771,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #exclude = False # unused_var
             #for putative_system in clust.compatible_systems:
             for putative_system in [s.name for s in systems_to_consider]:
-                _log_out.info("Considering %s: " % putative_system)
+                _log_out.info("Considering {}: ".format(putative_system))
                 if putative_system in syst_dict.keys():
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
@@ -1775,7 +1780,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
                     msg = so.decision_rule()
                     so_state = so.state
-                    _log_out.info("-> %s" % so_state)
+                    _log_out.info("-> {}".format(so_state))
                     if so_state != "exclude":
                         if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
@@ -1783,28 +1788,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
                             if first:
                                 store_clust = clust
-                                #store_so = so
                                 store_scattered = True
-                                #store_msg
-                            #print "...\nStored for later treatment of scattered systems.\n"
-                            #systems_occurences_scattered[putative_system].fill_with_cluster(clust)
                         else:
-                            #print so 
-                            #print so_state
-                            #print "...\nComplete %s %s system stored.\n"%(putative_system, so_state)
                             _log_out.info(msg)
                             systems_occurences_list.append(so)
                             store_scattered = False
                             break
-                    #else:
-                    #    exclude = True
-                    #    #store_scattered=True
-            #if store_scattered and not exclude:
             if store_scattered:
-                #print store_so
-                #print store_msg
-                #print "...\nPutative %s locus stored for later treatment of scattered systems.\n"%clust.compatible_systems[0]
-                _log_out.info("=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0])
+                _log_out.info("=> Putative {} locus stored for later treatment of scattered systems.".format(clust.compatible_systems[0]))
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
 
         elif clust.state == "ambiguous":
@@ -1823,7 +1814,12 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
 
         else:
             _log_out.info("------- next -------")
-    _log_out.info("\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n")
+    _log_out.info("""
+    
+***************************************************
+******* Report scattered/uncomplete systems *******
+***************************************************
+""")
     for system in systems:
         #print systems_occurences[system]
 
@@ -2070,7 +2066,7 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
                 if getattr(prev_hit, 'profile_coverage') < getattr(h, 'profile_coverage'):
                     prev_hit = h
             else:
-                raise MacsypyError("The criterion for Hits comparison % does not exist or is not available. \nIt must be either \"score\", \"i_eval\" or \"profile_coverage\"."%criterion)
+                raise MacsypyError('The criterion for Hits comparison {} does not exist or is not available. \nIt must be either "score", "i_eval" or "profile_coverage".'.format(criterion))
 
             #print "BEST"
             #print prev_hit

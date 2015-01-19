@@ -154,10 +154,10 @@ class Test(unittest.TestCase):
                Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 73, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
         ]
         s = ""
-        s = "# gene: %s extract from %s hmm output\n" % (gene.name, report_path)
-        s += "# profile length= %d\n" % len(gene.profile)
-        s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
-        s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
+        s = "# gene: {0} extract from {1} hmm output\n".format(gene.name, report_path)
+        s += "# profile length= {0:d}\n".format(len(gene.profile))
+        s += "# i_evalue threshold= {0:.3f}\n".format(self.cfg.i_evalue_sel)
+        s += "# coverage threshold= {0:.3f}\n".format(self.cfg.coverage_profile)
         s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
         for h in hits:
             s += str(h)

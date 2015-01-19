@@ -63,13 +63,16 @@ class HMMReport(object):
         """
         Print information on filtered hits
         """
-        s = "# gene: %s extract from %s hmm output\n" % (self.gene.name, self._hmmer_raw_out)
-        s += "# profile length= %d\n" % len(self.gene.profile)
-        s += "# i_evalue threshold= %f\n" % self.cfg.i_evalue_sel
-        s += "# coverage threshold= %f\n" % self.cfg.coverage_profile
-        #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score coverage\n"
-        #s += "# hit_id replicon_name position_hit gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
-        s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        s = """# gene: {gene_name} extract from {hmmer_out} hmm output
+# profile length= {profile_len:d}
+# i_evalue threshold= {i_evalue:.3f}
+# coverage threshold= {coverage:.3f}
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+""".format(gene_name = self.gene.name, hmmer_out = self._hmmer_raw_out,
+                                             profile_len = len(self.gene.profile),
+                                             i_evalue = self.cfg.i_evalue_sel,
+                                             coverage = self.cfg.coverage_profile)
+        
         for h in self.hits:
             s += str(h)
         return s
@@ -396,18 +399,18 @@ class Hit(object):
         """
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
-                                                     self.replicon_name,
-                                                     self.position,
-                                                     self.seq_length,
-                                                     self.gene.name,
-                                                     self.system.name,
-                                                     self.i_eval,
-                                                     self.score,
-                                                     self.profile_coverage, 
-                                                     self.sequence_coverage,
-                                                     self.begin_match,
-                                                     self.end_match)
+        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{system_name}\t{i_evalue:.3e}\t{score:.3f}\t{profil_cov:.3f}\t{seq_cov:.3f}\t{begin_match:d}\t{end_match:d}\n".format(id = self.id,
+                                                                                                                                                   replicon_name = self.replicon_name,
+                                                                                                                                                   position = self.position,
+                                                                                                                                                   seq_len = self.seq_length,
+                                                                                                                                                   gene_name = self.gene.name,
+                                                                                                                                                   system_name = self.system.name,
+                                                                                                                                                   i_evalue = self.i_eval,
+                                                                                                                                                   score = self.score,
+                                                                                                                                                   profil_cov = self.profile_coverage, 
+                                                                                                                                                   seq_cov = self.sequence_coverage,
+                                                                                                                                                   begin_match = self.begin_match,
+                                                                                                                                                   end_match = self.end_match)
 
     def __cmp__(self, other):
         """
@@ -419,7 +422,11 @@ class Hit(object):
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene): 
-                _log.warning("Non homologs match: %s (%s) %s (%s) for %s"%(self.gene.name, self.system.name, other.gene.name, other.system.name, self.id))
+                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(g_name = self.gene.name, 
+                                                                                                                           sys_name = self.system.name, 
+                                                                                                                           other_g_name = other.gene.name, 
+                                                                                                                           other_sys_name = other.system.name, 
+                                                                                                                           id = self.id))
             return cmp(self.score, other.score)
         else:
             return cmp(self.id, other.id)
