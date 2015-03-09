@@ -155,6 +155,10 @@ Path options::
 
   -d DEF_DIR, --def DEF_DIR
                         Path to the systems definition files.
+  
+  -o OUT_DIR, --out-dir OUT_DIR
+                        Path to the directory where to store results. 
+                        If out-dir is specified res-search-dir will be ignored.                      
                         
   -r RES_SEARCH_DIR, --res-search-dir RES_SEARCH_DIR
                         Path to the directory where to store MacSyFinder search
