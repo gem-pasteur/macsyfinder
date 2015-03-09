@@ -331,25 +331,18 @@ class Gene(object):
         :rtype: boolean.
         """
         
-        #print "\n- is_authorized? -"
-        #print "%s in %s"%(self, system.name)
         if include_forbidden:
             for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
                 if self == m:
-                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    #print "Yes - via exchang"
                     return True
         else:
             for m in (system.mandatory_genes+system.accessory_genes):
                 if self == m:
-                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    #print "Yes - via exchang"
                     return True 
-        #print "No!"
         return False
 
 
@@ -547,7 +540,6 @@ class Profile(object):
                             "profile" : self.path,
                             "sequence_db" : self.cfg.sequence_db,
                            }
-                #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
                 command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
                 _log.info( "{0} Hmmer command line : {1}".format(self.gene.name, command))
                 try:

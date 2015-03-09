@@ -387,18 +387,16 @@ class Cluster(object):
                                 state = "ambiguous"
                                 #print "ambiguous {0}".format(putative_system)
 
-                        """
-                        if forbid == 0:
-                            if auth == len(hits):
-                                state = "clear"
-                                #print "clear %s"%putative_system
-                            else:
-                                state = "ambiguous"
-                                #print "ambiguous %s"%putative_system
-                        else:
-                            state = "ineligible"
-                            #print "ineligible %s"%putative_system
-                        """    
+#                         if forbid == 0:
+#                             if auth == len(hits):
+#                                 state = "clear"
+#                                 #print "clear {}".format(putative_system)
+#                             else:
+#                                 state = "ambiguous"
+#                                 #print "ambiguous {}".format(putative_system)
+#                         else:
+#                             state = "ineligible"
+#                             #print "ineligible {}".format(putative_system)
                         return state
 
                     # Sort systems to consider by decreasing counts.
@@ -768,7 +766,8 @@ class SystemOccurence(object):
         report_str += "\t{0:d}".format(self.nb_syst_genes)
         # Nb syst genes matched
         report_str += "\t{0:d}".format(self.compute_nb_syst_genes_tot())
-        #report_str += "\t%d"%self.compute_system_length() # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        #report_str += "\t{0:d}".format(self.compute_system_length()) 
         # The total length of the locus in protein number, delimited by hits for profiles of the system.
         report_str += "\t{0:d}".format(self.compute_system_length(rep_info))
         # Nb mandatory_genes matched at least once
@@ -812,14 +811,16 @@ class SystemOccurence(object):
         report_str += "\t{0}".format(self.system_name)
         report_str += "\t{0}".format(self.state)
 
-        #report_str+="\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
+        # Nb of loci included to fill the system occurrence
+        #report_str+="\t{0:d}".format(self.nb_cluster) 
         report_str += "\tNone"# No loci in unordered
         report_str += "\t{0:d}".format(len(self.mandatory_genes)) # Nb mandatory_genes in the definition of the system
         report_str += "\t{0:d}".format(len(self.accessory_genes)) # Nb accessory_genes in the definition of the system
         report_str += "\t{0:d}".format(self.nb_syst_genes) # Nb syst genes NR
         report_str += "\t{0:d}".format(self.compute_nb_syst_genes_tot()) # Nb syst genes matched
 
-        #report_str+="\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        #report_str+="\t{0:d}".format(self.compute_system_length(rep_info)) 
         report_str += "\tNone" # No loci in unordered
 
         report_str += "\t{0:d}".format(self.count_genes(self.mandatory_genes)) # Nb mandatory_genes matched at least once
@@ -832,8 +833,9 @@ class SystemOccurence(object):
         report_str += "\t{0:d}".format(len(missing_accessory)) # Nb accessory_genes with no occurrence in the system
         report_str += "\t{0}".format(str(missing_mandatory)) # List of mandatory genes with no occurrence in the system
         report_str += "\t{0}".format(str(missing_accessory)) # List of accessory genes with no occurrence in the system
-
-        #report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
+        
+        # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
+        #report_str+="\t{0}".format(self.loci_positions) 
         report_str += "\tNone" # No loci in unordered
         report_str += "\t{0}".format(self.get_gene_counter_output(True)) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
 
@@ -1689,7 +1691,7 @@ def disambiguate_cluster(cluster):
                     counter_genes_compat_systems[syst.name] = 1
                 else:
                     counter_genes_compat_systems[syst.name] += 1
-    #print "\n---Counter compatible systems ! ---\n%s"%str(counter_genes_compat_systems)
+    #print "\n---Counter compatible systems ! ---\n{0}".format(counter_genes_compat_systems)
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res = []
@@ -1829,7 +1831,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             so = systems_occurences_scattered[system.name]
             msg = so.decision_rule()
             so_state = so.state
-            #print "-- %s --"%so.system_name
+            #print "-- {0} --".format(so.system_name)
             #print so
             _log_out.info(msg)
             if so.is_complete():
@@ -1933,7 +1935,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             if prev.gene.loner:
                 #print "trois - loner_state"
-                #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
+                #print "--- PREVLONER {0} {1}".format(prev.id, prev.gene.name)
                 loner_state = True
         else:
             # Storage of the previous cluster
@@ -1950,7 +1952,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print cur_cluster
                 #print "cinq - ADD cur_cluster"
-                #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
+                #print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
 
                 cur_cluster = Cluster(systems_to_detect)
@@ -1958,7 +1960,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             if prev.gene.loner:
                 #print "six - check"
-                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                #print "PREVLONER ?? {0} {1}".format(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
                     #print "six - ADD prev in cur_cluster, ADD cur_cluster"
@@ -1979,7 +1981,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
             cur_cluster = Cluster(systems_to_detect)
 
         prev = cur
-        #print "Now prev is %s"%(prev.gene.name)
+        #print "Now prev is {0}".format(prev.gene.name)
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         #print "Recap clusters"
@@ -1998,7 +2000,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 multi_system_genes_system_wise[prev.system.name].append(prev)
 
     if rep_info.topology == "circular":
-        # Need to take into account the possibility of a single gene at both extremity, that should be considered as part of a cluster (and was not with previous steps)! 
+        # Need to take into account the possibility of a single gene at both extremity, 
+        # that should be considered as part of a cluster (and was not with previous steps)! 
         first = hits[0]
         last = hits[-1]
         hitstoconsider=[]
