@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -170,7 +170,7 @@ class Config(object):
                           'log_level': logging.WARNING,
                           'worker_nb': '1'
                           }
-        self.parser = SafeConfigParser(defaults = self._defaults)
+        self.parser = SafeConfigParser(defaults=self._defaults)
         used_files = self.parser.read(config_files)
 
         frame = inspect.currentframe()
@@ -339,7 +339,7 @@ class Config(object):
                 raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(', '.join(val_4_replicon_topology)))
             if options['replicon_topology'] == 'circular' and options['db_type'] in ('unordered_replicon', 'unordered'):
                 self._log.warning("As the input dataset type 'db_type' is set to {0},\
-                 the replicon_topology file was ignored".format(options['db_type']))
+ the replicon_topology file was ignored".format(options['db_type']))
             
             if 'topology_file' in cmde_line_opt:
                 options['topology_file'] = cmde_line_opt['topology_file']
@@ -366,10 +366,10 @@ class Config(object):
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
                             raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
-                             but you provided {} in the configuration file".format(system, interval))
+ but you provided {} in the configuration file".format(system, interval))
                 except StopIteration:
                     raise ValueError( "Invalid syntax for 'inter_gene_max_space': you must have a list of\
-                     systems and corresponding 'inter_gene_max_space' separated by spaces")
+ systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if 'inter_gene_max_space' not in options:
                     options['inter_gene_max_space'] = {}
@@ -380,13 +380,13 @@ class Config(object):
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
                         raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
-                         but you provided {1} on command line".format(system, interval))
+ but you provided {1} on command line".format(system, interval))
 
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
                 min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required")
                 min_mandatory_genes_required = min_mandatory_genes_required.split()
-                it = iter( min_mandatory_genes_required)
+                it = iter(min_mandatory_genes_required)
                 try:
                     for system in it:
                         quorum_mandatory_genes = it.next()
@@ -395,10 +395,10 @@ class Config(object):
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
                             raise ValueError("The value for 'min_mandatory_genes_required' option for system {0}\
-                             must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
+ must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
                 except StopIteration:
-                    raise ValueError( "Invalid syntax for 'min_mandatory_genes_required': you must have a list of\
-                     systems and corresponding 'min_mandatory_genes_required' separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of\
+ systems and corresponding 'min_mandatory_genes_required' separated by spaces")
 
             if 'min_mandatory_genes_required' in cmde_line_values and \
                             cmde_line_values['min_mandatory_genes_required'] is not None:
@@ -411,7 +411,7 @@ class Config(object):
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
                         raise ValueError("The value for 'min_mandatory_genes_required' option for system {0} must be an\
-                         integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
+ integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
 
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
@@ -426,10 +426,10 @@ class Config(object):
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
                             raise ValueError("The value for 'min_genes_required' option for system {0} must be an\
-                             integer, but you provided {1} in the configuration file".format(system, quorum_genes))
+ integer, but you provided {1} in the configuration file".format(system, quorum_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and\
-                     corresponding 'min_mandatory_genes_required' separated by spaces")
+ corresponding 'min_mandatory_genes_required' separated by spaces")
             if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
                 if 'min_genes_required' not in options:
                     options['min_genes_required'] = {}
@@ -440,7 +440,7 @@ class Config(object):
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
                         raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer,\
-                         but you provided {1} on command line".format(system, quorum_genes))
+ but you provided {1} on command line".format(system, quorum_genes))
 
             if self.parser.has_option("system", "max_nb_genes"):
                 options['max_nb_genes'] = {}
@@ -458,7 +458,7 @@ class Config(object):
                              but you provided {1} in the configuration file".format(system, max_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and\
-                     corresponding 'max_nb_genes' separated by spaces")
+ corresponding 'max_nb_genes' separated by spaces")
             if 'max_nb_genes' in cmde_line_values and cmde_line_values['max_nb_genes'] is not None: 
                 if 'max_nb_genes' not in options:
                     options['max_nb_genes'] = {}
@@ -469,7 +469,7 @@ class Config(object):
                         options['max_nb_genes'][system] = max_genes
                     except ValueError:
                         raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, \
-                        but you provided {1} on command line".format(system, max_genes))
+ but you provided {1} on command line".format(system, max_genes))
 
             if self.parser.has_option("system", "multi_loci"):
                 options['multi_loci'] = self.parser.get("system", "multi_loci").split(',')
@@ -556,7 +556,7 @@ class Config(object):
                 raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
 
             try:
-                options['res_search_suffix'] =  self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
+                options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
             except NoSectionError:
                 if 'res_search_suffix' in cmde_line_opt:
                     options['res_search_suffix'] = cmde_line_opt['res_search_suffix']
@@ -615,11 +615,11 @@ class Config(object):
         save the configuration used for this run in the ini format file
         """
         parser = SafeConfigParser()
-        parser.add_section( 'base')
+        parser.add_section('base')
         parser.set('base', 'file', str(self.options['sequence_db']))
         parser.set('base', 'type', str(self.options['db_type']).lower())
         cfg_opts = [('base', ('replicon_topology', 'topology_file', 'index_db_exe',)),
-                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required','max_nb_genes', 'multi_loci')),
+                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci')),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile')),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))

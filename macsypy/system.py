@@ -15,15 +15,15 @@
 
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
-from macsypy_error import SystemInconsistencyError
+from .macsypy_error import SystemInconsistencyError
 
 class SystemBank(object):
     """
     Build and store all Systems objects. Systems must not be instanciated directly.
     This system factory must be used. It ensures there is a unique instance
     of a system for a given system name.
-    To get a system, use the method __getitem__ via the "[]". If the System is already cached in the SystemBank, it is returned.
-    Otherwise a new system is built, stored and then returned.
+    To get a system, use the method __getitem__ via the "[]". If the System is already cached in the SystemBank,
+    it is returned. Otherwise a new system is built, stored and then returned.
     """
 
     _system_bank = {}
@@ -75,7 +75,7 @@ class SystemBank(object):
         :raise: KeyError if a system with the same name is already registered.
         """
         if system in self._system_bank:
-            raise KeyError, "a system named {0} is already registered in the systems' bank".format(system.name)
+            raise KeyError("a system named {0} is already registered in the systems' bank".format(system.name))
         else:
             self._system_bank[system.name] = system
 
@@ -87,8 +87,8 @@ class System(object):
     Handle a secretion system.
     """
 
-    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required = None, 
-                 min_genes_required = None, max_nb_genes = None, multi_loci = False):
+    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required=None,
+                 min_genes_required=None, max_nb_genes=None, multi_loci=False):
         """
         :param cfg: the configuration object
         :type cfg: :class:`macsypy.config.Config` object

@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -21,7 +21,8 @@ import os.path
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
 from subprocess import Popen
-from macsypy_error import MacsypyError
+from .macsypy_error import MacsypyError
+
 
 def fasta_iter(fasta_file):
     """
@@ -34,7 +35,7 @@ def fasta_iter(fasta_file):
     """
     # ditch the boolean (x[0]) and just keep the header or sequence since
     # we know they alternate.
-    faiter = (x[1] for x in groupby(fasta_file , lambda line: line[0] == ">"))
+    faiter = (x[1] for x in groupby(fasta_file, lambda line: line[0] == ">"))
     for header in faiter:
         # drop the ">"
         header = header.next()[1:].strip()
@@ -67,10 +68,10 @@ class Indexes(object):
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db
         self.name = os.path.basename(cfg.sequence_db)
-        self._hmmer_indexes = None  #list of path
-        self._my_indexes = None  #path 
+        self._hmmer_indexes = None  # list of path
+        self._my_indexes = None  # path
 
-    def build(self, force = False):
+    def build(self, force=False):
         """
         Build the indexes from the sequence dataset in fasta format
 
@@ -86,19 +87,19 @@ class Indexes(object):
         index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db))
 
         if force or not hmmer_indexes or not my_indexes:
-            #formatdb create indexes in the same directory as the sequence_db
-            #so it must be writable
-            #if the directory is not writable, formatdb do a Segmentation fault
+            # formatdb create indexes in the same directory as the sequence_db
+            # so it must be writable
+            # if the directory is not writable, formatdb do a Segmentation fault
             if not os.access(index_dir, os.R_OK|os.W_OK):
                 msg = "cannot build indexes, ({0}) is not writable".format(index_dir)
                 _log.critical(msg)
                 raise IOError(msg)
 
         if force or not hmmer_indexes:
-            #self._build_hmmer_indexes() is asynchron
+            # self._build_hmmer_indexes() is asynchron
             hmmer_indexes_proc = self._build_hmmer_indexes()
         if force or not my_indexes:
-            #self._build_my_indexes() is synchron
+            # self._build_my_indexes() is synchron
             self._build_my_indexes()
 
         ################################# 
@@ -109,15 +110,15 @@ class Indexes(object):
             hmmer_indexes_proc.wait()
             if hmmer_indexes_proc.returncode == 127:
                 msg = "neither makeblastdb nor formatdb can be found, check your config or install makeblastb"
-                _log.critical( msg, exc_info = True )
+                _log.critical(msg, exc_info=True)
                 raise RuntimeError(msg)
             if hmmer_indexes_proc.returncode != 0:
                 msg = "an error occurred during databases indexation see formatdb.log"
-                _log.critical( msg, exc_info = True )
+                _log.critical(msg, exc_info=True)
                 raise RuntimeError(msg)
         self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
-        assert self._hmmer_indexes , "failed to create hmmer indexes"
+        assert self._hmmer_indexes, "failed to create hmmer indexes"
         assert self._my_indexes, "failed create macsyfinder indexes"
 
 
@@ -131,26 +132,30 @@ class Indexes(object):
         idx = []
         file_nb = 0
         for suffix in suffixes:
-            index_files = glob( "{0}*{1}".format(self._fasta_path, suffix))
+            index_files = glob("{0}*{1}".format(self._fasta_path, suffix))
             nb_of_index = len(index_files)
             if suffix != '.pal':
                 if file_nb and file_nb != nb_of_index:
-                    msg = "some index files are missing. Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "some index files are missing.\
+ Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
-                    raise  RuntimeError(msg)
+                    raise RuntimeError(msg)
             else:
                 if nb_of_index > 1:
-                    msg = "too many .pal file . Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "too many .pal file.\
+ Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
-                    raise  RuntimeError(msg)    
+                    raise RuntimeError(msg)
                 elif file_nb > 1 and nb_of_index == 0:
-                    msg = "some index files are missing. Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "some index files are missing.\
+ Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
-                    raise  RuntimeError(msg)
+                    raise RuntimeError(msg)
                 elif file_nb == 1 and nb_of_index == 1:
-                    msg = "a virtual index is detected (.pal) but there is only one file per index type. Delete all index files  (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
+                    msg = "a virtual index is detected (.pal) but there is only one file per index type.\
+ Delete all index files  (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
                     _log.critical(msg)
-                    raise  RuntimeError(msg)
+                    raise RuntimeError(msg)
             idx.extend(index_files)
             file_nb = nb_of_index
         return idx
@@ -161,7 +166,7 @@ class Indexes(object):
         :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
         """ 
-        path = os.path.join( os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
+        path = os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
         if os.path.exists(path):
             return path
 
@@ -181,27 +186,28 @@ class Indexes(object):
             # -p T Type of file = protein
             # -o T Parse SeqId and create indexes.
             # -s T Create indexes limited only to accessions
-            command = "{db_indexer} -t {db_name} -i {db_file} -p T -o T -s T".format(db_indexer = self.cfg.index_db_exe,
-                                                                                     db_name = self.name,
-                                                                                     db_file = self.cfg.sequence_db
+            command = "{db_indexer} -t {db_name} -i {db_file} -p T -o T -s T".format(db_indexer=self.cfg.index_db_exe,
+                                                                                     db_name=self.name,
+                                                                                     db_file=self.cfg.sequence_db
                                                                                     )
         else:
-            raise MacsypyError("{0} is not supported to index the sequence dataset. Please use makeblastdb or formatdb.".format(self.cfg.sequence_db))
+            raise MacsypyError("{0} is not supported to index the sequence dataset.\
+ Please use makeblastdb or formatdb.".format(self.cfg.sequence_db))
 
         _log.debug("hmmer index command: {0}".format(command))
         err_path = os.path.join(index_dir, "formatdb.err")
         with  open(err_path, 'w') as err_file:
             try:
-                formatdb = Popen( command ,
-                                  shell = True ,
-                                  stdout = err_file ,
-                                  stdin  = None ,
-                                  stderr = err_file ,
-                                  close_fds = False ,
-                                  )
+                formatdb = Popen(command,
+                                 shell=True,
+                                 stdout=err_file,
+                                 stdin=None,
+                                 stderr=err_file,
+                                 close_fds=False,
+                                 )
             except Exception as err:
-                msg = "unable to index the sequence dataset : {0} : {1}".fomat(command, err)
-                _log.critical( msg, exc_info = True )
+                msg = "unable to index the sequence dataset : {0} : {1}".format(command, err)
+                _log.critical(msg, exc_info=True)
                 raise err
             return formatdb
 
@@ -217,15 +223,15 @@ class Indexes(object):
         """
         try:
             with open(self._fasta_path, 'r') as fasta_file:
-                with open(os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx" ), 'w') as my_base:
+                with open(os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx"), 'w') as my_base:
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
                     for seqid, comment, length in f_iter:
                         seq_nb += 1
-                        my_base.write("{seq_id};{length:d};{seq_nb:d}\n".format(seq_id = seqid, length = length, seq_nb = seq_nb))
+                        my_base.write("{seq_id};{length:d};{seq_nb:d}\n".format(seq_id=seqid, length=length, seq_nb=seq_nb))
         except Exception as err:
             msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db, err)
-            _log.critical(msg, exc_info = True)
+            _log.critical(msg, exc_info=True)
             raise err
 
 
@@ -260,7 +266,7 @@ class RepliconDB(object):
         else:
             topo_dict = {}
         if self.cfg.db_type == 'gembase':
-            self._fill_gembase_min_max(topo_dict, default_topology = self.cfg.replicon_topology)
+            self._fill_gembase_min_max(topo_dict, default_topology=self.cfg.replicon_topology)
         else:
             self._fill_ordered_min_max(self.cfg.replicon_topology)
 
@@ -280,8 +286,7 @@ class RepliconDB(object):
                 topo_dict[replicon_name] = topo
         return topo_dict
 
-
-    def _fill_ordered_min_max(self, default_topology = None):
+    def _fill_ordered_min_max(self, default_topology=None):
         """
         For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
 
@@ -289,7 +294,7 @@ class RepliconDB(object):
         :type default_topology: string
         """
         _min = 1
-        #self.sequence_idx is a file with the following structure seq_id;seq_length;seq_rank\n
+        # self.sequence_idx is a file with the following structure seq_id;seq_length;seq_rank\n
         with open(self.sequence_idx) as idx_f:
             _max = 0
             genes = []
@@ -312,7 +317,7 @@ class RepliconDB(object):
         """
         def grp_replicon(line):
             """
-            in gembase the idtentifier of fasta sequence follow the following schema: replicon_name_seq_name 
+            in gembase the identifier of fasta sequence follow the following schema: replicon_name_seq_name
             so grp_replicon allow to group sequences belonging to the same replicon.
             """
             return line.split('_')[0]
@@ -320,11 +325,11 @@ class RepliconDB(object):
         def parse_entry(entry):
             """
             parse an entry in the index file (.idx)
-            an entry have the folowing format sequence_id;sequence lenght;sequence rank in replicon
+            an entry have the following format sequence_id;sequence length;sequence rank in replicon
             """
             entry = entry.rstrip()
             seq_id, length, rank = entry.split(';')
-            replicon_name , seq_name = seq_id.split('_')
+            replicon_name, seq_name = seq_id.split('_')
             return replicon_name, seq_name, length, int(rank)
 
         with open(self.sequence_idx) as idx_f:
@@ -332,14 +337,14 @@ class RepliconDB(object):
             for replicon in replicons:
                 genes = []
                 entry = replicon.next()
-                replicon_name, seq_name, seq_lenght, _min = parse_entry(entry)
-                genes.append((seq_name, seq_lenght))
+                replicon_name, seq_name, seq_length, _min = parse_entry(entry)
+                genes.append((seq_name, seq_length))
                 for entry in replicon:
-                    #pass all sequence of the replicon until the last one
-                    _, seq_name, seq_lenght, _ = parse_entry(entry)
-                    genes.append((seq_name, seq_lenght))
-                _, seq_name, seq_lenght, _max = parse_entry(entry)
-                genes.append((seq_name, seq_lenght))
+                    # pass all sequence of the replicon until the last one
+                    _, seq_name, seq_length, _ = parse_entry(entry)
+                    genes.append((seq_name, seq_length))
+                _, seq_name, seq_length, _max = parse_entry(entry)
+                genes.append((seq_name, seq_length))
                 if replicon_name in topology:
                     self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)
                 else:
@@ -367,13 +372,14 @@ class RepliconDB(object):
         return self._DB[replicon_name]
 
 
-    def get(self, replicon_name, default = None):
+    def get(self, replicon_name, default=None):
         """
         :param replicon_name: the name of the replicon to get informations
         :type replicon_name: string
         :param default: the value to return if the replicon_name is not in the RepliconDB
         :type default: any
-        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default. If default is not given, it is set to None, so that this method never raises a KeyError.
+        :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default.
+        If default is not given, it is set to None, so that this method never raises a KeyError.
         :rtype: :class:`RepliconInfo` object
         """
         return self._DB.get(replicon_name, default)
