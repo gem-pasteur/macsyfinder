@@ -241,20 +241,23 @@ class install_macsyfinder(install):
 
 
     def run(self):
-        print ""
+        def subst_file(_file, vars_2_subst):
+            input_file = os.path.join(self.build_lib, _file)
+            output_file = input_file + '.tmp'
+            subst_vars(input_file, output_file, vars_2_subst)
+            os.unlink(input_file)
+            self.move_file(output_file, input_file)
+
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
                         'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
                         'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder'),
-                        
                         }
         for _file in self.distribution.fix_prefix:
-            input_file = os.path.join(self.build_lib, _file)
-            output_file =  input_file + '.tmp'
-            subst_vars(input_file, output_file, vars_2_subst)
-            os.unlink(input_file)
-            self.move_file(output_file, input_file)
+            subst_file(_file, vars_2_subst)
+        _file = os.path.join('macsypy', '__init__.py')
+        subst_file(_file, {'VERSION' : self.distribution.get_version()})
         install.run(self)
 
 

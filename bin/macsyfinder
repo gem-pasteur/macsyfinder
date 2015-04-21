@@ -26,7 +26,7 @@ if 'MACSY_HOME' in os.environ:
 try:
     from macsypy.config import Config
 except ImportError as err:
-    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format( err )
+    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format(err)
     sys.exit( msg )
 
 from operator import attrgetter # To be used with "sorted"
@@ -63,7 +63,7 @@ of diderm bacteria from a protein dataset.
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("systems",
-                    nargs = '+',
+                    nargs = '*',
                     help = "The systems to detect. This is an obligatory option with no keyword associated to it. To detect all the protein secretion systems and related appendages: set to \"all\" (case insensitive). Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
 genome_options = parser.add_argument_group(title = "Input dataset options")
 genome_options.add_argument("--sequence-db",
@@ -215,7 +215,12 @@ general_options.add_argument("-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
                       default = 0,
-                      help = "Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
+                      help = "Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)")
+general_options.add_argument("--version",
+                      action= "store_true",
+                      dest = "version",
+                      default = False,
+                      help = "display the version information and quit")
 general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
@@ -235,6 +240,27 @@ general_options.add_argument("--previous-run",
 --e-value-res, --db-type, --hmmer)""")
 
 args = parser.parse_args()
+if args.version:
+    import macsypy
+    if macsypy.__version__ == '$VERSION':
+        version = "NOT packaged, development version"
+    else:
+        version = macsypy.__version__
+    print >> sys.stderr, """Macsyfinder {0}
+Python {1}
+
+MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+See the COPYING file for details.
+
+If you use this software please cite:
+Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
+MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
+    sys.exit(0)
+
+if not args.systems:
+    parser.error("you MUST provided systems to search.")
+
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
                           args.profile_suffix or
