@@ -1,0 +1,86 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="2" min_genes_required="3">
+
+<gene name="cas1_TypeI-II-III" presence="accessory"   system_ref="CAS"/>
+<gene name="cas2_TypeI-II-III" presence="accessory"   system_ref="CAS"/>
+
+<gene name="cas6_TypeI-III" presence="accessory"  system_ref="CAS"/>
+<gene name="cas4_TypeI-II" presence="accessory"  system_ref="CAS"/>
+
+
+<gene name="cas5_TypeI" presence="mandatory"/>
+<gene name="cas3_TypeI" presence="mandatory"/>
+<gene name="cas3a_TypeI" presence="mandatory"/>
+<gene name="cas7_TypeI" presence="mandatory"/>
+
+<gene name="cas5a_TypeIA" presence="mandatory"/>
+<gene name="cas4_TypeIA" presence="mandatory"/>
+<gene name="cas7_TypeIA" presence="mandatory"/>
+<gene name="casRa_TypeIA" presence="mandatory"/>
+<gene name="cas8a2a_TypeIA" presence="mandatory"/>
+<gene name="cas8a2a2_TypeIA" presence="mandatory"/>
+<gene name="csa5_TypeIA" presence="mandatory"/>
+<gene name="csaX_TypeIA" presence="mandatory"/>
+
+<gene name="cas1_TypeIA" presence="mandatory"/>
+<gene name="cas8a1a2_TypeIA" presence="mandatory"/>
+<gene name="cas8a1a3_TypeIA" presence="mandatory"/>
+<gene name="cas5a2_TypeIA" presence="mandatory"/>
+<gene name="cas6_TypeIA" presence="mandatory"/>
+
+
+<gene name="cas1_TypeIB" presence="mandatory"/>
+<gene name="cas5b_TypeIB" presence="mandatory"/>
+<gene name="cas8a1b_TypeIB" presence="mandatory"/>
+<gene name="cas7b_TypeIB" presence="mandatory"/>
+<gene name="cas5b2_TypeIB" presence="mandatory"/>
+<gene name="cas8b_TypeIB" presence="mandatory"/>
+<gene name="cas7b2_TypeIB" presence="mandatory"/>
+<gene name="cas8a1b2_TypeIB" presence="mandatory" />
+<gene name="cas8a1b3_TypeIB" presence="mandatory"/>
+<gene name="cas7b3_TypeIB" presence="mandatory"/>
+
+<gene name="cas1_TypeIC" presence="mandatory"/>
+<gene name="cas5c_TypeIC" presence="mandatory"/>
+<gene name="cas8c_TypeIC" presence="mandatory"/>
+<gene name="cas7c_TypeIC" presence="mandatory" />
+<gene name="cas5c2_TypeIC" presence="mandatory"/>
+<gene name="cas7c2_TypeIC" presence="mandatory"/>
+<gene name="cas8c2_TypeIC" presence="mandatory"/>
+
+<gene name="cas1_TypeID" presence="mandatory"/>
+<gene name="cas3_TypeID" presence="mandatory"/>
+<gene name="csc1_TypeID" presence="mandatory"/>
+<gene name="csc2_TypeID" presence="mandatory" />
+<gene name="cas10d_TypeID" presence="mandatory"/>
+
+<gene name="cas1_TypeIE" presence="mandatory"/>
+<gene name="cas2_TypeIE" presence="mandatory"/>
+<gene name="cas5_TypeIE" presence="mandatory"/>
+<gene name="cse1_TypeIE" presence="mandatory"/>
+<gene name="cse2_TypeIE" presence="mandatory"/>
+<gene name="cas6_TypeIE" presence="mandatory"/>
+<gene name="cas7_TypeIE" presence="mandatory"/>
+
+<gene name="cas1_TypeIF" presence="mandatory"/>
+<gene name="cas3-cas2_TypeIF" presence="mandatory"/>
+<gene name="csy1_TypeIF" presence="mandatory"/>
+<gene name="csy2_TypeIF" presence="mandatory"/>
+<gene name="csy3_TypeIF" presence="mandatory"/>
+<gene name="cas6_TypeIF" presence="mandatory"/>
+
+<gene name="cas3_TypeIU" presence="mandatory"/>
+<gene name="csb1_TypeIU" presence="mandatory"/>
+<gene name="csb2_TypeIU" presence="mandatory"/>
+<gene name="csb3_TypeIU" presence="mandatory"/>
+<gene name="csx17_TypeIU" presence="mandatory"/>
+
+<gene name="cas9_TypeII" presence="forbidden"  system_ref="CAS-TypeII"/>
+<gene name="cas9_TypeIIB" presence="forbidden"  system_ref="CAS-TypeII"/>
+
+<gene name="cas10_TypeIIIA" presence="forbidden"  system_ref="CAS-TypeIII"/>
+<gene name="cas10_TypeIIIB" presence="forbidden"  system_ref="CAS-TypeIII"/>
+
+<gene name="csm3_TypeIIIA" presence="accessory" system_ref="CAS-TypeIII"/>
+<gene name="csx10_TypeIIIU" presence="accessory" system_ref="CAS-TypeIII"/>
+
+</system>
