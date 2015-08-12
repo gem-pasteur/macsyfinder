@@ -221,6 +221,11 @@ general_options.add_argument("--version",
                       dest = "version",
                       default = False,
                       help = "display the version information and quit")
+general_options.add_argument("-l, --list",
+                      action= "store_true",
+                      dest = "list",
+                      default = False,
+                      help = "display the all systems installed in generic location and quit")
 general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
@@ -257,6 +262,9 @@ Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
 MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
 PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
     sys.exit(0)
+
+if args.list:
+    pass
 
 if not args.systems:
     parser.error("you MUST provided systems to search.")
