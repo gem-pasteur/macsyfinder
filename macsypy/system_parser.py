@@ -20,7 +20,7 @@ _log = logging.getLogger('macsyfinder')
 from .system import System
 from .gene import Gene
 from .gene import Homolog, Analog
-from .registries import ProfilesRegistry, DefinitionsRegistry
+from .registries import SystemsRegistry
 from .macsypy_error import MacsypyError, SystemInconsistencyError
 
 
