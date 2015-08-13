@@ -26,7 +26,7 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 class SystemDef(object):
     """
     Handle where are store systems. Systems are organized in families and sub families.
-    each family match to a SystemDef. a System def contains the path toward the models
+    each family match to a SystemDef. a System def contains the path toward the _models
     and the paths to corresponding  profiles.
     """
 
@@ -41,18 +41,18 @@ class SystemDef(object):
         self.path = path
         self.name = os.path.basename(path)
         self._profiles = self._scan_profiles(os.path.join(path, 'profiles'))
-        self.models = {}
+        self._models = {}
         models_dir = os.path.join(self.path, 'models')
         for model in os.listdir(models_dir):
             model_path = os.path.join(models_dir, model)
             new_model = self._scan_models(model_path=model_path)
-            self.models[new_model.name] = new_model
+            self._models[new_model.name] = new_model
 
 
     def _scan_models(self, model_def=None, model_path=None):
         """
-        Scan recursively the models tree on the file system and store
-        all model definition
+        Scan recursively the _models tree on the file system and store
+        all _models definitions
 
         :param modelf_def: the current model definition to add new submodel location
         :type model_def: :class:`ModelDefLocation`
@@ -91,24 +91,69 @@ class SystemDef(object):
         return all_profiles
 
 
+    def get_model(self, name):
+        """
+        :param name: the name of the profile to retrieve (without extension)
+        :type name: string
+        :returns: the absolute path of the xml definition
+        :rtype: string
+        :raise: KeyError if name does not match with any model definition
+        """
+        name_path = name.split('/')
+        models = self._models
+        for level in name_path:
+            if level in self._models:
+                model = models[level]
+                models = model
+            else:
+                raise KeyError("{} does not match with any _models".format(level))
+        return model.path
+
+
+    @property
+    def models(self):
+        """
+        :return: the list of _models of first level for this system
+        :rtype: list of :class: ModelDefLocation` object
+        """
+        return self._models.values()
+
+
+    def get_profile(self, name):
+        """
+        :param name: the name of the profile to retrieve (without extension)
+        :type name: string
+        :returns: the absolute path of the hmm profile
+        :rtype: string
+        :raise: KeyError if name does not match with any profiles
+        """
+        return self._profiles[name]
+
+
+    def __str__(self):
+        return self.name
 
 
 class ModelDefLocation(dict):
     """
-    Manage were models are stored. a Model is a xml definition of a system.
+    Manage were _models are stored. a Model is a xml definition of a system.
     """
 
     def __init__(self, name=None, submodels=None, path=None):
         super(ModelDefLocation, self).__init__(name=name, submodels=submodels, path=path)
-        self.__dict__ = self
+        self.__dict__ = self #allow to use dot notation to access to property here name or submodels ...
 
     def add_submodel(self, submodel):
         """
         :param submodels:
+        :type submodels:
         """
         if self.submodels is None:
             self.submodels = {}
         self.submodels[submodel.name] = submodel
+
+    def __str__(self):
+        return self.name
 
 
 class SystemsRegistry(object):
@@ -132,7 +177,32 @@ class SystemsRegistry(object):
                 new_system = SystemDef(system_path, cfg)
                 self._register[new_system.name] = new_system
 
+    def systems(self):
+        """
+        :returns: the list of systems
+        :rtype: list of :class:`SystemDef` object
+        """
+        return self._register.values() # level 0 like TXSS ou CRISPR_Cas
 
+    def __str__(self):
+        s = ''
+
+        def model_to_str(model, pad):
+            if model.submodels:
+                model_s = "{}\{}\n".format(' ' * pad, model.name)
+                pad = pad + len(model.name) + 1
+                for i, submodel in enumerate(model.submodels.values()):
+                    model_s += model_to_str(submodel, pad)
+            else:
+                model_s = "{}\{}\n".format(' ' * pad, model.name)
+            return model_s
+
+        for system in self.systems():
+            s += system.name + '\n'
+            pad = len(system.name) + 1
+            for model in system.models:
+                s += model_to_str(model, pad)
+        return s
 
 
 # class ProfilesRegistry(object):
