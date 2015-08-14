@@ -46,7 +46,8 @@ class SystemDef(object):
         for model in os.listdir(models_dir):
             model_path = os.path.join(models_dir, model)
             new_model = self._scan_models(model_path=model_path)
-            self._models[new_model.name] = new_model
+            if new_model:  # _scan_models can return None if a dir is empty
+                self._models[new_model.name] = new_model
 
 
     def _scan_models(self, model_def=None, model_path=None):
@@ -60,11 +61,13 @@ class SystemDef(object):
         :type model_path: string
         """
         if os.path.isfile(model_path):
+            new_model = None
             base, ext = os.path.splitext(model_path)
             if ext == '.xml':
                 new_model = ModelDefLocation(name=os.path.basename(base),
                                              path=model_path)
             return new_model
+
         elif os.path.isdir(model_path):
             new_model = ModelDefLocation(name=os.path.basename(model_path),
                                          path=model_path
@@ -74,7 +77,6 @@ class SystemDef(object):
                                              model_path=os.path.join(new_model.path, model))
                 if submodel is not None:
                     new_model.add_submodel(submodel)
-
             return new_model
 
 
@@ -84,10 +86,11 @@ class SystemDef(object):
         """
         all_profiles = {}
         for profile in os.listdir(path):
-            if os.path.isfile(profile):
+            profile_path = os.path.join(path, profile)
+            if os.path.isfile(profile_path):
                 base, ext = os.path.splitext(profile)
                 if ext == self.cfg.profile_suffix:
-                    all_profiles[base] = os.path.abspath(profile)
+                    all_profiles[base] = os.path.abspath(profile_path)
         return all_profiles
 
 
@@ -136,7 +139,7 @@ class SystemDef(object):
 
 class ModelDefLocation(dict):
     """
-    Manage were _models are stored. a Model is a xml definition of a system.
+    Manage were models are stored. a Model is a xml definition of a system.
     """
 
     def __init__(self, name=None, submodels=None, path=None):
