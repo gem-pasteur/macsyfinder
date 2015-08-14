@@ -114,7 +114,7 @@ class Test(unittest.TestCase):
     def test_models(self):
         pass
 
-    def test_profile(self):
+    def test_get_profile(self):
         pass
 
     def test_str(self):
