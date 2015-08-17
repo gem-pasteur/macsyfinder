@@ -96,10 +96,10 @@ class SystemDef(object):
 
     def get_model(self, name):
         """
-        :param name: the name of the profile to retrieve (without extension)
+        :param name: the name of the model to retrieve (without extension)
         :type name: string
-        :returns: the absolute path of the xml definition
-        :rtype: string
+        :returns: the model corresponding to the given name
+        :rtype: a :class:`ModelDefLocation` object
         :raise: KeyError if name does not match with any model definition
         """
         name_path = name.split('/')
@@ -110,7 +110,7 @@ class SystemDef(object):
                 models = model
             else:
                 raise KeyError("{} does not match with any _models".format(level))
-        return model.path
+        return model
 
 
     @property
@@ -158,6 +158,10 @@ class ModelDefLocation(dict):
     def __str__(self):
         return self.name
 
+    def __eq__(self, other):
+        return self.name == other.name and \
+               self.path == other.path and \
+               self.submodels == other.submodels
 
 class SystemsRegistry(object):
     """
