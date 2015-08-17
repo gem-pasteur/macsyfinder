@@ -205,7 +205,7 @@ class SystemsRegistry(object):
             if model.submodels:
                 model_s = "{}\{}\n".format(' ' * pad, model.name)
                 pad = pad + len(model.name) + 1
-                for i, submodel in enumerate(model.submodels.values()):
+                for submodel in model.submodels.values():
                     model_s += model_to_str(submodel, pad)
             else:
                 model_s = "{}\{}\n".format(' ' * pad, model.name)
