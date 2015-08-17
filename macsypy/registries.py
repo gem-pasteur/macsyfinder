@@ -136,6 +136,14 @@ class SystemDef(object):
     def __str__(self):
         return self.name
 
+    def __eq__(self, other):
+        return self.path == other.path and \
+               self.name == other.name and \
+               self._profiles == other._profiles and \
+               self._models == other._models
+
+
+
 
 class ModelDefLocation(dict):
     """
@@ -163,6 +171,7 @@ class ModelDefLocation(dict):
                self.path == other.path and \
                self.submodels == other.submodels
 
+
 class SystemsRegistry(object):
     """
     scan canonical directories to register the different systems available in global macsyfinder
@@ -175,21 +184,21 @@ class SystemsRegistry(object):
         :param cfg: the macsyfinder configuration
         :type cfg: :class:`macsypy.config.Config` object
         """
-        self._register = {}
+        self._registery = {}
         systems_def_root = os.path.join(_prefix_data, 'macsyfinder', 'systems')
 
         for systems_type in os.listdir(systems_def_root):
             system_path = os.path.join(systems_def_root, systems_type)
             if os.path.isdir(system_path):
                 new_system = SystemDef(system_path, cfg)
-                self._register[new_system.name] = new_system
+                self._registery[new_system.name] = new_system
 
     def systems(self):
         """
         :returns: the list of systems
         :rtype: list of :class:`SystemDef` object
         """
-        return self._register.values() # level 0 like TXSS ou CRISPR_Cas
+        return self._registery.values() # level 0 like TXSS ou CRISPR_Cas
 
     def __str__(self):
         s = ''
