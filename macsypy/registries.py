@@ -14,8 +14,6 @@
 
 
 import os
-import glob
-from .macsypy_error import MacsypyError
 
 _prefix_data = '$PREFIXDATA'
 if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
