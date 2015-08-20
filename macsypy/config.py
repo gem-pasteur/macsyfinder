@@ -202,11 +202,11 @@ class Config(object):
                           'e_value_res': "1",
                           'i_evalue_sel': "0.001",
                           'coverage_profile': "0.5",
-                          'def_dir': os.path.join(_prefix_data, 'DEF'),
+                          #'def_dir': os.path.join(_prefix_data, 'DEF'),
                           'res_search_dir': os.getcwd(),
                           'res_search_suffix': '.search_hmm.out',
                           'res_extract_suffix': '.res_hmm_extract',
-                          'profile_dir': os.path.join(_prefix_data, 'profiles'),
+                          #'profile_dir': os.path.join(_prefix_data, 'profiles'),
                           'profile_suffix': '.hmm',
                           'log_level': logging.WARNING,
                           'worker_nb': '1'
@@ -581,23 +581,17 @@ class Config(object):
 
             try:
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'def_dir' in cmde_line_opt:
-                    options['def_dir'] = cmde_line_opt['def_dir']
-                else:
-                    options['def_dir'] = self._defaults['def_dir']
-            if not os.path.exists(options['def_dir']):
-                raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+                if not os.path.exists(options['def_dir']):
+                    raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+            except (NoSectionError, NoOptionError):
+                options['def_dir'] = None
 
             try:
                 options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'profile_dir' in cmde_line_opt:
-                    options['profile_dir'] = cmde_line_opt['profile_dir']
-                else:
-                    options['profile_dir'] = self._defaults['profile_dir']
-            if not os.path.exists(options['profile_dir']):
-                raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+                if not os.path.exists(options['profile_dir']):
+                    raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+            except (NoSectionError, NoOptionError):
+                options['profile_dir'] = None
 
             try:
                 options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
@@ -690,6 +684,17 @@ class Config(object):
                     pass
         with open(os.path.join(dir_path, self._new_cfg_name), 'w') as new_cfg:
             parser.write(new_cfg)
+
+    def old_data_organization(self):
+        """
+
+        :return: True if the data are organized in old way, two independant directories:
+
+          * one directory for hmm profiles
+          * one directory for models definitions
+
+        """
+        return self.options['profile_dir'] is not None
 
     @property
     def sequence_db(self):
