@@ -28,25 +28,39 @@ class SystemDef(object):
     and the paths to corresponding  profiles.
     """
 
-    def __init__(self, path, cfg):
+    def __init__(self, cfg, path=None, profile_dir=None, def_dir=None):
         """
-        :param path: the absolute path to a system family
+        :param path: if it's an installed system: path is the absolute path to a system family.
+                     otherwise path is None, and profile_dir and def_dir must be specified.
         :type path: string
         :param cfg: the macsyfinder configuration
         :type cfg: :class:`macsypy.config.Config` object
         """
         self.cfg = cfg
         self.path = path
-        self.name = os.path.basename(path)
-        self._profiles = self._scan_profiles(os.path.join(path, 'profiles'))
-        self._models = {}
-        models_dir = os.path.join(self.path, 'models')
-        for model in os.listdir(models_dir):
-            model_path = os.path.join(models_dir, model)
-            new_model = self._scan_models(model_path=model_path)
-            if new_model:  # _scan_models can return None if a dir is empty
-                self._models[new_model.name] = new_model
+        if path is not None:
+            self.name = os.path.basename(path)
+        else:
+            self.name = os.path.basename(def_dir)
+        if not profile_dir:
+            profile_dir = os.path.join(path, 'profiles')
+        self._profiles = self._scan_profiles(profile_dir)
 
+        self._models = {}
+        if not def_dir:
+            models_dir = os.path.join(self.path, 'models')
+            for model in os.listdir(models_dir):
+                model_path = os.path.join(models_dir, model)
+                new_model = self._scan_models(model_path=model_path)
+                if new_model:  # _scan_models can return None if a dir is empty
+                    self._models[new_model.name] = new_model
+        else:
+            import glob
+            for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
+                new_model = ModelDefLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
+                                             path=os.path.abspath(model_path))
+                self._models[new_model.name] = new_model
+#
 
     def _scan_models(self, model_def=None, model_path=None):
         """
@@ -183,13 +197,17 @@ class SystemsRegistry(object):
         :type cfg: :class:`macsypy.config.Config` object
         """
         self._registery = {}
-        systems_def_root = os.path.join(_prefix_data, 'macsyfinder', 'systems')
+        if cfg.old_data_organization():
+            new_system = SystemDef(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
+            self._registery[new_system.name] = new_system
+        else:
+            systems_def_root = os.path.join(_prefix_data, 'macsyfinder', 'systems')
+            for systems_type in os.listdir(systems_def_root):
+                system_path = os.path.join(systems_def_root, systems_type)
+                if os.path.isdir(system_path):
+                    new_system = SystemDef(cfg, path=system_path)
+                    self._registery[new_system.name] = new_system
 
-        for systems_type in os.listdir(systems_def_root):
-            system_path = os.path.join(systems_def_root, systems_type)
-            if os.path.isdir(system_path):
-                new_system = SystemDef(system_path, cfg)
-                self._registery[new_system.name] = new_system
 
     def systems(self):
         """

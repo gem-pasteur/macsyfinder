@@ -20,7 +20,7 @@ import shutil
 import tempfile
 import platform
 import logging
-from macsypy.config import ConfigLight
+from macsypy.config import ConfigLight, Config
 from macsypy import registries
 from macsypy.registries import SystemDef, ModelDefLocation, SystemsRegistry
 
@@ -108,7 +108,7 @@ class SystemDefTest(unittest.TestCase):
                          }
 
         simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(simple_dir, self.cfg)
+        sys_def = SystemDef(self.cfg, path=simple_dir)
         self.assertEqual(sys_def.name, simple_system['name'])
         self.assertEqual(sys_def.path, simple_dir)
         self.assertDictEqual(sys_def._profiles,
@@ -132,7 +132,7 @@ class SystemDefTest(unittest.TestCase):
                                          },
                           }
         complex_dir = self._create_fake_systems_tree(complex_system)
-        sys_def = SystemDef(complex_dir, self.cfg)
+        sys_def = SystemDef(self.cfg, path=complex_dir)
         self.assertEqual(sys_def.name, complex_system['name'])
         self.assertEqual(sys_def.path, complex_dir)
         self.assertDictEqual(sys_def._profiles,
@@ -159,7 +159,7 @@ class SystemDefTest(unittest.TestCase):
                          }
 
         simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(simple_dir, self.cfg)
+        sys_def = SystemDef(self.cfg, path=simple_dir)
 
         model_name = 'model_1'
         model_expected = ModelDefLocation(name=model_name,
@@ -184,7 +184,7 @@ class SystemDefTest(unittest.TestCase):
                                          },
                           }
         complex_dir = self._create_fake_systems_tree(complex_system)
-        sys_def = SystemDef(complex_dir, self.cfg)
+        sys_def = SystemDef(self.cfg, path=complex_dir)
 
         models_expected = []
         for model_name in complex_system['models']:
@@ -213,7 +213,7 @@ class SystemDefTest(unittest.TestCase):
                          }
 
         simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(simple_dir, self.cfg)
+        sys_def = SystemDef(self.cfg,path=simple_dir)
 
         self.assertEqual(sys_def.get_profile(os.path.splitext(simple_system['profiles'][0])[0]),
                          os.path.join(simple_dir, 'profiles', simple_system['profiles'][0]))
@@ -288,7 +288,15 @@ class SystemRegistryTest(unittest.TestCase):
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        self.cfg = ConfigLight()
+        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          hmmer_exe="",
+                          #def_dir=os.path.join(self._data_dir, 'DEF'),
+                          res_search_dir=tempfile.gettempdir(),
+                          #profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file)
         self.tmp_dir = tempfile.mkdtemp()
         self._prefix_data_ori = registries._prefix_data
         registries._prefix_data = self.tmp_dir
@@ -327,6 +335,10 @@ class SystemRegistryTest(unittest.TestCase):
         logging.shutdown()
         l = logging.getLogger()
         l.manager.loggerDict.clear()
+        try:
+            shutil.rmtree(self.cfg.working_dir)
+        except:
+            pass
         try:
             shutil.rmtree(self.tmp_dir)
         except:
@@ -376,8 +388,8 @@ class SystemRegistryTest(unittest.TestCase):
 
     def test_systems(self):
         sr = SystemsRegistry(self.cfg)
-        system_complex_expected = SystemDef(self.complex_dir, self.cfg)
-        system_simple_expected = SystemDef(self.simple_dir, self.cfg)
+        system_complex_expected = SystemDef(self.cfg, path=self.complex_dir)
+        system_simple_expected = SystemDef(self.cfg, path=self.simple_dir)
         systems_received = sr.systems()
         self.assertEqual(len(systems_received), 2)
         self.assertIn(system_complex_expected, systems_received)

@@ -64,7 +64,6 @@ of diderm bacteria from a protein dataset.
      '''))
 #, formatter_class=argparse.RawDescriptionHelpFormatter)
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-
 parser.add_argument("systems",
                     nargs='*',
                     help="The systems to detect. This is an obligatory option with no keyword associated to it. \
@@ -72,16 +71,26 @@ parser.add_argument("systems",
                          set to \"all\" (case insensitive).\
                          Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
 
+parser.add_argument("-m", "--models",
+                    action='append',
+                    dest='models',
+                    nargs='*',
+                    default=None,
+                    help='TODO bla-bla')
+
 genome_options = parser.add_argument_group(title="Input dataset options")
 genome_options.add_argument("--sequence-db",
                             action='store',
                             dest='sequence_db',
+                            default=None,
+                            required=True,
                             help="Path to the sequence dataset in fasta format.")
 
 genome_options.add_argument("--db-type",
                             choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                             dest="db_type",
                             default=None,
+                            required=True,
                             help="The type of dataset to deal with. \"unordered_replicon\" corresponds\
                                  to a non-assembled genome,\"unordered\" to a metagenomic dataset,\
                                   \"ordered_replicon\" to an assembled genome, \
@@ -178,14 +187,12 @@ hmmer_options.add_argument('--index-db',
                            help="The indexer to be used for Hmmer.\
                                 The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary\
                                 (default = makeblastb)")
-
 hmmer_options.add_argument('--e-value-search',
                            action='store',
                            dest='e_value_res',
                            type=float,
                            default=None,
                            help='Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
-
 hmmer_options.add_argument('--i-evalue-select',
                            action='store',
                            dest='i_evalue_sel',
@@ -193,7 +200,6 @@ hmmer_options.add_argument('--i-evalue-select',
                            default=None,
                            help='Maximal independent e-value for Hmmer hits to be selected for system detection.\
                                  (default = 0.001)')
-
 hmmer_options.add_argument('--coverage-profile',
                            action='store',
                            dest='coverage_profile',
@@ -203,11 +209,26 @@ hmmer_options.add_argument('--coverage-profile',
                                 the hit selection for system detection. (default = 0.5)')
 
 dir_options = parser.add_argument_group(title="Path options", description=None)
+dir_options.add_argument('-d', '--models-dir',
+                         action='store',
+                         dest='models_dir',
+                         default=None,
+                         help='specify the path to the models if the models are not installed in the canonical place.\
+                          It gather definitions (xml files) and hmm profiles in a specific\
+                          structure. A directory with the name of the system with at least two directories\
+                          "profiles" which contains all hmm profile for gene describe in definitions and\
+                          "models" which contains either xml file of definitions or subdirectories\
+                          to organize the system in subsystems.')
 dir_options.add_argument('-d', '--def',
                          action='store',
                          dest='def_dir',
                          default=None,
-                         help='Path to the systems definition files.')
+                         help='Path to the systems definition files. (DEPRECATED see --models and --models-path options)')
+dir_options.add_argument('-p', '--profile-dir',
+                         action='store',
+                         dest='profile_dir',
+                         default=None,
+                         help='Path to the profiles directory. (DEPRECATED see --models and --models-path options)')
 dir_options.add_argument('-o', '--out-dir',
                          action='store',
                          dest='out_dir',
@@ -230,11 +251,6 @@ dir_options.add_argument('--res-extract-suffix',
                          dest='res_extract_suffix',
                          default=None,
                          help='The suffix to give to filtered hits output files.')
-dir_options.add_argument('-p', '--profile-dir',
-                         action='store',
-                         dest='profile_dir',
-                         default=None,
-                         help='Path to the profiles directory.')
 dir_options.add_argument('--profile-suffix',
                          action='store',
                          dest='profile_suffix',
@@ -265,9 +281,9 @@ general_options.add_argument("--version",
                              dest="version",
                              default=False,
                              help="display the version information and quit")
-general_options.add_argument("-l", "--list",
+general_options.add_argument("-l", "--list-systems",
                              action="store_true",
-                             dest="list",
+                             dest="list_systems",
                              default=False,
                              help="display the all systems installed in generic location and quit.")
 general_options.add_argument("--log",
@@ -310,15 +326,30 @@ MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application
 PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
     sys.exit(0)
 
-if args.list:
+if args.list_systems:
     config = ConfigLight(previous_run=args.previous_run,
                          cfg_file=args.cfg_file,)
     registry = SystemsRegistry(config)
     print >> sys.stderr, registry
     sys.exit(0)
 
-if not args.systems:
+old_options = (args.def_dir, args.profile_dir, args.systems)
+new_options = (args.models_dir, args.models)
+
+if not args.systems and not args.models:
     parser.error("you MUST provided systems to search.")
+
+if args.systems and args.models:
+    parser.error("""--models option is the new way to specify models to search.
+models as arguments is the old and DEPRECATED way to specify models.
+You cannot use the two ways in the same time.
+""")
+
+if any(old_options) and any(new_options):
+    parser.error("""--models --models-dir options are the new way to specify models to search.
+--def-dir and --profile-dir is the old and DEPRECATED way to specify models.
+You cannot use the two ways in the same time.
+""")
 
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
@@ -378,12 +409,18 @@ idx = Indexes(config)
 idx.build(force=config.build_indexes)
 
 parser = SystemParser(config, system_bank, gene_bank)
+
+
+####################### A MODILFIER ###################################
+
 if ('all' or 'All' or 'ALL') in args.systems:
     import glob
     systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
     systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
 else:
     systems_name_to_detect = args.systems
+############################################################
+
 parser.parse(systems_name_to_detect)
 
 
@@ -393,7 +430,7 @@ out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence
 for s in systems_name_to_detect:
     out_logger.info("\t- {}".format(s))
 
-systems_to_detect = [system_bank[system_name] for system_name  in systems_name_to_detect]
+systems_to_detect = [system_bank[system_name] for system_name in systems_name_to_detect]
 all_genes = []
 for system in systems_to_detect:
     genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
@@ -425,3 +462,49 @@ if len(all_hits) > 0:
 else:
     logger.info("No hits found in this dataset.")
 logger.debug("END")
+
+
+def systems_to_detect(args):
+    """
+    :param args: the result of commandline parsing
+    :type args: class:`argparse.Namespace` object
+    :return: list of system to launch a detection on.
+    :rtype: list of :class:`macsypy.system.System` objects
+    """
+    # si -d => ancien algo
+    # si -m => nouveau algo
+    # si ni -l'un ni l'autre ??
+    # si les 2 ??
+    def user_specfied_location():
+        pass
+
+    def system_wide_location():
+        pass
+
+    systems_name_to_detect = []
+    user_specified_loc_opt = set((args.def_dir, args.profile_dir))
+    system_wide_loc_opt = args.models
+    if any(user_specified_loc_opt) but not all(old_options):
+        pass
+    elif system_wide_loc_opt and any(user_specified_loc_opt):
+        pass
+    elif any(user_specified_loc_opt):
+        if ('all' or 'All' or 'ALL') in args.systems:
+            import glob
+            systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
+            systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
+    elif system_wide_loc_opt:
+        pass
+
+    return systems_name_to_detect
+
+
+name to detect what is the system name ? it's path?
+
+    if ('all' or 'All' or 'ALL') in args.systems:
+        import glob
+        systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
+        systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
+    else:
+        systems_name_to_detect = args.systems
+
