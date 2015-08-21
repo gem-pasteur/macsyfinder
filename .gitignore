@@ -39,6 +39,12 @@ test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
 
+
+####################
+# MacSyFinder data #
+####################
+data/macsyfinder/models/TXSS/*
+
 ##############################
 # MacsyFinder generated file #
 ##############################
