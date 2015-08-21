@@ -32,7 +32,7 @@ except ImportError as err:
 from operator import attrgetter # To be used with "sorted"
 from textwrap import dedent
 
-from macsypy.registries import SystemsRegistry
+from macsypy.registries import ModelRegistry
 from macsypy.system_parser import SystemParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes
@@ -83,14 +83,12 @@ genome_options.add_argument("--sequence-db",
                             action='store',
                             dest='sequence_db',
                             default=None,
-                            required=True,
                             help="Path to the sequence dataset in fasta format.")
 
 genome_options.add_argument("--db-type",
                             choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                             dest="db_type",
                             default=None,
-                            required=True,
                             help="The type of dataset to deal with. \"unordered_replicon\" corresponds\
                                  to a non-assembled genome,\"unordered\" to a metagenomic dataset,\
                                   \"ordered_replicon\" to an assembled genome, \
@@ -209,7 +207,7 @@ hmmer_options.add_argument('--coverage-profile',
                                 the hit selection for system detection. (default = 0.5)')
 
 dir_options = parser.add_argument_group(title="Path options", description=None)
-dir_options.add_argument('-d', '--models-dir',
+dir_options.add_argument('--models-dir',
                          action='store',
                          dest='models_dir',
                          default=None,
@@ -219,7 +217,7 @@ dir_options.add_argument('-d', '--models-dir',
                           "profiles" which contains all hmm profile for gene describe in definitions and\
                           "models" which contains either xml file of definitions or subdirectories\
                           to organize the system in subsystems.')
-dir_options.add_argument('-d', '--def',
+dir_options.add_argument('-d', '--def-dir',
                          action='store',
                          dest='def_dir',
                          default=None,
@@ -281,11 +279,11 @@ general_options.add_argument("--version",
                              dest="version",
                              default=False,
                              help="display the version information and quit")
-general_options.add_argument("-l", "--list-systems",
+general_options.add_argument("-l", "--list-models",
                              action="store_true",
-                             dest="list_systems",
+                             dest="list_models",
                              default=False,
-                             help="display the all systems installed in generic location and quit.")
+                             help="display the all models installed in generic location and quit.")
 general_options.add_argument("--log",
                              action='store',
                              dest='log_file',
@@ -326,10 +324,12 @@ MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application
 PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
     sys.exit(0)
 
-if args.list_systems:
+if args.list_models:
     config = ConfigLight(previous_run=args.previous_run,
-                         cfg_file=args.cfg_file,)
-    registry = SystemsRegistry(config)
+                         cfg_file=args.cfg_file,
+                         profile_suffix=args.profile_suffix,
+                         )
+    registry = ModelRegistry(config)
     print >> sys.stderr, registry
     sys.exit(0)
 
@@ -484,7 +484,7 @@ def systems_to_detect(args):
     systems_name_to_detect = []
     user_specified_loc_opt = set((args.def_dir, args.profile_dir))
     system_wide_loc_opt = args.models
-    if any(user_specified_loc_opt) but not all(old_options):
+    if any(user_specified_loc_opt) and not all(old_options):
         pass
     elif system_wide_loc_opt and any(user_specified_loc_opt):
         pass
@@ -499,7 +499,6 @@ def systems_to_detect(args):
     return systems_name_to_detect
 
 
-name to detect what is the system name ? it's path?
 
     if ('all' or 'All' or 'ALL') in args.systems:
         import glob

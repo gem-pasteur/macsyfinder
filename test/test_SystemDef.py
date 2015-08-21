@@ -20,16 +20,54 @@ import shutil
 import tempfile
 import platform
 import logging
+
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
-from macsypy.registries import SystemDef, ModelDefLocation, SystemsRegistry
+from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry
+from macsypy.macsypy_error import MacsypyError
 
 
-class SystemDefTest(unittest.TestCase):
 
+
+def _create_fake_models_tree(root_models_dir, sys_def):
+    models_dir = os.path.join(root_models_dir, sys_def['name'])
+    os.mkdir(models_dir)
+
+    profiles_dir = os.path.join(models_dir, 'profiles')
+    os.mkdir(profiles_dir)
+    for profile in sys_def['profiles']:
+        fh = open(os.path.join(profiles_dir, profile), 'w')
+        fh.close()
+    for filename in sys_def['not_profiles']:
+        fh = open(os.path.join(profiles_dir, filename), 'w')
+        fh.close()
+
+    def_dir = os.path.join(models_dir, 'definitions')
+    os.mkdir(def_dir)
+
+    def create_tree(definitions, path):
+        for level_n in definitions:
+            if isinstance(level_n, str):
+                if definitions[level_n] is None:
+                    fh = open(os.path.join(path, level_n), 'w')
+                    fh.close()
+                else:
+                    subdef_path = os.path.join(path, level_n)
+                    if not os.path.exists(subdef_path):
+                        os.mkdir(subdef_path)
+                    create_tree(definitions[level_n], subdef_path)
+            elif isinstance(level_n, dict):
+                create_tree(definitions[level_n], path)
+            else:
+                assert False, "error in modeling \"definitions\" {} {} ".format(level_n, type(level_n))
+    create_tree(sys_def['definitions'], def_dir)
+    create_tree(sys_def['not_definitions'], def_dir)
+    return models_dir
+
+
+class ModelLocationTest(unittest.TestCase):
 
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
-    
     
     def setUp(self):
         l = logging.getLogger()
@@ -44,45 +82,33 @@ class SystemDefTest(unittest.TestCase):
         
         self.cfg = ConfigLight()
         self.tmp_dir = tempfile.mkdtemp()
-        self.system_dir = os.path.join(self.tmp_dir, 'systems')
-        os.mkdir(self.system_dir)
+        self.root_models_dir = os.path.join(self.tmp_dir, 'models')
+        os.mkdir(self.root_models_dir)
 
+        self.simple_models = {'name': 'simple',
+                              'profiles': ('prof_1.hmm', 'prof_2.hmm'),
+                              'not_profiles': ('not_a_profile', ),
+                              'definitions': {'def_1.xml': None,
+                                              'def_2.xml': None
+                                             },
+                              'not_definitions': {'not_a_def': None},
+                              }
 
-    def _create_fake_systems_tree(self, sys_def):
-        system_dir = os.path.join(self.system_dir, sys_def['name'])
-        os.mkdir(system_dir)
+        self.complex_models = {'name': 'complex',
+                               'profiles': ('prof_1.hmm', 'prof_2.hmm'),
+                               'not_profiles': ('not_a_profile', ),
+                               'definitions': {'subdef_1': {'def_1_1.xml': None,
+                                                            'def_1_2.xml': None
+                                                           },
+                                               'subdef_2': {'def_2_1.xml': None,
+                                                            'def_2_2.xml': None
+                                                           },
+                                               },
+                               'not_definitions': {'subdef_1': {'not_a_def': None},
+                                                   'subdef_2': {'not_a_def': None}
+                                                  },
+                             }
 
-        profiles_dir = os.path.join(system_dir, 'profiles')
-        os.mkdir(profiles_dir)
-        for profile in sys_def['profiles']:
-            fh = open(os.path.join(profiles_dir, profile), 'w')
-            fh.close()
-        for filename in sys_def['not_profiles']:
-            fh = open(os.path.join(profiles_dir, filename), 'w')
-            fh.close()
-
-        models_dir = os.path.join(system_dir, 'models')
-        os.mkdir(models_dir)
-
-        def create_tree(models, path):
-            for level_n in models:
-                if isinstance(level_n, str):
-                    if models[level_n] is None:
-                        fh = open(os.path.join(path, level_n), 'w')
-                        fh.close()
-                    else:
-                        submodel_path = os.path.join(path, level_n)
-                        if not os.path.exists(submodel_path):
-                            os.mkdir(submodel_path)
-                        create_tree(models[level_n], submodel_path)
-                elif isinstance(level_n, dict):
-                    create_tree(models[level_n], path)
-                else:
-                    assert False, "error in modeling \"models\" {} {} ".format(level_n, type(level_n))
-        create_tree(sys_def['models'], models_dir)
-        create_tree(sys_def['not_models'], models_dir)
-
-        return system_dir
 
 
     def tearDown(self):
@@ -91,132 +117,108 @@ class SystemDefTest(unittest.TestCase):
         logging.shutdown()
         l = logging.getLogger()
         l.manager.loggerDict.clear()
-        try:
-            shutil.rmtree(self.tmp_dir)
-        except:
-            pass
+        #try:
+        #    shutil.rmtree(self.tmp_dir)
+        #except:
+        #    pass
 
 
-    def test_SystemDef(self):
-        simple_system = {'name': 'simple',
-                         'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                         'not_profiles': ('not_a_profile', ),
-                         'models': {'model_1.xml': None,
-                                    'model_2.xml': None
-                                    },
-                         'not_models': {'not_a_model': None},
-                         }
+    def test_ModelLocation(self):
+        with self.assertRaises(MacsypyError) as cm:
+            ModelLocation(self.cfg, path='foo', profile_dir='bar')
+        self.assertEqual(cm.exception.message, "'path' and 'profile_dir' are incompatible arguments")
 
-        simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(self.cfg, path=simple_dir)
-        self.assertEqual(sys_def.name, simple_system['name'])
+        with self.assertRaises(MacsypyError) as cm:
+            ModelLocation(self.cfg, path='foo', def_dir='bar')
+        self.assertEqual(cm.exception.message, "'path' and 'def_dir' are incompatible arguments")
+
+        with self.assertRaises(MacsypyError) as cm:
+            ModelLocation(self.cfg, def_dir='foo')
+        self.assertEqual(cm.exception.message, "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
+
+        with self.assertRaises(MacsypyError) as cm:
+            ModelLocation(self.cfg, profile_dir='foo')
+        self.assertEqual(cm.exception.message, "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
+
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        sys_def = ModelLocation(self.cfg, path=simple_dir)
+        self.assertEqual(sys_def.name, self.simple_models['name'])
         self.assertEqual(sys_def.path, simple_dir)
         self.assertDictEqual(sys_def._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p) for p in simple_system['profiles']})
+                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p) \
+                              for p in self.simple_models['profiles']})
 
-        self.assertSetEqual(set(sys_def._models.keys()),
-                            {os.path.splitext(m)[0] for m in simple_system['models']})
+        self.assertSetEqual(set(sys_def._definitions.keys()),
+                            {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
 
-        complex_system = {'name': 'complex',
-                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                          'not_profiles': ('not_a_profile', ),
-                          'models': {'submodel_1': {'model_1_1.xml': None,
-                                                    'model_1_2.xml': None
-                                                    },
-                                     'submodel_2': {'model_2_1.xml': None,
-                                                    'model_2_2.xml': None
-                                                   },
-                                     },
-                          'not_models': {'submodel_1': {'not_a_model': None},
-                                         'submodel_2': {'not_a_model': None}
-                                         },
-                          }
-        complex_dir = self._create_fake_systems_tree(complex_system)
-        sys_def = SystemDef(self.cfg, path=complex_dir)
-        self.assertEqual(sys_def.name, complex_system['name'])
+
+        complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
+        sys_def = ModelLocation(self.cfg, path=complex_dir)
+        self.assertEqual(sys_def.name, self.complex_models['name'])
         self.assertEqual(sys_def.path, complex_dir)
         self.assertDictEqual(sys_def._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(complex_dir, 'profiles', p) for p in complex_system['profiles']})
+                             {os.path.splitext(p)[0]: os.path.join(complex_dir, 'profiles', p) \
+                              for p in self.complex_models['profiles']})
 
-        self.assertSetEqual({sm for sm in complex_system['models']}, set(sys_def._models.keys()))
-        for submodel_name in complex_system['models']:
-            submodel = complex_system['models'][submodel_name]
+        self.assertSetEqual({sm for sm in self.complex_models['definitions']}, set(sys_def._definitions.keys()))
+        for subdef_name in self.complex_models['definitions']:
+            subdef = self.complex_models['definitions'][subdef_name]
 
-            self.assertSetEqual({ssm.name for ssm in sys_def._models[submodel_name].submodels.values()},
-                                {os.path.splitext(ssm)[0] for ssm in submodel})
-            self.assertSetEqual({ssm.path for ssm in sys_def._models[submodel_name].submodels.values()},
-                                {os.path.join(complex_dir, 'models', submodel_name,ssm) for ssm in submodel})
+            self.assertSetEqual({ssm.name for ssm in sys_def._definitions[subdef_name].subdefinitions.values()},
+                                {os.path.splitext(ssm)[0] for ssm in subdef})
+            self.assertSetEqual({ssm.path for ssm in sys_def._definitions[subdef_name].subdefinitions.values()},
+                                {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
 
-    def test_get_model(self):
-        simple_system = {'name': 'simple',
-                         'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                         'not_profiles': ('not_a_profile', ),
-                         'models': {'model_1.xml': None,
-                                    'model_2.xml': None
-                                    },
-                         'not_models': {'not_a_model': None},
-                         }
 
-        simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(self.cfg, path=simple_dir)
+    def test_get_definition(self):
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
 
-        model_name = 'model_1'
-        model_expected = ModelDefLocation(name=model_name,
-                                          path=os.path.join(simple_dir, 'models', model_name+'.xml'))
-        model_received = sys_def.get_model(model_name)
+        model_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
+        defloc_expected = DefinitionLocation(name=model_name,
+                                             path=os.path.join(simple_dir, 'definitions', model_name + '.xml'))
+        defloc_received = model_loc.get_definition(model_name)
+        self.assertEqual(defloc_expected, defloc_received)
+
+        complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
+        sys_def = ModelLocation(self.cfg, path=complex_dir)
+
+        submodel_name = 'subdef_1'
+        model_name = 'def_1_1'
+        model_expected = DefinitionLocation(name=model_name,
+                                            path=os.path.join(complex_dir, 'definitions', submodel_name, model_name + '.xml'))
+
+        model_received = sys_def.get_definition(submodel_name + '/' + model_name)
         self.assertEqual(model_expected, model_received)
 
 
     def test_models(self):
-        complex_system = {'name': 'complex',
-                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                          'not_profiles': ('not_a_profile', ),
-                          'models': {'submodel_1': {'model_1_1.xml': None,
-                                                    'model_1_2.xml': None
-                                                    },
-                                     'submodel_2': {'model_2_1.xml': None,
-                                                    'model_2_2.xml': None
-                                                    },
-                                     },
-                          'not_models': {'submodel_1': {'not_a_model': None},
-                                         'submodel_2': {'not_a_model': None}
-                                         },
-                          }
-        complex_dir = self._create_fake_systems_tree(complex_system)
-        sys_def = SystemDef(self.cfg, path=complex_dir)
+        complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
+        model_loc = ModelLocation(self.cfg, path=complex_dir)
 
-        models_expected = []
-        for model_name in complex_system['models']:
-            submodels = {os.path.splitext(m)[0]: ModelDefLocation(name=os.path.splitext(m)[0],
-                                                                  path=os.path.join(complex_dir, 'models', model_name, m)) \
-                         for m in complex_system['models'][model_name]
+        defs_expected = []
+        for def_name in self.complex_models['definitions']:
+            subdefinitions = {os.path.splitext(m)[0]: DefinitionLocation(name=os.path.splitext(m)[0],
+                                                                    path=os.path.join(complex_dir, 'definitions', def_name, m)) \
+                         for m in self.complex_models['definitions'][def_name]
                          }
-            sub_model = ModelDefLocation(name=model_name,
-                                         path=os.path.join(complex_dir, 'models', model_name),
-                                         submodels=submodels)
-            models_expected.append(sub_model)
+            sub_def = DefinitionLocation(name=def_name,
+                                         path=os.path.join(complex_dir, 'definitions', def_name),
+                                         subdefinitions=subdefinitions)
+            defs_expected.append(sub_def)
 
-        models_received = sys_def.models
-        self.assertEqual(len(models_received), len(models_expected))
-        self.assertEqual(sorted(models_received), sorted(models_expected))
+        defs_received = model_loc.definitions
+        self.assertEqual(len(defs_expected), len(defs_received))
+        self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
 
     def test_get_profile(self):
-        simple_system = {'name': 'simple',
-                         'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                         'not_profiles': ('not_a_profile', ),
-                         'models': {'model_1.xml': None,
-                                    'model_2.xml': None
-                                    },
-                         'not_models': {'not_a_model': None},
-                         }
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        sys_def = ModelLocation(self.cfg, path=simple_dir)
 
-        simple_dir = self._create_fake_systems_tree(simple_system)
-        sys_def = SystemDef(self.cfg,path=simple_dir)
-
-        self.assertEqual(sys_def.get_profile(os.path.splitext(simple_system['profiles'][0])[0]),
-                         os.path.join(simple_dir, 'profiles', simple_system['profiles'][0]))
+        self.assertEqual(sys_def.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
+                         os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
 
     def test_str(self):
         pass
@@ -243,31 +245,31 @@ class ModelDefLocationTest(unittest.TestCase):
     def test_ModelDefLocation(self):
         model_name = 'foo'
         model_path = '/path/to/model.xml'
-        mdfl = ModelDefLocation(name=model_name,
+        mdfl = DefinitionLocation(name=model_name,
                                 path=model_path)
         self.assertEqual(mdfl.name, model_name)
         self.assertEqual(mdfl.path, model_path)
-        self.assertIsNone(mdfl.submodels)
+        self.assertIsNone(mdfl.subdefinitions)
 
     def test_add_submodel(self):
         model_name = 'foo'
         model_path = '/path/to/systems/Foo_system/models/foo'
-        mdfl = ModelDefLocation(name=model_name,
+        mdfl = DefinitionLocation(name=model_name,
                                 path=model_path)
         submodel_name = 'bar'
         submodel_path = '/path/to/systems/Foo_system/models/foo/bar.xml'
-        submodel = ModelDefLocation(name=submodel_name,
+        submodel = DefinitionLocation(name=submodel_name,
                                     path=submodel_path)
-        mdfl.add_submodel(submodel)
+        mdfl.add_subdefinition(submodel)
 
-        self.assertEqual(len(mdfl.submodels), 1)
-        self.assertEqual(mdfl.submodels[submodel_name], submodel)
+        self.assertEqual(len(mdfl.subdefinitions), 1)
+        self.assertEqual(mdfl.subdefinitions[submodel_name], submodel)
 
 
     def test_str(self):
         model_name = 'foo'
         model_path = '/path/to/model.xml'
-        mdfl = ModelDefLocation(name=model_name,
+        mdfl = DefinitionLocation(name=model_name,
                                 path=model_path)
         self.assertEqual(mdfl.name, model_name)
 
@@ -300,33 +302,34 @@ class SystemRegistryTest(unittest.TestCase):
         self.tmp_dir = tempfile.mkdtemp()
         self._prefix_data_ori = registries._prefix_data
         registries._prefix_data = self.tmp_dir
-        self.system_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'systems')
-        os.makedirs(self.system_dir)
-        complex_system = {'name': 'complex',
-                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
-                          'not_profiles': ('not_a_profile', ),
-                          'models': {'submodel_1': {'model_1_1.xml': None,
-                                                    'model_1_2.xml': None
-                                                    },
-                                     'submodel_2': {'model_2_1.xml': None,
-                                                    'model_2_2.xml': None
-                                                    },
-                                     },
-                          'not_models': {'submodel_1': {'not_a_model': None},
-                                         'submodel_2': {'not_a_model': None}
-                                         },
-                          }
-        simple_system = {'name': 'simple',
+        self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
+        os.makedirs(self.root_models_dir)
+        simple_models = {'name': 'simple',
                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
                          'not_profiles': ('not_a_profile', ),
-                         'models': {'model_1.xml': None,
-                                    'model_2.xml': None
-                                    },
-                         'not_models': {'not_a_model': None},
+                         'definitions': {'def_1.xml': None,
+                                         'def_2.xml': None
+                                        },
+                         'not_definitions': {'not_a_def': None},
                          }
 
-        self.simple_dir = self._create_fake_systems_tree(simple_system)
-        self.complex_dir = self._create_fake_systems_tree(complex_system)
+        complex_models = {'name': 'complex',
+                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
+                          'not_profiles': ('not_a_profile', ),
+                          'definitions': {'subdef_1': {'def_1_1.xml': None,
+                                                       'def_1_2.xml': None
+                                                      },
+                                          'subdef_2': {'def_2_1.xml': None,
+                                                       'def_2_2.xml': None
+                                                      },
+                                          },
+                          'not_definitions': {'subdef_1': {'not_a_def': None},
+                                              'subdef_2': {'not_a_def': None}
+                                             },
+                          }
+
+        self.simple_dir = _create_fake_models_tree(self.root_models_dir, simple_models)
+        self.complex_dir = _create_fake_models_tree(self.root_models_dir, complex_models)
 
 
     def tearDown(self):
@@ -346,51 +349,15 @@ class SystemRegistryTest(unittest.TestCase):
         registries._prefix_data = self._prefix_data_ori
 
 
-    def _create_fake_systems_tree(self, sys_def):
-        system_dir = os.path.join(self.system_dir, sys_def['name'])
-        os.mkdir(system_dir)
-
-        profiles_dir = os.path.join(system_dir, 'profiles')
-        os.mkdir(profiles_dir)
-        for profile in sys_def['profiles']:
-            fh = open(os.path.join(profiles_dir, profile), 'w')
-            fh.close()
-        for filename in sys_def['not_profiles']:
-            fh = open(os.path.join(profiles_dir, filename), 'w')
-            fh.close()
-
-        models_dir = os.path.join(system_dir, 'models')
-        os.mkdir(models_dir)
-
-        def create_tree(models, path):
-            for level_n in models:
-                if isinstance(level_n, str):
-                    if models[level_n] is None:
-                        fh = open(os.path.join(path, level_n), 'w')
-                        fh.close()
-                    else:
-                        submodel_path = os.path.join(path, level_n)
-                        if not os.path.exists(submodel_path):
-                            os.mkdir(submodel_path)
-                        create_tree(models[level_n], submodel_path)
-                elif isinstance(level_n, dict):
-                    create_tree(models[level_n], path)
-                else:
-                    assert False, "error in modeling \"models\" {} {} ".format(level_n, type(level_n))
-        create_tree(sys_def['models'], models_dir)
-        create_tree(sys_def['not_models'], models_dir)
-        return system_dir
-
-
-    def test_SystemRegistry(self):
-        sr = SystemsRegistry(self.cfg)
+    def test_ModelRegistry(self):
+        sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registery.keys()), sorted(['simple', 'complex']))
 
-    def test_systems(self):
-        sr = SystemsRegistry(self.cfg)
-        system_complex_expected = SystemDef(self.cfg, path=self.complex_dir)
-        system_simple_expected = SystemDef(self.cfg, path=self.simple_dir)
-        systems_received = sr.systems()
-        self.assertEqual(len(systems_received), 2)
-        self.assertIn(system_complex_expected, systems_received)
-        self.assertIn(system_simple_expected, systems_received)
+    def test_models(self):
+        md = ModelRegistry(self.cfg)
+        model_complex_expected = ModelLocation(self.cfg, path=self.complex_dir)
+        model_simple_expected = ModelLocation(self.cfg, path=self.simple_dir)
+        models_received = md.models()
+        self.assertEqual(len(models_received), 2)
+        self.assertIn(model_complex_expected, models_received)
+        self.assertIn(model_complex_expected, models_received)

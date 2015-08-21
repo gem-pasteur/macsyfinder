@@ -14,6 +14,7 @@
 
 
 import os
+from macsypy.macsypy_error import MacsypyError
 
 _prefix_data = '$PREFIXDATA'
 if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
@@ -21,21 +22,31 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 
 
 
-class SystemDef(object):
+class ModelLocation(object):
     """
-    Handle where are store systems. Systems are organized in families and sub families.
-    each family match to a SystemDef. a System def contains the path toward the _models
-    and the paths to corresponding  profiles.
+    Handle where are store Models. Models are organized in families and sub families.
+    each family match to a ModelLocation. a ModelLocation contains the path toward the definitions
+    and the paths to corresponding to the profiles.
     """
 
     def __init__(self, cfg, path=None, profile_dir=None, def_dir=None):
         """
+        :param cfg: the macsyfinder configuration
+        :type cfg: :class:`macsypy.config.Config` object
         :param path: if it's an installed system: path is the absolute path to a system family.
                      otherwise path is None, and profile_dir and def_dir must be specified.
         :type path: string
-        :param cfg: the macsyfinder configuration
-        :type cfg: :class:`macsypy.config.Config` object
+        :param profile_dir: the absolute path to the directory which contains the hmm profiles files.
+        :type profile_dir: string
+        :param def_dir: the absolute path to the directory which contains the systems definitions (xml files) or submodels.
+        :type def_dir: string
+        :raise: MacsypyError if path is set and profile_dir or def_dir is set
+        :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
+        if path and any((profile_dir, def_dir)):
+            raise MacsypyError("'path' and '{}' are incompatible arguments".format('profile_dir' if profile_dir else 'def_dir'))
+        elif not path and not all((profile_dir, def_dir)):
+            raise MacsypyError("if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
         self.cfg = cfg
         self.path = path
         if path is not None:
@@ -46,50 +57,48 @@ class SystemDef(object):
             profile_dir = os.path.join(path, 'profiles')
         self._profiles = self._scan_profiles(profile_dir)
 
-        self._models = {}
+        self._definitions = {}
         if not def_dir:
-            models_dir = os.path.join(self.path, 'models')
-            for model in os.listdir(models_dir):
-                model_path = os.path.join(models_dir, model)
-                new_model = self._scan_models(model_path=model_path)
-                if new_model:  # _scan_models can return None if a dir is empty
-                    self._models[new_model.name] = new_model
+            def_dir = os.path.join(self.path, 'definitions')
+            for definition in os.listdir(def_dir):
+                definition_path = os.path.join(def_dir, definition)
+                new_def = self._scan_definitions(def_path=definition_path)
+                if new_def:  # _scan_definitions can return None if a dir is empty
+                    self._definitions[new_def.name] = new_def
         else:
             import glob
             for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
-                new_model = ModelDefLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
+                new_def = DefinitionLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
                                              path=os.path.abspath(model_path))
-                self._models[new_model.name] = new_model
+                self._definitions[new_def.name] = new_def
 #
 
-    def _scan_models(self, model_def=None, model_path=None):
+    def _scan_definitions(self, definition=None, def_path=None):
         """
-        Scan recursively the _models tree on the file system and store
-        all _models definitions
+        Scan recursively the _definitions tree on the file system and store
+        all _definitions definitions
 
         :param modelf_def: the current model definition to add new submodel location
-        :type model_def: :class:`ModelDefLocation`
-        :param model_path: the absolute path to analyse
-        :type model_path: string
+        :type definition: :class:`DefinitionLocation`
+        :param def_path: the absolute path to analyse
+        :type def_path: string
         """
-        if os.path.isfile(model_path):
-            new_model = None
-            base, ext = os.path.splitext(model_path)
+        if os.path.isfile(def_path):
+            new_def = None
+            base, ext = os.path.splitext(def_path)
             if ext == '.xml':
-                new_model = ModelDefLocation(name=os.path.basename(base),
-                                             path=model_path)
-            return new_model
+                new_def = DefinitionLocation(name=os.path.basename(base),
+                                             path=def_path)
+            return new_def
 
-        elif os.path.isdir(model_path):
-            new_model = ModelDefLocation(name=os.path.basename(model_path),
-                                         path=model_path
-                                         )
-            for model in os.listdir(model_path):
-                submodel = self._scan_models(model_def=new_model,
-                                             model_path=os.path.join(new_model.path, model))
-                if submodel is not None:
-                    new_model.add_submodel(submodel)
-            return new_model
+        elif os.path.isdir(def_path):
+            new_def = DefinitionLocation(name=os.path.basename(def_path),
+                                         path=def_path)
+            for model in os.listdir(def_path):
+                subdef = self._scan_definitions(definition=new_def, def_path=os.path.join(new_def.path, model))
+                if subdef is not None:
+                    new_def.add_subdefinition(subdef)
+            return new_def
 
 
     def _scan_profiles(self, path):
@@ -106,41 +115,48 @@ class SystemDef(object):
         return all_profiles
 
 
-    def get_model(self, name):
+    def get_definition(self, name):
         """
-        :param name: the name of the model to retrieve (without extension)
-        :type name: string
-        :returns: the model corresponding to the given name
-        :rtype: a :class:`ModelDefLocation` object
-        :raise: KeyError if name does not match with any model definition
+        :param name: the name of the definition to retrieve.
+                     it's complete path without extension.
+                     for instance for a file with path like this:
+                     systems/TXSS/defintions/T3SS.xml
+                     the name is: TXSS/T3SS
+                     for
+                     systems/CRISPR-Cas/definitions/typing/CAS.xml:
+                     the name is CRISPR-Cas/typing/CAS
+        :type name: string.
+        :returns: the definition corresponding to the given name.
+        :rtype: a :class:`DefinitionLocation` object.
+        :raise: KeyError if name does not match with any model definition.
         """
         name_path = name.split('/')
-        models = self._models
+        defs = self._definitions
         for level in name_path:
-            if level in self._models:
-                model = models[level]
-                models = model
+            if level in defs:
+                definition = defs[level]
+                defs = definition.subdefinitions
             else:
-                raise KeyError("{} does not match with any _models".format(level))
-        return model
+                raise KeyError("{} does not match with any definitions".format(level))
+        return definition
 
 
     @property
-    def models(self):
+    def definitions(self):
         """
-        :return: the list of _models of first level for this system
-        :rtype: list of :class: ModelDefLocation` object
+        :return: the list of definitions of first level for this system
+        :rtype: list of :class: DefinitionLocation` object
         """
-        return self._models.values()
+        return self._definitions.values()
 
 
     def get_profile(self, name):
         """
-        :param name: the name of the profile to retrieve (without extension)
-        :type name: string
-        :returns: the absolute path of the hmm profile
-        :rtype: string
-        :raise: KeyError if name does not match with any profiles
+        :param name: the name of the profile to retrieve (without extension).
+        :type name: string.
+        :returns: the absolute path of the hmm profile.
+        :rtype: string.
+        :raise: KeyError if name does not match with any profiles.
         """
         return self._profiles[name]
 
@@ -152,28 +168,30 @@ class SystemDef(object):
         return self.path == other.path and \
                self.name == other.name and \
                self._profiles == other._profiles and \
-               self._models == other._models
+               self._definitions == other._definitions
 
 
 
 
-class ModelDefLocation(dict):
+class DefinitionLocation(dict):
     """
     Manage were models are stored. a Model is a xml definition of a system.
     """
 
-    def __init__(self, name=None, submodels=None, path=None):
-        super(ModelDefLocation, self).__init__(name=name, submodels=submodels, path=path)
-        self.__dict__ = self #allow to use dot notation to access to property here name or submodels ...
+    def __init__(self, name=None, subdefinitions=None, path=None):
+        super(DefinitionLocation, self).__init__(name=name, subdefinitions=subdefinitions, path=path)
+        self.__dict__ = self #allow to use dot notation to access to property here name or subdefinitions ...
 
-    def add_submodel(self, submodel):
+    def add_subdefinition(self, subdefinition):
         """
-        :param submodels:
-        :type submodels:
+        add new sub category of definitions to this definition
+
+        :param subdefinition: the new definition to add as subdefinition.
+        :type subdefinition: :class:`DefinitionLocation` object
         """
-        if self.submodels is None:
-            self.submodels = {}
-        self.submodels[submodel.name] = submodel
+        if self.subdefinitions is None:
+            self.subdefinitions = {}
+        self.subdefinitions[subdefinition.name] = subdefinition
 
     def __str__(self):
         return self.name
@@ -181,13 +199,13 @@ class ModelDefLocation(dict):
     def __eq__(self, other):
         return self.name == other.name and \
                self.path == other.path and \
-               self.submodels == other.submodels
+               self.subdefinitions == other.subdefinitions
 
 
-class SystemsRegistry(object):
+class ModelRegistry(object):
     """
-    scan canonical directories to register the different systems available in global macsyfinder
-    share data location (depending installation /usr/share/data/profile) or can be
+    scan canonical directories to register the different models available in global macsyfinder
+    share data location (depending installation /usr/share/data/models) or can be
     overload with the location specify in the macsyfinder configuration (either in config file or command line)
     """
 
@@ -198,42 +216,43 @@ class SystemsRegistry(object):
         """
         self._registery = {}
         if cfg.old_data_organization():
-            new_system = SystemDef(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
-            self._registery[new_system.name] = new_system
+            new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
+            self._registery[new_model.name] = new_model
         else:
-            systems_def_root = os.path.join(_prefix_data, 'macsyfinder', 'systems')
-            for systems_type in os.listdir(systems_def_root):
-                system_path = os.path.join(systems_def_root, systems_type)
-                if os.path.isdir(system_path):
-                    new_system = SystemDef(cfg, path=system_path)
-                    self._registery[new_system.name] = new_system
+            models_def_root = os.path.join(_prefix_data, 'macsyfinder', 'models')
+            for models_type in os.listdir(models_def_root):
+                model_path = os.path.join(models_def_root, models_type)
+                if os.path.isdir(model_path):
+                    new_model = ModelLocation(cfg, path=model_path)
+                    self._registery[new_model.name] = new_model
 
 
-    def systems(self):
+    def models(self):
         """
-        :returns: the list of systems
-        :rtype: list of :class:`SystemDef` object
+        :returns: the list of models
+        :rtype: list of :class:`ModelLocation` object
         """
         return self._registery.values() # level 0 like TXSS ou CRISPR_Cas
+
 
     def __str__(self):
         s = ''
 
         def model_to_str(model, pad):
-            if model.submodels:
+            if model.subdefinitions:
                 model_s = "{}\{}\n".format(' ' * pad, model.name)
                 pad = pad + len(model.name) + 1
-                for submodel in model.submodels.values():
+                for submodel in model.subdefinitions.values():
                     model_s += model_to_str(submodel, pad)
             else:
                 model_s = "{}\{}\n".format(' ' * pad, model.name)
             return model_s
 
-        for system in self.systems():
-            s += system.name + '\n'
-            pad = len(system.name) + 1
-            for model in system.models:
-                s += model_to_str(model, pad)
+        for model in self.models():
+            s += model.name + '\n'
+            pad = len(model.name) + 1
+            for definition in model.definitions:
+                s += model_to_str(definition, pad)
         return s
 
 

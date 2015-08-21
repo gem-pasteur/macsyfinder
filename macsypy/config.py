@@ -67,6 +67,9 @@ class ConfigLight(object):
                 self.profile_suffix = self._defaults['profile_suffix']
 
 
+    def old_data_organization(self):
+        return False
+
 class Config(object):
     """
     Parse configuration files and handle the configuration according to the following file location precedence:
@@ -687,7 +690,6 @@ class Config(object):
 
     def old_data_organization(self):
         """
-
         :return: True if the data are organized in old way, two independant directories:
 
           * one directory for hmm profiles
