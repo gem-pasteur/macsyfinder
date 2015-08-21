@@ -117,10 +117,10 @@ class ModelLocationTest(unittest.TestCase):
         logging.shutdown()
         l = logging.getLogger()
         l.manager.loggerDict.clear()
-        #try:
-        #    shutil.rmtree(self.tmp_dir)
-        #except:
-        #    pass
+        try:
+            shutil.rmtree(self.tmp_dir)
+        except:
+            pass
 
 
     def test_ModelLocation(self):
@@ -141,32 +141,32 @@ class ModelLocationTest(unittest.TestCase):
         self.assertEqual(cm.exception.message, "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        sys_def = ModelLocation(self.cfg, path=simple_dir)
-        self.assertEqual(sys_def.name, self.simple_models['name'])
-        self.assertEqual(sys_def.path, simple_dir)
-        self.assertDictEqual(sys_def._profiles,
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        self.assertEqual(model_loc.name, self.simple_models['name'])
+        self.assertEqual(model_loc.path, simple_dir)
+        self.assertDictEqual(model_loc._profiles,
                              {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p) \
                               for p in self.simple_models['profiles']})
 
-        self.assertSetEqual(set(sys_def._definitions.keys()),
+        self.assertSetEqual(set(model_loc._definitions.keys()),
                             {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
 
 
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
-        sys_def = ModelLocation(self.cfg, path=complex_dir)
-        self.assertEqual(sys_def.name, self.complex_models['name'])
-        self.assertEqual(sys_def.path, complex_dir)
-        self.assertDictEqual(sys_def._profiles,
+        model_loc = ModelLocation(self.cfg, path=complex_dir)
+        self.assertEqual(model_loc.name, self.complex_models['name'])
+        self.assertEqual(model_loc.path, complex_dir)
+        self.assertDictEqual(model_loc._profiles,
                              {os.path.splitext(p)[0]: os.path.join(complex_dir, 'profiles', p) \
                               for p in self.complex_models['profiles']})
 
-        self.assertSetEqual({sm for sm in self.complex_models['definitions']}, set(sys_def._definitions.keys()))
+        self.assertSetEqual({sm for sm in self.complex_models['definitions']}, set(model_loc._definitions.keys()))
         for subdef_name in self.complex_models['definitions']:
             subdef = self.complex_models['definitions'][subdef_name]
 
-            self.assertSetEqual({ssm.name for ssm in sys_def._definitions[subdef_name].subdefinitions.values()},
+            self.assertSetEqual({ssm.name for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.splitext(ssm)[0] for ssm in subdef})
-            self.assertSetEqual({ssm.path for ssm in sys_def._definitions[subdef_name].subdefinitions.values()},
+            self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
 
