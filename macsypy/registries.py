@@ -73,7 +73,7 @@ class ModelLocation(object):
                 self._definitions[new_def.name] = new_def
 #
 
-    def _scan_definitions(self, definition=None, def_path=None):
+    def _scan_definitions(self, modelf_def=None, def_path=None):
         """
         Scan recursively the _definitions tree on the file system and store
         all _definitions definitions
@@ -83,19 +83,28 @@ class ModelLocation(object):
         :param def_path: the absolute path to analyse
         :type def_path: string
         """
+        current_dir = None
         if os.path.isfile(def_path):
             new_def = None
             base, ext = os.path.splitext(def_path)
             if ext == '.xml':
-                new_def = DefinitionLocation(name=os.path.basename(base),
+                if modelf_def is not None:
+                    name = "{}/{}".format(modelf_def.name, os.path.basename(base))
+                else:
+                    name = os.path.basename(base)
+                new_def = DefinitionLocation(name=name,
                                              path=def_path)
             return new_def
 
         elif os.path.isdir(def_path):
-            new_def = DefinitionLocation(name=os.path.basename(def_path),
+            if modelf_def is not None:
+                name = "{}/{}".format(modelf_def.name, os.path.basename(def_path))
+            else:
+                name = os.path.basename(def_path)
+            new_def = DefinitionLocation(name=name,
                                          path=def_path)
             for model in os.listdir(def_path):
-                subdef = self._scan_definitions(definition=new_def, def_path=os.path.join(new_def.path, model))
+                subdef = self._scan_definitions(modelf_def=new_def, def_path=os.path.join(new_def.path, model))
                 if subdef is not None:
                     new_def.add_subdefinition(subdef)
             return new_def
@@ -176,6 +185,10 @@ class ModelLocation(object):
 class DefinitionLocation(dict):
     """
     Manage were models are stored. a Model is a xml definition of a system.
+    It has 3 attributes
+    name: the fully qualified definitions name like TXSS/T3SS or CRISPR-cas/Typing/Cas
+    path: the absolute path to the definitions or set of definitions
+    subdefinitions: the subdefintions if it exists
     """
 
     def __init__(self, name=None, subdefinitions=None, path=None):
@@ -191,7 +204,7 @@ class DefinitionLocation(dict):
         """
         if self.subdefinitions is None:
             self.subdefinitions = {}
-        self.subdefinitions[subdefinition.name] = subdefinition
+        self.subdefinitions[subdefinition.name.split('/')[-1]] = subdefinition
 
     def __str__(self):
         return self.name
@@ -219,7 +232,10 @@ class ModelRegistry(object):
             new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
             self._registery[new_model.name] = new_model
         else:
-            models_def_root = os.path.join(_prefix_data, 'macsyfinder', 'models')
+            if cfg.models_dir:
+                models_def_root = cfg.models_dir
+            else:
+                models_def_root = os.path.join(_prefix_data, 'macsyfinder', 'models')
             for models_type in os.listdir(models_def_root):
                 model_path = os.path.join(models_def_root, models_type)
                 if os.path.isdir(model_path):

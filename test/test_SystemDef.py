@@ -166,7 +166,8 @@ class ModelLocationTest(unittest.TestCase):
             subdef = self.complex_models['definitions'][subdef_name]
 
             self.assertSetEqual({ssm.name for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
-                                {os.path.splitext(ssm)[0] for ssm in subdef})
+                                {"{}/{}".format(subdef_name, os.path.splitext(ssm)[0]) for ssm in subdef})
+
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
@@ -199,8 +200,11 @@ class ModelLocationTest(unittest.TestCase):
 
         subdef_name = 'subdef_1'
         def_name = 'def_1_1'
-        defloc_expected = DefinitionLocation(name=def_name,
+        defloc_expected = DefinitionLocation(name="{}/{}".format(subdef_name, def_name),
                                              path=os.path.join(complex_dir, 'definitions', subdef_name, def_name + '.xml'))
+        print
+        print "### defloc_expected name", defloc_expected.name
+        print "### defloc_expected path", defloc_expected.path
 
         defloc_received = sys_def.get_definition(subdef_name + '/' + def_name)
         self.assertEqual(defloc_expected, defloc_received)
@@ -223,14 +227,14 @@ class ModelLocationTest(unittest.TestCase):
 
         defs_expected = []
         for def_name in self.complex_models['definitions']:
-            subdefinitions = {os.path.splitext(m)[0]: DefinitionLocation(name=os.path.splitext(m)[0],
-                                                                    path=os.path.join(complex_dir, 'definitions', def_name, m)) \
+            subdefinitions = {os.path.splitext(m)[0]: DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
+                                                                         path=os.path.join(complex_dir, 'definitions', def_name, m)) \
                          for m in self.complex_models['definitions'][def_name]
                          }
-            sub_def = DefinitionLocation(name=def_name,
-                                         path=os.path.join(complex_dir, 'definitions', def_name),
-                                         subdefinitions=subdefinitions)
-            defs_expected.append(sub_def)
+            defs = DefinitionLocation(name=def_name,
+                                     path=os.path.join(complex_dir, 'definitions', def_name),
+                                     subdefinitions=subdefinitions)
+            defs_expected.append(defs)
 
         defs_received = model_loc.definitions
         self.assertEqual(len(defs_expected), len(defs_received))
