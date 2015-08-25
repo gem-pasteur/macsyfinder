@@ -224,17 +224,19 @@ class ModelLocationTest(unittest.TestCase):
         defs_expected = []
         for def_name in self.complex_models['definitions']:
             defs_expected.extend([DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
-                                                                         path=os.path.join(complex_dir, 'definitions', def_name, m)) \
-                         for m in self.complex_models['definitions'][def_name]])
+                                                     path=os.path.join(complex_dir, 'definitions', def_name, m))\
+                                  for m in self.complex_models['definitions'][def_name]])
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
         defs_expected = []
-        for def_name in self.complex_models['definitions']['subdef_1']:
-            defs_expected.append(DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
-                                                    path=os.path.join(complex_dir, 'definitions', def_name, m))
+        def_root_name = 'subdef_1'
+        for def_name in self.complex_models['definitions'][def_root_name]:
+            defs_expected.append(DefinitionLocation(name="{}/{}".format(def_root_name, os.path.splitext(def_name)[0]),
+                                                    path=os.path.join(complex_dir, 'definitions', def_root_name, def_name))
                                  )
-        defs_received = model_loc.get_all_definitions(root_def_name='subdef_1')
+        defs_received = model_loc.get_all_definitions(root_def_name=def_root_name)
+        self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
         ## test old way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
@@ -247,8 +249,6 @@ class ModelLocationTest(unittest.TestCase):
                         ]
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
-
-
 
 
     def test_get_profile(self):
