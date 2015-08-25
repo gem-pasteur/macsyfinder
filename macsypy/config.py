@@ -83,8 +83,8 @@ class Config(object):
     options = ('cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file',
                'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci',
                 'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
-                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix',
-                'out_dir',
+                'def_dir', 'models_dir', 'res_search_dir', 'res_search_suffix',
+                'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
     def __init__(self,
@@ -103,7 +103,8 @@ class Config(object):
                  e_value_res=None,
                  i_evalue_sel=None,
                  coverage_profile=None,
-                 def_dir=None ,
+                 def_dir=None,
+                 models_dir=None,
                  res_search_dir=None,
                  res_search_suffix=None,
                  profile_dir=None,
@@ -160,6 +161,8 @@ class Config(object):
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
+        :param models_dir: the path to the directory containing models (profiles + definitions)
+        :type models_dir: string
         :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
         :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date},
@@ -205,11 +208,9 @@ class Config(object):
                           'e_value_res': "1",
                           'i_evalue_sel': "0.001",
                           'coverage_profile': "0.5",
-                          #'def_dir': os.path.join(_prefix_data, 'DEF'),
                           'res_search_dir': os.getcwd(),
                           'res_search_suffix': '.search_hmm.out',
                           'res_extract_suffix': '.res_hmm_extract',
-                          #'profile_dir': os.path.join(_prefix_data, 'profiles'),
                           'profile_suffix': '.hmm',
                           'log_level': logging.WARNING,
                           'worker_nb': '1'
@@ -583,18 +584,40 @@ class Config(object):
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
             try:
+                options['models_dir'] = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
+            except NoSectionError:
+                if 'models_dir' in cmde_line_opt:
+                    options['models_dir'] = cmde_line_opt['models_dir']
+                else:
+                    options['models_dir'] = None
+            except NoOptionError:
+                options['models_dir'] = None
+            if options['models_dir'] is not None and not os.path.exists(options['models_dir']):
+                raise ValueError("{0}: No such models directory".format(options['models_dir']))
+
+            try:
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars=cmde_line_opt)
-                if not os.path.exists(options['def_dir']):
-                    raise ValueError("{0}: No such definition directory".format(options['def_dir']))
-            except (NoSectionError, NoOptionError):
+            except NoSectionError:
+                if 'def_dir' in cmde_line_opt:
+                    options['def_dir'] = cmde_line_opt['def_dir']
+                else:
+                    options['def_dir'] = None
+            except NoOptionError:
                 options['def_dir'] = None
+            if options['def_dir'] is not None and not os.path.exists(options['def_dir']):
+                raise ValueError("{0}: No such definition directory".format(options['def_dir']))
 
             try:
                 options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars=cmde_line_opt)
-                if not os.path.exists(options['profile_dir']):
-                    raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
-            except (NoSectionError, NoOptionError):
+            except NoSectionError:
+                if 'profile_dir' in cmde_line_opt:
+                    options['profile_dir'] = cmde_line_opt['profile_dir']
+                else:
+                    options['profile_dir'] = None
+            except NoOptionError:
                 options['profile_dir'] = None
+            if options['profile_dir'] is not None and not os.path.exists(options['profile_dir']):
+                raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
 
             try:
                 options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
@@ -663,7 +686,7 @@ class Config(object):
                     ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
                                 'max_nb_genes', 'multi_loci')),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile')),
-                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir',
+                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'models_dir',
                                      'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
@@ -885,6 +908,14 @@ class Config(object):
         :rtype: string
         """
         return self.options['profile_dir']
+
+    @property
+    def models_dir(self):
+        """
+        :return: the path to the directory where are the models (definitions + profiles)
+        :rtype: string
+        """
+        return self.options['models_dir']
 
     @property
     def profile_suffix(self):
