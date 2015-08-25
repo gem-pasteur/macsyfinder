@@ -150,13 +150,19 @@ class ModelLocation(object):
         return definition
 
 
-    @property
-    def definitions(self):
+    def get_all_definitions(self, root_def=None):
         """
-        :return: the list of definitions of first level for this system
+        :name root_def: The name of the root definition to get sub definitions.
+                        If root_def is None, return all definitions for this set of models
+        :param root_def: string
+        :return: the list of definitions or subdefinitions if root_def is specified for this model.
         :rtype: list of :class: DefinitionLocation` object
         """
-        return self._definitions.values()
+        # all_defs = [def_loc for def_loc in self._definitions.values()]
+        # all_terminal_def = [def_loc for def_loc in all_defs]
+        # [l2 for  subl in l for l2 in subl]
+        all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
+        return all_defs
 
 
     def get_profile(self, name):
@@ -205,6 +211,19 @@ class DefinitionLocation(dict):
         if self.subdefinitions is None:
             self.subdefinitions = {}
         self.subdefinitions[subdefinition.name.split('/')[-1]] = subdefinition
+
+
+    def all(self):
+        if not self.subdefinitions:
+            return [self]
+        else:
+            all_leaf = []
+            for definition in self.subdefinitions.values():
+                for leaf in definition.all():
+                    all_leaf.append(leaf)
+            return all_leaf
+
+
 
     def __str__(self):
         return self.name

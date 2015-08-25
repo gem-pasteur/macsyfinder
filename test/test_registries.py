@@ -202,10 +202,6 @@ class ModelLocationTest(unittest.TestCase):
         def_name = 'def_1_1'
         defloc_expected = DefinitionLocation(name="{}/{}".format(subdef_name, def_name),
                                              path=os.path.join(complex_dir, 'definitions', subdef_name, def_name + '.xml'))
-        print
-        print "### defloc_expected name", defloc_expected.name
-        print "### defloc_expected path", defloc_expected.path
-
         defloc_received = sys_def.get_definition(subdef_name + '/' + def_name)
         self.assertEqual(defloc_expected, defloc_received)
 
@@ -221,7 +217,7 @@ class ModelLocationTest(unittest.TestCase):
         self.assertEqual(defloc_expected, defloc_received)
 
 
-    def test_models(self):
+    def test_get_all_definitions(self):
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
         model_loc = ModelLocation(self.cfg, path=complex_dir)
 
@@ -231,28 +227,21 @@ class ModelLocationTest(unittest.TestCase):
                                                                          path=os.path.join(complex_dir, 'definitions', def_name, m)) \
                          for m in self.complex_models['definitions'][def_name]
                          }
-            defs = DefinitionLocation(name=def_name,
-                                     path=os.path.join(complex_dir, 'definitions', def_name),
-                                     subdefinitions=subdefinitions)
-            defs_expected.append(defs)
-
-        defs_received = model_loc.definitions
-        self.assertEqual(len(defs_expected), len(defs_received))
+            defs_expected.extend(subdefinitions.values())
+        defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
         ## test old way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-
         model_loc = ModelLocation(self.cfg,
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
-        defs_expected = [DefinitionLocation(name=d,
-                                            path=os.path.join(simple_dir, 'definitions', d) + '.xml') \
+        defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
+                                            path=os.path.join(simple_dir, 'definitions', d)) \
                          for d in self.simple_models['definitions']
                         ]
-        defs_received = model_loc.definitions
-        self.assertEqual(len(defs_expected), len(defs_received))
-
+        defs_received = model_loc.get_all_definitions()
+        self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
@@ -299,6 +288,7 @@ class DefinitionLocationTest(unittest.TestCase):
         self.assertEqual(mdfl.path, model_path)
         self.assertIsNone(mdfl.subdefinitions)
 
+
     def test_add_submodel(self):
         model_name = 'foo'
         model_path = '/path/to/systems/Foo_system/models/foo'
@@ -320,6 +310,24 @@ class DefinitionLocationTest(unittest.TestCase):
         mdfl = DefinitionLocation(name=model_name,
                                 path=model_path)
         self.assertEqual(mdfl.name, model_name)
+
+
+    def test_all(self):
+        model_name = 'foo'
+        model_path = '/path/to/systems/Foo_system/models/foo'
+        mdfl = DefinitionLocation(name=model_name,
+                                path=model_path)
+        submodel_name1 = 'foo/bar'
+        submodel_path1 = '/path/to/systems/Foo_system/models/foo/bar.xml'
+        submodel1 = DefinitionLocation(name=submodel_name1,
+                                       path=submodel_path1)
+        mdfl.add_subdefinition(submodel1)
+        submodel_name2 = 'foo/baz'
+        submodel_path2 = '/path/to/systems/Foo_system/models/foo/baz.xml'
+        submodel2 = DefinitionLocation(name=submodel_name2,
+                                       path=submodel_path2)
+        mdfl.add_subdefinition(submodel2)
+        self.assertListEqual(sorted(mdfl.all()), sorted([submodel1, submodel2]))
 
 
 class ModelRegistryTest(unittest.TestCase):
