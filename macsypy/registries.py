@@ -150,18 +150,19 @@ class ModelLocation(object):
         return definition
 
 
-    def get_all_definitions(self, root_def=None):
+    def get_all_definitions(self, root_def_name=None):
         """
-        :name root_def: The name of the root definition to get sub definitions.
+        :name root_def_name: The name of the root definition to get sub definitions.
                         If root_def is None, return all definitions for this set of models
-        :param root_def: string
+        :param root_def_name: string
         :return: the list of definitions or subdefinitions if root_def is specified for this model.
         :rtype: list of :class: DefinitionLocation` object
         """
-        # all_defs = [def_loc for def_loc in self._definitions.values()]
-        # all_terminal_def = [def_loc for def_loc in all_defs]
-        # [l2 for  subl in l for l2 in subl]
-        all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
+        if root_def_name is None:
+            all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
+        else:
+            root_def = self.get_definition(root_def_name)
+            all_defs = root_def.all()
         return all_defs
 
 

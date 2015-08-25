@@ -223,13 +223,18 @@ class ModelLocationTest(unittest.TestCase):
 
         defs_expected = []
         for def_name in self.complex_models['definitions']:
-            subdefinitions = {os.path.splitext(m)[0]: DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
+            defs_expected.extend([DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
                                                                          path=os.path.join(complex_dir, 'definitions', def_name, m)) \
-                         for m in self.complex_models['definitions'][def_name]
-                         }
-            defs_expected.extend(subdefinitions.values())
+                         for m in self.complex_models['definitions'][def_name]])
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
+
+        defs_expected = []
+        for def_name in self.complex_models['definitions']['subdef_1']:
+            defs_expected.append(DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
+                                                    path=os.path.join(complex_dir, 'definitions', def_name, m))
+                                 )
+        defs_received = model_loc.get_all_definitions(root_def_name='subdef_1')
 
         ## test old way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
@@ -242,6 +247,9 @@ class ModelLocationTest(unittest.TestCase):
                         ]
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
+
+
+
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
