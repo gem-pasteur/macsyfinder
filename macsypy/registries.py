@@ -20,6 +20,24 @@ _prefix_data = '$PREFIXDATA'
 if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
     _prefix_data = os.path.join(os.environ['MACSY_HOME'], 'data')
 
+_separator = '/'
+
+def _split_def_name(fqn):
+    """
+    :param fqn: the fully quallified de name of a def
+           the follow the schema model_name/<def_name>*/def_name
+           for instance CRISPR-Cas/typing/cas
+    :type fqn: string
+    :return: the list of coponents of the def path
+             ['CRISPR-Cas', 'typing', 'cas']
+    :rtype: list of string
+    """
+    split = def_name.split(_separator)
+    if split[0] == '':
+        split = split[1:]
+    if split[-1] == '':
+        split = split[:-1]
+    return split
 
 
 class ModelLocation(object):
@@ -64,6 +82,14 @@ class ModelLocation(object):
                 definition_path = os.path.join(def_dir, definition)
                 new_def = self._scan_definitions(def_path=definition_path)
                 if new_def:  # _scan_definitions can return None if a dir is empty
+                    new_def.fqn = "{}{}{}".format(self.name,
+                                                  _separator,
+                                                  new_def.fqn)
+                    if new_def.subdefinitions:
+                        for def_loc in new_def.subdefinitions.values():
+                            def_loc.fqn = "{}{}{}".format(self.name,
+                                                          _separator,
+                                                          def_loc.fqn)
                     self._definitions[new_def.name] = new_def
         else:
             import glob
@@ -71,40 +97,36 @@ class ModelLocation(object):
                 new_def = DefinitionLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
                                              path=os.path.abspath(model_path))
                 self._definitions[new_def.name] = new_def
-#
 
-    def _scan_definitions(self, modelf_def=None, def_path=None):
+
+    def _scan_definitions(self, model_def=None, def_path=None):
         """
-        Scan recursively the _definitions tree on the file system and store
-        all _definitions definitions
+        Scan recursively the definitions tree on the file system and store
+        them.
 
-        :param modelf_def: the current model definition to add new submodel location
+        :param model_def: the current model definition to add new submodel location
         :type definition: :class:`DefinitionLocation`
         :param def_path: the absolute path to analyse
         :type def_path: string
+        :returns: a definition location
+        :rtype: :class:`DefinitionLocation` object
         """
         current_dir = None
         if os.path.isfile(def_path):
             new_def = None
             base, ext = os.path.splitext(def_path)
             if ext == '.xml':
-                if modelf_def is not None:
-                    name = "{}/{}".format(modelf_def.name, os.path.basename(base))
-                else:
-                    name = os.path.basename(base)
+                name = os.path.basename(base)
                 new_def = DefinitionLocation(name=name,
                                              path=def_path)
             return new_def
 
         elif os.path.isdir(def_path):
-            if modelf_def is not None:
-                name = "{}/{}".format(modelf_def.name, os.path.basename(def_path))
-            else:
-                name = os.path.basename(def_path)
+            name = os.path.basename(def_path)
             new_def = DefinitionLocation(name=name,
                                          path=def_path)
             for model in os.listdir(def_path):
-                subdef = self._scan_definitions(modelf_def=new_def, def_path=os.path.join(new_def.path, model))
+                subdef = self._scan_definitions(model_def=new_def, def_path=os.path.join(new_def.path, model))
                 if subdef is not None:
                     new_def.add_subdefinition(subdef)
             return new_def
@@ -124,9 +146,9 @@ class ModelLocation(object):
         return all_profiles
 
 
-    def get_definition(self, name):
+    def get_definition(self, fqn):
         """
-        :param name: the name of the definition to retrieve.
+        :param fqn: the fully qualified name of the definition to retrieve.
                      it's complete path without extension.
                      for instance for a file with path like this:
                      systems/TXSS/defintions/T3SS.xml
@@ -134,20 +156,47 @@ class ModelLocation(object):
                      for
                      systems/CRISPR-Cas/definitions/typing/CAS.xml:
                      the name is CRISPR-Cas/typing/CAS
-        :type name: string.
+        :type fqn: string.
         :returns: the definition corresponding to the given name.
         :rtype: a :class:`DefinitionLocation` object.
-        :raise: KeyError if name does not match with any model definition.
+        :raise: valueError if name does not match with any model definition.
         """
-        name_path = name.split('/')
+        if self.cfg.old_data_organization():
+            definition = self._old_get_definition(fqn)
+        else:
+            definition = self._new_get_definition(fqn)
+        return definition
+
+
+    def _new_get_definition(self, fqn):
+        """
+        work on new data organization.
+
+        :param fqn:
+        :return: the definition corresponding to the given fully qualified name
+        """
+        name_path = fqn.split(_separator)
+        model_name = name_path[0]
+        def_full_name = name_path[1:]
         defs = self._definitions
-        for level in name_path:
+        definition = None
+        for level in def_full_name:
             if level in defs:
                 definition = defs[level]
                 defs = definition.subdefinitions
             else:
-                raise KeyError("{} does not match with any definitions".format(level))
+                raise ValueError("{} does not match with any definitions".format(level))
         return definition
+
+
+    def _old_get_definition(self, name):
+        """
+        work on old data organization.
+
+        :param name:
+        :return: the definition corresponding to the given name
+        """
+        return self._definitions[name]
 
 
     def get_all_definitions(self, root_def_name=None):
@@ -162,8 +211,22 @@ class ModelLocation(object):
             all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
         else:
             root_def = self.get_definition(root_def_name)
-            all_defs = root_def.all()
+            if root_def is not None:
+                all_defs = root_def.all()
+            else:
+                raise ValueError("root_def_name {} does not match with any definitions".format(root_def_name))
         return all_defs
+
+
+    def get_definitions(self):
+        """
+
+        :return:
+        """
+        if self._definitions is not None:
+            return self._definitions.values()
+        else:
+            return {}
 
 
     def get_profile(self, name):
@@ -187,8 +250,6 @@ class ModelLocation(object):
                self._definitions == other._definitions
 
 
-
-
 class DefinitionLocation(dict):
     """
     Manage were models are stored. a Model is a xml definition of a system.
@@ -199,8 +260,9 @@ class DefinitionLocation(dict):
     """
 
     def __init__(self, name=None, subdefinitions=None, path=None):
-        super(DefinitionLocation, self).__init__(name=name, subdefinitions=subdefinitions, path=path)
+        super(DefinitionLocation, self).__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
         self.__dict__ = self #allow to use dot notation to access to property here name or subdefinitions ...
+
 
     def add_subdefinition(self, subdefinition):
         """
@@ -211,7 +273,10 @@ class DefinitionLocation(dict):
         """
         if self.subdefinitions is None:
             self.subdefinitions = {}
-        self.subdefinitions[subdefinition.name.split('/')[-1]] = subdefinition
+        subdefinition.fqn = "{}{}{}".format(self.name,
+                                            _separator,
+                                            subdefinition.fqn)
+        self.subdefinitions[subdefinition.name] = subdefinition
 
 
     def all(self):
@@ -225,12 +290,11 @@ class DefinitionLocation(dict):
             return all_leaf
 
 
-
     def __str__(self):
         return self.name
 
     def __eq__(self, other):
-        return self.name == other.name and \
+        return self.fqn == other.fqn and \
                self.path == other.path and \
                self.subdefinitions == other.subdefinitions
 
@@ -247,10 +311,10 @@ class ModelRegistry(object):
         :param cfg: the macsyfinder configuration
         :type cfg: :class:`macsypy.config.Config` object
         """
-        self._registery = {}
+        self._registry = {}
         if cfg.old_data_organization():
             new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
-            self._registery[new_model.name] = new_model
+            self._registry[new_model.name] = new_model
         else:
             if cfg.models_dir:
                 models_def_root = cfg.models_dir
@@ -260,7 +324,7 @@ class ModelRegistry(object):
                 model_path = os.path.join(models_def_root, models_type)
                 if os.path.isdir(model_path):
                     new_model = ModelLocation(cfg, path=model_path)
-                    self._registery[new_model.name] = new_model
+                    self._registry[new_model.name] = new_model
 
 
     def models(self):
@@ -268,7 +332,17 @@ class ModelRegistry(object):
         :returns: the list of models
         :rtype: list of :class:`ModelLocation` object
         """
-        return self._registery.values() # level 0 like TXSS ou CRISPR_Cas
+        return self._registry.values() # level 0 like TXSS ou CRISPR_Cas
+
+
+    def __getitem__(self, name):
+        """
+        :param name:
+        :type name: string
+        :returns: the model corresponding to name.
+        :rtype: :class:`ModelLocation` object
+        """
+        return self._registry[name]
 
 
     def __str__(self):
@@ -287,9 +361,32 @@ class ModelRegistry(object):
         for model in self.models():
             s += model.name + '\n'
             pad = len(model.name) + 1
-            for definition in model.definitions:
+            for definition in model.get_definitions():
                 s += model_to_str(definition, pad)
         return s
+
+
+    # def _path_2_name(self, path):
+    #     path = path.split('/')
+    #     model_name = path[0]
+    #     definition_name = '/'.join(path[1:])
+    #     return model_name, definition_name
+    #
+    #
+    # def get_definition(self, name):
+    #     """
+    #     :param name: the fullyqualified name of the definition to retrieve.
+    #     :type name: string
+    #     :returns: the definition location corresponding to the name
+    #     :rtype: :class:`DefinitionLocation` object
+    #     """
+    #     model_name, definition_name = self._path_2_name(name)
+    #     model = self._registry[model_name]
+    #     definition = model.get_definition(model_name)
+    #     return definition
+
+
+
 
 
 # class ProfilesRegistry(object):

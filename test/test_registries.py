@@ -146,7 +146,7 @@ class ModelLocationTest(unittest.TestCase):
         self.assertEqual(model_loc.name, self.simple_models['name'])
         self.assertEqual(model_loc.path, simple_dir)
         self.assertDictEqual(model_loc._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p) \
+                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p)
                               for p in self.simple_models['profiles']})
 
         self.assertSetEqual(set(model_loc._definitions.keys()),
@@ -158,15 +158,20 @@ class ModelLocationTest(unittest.TestCase):
         self.assertEqual(model_loc.name, self.complex_models['name'])
         self.assertEqual(model_loc.path, complex_dir)
         self.assertDictEqual(model_loc._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(complex_dir, 'profiles', p) \
+                             {os.path.splitext(p)[0]: os.path.join(complex_dir, 'profiles', p)
                               for p in self.complex_models['profiles']})
 
         self.assertSetEqual({sm for sm in self.complex_models['definitions']}, set(model_loc._definitions.keys()))
         for subdef_name in self.complex_models['definitions']:
             subdef = self.complex_models['definitions'][subdef_name]
-
             self.assertSetEqual({ssm.name for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
-                                {"{}/{}".format(subdef_name, os.path.splitext(ssm)[0]) for ssm in subdef})
+                                 {os.path.splitext(ss_name)[0] for ss_name in subdef.keys()})
+
+            self.assertSetEqual({ssm.fqn for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
+                                {"{m_name}{sep}{sub_d_name}{sep}{d_name}".format(m_name=self.complex_models['name'],
+                                                    sep=registries._separator,
+                                                    sub_d_name=subdef_name,
+                                                    d_name=os.path.splitext(ss_name)[0]) for ss_name in subdef.keys()})
 
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
@@ -177,7 +182,7 @@ class ModelLocationTest(unittest.TestCase):
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
         self.assertDictEqual(model_loc._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p) \
+                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p)
                               for p in self.simple_models['profiles']})
 
         self.assertSetEqual(set(model_loc._definitions.keys()),
@@ -189,20 +194,34 @@ class ModelLocationTest(unittest.TestCase):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(self.cfg, path=simple_dir)
 
-        def_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
-        defloc_expected = DefinitionLocation(name=def_name,
-                                             path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
-        defloc_received = model_loc.get_definition(def_name)
+        def_fqn = '{}{}{}'.format(model_loc.name,
+                                   registries._separator,
+                                   os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+        defloc_expected_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
+        defloc_expected = DefinitionLocation(name=defloc_expected_name,
+                                             path=os.path.join(simple_dir, 'definitions', defloc_expected_name + '.xml'))
+        defloc_expected.fqn = "{}{}{}".format(model_loc.name,
+                                   registries._separator,
+                                   os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+
+        defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
 
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
-        sys_def = ModelLocation(self.cfg, path=complex_dir)
+        model_loc = ModelLocation(self.cfg, path=complex_dir)
 
         subdef_name = 'subdef_1'
         def_name = 'def_1_1'
-        defloc_expected = DefinitionLocation(name="{}/{}".format(subdef_name, def_name),
+        def_fqn = '{model_name}{sep}{subdef_name}{sep}{def_name}'.format(
+                                                                    model_name=model_loc.name,
+                                                                    sep=registries._separator,
+                                                                    subdef_name=subdef_name,
+                                                                    def_name=def_name)
+
+        defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(complex_dir, 'definitions', subdef_name, def_name + '.xml'))
-        defloc_received = sys_def.get_definition(subdef_name + '/' + def_name)
+        defloc_expected.fqn = def_fqn
+        defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
 
         ## test old way to specify profiles and defitions
@@ -210,12 +229,15 @@ class ModelLocationTest(unittest.TestCase):
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
+        function_orig = self.cfg.old_data_organization
+        self.cfg.old_data_organization = lambda : True
         def_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
         defloc_received = model_loc.get_definition(def_name)
-        self.assertEqual(defloc_expected, defloc_received)
 
+        self.assertEqual(defloc_expected, defloc_received)
+        self.cfg.old_data_organization = function_orig
 
     def test_get_all_definitions(self):
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
@@ -223,19 +245,35 @@ class ModelLocationTest(unittest.TestCase):
 
         defs_expected = []
         for def_name in self.complex_models['definitions']:
-            defs_expected.extend([DefinitionLocation(name="{}/{}".format(def_name, os.path.splitext(m)[0]),
-                                                     path=os.path.join(complex_dir, 'definitions', def_name, m))\
-                                  for m in self.complex_models['definitions'][def_name]])
+            for subdef_name in self.complex_models['definitions'][def_name]:
+                new_def = DefinitionLocation(name=os.path.splitext(subdef_name)[0],
+                                             path=os.path.join(complex_dir, 'definitions', def_name, subdef_name))
+                new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}'.format(
+                                                                    model_name=model_loc.name,
+                                                                    sep=registries._separator,
+                                                                    subdef_name=os.path.splitext(subdef_name)[0],
+                                                                    def_name=def_name)
+                defs_expected.append(new_def)
+
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
         defs_expected = []
         def_root_name = 'subdef_1'
         for def_name in self.complex_models['definitions'][def_root_name]:
-            defs_expected.append(DefinitionLocation(name="{}/{}".format(def_root_name, os.path.splitext(def_name)[0]),
-                                                    path=os.path.join(complex_dir, 'definitions', def_root_name, def_name))
-                                 )
-        defs_received = model_loc.get_all_definitions(root_def_name=def_root_name)
+            new_def = DefinitionLocation(name=os.path.splitext(def_name)[0],
+                                         path=os.path.join(complex_dir, 'definitions', def_root_name, def_name))
+            new_def.fqn = '{model_name}{sep}{def_root_name}{sep}{def_name}'.format(
+                                                                    model_name=model_loc.name,
+                                                                    sep=registries._separator,
+                                                                    def_root_name=def_root_name,
+                                                                    def_name=os.path.splitext(def_name)[0])
+            defs_expected.append(new_def)
+
+        defs_received = model_loc.get_all_definitions(root_def_name="{model_name}{sep}{def_root_name}".format(
+                                                                                           model_name=model_loc.name,
+                                                                                           sep=registries._separator,
+                                                                                           def_root_name=def_root_name))
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
         ## test old way to specify profiles and defitions
@@ -244,7 +282,7 @@ class ModelLocationTest(unittest.TestCase):
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
         defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
-                                            path=os.path.join(simple_dir, 'definitions', d)) \
+                                            path=os.path.join(simple_dir, 'definitions', d))
                          for d in self.simple_models['definitions']
                         ]
         defs_received = model_loc.get_all_definitions()
@@ -291,7 +329,7 @@ class DefinitionLocationTest(unittest.TestCase):
         model_name = 'foo'
         model_path = '/path/to/model.xml'
         mdfl = DefinitionLocation(name=model_name,
-                                path=model_path)
+                                  path=model_path)
         self.assertEqual(mdfl.name, model_name)
         self.assertEqual(mdfl.path, model_path)
         self.assertIsNone(mdfl.subdefinitions)
@@ -415,7 +453,7 @@ class ModelRegistryTest(unittest.TestCase):
 
     def test_ModelRegistry(self):
         sr = ModelRegistry(self.cfg)
-        self.assertEqual(sorted(sr._registery.keys()), sorted(['simple', 'complex']))
+        self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
