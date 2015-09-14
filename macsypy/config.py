@@ -65,6 +65,17 @@ class ConfigLight(object):
                 self.profile_suffix = cmde_line_opt['profile_suffix']
             else:
                 self.profile_suffix = self._defaults['profile_suffix']
+        try:
+            self.models_dir = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
+        except NoSectionError:
+            if 'models_dir' in cmde_line_opt:
+                self.models_dir = cmde_line_opt['models_dir']
+            else:
+                self.models_dir = None
+        except NoOptionError:
+            self.models_dir = None
+        if self.models_dir is not None and not os.path.exists(self.models_dir):
+            raise ValueError("{0}: No such models directory".format(self.models_dir))
 
 
     def old_data_organization(self):
@@ -347,7 +358,7 @@ class Config(object):
         try:
             if cmde_line_opt.get('previous_run', None):
                 if os.path.exists(cmde_line_opt['previous_run']):
-                    options['previous_run'] = cmde_line_opt['previous_run']
+                    options['previous_run'] = os.path.normpath(cmde_line_opt['previous_run'])
                 else:
                     raise ValueError("previous run directory '{0}' was not found".format(cmde_line_opt['previous_run']))
             try:
@@ -592,8 +603,10 @@ class Config(object):
                     options['models_dir'] = None
             except NoOptionError:
                 options['models_dir'] = None
-            if options['models_dir'] is not None and not os.path.exists(options['models_dir']):
-                raise ValueError("{0}: No such models directory".format(options['models_dir']))
+            if options['models_dir'] is not None:
+                if not os.path.exists(options['models_dir']):
+                    raise ValueError("{0}: No such models directory".format(options['models_dir']))
+                options['models_dir'] = os.path.normpath(options['models_dir'])
 
             try:
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars=cmde_line_opt)
@@ -604,8 +617,10 @@ class Config(object):
                     options['def_dir'] = None
             except NoOptionError:
                 options['def_dir'] = None
-            if options['def_dir'] is not None and not os.path.exists(options['def_dir']):
-                raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+            if options['def_dir'] is not None:
+                if not os.path.exists(options['def_dir']):
+                    raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+                options['def_dir'] = os.path.normpath(options['def_dir'])
 
             try:
                 options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars=cmde_line_opt)
@@ -616,8 +631,10 @@ class Config(object):
                     options['profile_dir'] = None
             except NoOptionError:
                 options['profile_dir'] = None
-            if options['profile_dir'] is not None and not os.path.exists(options['profile_dir']):
-                raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+            if options['profile_dir'] is not None:
+                if not os.path.exists(options['profile_dir']):
+                    raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+                options['profile_dir'] = os.path.normpath(options['profile_dir'])
 
             try:
                 options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
