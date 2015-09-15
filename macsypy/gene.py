@@ -55,11 +55,13 @@ class GeneBank(object):
         """
         return gene in self._genes_bank.values()
 
+
     def __iter__(self):
         """
         Return an iterator object on the genes contained in the bank
         """
         return self._genes_bank.itervalues()
+
 
     def add_gene(self, gene):
         """
@@ -73,6 +75,7 @@ class GeneBank(object):
             raise KeyError("a gene named {0} is already registered".format(gene.name))
         else:
             self._genes_bank[gene.name] = gene
+
 
 gene_bank = GeneBank()
 
@@ -215,6 +218,7 @@ class Gene(object):
         """
         return self.homologs
 
+
     def add_analog(self, analog):
         """
         Add an analogous gene to the Gene
@@ -231,6 +235,7 @@ class Gene(object):
         :type: list of :class:`macsypy.gene.Analog` object
         """
         return self.analogs
+
 
     def __eq__(self, gene):
         """
@@ -382,12 +387,14 @@ class Homolog(object):
     def __getattr__(self, name):
         return getattr(self.gene, name)
 
+
     def is_aligned(self):
         """
         :return: True if this gene homolog is aligned to its homolog, False otherwise.
         :rtype: boolean
         """
         return self.aligned
+
 
     @property
     def gene_ref(self):
@@ -415,8 +422,10 @@ class Analog(object):
 
         self.ref = gene_ref 
 
+
     def __getattr__(self, name):
         return getattr(self.gene, name)
+
 
     @property
     def gene_ref(self):
@@ -460,6 +469,7 @@ class ProfileFactory(object):
             self._profiles[key] = profile
         return profile
 
+
 profile_factory = ProfileFactory()
 
 
@@ -486,12 +496,14 @@ class Profile(object):
         self._report = None
         self._lock = Lock()
 
+
     def __len__(self):
         """
         :return: the length of the HMM protein profile
         :rtype: int
         """
         return self.len
+
 
     def _len(self):
         """
@@ -505,6 +517,7 @@ class Profile(object):
                     length = int(l.split()[1])
                     break
         return length
+
 
     def __str__(self):
         """
