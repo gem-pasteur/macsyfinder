@@ -51,20 +51,19 @@ class Test(unittest.TestCase):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
-                           )
+        self.cfg = Config(hmmer_exe="hmmsearch",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          models_dir=os.path.join(self._data_dir, 'models'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix=".search_hmm.out",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
@@ -131,20 +130,19 @@ class Test(unittest.TestCase):
 
     def test_fill_ordered_replicon_min_max(self):
         self.tearDown()
-        self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(self._data_dir, "base", "ordered_replicon_base"),
-                           db_type = "ordered_replicon",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
-                           )
+        self.cfg = Config(hmmer_exe="hmmsearch",
+                          sequence_db=os.path.join(self._data_dir, "base", "ordered_replicon_base"),
+                          db_type="ordered_replicon",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          models_dir=os.path.join(self._data_dir, 'models'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix=".search_hmm.out",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file='NUL' if platform.system() == 'Windows' else '/dev/null'
+                          )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
@@ -201,7 +199,8 @@ class Test(unittest.TestCase):
         self.assertIn('ESCO030p01', db)
         self.assertIn('PSAE001c01', db)
         self.assertNotIn('toto', db)
- 
+
+
     def test_getitem(self):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
@@ -209,7 +208,8 @@ class Test(unittest.TestCase):
         self.assertEqual(ESCO030p01, db['ESCO030p01'])
         self.assertEqual(PSAE001c01, db['PSAE001c01'])
         self.assertRaises(KeyError, db.__getitem__, 'foo')
- 
+
+
     def test_get(self):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
@@ -219,12 +219,10 @@ class Test(unittest.TestCase):
         self.assertIsNone(db.get('foo'))
         self.assertEqual('bar', db.get('foo', 'bar'))
 
+
     def test_items(self):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
-        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01),('PSAE001c01',PSAE001c01)])
-        db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
-        
+        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01), ('PSAE001c01',PSAE001c01)])
+

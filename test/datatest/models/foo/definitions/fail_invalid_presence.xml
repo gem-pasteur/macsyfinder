@@ -1,0 +1,10 @@
+<system inter_gene_max_space="20" min_mandatory_genes_required="4" min_genes_required="6"> 
+    <gene name="sctJ_FLG" presence="mandatory" system_ref="system_1"/>
+    <gene name="sctN_FLG" presence="foo_bar"/>       
+    <gene name="flgB" presence="mandatory" system_ref="system_1"/>
+    <gene name="flgC" presence="mandatory" system_ref="system_1"/>
+    <gene name="fliE" presence="mandatory" system_ref="system_1"/>
+    <gene name="tadZ" presence="accessory" system_ref="system_2"/>
+    <gene name="sctC" presence="forbidden" system_ref="system_2"/>
+</system>
+
