@@ -22,9 +22,9 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 
 _separator = '/'
 
-def _split_def_name(fqn):
+def split_def_name(fqn):
     """
-    :param fqn: the fully quallified de name of a def
+    :param fqn: the fully quallified de name of a DefinitionLocation object
            the follow the schema model_name/<def_name>*/def_name
            for instance CRISPR-Cas/typing/cas
     :type fqn: string
@@ -32,13 +32,22 @@ def _split_def_name(fqn):
              ['CRISPR-Cas', 'typing', 'cas']
     :rtype: list of string
     """
-    split = def_name.split(_separator)
+    split = fqn.split(_separator)
     if split[0] == '':
         split = split[1:]
     if split[-1] == '':
         split = split[:-1]
     return split
 
+def join_def_path(*args):
+    """
+    join different elements of the definition path
+    :param path: the elements of the definition path, each elements must be a string
+    :return: The return value is the concatenation of different elements of args with one
+    separator
+    :rtype: string
+    """
+    return _separator.join(args)
 
 class ModelLocation(object):
     """
