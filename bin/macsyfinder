@@ -41,6 +41,46 @@ from macsypy.system import system_bank
 from macsypy.gene import gene_bank
 
 
+
+def models_to_detect(cmd_args, cfg, model_registry):
+    """
+    :param cmd_args: the result of commandline parsing.
+    :type cmd_args: class:`argparse.Namespace` object.
+    :param cfg: the configuration of this run.
+    :type cfg: :class:`macsypy.config.Config object.
+    :param model_registry: the models registry for this run.
+    :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
+    :return: list of system to launch a detection on.
+    :rtype: list of :class:`macsypy.system.System` objects
+    """
+    if cfg.old_data_organization():
+        if 'all' in [m.lower() for m in args.systems]:
+            model = model_registry.models()[0]
+            model_name = model.name
+            models_name_to_detect = ['{}/{}'.format(model_name, d.name) for d in model.get_all_definitions()]
+        else:
+            models_name_to_detect = cmd_args.systems
+    else:
+        models_name_to_detect = []
+        for group_of_defs in cmd_args.models:
+            root = group_of_defs[0]
+            definitions = group_of_defs[1:]
+
+            def_path = root.split('/')
+            model_name = def_path[0]
+            root_def_name = None
+            if len(def_path) > 1:
+                root_def_name = '/'.join(def_path[1:])
+            model = model_registry[root.split('/')[0]]
+            if 'all' in [d.lower() for d in definitions]:
+                def_loc = model.get_all_definitions(root_def_name=root_def_name)
+                models_name_to_detect.extend(['{}/{}'.format(model_name, d.name) for d in def_loc])
+            else:
+                models_name_to_detect.extend(['{}/{}'.format(model_name, one_def) for one_def in definitions])
+    return models_name_to_detect
+
+
+
 parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
                                  formatter_class=argparse.RawDescriptionHelpFormatter, description=dedent('''
 
@@ -66,10 +106,13 @@ of diderm bacteria from a protein dataset.
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("systems",
                     nargs='*',
-                    help="The systems to detect. This is an obligatory option with no keyword associated to it. \
+                    help="The list (separated by spaces) of models to detect  \
                          To detect all the protein secretion systems and related appendages:\
                          set to \"all\" (case insensitive).\
-                         Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
+                         Otherwise, a single or multiple models can be specified. For example: \"T2SS T4P\". \
+                         This the old way to specified systems to detect. It is better to install models in macsyfinder \
+                         or use the --models-dir dir_options (for more informations about data organiztion see \
+                         (http://macsyfinder.readthedocs.org/en/latest/#) ")
 
 parser.add_argument("-m", "--models",
                     action='append',
@@ -404,35 +447,27 @@ config = Config(previous_run=args.previous_run,
 logger = logging.getLogger('macsyfinder')
 config.save(config.working_dir)
 
-#build indexes
+registry = ModelRegistry(config)
+# build indexes
 idx = Indexes(config)
 idx.build(force=config.build_indexes)
 
+# create models
 parser = SystemParser(config, system_bank, gene_bank)
-
-
-####################### A MODILFIER ###################################
-
-if ('all' or 'All' or 'ALL') in args.systems:
-    import glob
-    systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
-    systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
-else:
-    systems_name_to_detect = args.systems
-############################################################
-
-parser.parse(systems_name_to_detect)
+models_name_to_detect = models_to_detect(args, config, registry)
+parser.parse(models_name_to_detect)
 
 
 out_logger = logging.getLogger('macsyfinder.out')
 out_logger.info("MacSyFinder's results will be stored in {0}".format(config.working_dir))
 out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db))
-for s in systems_name_to_detect:
+
+for s in models_name_to_detect:
     out_logger.info("\t- {}".format(s))
 
-systems_to_detect = [system_bank[system_name] for system_name in systems_name_to_detect]
+models_to_detect = [system_bank[model_fqn] for model_fqn in models_name_to_detect]
 all_genes = []
-for system in systems_to_detect:
+for system in models_to_detect:
     genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
     # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
     ex_genes = []
@@ -443,7 +478,7 @@ for system in systems_to_detect:
             ex_genes += h_s
             a_s = g.get_analogs()
             ex_genes += a_s
-    all_genes +=  (genes + ex_genes)
+    all_genes += (genes + ex_genes)
 #############################################
 # this part of code is executed in parallel
 #############################################
@@ -451,59 +486,22 @@ all_reports = search_genes(all_genes, config)
 #############################################
 # end of parallel code
 #############################################
-all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
+all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
 if len(all_hits) > 0:
-    all_hits = sorted(all_hits, key = attrgetter('score'), reverse = True)
-    all_hits = sorted(all_hits, key = attrgetter('replicon_name', 'position'))
+    all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
+    all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
-    systems_to_detect = sorted(systems_to_detect, key = attrgetter('name'))
+    systems_to_detect = sorted(models_to_detect, key=attrgetter('name'))
     search_systems(all_hits, systems_to_detect, config)
 else:
     logger.info("No hits found in this dataset.")
 logger.debug("END")
 
 
-def systems_to_detect(args):
-    """
-    :param args: the result of commandline parsing
-    :type args: class:`argparse.Namespace` object
-    :return: list of system to launch a detection on.
-    :rtype: list of :class:`macsypy.system.System` objects
-    """
-    # si -d => ancien algo
-    # si -m => nouveau algo
-    # si ni -l'un ni l'autre ??
-    # si les 2 ??
-    def user_specfied_location():
-        pass
-
-    def system_wide_location():
-        pass
-
-    systems_name_to_detect = []
-    user_specified_loc_opt = set((args.def_dir, args.profile_dir))
-    system_wide_loc_opt = args.models
-    if any(user_specified_loc_opt) and not all(old_options):
-        pass
-    elif system_wide_loc_opt and any(user_specified_loc_opt):
-        pass
-    elif any(user_specified_loc_opt):
-        if ('all' or 'All' or 'ALL') in args.systems:
-            import glob
-            systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
-            systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
-    elif system_wide_loc_opt:
-        pass
-
-    return systems_name_to_detect
 
 
 
-    if ('all' or 'All' or 'ALL') in args.systems:
-        import glob
-        systems_name_to_detect = glob.glob(os.path.join(config.def_dir, '*.xml'))
-        systems_name_to_detect = [os.path.basename(s)[:-4] for s in systems_name_to_detect]
-    else:
-        systems_name_to_detect = args.systems
+
+
 
