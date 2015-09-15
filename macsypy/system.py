@@ -16,6 +16,7 @@
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
 from .macsypy_error import SystemInconsistencyError
+from registries import split_def_name
 
 class SystemBank(object):
     """
@@ -54,12 +55,14 @@ class SystemBank(object):
         """
         return system in self._system_bank.values()
 
+
     def __iter__(self):
         """
         Return an iterator object on the systems contained in the bank
         """
         return self._system_bank.itervalues()
-    
+
+
     def __len__(self):
         """
         :return: the number of systems stored in the bank
@@ -87,7 +90,7 @@ class System(object):
     Handle a secretion system.
     """
 
-    def __init__(self, cfg, fqn, name, inter_gene_max_space, min_mandatory_genes_required=None,
+    def __init__(self, cfg, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
         """
         :param cfg: the configuration object
@@ -106,7 +109,7 @@ class System(object):
         :type multi_loci: boolean
         """
         self.cfg = cfg
-        self.name = name
+        self.name = split_def_name(fqn)[-1]
         self.fqn = fqn
         self._inter_gene_max_space = inter_gene_max_space
         self._min_mandatory_genes_required = min_mandatory_genes_required
