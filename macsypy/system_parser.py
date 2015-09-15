@@ -45,15 +45,16 @@ class SystemParser(object):
         self.system_bank = system_bank
         self.gene_bank = gene_bank
         self.model_registry = ModelRegistry(cfg)
-        #self.definitions_registry = DefinitionsRegistry(cfg)
 
 
     def definition_to_parse(self, def_2_parse, parsed_models):
         """
-        :param sys_2_parse: the list of definitions fqn to parse ([TXSS/T6SS TXSS/T3SS, ...])
-        :type sys_2_parse: [string, ...]
-        :return: the list of definitions' names to parse. Scan the whole chain of 'system_ref' in a recursive way.
-        :rtype: [string, ...]
+        :param sys_2_parse: the set of definitions fqn to parse ([TXSS/T6SS TXSS/T3SS, ...])
+        :type sys_2_parse: set of strings {string, ...}
+        :param parsed_models: the fully qualified name of the models already build.
+        :type parsed_models: set of strings {string, ...}
+        :return: a set of definitions' fully qualified names to parse. Scan the whole chain of 'system_ref' in a recursive way.
+        :rtype: {string, ...}
         """
         diff_def = parsed_models ^ def_2_parse
         if not diff_def:
@@ -63,10 +64,15 @@ class SystemParser(object):
                 parsed_models.add(def_fqn)
                 def_path = split_def_name(def_fqn)
                 model_name = def_path[0]
-                model_location = self.model_registry[model_name]
-                definition_location = model_location.get_definition(def_fqn)
-                path = definition_location.path
+                try:
+                    model_location = self.model_registry[model_name]
+                    definition_location = model_location.get_definition(def_fqn)
+                except KeyError:
+                    raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir))
+                except ValueError:
+                    raise MacsypyError("{}: No such definition".format(def_fqn))
 
+                path = definition_location.path
                 if not os.path.exists(path):
                     raise MacsypyError("{}: No such system definitions".format(path))
                 try:
@@ -101,7 +107,6 @@ class SystemParser(object):
         definition_location = model_location.get_definition(def_fqn)
         path = definition_location.path
 
-        #path = os.path.join(self.cfg.def_dir, system_name + ".xml")
         inter_gene_max_space = system_node.get('inter_gene_max_space')
         if inter_gene_max_space is None:
             msg = "Invalid system definition ({0}): inter_gene_max_space must be defined".format(path)
@@ -150,7 +155,6 @@ class SystemParser(object):
             multi_loci = False
         system = System(self.cfg,
                         def_fqn,
-                        definition_location.name,
                         inter_gene_max_space,
                         min_mandatory_genes_required,
                         min_genes_required,
