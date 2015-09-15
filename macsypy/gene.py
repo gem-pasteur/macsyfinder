@@ -462,8 +462,9 @@ class ProfileFactory(object):
         if key in self._profiles:
             profile = self._profiles[key]
         else:
-            path = model_location.get_profile(gene.name)
-            if path is None:
+            try:
+                path = model_location.get_profile(gene.name)
+            except KeyError:
                 raise MacsypyError("{0}: No such profile".format(gene.name))
             profile = Profile(gene, cfg, path)
             self._profiles[key] = profile

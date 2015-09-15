@@ -24,7 +24,7 @@ from macsypy.report import Hit
 from macsypy.config import Config
 from macsypy.gene import Gene
 from macsypy.system import System
-from macsypy.registries import ProfilesRegistry
+from macsypy.registries import ModelRegistry
 
 class Test(unittest.TestCase):
 
@@ -42,22 +42,22 @@ class Test(unittest.TestCase):
         macsy_log.addHandler(log_handler)
         
         
-        self.cfg = Config( hmmer_exe = "",
-                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = "",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
-                           )
-        self.profile_registry = ProfilesRegistry(self.cfg)
-        
+        self.cfg = Config(hmmer_exe="",
+                         sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                         db_type="gembase",
+                         e_value_res=1,
+                         i_evalue_sel=0.5,
+                         models_dir=os.path.join(self._data_dir, 'models'),
+                         res_search_dir=tempfile.gettempdir(),
+                         res_search_suffix="",
+                         profile_suffix=".hmm",
+                         res_extract_suffix="",
+                         log_level=30,
+                         log_file=log_file
+                         )
+        models_registry = ModelRegistry(self.cfg)
+        self.model_name = 'foo'
+        self.models_location = models_registry[self.model_name]
   
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -71,18 +71,18 @@ class Test(unittest.TestCase):
             pass
 
     def test_cmp(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = System(self.cfg, "foo/T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD",system, self.profile_registry)
+        gene = Gene(self.cfg, "gspD",system, self.models_location)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h1 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
         self.assertGreater(h1, h0)
         self.assertLess(h0, h1)
 
     def test_eq(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = System(self.cfg, "foo/T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD", system, self.profile_registry)
+        gene = Gene(self.cfg, "gspD", system, self.models_location)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h1 = Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 3450, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741)
         h2 = Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 4146, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736)
@@ -90,9 +90,9 @@ class Test(unittest.TestCase):
         self.assertNotEqual(h0, h2)
         
     def test_str(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = System(self.cfg, "foo/T2SS", 10)
         gene_name = "gspD"
-        gene = Gene(self.cfg, "gspD", system, self.profile_registry)
+        gene = Gene(self.cfg, "gspD", system, self.models_location)
         hit_prop={'id' : "PSAE001c01_006940",
                   'hit_seq_len': 803,
                   'replicon_name' : "PSAE001c01",
