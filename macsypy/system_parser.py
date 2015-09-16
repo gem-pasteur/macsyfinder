@@ -166,6 +166,7 @@ class SystemParser(object):
     def _create_genes(self, system, system_node):
         """
         Create genes belonging to the systems. Be careful, the returned genes have not their homologs/analogs set yet.
+        all genes belonging to an other system (system_ref) are ignored
 
         :param system: the System currently parsing
         :type system: :class:`macsypy.system.System` object
@@ -175,10 +176,13 @@ class SystemParser(object):
         :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
         genes = []
+        created_genes = set()
         gene_nodes = system_node.findall(".//gene")
         gene_nodes = [gene_node for gene_node in gene_nodes if gene_node.get("system_ref") is None]
         for node in gene_nodes:
             name = node.get("name")
+            if name in created_genes:
+                continue
             if not name:
                 msg = "Invalid system definition '{0}': gene without a name".format(system.name)
                 _log.error(msg)
@@ -206,7 +210,9 @@ class SystemParser(object):
                 attrs['inter_gene_max_space'] = inter_gene_max_space
             model_name = split_def_name(system.fqn)[0]
             model_location = self.model_registry[model_name]
-            genes.append(Gene(self.cfg, name, system, model_location, **attrs))
+            new_gene = Gene(self.cfg, name, system, model_location, **attrs)
+            genes.append(new_gene)
+            created_genes.add(new_gene.name)
         return genes
 
 
@@ -438,6 +444,8 @@ class SystemParser(object):
             genes = self._create_genes(sys, model_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
+
+
         # Now, all systems related (e.g. via system_ref) to the one to detect are filled appropriately.
         for def_fqn in defs_2_parse:
             model = self.system_bank[def_fqn]
