@@ -4,7 +4,7 @@
            <gene name="sctJ" system_ref="system_2"/>
        </homologs>
     </gene>
-    <gene name="sctN_FLG" presence="mandatory"/>       
+    <gene name="sctN_FLG" presence="mandatory"/>
     <gene name="flgB" presence="mandatory"/>
     <gene name="flgC" presence="mandatory"/>
     <gene name="fliE" presence="mandatory"/>

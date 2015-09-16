@@ -227,7 +227,9 @@ class SystemParser(object):
                 _log.error(msg)
                 raise SyntaxError(msg)
             gene_name = gene_node.get('name')
-            gene = self.gene_bank[gene_name]
+            model_name = split_def_name(system.fqn)[0]
+            key = (model_name, gene_name)
+            gene = self.gene_bank[key]
             for homolog_node in gene_node.findall("homologs/gene"):
                 gene.add_homolog(self._parse_homolog(homolog_node, gene, system))
             for analog_node in gene_node.findall("analogs/gene"):
@@ -253,8 +255,11 @@ class SystemParser(object):
         :type node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
         :type gene_ref: class:`macsypy.gene.Gene` object
+        :param curr_system: the system being parsed .
+        :type curr_system: :class:`macsypy.system.System` object
         :return: the gene object corresponding to the node
-        :rtype: :class:`macsypy.gene.Homolog` object 
+        :rtype: :class:`macsypy.gene.Homolog` object
+        :raise SyntaxError: if the system definition does not follow the grammar.
         """
         name = node.get("name")
         if not name:
@@ -272,10 +277,12 @@ class SystemParser(object):
             _log.error(msg)
             raise SyntaxError(msg)
         try:
-            gene = self.gene_bank[name]
+            model_name = split_def_name(curr_system.fqn)[0]
+            key = (model_name, name)
+            gene = self.gene_bank[key]
         except KeyError:
             msg = "Invalid system definition '{0}': The gene '{1}' described as homolog of\
- '{2}' in system '{3}' is not in the \"GeneBank\" gene factory".format(curr_system.name, name,
+ '{2}' in system '{3}' is not in the 'GeneBank' gene factory".format(curr_system.name, name,
                                                                        gene_ref.name, curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
@@ -301,6 +308,8 @@ class SystemParser(object):
         :type node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
         :type gene_ref: class:`macsypy.gene.Gene` object.
+        :type curr_system: :class:`macsypy.system.System` object
+        :return: the gene object corresponding to the node
         :return: the gene object corresponding to the node
         :rtype: :class:`macsypy.gene.Analog` object 
         """
@@ -310,7 +319,9 @@ class SystemParser(object):
             _log.error(msg)
             raise SyntaxError(msg)
         try:
-            gene = self.gene_bank[name]
+            model_name = split_def_name(curr_system.fqn)[0]
+            key = (model_name, name)
+            gene = self.gene_bank[key]
         except KeyError:
             msg = "The gene '{0}' described as analog of '{1}' in system '{2}'\
  is not in the \"GeneBank\" gene factory".format(name, gene_ref.name, curr_system.name)

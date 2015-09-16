@@ -39,6 +39,7 @@ def split_def_name(fqn):
         split = split[:-1]
     return split
 
+
 def join_def_path(*args):
     """
     join different elements of the definition path

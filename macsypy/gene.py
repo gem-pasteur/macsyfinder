@@ -22,7 +22,7 @@ from subprocess import Popen
 from threading import Lock
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .macsypy_error import MacsypyError
-
+import registries
 
 class GeneBank(object):
     """
@@ -30,18 +30,20 @@ class GeneBank(object):
     """
     _genes_bank = {}
 
-    def __getitem__(self, name):
+    def __getitem__(self, key):
         """
-        :param name: the name of the Gene
-        :type name: string
-        :return: return the Gene corresponding to the name.
-          If the Gene already exists, return it, otherwise, build it and return it
+        :param key: The key to retrieve a gene.
+        The key is composed of the name of models family and the gene name.
+        for instance CRISPR-Cas/cas9_TypeIIB or TXSS/T6SS_tssH
+        :type name: tuple (string, string)
+        :return: return the Gene corresponding to the key.
         :rtype: :class:`macsypy.gene.Gene` object
+        :raise KeyError: if the key does not exist in GeneBank.
         """
-        if name in self._genes_bank:
-            return self._genes_bank[name]
-        else:
-            raise KeyError(name)
+        try:
+            return self._genes_bank[key]
+        except KeyError:
+            raise KeyError("No such gene {} in this bank".format(key))
 
 
     def __contains__(self, gene):
@@ -71,10 +73,12 @@ class GeneBank(object):
         :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
-        if gene in self._genes_bank:
-            raise KeyError("a gene named {0} is already registered".format(gene.name))
+        model_name = registries.split_def_name(gene.system.fqn)[0]
+        key = (model_name, gene.name)
+        if key in self._genes_bank:
+            raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
         else:
-            self._genes_bank[gene.name] = gene
+            self._genes_bank[key] = gene
 
 
 gene_bank = GeneBank()

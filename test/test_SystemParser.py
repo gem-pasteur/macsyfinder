@@ -86,7 +86,7 @@ class Test(unittest.TestCase):
         with self.assertRaises(MacsypyError) as context:
             #self.parser.system_to_parse(system_2_detect)
             self.parser.definition_to_parse(models_2_detect, parsed)
-  
+
     def test_parse(self):
         def_2_parse = set()
         def_2_parse.add('foo/system_1')
@@ -160,7 +160,8 @@ class Test(unittest.TestCase):
         system_2_detect = ['foo/invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message, 'Invalid system definition \'invalid_homolog\': The gene \'foo_bar\' described as homolog of \'sctJ\' in system \'invalid_homolog\' is not in the "GeneBank" gene factory')
+        self.assertEqual(context.exception.message,
+                         "Invalid system definition 'invalid_homolog': The gene 'foo_bar' described as homolog of 'gspD' in system 'invalid_homolog' is not in the 'GeneBank' gene factory")
 
 
     def test_bad_sys_ref(self):
@@ -168,8 +169,9 @@ class Test(unittest.TestCase):
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
-                         "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctJ_FLG' with system_ref 'system_1' has an other system in bank (system_2)"
+                         "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctN' with system_ref 'system_1' has an other system in bank (system_2)"
                          )
+
 
     def test_bad_min_genes_required(self):
         system_2_detect = ['foo/bad_min_genes_required']
@@ -177,17 +179,20 @@ class Test(unittest.TestCase):
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
+
     def test_bad_min_mandatory_genes_required(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, 'system \'bad_min_mandatory_genes_required\' is not consistent: min_genes_required 16 must be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
+
     def test_bad_min_mandatory_genes_required_2(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required_2']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message, "min_genes_required must be greater or equal than min_mandatory_genes_required")
+
 
     def test_bad_max_nb_genes(self):
         system_2_detect = 'foo/bad_max_nb_genes'
