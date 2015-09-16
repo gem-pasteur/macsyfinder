@@ -506,6 +506,7 @@ class SystemOccurence(object):
         """
         self.system = system
         self.system_name = system.name
+        self.system_fqn = system.fqn
 
         # Variables to be updated during the system detection 
         self.valid_hits = [] # validSystemHit are stored with the "fill_with" function, and ready for extraction in case of a positive detection
@@ -1860,8 +1861,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
 
         # So new: Add support for the multi_loci parameter:
         if system.multi_loci:
-
-            so = systems_occurences_scattered[system.name]
+            so = systems_occurences_scattered[system.fqn]
             msg = so.decision_rule()
             so_state = so.state
             #print "-- {0} --".format(so.system_name)
