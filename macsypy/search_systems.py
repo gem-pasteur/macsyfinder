@@ -1126,7 +1126,7 @@ class validSystemHit(object):
 
     def output_system(self, system_name, system_status):
         return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
-        \t{sys_name}\t{sys_status}\t{gene_status}\t{e:i_eval}\t{score:.3f}\t{prof_cov:.3f}\t{seq_cov:.3f}\
+        \t{sys_name}\t{sys_status}\t{gene_status}\t{i_eval:.3e}\t{score:.3f}\t{prof_cov:.3f}\t{seq_cov:.3f}\
         \t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
                                                    rpl_name=self.replicon_name,
                                                    pos=self.position,
