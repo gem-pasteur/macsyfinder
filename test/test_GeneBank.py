@@ -79,7 +79,7 @@ class Test(unittest.TestCase):
         system_foo = System(self.cfg, "foo/bar", 10)
         gene = Gene(self.cfg, gene_name, system_foo, self.models_location)
         gene_bank.add_gene(gene)
-        gene_from_bank = gene_bank[gene_name]
+        gene_from_bank = gene_bank[(self.model_name, gene_name)]
         self.assertTrue(isinstance(gene_from_bank, Gene))
         self.assertEqual(gene_from_bank, gene)
 
@@ -107,7 +107,7 @@ class Test(unittest.TestCase):
         system_foo = System(self.cfg, "foo", 10)
         gene_in = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         gene_bank.add_gene(gene_in)
-        gene1 = gene_bank['sctJ_FLG']
-        gene2 = gene_bank['sctJ_FLG']
+        gene1 = gene_bank[(self.model_name, 'sctJ_FLG')]
+        gene2 = gene_bank[(self.model_name, 'sctJ_FLG')]
         self.assertEqual(gene1, gene2)
         self.assertIs(gene1, gene2)
