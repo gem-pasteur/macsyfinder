@@ -59,7 +59,8 @@ def models_to_detect(cmd_args, cfg, model_registry):
             model_name = model.name
             models_name_to_detect = ['{}/{}'.format(model_name, d.name) for d in model.get_all_definitions()]
         else:
-            models_name_to_detect = cmd_args.systems
+            model_name = os.path.basename(os.path.normpath(cfg.def_dir))
+            models_name_to_detect = ['{}/{}'.format(model_name, d) for d in cmd_args.systems]
     else:
         models_name_to_detect = []
         for group_of_defs in cmd_args.models:

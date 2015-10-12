@@ -203,9 +203,10 @@ class ModelLocation(object):
         """
         work on old data organization.
 
-        :param name:
+        :param name: the fqn of the definition. In this case it match <definition dir>/<definition name>.
         :return: the definition corresponding to the given name
         """
+        name = name.split(_separator)[1]
         return self._definitions[name]
 
 
