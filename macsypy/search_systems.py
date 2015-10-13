@@ -1579,7 +1579,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
-                so.valid_hits.sort(cmp = lambda x, y:cmp_so(so, x, y))
+                so.valid_hits.sort(cmp=lambda x, y: cmp_so(so, x, y))
                 for valid_hit in so.valid_hits:
                     gene = {}
                     gene['id'] = valid_hit.id
