@@ -18,6 +18,11 @@
 *~
 \#*\#
 
+#################
+# pycharm files #
+#################
+.idea/*
+
 ##########################
 # Python complied source #
 ##########################
@@ -38,7 +43,7 @@ log*
 test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
-
+macsyfinder-201*
 
 ####################
 # MacSyFinder data #
@@ -49,3 +54,4 @@ data/macsyfinder/models/TXSS/*
 # MacsyFinder generated file #
 ##############################
 MANIFEST
+uninstall*
