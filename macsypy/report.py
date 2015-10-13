@@ -17,18 +17,19 @@ import os
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
 
-
 import abc
 from threading import Lock
 from itertools import groupby
-from database import Indexes, RepliconDB
+from .database import Indexes, RepliconDB
 
 
 class HMMReport(object):
     """
-    Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output, after having applied a hit filtering.
+    Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,
+    after having applied a hit filtering.
     This class is an **abstract class**. There are two implementations of this abstract class
-    depending on wether the input sequence dataset is "ordered" ("gembase" or "ordered_replicon" db_type) or not ("unordered" or "unordered_replicon" db_type).
+    depending on whether the input sequence dataset is "ordered" ("gembase" or "ordered_replicon" db_type)
+    or not ("unordered" or "unordered_replicon" db_type).
     """
 
     __metaclass__ = abc.ABCMeta
@@ -68,10 +69,10 @@ class HMMReport(object):
 # i_evalue threshold= {i_evalue:.3f}
 # coverage threshold= {coverage:.3f}
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-""".format(gene_name = self.gene.name, hmmer_out = self._hmmer_raw_out,
-                                             profile_len = len(self.gene.profile),
-                                             i_evalue = self.cfg.i_evalue_sel,
-                                             coverage = self.cfg.coverage_profile)
+""".format(gene_name=self.gene.name, hmmer_out=self._hmmer_raw_out,
+                                     profile_len=len(self.gene.profile),
+                                     i_evalue=self.cfg.i_evalue_sel,
+                                     coverage=self.cfg.coverage_profile)
         
         for h in self.hits:
             s += str(h)
@@ -80,8 +81,9 @@ class HMMReport(object):
 
     def save_extract(self):
         """
-        Write the string representation of the extact report in a file.
-        The name of this file is the concatenation of the gene name and of the "res_extract_suffix" from the config object
+        Write the string representation of the extract report in a file.
+        The name of this file is the concatenation of the gene name and of the "res_extract_suffix"
+        from the config object
         """
         with self._lock:
             extract_out_name = self.gene.name + self.cfg.res_extract_suffix
@@ -104,7 +106,7 @@ class HMMReport(object):
         """
         :param line: the line to parse
         :type line: string
-        :return: True if it's the begining of a new hit in Hmmer raw output files.\
+        :return: True if it's the beginning of a new hit in Hmmer raw output files.
          False otherwise
         :rtype: boolean.
         """
@@ -157,7 +159,8 @@ class HMMReport(object):
 
     def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, b_grp):
         """
-        Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected ("coverage_profile" and "i_evalue_select" command-line parameters) 
+        Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
+        ("coverage_profile" and "i_evalue_select" command-line parameters)
 
         :param hit_id: the sequence identifier
         :type hit_id: string 
@@ -192,12 +195,12 @@ class HMMReport(object):
                 else:
                     fields = line.split()
                     try:
-                        if(len(fields) > 1 and float(fields[5]) <= i_evalue_sel):
+                        if len(fields) > 1 and float(fields[5]) <= i_evalue_sel:
                             cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
                             begin = int(fields[9])
                             end = int(fields[10])
                             cov_gene = (float(end) - float(begin) + 1) / seq_lg # To be added in Gene: sequence_length
-                            if (cov_profile >= coverage_treshold):
+                            if cov_profile >= coverage_treshold:
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
                                 hits.append(Hit(self.gene,
@@ -224,7 +227,7 @@ class GeneralHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to any type of 'unordered' datasets.
     """
-    #pass
+
     def extract(self):
         """
         Parse the output file of hmmer compute from an unordered genes base
@@ -245,20 +248,21 @@ class GeneralHMMReport(HMMReport):
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_treshold = self.cfg.coverage_profile
+                coverage_threshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
-                #drop summary
+                # drop summary
                 hmm_hits.next()
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
 
-                    #replicon_name = self.cfg. # Define a variable in further devt
+                    # replicon_name = self.cfg. # Define a variable in further devt
                     replicon_name = "Unordered"
 
                     body = hmm_hits.next()
-                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
+                                             replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
                 self.hits.sort()
                 return self.hits
@@ -269,7 +273,7 @@ class OrderedHMMReport(HMMReport):
     Handle HMM report. Extract a synthetic report from the raw hmmer output.
     Dedicated to 'ordered_replicon' datasets.
     """
-    #pass
+
     def extract(self):
         """
         Parse the output file of Hmmer obtained from a search in an ordered set of sequences
@@ -290,10 +294,10 @@ class OrderedHMMReport(HMMReport):
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_treshold = self.cfg.coverage_profile
+                coverage_threshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
-                #drop summary
+                # drop summary
                 hmm_hits.next()
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
@@ -301,7 +305,8 @@ class OrderedHMMReport(HMMReport):
                     replicon_name = RepliconDB.ordered_replicon_name
 
                     body = hmm_hits.next()
-                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
+                                             replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
                 self.hits.sort()
                 return self.hits
@@ -332,10 +337,10 @@ class GembaseHMMReport(HMMReport):
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_treshold = self.cfg.coverage_profile
+                coverage_threshold = self.cfg.coverage_profile
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
-                #drop summary
+                # drop summary
                 hmm_hits.next()
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
@@ -343,7 +348,8 @@ class GembaseHMMReport(HMMReport):
                     fields_hit = hit_id.split('_')
                     replicon_name = fields_hit[0]
                     body = hmm_hits.next()
-                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, body)
+                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
+                                             replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
                 self.hits.sort()
                 return self.hits
@@ -399,22 +405,24 @@ class Hit(object):
         """
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
-        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{system_name}\t{i_evalue:.3e}\t{score:.3f}\t{profil_cov:.3f}\t{seq_cov:.3f}\t{begin_match:d}\t{end_match:d}\n".format(id = self.id,
-                                                                                                                                                   replicon_name = self.replicon_name,
-                                                                                                                                                   position = self.position,
-                                                                                                                                                   seq_len = self.seq_length,
-                                                                                                                                                   gene_name = self.gene.name,
-                                                                                                                                                   system_name = self.system.name,
-                                                                                                                                                   i_evalue = self.i_eval,
-                                                                                                                                                   score = self.score,
-                                                                                                                                                   profil_cov = self.profile_coverage, 
-                                                                                                                                                   seq_cov = self.sequence_coverage,
-                                                                                                                                                   begin_match = self.begin_match,
-                                                                                                                                                   end_match = self.end_match)
+        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{system_name}\t{i_evalue:.3e}\t{score:.3f}\
+\t{profil_cov:.3f}\t{seq_cov:.3f}\t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
+                                                                             replicon_name=self.replicon_name,
+                                                                             position=self.position,
+                                                                             seq_len=self.seq_length,
+                                                                             gene_name=self.gene.name,
+                                                                             system_name=self.system.name,
+                                                                             i_evalue=self.i_eval,
+                                                                             score=self.score,
+                                                                             profil_cov=self.profile_coverage,
+                                                                             seq_cov=self.sequence_coverage,
+                                                                             begin_match=self.begin_match,
+                                                                             end_match=self.end_match)
 
     def __cmp__(self, other):
         """
-        Compare two Hits. If the sequence identifier is the same, do the comparison on the score. Otherwise, do it on alphabetical comparison of the sequence identifier.
+        Compare two Hits. If the sequence identifier is the same, do the comparison on the score.
+        Otherwise, do it on alphabetical comparison of the sequence identifier.
 
         :param other: the hit to compare to the current object
         :type other: :class:`macsypy.report.Hit` object
@@ -422,11 +430,12 @@ class Hit(object):
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene): 
-                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(g_name = self.gene.name, 
-                                                                                                                           sys_name = self.system.name, 
-                                                                                                                           other_g_name = other.gene.name, 
-                                                                                                                           other_sys_name = other.system.name, 
-                                                                                                                           id = self.id))
+                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(\
+                    g_name=self.gene.name,
+                    sys_name=self.system.name,
+                    other_g_name=other.gene.name,
+                    other_sys_name=other.system.name,
+                    id=self.id))
             return cmp(self.score, other.score)
         else:
             return cmp(self.id, other.id)
@@ -440,8 +449,7 @@ class Hit(object):
         :return: the result of the comparison
         :rtype: boolean
         """
-        return (
-                self.gene.name == other.gene.name and
+        return (self.gene.name == other.gene.name and
                 self.system.name == other.system.name and
                 self.id == other.id and
                 self.seq_length == other.seq_length and

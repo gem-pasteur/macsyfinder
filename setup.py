@@ -241,6 +241,13 @@ class install_macsyfinder(install):
 
 
     def run(self):
+        def subst_file(_file, vars_2_subst):
+            input_file = os.path.join(self.build_lib, _file)
+            output_file = input_file + '.tmp'
+            subst_vars(input_file, output_file, vars_2_subst)
+            os.unlink(input_file)
+            self.move_file(output_file, input_file)
+
         inst = self.distribution.command_options.get('install')
         vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
@@ -248,11 +255,9 @@ class install_macsyfinder(install):
                         'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder'),
                         }
         for _file in self.distribution.fix_prefix:
-            input_file = os.path.join(self.build_lib, _file)
-            output_file =  input_file + '.tmp'
-            subst_vars(input_file, output_file, vars_2_subst)
-            os.unlink(input_file)
-            self.move_file(output_file, input_file)
+            subst_file(_file, vars_2_subst)
+        _file = os.path.join('macsypy', '__init__.py')
+        subst_file(_file, {'VERSION' : self.distribution.get_version()})
         install.run(self)
 
 
@@ -609,6 +614,7 @@ class sdist_macsy(sdist):
             f.write('recursive-include {0} *\n'.format(os.path.join(self.macsyview_link_name, 'app')))
 
     def set_up(self):
+        print "@@@VERSION = ",self.distribution.get_version()
         if os.path.exists( self.macsyview_link_name ):
             if os.path.realpath(self.macsyview_link_name) == os.path.realpath(self.macsyview_dir):
                 self.must_clean = False
@@ -725,18 +731,18 @@ require_packages = []
 
 
 setup(name        = 'macsyfinder',
-      version     =  time.strftime("1.0.2"),
+      version     = time.strftime("%Y%m%d-dev"),
       description  = """MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
       author  = "Sophie Abby, Bertrand Néron",
       author_email = "sabby@pasteur.fr, bneron@pasteur.fr",
       classifiers = [
-                     'Operating System :: POSIX' ,
-                     'Programming Language :: Python' ,
-                     'Topic :: Bioinformatics' ,
+                     'Operating System :: POSIX',
+                     'Programming Language :: Python :: 2.7 :: Only',
+                     'Topic :: Bioinformatics',
                     ] ,
       packages    = ['macsypy'],
-      scripts     = [ 'bin/macsyfinder'] ,
+      scripts     = ['bin/macsyfinder'],
       viewer      = ['bin/macsyview'],
       #(dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files = [('macsyfinder/DEF', ['data/DEF/']),
