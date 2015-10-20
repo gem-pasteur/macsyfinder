@@ -335,11 +335,7 @@ class Cluster(object):
                     ## syst_name = syst.name
                     syst_fqn = syst.fqn
                     ## if not systems_compat.has_key(syst_name):
-                    if not systems_compat.has_key(syst_fqn):
-                        systems_compat[syst_fqn] = 1
-                        #systems_object[syst]=h.system
-                    else:
-                        systems_compat[syst_fqn] += 1
+                    systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
                     if genes.count(h.gene.name) == 0:
                         genes.append(h.gene.name)
 
@@ -2028,7 +2024,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
         if prev.gene.multi_system:
-            if prev.system.name not in multi_system_genes_system_wise.keys():
+            if prev.system.name not in multi_system_genes_system_wise:
                 multi_system_genes_system_wise[prev.system.fqn] = []
                 multi_system_genes_system_wise[prev.system.fqn].append(prev)
 
@@ -2195,7 +2191,7 @@ def search_systems(hits, systems, cfg):
             for replicon in rep_db.replicon_names():
                 if not replicon in replicons_w_hits:
                     _log_out.info(replicon)
-                    text = replicon+"\t0"*len(system_names)*len(system_occurences_states)+"\n"
+                    text = replicon + "\t0" * len(system_names) * len(system_occurences_states) + "\n"
                     #print text.strip()
                     _f.write(text)
 
