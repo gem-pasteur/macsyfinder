@@ -332,9 +332,7 @@ class Cluster(object):
                 syst_list = h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
                 #syst_list=h.gene.get_compatible_systems(self.systems_to_detect, True) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before yep
                 for syst in syst_list:
-                    ## syst_name = syst.name
                     syst_fqn = syst.fqn
-                    ## if not systems_compat.has_key(syst_name):
                     systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
                     if genes.count(h.gene.name) == 0:
                         genes.append(h.gene.name)
@@ -1948,7 +1946,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 positions.append(prev.position)
                 # New : Storage of multi_system genes:
                 if prev.gene.multi_system:
-                    if prev.system.fqn not in multi_system_genes_system_wise.keys():
+                    if prev.system.fqn not in multi_system_genes_system_wise:
                         multi_system_genes_system_wise[prev.system.fqn] = []
                     multi_system_genes_system_wise[prev.system.fqn].append(prev)
 
@@ -1958,7 +1956,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 positions.append(cur.position)
                 # New : Storage of multi_system genes:
                 if cur.gene.multi_system:
-                    if cur.system.fqn not in multi_system_genes_system_wise.keys():
+                    if cur.system.fqn not in multi_system_genes_system_wise:
                         multi_system_genes_system_wise[cur.system.fqn] = []
                     multi_system_genes_system_wise[cur.system.fqn].append(cur)
 
