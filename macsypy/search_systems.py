@@ -21,9 +21,9 @@ import itertools
 import operator
 import json
 
-from macsypy_error import MacsypyError, SystemDetectionError
-from database import RepliconDB
-from system import system_bank
+from .macsypy_error import MacsypyError, SystemDetectionError
+from .database import RepliconDB
+from .system import system_bank
 
 _log = logging.getLogger('macsyfinder.' + __name__)
 
@@ -1604,7 +1604,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['summary']['mandatory'] = so.mandatory_genes
                 system['summary']['accessory'] = so.accessory_genes
                 system['summary']['forbidden'] = so.forbidden_genes
-                system['summary']['state'] = so._state
+                system['summary']['state'] = so.state
                 systems.append(system)
             json.dump(systems, _file, indent=self._indent)
 
@@ -1657,7 +1657,6 @@ def disambiguate_cluster(cluster):
         #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
         compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
-
         #print h
         #print "Hit's:"
         #print [syst.name for syst in compatible_systems]
@@ -1922,7 +1921,6 @@ def build_clusters(hits, systems_to_detect, rep_info):
             positions.append(prev.position)
     """
 
-    tmp = ""
     for cur in hits[1:]:
 
         _log.debug("Hit {0}".format(cur))
