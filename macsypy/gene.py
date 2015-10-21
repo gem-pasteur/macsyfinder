@@ -358,12 +358,9 @@ class Gene(object):
         :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
         :type include_forbidden: boolean
         :return: the list of compatible systems
-        :rtype: list of string, or void list if none compatible
+        :rtype: list of :class:`macsypy.system.System` objects, or void list if none compatible
         """
-        compatibles = []
-        for s in system_list:
-            if self.is_authorized(s, include_forbidden):
-                compatibles.append(s)
+        compatibles = [s for s in system_list if self.is_authorized(s, include_forbidden)]
         return compatibles
 
 
