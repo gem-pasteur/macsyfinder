@@ -1810,11 +1810,11 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #for putative_system in clust.compatible_systems:
             for putative_system in [s.fqn for s in systems_to_consider]:
                 _log_out.info("Considering {}: ".format(putative_system))
-                if putative_system in syst_dict.keys():
+                if putative_system in syst_dict:
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
                     # NEW!
-                    if putative_system in multi_systems_genes.keys():
+                    if putative_system in multi_systems_genes:
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
                     msg = so.decision_rule()
                     so_state = so.state
@@ -1898,6 +1898,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
     # Deals with different dataset types using Pipeline ??
     clusters = ClustersHandler()
     prev = hits[0]
+    print "@@ DEBUG prev", prev
     #cur_cluster = Cluster()
     cur_cluster = Cluster(systems_to_detect)
     positions = []
@@ -1924,6 +1925,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     tmp = ""
     for cur in hits[1:]:
+        print "@@ DEBUG cur", cur
 
         _log.debug("Hit {0}".format(cur))
         #prev_max_dist = prev.get_syst_inter_gene_max_space()
@@ -1944,8 +1946,12 @@ def build_clusters(hits, systems_to_detect, rep_info):
         # First condition removes duplicates (hits for the same sequence)
         # the two others takes into account either system1 parameter or system2 parameter
 
+        print "@@ inter_gene",inter_gene
+        print "@@ prev_max_dist",prev_max_dist
+        print "@@ cur_max_dist",cur_max_dist
+        print "@@ inter_gene <= prev_max_dist or inter_gene <= cur_max_dist",inter_gene <= prev_max_dist or inter_gene <= cur_max_dist
         #smaller_dist = min(prev_max_dist, cur_max_dist)
-        if(inter_gene <= prev_max_dist or inter_gene <= cur_max_dist):
+        if inter_gene <= prev_max_dist or inter_gene <= cur_max_dist:
         #if(inter_gene <= smaller_dist ):
             #print "zero"
             if positions.count(prev.position) == 0:
@@ -1964,7 +1970,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 positions.append(cur.position)
                 # New : Storage of multi_system genes:
                 if cur.gene.multi_system:
-                    if cur.system.fqn not in multi_system_genes_system_wise.keys():
+                    if cur.system.fqn not in multi_system_genes_system_wise:
                         multi_system_genes_system_wise[cur.system.fqn] = []
                     multi_system_genes_system_wise[cur.system.fqn].append(cur)
 
@@ -2005,7 +2011,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
                     # New : Storage of multi_system genes:
                     if prev.gene.multi_system:
-                        if prev.system.name not in multi_system_genes_system_wise.keys():
+                        if prev.system.name not in multi_system_genes_system_wise:
                             multi_system_genes_system_wise[prev.system.fqn] = []
                         multi_system_genes_system_wise[prev.system.fqn].append(prev)
 
@@ -2030,7 +2036,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
         if prev.gene.multi_system:
-            if prev.system.name not in multi_system_genes_system_wise.keys():
+            if prev.system.name not in multi_system_genes_system_wise:
                 multi_system_genes_system_wise[prev.system.fqn] = []
                 multi_system_genes_system_wise[prev.system.fqn].append(prev)
 
@@ -2165,9 +2171,9 @@ def search_systems(hits, systems, cfg):
         for k, g in itertools.groupby(hits, operator.attrgetter('replicon_name')):
             sub_hits = list(g)
             rep_info = rep_db[k]
-
             # The following applies to any "replicon"
             (clusters, multi_syst_genes) = build_clusters(sub_hits, systems, rep_info)
+
             _log_out.info("\n************************************\n Analyzing clusters for {0} \n************************************".format(k))
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
