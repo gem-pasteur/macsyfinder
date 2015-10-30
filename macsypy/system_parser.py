@@ -50,11 +50,12 @@ class SystemParser(object):
 
     def system_to_parse(self, sys_2_parse, parsed_systems):
         """
-        :param sys_2_parse: the list of systems to parse
+        :param sys_2_parse: a dict of systems to parse
         :type sys_2_parse: [string, ...]
         :return: the list of systems' names to parse. Scan the whole chain of 'system_ref' in a recursive way.
         :rtype: [string, ...]
         """
+        #the list of system which must be parsed
         diff_sys = list(set(parsed_systems.keys()) - set(sys_2_parse.keys()))
         diff_sys_2 = list(set(sys_2_parse.keys()) - set(parsed_systems.keys()))
         diff_sys += diff_sys_2
@@ -376,7 +377,7 @@ class SystemParser(object):
         Parse systems definition in XML format to build the corresponding system objects,
          and add them to the system factory after checking its consistency.
         To get the system ask it to system_bank
-        :param systems_2_detect: a list with the names of the systems to parse
+        :param systems_2_detect: a list with the names of the systems to parse (eg 'T2SS')
         :type systems_2_detect: list of string
         """
         # one opening/closing file / system
