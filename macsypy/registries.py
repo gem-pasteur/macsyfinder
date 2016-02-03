@@ -22,6 +22,7 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 
 _separator = '/'
 
+
 def split_def_name(fqn):
     """
     :param fqn: the fully quallified de name of a DefinitionLocation object
@@ -49,6 +50,7 @@ def join_def_path(*args):
     :rtype: string
     """
     return _separator.join(args)
+
 
 class ModelLocation(object):
     """
@@ -375,89 +377,3 @@ class ModelRegistry(object):
             for definition in model.get_definitions():
                 s += model_to_str(definition, pad)
         return s
-
-
-    # def _path_2_name(self, path):
-    #     path = path.split('/')
-    #     model_name = path[0]
-    #     definition_name = '/'.join(path[1:])
-    #     return model_name, definition_name
-    #
-    #
-    # def get_definition(self, name):
-    #     """
-    #     :param name: the fullyqualified name of the definition to retrieve.
-    #     :type name: string
-    #     :returns: the definition location corresponding to the name
-    #     :rtype: :class:`DefinitionLocation` object
-    #     """
-    #     model_name, definition_name = self._path_2_name(name)
-    #     model = self._registry[model_name]
-    #     definition = model.get_definition(model_name)
-    #     return definition
-
-
-
-
-
-# class ProfilesRegistry(object):
-#     """
-#     ProfilesRegistry register all profiles available.
-#     """
-#
-#     def __init__(self, cfg):
-#         """
-#         get all profiles available in global macsyfinder share data location (depending installation /usr/share/data/profile)
-#         and overload it with the location specify in the macsyfinder configuration (either in config file or command line)
-#
-#         :param cfg: the macsyfinder configuration
-#         :type cfg: :class:`macsypy.config.Config` object
-#         """
-#         self._register = {}
-#         global_path = os.path.join(_prefix_data, 'macsyfinder', 'systems', 'profiles')
-#         self._fill_profile(global_path, cfg)
-#         local_path = cfg.profile_dir
-#         if local_path:
-#             self._fill_profile(local_path, cfg)
-#
-#     def _fill_profile(self, dir_path, cfg):
-#         for path in glob.glob(os.path.join(dir_path, '*' + cfg.profile_suffix)):
-#             name = os.path.basename(path)
-#             name = name[:-1 * len(cfg.profile_suffix)]
-#             self._register[name] = path
-#
-#     def __getattr__(self, name):
-#         return getattr(self._register, name)
-#
-#
-# class DefinitionsRegistry(object):
-#     """
-#     DefinitionsRegistry register all definition systems available.
-#     """
-#
-#
-#     def __init__(self, cfg):
-#         """
-#         get all systems defitions available in global macsyfinder share data location ( depending installation /usr/share/data/DEF)
-#         and overload it with the location specify in the macsyfinder configuration (either in config file or command line)
-#
-#         :param cfg: the macsyfinder configuration
-#         :type cfg: :class:`macsypy.config.Config` object
-#         """
-#         self._register = {}
-#         global_path = os.path.join(_prefix_data, 'macsyfinder', 'DEF')
-#         self._fill_def(global_path)
-#         local_path = cfg.def_dir
-#         if local_path:
-#             self._fill_def(local_path)
-#
-#     def _fill_def(self, dir_path):
-#         for path in glob.glob(os.path.join(dir_path, '*.xml')):
-#             name = os.path.basename(path)
-#             name = os.path.splitext(name)[0]
-#             self._register[name] = path
-#
-#     def __getattr__(self, name):
-#         return getattr(self._register, name)
-#
-
