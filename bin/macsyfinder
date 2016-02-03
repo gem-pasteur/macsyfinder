@@ -68,7 +68,9 @@ def models_to_detect(cmd_args, cfg, model_registry):
             definitions = group_of_defs[1:]
             model = model_registry[root.split('/')[0]]
             if 'all' in [d.lower() for d in definitions]:
-                def_loc = model.get_all_definitions()
+                if root == model.name:
+                    root = None
+                def_loc = model.get_all_definitions(root_def_name=root)
                 models_name_to_detect.extend([d.fqn for d in def_loc])
             else:
                 models_name_to_detect.extend(['{}/{}'.format(root, one_def) for one_def in definitions])
