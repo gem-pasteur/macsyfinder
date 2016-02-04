@@ -69,11 +69,11 @@ genome_options = parser.add_argument_group(title = "Input dataset options")
 genome_options.add_argument("--sequence-db",
                     action = 'store',
                     dest = 'sequence_db',
-                    help = "Path to the sequence dataset in fasta format.")
+                    help = "Path to the sequence dataset in fasta format.", required=True)
 genome_options.add_argument("--db-type" ,
                        choices = ['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                        dest = "db_type",
-                       default = None,
+                       default = None, required=True,
                        help = "The type of dataset to deal with. \"unordered_replicon\" corresponds to a non-assembled genome, \"unordered\" to a metagenomic dataset, \"ordered_replicon\" to an assembled genome, and \"gembase\" to a set of replicons where sequence identifiers follow this convention: \">RepliconName SequenceID\"." )
 genome_options.add_argument("--replicon-topology" ,
                        choices = ['linear', 'circular'],
