@@ -25,7 +25,7 @@ Installation from distribution
 
 2. Go to the macsyfinder directory
  
-    cd macsyfinder-1.0
+    cd macsyfinder-x.x
 
 3. Build and install
 

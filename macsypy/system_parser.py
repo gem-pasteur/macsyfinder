@@ -413,10 +413,11 @@ class SystemParser(object):
 
     def parse(self, models_2_detect):
         """
-        Parse systems definition in XML format to build the corresponding system objects,
+        Parse models definition in XML format to build the corresponding system objects,
          and add them to the system factory after checking its consistency.
         To get the system ask it to system_bank
-        :param models_2_detect: a list with the names of the systems to parse
+        :param models_2_detect: a list with the fully qualified names of the systems to parse 
+        (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
         :type models_2_detect: list of string
         """
         # one opening/closing file / definition

@@ -486,10 +486,12 @@ all_reports = search_genes(all_genes, config)
 all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
 if len(all_hits) > 0:
-    all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
-    all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
-
-    systems_to_detect = sorted(models_to_detect, key=attrgetter('name'))
+    # It's important to keep this sorting to have in last  all_hits version
+    # the hits with the same replicon_name and position sorted by score
+    # the best score in first
+    all_hits = sorted(all_hits, key = attrgetter('score'), reverse = True)
+    all_hits = sorted(all_hits, key = attrgetter('replicon_name', 'position'))
+    systems_to_detect = sorted(systems_to_detect, key = attrgetter('name'))
     search_systems(all_hits, systems_to_detect, config)
 else:
     logger.info("No hits found in this dataset.")
