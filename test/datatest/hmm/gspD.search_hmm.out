@@ -14,6 +14,7 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
     ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+   1.5e-236  779.7   7.9     2e-236  779.2   5.5    1.2  1  NC_xxxxx_xx_056141 C ATG TAA 6260390 6261757 Valid PA5567 13
    8.6e-235  779.7   7.9   1.2e-234  779.2   5.5    1.2  1  PSAE001c01_006940 D ATG TGA 741925 744336 Valid PA0685 2412 
    6.7e-211  700.8  16.9   1.8e-210  699.3  11.7    1.6  1  PSAE001c01_031420 D ATG TAA 3484354 3486330 Valid xcpQ 1977 
    3.5e-184  612.5   4.6   6.1e-183  608.4   3.2    2.0  1  PSAE001c01_018920 D ATG TGA 2028968 2031298 Valid xqhA 2331 
@@ -25,6 +26,53 @@ Scores for complete sequences (score includes all domains):
 
 
 Domain annotation for each sequence (and alignments):
+>> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  779.2   5.5  1.4e-237    2e-236       1     596 []     104     741 ..     104     741 .. 0.93
+
+  Alignments for each domain:
+  == domain 1    score: 779.2 bits;  conditional E-value: 1.4e-237
+    gspD_tcoffee_aln   1 lnfkdadieavvkavgeatgktfivdprVkGkvslvsekplseaealelllsvLrlqgfavvesngvlkvvpeadaklqggpllskasasa 91 
+                         lnf+d+++eavv+a+++atg++f+vdprVkGk++lvse ++++++a+++l+s+Lr+qgf+vv+ +gv++vvpeadakl ggp+++ a+++a
+  NC_xxxxx_xx_056141 104 LNFVDTEVEAVVRALSRATGRQFLVDPRVKGKLTLVSEGQVPARTAYRMLTSALRMQGFSVVDVDGVSQVVPEADAKLLGGPVYG-ADRPA 193
+                         7*********************************************************************************988.999** PP
+
+    gspD_tcoffee_aln  92 gdelvtrvvrlrnvsaselvpvLrplvskngtivaypasnvlvvtdyadnleriaeiiaqvDsasaseveviplknasaediaavleklld 182
+                         ++++vtr++rlr+++a +l+pvLrp+v++n+ i+ayp +n++vvtdya+nl+r+a+iia++D++sas+++v+p++n++a dia+++++lld
+  NC_xxxxx_xx_056141 194 ANGMVTRTFRLRYENAVNLIPVLRPIVAQNNPINAYPGNNTVVVTDYAENLDRVAGIIASIDIPSASDTDVVPIQNGIAVDIASTVSELLD 284
+                         ******************************************************************************************* PP
+
+    gspD_tcoffee_aln 183 esgkkgaeaslkvkvvadersNsllvrgpsaar.dkikkliaklDseaersgnvrvveLknakAkdlaevLrqlvggtkteegnsgesgkv 272
+                         ++g+ gae+ +k+ v+ad+rsNs+++r+ps++r + +++li klDs ++++gn++vv+L+na+A++la++Lr+l++g++++egn+g+++++
+  NC_xxxxx_xx_056141 285 SQGSGGAEQGQKTVVLADPRSNSIVIRSPSPERtQLARDLIGKLDSVQSNPGNLHVVYLRNAQATRLAQALRGLITGDSGGEGNEGDQQRA 375
+                         *********************************999**************************************************99966 PP
+
+    gspD_tcoffee_aln 273 a......................srs..............sggd.gasgs....ag.saagevtsevegekvliqadaatNaLiitaseev 321
+                         +                      + +              sgg+ ga+gs    ag +a+ge++s++++++v++qada+tN+L+i+a+e++
+  NC_xxxxx_xx_056141 376 RlsgggmlgggnsgtgsqglgssG-NttgsgssglggsnrSGGAyGAMGSgqggAGpGAMGEENSAFSAGGVTVQADATTNTLLISAPEPL 465
+                         566888887777666555444330.0333333344444445555788888654422688******************************** PP
+
+    gspD_tcoffee_aln 322 yrnlreVieqLDvrraQVlvealivEvsedkakqlGvqwavknagttg..agtnfansggsilnlaaaaattngkdalesltlnGvaigvl 410
+                         yrnlreVi+ LD+rraQV++e+livEvsed+++++G+qw+++n g++g  +g+nf++s+   ln       t+gk+++++l ++G++ig++
+  NC_xxxxx_xx_056141 466 YRNLREVIDLLDQRRAQVVIESLIVEVSEDDSSEFGIQWQAGNLGGNGvfGGVNFGQSA---LN-------TAGKNTIDVL-PKGLNIGLV 545
+                         ***********************************************656777777755...44.......5688899999.*******99 PP
+
+    gspD_tcoffee_aln 411 g.........knkdlgalvsalksdtksnvLsTPsiltldNeeAkilVGqnvPiltgsvl.tg.sgsdnpfqtverkdvGvkLkvkPqine 490
+                         +         k  dl++l +alks++++nvLsTP++ltldNe+A+i+VGq++P+++g+++ +g ++s+npfqt++r+dvG+kL+++Pqi+e
+  NC_xxxxx_xx_056141 546 DgtvdipgigKILDLKVLARALKSRGGTNVLSTPNLLTLDNESASIMVGQTIPFVSGQYVtDGgGTSNNPFQTIQREDVGLKLNIRPQISE 636
+                         9999999999**************************************************877799************************* PP
+
+    gspD_tcoffee_aln 491 ggavkLdieqEvSavkerassaasdlvinkRsikttvlvddgdiivlgGLlddneteseekvPlLgdiPllGaLFrskskerektnlmvfl 581
+                         gg+vkLd++qEvS+v+eras +a+++v+nkR+i+t++l+ddg+i+vlgGLl+dn+++++++vP+L+++P++G+LFr+++++r+ktnlmvfl
+  NC_xxxxx_xx_056141 637 GGTVKLDVYQEVSSVDERAS-TAAGVVTNKRAIDTSILLDDGQIMVLGGLLQDNVQDNTDGVPGLSSLPGVGSLFRYQKRSRTKTNLMVFL 726
+                         ******************99.********************************************************************** PP
+
+    gspD_tcoffee_aln 582 rPtiirdaeaaralt 596
+                         rP+i+rda+a r++t
+  NC_xxxxx_xx_056141 727 RPYIVRDAAAGRSIT 741
+                         ***********9987 PP
+
 >> PSAE001c01_006940  D ATG TGA 741925 744336 Valid PA0685 2412 _NP_249376.1_ PA0685 1 741925 744336 | type II secretion
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
