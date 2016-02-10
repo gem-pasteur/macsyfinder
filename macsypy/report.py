@@ -345,8 +345,7 @@ class GembaseHMMReport(HMMReport):
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
-                    fields_hit = hit_id.split('_')
-                    replicon_name = fields_hit[0]
+                    replicon_name = "_".join(hit_id.split('_')[:-1])
                     body = hmm_hits.next()
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                              replicon_name, position_hit, i_evalue_sel, body)
