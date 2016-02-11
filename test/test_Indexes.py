@@ -18,6 +18,9 @@ import os
 import sys
 import unittest
 import shutil
+import tempfile
+import platform
+import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
 
@@ -38,20 +41,29 @@ class Test(unittest.TestCase):
         self.real_init = Indexes.__init__
 
     def setUp(self):
-
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
+        
+        #add only one handler to the macsypy logger
+        from macsypy.database import _log
+        macsy_log = _log.parent
+        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_handler = logging.FileHandler(log_file)
+        macsy_log.addHandler(log_handler)
+        
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, "DEF"),
-                           res_search_dir = '/tmp',
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = ".search_hmm.out",
                            profile_dir = os.path.join(self._data_dir, "profiles"),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = log_file
                            )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
@@ -59,6 +71,11 @@ class Test(unittest.TestCase):
 
 
     def tearDown(self):
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        logging.shutdown()
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
@@ -136,7 +153,7 @@ class Test(unittest.TestCase):
         files_2_find = []
         for s in  suffixes:
             for i in range(2):
-                new_idx = os.path.join("%s.%d.%s" %(self.cfg.sequence_db, i, s))
+                new_idx = os.path.join("{0}.{1:d}.{2}".format(self.cfg.sequence_db, i, s))
                 open(new_idx, 'w')
                 files_2_find.append(new_idx)
         new_idx = os.path.join(self.cfg.sequence_db + '.pal')
@@ -206,7 +223,10 @@ class Test(unittest.TestCase):
     def test_build_not_writable(self):
         idx = Indexes(self.cfg)
         idx_dir = os.path.join( os.path.dirname(self.cfg.sequence_db))
-        os.chmod(idx_dir, 0000)
-        self.assertRaises(IOError, idx.build)
-        os.chmod(idx_dir, 0777)    
+
+        # Skip test on Windows, since setting the folder permissions is not affecting files inside
+        if platform.system() != 'Windows':
+            os.chmod(idx_dir, 0000)
+            self.assertRaises(IOError, idx.build)
+            os.chmod(idx_dir, 0777)
 

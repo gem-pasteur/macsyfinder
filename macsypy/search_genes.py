@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -20,7 +20,7 @@ import signal
 import sys
 import shutil
 import os.path
-from report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport 
+from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
 def search_genes(genes, cfg):
     """
@@ -36,8 +36,8 @@ def search_genes(genes, cfg):
     worker_nb = cfg.worker_nb
     if not worker_nb:
         worker_nb = len(genes)
-    _log.debug("worker_nb = %d" % worker_nb)
-    sema = threading.BoundedSemaphore(value = worker_nb)
+    _log.debug("worker_nb = {0:d}".format(worker_nb))
+    sema = threading.BoundedSemaphore(value=worker_nb)
     all_reports = []
 
 
@@ -64,7 +64,7 @@ def search_genes(genes, cfg):
         :type sema: a threading.BoundedSemaphore
         """
         with sema:
-            _log.info("search gene %s" % gene.name)
+            _log.info("search gene {0}".format(gene.name))
             profile = gene.profile
             report = profile.execute()
             if report:
@@ -90,34 +90,34 @@ def search_genes(genes, cfg):
         """
         with sema:
             hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
-            _log.info("recover hmm %s" % hmm_old_path)
+            _log.info("recover hmm {0}".format(hmm_old_path))
             hmm_new_path = os.path.join(cfg.working_dir, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
             shutil.copy(hmm_old_path, hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
             if cfg.db_type == 'gembase':
-                report = GembaseHMMReport(gene, hmm_new_path, cfg )
+                report = GembaseHMMReport(gene, hmm_new_path, cfg)
             elif cfg.db_type == 'ordered_replicon':
-                report = OrderedHMMReport(gene, hmm_new_path, cfg )
+                report = OrderedHMMReport(gene, hmm_new_path, cfg)
             else:
-                report = GeneralHMMReport(gene, hmm_new_path, cfg )
+                report = GeneralHMMReport(gene, hmm_new_path, cfg)
             if report:
                 report.extract()
                 report.save_extract()
                 all_reports.append(report)
 
-    #there is only one instance of gene per name but the same instance can be
-    #in all genes several times
-    #hmmsearch and extract should be execute only once per run
-    #so I uniquify the list of gene
+    # there is only one instance of gene per name but the same instance can be
+    # in all genes several times
+    # hmmsearch and extract should be execute only once per run
+    # so I uniquify the list of gene
     genes = set(genes)
     _log.debug("start searching genes")
 
     previous_run = cfg.previous_run
     for gene in genes:
         if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)):
-            t = threading.Thread(target = recover, args = (gene, all_reports, cfg, sema))
+            t = threading.Thread(target=recover, args=(gene, all_reports, cfg, sema))
         else:
-            t = threading.Thread(target = search, args = (gene, all_reports, sema))
+            t = threading.Thread(target=search, args=(gene, all_reports, sema))
         t.start()
 
     main_thread = threading.currentThread()   

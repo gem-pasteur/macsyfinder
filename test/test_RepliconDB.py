@@ -17,6 +17,9 @@
 import os
 import unittest
 import shutil
+import tempfile
+import platform
+import logging
 from macsypy.config import Config
 from macsypy.database import RepliconDB, Indexes, RepliconInfo
 
@@ -38,19 +41,29 @@ class Test(unittest.TestCase):
 
 
     def setUp(self):
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
+        
+        #add only one handler to the macsypy logger
+        from macsypy.database import _log
+        macsy_log = _log.parent
+        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_handler = logging.FileHandler(log_file)
+        macsy_log.addHandler(log_handler)
+        
         self.cfg = Config( hmmer_exe = "hmmsearch",
                            sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = '/tmp',
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = ".search_hmm.out",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = log_file
                            )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
@@ -85,11 +98,19 @@ class Test(unittest.TestCase):
                                  ('056340', '178'), ('056350', '156'), ('056360', '85'), ('056370', '289'), ('056380', '126'), 
                                  ('056390', '290'), ('056400', '262'), ('056410', '214'), ('056420', '630'), ('056430', '127'), 
                                  ('056440', '455'), ('056440', '455')]
-        
+        self.NCDB_genes = [('056134', '289'), ('056135', '126'), ('056136', '290'),
+                           ('056137', '262'), ('056138', '214'), ('056139', '630'),
+                           ('056140', '127'), ('056141', '803'), ('056141', '803')]
+
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
 
     def tearDown(self):
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        logging.shutdown()
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
@@ -104,7 +125,7 @@ class Test(unittest.TestCase):
                    }
         with open(self.cfg.topology_file , 'w') as f:
             for k, v in db_send.items():
-                f.write('%s : %s\n' % (k,v))
+                f.write('{0} : {1}\n'.format(k,v))
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
         rcv_topo = db._fill_topology()
@@ -119,13 +140,13 @@ class Test(unittest.TestCase):
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = '/tmp',
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = ".search_hmm.out",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
                            )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
@@ -148,56 +169,78 @@ class Test(unittest.TestCase):
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
         db._fill_gembase_min_max({}, self.cfg.replicon_topology)
-        self.assertEqual(len(db._DB), 2)
+        self.assertEqual(len(db._DB), 3)
+        self.assertEqual(set(db._DB.keys()), set(['ESCO030p01', 'PSAE001c01', 'NC_xxxxx_xx']))
         PRRU001c01 = db['ESCO030p01']
         self.assertEqual(PRRU001c01.topology, 'circular')
         self.assertEqual(PRRU001c01.min, 1)
         self.assertEqual(PRRU001c01.max, 67)
+        self.assertEqual(PRRU001c01.genes, self.ESCO030p01_genes)
         PSAE001c01 = db['PSAE001c01']
         self.assertEqual(PSAE001c01.topology, 'circular')
         self.assertEqual(PSAE001c01.min, 68)
         self.assertEqual(PSAE001c01.max, 133)
+        self.assertEqual(PSAE001c01.genes, self.PSAE001c01_genes)
+        DBNC = db['NC_xxxxx_xx']
+        self.assertEqual(DBNC.topology, 'circular')
+        self.assertEqual(DBNC.min, 134)
+        self.assertEqual(DBNC.max, 141)
+        self.assertEqual(DBNC.genes, self.NCDB_genes)
+
  
  
     def test_fill_gembase_min_max_with_topology(self):
         self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
         with open(self.cfg.topology_file , 'w') as f:
-            f.write('ESCO030p01 : circular\nPSAE001c01 : linear\n')
+            f.write('# topology file\nESCO030p01 : circular\nPSAE001c01 : linear\n')
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
         topo_dict = db._fill_topology()
         db._fill_gembase_min_max(topo_dict, 'circular')
-        self.assertEqual(len(db._DB), 2)
+        self.assertEqual(len(db._DB), 3)
+        self.assertEqual(set(db._DB.keys()), set(['ESCO030p01', 'PSAE001c01', 'NC_xxxxx_xx']))
         ESCO030p01 = db['ESCO030p01']
         self.assertEqual(ESCO030p01.topology, 'circular')
         self.assertEqual(ESCO030p01.min, 1)
         self.assertEqual(ESCO030p01.max, 67)
+        self.assertEqual(ESCO030p01.genes, self.ESCO030p01_genes)
         PSAE001c01 = db['PSAE001c01']
         self.assertEqual(PSAE001c01.topology, 'linear')
         self.assertEqual(PSAE001c01.min, 68)
         self.assertEqual(PSAE001c01.max, 133)
+        self.assertEqual(PSAE001c01.genes, self.PSAE001c01_genes)
+        DBNC = db['NC_xxxxx_xx']
+        self.assertEqual(DBNC.topology, 'circular')
+        self.assertEqual(DBNC.min, 134)
+        self.assertEqual(DBNC.max, 141)
+        self.assertEqual(DBNC.genes, self.NCDB_genes)
          
  
     def test_in(self):
         db = RepliconDB(self.cfg)
         self.assertIn('ESCO030p01', db)
         self.assertIn('PSAE001c01', db)
+        self.assertIn('NC_xxxxx_xx', db)
         self.assertNotIn('toto', db)
  
     def test_getitem(self):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
+        NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
         self.assertEqual(ESCO030p01, db['ESCO030p01'])
         self.assertEqual(PSAE001c01, db['PSAE001c01'])
+        self.assertEqual(NCXX, db['NC_xxxxx_xx'])
         self.assertRaises(KeyError, db.__getitem__, 'foo')
- 
+
     def test_get(self):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
+        NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
         self.assertEqual(ESCO030p01, db.get('ESCO030p01'))
         self.assertEqual(PSAE001c01, db.get('PSAE001c01'))
+        self.assertEqual(NCXX, db.get('NC_xxxxx_xx', 'foo'))
         self.assertIsNone(db.get('foo'))
         self.assertEqual('bar', db.get('foo', 'bar'))
 
@@ -205,8 +248,6 @@ class Test(unittest.TestCase):
         db = RepliconDB(self.cfg)
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
-        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01),('PSAE001c01',PSAE001c01)])
-        db = RepliconDB(self.cfg)
-        PRRU001c01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
-        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
-        
+        NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
+        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01), ('NC_xxxxx_xx',NCXX),
+                                           ('PSAE001c01',PSAE001c01)])

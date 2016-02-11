@@ -1,0 +1,26 @@
+---
+# How to cite macsyfinder
+# below the citation informations in yaml format 
+
+authors:
+    - Abby SS.  
+    - Néron B. 
+    - Ménager H. 
+    - Touchon M. 
+    - Rocha EPC. 
+date: 2014
+title: "MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems."
+journal: 
+    title: PLoS ONE 
+    volume: 9
+    issue: 10 
+    enumber: e110726. 
+doi: 10.1371/journal.pone.0110726
+url: http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
+
+
+# below a more human readable and traditional version 
+ 
+# Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014) 
+# MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. 
+# PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726

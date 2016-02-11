@@ -25,8 +25,8 @@ if 'MACSY_HOME' in os.environ:
         sys.path.insert(0, MACSY_HOME)
 try:
     from macsypy.config import Config
-except ImportError , err:
-    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format( err )
+except ImportError as err:
+    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format(err)
     sys.exit( msg )
 
 from operator import attrgetter # To be used with "sorted"
@@ -63,7 +63,7 @@ as described by user-defined models, in a protein dataset.
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 parser.add_argument("systems",
-                    nargs = '+',
+                    nargs = '*',
                     help = "The systems to detect. This is an obligatory option with no keyword associated to it. To detect all the protein secretion systems and related appendages: set to \"all\" (case insensitive). Otherwise, a single or multiple systems can be specified. For example: \"T2SS T4P\". ")
 genome_options = parser.add_argument_group(title = "Input dataset options")
 genome_options.add_argument("--sequence-db",
@@ -173,11 +173,16 @@ dir_options.add_argument('-d', '--def',
                     dest = 'def_dir',
                     default = None,
                     help = 'Path to the systems definition files.')
+dir_options.add_argument('-o', '--out-dir',
+                    action = 'store',
+                    dest = 'out_dir',
+                    default = None,
+                    help = 'Path to the directory where to store results. if out-dir is specified res-search-dir will be ignored.')
 dir_options.add_argument('-r', '--res-search-dir',
                     action = 'store',
                     dest = 'res_search_dir',
                     default = None,
-                    help = 'Path to the directory where to store MacSyFinder search results directories.')
+                    help = 'Path to the directory where to store MacSyFinder search results directories (default current working directory).')
 dir_options.add_argument('--res-search-suffix',
                     action = 'store',
                     dest = 'res_search_suffix',
@@ -210,7 +215,12 @@ general_options.add_argument("-v" , "--verbosity",
                       action= "count",
                       dest = "verbosity",
                       default = 0,
-                      help = "Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)") 
+                      help = "Increases the verbosity level. There are 4 levels: Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)")
+general_options.add_argument("--version",
+                      action= "store_true",
+                      dest = "version",
+                      default = False,
+                      help = "display the version information and quit")
 general_options.add_argument("--log",
                     action = 'store',
                     dest = 'log_file',
@@ -230,6 +240,33 @@ general_options.add_argument("--previous-run",
 --e-value-res, --db-type, --hmmer)""")
 
 args = parser.parse_args()
+if args.version:
+    import macsypy
+    if macsypy.__version__ == '$VERSION':
+        version = "NOT packaged, development version"
+    else:
+        version = macsypy.__version__
+    print >> sys.stderr, """Macsyfinder {0}
+Python {1}
+
+MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+See the COPYING file for details.
+
+If you use this software please cite:
+Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
+MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
+    sys.exit(0)
+
+if not args.systems:
+    parser.error("you MUST provided systems to search.")
+
+if not args.previous_run and not args.sequence_db:
+    parser.error("argument --sequence-db is required.")
+
+if not args.previous_run and not args.db_type:
+    parser.error("argument --db-type is required.")
+
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
                           args.profile_suffix or
@@ -271,6 +308,7 @@ config = Config(previous_run = args.previous_run,
                 coverage_profile = args.coverage_profile,
                 def_dir = args.def_dir,
                 res_search_dir = args.res_search_dir,
+                out_dir = args.out_dir,
                 res_search_suffix = args.res_search_suffix,
                 profile_dir = args.profile_dir,
                 profile_suffix = args.profile_suffix,

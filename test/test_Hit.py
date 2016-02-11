@@ -17,6 +17,9 @@
 import os
 import unittest
 import shutil
+import tempfile
+import platform
+import logging
 from macsypy.report import Hit
 from macsypy.config import Config
 from macsypy.gene import Gene
@@ -28,25 +31,44 @@ class Test(unittest.TestCase):
     _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
 
     def setUp(self):
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
+        
+        #add only one handler to the macsypy logger
+        from macsypy.report import _log
+        macsy_log = _log.parent
+        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_handler = logging.FileHandler(log_file)
+        macsy_log.addHandler(log_handler)
+        
+        
         self.cfg = Config( hmmer_exe = "",
                            sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
                            db_type = "gembase",
                            e_value_res = 1,
                            i_evalue_sel = 0.5,
                            def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = "/tmp",
+                           res_search_dir = tempfile.gettempdir(),
                            res_search_suffix = "",
                            profile_dir = os.path.join(self._data_dir, 'profiles'),
                            profile_suffix = ".hmm",
                            res_extract_suffix = "",
                            log_level = 30,
-                           log_file = '/dev/null'
+                           log_file = log_file
                            )
         self.profile_registry = ProfilesRegistry(self.cfg)
         
   
     def tearDown(self):
-        shutil.rmtree(self.cfg.working_dir)
+        # close loggers filehandles, so they don't block file deletion
+        # in shutil.rmtree calls in Windows
+        logging.shutdown()
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
+        try:
+            shutil.rmtree(self.cfg.working_dir)
+        except:
+            pass
 
     def test_cmp(self):
         system = System(self.cfg, "T2SS", 10)
@@ -87,6 +109,6 @@ class Test(unittest.TestCase):
         
         hit = Hit( gene, system, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'], hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'], 
                    hit_prop['profil_coverage'], hit_prop['sequence_coverage'],hit_prop['begin'],hit_prop['end'])
-        s = "%(id)s\t%(replicon_name)s\t%(position)d\t%(hit_seq_len)d\t%(gene_name)s\t%(system_name)s\t%(i_eval)s\t%(score)s\t%(profil_coverage)f\t%(sequence_coverage)f\t%(begin)d\t%(end)d\n" % hit_prop
+        s = "{id}\t{replicon_name}\t{position:d}\t{hit_seq_len:d}\t{gene_name}\t{system_name}\t{i_eval:.3e}\t{score:.3f}\t{profil_coverage:.3f}\t{sequence_coverage:.3f}\t{begin:d}\t{end:d}\n".format(**hit_prop)
         self.assertEqual(s,str(hit))
         

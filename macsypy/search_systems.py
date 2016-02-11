@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -67,12 +67,14 @@ class ClustersHandler(object):
 
     def circularize(self, rep_info, end_hits, systems_to_detect):
         """
-        This function takes into account the circularity of the replicon by merging clusters when appropriate (typically at replicon's ends). 
+        This function takes into account the circularity of the replicon by merging clusters when appropriate
+        (typically at replicon's ends).
         It has to be called only if the replicon_topology is set to \"circular\".
 
         :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
         :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
-        :param end_hits: a set of hits at ends of the replicon that were not introduced in clusters, and that might be part of a system overlapping the two "ends" of the replicon
+        :param end_hits: a set of hits at ends of the replicon that were not introduced in clusters,
+        and that might be part of a system overlapping the two "ends" of the replicon
         :type end_hits: a list of :class:`macsypy.report.Hit`
         :param systems_to_detect: the set of systems to detect in this run
         :type systems_to_detect: a list of :class:`macsypy.system.System
@@ -90,20 +92,21 @@ class ClustersHandler(object):
             clust_first = self.clusters[0]
             clust_last = self.clusters[len(self.clusters) - 1]
 
-            #check_clust = True
+            # check_clust = True
             # Case 1: none of the two end hits is part of a cluster => they might form a new cluster together. 
             if len(end_hits) == 2:
                 first = end_hits[0]
                 second = end_hits[1]
-                #if(first.gene.position > second.gene.position): # Genes do not have positions ! But Hits do!
+                # if(first.gene.position > second.gene.position): # Genes do not have positions ! But Hits do!
                 if(first.position > second.position):
                     tmp = first
                     first = second
-                    #second = first
+                    # second = first
                     second = tmp
                 dist = second.position - pos_min + pos_max - first.position 
                 if(dist <= max(first.gene.inter_gene_max_space, second.gene.inter_gene_max_space)):
-                    # If true, this means that there is no need to circularize other clusters as this cluster already overlaps the "Ori". => check_clust is thus set to False
+                    # If true, this means that there is no need to circularize other clusters as this cluster already
+                    # overlaps the "Ori". => check_clust is thus set to False
 
                     msg += "--- Two hits at both ends of the replicon form a new cluster.\n"
 
@@ -118,8 +121,9 @@ class ClustersHandler(object):
                 for h in end_hits:
                     # Two cases: we are at one end, or the other
                     if h.position > clust_first.hits[0].position:
-                        # Case 2: The end hit is at the terminal end of the replicon. Try to cluster it with the 1st stored cluster.
-                        #print "The end hit is at the TERMINAL end of the replicon. Test if it must be clustered with the 1st stored cluster."
+                        # Case 2: The end hit is at the terminal end of the replicon.
+                        # Try to cluster it with the 1st stored cluster.
+                        # print "The end hit is at the TERMINAL end of the replicon. Test if it must be clustered with the 1st stored cluster."
                         dist_end_hit = clust_first.begin - pos_min + pos_max - h.position # OK?
                         if(dist_end_hit <= max(clust_first.hits[0].gene.inter_gene_max_space, h.gene.inter_gene_max_space)):
                             check_clust = False
@@ -136,12 +140,13 @@ class ClustersHandler(object):
                             self.clusters.pop(0)
                             self.clusters.append(new_clust)
                     else:
-                        # Case 3: The end hit is at the initial end of the replicon. Try to cluster it with the last stored cluster.
-                        #print "The end hit is at the INITIAL end of the replicon. Test if it must be clustered with the last stored cluster."
+                        # Case 3: The end hit is at the initial end of the replicon.
+                        # Try to cluster it with the last stored cluster.
+                        # print "The end hit is at the INITIAL end of the replicon. Test if it must be clustered with the last stored cluster."
                         dist_end_hit = h.position - pos_min + pos_max - clust_last.end 
-                        if(dist_end_hit <= max(clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space, h.gene.inter_gene_max_space)):
+                        if dist_end_hit <= max(clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space, h.gene.inter_gene_max_space):
                             check_clust = False
-                            #print "Cluster them !"
+                            # print "Cluster them !"
 
                             msg += "--- A hit is at the INITIAL end of the replicon, and must be clustered with the last stored cluster.\n"
 
@@ -152,14 +157,16 @@ class ClustersHandler(object):
             clust_first = self.clusters[0]
             clust_last = self.clusters[len(self.clusters)-1]
 
-            # Case 4: when putative end hits have been dealt with, now remain cases where clusters are at both ends, and might be fused.                     
+            # Case 4: when putative end hits have been dealt with,
+            # now remain cases where clusters are at both ends, and might be fused.
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
 
-            if (dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space)):
+            if dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space):
                 # Need to circularize !
                 #print "A cluster needs to be \"circularized\" ! "
                 msg = "--- Two clusters should be merged into a new cluster \"circularized\" !\n"
-                # The "1st" cluster on the replicon is removed, as its hits will be appended to the "last" cluster on the replicon.
+                # The "1st" cluster on the replicon is removed,
+                # as its hits will be appended to the "last" cluster on the replicon.
                 #self.clusters.pop(0) 
                 for h in clust_first.hits:
                     clust_last.add(h)
@@ -253,7 +260,8 @@ class Cluster(object):
     def add(self, hit):
         """
         Add a Hit to a Cluster.
-        Hits are always added at the end of the cluster (appended to the list of hits). Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
+        Hits are always added at the end of the cluster (appended to the list of hits).
+        Thus, 'begin' and 'end' positions of the Cluster are always the position of the 1st and of the last hit respectively.
 
         :param hit: the Hit to add
         :type hit: a :class:`macsypy.report.Hit`
@@ -266,7 +274,7 @@ class Cluster(object):
             self.replicon_name = hit.replicon_name
             self.hits.append(hit)
         else:
-            if(self.replicon_name == hit.replicon_name):
+            if self.replicon_name == hit.replicon_name:
                 # To be updated !! make this work also with "circularized" clusters
                 # The end position only is updated, as Hits are always appended.
                 self.end = hit.get_position()
@@ -280,9 +288,11 @@ class Cluster(object):
     def save(self, force=False):
         """
         Check the status of the cluster regarding systems which have hits in it. 
-        Update systems represented, and assign a putative system (self._putative_system), which is the system with most hits in the cluster. 
+        Update systems represented, and assign a putative system (self._putative_system),
+        which is the system with most hits in the cluster.
         The systems represented are stored in a dictionary in the self.systems variable. 
-        The execution of this function can be forced, even if it has already run for the cluster with the option force=True.
+        The execution of this function can be forced, even if it has already run
+        for the cluster with the option force=True.
         """
         if not self.putative_system or force:
             # First compute the "Majoritary" system
@@ -332,15 +342,17 @@ class Cluster(object):
 
             #print systems_compat
             # We sort the list of compatible systems per decreasing nb of systems occurrences
-            systems_compat = OrderedDict(sorted(systems_compat.items(), reverse = True, key = lambda t: t[1]))
+            systems_compat = OrderedDict(sorted(systems_compat.items(), reverse=True, key=lambda t: t[1]))
             #print systems_compat
             #print self
 
             if len(genes) == 1 and self.hits[0].gene.loner == False:
                 self._state = "ineligible"
             else:
-                # Check for foreign "accessory" genes... Might increase nb of systems predicted in the cluster, even if they are tolerated in the cluster. 
-                # Also deal with foreign "exchangeable" genes for the same reasons... NB !! Maybe just not add the system to the list if exchangeable?  
+                # Check for foreign "accessory" genes... Might increase nb of systems predicted in the cluster,
+                # even if they are tolerated in the cluster.
+                # Also deal with foreign "exchangeable" genes for the same reasons... NB !!
+                # Maybe just not add the system to the list if exchangeable?
                 #if len(systems.keys()) == 1:
                 if len(systems_compat.keys()) == 1:
                     self._state = "clear"
@@ -352,7 +364,10 @@ class Cluster(object):
                     # Store only compatible systems that are searched for !!
                     self._compatible_systems.append(syst)
                 else:
-                    # Check for foreign "accessory" genes regarding the majoritary system... They might increase nb of systems predicted in the cluster artificially, even if they are tolerated in the cluster. For that need to scan again all hits and ask wether they are accessory foreign genes. 
+                    # Check for foreign "accessory" genes regarding the majoritary system...
+                    # They might increase nb of systems predicted in the cluster artificially,
+                    # even if they are tolerated in the cluster.
+                    # For that need to scan again all hits and ask wether they are accessory foreign genes.
                     def try_system(hits, putative_system, counter_systems_in_clust):
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
@@ -382,23 +397,21 @@ class Cluster(object):
                                                     
                             if auth == len(hits):
                                 state = "clear"
-                                #print "clear %s"%putative_system
+                                #print "clear {0}".format(putative_system)
                             else:
                                 state = "ambiguous"
-                                #print "ambiguous %s"%putative_system
+                                #print "ambiguous {0}".format(putative_system)
 
-                        """
-                        if forbid == 0:
-                            if auth == len(hits):
-                                state = "clear"
-                                #print "clear %s"%putative_system
-                            else:
-                                state = "ambiguous"
-                                #print "ambiguous %s"%putative_system
-                        else:
-                            state = "ineligible"
-                            #print "ineligible %s"%putative_system
-                        """    
+#                         if forbid == 0:
+#                             if auth == len(hits):
+#                                 state = "clear"
+#                                 #print "clear {}".format(putative_system)
+#                             else:
+#                                 state = "ambiguous"
+#                                 #print "ambiguous {}".format(putative_system)
+#                         else:
+#                             state = "ineligible"
+#                             #print "ineligible {}".format(putative_system)
                         return state
 
                     # Sort systems to consider by decreasing counts.
@@ -407,7 +420,7 @@ class Cluster(object):
                         # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
                         state = try_system(self.hits, putative_system, systems_compat)
                         if state == "clear":
-                            #print "BUENO SYSTEMO %s"%putative_system
+                            #print "BUENO SYSTEMO {0}".format(putative_system)
                             #self._state="clear" 
                             #self._putative_system=putative_system 
                             #break
@@ -415,7 +428,7 @@ class Cluster(object):
                         #else:
                         #    self._state="ambiguous" # tmp before nope
                         #    # Aoutch in this case no putative_system?!
-                        #    print "YAPABON...%s"%putative_system
+                        #    print "YAPABON...{0}".format(putative_system)
                     if len(cluster_compatible_systems) >= 1:
                         #print cluster_compatible_systems
                         self._state = "clear"
@@ -450,7 +463,7 @@ class SystemNameGenerator(object):
         else:
             self.name_bank[basename] = 1
 
-        system_name =  basename + str(self.name_bank[basename])
+        system_name = basename + str(self.name_bank[basename])
         return system_name
 
     def _computeBasename(self, replicon, system):
@@ -621,7 +634,8 @@ class SystemOccurence(object):
 
     def get_system_name_unordered(self, suffix="_putative"):
         """
-        Attributes a name to the system occurrence for an "unordered" dataset => generating a generic name based on the system name and the suffix given. 
+        Attributes a name to the system occurrence for an "unordered" dataset => generating a generic name based
+         on the system name and the suffix given.
 
         :param suffix: the suffix to be used for generating the systemOccurrence's name
         :type suffix: string
@@ -633,7 +647,8 @@ class SystemOccurence(object):
 
     def compute_system_length(self, rep_info):
         """
-        Returns the length of the system, all loci gathered, in terms of protein number (even those not matching any system gene)
+        Returns the length of the system, all loci gathered, in terms of protein number
+        (even those not matching any system gene)
 
         :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
         :type rep_info: a namedTuple "RepliconInfo" :class:`macsypy.database.RepliconInfo`
@@ -648,7 +663,8 @@ class SystemOccurence(object):
                 locus_length = end - begin + rep_info.max - rep_info.min + 2
                 length += locus_length
             else:
-                msg = "Inconsistency in locus positions in the case of a linear replicon. The begin position of a locus cannot be higher than the end position. \n"
+                msg = "Inconsistency in locus positions in the case of a linear replicon.\
+ The begin position of a locus cannot be higher than the end position. \n"
                 msg += "Problem with locus found with positions begin: {0:d} end: {1:d}".format(begin, end)
                 _log.critical(msg)
                 raise SystemDetectionError(msg)
@@ -657,9 +673,11 @@ class SystemOccurence(object):
     @property
     def nb_syst_genes(self):
         """
-        This value is set after a decision was made on the system in :func:`macsypy.search_systems.SystemOccurence:decision_rule`
+        This value is set after a decision was made on the system in
+        :func:`macsypy.search_systems.SystemOccurence:decision_rule`
 
-        :return: the number of mandatory and accessory genes with at least one occurence (number of different accessory genes)
+        :return: the number of mandatory and accessory genes with at least one occurence
+        (number of different accessory genes)
         :rtype: integer
         """
         return self._nb_syst_genes
@@ -713,7 +731,7 @@ class SystemOccurence(object):
 
     def count_missing_genes(self, gene_dict):
         """
-        Counts the number of genes with no occurence in the gene counter.
+        Counts the number of genes with no occurrence in the gene counter.
 
         :param gene_dict: a dictionary with gene's names as keys and number of occurrences as values
         :type gene_dict: dict
@@ -740,7 +758,10 @@ class SystemOccurence(object):
 
         :rtype: string
         """
-        return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_accessory\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Accessory_NR\tNb_missing_mandatory\tNb_missing_accessory\tList_missing_mandatory\tList_missing_accessory\tLoci_positions\tOccur_Mandatory\tOccur_Accessory\tOccur_Forbidden"
+        return "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_accessory\
+\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Accessory_NR\
+\tNb_missing_mandatory\tNb_missing_accessory\tList_missing_mandatory\tList_missing_accessory\tLoci_positions\
+\tOccur_Mandatory\tOccur_Accessory\tOccur_Forbidden"
 
 
     def get_summary(self, replicon_name, rep_info):
@@ -762,13 +783,14 @@ class SystemOccurence(object):
         report_str += "\t{0:d}".format(self.nb_cluster)
         # Nb mandatory_genes in the definition of the system
         report_str += "\t{0:d}".format(len(self.mandatory_genes))
-         # Nb accessory_genes in the definition of the system                               
+        # Nb accessory_genes in the definition of the system
         report_str += "\t{0:d}".format(len(self.accessory_genes))
         # Nb syst genes NR
         report_str += "\t{0:d}".format(self.nb_syst_genes)
         # Nb syst genes matched
         report_str += "\t{0:d}".format(self.compute_nb_syst_genes_tot())
-        #report_str += "\t%d"%self.compute_system_length() # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        #report_str += "\t{0:d}".format(self.compute_system_length()) 
         # The total length of the locus in protein number, delimited by hits for profiles of the system.
         report_str += "\t{0:d}".format(self.compute_system_length(rep_info))
         # Nb mandatory_genes matched at least once
@@ -809,33 +831,36 @@ class SystemOccurence(object):
         #report_str = replicon_name+"\t"+self.get_system_unique_name(replicon_name)
         # No replicon name for unordered... get it from the config object in future developments... 
         report_str = replicon_name+"\t"+self.get_system_name_unordered()
-        report_str += "\t%s"%self.system_name
-        report_str += "\t%s"%self.state
+        report_str += "\t{0}".format(self.system_name)
+        report_str += "\t{0}".format(self.state)
 
-        #report_str+="\t%d"%self.nb_cluster # Nb of loci included to fill the system occurrence
+        # Nb of loci included to fill the system occurrence
+        #report_str+="\t{0:d}".format(self.nb_cluster) 
         report_str += "\tNone"# No loci in unordered
-        report_str += "\t%d"%len(self.mandatory_genes) # Nb mandatory_genes in the definition of the system
-        report_str += "\t%d"%len(self.accessory_genes) # Nb accessory_genes in the definition of the system
-        report_str += "\t%d"%self.nb_syst_genes # Nb syst genes NR
-        report_str += "\t%d"%self.compute_nb_syst_genes_tot() # Nb syst genes matched
+        report_str += "\t{0:d}".format(len(self.mandatory_genes)) # Nb mandatory_genes in the definition of the system
+        report_str += "\t{0:d}".format(len(self.accessory_genes)) # Nb accessory_genes in the definition of the system
+        report_str += "\t{0:d}".format(self.nb_syst_genes) # Nb syst genes NR
+        report_str += "\t{0:d}".format(self.compute_nb_syst_genes_tot()) # Nb syst genes matched
 
-        #report_str+="\t%d"%self.compute_system_length(rep_info) # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        # The total length of the locus in protein number, delimited by hits for profiles of the system.
+        #report_str+="\t{0:d}".format(self.compute_system_length(rep_info)) 
         report_str += "\tNone" # No loci in unordered
 
-        report_str += "\t%d"%self.count_genes(self.mandatory_genes) # Nb mandatory_genes matched at least once
-        report_str += "\t%d"%self.count_genes(self.accessory_genes) # Nb accessory_genes matched at least once
+        report_str += "\t{0:d}".format(self.count_genes(self.mandatory_genes)) # Nb mandatory_genes matched at least once
+        report_str += "\t{0:d}".format(self.count_genes(self.accessory_genes)) # Nb accessory_genes matched at least once
 
         missing_mandatory = self.compute_missing_genes_list(self.mandatory_genes)        
         missing_accessory = self.compute_missing_genes_list(self.accessory_genes)
 
-        report_str += "\t%d"%len(missing_mandatory) # Nb mandatory_genes with no occurrence in the system
-        report_str += "\t%d"%len(missing_accessory) # Nb accessory_genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_mandatory) # List of mandatory genes with no occurrence in the system
-        report_str += "\t%s"%str(missing_accessory) # List of accessory genes with no occurrence in the system
-
-        #report_str+="\t%s"%self.loci_positions # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
+        report_str += "\t{0:d}".format(len(missing_mandatory)) # Nb mandatory_genes with no occurrence in the system
+        report_str += "\t{0:d}".format(len(missing_accessory)) # Nb accessory_genes with no occurrence in the system
+        report_str += "\t{0}".format(str(missing_mandatory)) # List of mandatory genes with no occurrence in the system
+        report_str += "\t{0}".format(str(missing_accessory)) # List of accessory genes with no occurrence in the system
+        
+        # The positions of the loci (begin, end) as delimited by hits for profiles of the system.
+        #report_str+="\t{0}".format(self.loci_positions) 
         report_str += "\tNone" # No loci in unordered
-        report_str += "\t%s"%self.get_gene_counter_output(True) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
+        report_str += "\t{0}".format(self.get_gene_counter_output(True)) # A dico per type of gene 'Mandatory, Accessory, Forbidden' with gene occurrences in the system
 
         return report_str
 
@@ -902,7 +927,8 @@ class SystemOccurence(object):
         Set the system occurence state to "no_decision" after calling of this function.
 
         .. note::
-            Forbidden genes will only be included if they do belong to the current system (and not to another specified with "system_ref" in the current system's definition). 
+            Forbidden genes will only be included if they do belong to the current system
+            (and not to another specified with "system_ref" in the current system's definition).
 
         :param hits: a list of Hits to treat for :class:`macsypy.search_systems.SystemOccurence` inclusion.
         :type list of: :class:`macsypy.report.Hit`
@@ -1004,9 +1030,12 @@ class SystemOccurence(object):
         nb_accessory = self.count_genes(self.accessory_genes)
         self._nb_syst_genes = self.compute_nb_syst_genes()
 
-        msg = "====> Decision rule for putative system %s:\n" % self.system_name
+        msg = "====> Decision rule for putative system {0}:\n".format(self.system_name)
         msg += str(self)
-        msg += "\nnb_forbid : %d\nnb_mandat : %d\nnb_accessory : %d" % (nb_forbid, nb_mandat, nb_accessory)
+        msg += """
+nb_forbid : {0:d}
+nb_mandat : {1:d}
+nb_accessory : {2:d}""".format(nb_forbid, nb_mandat, nb_accessory)
 
         if (nb_forbid == 0):
             if (nb_mandat >= self.system.min_mandatory_genes_required) and (self.nb_syst_genes >= self.system.min_genes_required) and (self.nb_syst_genes  >= 1):
@@ -1015,7 +1044,7 @@ class SystemOccurence(object):
                 else:
                     self._state = "multi_loci"
 
-                msg += "\nComplete \"%s\" system."%self.state
+                msg += "\nComplete \"{0}\" system.".format(self.state)
                 msg += "\n******************************************\n"
                 #print msg
                 #_log.info(msg)
@@ -1076,38 +1105,40 @@ class validSystemHit(object):
     def __str__(self):
         return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
 \t{g_status}\t{i_eval}\t{score}\t{prof_cov:f}\t{seq_cov:f}\
-\t{begin_match:d}\t{end_match:d}\n".format(id = self.id,
-                                           rpl_name = self.replicon_name,
-                                           pos = self.position,
-                                           seq_l = self.seq_length,
-                                           gene_name = self.gene.name,
-                                           ref_sys = self.reference_system,
-                                           predict_sys = self.predicted_system,
-                                           g_status = self.gene_status,
-                                           i_eval = self.i_eval,
-                                           score = self.score,
-                                           prof_cov = self.profile_coverage,
-                                           seq_cov = self.sequence_coverage,
-                                           begin_match = self.begin_match,
-                                           end_match = self.end_match)
+\t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
+                                           rpl_name=self.replicon_name,
+                                           pos=self.position,
+                                           seq_l=self.seq_length,
+                                           gene_name=self.gene.name,
+                                           ref_sys=self.reference_system,
+                                           predict_sys=self.predicted_system,
+                                           g_status=self.gene_status,
+                                           i_eval=self.i_eval,
+                                           score=self.score,
+                                           prof_cov=self.profile_coverage,
+                                           seq_cov=self.sequence_coverage,
+                                           begin_match=self.begin_match,
+                                           end_match=self.end_match)
 
     def output_system(self, system_name, system_status):
-        return "%s\t%s\t%d\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%f\t%f\t%d\t%d\n" % (self.id,
-                                                     self.replicon_name,
-                                                     self.position,
-                                                     self.seq_length,
-                                                     self.gene.name,
-                                                     self.reference_system,
-                                                     self.predicted_system,
-                                                     system_name,
-                                                     system_status,
-                                                     self.gene_status,
-                                                     self.i_eval,
-                                                     self.score,
-                                                     self.profile_coverage,
-                                                     self.sequence_coverage,
-                                                     self.begin_match,
-                                                     self.end_match)
+        return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
+        \t{sys_name}\t{sys_status}\t{gene_status}\t{i_eval:.3e}\t{score:.3f}\t{prof_cov:.3f}\t{seq_cov:.3f}\
+        \t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
+                                                   rpl_name=self.replicon_name,
+                                                   pos=self.position,
+                                                   seq_l=self.seq_length,
+                                                   gene_name=self.gene.name,
+                                                   ref_sys=self.reference_system,
+                                                   predict_sys=self.predicted_system,
+                                                   sys_name=system_name,
+                                                   sys_status=system_status,
+                                                   gene_status=self.gene_status,
+                                                   i_eval=self.i_eval,
+                                                   score=self.score,
+                                                   prof_cov=self.profile_coverage,
+                                                   seq_cov=self.sequence_coverage,
+                                                   begin_match=self.begin_match,
+                                                   end_match=self.end_match)
 
 
     def output_system_header(self):
@@ -1115,7 +1146,8 @@ class validSystemHit(object):
         :return: the header for the output file
         :rtype: string
         """
-        return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
+        return "#Hit_Id\tReplicon_name\tPosition\tSequence_length\tGene\tReference_system\tPredicted_system\
+\tSystem_Id\tSystem_status\tGene_status\ti-evalue\tScore\tProfile_coverage\tSequence_coverage\tBegin_match\tEnd_match\n"
 
 
 
@@ -1123,8 +1155,8 @@ class systemDetectionReport(object):
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, systems_occurences_list, cfg):
-        self._systems_occurences_list = systems_occurences_list
+    def __init__(self, systems_occurrences_list, cfg):
+        self._systems_occurrences_list = systems_occurrences_list
         self.cfg = cfg
         if 'MACSY_DEBUG' in os.environ and os.environ['MACSY_DEBUG']:
             self._indent = 2 #human readable json for debugging purpose
@@ -1187,14 +1219,14 @@ class systemDetectionReportOrdered(systemDetectionReport):
     """
 
 
-    def __init__(self, replicon_name, systems_occurences_list, cfg):
+    def __init__(self, replicon_name, systems_occurrences_list, cfg):
         """
         :param replicon_name: the name of the replicon
         :type replicon_name: string
-        :param systems_occurences_list: the list of system's occurrences to consider
-        :type systems_occurences_list: list of :class:`macsypy.search_systems.SystemOccurence`
+        :param systems_occurrences_list: the list of system's occurrences to consider
+        :type systems_occurrences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
-        super(systemDetectionReportOrdered, self).__init__(systems_occurences_list, cfg)
+        super(systemDetectionReportOrdered, self).__init__(systems_occurrences_list, cfg)
         self.replicon_name = replicon_name
 
 
@@ -1207,33 +1239,33 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :rtype: Counter
         """
         system_textlist = []
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             system_textlist.append(so.system_name + "_" + so.state)
 
         return Counter(system_textlist)
 
-    def tabulated_output_header(self, system_occurence_states, system_names):
+    def tabulated_output_header(self, system_occurrence_states, system_names):
         """
         Returns a string containing the header of the tabulated output
 
-        :param system_occurence_states: the different forms of detected systems to consider
-        :type system_occurence_states: list of string
+        :param system_occurrence_states: the different forms of detected systems to consider
+        :type system_occurrence_states: list of string
         :rtype: string
         """
         # Can be done intra-class 
         header = "#Replicon"
         for syst_name in system_names:
-            for state in system_occurence_states:
+            for state in system_occurrence_states:
                 header += "\t" + syst_name + "_" + state
         header += "\n"
         return header
 
-    def tabulated_output(self, system_occurence_states, system_names, reportfilename, print_header = False):
+    def tabulated_output(self, system_occurrence_states, system_names, reportfilename, print_header = False):
         """
         Write a tabulated output with number of detected systems for each replicon.
 
-        :param system_occurence_states: the different forms of detected systems to consider
-        :type system_occurence_states: list of string
+        :param system_occurrence_states: the different forms of detected systems to consider
+        :type system_occurrence_states: list of string
         :param reportfilename: the output file name 
         :type reportfilename: string
         :param print_header: True if the header has to be written. False otherwise
@@ -1245,9 +1277,9 @@ class systemDetectionReportOrdered(systemDetectionReport):
         _log_out.info(system_counter)
         report_str = self.replicon_name
         for s in system_names:
-            for o in system_occurence_states:
+            for o in system_occurrence_states:
                 index = s + "_" + str(o)
-                if system_counter.has_key(index):
+                if index in system_counter:
                     report_str += "\t"
                     report_str += str(system_counter[index])
                 else:
@@ -1256,11 +1288,11 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
         with open(reportfilename, 'a') as _file:
             if print_header:
-                _file.write(self.tabulated_output_header(system_occurence_states, system_names))
+                _file.write(self.tabulated_output_header(system_occurrence_states, system_names))
             _file.write(report_str)
 
 
-    def report_output(self, reportfilename, print_header = False):
+    def report_output(self, reportfilename, print_header=False):
         """
         Writes a report of sequences forming the detected systems, with information in their status in the system, 
         their localization on replicons, and statistics on the Hits.
@@ -1272,7 +1304,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
         """
         report_str = ""
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             so_unique_name = so.get_system_unique_name(self.replicon_name)
             for hit in so.valid_hits:
                 if print_header:
@@ -1284,7 +1316,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
             _file.write(report_str)
 
 
-    def summary_output(self, reportfilename, rep_info, print_header = False):
+    def summary_output(self, reportfilename, rep_info, print_header=False):
         """
         Writes a report with the summary of systems detected in replicons. For each system, a summary is done including:
 
@@ -1300,7 +1332,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
         """
         report_str = ""
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             if print_header:
                 report_str += "{0}\n".format(so.get_summary_header())
                 print_header = False
@@ -1315,7 +1347,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
         """
         """
         with open(json_path, 'w') as _file:
-            json.dump(json_data, _file, indent = self._indent)
+            json.dump(json_data, _file, indent=self._indent)
 
 
     def _match2json(self, valid_hit, so):
@@ -1361,15 +1393,15 @@ class systemDetectionReportOrdered(systemDetectionReport):
         :type rep_db: a class:`macsypy.database.RepliconDB` object
         """
         systems = []
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             system = {}
-            systemName = so.system_name
+            system_name = so.system_name
             fields = so.unique_name.split('_')
             repliconName = fields[0]
-            occurenceNumber = int(fields[len(fields)-1])
+            occurrence_number = int(fields[len(fields)-1])
             
-            system['occurenceNumber'] = occurenceNumber
-            system['name'] = systemName
+            system['occurrence_number'] = occurrence_number
+            system['name'] = system_name
             system['id'] = so.unique_name
             system['replicon'] = {}
             system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
@@ -1400,7 +1432,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     pos_in_bk_2_display = before_orig + after_orig
                 pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
                 for curr_position in pos_in_rep_2_display:
-                    gene_name, gene_lenght = rep_info.genes[curr_position]
+                    gene_name, gene_length = rep_info.genes[curr_position]
                     if self.cfg.db_type == 'gembase':
                         # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits.
                         gene_id = "{0}_{1}".format(system['replicon']['name'], gene_name)
@@ -1409,7 +1441,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                     if gene_id in valid_hits:
                         gene = self._match2json(valid_hits[gene_id], so)
                     else:
-                        gene = self._gene2json(gene_id, int(gene_lenght), curr_position + rep_info.min)
+                        gene = self._gene2json(gene_id, int(gene_length), curr_position + rep_info.min)
                     system['genes'].append(gene)
 
             system['summary'] = {}
@@ -1426,16 +1458,17 @@ class systemDetectionReportUnordered(systemDetectionReport):
     Stores a report for putative detected systems gathering all hits from a search in an unordered dataset: 
         - by system.
 
-    Mandatory and accessory genes only are reported in the "json" and "report" output, but all hits matching a system component are reported in the "summary".  
+    Mandatory and accessory genes only are reported in the "json" and "report" output,
+    but all hits matching a system component are reported in the "summary".
 
     """
 
-    def __init__(self, systems_occurences_list, cfg):
+    def __init__(self, systems_occurrences_list, cfg):
         """
-        :param systems_occurences_list: the list of system's occurrences to consider
-        :type systems_occurences_list: list of :class:`macsypy.search_systems.SystemOccurence`
+        :param systems_occurrences_list: the list of system's occurrences to consider
+        :type systems_occurrences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
-        super(systemDetectionReportUnordered, self).__init__(systems_occurences_list, cfg)
+        super(systemDetectionReportUnordered, self).__init__(systems_occurrences_list, cfg)
 
 
 
@@ -1451,7 +1484,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
         """
         report_str = ""
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             #so_unique_name = so.get_system_unique_name(self.replicon_name)
             so_unique_name = so.get_system_name_unordered()
             #so_unique_name = so.system_name+"_putative"
@@ -1480,12 +1513,12 @@ class systemDetectionReportUnordered(systemDetectionReport):
         """
 
         report_str = ""
-        for so in self._systems_occurences_list:
+        for so in self._systems_occurrences_list:
             if print_header:
                 report_str += "{0}\n".format(so.get_summary_header())
                 print_header = False
 
-            #report_str+="%s\n"%so.get_summary(self.replicon_name, rep_info)
+            #report_str+="{0}\n".format(so.get_summary(self.replicon_name, rep_info))
             # Get a fake "replicon_name" from the config object in future devt.
             report_str += "{0}\n".format(so.get_summary_unordered("Unordered"))
 
@@ -1533,7 +1566,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
         with open(json_path, 'w') as _file:
             systems = []
-            for so in self._systems_occurences_list:
+            for so in self._systems_occurrences_list:
                 if not so.unique_name:
                     so.unique_name = so.get_system_name_unordered()
                 system = {}
@@ -1567,7 +1600,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['summary']['forbidden'] = so.forbidden_genes
                 system['summary']['state'] = so._state
                 systems.append(system)
-            json.dump(systems, _file, indent = self._indent)
+            json.dump(systems, _file, indent=self._indent)
 
 
 def get_compatible_systems(systems_list1, systems_list2):
@@ -1590,11 +1623,14 @@ def get_compatible_systems(systems_list1, systems_list2):
 
 def disambiguate_cluster(cluster):
     """
-    This disambiguation step is used on clusters with hits for multiple systems (when cluster.state is set to "ambiguous"). 
-    It returns a "cleansed" list of clusters, ready to use for system occurence detection (and that are "clear" cases). It: 
+    This disambiguation step is used on clusters with hits for multiple systems
+    (when cluster.state is set to "ambiguous"). It returns a "cleansed" list of clusters,
+    ready to use for system occurence detection (and that are "clear" cases). It:
 
     - splits the cluster in two if it seems that two systems are nearby
-    - removes single hits that are not forbidden for the "main" system and that are at one end of the current cluster in this case, check that they are not "loners", cause "loners" can be stored.
+    - removes single hits that are not forbidden for the "main" system and
+     that are at one end of the current cluster in this case,
+     check that they are not "loners", cause "loners" can be stored.
 
     :param cluster: the cluster to "disambiguate"
     :type cluster: :class:`macsypy.search_systems.Cluster`
@@ -1626,7 +1662,8 @@ def disambiguate_cluster(cluster):
             cur_cluster.add(h)
             cur_compatible = compat_list
         else:
-            # Deal with "accessory foreign genes", and system attribution when the current gene can be in both aside systems! 
+            # Deal with "accessory foreign genes",
+            # and system attribution when the current gene can be in both aside systems!
             # Former cluster (now to save) is considered.
             # Check cluster status before storing it or not:
             cur_cluster.save() # Check if it updates compatible systems?? right?
@@ -1684,7 +1721,7 @@ def disambiguate_cluster(cluster):
                     counter_genes_compat_systems[syst.name] = 1
                 else:
                     counter_genes_compat_systems[syst.name] += 1
-    #print "\n---Counter compatible systems ! ---\n%s"%str(counter_genes_compat_systems)
+    #print "\n---Counter compatible systems ! ---\n{0}".format(counter_genes_compat_systems)
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res = []
@@ -1766,7 +1803,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #exclude = False # unused_var
             #for putative_system in clust.compatible_systems:
             for putative_system in [s.name for s in systems_to_consider]:
-                _log_out.info("Considering %s: " % putative_system)
+                _log_out.info("Considering {}: ".format(putative_system))
                 if putative_system in syst_dict.keys():
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
@@ -1775,7 +1812,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
                     msg = so.decision_rule()
                     so_state = so.state
-                    _log_out.info("-> %s" % so_state)
+                    _log_out.info("-> {}".format(so_state))
                     if so_state != "exclude":
                         if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
@@ -1783,28 +1820,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
                             if first:
                                 store_clust = clust
-                                #store_so = so
                                 store_scattered = True
-                                #store_msg
-                            #print "...\nStored for later treatment of scattered systems.\n"
-                            #systems_occurences_scattered[putative_system].fill_with_cluster(clust)
                         else:
-                            #print so 
-                            #print so_state
-                            #print "...\nComplete %s %s system stored.\n"%(putative_system, so_state)
                             _log_out.info(msg)
                             systems_occurences_list.append(so)
                             store_scattered = False
                             break
-                    #else:
-                    #    exclude = True
-                    #    #store_scattered=True
-            #if store_scattered and not exclude:
             if store_scattered:
-                #print store_so
-                #print store_msg
-                #print "...\nPutative %s locus stored for later treatment of scattered systems.\n"%clust.compatible_systems[0]
-                _log_out.info("=> Putative %s locus stored for later treatment of scattered systems."%clust.compatible_systems[0])
+                _log_out.info("=> Putative {} locus stored for later treatment of scattered systems.".format(clust.compatible_systems[0]))
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
 
         elif clust.state == "ambiguous":
@@ -1823,7 +1846,12 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
 
         else:
             _log_out.info("------- next -------")
-    _log_out.info("\n\n***************************************************\n******* Report scattered/uncomplete systems *******\n***************************************************\n")
+    _log_out.info("""
+    
+****************************************************
+******* Report scattered/uncompleted systems *******
+****************************************************
+""")
     for system in systems:
         #print systems_occurences[system]
 
@@ -1833,7 +1861,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             so = systems_occurences_scattered[system.name]
             msg = so.decision_rule()
             so_state = so.state
-            #print "-- %s --"%so.system_name
+            #print "-- {0} --".format(so.system_name)
             #print so
             _log_out.info(msg)
             if so.is_complete():
@@ -1937,7 +1965,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             if prev.gene.loner:
                 #print "trois - loner_state"
-                #print "--- PREVLONER %s %s"%(prev.id, prev.gene.name)
+                #print "--- PREVLONER {0} {1}".format(prev.id, prev.gene.name)
                 loner_state = True
         else:
             # Storage of the previous cluster
@@ -1954,7 +1982,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
                 #print cur_cluster
                 #print "cinq - ADD cur_cluster"
-                #print "PREVLONER %s %s"%(prev.id, prev.gene.name)
+                #print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
 
                 cur_cluster = Cluster(systems_to_detect)
@@ -1962,7 +1990,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
             if prev.gene.loner:
                 #print "six - check"
-                #print "PREVLONER ?? %s %s"%(prev.id, prev.gene.name)
+                #print "PREVLONER ?? {0} {1}".format(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
                     #print "six - ADD prev in cur_cluster, ADD cur_cluster"
@@ -1983,7 +2011,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
             cur_cluster = Cluster(systems_to_detect)
 
         prev = cur
-        #print "Now prev is %s"%(prev.gene.name)
+        #print "Now prev is {0}".format(prev.gene.name)
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         #print "Recap clusters"
@@ -2002,7 +2030,8 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 multi_system_genes_system_wise[prev.system.name].append(prev)
 
     if rep_info.topology == "circular":
-        # Need to take into account the possibility of a single gene at both extremity, that should be considered as part of a cluster (and was not with previous steps)! 
+        # Need to take into account the possibility of a single gene at both extremity, 
+        # that should be considered as part of a cluster (and was not with previous steps)! 
         first = hits[0]
         last = hits[-1]
         hitstoconsider=[]
@@ -2018,7 +2047,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     return (clusters, multi_system_genes_system_wise)
 
-def get_best_hits(hits, tosort = False, criterion = "score"):
+def get_best_hits(hits, tosort=False, criterion="score"):
     """
     Returns from a putatively redundant list of hits, a list of best matching hits.
     Analyzes quorum and co-localization if required for system detection. 
@@ -2070,7 +2099,7 @@ def get_best_hits(hits, tosort = False, criterion = "score"):
                 if getattr(prev_hit, 'profile_coverage') < getattr(h, 'profile_coverage'):
                     prev_hit = h
             else:
-                raise MacsypyError("The criterion for Hits comparison % does not exist or is not available. \nIt must be either \"score\", \"i_eval\" or \"profile_coverage\"."%criterion)
+                raise MacsypyError('The criterion for Hits comparison {} does not exist or is not available. \nIt must be either "score", "i_eval" or "profile_coverage".'.format(criterion))
 
             #print "BEST"
             #print prev_hit

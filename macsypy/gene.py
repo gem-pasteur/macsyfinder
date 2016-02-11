@@ -4,7 +4,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -20,8 +20,8 @@ _log = logging.getLogger('macsyfinder.' + __name__)
 
 from subprocess import Popen
 from threading import Lock
-from report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
-from macsypy_error import MacsypyError
+from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
+from .macsypy_error import MacsypyError
 
 
 class GeneBank(object):
@@ -34,8 +34,6 @@ class GeneBank(object):
         """
         :param name: the name of the Gene
         :type name: string
-        :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         :return: return the Gene corresponding to the name.
           If the Gene already exists, return it, otherwise, build it and return it
         :rtype: :class:`macsypy.gene.Gene` object
@@ -65,18 +63,14 @@ class GeneBank(object):
 
     def add_gene(self, gene):
         """
+        Add a gene in the bank
 
-        :param name: the name of the gene
-        :type name: string
-        :param cfg: the configuration
-        :type cfg: :class:`macsypy.config.Config` object
-        :return: return gene corresponding to the name.
-          If the gene already exists, return it, otherwise, build it and return it
-        :rtype: :class:`macsypy.gene.Gene` object
+        :param gene: the gene to add
+        :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
         if gene in self._genes_bank:
-            raise KeyError("a gene named %s is already registered" % gene.name)
+            raise KeyError("a gene named {0} is already registered".format(gene.name))
         else:
             self._genes_bank[gene.name] = gene
 
@@ -92,10 +86,10 @@ class Gene(object):
     def __init__(self, cfg, name,
                  system,
                  profiles_registry,
-                 loner = False,
-                 exchangeable = False,
-                 multi_system = False,
-                 inter_gene_max_space = None ):
+                 loner=False,
+                 exchangeable=False,
+                 multi_system=False,
+                 inter_gene_max_space=None):
         """
         handle gene
 
@@ -109,8 +103,8 @@ class Gene(object):
         :type profiles_registry: :class:`macsypy.registries.ProfilesRegistry` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs \
-          whithout any effects on the system assessment, False otherwise.
+        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
+          without any effects on the system assessment, False otherwise.
         :type exchangeable: boolean.
         :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
@@ -134,14 +128,14 @@ class Gene(object):
         """
         Print the name of the gene and of its homologs/analogs.
         """
-        s = "name : %s" % self.name
-        s += "\ninter_gene_max_space: %d"%self.inter_gene_max_space
+        s = "name : {0}".format(self.name)
+        s += "\ninter_gene_max_space: {:d}".format(self.inter_gene_max_space)
         if self.loner:
-            s+= "\nloner"
+            s += "\nloner"
         if self.multi_system:
-            s+= "\nmulti_system"
+            s += "\nmulti_system"
         if self.exchangeable:
-            s+= "\nexchangeable"
+            s += "\nexchangeable"
         if self.homologs:
             s += "\n    homologs: "
             for h in self.homologs:
@@ -321,7 +315,7 @@ class Gene(object):
             return False
 
 
-    def is_authorized(self, system, include_forbidden = True):
+    def is_authorized(self, system, include_forbidden=True):
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
         :param system: the query of the test
@@ -331,25 +325,18 @@ class Gene(object):
         :rtype: boolean.
         """
         
-        #print "\n- is_authorized? -"
-        #print "%s in %s"%(self, system.name)
         if include_forbidden:
             for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
                 if self == m:
-                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    #print "Yes - via exchang"
                     return True
         else:
             for m in (system.mandatory_genes+system.accessory_genes):
                 if self == m:
-                    #print "Yes"
                     return True
                 if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    #print "Yes - via exchang"
                     return True 
-        #print "No!"
         return False
 
 
@@ -376,13 +363,13 @@ class Homolog(object):
     Handle homologs, encapsulate a Gene
     """
 
-    def __init__(self, gene, gene_ref, aligned = False ):
+    def __init__(self, gene, gene_ref, aligned=False):
         """
         :param gene: the gene
         :type gene: :class:`macsypy.gene.Gene` object.
         :param gene_ref: the gene to which the current is homolog.
         :type gene_ref: :class:`macsypy.gene.Gene` object.
-        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.\ 
+        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.
           Otherwise, only partial overlapping between the profiles. 
         :type aligned: boolean
         """
@@ -409,6 +396,7 @@ class Homolog(object):
         :rtype: :class:`macsypy.gene.Gene` object
         """
         return self.ref
+
 
 class Analog(object):
     """
@@ -439,7 +427,7 @@ class Analog(object):
         return self.ref
 
 
-class ProfileFactory():
+class ProfileFactory(object):
     """
     Build and store all Profile objects. Profiles must not be instanciated directly.
     The profile_factory must be used. The profile_factory ensures there is only one instance
@@ -509,6 +497,7 @@ class Profile(object):
         Parse the HMM profile file to get and store the length.
         This private method is called at the Profile init.
         """
+        length = None
         with open(self.path) as f:
             for l in f:
                 if l.startswith("LENG"):
@@ -520,7 +509,7 @@ class Profile(object):
         """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
-        return "%s : %s" % (self.gene.name, self.path)
+        return "{0} : {1}".format(self.gene.name, self.path)
 
 
     def execute(self):
@@ -533,55 +522,58 @@ class Profile(object):
         with self._lock:
             # the results of HMM is cached 
             # so HMMsearch is executed only once per run
-            # if this method is called several times the first call induce the execution of HMMsearch and generate a report
+            # if this method is called several times,
+            # the first call induce the execution of HMMsearch and generate a report
             # the other calls return directly this report
             if self._report is not None:
                 return self._report
-            output_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, self.gene.name + self.cfg.res_search_suffix)
-            err_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err" )
+            output_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir,
+                                       self.gene.name + self.cfg.res_search_suffix)
+            err_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir,
+                                    self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err")
 
-            with  open(err_path, 'w') as err_file:
-                options = { "hmmer_exe" : self.cfg.hmmer_exe,
-                            "output_file" : output_path ,
-                            "e_value_res" : self.cfg.e_value_res,
-                            "profile" : self.path,
-                            "sequence_db" : self.cfg.sequence_db,
+            with open(err_path, 'w') as err_file:
+                options = {"hmmer_exe": self.cfg.hmmer_exe,
+                           "output_file": output_path,
+                           "e_value_res": self.cfg.e_value_res,
+                           "profile": self.path,
+                           "sequence_db": self.cfg.sequence_db,
                            }
-                #command = "%(hmmer_exe)s -o %(output_file)s -E %(e_value_res)d %(profile)s %(sequence_db)s" % options
                 command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
-                _log.info( "{0} Hmmer command line : {1}".format(self.gene.name, command))
+                _log.info("{0} Hmmer command line : {1}".format(self.gene.name, command))
                 try:
-                    hmmer = Popen( command ,
-                                   shell = True ,
-                                   stdout = None ,
-                                   stdin  = None ,
-                                   stderr = err_file ,
-                                   close_fds = False ,
-                                   )
-                except Exception, err:
-                    msg = "Hmmer execution failed: command = %s : %s" % ( command , err)
-                    _log.critical( msg, exc_info = True )
+                    hmmer = Popen(command,
+                                  shell=True,
+                                  stdout=None,
+                                  stdin=None,
+                                  stderr=err_file,
+                                  close_fds=False,
+                                 )
+                except Exception as err:
+                    msg = "Hmmer execution failed: command = {0} : {1}".format(command, err)
+                    _log.critical(msg, exc_info=True)
                     raise err
 
                 hmmer.wait()
 
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
-                    msg = "the Hmmer execution was aborted: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
+                    msg = "the Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
                     _log.critical(msg)
                     return
                 else:
-                    msg = "an error occurred during Hmmer execution: command = %s : return code = %d check %s" % (command, hmmer.returncode, err_path)
-                    _log.debug(msg, exc_info = True )
+                    msg = "an error occurred during Hmmer execution: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
+                    _log.debug(msg, exc_info=True)
                     _log.critical(msg)
                     raise RuntimeError(msg)
             self.hmm_raw_output = output_path
             if self.cfg.db_type == 'gembase':
-                report = GembaseHMMReport(self.gene, output_path, self.cfg )
+                report = GembaseHMMReport(self.gene, output_path, self.cfg)
             elif self.cfg.db_type == 'ordered_replicon':
-                report = OrderedHMMReport(self.gene, output_path, self.cfg )
+                report = OrderedHMMReport(self.gene, output_path, self.cfg)
             else:
-                report = GeneralHMMReport(self.gene, output_path, self.cfg )
+                report = GeneralHMMReport(self.gene, output_path, self.cfg)
             self._report = report
             return report
+
 

@@ -12,8 +12,9 @@ http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 Download distribution
 ---------------------
-[![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.png)](http://dl.bintray.com/gem-pasteur/MacSyFinder/macsyfinder-1.0.1.tar.gz)
  
+[ ![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.svg) ](https://bintray.com/gem-pasteur/MacSyFinder/macsyfinder/_latestVersion)
+
 
 Installation from distribution
 ------------------------------
@@ -24,7 +25,7 @@ Installation from distribution
 
 2. Go to the macsyfinder directory
  
-    cd macsyfinder-1.0
+    cd macsyfinder-x.x
 
 3. Build and install
 
@@ -48,3 +49,11 @@ Installation from repository
 Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+
+
+Documentation
+-------------
+
+You will find complete documentation for setting up your project at the Read the Docs site.
+
+[![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)

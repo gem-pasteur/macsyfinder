@@ -5,7 +5,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                                   #
+# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -56,7 +56,7 @@ to run test, run 'python setup.py test -vv'""")
         chk = VersionPredicate(req)
         ver = '.'.join([str(v) for v in sys.version_info[:2]])
         if not chk.satisfied_by(ver):
-            log.error("Invalid python version, expected %s" % req)
+            log.error("Invalid python version, expected {0}".format(req))
             return False
         return True
 
@@ -65,14 +65,14 @@ to run test, run 'python setup.py test -vv'""")
         try:
             mod = __import__(chk.name)
         except:
-            log.error("Missing mandatory %s python module" % chk.name)
+            log.error("Missing mandatory {0} python module".format(chk.name))
             return False
         for v in [ '__version__', 'version' ]:
             ver = getattr(mod, v, None)
             break
         try:
             if ver and not chk.satisfied_by(ver):
-                log.error("Invalid module version, expected %s" % req)
+                log.error("Invalid module version, expected {0}".format(req))
                 return False
         except:
             pass
@@ -110,7 +110,7 @@ class test(Command):
     user_options = [('verbosity' , 'v' , 'verbosity of outputs (cumulative option ex -vv)', 1),
                     ('build-base=', 'b', "base build directory (default: 'build.build-base')"),
                     ('build-lib=', None, "build directory for all modules (default: 'build.build-lib')"),
-                    ('plat-name=', 'p', "platform name to build for, if supported (default: %s)" % get_platform()),
+                    ('plat-name=', 'p', "platform name to build for, if supported (default: {0})".format(get_platform())),
                     ]
 
     help_options = []
@@ -144,7 +144,7 @@ class test(Command):
                             "--plat-name only supported on Windows (try "
                             "using './configure --help' on your platform)")
 
-        plat_specifier = ".%s-%s" % (self.plat_name, sys.version[0:3])
+        plat_specifier = ".{0}-{1}".format(self.plat_name, sys.version[0:3])
 
         # Make it so Python 2.x and Python 2.x with --with-pydebug don't
         # share the same build directories. Doing so confuses the build
@@ -241,18 +241,23 @@ class install_macsyfinder(install):
 
 
     def run(self):
+        def subst_file(_file, vars_2_subst):
+            input_file = os.path.join(self.build_lib, _file)
+            output_file = input_file + '.tmp'
+            subst_vars(input_file, output_file, vars_2_subst)
+            os.unlink(input_file)
+            self.move_file(output_file, input_file)
+
         inst = self.distribution.command_options.get('install')
-        vars_2_subst = {'PREFIX': inst.get('prefix', ''),
+        vars_2_subst = {'PREFIX': inst['prefix'][1] if 'prefix' in inst else '',
                         'PREFIXCONF' : os.path.join(get_install_conf_dir(inst), 'macsyfinder'),
                         'PREFIXDATA' : os.path.join(get_install_data_dir(inst), 'macsyfinder'),
                         'PREFIXDOC'  : os.path.join(get_install_doc_dir(inst), 'macsyfinder'),
                         }
         for _file in self.distribution.fix_prefix:
-            input_file = os.path.join(self.build_lib, _file)
-            output_file =  input_file + '.tmp'
-            subst_vars(input_file, output_file, vars_2_subst)
-            os.unlink(input_file)
-            self.move_file(output_file, input_file)
+            subst_file(_file, vars_2_subst)
+        _file = os.path.join('macsypy', '__init__.py')
+        subst_file(_file, {'VERSION' : self.distribution.get_version()})
         install.run(self)
 
 
@@ -296,8 +301,7 @@ class install_data(_install_data):
                 f = convert_path(f)
                 if self.warn_dir:
                     self.warn("setup script did not provide a directory for "
-                              "'%s' -- installing right in '%s'" %
-                              (f, self.install_dir))
+                              "'{0}' -- installing right in '{1}'".format((f, self.install_dir)))
                 (out, _) = self.copy_file(f, self.install_dir)
                 self.outfiles.append(out)
             else:
@@ -421,8 +425,7 @@ class install_conf(install_data):
                 f = convert_path(f)
                 if self.warn_dir:
                     self.warn("setup script did not provide a directory for "
-                              "'%s' -- installing right in '%s'" %
-                              (f, self.install_dir))
+                              "'{0}' -- installing right in '{1}'".format(f, self.install_dir))
                 dest =  os.path.join(self.install_dir, f +".new" )
                 (out, _) = self.copy_file(f, self.install_dir)
                 self.outfiles.append(out)
@@ -562,11 +565,11 @@ class Uninstall(Command):
                         if not self.dry_run:
                             os.unlink(path)
                         log.info("remove file {}".format(path))
-                    except Exception, err:
+                    except Exception as err:
                         pass
                     _dir = os.path.dirname(path)
                     clean_tree(_dir)
-        except IOError, err:
+        except IOError as err:
             msg = "Cannot unistall macsyfinder.\n"
             if err.errno == os.errno.ENOENT:
                 msg += "Cannot access \"{}\": No such file".format(self.distribution.uninstall_files) 
@@ -611,12 +614,13 @@ class sdist_macsy(sdist):
             f.write('recursive-include {0} *\n'.format(os.path.join(self.macsyview_link_name, 'app')))
 
     def set_up(self):
+        print "@@@VERSION = ",self.distribution.get_version()
         if os.path.exists( self.macsyview_link_name ):
             if os.path.realpath(self.macsyview_link_name) == os.path.realpath(self.macsyview_dir):
                 self.must_clean = False
                 return
             else:
-                raise RuntimeError( "there already exist a 'macsyview' path in %s and is different than %s"%( os.getcwd(), self.macsyview_dir) )
+                raise RuntimeError( "there already exist a 'macsyview' path in {0} and is different than {1}".format( os.getcwd(), self.macsyview_dir))
         os.symlink( self.macsyview_dir , self.macsyview_link_name )
         self.must_clean = True
 
@@ -709,12 +713,12 @@ def get_install_doc_dir(inst):
 def subst_vars(src, dst, vars):
     try:
         src_file = open(src, "r")
-    except os.error, err:
-        raise DistutilsFileError, "could not open '%s': %s" % (src, err)
+    except os.error as err:
+        raise DistutilsFileError, "could not open '{0}': {1)".format(src, err)
     try:
         dest_file = open(dst, "w")
-    except os.error, err:
-        raise DistutilsFileError, "could not create '%s': %s" % (dst, err)
+    except os.error as err:
+        raise DistutilsFileError, "could not create '{0}': {1}".format(dst, err)
     with src_file:
         with dest_file:
             for line in src_file:
@@ -727,18 +731,18 @@ require_packages = []
 
 
 setup(name        = 'macsyfinder',
-      version     =  time.strftime("1.0.1"),
+      version     = time.strftime("%Y%m%d-dev"),
       description  = """MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
       author  = "Sophie Abby, Bertrand Néron",
       author_email = "sabby@pasteur.fr, bneron@pasteur.fr",
       classifiers = [
-                     'Operating System :: POSIX' ,
-                     'Programming Language :: Python' ,
-                     'Topic :: Bioinformatics' ,
+                     'Operating System :: POSIX',
+                     'Programming Language :: Python :: 2.7 :: Only',
+                     'Topic :: Bioinformatics',
                     ] ,
       packages    = ['macsypy'],
-      scripts     = [ 'bin/macsyfinder'] ,
+      scripts     = ['bin/macsyfinder'],
       viewer      = ['bin/macsyview'],
       #(dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files = [('macsyfinder/DEF', ['data/DEF/']),

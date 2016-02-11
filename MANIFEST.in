@@ -23,5 +23,7 @@ include etc/macsyfinder.conf
 include INSTALL
 include COPYING
 include COPYRIGHT
+include NEWS
+include CITATION
 recursive-include macsyview/app *
 recursive-include macsyview/bin *
