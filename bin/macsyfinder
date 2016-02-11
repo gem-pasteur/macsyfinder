@@ -56,8 +56,8 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder
              *                           *  *           *     *
 
                                
-MacSyFinder is a tool for the detection of protein secretion systems 
-of diderm bacteria from a protein dataset.   
+MacSyFinder is a tool for the detection of macromolecular systems 
+as described by user-defined models, in a protein dataset.   
      ''') )
 #, formatter_class=argparse.RawDescriptionHelpFormatter)
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
