@@ -261,6 +261,12 @@ PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys
 if not args.systems:
     parser.error("you MUST provided systems to search.")
 
+if not args.previous_run and not args.sequence_db:
+    parser.error("argument --sequence-db is required.")
+
+if not args.previous_run and not args.db_type:
+    parser.error("argument --db-type is required.")
+
 if args.previous_run and (args.cfg_file or
                           args.sequence_db or
                           args.profile_suffix or
