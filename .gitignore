@@ -49,6 +49,7 @@ macsyfinder-201*
 # MacSyFinder data #
 ####################
 data/macsyfinder/models/TXSS/*
+data/base/*
 
 ##############################
 # MacsyFinder generated file #
