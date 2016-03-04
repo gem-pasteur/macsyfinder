@@ -29,27 +29,27 @@ class Test(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.system import _log
         macsy_log = _log.parent
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           hmmer_exe = "",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = "",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
-                           )
+        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          hmmer_exe="",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          def_dir=os.path.join(self._data_dir, 'DEF'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix="",
+                          profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -84,7 +84,7 @@ class Test(MacsyTest):
         i = 0
         for s in system_bank:
             self.assertIn(s, systems)
-            i = i + 1
+            i += 1
         self.assertEqual(i, len(systems))
 
     def test_get_uniq_object(self):
@@ -92,5 +92,5 @@ class Test(MacsyTest):
         system_bank.add_system(system_foo)
         system_1 = system_bank[system_foo.name]
         system_2 = system_bank[system_foo.name]
-        self.assertEqual( system_1, system_2 )
-        
+        self.assertEqual(system_1, system_2)
+

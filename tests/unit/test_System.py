@@ -39,20 +39,20 @@ class Test(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config(sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                          db_type = "gembase", 
-                          hmmer_exe = "",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = "",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
-                           )
+        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          hmmer_exe="",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          def_dir=os.path.join(self._data_dir, 'DEF'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix="",
+                          profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
         self.profile_registry = ProfilesRegistry(self.cfg)
 
     def tearDown(self):
@@ -82,9 +82,9 @@ class Test(MacsyTest):
         min_genes_required = 40
         system = System(self.cfg, name, 10, min_genes_required = min_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_mandatory_gene( gene )
+        system.add_mandatory_gene(gene)
         self.assertEqual(system.min_genes_required, min_genes_required)
-        #see https://projets.pasteur.fr/issues/1850
+        # see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
         self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
         
@@ -93,9 +93,9 @@ class Test(MacsyTest):
         min_mandatory_genes_required = 40
         system = System(self.cfg, name, 10, min_mandatory_genes_required = min_mandatory_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.profile_registry)
-        system.add_mandatory_gene( gene )
+        system.add_mandatory_gene(gene)
         self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required)    
-        #see https://projets.pasteur.fr/issues/1850
+        # see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
         self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
 

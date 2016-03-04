@@ -40,20 +40,20 @@ class Test(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( hmmer_exe="hmmsearch",
-                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type="gembase",
-                           e_value_res=1,
-                           i_evalue_sel=0.5,
-                           def_dir=os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir=tempfile.gettempdir(),
-                           res_search_suffix=".search_hmm.out",
-                           profile_dir=os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix=".hmm",
-                           res_extract_suffix="",
-                           log_level=30,
-                           log_file=log_file
-                           )
+        self.cfg = Config(hmmer_exe="hmmsearch",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          def_dir=os.path.join(self._data_dir, 'DEF'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix=".search_hmm.out",
+                          profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                         )
         self.profile_registry = ProfilesRegistry(self.cfg)
 
 

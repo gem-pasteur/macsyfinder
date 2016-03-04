@@ -40,20 +40,20 @@ class Test(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           hmmer_exe = "",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = "",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
-                           )
+        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          hmmer_exe="",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          def_dir=os.path.join(self._data_dir, 'DEF'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix="",
+                          profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
         self.profile_registry = ProfilesRegistry(self.cfg)
 
 
@@ -75,8 +75,8 @@ class Test(MacsyTest):
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         gene_ref = Gene(self.cfg, 'sctJ', system_bar, self.profile_registry)
         homolog = Homolog(self.cfg, gene, gene_ref)
-        gene.add_homolog( homolog )
-        self.assertEqual(len( gene.homologs), 1)
+        gene.add_homolog(homolog)
+        self.assertEqual(len(gene.homologs), 1)
         self.assertEqual(gene.homologs[0], homolog)
     
     
@@ -109,7 +109,7 @@ class Test(MacsyTest):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.loner)
-        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, loner = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, loner=True)
         self.assertTrue(gene.loner)
 
 
@@ -120,7 +120,7 @@ class Test(MacsyTest):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.exchangeable)
-        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, exchangeable = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, exchangeable=True)
         self.assertTrue(gene.exchangeable)
  
     def test_multi_system(self):
@@ -130,7 +130,7 @@ class Test(MacsyTest):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertFalse(gene.multi_system)
-        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, multi_system = True)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, multi_system=True)
         self.assertTrue(gene.multi_system)
 
 
@@ -143,7 +143,7 @@ class Test(MacsyTest):
         system_foo = System(self.cfg, "foo", system_inter_gene_max_space)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.profile_registry)
         self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
-        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, inter_gene_max_space = gene_inter_gene_max_space)
+        gene = Gene(self.cfg, 'sctJ', system_foo, self.profile_registry, inter_gene_max_space=gene_inter_gene_max_space)
         self.assertEqual(gene.inter_gene_max_space, gene_inter_gene_max_space)
 
 
@@ -159,4 +159,4 @@ class Test(MacsyTest):
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
     homologs: sctJ"""
-        self.assertEqual( str(gene) , s )
+        self.assertEqual(str(gene), s)
