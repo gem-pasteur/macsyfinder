@@ -43,19 +43,19 @@ class Test(unittest.TestCase):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
+        self.cfg = Config( hmmer_exe="hmmsearch",
+                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                           db_type="gembase",
+                           e_value_res=1,
+                           i_evalue_sel=0.5,
+                           def_dir=os.path.join(self._data_dir, 'DEF'),
+                           res_search_dir=tempfile.gettempdir(),
+                           res_search_suffix=".search_hmm.out",
+                           profile_dir=os.path.join(self._data_dir, 'profiles'),
+                           profile_suffix=".hmm",
+                           res_extract_suffix="",
+                           log_level=30,
+                           log_file=log_file
                            )
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
@@ -162,6 +162,8 @@ class Test(unittest.TestCase):
         s += "# i_evalue threshold= {0:.3f}\n".format(self.cfg.i_evalue_sel)
         s += "# coverage threshold= {0:.3f}\n".format(self.cfg.coverage_profile)
         s += "# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end\n"
+        for h in hits:
+            s += str(h)
         self.assertEqual(str(report), s)
 
 if __name__ == "__main__":
