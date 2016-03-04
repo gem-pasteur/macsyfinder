@@ -53,14 +53,14 @@ class Test(MacsyTest):
                           res_extract_suffix="",
                           log_level=30,
                           log_file=log_file
-                         )
+                          )
         self.profile_registry = ProfilesRegistry(self.cfg)
 
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
-        logging.shutdown
+        logging.shutdown()
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         try:
@@ -98,7 +98,7 @@ class Test(MacsyTest):
             # a hmmsearch output file has been produced
             self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
             for i in range(5):
-                #skip 4 lines
+                # skip 4 lines
                 l = hmmer_raw_out_file.readline()
             # a hmmsearch used the abc profile line should become with: "# query HMM file:"
             path = os.path.join(self.cfg.profile_dir, gene.name + self.cfg.profile_suffix)
