@@ -15,7 +15,6 @@
 
 
 import os
-import unittest
 import shutil
 import tempfile
 import platform

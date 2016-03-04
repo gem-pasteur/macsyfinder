@@ -13,7 +13,6 @@
 
 
 import os
-import unittest
 import shutil
 import time
 import tempfile

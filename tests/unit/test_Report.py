@@ -12,10 +12,7 @@
 ################################################################################
 
 
-
-
 import os
-import unittest
 import shutil
 import tempfile
 import platform
@@ -166,5 +163,3 @@ class Test(MacsyTest):
             s += str(h)
         self.assertEqual(str(report), s)
 
-if __name__ == "__main__":
-    unittest.main()
