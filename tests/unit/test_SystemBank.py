@@ -23,12 +23,10 @@ import logging
 from macsypy.system import system_bank
 from macsypy.system import System
 from macsypy.config import Config
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
-
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+class Test(MacsyTest):
     
     def setUp(self):
         l = logging.getLogger()

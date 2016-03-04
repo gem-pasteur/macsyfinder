@@ -23,11 +23,10 @@ import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
 from macsypy.utils import which
+from tests import MacsyTest
 
- 
-class Test(unittest.TestCase):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+class Test(MacsyTest):
 
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)

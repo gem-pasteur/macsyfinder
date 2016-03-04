@@ -24,11 +24,10 @@ from macsypy.system import SystemBank
 from macsypy.gene import GeneBank
 from macsypy.system_parser import SystemParser
 from macsypy.macsypy_error import MacsypyError, SystemInconsistencyError
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+class Test(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()

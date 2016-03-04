@@ -20,17 +20,17 @@ import shutil
 import tempfile
 import platform
 import logging
-from macsypy.report import HMMReport, GeneralHMMReport, GembaseHMMReport, Hit
+from macsypy.report import HMMReport, GembaseHMMReport, Hit
 from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.config import Config
 from macsypy.database import Indexes
 from macsypy.registries import ProfilesRegistry
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
+class Test(MacsyTest):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
 
     def setUp(self):
         l = logging.getLogger()

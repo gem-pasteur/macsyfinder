@@ -14,7 +14,6 @@
 
 
 import os
-import unittest
 import shutil
 import tempfile
 import platform
@@ -24,11 +23,10 @@ from macsypy.config import Config
 from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.registries import ProfilesRegistry
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
+class Test(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()

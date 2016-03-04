@@ -21,11 +21,10 @@ import logging
 import platform
 
 from macsypy.config import Config
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
-
-    _data_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data"))
+class Test(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()

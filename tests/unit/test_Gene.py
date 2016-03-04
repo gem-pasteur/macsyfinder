@@ -25,14 +25,11 @@ from macsypy.gene import Homolog
 from macsypy.system import System
 from macsypy.config import Config
 from macsypy.registries import ProfilesRegistry
+from tests import MacsyTest
 
 
-class Test(unittest.TestCase):
+class Test(MacsyTest):
 
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
-    
-    
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
