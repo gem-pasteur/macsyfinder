@@ -33,26 +33,26 @@ class Test(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config( hmmer_exe = "hmmsearch",
-                           sequence_db = os.path.join(self._data_dir, "base", "test_base.fa"),
-                           db_type = "gembase",
-                           e_value_res = 1,
-                           i_evalue_sel = 0.5,
-                           def_dir = os.path.join(self._data_dir, 'DEF'),
-                           res_search_dir = tempfile.gettempdir(),
-                           res_search_suffix = ".search_hmm.out",
-                           profile_dir = os.path.join(self._data_dir, 'profiles'),
-                           profile_suffix = ".hmm",
-                           res_extract_suffix = "",
-                           log_level = 30,
-                           log_file = log_file
+        self.cfg = Config( hmmer_exe="hmmsearch",
+                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                           db_type="gembase",
+                           e_value_res=1,
+                           i_evalue_sel=0.5,
+                           def_dir=os.path.join(self._data_dir, 'DEF'),
+                           res_search_dir=tempfile.gettempdir(),
+                           res_search_suffix=".search_hmm.out",
+                           profile_dir=os.path.join(self._data_dir, 'profiles'),
+                           profile_suffix=".hmm",
+                           res_extract_suffix="",
+                           log_level=30,
+                           log_file=log_file
                            )
         self.profile_registry = ProfilesRegistry(self.cfg)
 
@@ -95,12 +95,12 @@ class Test(MacsyTest):
         hmmer_raw_out = profile.hmm_raw_output
         with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
             first_l = hmmer_raw_out_file.readline()
-            #a hmmsearch output file has been produced
+            # a hmmsearch output file has been produced
             self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
             for i in range(5):
                 #skip 4 lines
-                l  =  hmmer_raw_out_file.readline()
-            #a hmmsearch used the abc profile line should become with: "# query HMM file:"
+                l = hmmer_raw_out_file.readline()
+            # a hmmsearch used the abc profile line should become with: "# query HMM file:"
             path = os.path.join(self.cfg.profile_dir, gene.name + self.cfg.profile_suffix)
             self.assertTrue(l.find(path) != -1)
 
