@@ -28,7 +28,7 @@ from macsypy.registries import ProfilesRegistry
 
 class Test(unittest.TestCase):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "..", "datatest")
+    _data_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data"))
 
     def setUp(self):
         l = logging.getLogger()
