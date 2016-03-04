@@ -127,21 +127,21 @@ if __name__ == '__main__':
     result_all_tests = []
 
     if args.unit:
-        print "#" * 70
+        print "\n", "#" * 70
         print "Test Runner: Unit tests"
         print "#" * 70
         unit_results = run_unittests(MACSY_HOME, args.tests, verbosity=args.verbosity)
         result_all_tests.append(unit_results)
 
     if args.functional:
-        print "#" * 70
+        print "\n", "#" * 70
         print "Test Runner: Functional tests"
         print "#" * 70
         functional_results = run_functional_tests(MACSY_HOME, args.tests, verbosity=args.verbosity)
         result_all_tests.append(functional_results)
 
     if args.integration:
-        print "#" * 70
+        print "\n", "#" * 70
         print "Test Runner: Integration tests"
         print "#" * 70
         integration_results = run_integration_tests(MACSY_HOME, args.tests, verbosity=args.verbosity)
