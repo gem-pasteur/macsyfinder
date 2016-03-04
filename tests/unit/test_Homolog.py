@@ -34,7 +34,7 @@ class Test(unittest.TestCase):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
