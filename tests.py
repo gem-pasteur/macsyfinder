@@ -41,7 +41,7 @@ def run_unittests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = 'tests/unit'
-    return _run(test_files, test_files, test_root_path, verbosity)
+    return _run(lib, test_files, test_root_path, verbosity)
 
 
 def run_integration_tests(lib, test_files, verbosity=0):
@@ -60,7 +60,7 @@ def run_integration_tests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = 'tests/integration'
-    return _run(test_files, test_files, test_root_path, verbosity)
+    return _run(lib, test_files, test_root_path, verbosity)
 
 
 def run_functional_tests(lib, test_files, verbosity=0):
@@ -79,7 +79,7 @@ def run_functional_tests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = 'tests/functional'
-    return _run(test_files, test_files, test_root_path, verbosity)
+    return _run(lib, test_files, test_root_path, verbosity)
 
 
 if __name__ == '__main__':
