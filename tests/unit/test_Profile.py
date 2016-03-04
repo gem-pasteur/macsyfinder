@@ -25,7 +25,8 @@ from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.config import Config
 from macsypy.registries import ProfilesRegistry
-from ..tests import which
+from macsypy.utils import which
+
 
 class Test(unittest.TestCase):
 
@@ -87,7 +88,7 @@ class Test(unittest.TestCase):
         s = "{0} : {1}".format(gene.name, path)
         self.assertEqual(str(profile), s)
 
-    @unittest.skipIf( not which('hmmsearch'), 'hmmsearch not found in PATH')
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute(self):
         system = System(self.cfg, "T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.profile_registry)

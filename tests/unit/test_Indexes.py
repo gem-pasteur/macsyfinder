@@ -22,8 +22,7 @@ import platform
 import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
-
-from ..tests import which
+from macsypy.utils import which
 
  
 class Test(unittest.TestCase):
