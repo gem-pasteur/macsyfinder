@@ -1,0 +1,75 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/tadB.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/tadB.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       mcl_I1.5_tadB.tab.seqid  [M=220]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    6.7e-84  279.4   0.4    8.8e-84  279.0   0.2    1.1  1  PSAE001c01_043550 C GTG TAG 4825042 4825926 Valid tadB 885 _
+    1.8e-11   42.6   1.4    3.3e-11   41.8   1.0    1.4  1  PSAE001c01_043540 C ATG TGA 4824121 4825032 Valid tadC 912 _
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_043550  C GTG TAG 4825042 4825926 Valid tadB 885 _PA4301_NP_252991.1_ PA4301 1 4825042 4825926 | protein T
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  279.0   0.2   2.1e-87   8.8e-84       1     220 []      76     291 ..      76     291 .. 0.99
+
+  Alignments for each domain:
+  == domain 1    score: 279.0 bits;  conditional E-value: 2.1e-87
+  mcl_I1.5_tadB.tab.seqid   1 vlilllvsvglgllnaalilldnlvallallvglvllrwklgrrrnkklfeqfpevldivvralssGaslldaleragkeieepLg 86 
+                              vl+lllv++glgl++++ +l + l+a+l+++v+l++l +   +rr+k++++q+p++ld+vvr+l++G++l dal++a++++eepL+
+        PSAE001c01_043550  76 VLALLLVWSGLGLFGTIGALGGLLLAALSCRVALGML-Y---QRRLKRMIRQMPRFLDQVVRSLHAGRTLGDALMQAVENAEEPLR 157
+                              6889*********************************.9...******************************************** PP
+
+  mcl_I1.5_tadB.tab.seqid  87 eeftlitkrvalGedldaaledvyerykvkelyflilvlrlnlrkGGqlrevlsrlsavirdrkkmekklkaltaearmSaiiial 172
+                              ++ftl++++v lG++l++al++v+e+y+v+el++l+l +++n+r+GG+++++l++++++i++r+k++++l+a+t+e+r+Sa+++a 
+        PSAE001c01_043550 158 DIFTLARNHVLLGIHLPEALQEVAELYEVEELRILALGVSVNHRYGGNTSDLLDSIVKLIHEREKLSRQLHAMTGETRISAYVLAG 243
+                              ************************************************************************************** PP
+
+  mcl_I1.5_tadB.tab.seqid 173 lPvavvllilvlnpaylesmwadptGrllllavlglellGilvlrrll 220
+                              +P+a++++il++np yl +mwad+tGr+llla+lgl+llG+++l+r+l
+        PSAE001c01_043550 244 VPSALGGYILASNPGYLLNMWADGTGRFLLLASLGLQLLGCYALWRML 291
+                              ***********************************************7 PP
+
+>> PSAE001c01_043540  C ATG TGA 4824121 4825032 Valid tadC 912 _PA4300_NP_252990.1_ PA4300 1 4824121 4825032 | protein T
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   41.8   1.0   7.8e-15   3.3e-11      27     178 ..     127     285 ..      95     294 .. 0.80
+
+  Alignments for each domain:
+  == domain 1    score: 41.8 bits;  conditional E-value: 7.8e-15
+  mcl_I1.5_tadB.tab.seqid  27 llallvglvllrwklg...rrrnkklfeqfpevldivvralssGaslldalera...gkeieepLgeeftlitkrvalGedldaal 106
+                              l a  +g++l++ +l    + r   + +++  +++ +  +  +G+++++ l+ +   g+ i+++L+ e+ l+  r   G+dl + l
+        PSAE001c01_043540 127 LFAAGIGFLLPKQVLKhfaKARRALIADEMILFVQLIRILFDAGLTVEQTLRVVcleGRGITPQLARELDLALTRADNGIDLAEEL 212
+                              44568999888777766657888888888**********************9874556789************************* PP
+
+  mcl_I1.5_tadB.tab.seqid 107 edvyerykvkelyflilvlrlnlrkGGqlrevlsrlsavirdrkkm..ekklkaltaearmS.aiiiallPvavv 178
+                              e+ + r +v+ l     vlr  lr+GG +r  l  l ++ +dr+ +  ++++  l+a  +mS ++++ l+P  + 
+        PSAE001c01_043540 213 EALARRLQVDPLNDCCGVLRQMLRQGGSARSTLLTLKQLFEDRRLTtlQERIGKLSA--KMSlVMMVLLFPALLI 285
+                              *******************************************97611566666666..5662455557776654 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (220 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       334  (0.0400864); expected 166.6 (0.02)
+Passed bias filter:                      205  (0.0246039); expected 166.6 (0.02)
+Passed Vit filter:                        19  (0.00228036); expected 8.3 (0.001)
+Passed Fwd filter:                         2  (0.000240038); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.18u 0.01s 00:00:00.19 Elapsed: 00:00:00.06
+# Mc/sec: 10730.84
+//

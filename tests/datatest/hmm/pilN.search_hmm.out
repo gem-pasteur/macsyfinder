@@ -1,0 +1,57 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.0 (March 2010); http://hmmer.org/
+# Copyright (C) 2010 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  ./profiles/pilN.fasta-aln_edit.hmm
+# target sequence database:        datatest/prru_psae.001.c01.fasta
+# output directed to file:         ./datatest/res_search/pilN.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilN_buen.tab.seqid  [M=193]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence          Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------          -----------
+    4.6e-85  282.9   2.1    5.1e-85  282.8   1.4    1.0  1  PSAE001c01_051120 C ATG TGA 5679053 5679649 Valid pilN 597 _
+
+
+Domain annotation for each sequence (and alignments):
+>> PSAE001c01_051120  C ATG TGA 5679053 5679649 Valid pilN 597 _PA5043_NP_253730.1_ PA5043 1 5679053 5679649 | type 4 fi
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  282.8   1.4   6.2e-89   5.1e-85       1     193 []       4     193 ..       4     193 .. 1.00
+
+  Alignments for each domain:
+  == domain 1    score: 282.8 bits;  conditional E-value: 6.2e-89
+  pilN_buen.tab.seqid   1 iNLLPyreekrkekkkqvlvllagvlvagaalvflgydvidseienqqarndllkkkiaeldkeiaEvkklkkrkdellkkkkvieeLqk 90 
+                          iNLLP+ree+r+++k+q+lv+l+gvlva+aalvflg+++++++ienq+arnd+l+k+i++ld++i+E+++lk+r+++ll+++k+i++Lq+
+    PSAE001c01_051120   4 INLLPWREELREQRKQQFLVILGGVLVASAALVFLGDQYFTAAIENQNARNDFLRKEIVVLDARIKEISELKSRRQQLLERMKIIQDLQG 93 
+                          9***************************************************************************************** PP
+
+  pilN_buen.tab.seqid  91 kRsrpvrlldeLvravPdkvyltalketgdavsisGsaeSnnrVaelmRnldavewldrpelsetarvevtkndaeqeelleatvqPfvk 180
+                          +R++++r++d+Lvr++Pd+vy+t+lk+tg++++i+G+aeSnnrV++lmRn+da+ewl++p+l+e+  ++vt+++++q++++++tvq +++
+    PSAE001c01_051120  94 NRPIIGRVFDQLVRTLPDGVYFTDLKMTGKNIAIAGAAESNNRVSNLMRNMDASEWLTAPTLNEV--KAVTQGAVDQANVFQLTVQ-QTQ 180
+                          *****************************************************************..*******************.*** PP
+
+  pilN_buen.tab.seqid 181 kaeektkaksGsA 193
+                          ++ee++kak+G+A
+    PSAE001c01_051120 181 PGEEDAKAKHGVA 193
+                          ***********98 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                            1  (193 nodes)
+Target sequences:                       8332  (2926593 residues)
+Passed MSV filter:                       362  (0.043447); expected 166.6 (0.02)
+Passed bias filter:                      250  (0.0300048); expected 166.6 (0.02)
+Passed Vit filter:                        14  (0.00168027); expected 8.3 (0.001)
+Passed Fwd filter:                         1  (0.000120019); expected 0.1 (1e-05)
+Initial search space (Z):               8332  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.15u 0.01s 00:00:00.16 Elapsed: 00:00:00.05
+# Mc/sec: 11296.65
+//
