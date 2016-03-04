@@ -193,8 +193,8 @@ class test(Command):
 
         log.info("running test")
         os.environ['MACSY_HOME'] = os.path.dirname(os.path.abspath(__file__))
-        test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
         kind_of_skipped = {}
+        test_res = main.run(self.build_lib, [], verbosity=self.verbosity)
         for test in test_res.skipped:
             kind_of_skipped[test[1]] = True 
         for skip_reason in kind_of_skipped.keys():
