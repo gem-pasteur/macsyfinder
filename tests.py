@@ -40,7 +40,7 @@ def run_unittests(lib, test_files, verbosity=0):
     :return: True if the test passed successfully, False otherwise.
     :rtype: bool
     """
-    test_root_path = 'tests/unit'
+    test_root_path = os.path.join('tests', 'unit')
     return _run(lib, test_files, test_root_path, verbosity)
 
 
@@ -59,7 +59,7 @@ def run_integration_tests(lib, test_files, verbosity=0):
     :return: True if the test passed successfully, False otherwise.
     :rtype: bool
     """
-    test_root_path = 'tests/integration'
+    test_root_path = os.path.join('tests', 'integration')
     return _run(lib, test_files, test_root_path, verbosity)
 
 
@@ -78,7 +78,7 @@ def run_functional_tests(lib, test_files, verbosity=0):
     :return: True if the test passed successfully, False otherwise.
     :rtype: bool
     """
-    test_root_path = 'tests/functional'
+    test_root_path = os.path.join('tests', 'functional')
     return _run(lib, test_files, test_root_path, verbosity)
 
 
