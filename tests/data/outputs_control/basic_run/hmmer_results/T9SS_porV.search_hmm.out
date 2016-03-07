@@ -1,0 +1,221 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  data/TXSScan/profiles_TXSS/T9SS_porV.hmm
+# target sequence database:        /home/bneron/Projects/macsyfinder/data/base/test_aesu.fa
+# output directed to file:         basic_run/hmmer_results/T9SS_porV.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  [M=382]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+   1.6e-162  538.4   0.1   1.8e-162  538.2   0.1    1.0  1  AESU001c01a_016940  
+    6.5e-16   55.9   2.8    1.1e-11   42.0   0.7    2.1  2  AESU001c01a_022180  
+      1e-10   38.8   2.6    2.2e-09   34.4   0.2    2.1  2  AESU001c01a_025840  
+    4.8e-05   20.1   2.4       0.12    8.9   0.0    3.8  3  AESU001c01a_008190  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_016940  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  538.2   0.1  2.3e-165  1.8e-162       1     382 []       1     386 [.       1     386 [. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 538.2 bits;  conditional E-value: 2.3e-165
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30   1 mkkllllllavlllvslkasaqe........kdeeervit 32 
+                                                                                           mkkl++ +  ++ lv++k+ +q+        +  e+rvit
+                                                                    AESU001c01a_016940   1 MKKLIIPV--IIGLVAFKSIGQTnpppppdnAGIENRVIT 38 
+                                                                                           55555544..4678888899998899999888899***** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  33 tavpflliapDaraagmGdaGvatspdansqqwNpaklaf 72 
+                                                                                           t+vpf+li +D r++gmGd+Gv ts+da+sqqwNpak+af
+                                                                    AESU001c01a_016940  39 TGVPFMLIGADPRSGGMGDIGVVTSADAFSQQWNPAKYAF 78 
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  73 aeskagvslsYtPwlrklvnDislaylsgykkidersavg 112
+                                                                                           a sk+gv+ +YtP+l+klvnDi+l++l++y++++e+sav+
+                                                                    AESU001c01a_016940  79 ALSKQGVGATYTPYLNKLVNDIFLGNLTYYNRLNEQSAVA 118
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 113 aslrYfslGeieltdeageslgevkpnelaldlsYslkLs 152
+                                                                                           as+rYfs Geiel+++ ++    vkpnel +d+sY+l+Ls
+                                                                    AESU001c01a_016940 119 ASFRYFSQGEIELRERPDDIPVIVKPNELLFDVSYALRLS 158
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 153 ekfslavalryirSdlkaeaseeelkaasafavDvsgyyq 192
+                                                                                           e+fs+ava+ryirSdlk ++s e+++aas++avDv+gyyq
+                                                                    AESU001c01a_016940 159 ERFSMAVAGRYIRSDLKLQTSVEDANAASSVAVDVAGYYQ 198
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 193 seeialkdkegrlslGlnisniGpkisYdeseqenflPtn 232
+                                                                                           seei ++d++gr++lG+nisniGpk++Yde ++e+ lPtn
+                                                                    AESU001c01a_016940 199 SEEIPYDDFDGRWRLGFNISNIGPKLKYDEVGSESNLPTN 238
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 233 lrlGagftlkldeynkltvaldvnKlLvPtpekkedengd 272
+                                                                                           l lG+gf+++ldeynk+ ++++vnKlLvPtp+   d+n+d
+                                                                    AESU001c01a_016940 239 LALGGGFDFILDEYNKVGISAEVNKLLVPTPS---DSNND 275
+                                                                                           *******************************9...45565 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 273 evleeaekkyknksvisgifkSfgdapggfseElkeitls 312
+                                                                                           ++++ +e++y nks++sgif+Sf+dap+gfseElke+t++
+                                                                    AESU001c01a_016940 276 GNIN-KEDDYYNKSFFSGIFSSFSDAPDGFSEELKEFTWA 314
+                                                                                           6665.7899******************************* PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 313 lgaEYsYndafalRaGYfneseekGnrkyftvGaGfkynv 352
+                                                                                           lgaEY+Y+d falR+GYfnes+ kG+rk++t+GaGf+y+ 
+                                                                    AESU001c01a_016940 315 LGAEYWYQDVFALRGGYFNESDVKGGRKFATIGAGFRYTF 354
+                                                                                           **************************************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 353 fkldlsYlist..kqknpLentlrfsLtfnlg 382
+                                                                                           +++dlsYl+st    ++pL+ tlrf+Ltfn+g
+                                                                    AESU001c01a_016940 355 IGIDLSYLFSTskLANSPLDGTLRFGLTFNFG 386
+                                                                                           ***********755799*************96 PP
+
+>> AESU001c01a_022180  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   42.0   0.7   1.4e-14   1.1e-11       8     166 ..      11     168 ..       3     215 .. 0.79
+   2 !   14.0   0.1   4.2e-06    0.0033     295     359 ..     266     336 ..     261     359 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 42.0 bits;  conditional E-value: 1.4e-14
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30   8 llavlllvslkasaqekdeeervittavpflliapDaraa 47 
+                                                                                           +l++l+l++ + saq+      v + +  f++i  Da a 
+                                                                    AESU001c01a_022180  11 ILLLLILLTATLSAQT------VRKYSNEFMNIGVDAAAF 44 
+                                                                                           4445677777888884......4456778*********** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  48 gmGdaGvatspdansqqwNpaklafaeskagvslsYtPwl 87 
+                                                                                           gm +a +a+s d+ns +wNpa l+ +e+ +++sl ++ ++
+                                                                    AESU001c01a_022180  45 GMSNAVTASSGDVNSGYWNPAGLVNLED-KQISLMHASYF 83 
+                                                                                           ************************9985.57********* PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  88 rklvnDislaylsgykkidersavgaslrYfslGeieltd 127
+                                                                                            ++ n     y+++   +d++savg+s+  f + +i  t+
+                                                                    AESU001c01a_022180  84 ANIAN---YDYAAFAMPLDDKSAVGLSVIRFGVDDILNTT 120
+                                                                                           *9986...7899999******************9995544 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 128 ea.g.......eslgevkpnelaldlsYslkLs.ekfsla 158
+                                                                                           +  +       + + +++  ++ +++sY++kL  + +  +
+                                                                    AESU001c01a_022180 121 QLiDdegniryDRISKFSTADYGFTFSYARKLPlDGLNYG 160
+                                                                                           3322344677778899****************64678888 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 159 valryirS 166
+                                                                                           v+++ ir 
+                                                                    AESU001c01a_022180 161 VNAKVIRR 168
+                                                                                           88888764 PP
+
+  == domain 2  score: 14.0 bits;  conditional E-value: 4.2e-06
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 295 fgdapggfseElkeitlslgaEYsYndafalRaG...Yfn 331
+                                                                                           f++  + +s  + +it slg+E++Y d + +R+G   + n
+                                                                    AESU001c01a_022180 266 FAETNDVISTSFASITPSLGLEFAYIDMVYVRGGvgnFQN 305
+                                                                                           7777888899999*******************98554455 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 332 eseekGnrk..yf.tvGaGfkynvfkldlsY 359
+                                                                                             +  G+    +   +G+Gf+y+ +++d + 
+                                                                    AESU001c01a_022180 306 IRQLDGSDSvgFQpNIGVGFRYKGIQVDYAL 336
+                                                                                           5666787652243479************874 PP
+
+>> AESU001c01a_025840  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   34.4   0.2   2.8e-12   2.2e-09      12     173 ..      10     163 ..       1     214 [. 0.82
+   2 !    4.7   0.2    0.0028       2.2     313     364 ..     268     323 ..     263     338 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 34.4 bits;  conditional E-value: 2.8e-12
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  12 lllvslkasaqekdeeervittavpflliapDaraagmGd 51 
+                                                                                           +ll+s    aq          t+  fl++    r a++G 
+                                                                    AESU001c01a_025840  10 SLLLSQLLLAQI------GGRTTYQFLNLVNSPRMAALGG 43 
+                                                                                           555555555553......2357889*************98 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  52 aGva.tspdansqqwNpaklafaeskagvslsYtPwlrkl 90 
+                                                                                             v+  + d +   +Npa ++  e + ++sl+Yt ++   
+                                                                    AESU001c01a_025840  44 KVVTnYDYDPTQGLFNPASINP-EMDNQLSLNYTNYI--- 79 
+                                                                                           8776378999999*****9985.66889******996... PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  91 vnDislaylsgykkid.ersavgaslrYfslGeieltdea 129
+                                                                                             D++ +++++ +  d  ++++ +  +Y ++G+ +  de 
+                                                                    AESU001c01a_025840  80 -GDVNYGTAAYAYLWDrRTQVLHMGATYVNYGKFDGYDEL 118
+                                                                                           .6999999999998885778999***************** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 130 geslgevkpnelaldlsYslkLs.ekfslavalryirSdl 168
+                                                                                           g+++ +++  e+a++++++++++  +f ++v+++ i+S l
+                                                                    AESU001c01a_025840 119 GNPTSSFSGGEVAISFGHARNIAfTNFHVGVNVKLISSTL 158
+                                                                                           **********************8679*************9 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 169 kaeas 173
+                                                                                           ++ +s
+                                                                    AESU001c01a_025840 159 ENYSS 163
+                                                                                           98755 PP
+
+  == domain 2  score: 4.7 bits;  conditional E-value: 0.0028
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 313 lgaEYsYndafalRaGYfneseek....GnrkyftvGaGf 348
+                                                                                           +g+E   +  f +R GY     e       r ++ + aGf
+                                                                    AESU001c01a_025840 268 AGIELFPESGFNIRLGYNFRRGEElrivDRRTFAGISAGF 307
+                                                                                           577777788999****9643333212226899******** PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 349 kynvfkldlsYlistk 364
+                                                                                            ++  kl lsY  s+ 
+                                                                    AESU001c01a_025840 308 AIKLNKLRLSYSYSKY 323
+                                                                                           ***9999999988764 PP
+
+>> AESU001c01a_008190  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !    8.9   0.0   0.00015      0.12      45      81 ..      30      66 ..      23      81 .. 0.92
+   2 ?   -1.1   0.0      0.16   1.3e+02      89     140 ..     132     186 ..     113     194 .. 0.69
+   3 !    6.4   0.3    0.0009       0.7     319     362 ..     332     376 ..     308     384 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 8.9 bits;  conditional E-value: 0.00015
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 45 raagmGdaGvatspdansqqwNpaklafaeskagvsl 81
+                                                                                          +a +mG +Gva    +  +++Npa l+++e+k ++++
+                                                                    AESU001c01a_008190 30 KALAMGHTGVAVINSSELVFFNPAGLVYLEDKFNITV 66
+                                                                                          6779****************************99987 PP
+
+  == domain 2  score: -1.1 bits;  conditional E-value: 0.16
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30  89 klvnDislayl....sgykkidersavgaslrYfslGeie 124
+                                                                                           +lvn+i la +    ++  ki+++ ++g+   Y  +G+++
+                                                                    AESU001c01a_008190 132 HLVNNIDLAAIyfqpTVSFKINDKLSFGGGPIYV-TGSVN 170
+                                                                                           5777777776522335567888888888888776.58999 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 125 ltdeageslgevkpne 140
+                                                                                           ++++ +++l++++ n 
+                                                                    AESU001c01a_008190 171 FNRNLNRTLTDLEGNR 186
+                                                                                           9988888887776664 PP
+
+  == domain 3  score: 6.4 bits;  conditional E-value: 0.0009
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 319 YndafalRaGYfneseekGnrkyftvGaGfkynv.fkldl 357
+                                                                                           Y d   +R GYf  ++ + +   ft+G+ +++ + +++d+
+                                                                    AESU001c01a_008190 332 YFDGSPVRDGYFAPETPRNDSDNFTAGLTVNVGShLQIDA 371
+                                                                                           3344467888888888888889999999988865589999 PP
+
+  PorV-fljo-bacteroidetes.blast.res_match_e-50.extract.fasta-mafft_auto-profile_bmge30 358 sYlis 362
+                                                                                           s+l  
+                                                                    AESU001c01a_008190 372 SFLYV 376
+                                                                                           98865 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (382 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                       170  (0.0541401); expected 62.8 (0.02)
+Passed bias filter:                       71  (0.0226115); expected 62.8 (0.02)
+Passed Vit filter:                        10  (0.00318471); expected 3.1 (0.001)
+Passed Fwd filter:                         4  (0.00127389); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.07u 0.00s 00:00:00.07 Elapsed: 00:00:00.07
+# Mc/sec: 5684.51
+//
+[ok]

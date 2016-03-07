@@ -1,0 +1,147 @@
+MacSyFinder's results will be stored in basic_run
+Analysis launched on /home/bneron/Projects/macsyfinder/data/base/test_aesu.fa for system(s):
+	- T9SS
+	- T3SS
+	- T4SS_typeI
+
+************************************
+ Analyzing clusters for AESU001c01a 
+************************************
+
+--- Cluster T9SS  ---
+['AESU001c01a_005140']
+['T9SS_sprT']
+[505]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T9SS  ---
+['AESU001c01a_007860', 'AESU001c01a_007870', 'AESU001c01a_007880', 'AESU001c01a_007890']
+['T9SS_gldN_TIGR03523', 'T9SS_gldM_TIGR03517', 'T9SS_gldL_TIGR03513', 'T9SS_gldK_TIGR03525']
+[773, 774, 775, 776]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T9SS  ---
+['AESU001c01a_008700']
+['T9SS_sprA-3_TIGR04189']
+[857]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T3SS ? ---
+['AESU001c01a_011540', 'AESU001c01a_011620']
+['T3SS_sctN', 'T9SS_sprE']
+[1137, 1145]
+Disambiguation step:
+Store: 
+--- Cluster T9SS  ---
+['AESU001c01a_011620']
+['T9SS_sprE']
+[1145]
+=> disambiguated cluster(s) stored for later treatment
+
+--- Cluster T9SS  ---
+['AESU001c01a_016920', 'AESU001c01a_016930', 'AESU001c01a_016940']
+['T9SS_gldJ_TIGR03524', 'T9SS_porU', 'T9SS_porV']
+[1667, 1668, 1669]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T9SS  ---
+['AESU001c01a_022180']
+['T9SS_porQ']
+[2186]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T9SS ? ---
+['AESU001c01a_025650', 'AESU001c01a_025840']
+['T4SS_I_traP', 'T9SS_porQ']
+[2532, 2551]
+Disambiguation step:
+Store: 
+--- Cluster T9SS  ---
+['AESU001c01a_025840']
+['T9SS_porQ']
+[2551]
+=> disambiguated cluster(s) stored for later treatment
+
+--- Cluster T9SS  ---
+['AESU001c01a_011620']
+['T9SS_sprE']
+[1145]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+--- Cluster T9SS  ---
+['AESU001c01a_025840']
+['T9SS_porQ']
+[2551]
+Considering T9SS: 
+-> uncomplete
+=> Putative T9SS locus stored for later treatment of scattered systems.
+
+    
+****************************************************
+******* Report scattered/uncompleted systems *******
+****************************************************
+
+====> Decision rule for putative system T3SS:
+Mandatory genes: 
+T3SS_sctC	0
+T3SS_sctJ	0
+T3SS_sctN	0
+T3SS_sctS	0
+T3SS_sctR	0
+T3SS_sctQ	0
+T3SS_sctV	0
+T3SS_sctU	0
+T3SS_sctT	0
+Forbidden genes: 
+Flg_flgC	0
+Flg_fliE	0
+Flg_flgB	0
+
+nb_forbid : 0
+nb_mandat : 0
+nb_accessory : 0
+Empty system.
+******************************************
+
+====> Decision rule for putative system T9SS:
+Mandatory genes: 
+T9SS_porV	1
+T9SS_sprE	1
+T9SS_sprA_PF14349	1
+T9SS_gldN_TIGR03523	1
+T9SS_gldK_TIGR03525	1
+T9SS_sprT	1
+T9SS_gldM_TIGR03517	1
+T9SS_gldL_TIGR03513	1
+Accessory genes: 
+T9SS_gldJ_TIGR03524	1
+T9SS_porU	1
+T9SS_porQ	2
+
+nb_forbid : 0
+nb_mandat : 8
+nb_accessory : 3
+Complete "multi_loci" system.
+******************************************
+
+******************************************
+
+******************************************
+Building reports for AESU001c01a: 
+
+Counter({'T9SS_multi_loci': 1})
+******************************************
+
+--- Replicons with no hits: ---

@@ -1,0 +1,62 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  data/TXSScan/profiles_TXSS/T3SS_sctU.hmm
+# target sequence database:        /home/bneron/Projects/macsyfinder/data/base/test_aesu.fa
+# output directed to file:         basic_run/hmmer_results/T3SS_sctU.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       sctU  [M=337]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+  ------ inclusion threshold ------
+       0.27    7.9   8.6      0.041   10.6   4.1    1.7  2  AESU001c01a_030910  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_030910  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.6   4.1   1.3e-05     0.041      29     118 ..      24     120 ..      16     125 .. 0.80
+   2 ?   -1.5   0.1     0.064     2e+02      69     100 ..     135     166 ..     126     174 .. 0.65
+
+  Alignments for each domain:
+  == domain 1  score: 10.6 bits;  conditional E-value: 1.3e-05
+                sctU  29 tsaavllaglllllllasvseerlresllltaelsekpfllavkqv..lskllllllllt.....lpllgavvlvallstlvqvgfvlstk 112
+                           +++l+ gl l++l   +++++l +sl+l+++++   f++a+ ++  +++ +l  l++t       ll+ +++ +l+ t+  vg+vls k
+  AESU001c01a_030910  24 SFVVTLVYGLILFFLNDVKYIDELLVSLVLNDPSVIGYFFIALFIYteIKHGVLNALFVTpvkihHYLLSKIIALTLIGTICSVGLVLSVK 114
+                         456677777777777777899********************9977644789999888887222224578888899999999********** PP
+
+                sctU 113 aikldl 118
+                          +++d+
+  AESU001c01a_030910 115 GLNFDI 120
+                         **9997 PP
+
+  == domain 2  score: -1.5 bits;  conditional E-value: 0.064
+                sctU  69 lavkqvlsklllllllltlpllgavvlvalls 100
+                         ++v +++  +++++l ++l+++ + +l + +s
+  AESU001c01a_030910 135 AIVGLIMLTFASEFLNFALLSIPVFFLFTGIS 166
+                         45566666777777777777777766665555 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (337 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                       197  (0.0627389); expected 62.8 (0.02)
+Passed bias filter:                       93  (0.0296178); expected 62.8 (0.02)
+Passed Vit filter:                         7  (0.0022293); expected 3.1 (0.001)
+Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
+# Mc/sec: 7020.82
+//
+[ok]
