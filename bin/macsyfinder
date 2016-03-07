@@ -38,8 +38,9 @@ from macsypy.search_systems import search_systems
 from macsypy.system import system_bank
 from macsypy.gene import gene_bank
 
-parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
-     description=dedent('''
+parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 description=dedent('''
 
 
      *            *               *                   *
