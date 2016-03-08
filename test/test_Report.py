@@ -97,9 +97,11 @@ class Test(unittest.TestCase):
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = GembaseHMMReport(gene, report_path, self.cfg)
         report.extract()
-        self.assertEqual(len(report.hits), 5)
+        self.assertEqual(len(report.hits), 6)
                 #gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,          score,       profile_coverage, sequence_coverage, begin_match, end_match
-        hits=[ Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+        hits=[ Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236),
+                   float(779.2), float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
+               Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
                Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 69, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
                Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 70, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
                Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 71, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
@@ -134,18 +136,25 @@ class Test(unittest.TestCase):
                 continue
         t.join()
 
-                        #gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,          score,       profile_coverage, sequence_coverage, begin_match, end_match
-        hits = [Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 69, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 70, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1) / 600,  226, 506),
-                Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 71, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 73, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
-               ]
+                # gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
+                # profile_coverage, sequence_coverage, begin_match, end_match
+        hits=[ Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
+                   float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
+               Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2),
+                   float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 69, float(3.7e-76), float(255.8),
+                   float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 70, float(3.2e-27), float(94.2),
+                   float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 71, float(6.1e-183), float(608.4),
+                   float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 73, float(1.8e-210), float(699.3),
+                   float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
+        ]
         for report in reports:
             report.save_extract()
             self.assertEqual(len(report.hits), len(hits))
-            self.assertListEqual(hits, report.hits)
-
+            self.assertListEqual(report.hits, hits)
 
     def test_str(self):
         system = System(self.cfg, "T2SS", 10)
@@ -156,12 +165,15 @@ class Test(unittest.TestCase):
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = GembaseHMMReport(gene, report_path, self.cfg)
         report.extract()
-        hits = [Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
-                Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 69, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
-                Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 70, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1) / 600,  226, 506),
-                Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 71, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
-                Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 73, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
-               ]
+
+        hits=[ Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
+               Hit(gene, system, "PSAE001c01_006940", 803,"PSAE001c01", 68, float(1.2e-234), float(779.2), float(1.000000), (741.0 - 104.0 + 1)/ 803, 104, 741),
+               Hit(gene, system, "PSAE001c01_013980", 759,"PSAE001c01", 69, float(3.7e-76), float(255.8), float(1.000000), (736.0 - 105.0 + 1)/ 759, 105, 736),
+               Hit(gene, system, "PSAE001c01_017350", 600,"PSAE001c01", 70, float(3.2e-27), float(94.2), float(0.500000), (506.0 - 226.0 + 1)/ 600,  226, 506),
+               Hit(gene, system, "PSAE001c01_018920", 776,"PSAE001c01", 71, float(6.1e-183), float(608.4), float(1.000000), (606.0 - 48.0 + 1)/ 776, 48, 606),
+               Hit(gene, system, "PSAE001c01_031420", 658,"PSAE001c01", 73, float(1.8e-210), float(699.3), float(1.000000), (614.0 - 55.0 + 1)/ 658, 55, 614)
+        ]
+        
         s = "# gene: {0} extract from {1} hmm output\n".format(gene.name, report_path)
         s += "# profile length= {0:d}\n".format(len(gene.profile))
         s += "# i_evalue threshold= {0:.3f}\n".format(self.cfg.i_evalue_sel)

@@ -317,10 +317,12 @@ class RepliconDB(object):
         """
         def grp_replicon(line):
             """
-            in gembase the identifier of fasta sequence follow the following schema: replicon_name_seq_name
+            in gembase the identifier of fasta sequence follows the following schema: 
+            <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
+            but not in the <seq-name>.
             so grp_replicon allow to group sequences belonging to the same replicon.
             """
-            return line.split('_')[0]
+            return "_".join(line.split('_')[: -1])
 
         def parse_entry(entry):
             """
@@ -329,7 +331,8 @@ class RepliconDB(object):
             """
             entry = entry.rstrip()
             seq_id, length, rank = entry.split(';')
-            replicon_name, seq_name = seq_id.split('_')
+            replicon_name = "_".join(seq_id.split('_')[: -1])
+            seq_name = seq_id.split('_')[-1]
             return replicon_name, seq_name, length, int(rank)
 
         with open(self.sequence_idx) as idx_f:
