@@ -228,6 +228,7 @@ class Test(MacsyTest):
 
         function_orig = self.cfg.old_data_organization
         self.cfg.old_data_organization = lambda : True
+        def_name = "definitions/{0}".format(os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
         def_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
@@ -235,6 +236,7 @@ class Test(MacsyTest):
 
         self.assertEqual(defloc_expected, defloc_received)
         self.cfg.old_data_organization = function_orig
+
 
     def test_get_all_definitions(self):
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
@@ -304,10 +306,7 @@ class Test(MacsyTest):
         pass
 
 
-class DefinitionLocationTest(unittest.TestCase):
-
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
+class DefinitionLocationTest(MacsyTest):
 
 
     def setUp(self):
@@ -317,7 +316,7 @@ class DefinitionLocationTest(unittest.TestCase):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
 
@@ -373,10 +372,7 @@ class DefinitionLocationTest(unittest.TestCase):
         self.assertListEqual(sorted(mdfl.all()), sorted([submodel1, submodel2]))
 
 
-class ModelRegistryTest(unittest.TestCase):
-
-
-    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
+class ModelRegistryTest(MacsyTest):
 
 
     def setUp(self):
@@ -386,7 +382,7 @@ class ModelRegistryTest(unittest.TestCase):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
