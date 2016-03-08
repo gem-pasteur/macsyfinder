@@ -34,17 +34,18 @@ class Test(MacsyTest):
         self.tmp_dir = tempfile.gettempdir()
 
 
-
     def tearDown(self):
         try:
             shutil.rmtree(self.out_dir)
         except:
             pass
 
+
     def test_basic_run(self):
         """
-        test if returncode of masyfinder is 0 and if json == the expected json
-        test the presence of T9SS T3SS T4SS_typeI systems
+        test if returncode of macsyfinder is 0 and
+        test each element of the json
+        macsyfinder is launched to search T9SS T3SS T4SS_typeI systems
         with test_aesu.fa sequence db in gembase format
         """
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_basic_run')
