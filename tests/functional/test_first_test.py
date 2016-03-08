@@ -89,7 +89,7 @@ class Test(MacsyTest):
 
         self.assertEqual(macsy_process.returncode, 0, "macsyfinder finished with non zero exit code: {0}".format(macsy_process.returncode))
 
-        expected_result_path = os.path.join(self._data_dir, 'outputs_control', 'basic_run', 'results.macsyfinder.json')
+        expected_result_path = os.path.join(self._data_dir, 'data_set_1', 'basic_run_results', 'results.macsyfinder.json')
         with open(expected_result_path) as expected_result_file:
             expected_result_json = json.load(expected_result_file)
 
