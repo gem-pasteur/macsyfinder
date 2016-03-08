@@ -25,8 +25,7 @@ from macsypy.config import ConfigLight, Config
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry
 from macsypy.macsypy_error import MacsypyError
-
-
+from tests import MacsyTest
 
 
 def _create_fake_models_tree(root_models_dir, sys_def):
@@ -65,10 +64,8 @@ def _create_fake_models_tree(root_models_dir, sys_def):
     return models_dir
 
 
-class ModelLocationTest(unittest.TestCase):
+class Test(MacsyTest):
 
-    _data_dir = os.path.join(os.path.dirname(__file__), "datatest")
-    
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
@@ -76,7 +73,7 @@ class ModelLocationTest(unittest.TestCase):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         

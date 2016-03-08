@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.gene import profile_factory
 from macsypy.gene import Profile
@@ -36,23 +35,23 @@ class Test(MacsyTest):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
         self.cfg = Config(hmmer_exe="",
-                         sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
-                         db_type="gembase",
-                         e_value_res=1,
-                         i_evalue_sel=0.5,
-                         models_dir=os.path.join(self._data_dir, 'models'),
-                         res_search_dir=tempfile.gettempdir(),
-                         res_search_suffix="",
-                         profile_suffix=".hmm",
-                         res_extract_suffix="",
-                         log_level=30,
-                         log_file=log_file
-                         )
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          models_dir=os.path.join(self._data_dir, 'models'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix="",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]

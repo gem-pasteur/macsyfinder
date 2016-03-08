@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.gene import Gene
 from macsypy.gene import Homolog
@@ -34,7 +33,7 @@ class Test(MacsyTest):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
@@ -154,8 +153,8 @@ class Test(MacsyTest):
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         system_bar = System(self.cfg, "bar", 20)
         gene_homolog = Gene(self.cfg, 'sctJ', system_bar, self.models_location)
-        homolog = Homolog( gene_homolog, gene, self.cfg)
-        gene.add_homolog( homolog )
+        homolog = Homolog(gene_homolog, gene, self.cfg)
+        gene.add_homolog(homolog)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
     homologs: sctJ"""

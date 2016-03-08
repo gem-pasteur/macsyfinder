@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.config import Config
 from macsypy.system import System
@@ -35,23 +34,23 @@ class Test(MacsyTest):
         #add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
         self.cfg = Config(hmmer_exe="",
-                         sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
-                         db_type="gembase",
-                         e_value_res=1,
-                         i_evalue_sel=0.5,
-                         models_dir=os.path.join(self._data_dir, 'models'),
-                         res_search_dir=tempfile.gettempdir(),
-                         res_search_suffix="",
-                         profile_suffix=".hmm",
-                         res_extract_suffix="",
-                         log_level=30,
-                         log_file=log_file
-                         )
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type="gembase",
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          models_dir=os.path.join(self._data_dir, 'models'),
+                          res_search_dir=tempfile.gettempdir(),
+                          res_search_suffix="",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          log_file=log_file
+                          )
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
@@ -84,7 +83,7 @@ class Test(MacsyTest):
     def test_min_genes_required(self):
         name = 'foo'
         min_genes_required = 40
-        system = System(self.cfg, name, 10, min_genes_required = min_genes_required)
+        system = System(self.cfg, name, 10, min_genes_required=min_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene( gene )
         self.assertEqual(system.min_genes_required, min_genes_required)
@@ -96,9 +95,9 @@ class Test(MacsyTest):
     def test_min_mandatory_genes_required(self):
         name = 'foo'
         min_mandatory_genes_required = 40
-        system = System(self.cfg, name, 10, min_mandatory_genes_required = min_mandatory_genes_required)
+        system = System(self.cfg, name, 10, min_mandatory_genes_required=min_mandatory_genes_required)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene( gene )
+        system.add_mandatory_gene(gene)
         self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required)
         # see https://projets.pasteur.fr/issues/1850
         system = System(self.cfg, name, 10)
@@ -109,7 +108,7 @@ class Test(MacsyTest):
         name = 'foo'
         inter_gene_max_space = 40
         max_nb_genes = 10
-        system = System(self.cfg, name, inter_gene_max_space, max_nb_genes = max_nb_genes)
+        system = System(self.cfg, name, inter_gene_max_space, max_nb_genes=max_nb_genes)
         self.assertEqual(system.max_nb_genes, max_nb_genes)
         name = 'bar'
         system = System(self.cfg, name, inter_gene_max_space)
@@ -119,7 +118,7 @@ class Test(MacsyTest):
     def test_multi_loci(self):
         name = 'True'
         inter_gene_max_space = 40
-        system = System(self.cfg, name, inter_gene_max_space, multi_loci = True)
+        system = System(self.cfg, name, inter_gene_max_space, multi_loci=True)
         self.assertTrue(system.multi_loci)
         name = 'False'
         inter_gene_max_space = 40

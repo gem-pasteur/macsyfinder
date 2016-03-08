@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.system import system_bank
 from macsypy.system import System
@@ -32,7 +31,7 @@ class Test(MacsyTest):
         # add only one handler to the macsypy logger
         from macsypy.system import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         

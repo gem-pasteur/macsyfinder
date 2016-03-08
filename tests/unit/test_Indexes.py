@@ -13,10 +13,10 @@
 
 
 import os
+import platform
 import unittest
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
@@ -43,7 +43,7 @@ class Test(MacsyTest):
         # add only one handler to the macsypy logger
         from macsypy.database import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
@@ -203,7 +203,7 @@ class Test(MacsyTest):
        
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
         for s in suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
+            new_idx = os.path.join(self.cfg.sequence_db + s)
             open(new_idx, 'w')
         idx = Indexes(self.cfg)
         idx.build(force=True)

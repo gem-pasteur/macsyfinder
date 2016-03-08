@@ -16,7 +16,6 @@ import os
 import unittest
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.gene import Profile
 from macsypy.gene import Gene
@@ -36,7 +35,7 @@ class Test(MacsyTest):
         # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         

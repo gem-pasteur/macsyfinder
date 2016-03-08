@@ -43,7 +43,7 @@ class Test(MacsyTest):
         #add only one handler to the macsypy logger
         from macsypy.database import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
@@ -115,10 +115,10 @@ class Test(MacsyTest):
 
     def test_fill_topology(self):
         self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
-        db_send = {'ESCO030p01' : 'circular',
-                   'PSAE001c01' : 'linear'
+        db_send = {'ESCO030p01': 'circular',
+                   'PSAE001c01': 'linear'
                    }
-        with open(self.cfg.topology_file , 'w') as f:
+        with open(self.cfg.topology_file, 'w') as f:
             for k, v in db_send.items():
                 f.write('{0} : {1}\n'.format(k,v))
         RepliconDB.__init__ = self.fake_init
@@ -140,7 +140,7 @@ class Test(MacsyTest):
                           profile_suffix=".hmm",
                           res_extract_suffix="",
                           log_level=30,
-                          log_file='NUL' if platform.system() == 'Windows' else '/dev/null'
+                          log_file=os.devnull
                           )
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
@@ -246,5 +246,5 @@ class Test(MacsyTest):
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
-        self.assertItemsEqual(db.items(), [('ESCO030p01',ESCO030p01), ('NC_xxxxx_xx',NCXX),
-                                           ('PSAE001c01',PSAE001c01)])
+        self.assertItemsEqual(db.items(), [('ESCO030p01', ESCO030p01), ('NC_xxxxx_xx', NCXX),
+                                           ('PSAE001c01', PSAE001c01)])
