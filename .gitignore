@@ -18,10 +18,10 @@
 *~
 \#*\#
 
-#################
+################# 
 # pycharm files #
 #################
-.idea/*
+\.idea
 
 ##########################
 # Python complied source #
@@ -51,8 +51,20 @@ macsyfinder-201*
 data/macsyfinder/models/TXSS/*
 data/base/*
 
+
 ##############################
 # MacsyFinder generated file #
 ##############################
 MANIFEST
-uninstall*
+
+uninstall.cfg
+uninstall_files
+
+*\.idx
+*\.phr
+*\.pin
+*\.pog
+*\.psd
+*\.psi
+*\.psq
+

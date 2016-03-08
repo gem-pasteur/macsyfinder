@@ -41,7 +41,6 @@ from macsypy.system import system_bank
 from macsypy.gene import gene_bank
 
 
-
 def models_to_detect(cmd_args, cfg, model_registry):
     """
     :param cmd_args: the result of commandline parsing.
@@ -77,9 +76,10 @@ def models_to_detect(cmd_args, cfg, model_registry):
     return models_name_to_detect
 
 
-
 parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
-                                 formatter_class=argparse.RawDescriptionHelpFormatter, description=dedent('''
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 description=dedent('''
+
 
 
      *            *               *                   *
@@ -399,7 +399,8 @@ if args.previous_run and (args.cfg_file or
                           args.e_value_res or
                           args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run conficts with --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
+    parser.error(" --previous-run conficts with --config, --sequence-db, --profile-suffix, --res-extract-suffix, "
+                 "--e-value-res, --db-type, --hmmer")
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
