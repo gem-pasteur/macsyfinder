@@ -14,13 +14,13 @@
 
 import shutil
 import tempfile
-import platform
 import os
 from subprocess import Popen
 import json
 
 from tests import MacsyTest
 from macsypy.utils import which
+
 
 class Test(MacsyTest):
 
@@ -86,10 +86,13 @@ class Test(MacsyTest):
             raise err
 
         macsy_process.wait()
+        self.assertEqual(macsy_process.returncode, 0,
+                         "macsyfinder finished with non zero exit code: {0} command launched=\n{1}".format(
+                          macsy_process.returncode,
+                          command))
 
-        self.assertEqual(macsy_process.returncode, 0, "macsyfinder finished with non zero exit code: {0}".format(macsy_process.returncode))
-
-        expected_result_path = os.path.join(self._data_dir, 'data_set_1', 'basic_run_results', 'results.macsyfinder.json')
+        expected_result_path = os.path.join(self._data_dir, 'data_set_1', 'basic_run_results',
+                                            'results.macsyfinder.json')
         with open(expected_result_path) as expected_result_file:
             expected_result_json = json.load(expected_result_file)
 
@@ -97,4 +100,39 @@ class Test(MacsyTest):
         with open(test_result_path) as test_result_file:
             test_result_json = json.load(test_result_file)
 
-        self.assertEqual(expected_result_json, test_result_json)
+        # it should have only one occurrence of T9SS
+        self.assertEqual(len(expected_result_json), 1,
+                         "different type of systems expected: 1  retrieved: {0}".format(len(expected_result_json)))
+        expected_result_json = expected_result_json[0]
+        test_result_json = test_result_json[0]
+        self.assertEqual(expected_result_json['name'],
+                         test_result_json['name'],
+                         "type of system name expected: {0}   retrieved: {1}".format(expected_result_json['name'],
+                                                                                     test_result_json['name']))
+        self.assertEqual(expected_result_json['occurrence_number'],
+                         test_result_json['occurrence_number'],
+                         "occurrence number expected {0}   retrieved: {1}".format(expected_result_json['occurrence_number'],
+                                                                                  test_result_json['occurrence_number']))
+        self.assertDictEqual(expected_result_json['replicon'],
+                             test_result_json['replicon'],
+                             "replicon expected {0}   retrieved: {1}".format(expected_result_json['occurrence_number'],
+                                                                             test_result_json['occurrence_number']))
+        self.assertEqual(expected_result_json['id'],
+                         test_result_json['id'],
+                         "system occurrence id expected {0}   retrieved: {1}".format(expected_result_json['id'],
+                                                                                     test_result_json['id']))
+        self.assertDictEqual(expected_result_json['summary']['mandatory'],
+                             test_result_json['summary']['mandatory'],
+                             "mandatory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['mandatory'],
+                                                                                    test_result_json['summary']['mandatory']))
+        self.assertDictEqual(expected_result_json['summary']['accessory'],
+                             test_result_json['summary']['accessory'],
+                             "accessory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['accessory'],
+                                                                                    test_result_json['summary']['accessory']))
+        self.assertDictEqual(expected_result_json['summary']['forbidden'],
+                             test_result_json['summary']['forbidden'],
+                             "forbidden genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['forbidden'],
+                                                                                    test_result_json['summary']['forbidden']))
+        self.assertListEqual(expected_result_json['genes'], test_result_json['genes'],
+                             "genes expected {0}   retrieved: {1}".format(expected_result_json['genes'],
+                                                                          test_result_json['genes']))
