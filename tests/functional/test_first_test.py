@@ -61,8 +61,8 @@ class Test(MacsyTest):
         command = "{bin} --def={def_dir} --profile-dir={profiles} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase {systems}".format(
                     bin=bin,
                     out_dir=self.out_dir,
-                    def_dir=os.path.join(self._data_dir, 'DEF', 'set_1'),
-                    profiles=os.path.join(self._data_dir, 'profiles', 'set_1'),
+                    def_dir=os.path.join(self._data_dir, 'data_set_1', 'def'),
+                    profiles=os.path.join(self._data_dir, 'data_set_1', 'profiles'),
                     seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
                     systems="T9SS T3SS T4SS_typeI",
                     )
