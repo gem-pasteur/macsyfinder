@@ -123,7 +123,6 @@ class ModelLocation(object):
         :returns: a definition location
         :rtype: :class:`DefinitionLocation` object
         """
-        current_dir = None
         if os.path.isfile(def_path):
             new_def = None
             base, ext = os.path.splitext(def_path)
@@ -188,7 +187,6 @@ class ModelLocation(object):
         :return: the definition corresponding to the given fully qualified name
         """
         name_path = fqn.split(_separator)
-        model_name = name_path[0]
         def_full_name = name_path[1:]
         defs = self._definitions
         definition = None
@@ -274,7 +272,7 @@ class DefinitionLocation(dict):
 
     def __init__(self, name=None, subdefinitions=None, path=None):
         super(DefinitionLocation, self).__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
-        self.__dict__ = self #allow to use dot notation to access to property here name or subdefinitions ...
+        self.__dict__ = self # allow to use dot notation to access to property here name or subdefinitions ...
 
 
     def add_subdefinition(self, subdefinition):
