@@ -11,14 +11,16 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install hmmer
   - sudo apt-get install ncbi-blast+
-env:
-  - MACSY_HOME=$TRAVIS_BUILD_DIR
-       
+
 # command to install python dependencies
 install: 
 - "pip install coverage"
 - "pip install python-coveralls"
 
+env:
+  global:
+    - MACSY_HOME=$TRAVIS_BUILD_DIR
+       
 # command to run tests
 script:
 - python setup.py build
