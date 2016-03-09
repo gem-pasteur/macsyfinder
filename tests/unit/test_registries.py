@@ -12,13 +12,9 @@
 ################################################################################
 
 
-
-
 import os
-import unittest
 import shutil
 import tempfile
-import platform
 import logging
 
 from macsypy.config import ConfigLight, Config
@@ -64,13 +60,13 @@ def _create_fake_models_tree(root_models_dir, sys_def):
     return models_dir
 
 
-class Test(MacsyTest):
+class ModelLocationTest(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = os.devnull
@@ -87,7 +83,7 @@ class Test(MacsyTest):
                               'not_profiles': ('not_a_profile', ),
                               'definitions': {'def_1.xml': None,
                                               'def_2.xml': None
-                                             },
+                                              },
                               'not_definitions': {'not_a_def': None},
                               }
 
@@ -96,16 +92,15 @@ class Test(MacsyTest):
                                'not_profiles': ('not_a_profile', ),
                                'definitions': {'subdef_1': {'def_1_1.xml': None,
                                                             'def_1_2.xml': None
-                                                           },
+                                                            },
                                                'subdef_2': {'def_2_1.xml': None,
                                                             'def_2_2.xml': None
-                                                           },
+                                                            },
                                                },
                                'not_definitions': {'subdef_1': {'not_a_def': None},
                                                    'subdef_2': {'not_a_def': None}
-                                                  },
-                             }
-
+                                                   },
+                               }
 
 
     def tearDown(self):
@@ -123,21 +118,25 @@ class Test(MacsyTest):
     def test_ModelLocation(self):
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, path='foo', profile_dir='bar')
-        self.assertEqual(cm.exception.message, "'path' and 'profile_dir' are incompatible arguments")
+        self.assertEqual(cm.exception.message,
+                         "'path' and 'profile_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, path='foo', def_dir='bar')
-        self.assertEqual(cm.exception.message, "'path' and 'def_dir' are incompatible arguments")
+        self.assertEqual(cm.exception.message,
+                         "'path' and 'def_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, def_dir='foo')
-        self.assertEqual(cm.exception.message, "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
+        self.assertEqual(cm.exception.message,
+                         "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, profile_dir='foo')
-        self.assertEqual(cm.exception.message, "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
+        self.assertEqual(cm.exception.message,
+                         "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
-        ##  test new way to specify profiles and defitions
+        # test new way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(self.cfg, path=simple_dir)
         self.assertEqual(model_loc.name, self.simple_models['name'])
@@ -148,7 +147,6 @@ class Test(MacsyTest):
 
         self.assertSetEqual(set(model_loc._definitions.keys()),
                             {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
-
 
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
         model_loc = ModelLocation(self.cfg, path=complex_dir)
@@ -162,18 +160,18 @@ class Test(MacsyTest):
         for subdef_name in self.complex_models['definitions']:
             subdef = self.complex_models['definitions'][subdef_name]
             self.assertSetEqual({ssm.name for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
-                                 {os.path.splitext(ss_name)[0] for ss_name in subdef.keys()})
+                                {os.path.splitext(ss_name)[0] for ss_name in subdef.keys()})
 
             self.assertSetEqual({ssm.fqn for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {"{m_name}{sep}{sub_d_name}{sep}{d_name}".format(m_name=self.complex_models['name'],
-                                                    sep=registries._separator,
-                                                    sub_d_name=subdef_name,
-                                                    d_name=os.path.splitext(ss_name)[0]) for ss_name in subdef.keys()})
+                                                                                 sep=registries._separator,
+                                                                                 sub_d_name=subdef_name,
+                                                                                 d_name=os.path.splitext(ss_name)[0]) for ss_name in subdef.keys()})
 
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
-        ##  test old way to specify profiles and defitions
+        # test old way to specify profiles and defitions
         model_loc = ModelLocation(self.cfg,
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
@@ -187,19 +185,19 @@ class Test(MacsyTest):
 
 
     def test_get_definition(self):
-        ##  test new way to specify profiles and defitions
+        # test new way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(self.cfg, path=simple_dir)
 
         def_fqn = '{}{}{}'.format(model_loc.name,
-                                   registries._separator,
-                                   os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+                                  registries._separator,
+                                  os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
         defloc_expected_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
         defloc_expected = DefinitionLocation(name=defloc_expected_name,
                                              path=os.path.join(simple_dir, 'definitions', defloc_expected_name + '.xml'))
         defloc_expected.fqn = "{}{}{}".format(model_loc.name,
-                                   registries._separator,
-                                   os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+                                              registries._separator,
+                                              os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
 
         defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
@@ -221,18 +219,18 @@ class Test(MacsyTest):
         defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
 
-        ## test old way to specify profiles and defitions
+        # test old way to specify profiles and defitions
         model_loc = ModelLocation(self.cfg,
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
         function_orig = self.cfg.old_data_organization
         self.cfg.old_data_organization = lambda : True
-        def_name = "definitions/{0}".format(os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+        def_fqn = "definitions/{0}".format(os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
         def_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
-        defloc_received = model_loc.get_definition(def_name)
+        defloc_received = model_loc.get_definition(def_fqn)
 
         self.assertEqual(defloc_expected, defloc_received)
         self.cfg.old_data_organization = function_orig
@@ -275,7 +273,7 @@ class Test(MacsyTest):
                                                                                            def_root_name=def_root_name))
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
-        ## test old way to specify profiles and defitions
+        # test old way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(self.cfg,
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
@@ -283,7 +281,7 @@ class Test(MacsyTest):
         defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
                                             path=os.path.join(simple_dir, 'definitions', d))
                          for d in self.simple_models['definitions']
-                        ]
+                         ]
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
@@ -313,7 +311,7 @@ class DefinitionLocationTest(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
 
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = os.devnull
@@ -335,11 +333,11 @@ class DefinitionLocationTest(MacsyTest):
         model_name = 'foo'
         model_path = '/path/to/systems/Foo_system/models/foo'
         mdfl = DefinitionLocation(name=model_name,
-                                path=model_path)
+                                  path=model_path)
         submodel_name = 'bar'
         submodel_path = '/path/to/systems/Foo_system/models/foo/bar.xml'
         submodel = DefinitionLocation(name=submodel_name,
-                                    path=submodel_path)
+                                      path=submodel_path)
         mdfl.add_subdefinition(submodel)
 
         self.assertEqual(len(mdfl.subdefinitions), 1)
@@ -350,7 +348,7 @@ class DefinitionLocationTest(MacsyTest):
         model_name = 'foo'
         model_path = '/path/to/model.xml'
         mdfl = DefinitionLocation(name=model_name,
-                                path=model_path)
+                                  path=model_path)
         self.assertEqual(mdfl.name, model_name)
 
 
@@ -358,7 +356,7 @@ class DefinitionLocationTest(MacsyTest):
         model_name = 'foo'
         model_path = '/path/to/systems/Foo_system/models/foo'
         mdfl = DefinitionLocation(name=model_name,
-                                path=model_path)
+                                  path=model_path)
         submodel_name1 = 'foo/bar'
         submodel_path1 = '/path/to/systems/Foo_system/models/foo/bar.xml'
         submodel1 = DefinitionLocation(name=submodel_name1,
@@ -379,7 +377,7 @@ class ModelRegistryTest(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
 
-        #add only one handler to the macsypy logger
+        # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = os.devnull
@@ -388,9 +386,9 @@ class ModelRegistryTest(MacsyTest):
         self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type="gembase",
                           hmmer_exe="",
-                          #def_dir=os.path.join(self._data_dir, 'DEF'),
+                          # def_dir=os.path.join(self._data_dir, 'DEF'),
                           res_search_dir=tempfile.gettempdir(),
-                          #profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          # profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_extract_suffix="",
                           log_level=30,
                           log_file=log_file)
@@ -404,7 +402,7 @@ class ModelRegistryTest(MacsyTest):
                          'not_profiles': ('not_a_profile', ),
                          'definitions': {'def_1.xml': None,
                                          'def_2.xml': None
-                                        },
+                                         },
                          'not_definitions': {'not_a_def': None},
                          }
 
@@ -413,14 +411,14 @@ class ModelRegistryTest(MacsyTest):
                           'not_profiles': ('not_a_profile', ),
                           'definitions': {'subdef_1': {'def_1_1.xml': None,
                                                        'def_1_2.xml': None
-                                                      },
+                                                       },
                                           'subdef_2': {'def_2_1.xml': None,
                                                        'def_2_2.xml': None
-                                                      },
+                                                       },
                                           },
                           'not_definitions': {'subdef_1': {'not_a_def': None},
                                               'subdef_2': {'not_a_def': None}
-                                             },
+                                              },
                           }
 
         self.simple_dir = _create_fake_models_tree(self.root_models_dir, simple_models)
