@@ -1400,7 +1400,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
 
             # remind that if some fields name change
             # even the case macsyview must be adapted !
-            system['occurenceNumber'] = occurrence_number
+            system['occurrence_number'] = occurrence_number
             system['name'] = system_name
             system['id'] = so.unique_name
             system['replicon'] = {}

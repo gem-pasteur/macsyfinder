@@ -59,14 +59,13 @@ class Test(MacsyTest):
         # -p /home/bneron/Projects/macsyfinder/data/TXSScan/profiles_TXSS
         #
 
-        command = "{bin} --def={def_dir} --profile-dir={profiles} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase {systems}".format(
-                    bin=bin,
-                    out_dir=self.out_dir,
-                    def_dir=os.path.join(self._data_dir, 'data_set_1', 'def'),
-                    profiles=os.path.join(self._data_dir, 'data_set_1', 'profiles'),
-                    seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
-                    systems="T9SS T3SS T4SS_typeI",
-                    )
+        command = "{bin} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
+                  " --models {models}".format(bin=bin,
+                                              out_dir=self.out_dir,
+                                              models_dir=os.path.join(self._data_dir, 'data_set_1', 'models'),
+                                              seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
+                                              models="set_1 T9SS T3SS T4SS_typeI",
+                                              )
         if not bin:
             raise RuntimeError('macsyfinder not found, macsyfinder must be either in your path or MACSY_HOME must be defined')
         # I redirect stdout and stderr in dev null I don't want them on screen
@@ -120,20 +119,25 @@ class Test(MacsyTest):
                                                                              test_result_json['occurrence_number']))
         self.assertEqual(expected_result_json['id'],
                          test_result_json['id'],
-                         "system occurrence id expected {0}   retrieved: {1}".format(expected_result_json['id'],
-                                                                                     test_result_json['id']))
+                         "system occurrence id expected {0}    retrieved: {1}".format(expected_result_json['id'],
+                                                                                      test_result_json['id']))
         self.assertDictEqual(expected_result_json['summary']['mandatory'],
                              test_result_json['summary']['mandatory'],
-                             "mandatory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['mandatory'],
-                                                                                    test_result_json['summary']['mandatory']))
+                             "\nmandatory genes expected:  {0}"
+                             "\nmandatory genes retrieved: {1}".format(expected_result_json['summary']['mandatory'],
+                                                                       test_result_json['summary']['mandatory']))
         self.assertDictEqual(expected_result_json['summary']['accessory'],
                              test_result_json['summary']['accessory'],
-                             "accessory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['accessory'],
-                                                                                    test_result_json['summary']['accessory']))
+                             "\naccessory genes expected:  {0}"
+                             "\naccessory genes retrieved: {1}".format(expected_result_json['summary']['accessory'],
+                                                                       test_result_json['summary']['accessory']))
         self.assertDictEqual(expected_result_json['summary']['forbidden'],
                              test_result_json['summary']['forbidden'],
-                             "forbidden genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['forbidden'],
-                                                                                    test_result_json['summary']['forbidden']))
+                             "\nforbidden genes expected:  {0}"
+                             "\nforbidden genes retrieved: {1}".format(expected_result_json['summary']['forbidden'],
+                                                                       test_result_json['summary']['forbidden']))
         self.assertListEqual(expected_result_json['genes'], test_result_json['genes'],
-                             "genes expected {0}   retrieved: {1}".format(expected_result_json['genes'],
-                                                                          test_result_json['genes']))
+                             "\ngenes expected:  {0}"
+                             "\ngenes retrieved: {1}".format(expected_result_json['genes'], test_result_json['genes']))
+
+
