@@ -217,6 +217,7 @@ class ModelLocation(object):
         :param root_def_name: string
         :return: the list of definitions or subdefinitions if root_def is specified for this model.
         :rtype: list of :class: DefinitionLocation` object
+        :raise ValueError: if root_def_name does not match with any definitions
         """
         if root_def_name is None:
             all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
@@ -231,7 +232,6 @@ class ModelLocation(object):
 
     def get_definitions(self):
         """
-
         :return:
         """
         if self._definitions is not None:
@@ -351,9 +351,13 @@ class ModelRegistry(object):
         :param name:
         :type name: string
         :returns: the model corresponding to name.
-        :rtype: :class:`ModelLocation` object
+        :rtype: :class:`ModelLocation` object.
+        :raise KeyError: if name does not match any ModelLocation registered.
         """
-        return self._registry[name]
+        if name in self._registry:
+            return self._registry[name]
+        else:
+            raise KeyError("No such model definition: '{}'".format(name))
 
 
     def __str__(self):

@@ -51,6 +51,7 @@ def models_to_detect(cmd_args, cfg, model_registry):
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: list of system to launch a detection on.
     :rtype: list of :class:`macsypy.system.System` objects
+    :raise KeyError: if a model name provided in cmd_args is not in model_registry.
     """
     if cfg.old_data_organization():
         if 'all' in [m.lower() for m in args.systems]:
@@ -65,6 +66,7 @@ def models_to_detect(cmd_args, cfg, model_registry):
         for group_of_defs in cmd_args.models:
             root = group_of_defs[0]
             definitions = group_of_defs[1:]
+
             model = model_registry[root.split('/')[0]]
             if 'all' in [d.lower() for d in definitions]:
                 if root == model.name:
@@ -108,7 +110,7 @@ parser.add_argument("systems",
                          set to \"all\" (case insensitive).\
                          Otherwise, a single or multiple models can be specified. For example: \"T2SS T4P\". \
                          This the old way to specified systems to detect. It is better to install models in macsyfinder \
-                         or use the --models-dir dir_options (for more informations about data organiztion see \
+                         or use the --models-dir dir_options (for more information about data organization see \
                          (http://macsyfinder.readthedocs.org/en/latest/#) ")
 
 parser.add_argument("-m", "--models",
@@ -414,6 +416,7 @@ elif args.verbosity == 2:
     log_level = logging.INFO
 elif args.verbosity == 3:
     log_level = logging.DEBUG
+
 config = Config(previous_run=args.previous_run,
                 cfg_file=args.cfg_file,
                 sequence_db=args.sequence_db,
@@ -432,6 +435,7 @@ config = Config(previous_run=args.previous_run,
                 i_evalue_sel=args.i_evalue_sel,
                 coverage_profile=args.coverage_profile,
                 def_dir=args.def_dir,
+                models_dir=args.models_dir,
                 res_search_dir=args.res_search_dir,
                 out_dir=args.out_dir,
                 res_search_suffix=args.res_search_suffix,
@@ -452,9 +456,12 @@ idx.build(force=config.build_indexes)
 
 # create models
 parser = SystemParser(config, system_bank, gene_bank)
-models_name_to_detect = models_to_detect(args, config, registry)
-parser.parse(models_name_to_detect)
+try:
+    models_name_to_detect = models_to_detect(args, config, registry)
+except KeyError as err:
+    sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
+parser.parse(models_name_to_detect)
 
 out_logger = logging.getLogger('macsyfinder.out')
 out_logger.info("MacSyFinder's results will be stored in {0}".format(config.working_dir))
