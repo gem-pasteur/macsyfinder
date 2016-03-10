@@ -24,7 +24,7 @@ script:
 - python tests.py -vv
 #- /home/travis/virtualenv/python2.7.9/bin/macsyfinder --def=/home/travis/build/gem-pasteur/macsyfinder/tests/data/data_set_1/def --profile-dir=/home/travis/build/gem-pasteur/macsyfinder/tests/data/data_set_1/profiles --out-dir=/tmp/macsyfinder_test_basic_run --sequence-db=/home/travis/build/gem-pasteur/macsyfinder/tests/data/base/test_aesu.fa --db-type=gembase T9SS T3SS T4SS_typeI
 - ls -l /tmp/macsyfinder_test_basic_run
-- python json.tool /tmp/macsyfinder_test_basic_run
+- python -m json.tool /tmp/macsyfinder_test_basic_run
 
 after_success:
   - coveralls
