@@ -102,8 +102,8 @@ class Test(MacsyTest):
             test_result_json = json.load(test_result_file)
 
         # it should have only one occurrence of T9SS
-        self.assertEqual(len(expected_result_json), 1,
-                         "different type of systems expected: 1  retrieved: {0}".format(len(expected_result_json)))
+        self.assertEqual(len(test_result_json), 1,
+                         "different type of systems expected: 1  retrieved: {0}".format(len(test_result_json)))
         expected_result_json = expected_result_json[0]
         test_result_json = test_result_json[0]
         self.assertEqual(expected_result_json['name'],
