@@ -104,7 +104,8 @@ class Test(MacsyTest):
 
         print command
 
-
+        print "@@@ test_result_path", test_result_path
+        print "@@@ json", test_result_json
         # it should have only one occurrence of T9SS
         self.assertEqual(len(test_result_json), 1,
                          "different type of systems expected: 1  retrieved: {0}".format(len(test_result_json)))
