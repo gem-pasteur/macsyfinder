@@ -3,9 +3,7 @@ import sys
 import os
 
 
-def _run(lib, test_files, test_root_path, verbosity=0):
-    if lib not in sys.path:
-        sys.path.insert(0, lib)
+def _run(test_files, test_root_path, verbosity=0):
     if not test_files:
         suite = unittest.TestLoader().discover(test_root_path, pattern="test_*.py")
     else:
@@ -25,12 +23,10 @@ def _run(lib, test_files, test_root_path, verbosity=0):
     return result.wasSuccessful()
 
 
-def run_unittests(lib, test_files, verbosity=0):
+def run_unittests(test_files, verbosity=0):
     """
     Execute Unit Tests
 
-    :param lib: the path where is the macsypy
-    :type lib: string
     :param test_files: the file names of tests to run.
     of it is empty, discover recursively tests from 'tests/unit' directory.
     a test is python module with the test_*.py pattern
@@ -41,15 +37,13 @@ def run_unittests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = os.path.join('tests', 'unit')
-    return _run(lib, test_files, test_root_path, verbosity)
+    return _run(test_files, test_root_path, verbosity)
 
 
-def run_integration_tests(lib, test_files, verbosity=0):
+def run_integration_tests(test_files, verbosity=0):
     """
     Execute Integration Tests
 
-    :param lib: the path where is the macsypy
-    :type lib: string
     :param test_files: the file names of tests to run.
     of it is empty, discover recursively tests from 'tests/unit' directory.
     a test is python module with the test_*.py pattern
@@ -60,15 +54,13 @@ def run_integration_tests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = os.path.join('tests', 'integration')
-    return _run(lib, test_files, test_root_path, verbosity)
+    return _run(test_files, test_root_path, verbosity)
 
 
-def run_functional_tests(lib, test_files, verbosity=0):
+def run_functional_tests(test_files, verbosity=0):
     """
     Execute Functional Tests
 
-    :param lib: the path where is the macsypy
-    :type lib: string
     :param test_files: the file names of tests to run.
     of it is empty, discover recursively tests from 'tests/unit' directory.
     a test is python module with the test_*.py pattern
@@ -79,14 +71,12 @@ def run_functional_tests(lib, test_files, verbosity=0):
     :rtype: bool
     """
     test_root_path = os.path.join('tests', 'functional')
-    return _run(lib, test_files, test_root_path, verbosity)
+    return _run(test_files, test_root_path, verbosity)
 
 
 if __name__ == '__main__':
-    if 'MACSY_HOME' in os.environ:
-        MACSY_HOME = os.environ['MACSY_HOME']
-    else:
-        MACSY_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+
+
 
     from argparse import ArgumentParser
     parser = ArgumentParser()
@@ -130,22 +120,47 @@ if __name__ == '__main__':
         print "\n", "#" * 70
         print "Test Runner: Unit tests"
         print "#" * 70
-        unit_results = run_unittests(MACSY_HOME, args.tests, verbosity=args.verbosity)
+
+        old_path = sys.path
+        if 'MACSY_HOME' in os.environ:
+            MACSY_HOME = os.environ['MACSY_HOME']
+            if MACSY_HOME not in sys.path:
+                sys.path.insert(0, MACSY_HOME)
+        unit_results = run_unittests(args.tests, verbosity=args.verbosity)
         result_all_tests.append(unit_results)
+        sys.path = old_path
 
     if args.functional:
         print "\n", "#" * 70
         print "Test Runner: Functional tests"
         print "#" * 70
-        functional_results = run_functional_tests(MACSY_HOME, args.tests, verbosity=args.verbosity)
+
+        old_path = sys.path
+        if 'MACSY_HOME' in os.environ:
+            MACSY_HOME = os.environ['MACSY_HOME']
+            if MACSY_HOME not in sys.path:
+                sys.path.insert(0, MACSY_HOME)
+        else:
+            home_tests = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+            # we are in the case where we tests an installed macsyfinder
+            # so the libraries are already in PYTHONPATH
+            # but test are not
+            # we must had tests parent dir in pythonpath
+            # but after the standard libraries containing macsyfinder
+            # as we want to run macsyfinder using installed libraries
+            sys.path.append(home_tests)
+        functional_results = run_functional_tests(args.tests, verbosity=args.verbosity)
         result_all_tests.append(functional_results)
+        sys.path = old_path
 
     if args.integration:
         print "\n", "#" * 70
         print "Test Runner: Integration tests"
         print "#" * 70
-        integration_results = run_integration_tests(MACSY_HOME, args.tests, verbosity=args.verbosity)
+        old_path = sys.path
+        integration_results = run_integration_tests(args.tests, verbosity=args.verbosity)
         result_all_tests.append(integration_results)
+        sys.path = old_path
 
     if all(result_all_tests):
         sys.exit(0)

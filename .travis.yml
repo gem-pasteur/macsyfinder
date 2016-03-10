@@ -17,10 +17,7 @@ install:
 - "pip install coverage"
 - "pip install python-coveralls"
 
-env:
-  global:
-    - MACSY_HOME=$TRAVIS_BUILD_DIR
-       
+
 # command to run tests
 script:
 - python setup.py build
