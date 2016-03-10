@@ -17,12 +17,12 @@ install:
 - "pip install coverage"
 - "pip install python-coveralls"
 
-
 # command to run tests
 script:
 - python setup.py build
 - python setup.py install
 - python tests.py -vv
+- /home/travis/virtualenv/python2.7.9/bin/macsyfinder --def=/home/travis/build/gem-pasteur/macsyfinder/tests/data/data_set_1/def --profile-dir=/home/travis/build/gem-pasteur/macsyfinder/tests/data/data_set_1/profiles --out-dir=/tmp/macsyfinder_test_basic_run --sequence-db=/home/travis/build/gem-pasteur/macsyfinder/tests/data/base/test_aesu.fa --db-type=gembase T9SS T3SS T4SS_typeI
 
 after_success:
   - coveralls
