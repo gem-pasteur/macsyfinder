@@ -9,8 +9,11 @@ branches:
 # command to install Ubuntu dependencies
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install hmmer
   - sudo apt-get install ncbi-blast+
+  - wget  http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz
+  - tar -xf hmmer-3.1b2.tar.gz
+  - cd hmmer-3.1b2 && ./configure && make && sudo make install
+
 
 # command to install python dependencies
 install: 
