@@ -24,7 +24,7 @@ install:
 # command to run tests
 script:
 - python setup.py build
-- python setup.py install
+- python setup.py install --no-viewer 
 - python tests.py -vv
 
 after_success:
