@@ -71,8 +71,13 @@ class Test(MacsyTest):
         # I redirect stdout and stderr in dev null I don't want them on screen
         # I cannot redirect them in output directory as --out-dir expect a non existing directory or an empty one
         # but Popen need to have a file as argument of stdout/err
+
+        # I need to prepend the command by setsid because macsyfinder use killpg with group_id to terminated all
+        # threads and subprocess when an error occurred in one hmmsearch. It's work fine but when
+        # macsyfinder is launched by the tests.py srcipt the kill group kill also the tests.py script
+        # so we must run macsyfinder in a new process group
         try:
-            macsy_process = Popen(command,
+            macsy_process = Popen("setsid " + command,
                                   shell=True,
                                   stdin=None,
                                   stdout=open(os.devnull, 'w'),
@@ -101,8 +106,8 @@ class Test(MacsyTest):
             test_result_json = json.load(test_result_file)
 
         # it should have only one occurrence of T9SS
-        self.assertEqual(len(expected_result_json), 1,
-                         "different type of systems expected: 1  retrieved: {0}".format(len(expected_result_json)))
+        self.assertEqual(len(test_result_json), 1,
+                         "different type of systems expected: 1  retrieved: {0}".format(len(test_result_json)))
         expected_result_json = expected_result_json[0]
         test_result_json = test_result_json[0]
         self.assertEqual(expected_result_json['name'],

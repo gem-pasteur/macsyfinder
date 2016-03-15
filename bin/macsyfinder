@@ -487,7 +487,10 @@ for system in models_to_detect:
 #############################################
 # this part of code is executed in parallel
 #############################################
-all_reports = search_genes(all_genes, config)
+try:
+    all_reports = search_genes(all_genes, config)
+except Exception as err:
+    sys.exit(str(err))
 #############################################
 # end of parallel code
 #############################################

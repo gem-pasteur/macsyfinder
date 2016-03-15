@@ -22,6 +22,7 @@ import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
+
 def search_genes(genes, cfg):
     """
     For each gene of the list, use the corresponding profile to perform an Hmmer search, and parse the output
@@ -40,17 +41,14 @@ def search_genes(genes, cfg):
     sema = threading.BoundedSemaphore(value=worker_nb)
     all_reports = []
 
-
     def stop(signum, frame):
         """stop the main process, its threads and subprocesses"""
         _log.critical('KILL all Processes')
         proc_grp_id = os.getpgid(0)
         os.killpg(proc_grp_id, signum)
-        sys.exit(-1 * signum)
-
+        sys.exit(signum)
 
     signal.signal(signal.SIGTERM, stop)
-
 
     def search(gene, all_reports, sema):
         """
@@ -66,7 +64,11 @@ def search_genes(genes, cfg):
         with sema:
             _log.info("search gene {0}".format(gene.name))
             profile = gene.profile
-            report = profile.execute()
+            try:
+                report = profile.execute()
+            except Exception as err:
+                _log.critical(err)
+                stop(signal.SIGKILL, None)
             if report:
                 report.extract()
                 report.save_extract()
