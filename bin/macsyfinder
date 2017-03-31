@@ -44,20 +44,20 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder
 
      *            *               *                   *
 *           *               *   *   *  *    **                *   *
-  **     *    *   *  *     *                    *               *   
-    __  __  *              ____ *        *  *  *    **     *           
-|| |  \/  | __ _  ___  || / ___| _   _  ||   ___ _         _        *  
-|| | |\/| |/ _` |/ __| || \___ \| | | | ||  | __(_)_ _  __| |___ _ _ 
+  **     *    *   *  *     *                    *               *
+    __  __  *              ____ *        *  *  *    **     *
+|| |  \/  | __ _  ___  || / ___| _   _  ||   ___ _         _        *
+|| | |\/| |/ _` |/ __| || \___ \| | | | ||  | __(_)_ _  __| |___ _ _
 || | |  | | (_| | (__  ||  ___) | |_| | ||  | _|| | ' \/ _` / -_) '_|
-|| |_|  |_|\__,_|\___| || |____/ \__, | ||  |_| |_|_||_\__,_\___|_|   
-           *             *       |___/         *                   *    
- *      *   * *     *   **         *   *  *           * 
-  *      *         *        *    *              *  
+|| |_|  |_|\__,_|\___| || |____/ \__, | ||  |_| |_|_||_\__,_\___|_|
+           *             *       |___/         *                   *
+ *      *   * *     *   **         *   *  *           *
+  *      *         *        *    *              *
              *                           *  *           *     *
 
-                               
-MacSyFinder is a tool for the detection of protein secretion systems 
-of diderm bacteria from a protein dataset.   
+
+MacSyFinder is a tool for the detection of protein secretion systems
+of diderm bacteria from a protein dataset.
      ''') )
 #, formatter_class=argparse.RawDescriptionHelpFormatter)
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -135,15 +135,15 @@ system_options.add_argument("--multi-loci",
                              )
 
 hmmer_options =  parser.add_argument_group(title = "Options for Hmmer execution and hits filtering")
-hmmer_options.add_argument('--hmmer', 
+hmmer_options.add_argument('--hmmer',
                             action = 'store',
                             dest = 'hmmer_exe',
-                            default = None, 
+                            default = None,
                             help = 'Path to the Hmmer program.')
-hmmer_options.add_argument('--index-db', 
+hmmer_options.add_argument('--index-db',
                             action = 'store',
                             dest = 'index_db_exe',
-                            default = None, 
+                            default = None,
                             help = "The indexer to be used for Hmmer. The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary (default = makeblastb)")
 
 hmmer_options.add_argument('--e-value-search',
@@ -157,14 +157,14 @@ hmmer_options.add_argument('--i-evalue-select',
                      action = 'store',
                     dest = 'i_evalue_sel',
                     type = float,
-                    default = None , 
+                    default = None ,
                     help = 'Maximal independent e-value for Hmmer hits to be selected for system detection. (default = 0.001)')
 
 hmmer_options.add_argument('--coverage-profile',
                      action = 'store',
                     dest = 'coverage_profile',
                     type = float,
-                    default = None , 
+                    default = None ,
                     help = 'Minimal profile coverage required in the hit alignment to allow the hit selection for system detection. (default = 0.5)')
 
 dir_options =  parser.add_argument_group(title = "Path options", description = None)
@@ -236,7 +236,7 @@ general_options.add_argument("--previous-run",
                     dest = 'previous_run',
                     default = None,
                     help = """Path to a previous MacSyFinder run directory. It allows to skip the Hmmer search step on same dataset, as it uses previous run results and thus parameters regarding Hmmer detection. The configuration file from this previous run will be used.
-(conflict with options  --config, --sequence-db, --profile-suffix, --res-extract-suffix, 
+(conflict with options  --config, --sequence-db, --profile-suffix, --res-extract-suffix,
 --e-value-res, --db-type, --hmmer)""")
 
 args = parser.parse_args()
@@ -275,7 +275,7 @@ if args.previous_run and (args.cfg_file or
                           args.e_value_res or
                           args.db_type or
                           args.hmmer_exe):
-    parser.error(""" --previous-run conficts with --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
+    parser.error(""" --previous-run conficts with --config, --sequence-db, --profile-suffix, --profile-dir, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
 
 sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
 sh = logging.StreamHandler(sys.stderr)
