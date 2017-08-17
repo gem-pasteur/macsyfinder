@@ -184,7 +184,7 @@ class test(Command):
             if self.warn_dir and build_plat != get_platform():
                 raise DistutilsPlatformError("Can't test when "
                                              "cross-compiling")
-        from test import main
+        from tests.unit import main
         if self.build_lib is None:
             if os.path.exists(self.build_purelib):
                 self.build_lib = self.build_purelib
