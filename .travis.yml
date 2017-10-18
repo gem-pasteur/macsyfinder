@@ -9,18 +9,23 @@ branches:
 # command to install Ubuntu dependencies
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install hmmer
   - sudo apt-get install ncbi-blast+
+  - wget  http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz
+  - tar -xf hmmer-3.1b2.tar.gz
+  - cd hmmer-3.1b2 && ./configure && make && sudo make install
+  - cd -
 
-       
+
 # command to install python dependencies
 install: 
 - "pip install coverage"
 - "pip install python-coveralls"
+
 # command to run tests
 script:
 - python setup.py build
-- python setup.py test -vv
-- cd test && coverage run --source ../macsypy main.py && coverage html
+- python setup.py install --no-viewer 
+- python tests.py -vv
+
 after_success:
   - coveralls

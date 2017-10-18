@@ -184,7 +184,7 @@ class test(Command):
             if self.warn_dir and build_plat != get_platform():
                 raise DistutilsPlatformError("Can't test when "
                                              "cross-compiling")
-        from test import main
+        from tests.unit import main
         if self.build_lib is None:
             if os.path.exists(self.build_purelib):
                 self.build_lib = self.build_purelib
@@ -193,8 +193,8 @@ class test(Command):
 
         log.info("running test")
         os.environ['MACSY_HOME'] = os.path.dirname(os.path.abspath(__file__))
-        test_res = main.run(self.build_lib, [], verbosity = self.verbosity)
         kind_of_skipped = {}
+        test_res = main.run(self.build_lib, [], verbosity=self.verbosity)
         for test in test_res.skipped:
             kind_of_skipped[test[1]] = True 
         for skip_reason in kind_of_skipped.keys():
@@ -731,7 +731,7 @@ require_packages = []
 
 
 setup(name        = 'macsyfinder',
-      version     = time.strftime("%Y%m%d-dev"),
+      version     = '1.0.3',
       description  = """MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
       author  = "Sophie Abby, Bertrand Néron",

@@ -1,0 +1,10 @@
+
+
+Building a new DB, current time: 03/07/2016 12:42:52
+New DB name:   /home/bneron/Projects/macsyfinder/tests/data/base/test_aesu.fa
+New DB title:  test_aesu.fa
+Sequence type: Protein
+Keep Linkouts: T
+Keep MBits: T
+Maximum file size: 1000000000B
+Adding sequences from FASTA; added 3140 sequences in 0.224853 seconds.

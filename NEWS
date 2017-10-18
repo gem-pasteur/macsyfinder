@@ -1,4 +1,10 @@
-CHANGES IN RELEASE 1.0.2
+CHANGES IN
+
+RELEASE 1.0.3
+
+# fix unit tests
+
+RELEASE 1.0.2
 
 # Fix https://github.com/gem-pasteur/macsyfinder/issues/1
   unit tests to fix "too many file open" 

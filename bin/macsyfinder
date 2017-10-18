@@ -38,8 +38,9 @@ from macsypy.search_systems import search_systems
 from macsypy.system import system_bank
 from macsypy.gene import gene_bank
 
-parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.", formatter_class=argparse.RawDescriptionHelpFormatter,
-     description=dedent('''
+parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
+                                 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 description=dedent('''
 
 
      *            *               *                   *
@@ -289,6 +290,9 @@ elif args.verbosity == 2:
     log_level = logging.INFO
 elif args.verbosity == 3:
     log_level = logging.DEBUG
+else:
+    log_level = logging.NOTSET
+
 config = Config(previous_run = args.previous_run,
                 cfg_file = args.cfg_file,
                 sequence_db = args.sequence_db,
@@ -357,16 +361,21 @@ for system in systems_to_detect:
 #############################################
 # this part of code is executed in parallel
 #############################################
-all_reports = search_genes(all_genes, config)
+try:
+    all_reports = search_genes(all_genes, config)
+except Exception as err:
+    sys.exit(str(err))
 #############################################
 # end of parallel code
 #############################################
 all_hits = [hit for subl in [report.hits for report in all_reports ] for hit in subl]
 
 if len(all_hits) > 0:
+    # It's important to keep this sorting to have in last  all_hits version
+    # the hits with the same replicon_name and position sorted by score
+    # the best score in first
     all_hits = sorted(all_hits, key = attrgetter('score'), reverse = True)
     all_hits = sorted(all_hits, key = attrgetter('replicon_name', 'position'))
-
     systems_to_detect = sorted(systems_to_detect, key = attrgetter('name'))
     search_systems(all_hits, systems_to_detect, config)
 else:
