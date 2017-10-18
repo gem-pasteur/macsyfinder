@@ -212,14 +212,13 @@ class Test(MacsyTest):
         for f in hmmer_idx + [my_idx]:
             self.assertNotEqual(os.path.getsize(f), 0)
             
-    
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_build_not_writable(self):
+        # Skip test on Windows, since setting the folder permissions is not affecting files inside
+        # in Singularity container tess are run as root and this test as non sense
         idx = Indexes(self.cfg)
         idx_dir = os.path.join(os.path.dirname(self.cfg.sequence_db))
-
-        # Skip test on Windows, since setting the folder permissions is not affecting files inside
-        if platform.system() != 'Windows':
-            os.chmod(idx_dir, 0000)
-            self.assertRaises(IOError, idx.build)
-            os.chmod(idx_dir, 0777)
+        os.chmod(idx_dir, 0000)
+        self.assertRaises(IOError, idx.build)
+        os.chmod(idx_dir, 0777)
 

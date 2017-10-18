@@ -50,17 +50,10 @@ class Test(MacsyTest):
         """
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_basic_run')
         os.makedirs(self.out_dir)
-        bin = os.path.join(self.macsy_home, 'bin', 'macsyfinder') if self.local_install else which('macsyfinder')
-
-        # bin/macsyfinder
-        # --sequence-db /home/bneron/Projects/macsyfinder/data/base/test_aesu.fa
-        # --db-type gembase
-        # -d /home/bneron/Projects/macsyfinder/data/TXSScan/DEF_TXSS
-        # -p /home/bneron/Projects/macsyfinder/data/TXSScan/profiles_TXSS
-        #
+        macsy_bin = os.path.join(self.macsy_home, 'bin', 'macsyfinder') if self.local_install else which('macsyfinder')
 
         command = "{bin} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
-                  " --models {models}".format(bin=bin,
+                  " --models {models}".format(bin=macsy_bin,
                                               out_dir=self.out_dir,
                                               models_dir=os.path.join(self._data_dir, 'data_set_1', 'models'),
                                               seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),

@@ -23,6 +23,7 @@ if 'MACSY_HOME' in os.environ:
     MACSY_HOME = os.path.abspath(os.path.realpath(MACSY_HOME))
     if MACSY_HOME not in sys.path:
         sys.path.insert(0, MACSY_HOME)
+
 try:
     from macsypy.config import Config, ConfigLight
 except ImportError as err:
@@ -86,15 +87,15 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder
 
      *            *               *                   *
 *           *               *   *   *  *    **                *   *
-  **     *    *   *  *     *                    *               *   
-    __  __  *              ____ *        *  *  *    **     *           
-|| |  \/  | __ _  ___  || / ___| _   _  ||   ___ _         _        *  
-|| | |\/| |/ _` |/ __| || \___ \| | | | ||  | __(_)_ _  __| |___ _ _ 
+  **     *    *   *  *     *                    *               *
+    __  __  *              ____ *        *  *  *    **     *
+|| |  \/  | __ _  ___  || / ___| _   _  ||   ___ _         _        *
+|| | |\/| |/ _` |/ __| || \___ \| | | | ||  | __(_)_ _  __| |___ _ _
 || | |  | | (_| | (__  ||  ___) | |_| | ||  | _|| | ' \/ _` / -_) '_|
-|| |_|  |_|\__,_|\___| || |____/ \__, | ||  |_| |_|_||_\__,_\___|_|   
-           *             *       |___/         *                   *    
- *      *   * *     *   **         *   *  *           * 
-  *      *         *        *    *              *  
+|| |_|  |_|\__,_|\___| || |____/ \__, | ||  |_| |_|_||_\__,_\___|_|
+           *             *       |___/         *                   *
+ *      *   * *     *   **         *   *  *           *
+  *      *         *        *    *              *
              *                           *  *           *     *
 
                                
@@ -269,6 +270,7 @@ dir_options.add_argument('-p', '--profile-dir',
                          dest='profile_dir',
                          default=None,
                          help='Path to the profiles directory. (DEPRECATED see --models and --models-path options)')
+
 dir_options.add_argument('-o', '--out-dir',
                          action='store',
                          dest='out_dir',
