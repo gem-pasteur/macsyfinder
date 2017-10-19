@@ -1,6 +1,7 @@
 stages:
   - test
   - coverage
+  - pages
 
 variables:
   CRAW_HOME: ${CI_PROJECT_DIR}
@@ -31,7 +32,7 @@ coverage:
     - /^fix.*$/
 
 pages:
-  stage: release
+  stage: pages
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
   dependencies:
     - coverage
