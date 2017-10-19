@@ -50,6 +50,11 @@ Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 
+Unit tests with gitlab-ci
+-------------------------
+[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  [![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+
+
 
 Documentation
 -------------
