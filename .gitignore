@@ -33,6 +33,12 @@ build/
 dist/
 doc/_build/
 
+###########################
+# coverage files
+##########################
+htmlcov/
+.coverage
+
 ###################################
 # MacsyFinder results directories #
 ###################################
