@@ -40,7 +40,7 @@ pages:
     - cd ${CI_PROJECT_DIR}/doc/
     - make html
     - cd ${CI_PROJECT_DIR}
-    - mv ${CI_PROJECT_DIR}/doc/build/html/ public
+    - mv ${CI_PROJECT_DIR}/doc/_build/html/ public
     - mv htmlcov public/
   artifacts:
     paths:
