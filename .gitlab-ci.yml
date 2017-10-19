@@ -9,7 +9,7 @@ variables:
 
 testing:
   stage: test
-  image: registry-gitlab.pasteur.fr/bneron/macsyfinder:run_dep
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
   script:
     - python ${CI_PROJECT_DIR}/tests.py -vvv
   except:
