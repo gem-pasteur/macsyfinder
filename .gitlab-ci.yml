@@ -4,8 +4,8 @@ stages:
   - pages
 
 variables:
-  CRAW_HOME: ${CI_PROJECT_DIR}
-  CRAW_VERSION: ${CI_COMMIT_REF_NAME}
+  MACSY_HOME: ${CI_PROJECT_DIR}
+  MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
 testing:
   stage: test
