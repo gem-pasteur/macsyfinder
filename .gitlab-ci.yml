@@ -21,9 +21,9 @@ coverage:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
   script:
     - cd ${CI_PROJECT_DIR}
-    - coverage run --source=craw tests.py --unit
-    - coverage html
-    - coverage report
+    - python-coverage run --source=craw tests.py --unit
+    - python-coverage html
+    - python-coverage report
   artifacts:
     paths:
       - htmlcov/
