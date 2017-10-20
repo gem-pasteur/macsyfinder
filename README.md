@@ -52,7 +52,8 @@ Unit tests with Travis-CI
 
 Unit tests with gitlab-ci
 -------------------------
-[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  [![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  
+[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/htmlcov/index.html)
 
 
 
@@ -61,7 +62,10 @@ Documentation
 
 You will find complete documentation for setting up your project.
 for the development version on gitlab pages
+
 [![Doc] (https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
 
+
 for public version on readthedocs
+
 [![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
