@@ -59,6 +59,9 @@ Unit tests with gitlab-ci
 Documentation
 -------------
 
-You will find complete documentation for setting up your project at the Read the Docs site.
+You will find complete documentation for setting up your project.
+for the development version on gitlab pages
+[![Doc] (https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
 
+for public version on readthedocs
 [![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
