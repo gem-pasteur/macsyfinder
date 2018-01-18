@@ -9,21 +9,17 @@ include data/sequence_data/datatest_gembase.fasta*
 include data/sequence_data/datatest_gembase.topology
 include data/sequence_data/results.macsyfinder.json
 
-include test/test_*.py
-include test/main.py
-include test/__init__.py
-include test/datatest/DEF/*.xml
-include test/datatest/base/*
-include test/datatest/hmm/*
-include test/datatest/profiles/*
-include test/macsyfinder.conf
+include tests/__init__.py
+recursive-include tests/data *
+recursive-include tests/unit *.py
+recursive-include tests/functional *.py
 
 include etc/macsyfinder.conf
 
-include INSTALL
+include INSTALL.md
 include COPYING
 include COPYRIGHT
 include NEWS
-include CITATION
+include CITATION.yml
 recursive-include macsyview/app *
 recursive-include macsyview/bin *

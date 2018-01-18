@@ -28,6 +28,7 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 
 import logging
 
+
 class Config(object):
     """
     Parse configuration files and handle the configuration according to the following file location precedence:
@@ -82,16 +83,16 @@ class Config(object):
         :param sequence_db: the path to the sequence input dataset (fasta format)
         :type sequence_db: string
         :param db_type: the type of dataset to deal with. 
-         \"unordered_replicon\" corresponds to a non-assembled genome, 
-         \"unordered\" to a metagenomic dataset, 
-         \"ordered_replicon\" to an assembled genome, and 
-         \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
+                        \"unordered_replicon\" corresponds to a non-assembled genome,
+                        \"unordered\" to a metagenomic dataset,
+                        \"ordered_replicon\" to an assembled genome, and
+                        \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
         :type db_type: string
         :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningful
-        only if the db_type is 'ordered_replicon' or 'gembase'
+                                  only if the db_type is 'ordered_replicon' or 'gembase'
         :type replicon_topology: string
         :param topology_file: a tabular file of mapping between replicon names and the corresponding topology
-        (e.g. \"RepliconA linear\")
+                             (e.g. \"RepliconA linear\")
         :type topology_file: string
         :param inter_gene_max_space:
         :type inter_gene_max_space: list of list of 2 elements [[ string system, integer space] , ...]
@@ -112,16 +113,16 @@ class Config(object):
         :param i_evalue_sel: maximal independent e-value for Hmmer hits to be selected for system detection
         :type  i_evalue_sel: float
         :param coverage_profile: minimal profile coverage required in the hit alignment to allow the hit selection
-         for system detection
+                                for system detection
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
         :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
         :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date},
-        but this option allow to override this behavior. If out-dir option is set out-dir will be created
-        if outdir already exists it
-         must be empty. If out-dir and res-search-dir are sets res-search-dir will be ignore.
+                        but this option allow to override this behavior. If out-dir option is set out-dir will be created
+                        if outdir already exists it must be empty.
+                        If out-dir and res-search-dir are sets res-search-dir will be ignore.
         :type out_dir: string
         :param res_search_suffix: the suffix to give to Hmmer raw output files
         :type  res_search_suffix: string
@@ -130,8 +131,8 @@ class Config(object):
         :param profile_dir: path to the profiles directory
         :type  profile_dir: string
         :param profile_suffix: the suffix of profile files. For each 'Gene' element,
-        the corresponding profile is searched in the 'profile_dir',
-        in a file which name is based on the Gene name + the profile suffix.
+                               the corresponding profile is searched in the 'profile_dir',
+                               in a file which name is based on the Gene name + the profile suffix.
         :type  profile_suffix: string
         :param log_level: the level of log output
         :type log_level: int
@@ -675,7 +676,7 @@ class Config(object):
     def replicon_topology(self):
         """
         :return: the topology of the replicons. Two values are supported 'linear' (default) and circular.
-        Only relevant for 'ordered' datasets
+                 Only relevant for 'ordered' datasets
         :rtype: string
         """
         return self.options['replicon_topology']
@@ -693,7 +694,7 @@ class Config(object):
         :param system: the name of a system 
         :type system: string
         :return: the maximum number of components with no match allowed between two genes
-        with a match to consider them contiguous (at the system level)
+                 with a match to consider them contiguous (at the system level)
         :rtype: integer 
         """
         try:
