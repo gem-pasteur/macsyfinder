@@ -28,30 +28,34 @@ Installation from distribution
 
 1. Uncompress and untar the package:
 
-   `tar -xzf macsyfinder-x.x.tar.gz`
+```bash
+tar -xzf macsyfinder-x.x.tar.gz
+```
 
 2. Go to the MacSyFinder directory
  
-    `cd macsyfinder-x.x`
+```bash
+cd macsyfinder-x.x
+```
 
 3. Build 
 
-    `python setup.py build`
+```bash
+python setup.py build
+```
 
 4. Test    
 
-    `python setup.py test -vv`
+```bash
+python setup.py test -vv
+```
 
 5. Install
 
-    * on linux    
-        `sudo python setup.py install`
+```bash
+sudo python setup.py install
+```
 
-    * on MacOS
-      From `sierra` and `high sierra` version we cannot install anything in /usr even if you are root.
-      So we need to install in /usr/local
-      `sudo python setup.py install --prefix /usr/local`
-      
     To see all installation options "python setup.py --help"
 
 See the INSTALL file for more details.

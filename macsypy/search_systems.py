@@ -1629,8 +1629,8 @@ def disambiguate_cluster(cluster):
 
     - splits the cluster in two if it seems that two systems are nearby
     - removes single hits that are not forbidden for the "main" system and
-     that are at one end of the current cluster in this case,
-     check that they are not "loners", cause "loners" can be stored.
+      that are at one end of the current cluster in this case,
+      check that they are not "loners", cause "loners" can be stored.
 
     :param cluster: the cluster to "disambiguate"
     :type cluster: :class:`macsypy.search_systems.Cluster`

@@ -74,20 +74,8 @@ python setup.py test -vv
 
 ###Install
 
-
-####On Linux
-
 ```bash
 sudo python setup.py install
-```
-
-####On MacOS
-
-From MacOS `sierra` we cannot write in `/usr` even if you are _sudoer_.
-So we need to install MacSyFinder in an other location.
-
-```bash
-sudo python setup.py install --prefix /usr/local
 ```
 
 If you have not the privileges to perform a system wide installation,
@@ -105,7 +93,7 @@ and follow the "regular" procedure:
 * build MacSyFinder
 * test MacSyFinder
 
-for installation don't use `--prefix` nor `sudo`
+for installation in virtualenv don't use `--prefix` nor `sudo`
 
 ```bash
 python setup.py install
@@ -141,8 +129,8 @@ macsyfinder have some options that can be set in configuration file
 or on the command line.
 
 for all options see documentation 
- + ($prefix or /usr)/share/doc/macsyfinder/html/index.html
- + ($prefix or /usr)/share/doc/macsyfinder/pdf/Macsyfinder.pdf
+ + ($prefix or /usr)/local/share/doc/macsyfinder/html/index.html
+ + ($prefix or /usr)/local/share/doc/macsyfinder/pdf/Macsyfinder.pdf
  
  
 5 - Uninstalation.

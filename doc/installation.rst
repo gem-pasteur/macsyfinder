@@ -87,20 +87,10 @@ To test the libraries you just build: ::
 Install
 """""""
 
-On Linux
-''''''''
-
 ::
 
     sudo python setup.py install
 
-On MacOS
-''''''''
-
-From MacOS `sierra` we cannot write in `/usr` even if you are *sudoer*.
-So we need to install MacSyFinder in an other location. ::
-
-    sudo python setup.py install --prefix /usr/local
 
 If you have not the privileges to perform a system wide installation,
 you can use a [virtual environment](https://virtualenv.pypa.io/en/stable/). ::
@@ -116,7 +106,7 @@ and follow the "regular" procedure:
 * build MacSyFinder
 * test MacSyFinder
 
-for installation do nott use neither `--prefix` nor `sudo` ::
+for installation do not use neither `--prefix` nor `sudo` ::
 
     python setup.py install
 
@@ -127,7 +117,6 @@ To run `macsyfinder`, you need to activate the virtualenv: ::
     source macsyfinder/bin/activate
 
 Then run macsyfinder/macsyview
-
 
 You can access all general cmd with ::
 
