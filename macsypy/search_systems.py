@@ -97,11 +97,9 @@ class ClustersHandler(object):
             if len(end_hits) == 2:
                 first = end_hits[0]
                 second = end_hits[1]
-                # if(first.gene.position > second.gene.position): # Genes do not have positions ! But Hits do!
                 if(first.position > second.position):
                     tmp = first
                     first = second
-                    # second = first
                     second = tmp
                 dist = second.position - pos_min + pos_max - first.position 
                 if(dist <= max(first.gene.inter_gene_max_space, second.gene.inter_gene_max_space)):
@@ -167,7 +165,6 @@ class ClustersHandler(object):
                 msg = "--- Two clusters should be merged into a new cluster \"circularized\" !\n"
                 # The "1st" cluster on the replicon is removed,
                 # as its hits will be appended to the "last" cluster on the replicon.
-                #self.clusters.pop(0) 
                 for h in clust_first.hits:
                     clust_last.add(h)
                 self.clusters.pop(0) 
