@@ -1760,14 +1760,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     - check the QUORUM for each system to detect, *i.e.* mandatory + accessory - forbidden
 
     Only for \"ordered\" datasets representing a whole replicon.
-    Reports systems occurence.
+    Reports systems occurrences, i.e., identified systems from the clusters given as an input.
 
     :param clusters: the set of clusters to analyze
     :type clusters: :class:`macsypy.search_systems.ClustersHandler` 
     :param systems: the set of systems to detect
     :type systems: a list of :class:`macsypy.system.System`
     :param multi_systems_genes: a dictionary with genes that could belong to multiple systems (keys are system names)
-    :return: a set of systems occurence filled with hits found in clusters
+    :return: a set of systems occurrence filled with hits found in clusters
     :rtype: a list of :class:`macsypy.search_systems.SystemOccurence` 
 
     """
@@ -1778,6 +1778,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
 
     syst_dict = {}
     for system in systems:
+        ### Should'nt this be done only for multi-loci systems? CHECK!
         syst_dict[system.name] = system
         systems_occurences_scattered[system.name] = SystemOccurence(system)
 
@@ -1790,23 +1791,24 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
             #print clust.compatible_systems
-            # Arbitratily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
+            # Arbitrarily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
             first = True
             #store_scattered=True
             store_scattered = False
             store_clust = None
-            #store_so = None # unused_var
-            #store_msg = "" # unused_var
-            #exclude = False # unused_var
             #for putative_system in clust.compatible_systems:
+            # Candidate systems are explored from a list ordered by priority
             for putative_system in [s.name for s in systems_to_consider]:
                 _log_out.info("Considering {}: ".format(putative_system))
+                # If the candidate system is in the list of systems searched
                 if putative_system in syst_dict.keys():
+                    # An occurrence of this system is created and filled with genes from the cluster, or from multi-system genes stored.
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
                     # NEW!
                     if putative_system in multi_systems_genes.keys():
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
+                    # The decision rule is applied
                     msg = so.decision_rule()
                     so_state = so.state
                     _log_out.info("-> {}".format(so_state))
