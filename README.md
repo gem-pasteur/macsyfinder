@@ -91,3 +91,10 @@ for the development version on gitlab pages
 for public version on readthedocs
 
 [![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+
+
+Note
+----
+
+The setsid binary in `utils` directory is used only for functional tests on macosx. 
+The binary has been build using the [setsid-macosx](https://github.com/tzvetkoff/setsid-macosx) project.
