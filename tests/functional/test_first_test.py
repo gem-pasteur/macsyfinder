@@ -17,6 +17,7 @@ import tempfile
 import os
 from subprocess import Popen
 import json
+import unittest
 
 from tests import MacsyTest
 from macsypy.utils import which
@@ -40,7 +41,7 @@ class Test(MacsyTest):
         except:
             pass
 
-
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_basic_run(self):
         """
         test if returncode of macsyfinder is 0 and
@@ -68,10 +69,13 @@ class Test(MacsyTest):
 
         # I need to prepend the command by setsid because macsyfinder use killpg with group_id to terminated all
         # threads and subprocess when an error occurred in one hmmsearch. It's work fine but when
-        # macsyfinder is launched by the tests.py srcipt the kill group kill also the tests.py script
+        # macsyfinder is launched by the tests.py script the kill group kill also the tests.py script
         # so we must run macsyfinder in a new process group
+        # but setsid cmd does not exists on darwin so we provide one in utils
+        setsid = self.setsid()
         try:
-            macsy_process = Popen("setsid " + command,
+            macsy_process = Popen("{setsid} {cmd}".format(setsid=setsid,
+                                                          cmd=command),
                                   shell=True,
                                   stdin=None,
                                   stdout=open(os.devnull, 'w'),
