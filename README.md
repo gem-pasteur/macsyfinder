@@ -96,5 +96,5 @@ for public version on readthedocs
 Note
 ----
 
-The setsid binary in `utils` directory is used only for functional tests on macosx. 
+The `setsid` binary in *utils* directory is used only for functional tests on macosx. 
 The binary has been build using the [setsid-macosx](https://github.com/tzvetkoff/setsid-macosx) project.
