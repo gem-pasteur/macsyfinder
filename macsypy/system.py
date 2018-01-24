@@ -123,6 +123,23 @@ class System(object):
         self._accessory_genes = []
         self._forbidden_genes = []
 
+    def __str__(self):
+        s = "@@ ============== begin pprint system ================\n"
+        s += "@@ name: {}\n".format(self.name)
+        s += "@@ fqn: {}\n".format(self.fqn)
+        s += "@@ ==== mandatory genes ====\n"
+        for g in self._mandatory_genes:
+            s += "@@ {}\n".format(g.name)
+        s += "@@ ==== accessory genes ====\n"
+        for g in self._accessory_genes:
+            s += "@@ {}\n".format(g.name)
+        s += "@@ ==== forbidden genes ====\n"
+        for g in self._forbidden_genes:
+            s += "@@ {}\n".format(g.name)
+        s += "@@ ============== end pprint system ================\n"
+        return s
+
+
     @property
     def inter_gene_max_space(self):
         """

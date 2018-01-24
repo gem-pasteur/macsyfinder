@@ -418,6 +418,8 @@ elif args.verbosity == 2:
     log_level = logging.INFO
 elif args.verbosity == 3:
     log_level = logging.DEBUG
+else:
+    log_level = logging.NOTSET
 
 config = Config(previous_run=args.previous_run,
                 cfg_file=args.cfg_file,
