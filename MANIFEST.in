@@ -14,7 +14,7 @@ recursive-include tests/data *
 recursive-include tests/unit *.py
 recursive-include tests/functional *.py
 
-recursive-include utils/ *
+recursive-include utils *
 
 include etc/macsyfinder.conf
 
