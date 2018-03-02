@@ -62,6 +62,9 @@ See the INSTALL file for more details.
 Installation from repository
 ----------------------------
 
+ The installation from the repository is dedicated to whom want to develop macsyfinder,
+ If you only want to use it, please consider instalation from de distribution.
+ 
  Please be careful, MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
  
  
