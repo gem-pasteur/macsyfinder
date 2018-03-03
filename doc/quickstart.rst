@@ -84,7 +84,7 @@ To run the detection of the Type-IE subtype only, type::
     "macsyfinder --db-type gembase --sequence-db 
     /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE"
 
-A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
+A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the command-line (see the :ref:`Command-line options <command-line-label>`).
 
 To run the detection using the topology file, type::
 
