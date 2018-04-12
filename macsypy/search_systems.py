@@ -228,11 +228,6 @@ class Cluster(object):
         clear = '?'
         if self.state == "clear":
             clear = ''
-        return "@@ --- Cluster {0} {1} ---\n@@ {2}\n@@ {3}\n@@ {4}".format(self.putative_system,
-                                                               clear,
-                                                               seq_ids,
-                                                               gene_names,
-                                                               pos)
         return "--- Cluster {0} {1} ---\n{2}\n{3}\n{4}".format(self.putative_system,
                                                                clear, 
                                                                seq_ids, 
@@ -318,14 +313,10 @@ class Cluster(object):
             # Useless ?! Or change? 
             max_syst = 0
             tmp_syst_fqn = ""
-            print "@@@ ======= L321 compute putative system ======== @@@"
             for x, y in systems.iteritems():
-                print "@@ x =", x, " y =",y, " max_syst =",max_syst
                 if y >= max_syst:
-                    print "@@ old tmp_syst_name =", tmp_syst_fqn, "new tmp_syst_name",x,  " max_syst=", max_syst
                     tmp_syst_fqn = x
                     max_fqn = y
-            print "@@ ======== putative_system = ", tmp_syst_fqn, "======== @@@"
             self._putative_system = tmp_syst_fqn # Remove cause useless?
             
             # NEW Version with hits all "compatible" systems
@@ -566,27 +557,20 @@ class SystemOccurence(object):
         :return: Information of the component content of the SystemOccurence.
         :rtype: string
         """
-        #out = ""
-        out = "@@ ============== begin pprint SystemOccurence ================\n"
-        out += "@@ system_name: {}\n".format(self.system_name)
-        out += "@@ system_fqn: {}\n".format(self.system_fqn)
-        if self.mandatory_genes: 
-            out += "@@ ~~~~ Mandatory genes: ~~~~ \n"
+        out = ""
+        if self.mandatory_genes:
             for k, g in self.mandatory_genes.iteritems():
-                out += "@@ {0}\t{1:d}\n".format(k, g)
+                out += "{0}\t{1:d}\n".format(k, g)
         if self.accessory_genes:
-            out += "@@ ~~~~ Accessory genes: ~~~~ \n"
             for k, g in self.accessory_genes.iteritems():
-                out += "@@ {0}\t{1:d}\n".format(k, g)
+                out += "{0}\t{1:d}\n".format(k, g)
         if self.forbidden_genes:
-            out += "@@ ~~~~ Forbidden genes: ~~~~ \n"
             for k, g in self.forbidden_genes.iteritems():
-                out += "@@ {0}\t{1:d}\n".format(k, g)
+                out += "{0}\t{1:d}\n".format(k, g)
         # NEW
         if self.multi_syst_genes:
-            out += "@@ ~~~~ Multi_syst genes: ~~~~ \n"
             for k, g in self.multi_syst_genes.iteritems():
-                out += "@@ {0}\t{1:d}\n".format(k, g)
+                out += "{0}\t{1:d}\n".format(k, g)
         return out
 
 
@@ -1792,22 +1776,6 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     :rtype: a list of :class:`macsypy.search_systems.SystemOccurence` 
 
     """
-    print "@@@@@@@@@@@@@@@@@@@@@@@@ CALL analyze_clusters_replicon @@@@@@@@@@@@@@@@@@@@@@@@@@"
-    print "@@ ============= with arguments ==============="
-    print "@@ details of clusters:"
-    print "@@ replicon_name",clusters.replicon_name
-    print "@@ ======== {} clusters ========".format(len(clusters.clusters))
-    for c in clusters.clusters:
-        print "@@", c
-        print "@@ ------------- "
-    print "@@ ======== {} systems ========".format(len(systems))
-    for s in systems:
-        print "@@", s
-    print "@@ ======== {} multi_systems_genes ========".format(len(multi_systems_genes))
-    for ms in multi_systems_genes:
-        print "@@",ms
-    print "@@ L1788 ===================== END of arguments ======================="
-
     # Global Hits collectors, for uncomplete cluster Hits
     systems_occurences_scattered = {}
     systems_occurences_list = []
@@ -1872,7 +1840,6 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             # - remove single hits that are not forbidden for the "main" system and that are at one end of the current cluster
             # in this case, check that they are not "loners", cause "loners" can be stored.
             disamb_clusters = disambiguate_cluster(clust)
-            print "@@@ L1863 disamb_clusters", disamb_clusters
             # Add those new clusters to the set of clusters to fill system_occurrences?
             for c in disamb_clusters:
                 clusters.add(c)
@@ -2041,14 +2008,6 @@ def build_clusters(hits, systems_to_detect, rep_info):
             hitstoconsider.append(last)
 
         clusters.circularize(rep_info, hitstoconsider, systems_to_detect)
-    print "@@ @@@@@@@@@@@@@@@@ BEGIN DEBUG build_clusters @@@@@@@@@@@@@@@@"
-    print "@@ details of clusters return by build_clusters"
-    print "@@ replicon_name",clusters.replicon_name
-    print "@@ ======== {} clusters ========".format(len(clusters.clusters))
-    for c in clusters.clusters:
-        print "@@", c
-        print "@@ ------------- "
-    print "@@ @@@@@@@@@@@@@@@@ END DEBUG build clusters @@@@@@@@@@@@@@@@"
     return (clusters, multi_system_genes_system_wise)
 
 
@@ -2173,10 +2132,6 @@ def search_systems(hits, systems, cfg):
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
             # 
             systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)  
-            print "@@@@@@@@@@@@@@ DEBUG search_systems systems_occurences_list ({} so)@@@@@@@@@@@@@@".format(len(systems_occurences_list))
-            for so in systems_occurences_list:
-                print "@@ L2147 so:", so
-            print "@@@@@@@@@@@@@@@@@@@@@@@@ END DEBUG search_systems @@@@@@@@@@@@@@@@@@@@@@@@@@@@"
             _log_out.info("******************************************")
             _log_out.info("Building reports for {0}: \n".format(k))
             report = systemDetectionReportOrdered(k, systems_occurences_list, cfg)
