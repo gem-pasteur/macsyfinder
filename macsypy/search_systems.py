@@ -299,6 +299,7 @@ class Cluster(object):
             genes = []
 
             # Version with hits "reference" systems
+            # Two below "for" now useless?
             for h in self.hits:
                 syst = h.system.name
                 if not systems.has_key(syst):
@@ -1670,7 +1671,7 @@ def disambiguate_cluster(cluster):
                         counter_genes_compat_systems[syst.name] += len(cur_cluster.hits)
                     #print counter_genes_compat_systems
             else:
-                # Update counts of compatibles systems for all the hits
+                # Update counts of compatible systems for all the hits
                 #print "\nnope to store: "
                 #print cur_cluster
                 for h_clust in cur_cluster.hits:
@@ -1779,10 +1780,10 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     for clust in clusters.clusters:
         _log_out.info("\n{0}".format(clust))
         #if clust.state == "clear":
+        # Get the intersection of compatible systems and systems to detect
         systems_to_consider = get_compatible_systems([system_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
+        # For code refactoring: maybe the two conditions below are redundant?
         if clust.state == "clear" and len(systems_to_consider) > 0:
-            # Local Hits collector
-            # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
             #print clust.compatible_systems
             # Arbitrarily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
@@ -1790,11 +1791,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             #store_scattered=True
             store_scattered = False
             store_clust = None
-            #for putative_system in clust.compatible_systems:
+
             # Candidate systems are explored from a list ordered by priority
+            # ? IMPORTANT TO check they are really ordered as needed!
             for putative_system in [s.name for s in systems_to_consider]:
                 _log_out.info("Considering {}: ".format(putative_system))
                 # If the candidate system is in the list of systems searched
+                # ? Isn't that always the case by construction of systems_to_consider??! For code refactoring: following 'if' statement useless?
+                # YES! remove the following 'if'!
                 if putative_system in syst_dict.keys():
                     # An occurrence of this system is created and filled with genes from the cluster, or from multi-system genes stored.
                     so = SystemOccurence(syst_dict[putative_system])
@@ -1965,6 +1969,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
             if len(cur_cluster) > 1:
                 #print cur_cluster
                 #print "quatre - ADD cur_cluster"
+                # This calls the save() function of the Cluster()
                 clusters.add(cur_cluster) # Add an in-depth copy of the object? 
                 #print(cur_cluster)
 
@@ -1973,6 +1978,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = False
 
             elif len(cur_cluster) == 1 and loner_state == True: # WTF?
+                # For code refactoring, merge with above "if": same instructions are applied.
                 #print cur_cluster
                 #print "cinq - ADD cur_cluster"
                 #print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
@@ -1982,12 +1988,14 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 loner_state = False
 
             if prev.gene.loner:
+                # The "prev" loner gene is stored
                 #print "six - check"
                 #print "PREVLONER ?? {0} {1}".format(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
                     #print "six - ADD prev in cur_cluster, ADD cur_cluster"
                     cur_cluster.add(prev)
+                    # This calls the save() function of the Cluster()
                     clusters.add(cur_cluster)
                     #print(cur_cluster)
 
@@ -2008,6 +2016,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         #print "Recap clusters"
+        # This calls the save() function of the Cluster()
         clusters.add(cur_cluster)
 
     # Deal both with the case of single loner hits, and of last hits that are loners... YES!
@@ -2015,6 +2024,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
     if len(cur_cluster) == 0 and prev.gene.loner:
         #print "FIFO or LIFO?"
         cur_cluster.add(prev)
+        # This calls the save() function of the Cluster()
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
         if prev.gene.multi_system:
