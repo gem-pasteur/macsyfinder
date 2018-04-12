@@ -1230,7 +1230,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
         self.replicon_name = replicon_name
 
 
-
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
@@ -1243,6 +1242,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
             system_textlist.append(so.system_name + "_" + so.state)
 
         return Counter(system_textlist)
+
 
     def tabulated_output_header(self, system_occurrence_states, system_names):
         """
