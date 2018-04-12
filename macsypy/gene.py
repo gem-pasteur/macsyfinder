@@ -376,7 +376,7 @@ class Homolog(object):
         :param gene_ref: the gene to which the current is homolog.
         :type gene_ref: :class:`macsypy.gene.Gene` object.
         :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.
-          Otherwise, only partial overlapping between the profiles. 
+                        Otherwise, only partial overlapping between the profiles.
         :type aligned: boolean
         """
         self.gene = gene 
