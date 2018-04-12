@@ -65,7 +65,6 @@ Installation from repository
  Please be careful, MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
  
  
- 
 Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
