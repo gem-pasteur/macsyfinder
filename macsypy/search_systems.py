@@ -1235,7 +1235,6 @@ class systemDetectionReportOrdered(systemDetectionReport):
         self.replicon_name = replicon_name
 
 
-
     def counter_output(self):
         """
         Builds a counter of systems per replicon, with different "states" separated (single-locus vs multi-loci systems)
@@ -1248,6 +1247,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
             system_textlist.append(so.system_name + "_" + so.state)
 
         return Counter(system_textlist)
+
 
     def tabulated_output_header(self, system_occurrence_states, system_names):
         """
@@ -1636,8 +1636,8 @@ def disambiguate_cluster(cluster):
 
     - splits the cluster in two if it seems that two systems are nearby
     - removes single hits that are not forbidden for the "main" system and
-     that are at one end of the current cluster in this case,
-     check that they are not "loners", cause "loners" can be stored.
+      that are at one end of the current cluster in this case,
+      check that they are not "loners", cause "loners" can be stored.
 
     :param cluster: the cluster to "disambiguate"
     :type cluster: :class:`macsypy.search_systems.Cluster`

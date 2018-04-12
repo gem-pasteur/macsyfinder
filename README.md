@@ -1,7 +1,12 @@
 MacSyFinder
 ===========
 
+[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
+
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
+
 
 
 Citation
@@ -21,21 +26,35 @@ Installation from distribution
 
 1. Uncompress and untar the package:
 
-   tar -xzf macsyfinder-x.x.tar.gz
+```bash
+tar -xzf macsyfinder-x.x.tar.gz
+```
 
-2. Go to the macsyfinder directory
+2. Go to the MacSyFinder directory
  
-    cd macsyfinder-x.x
+```bash
+cd macsyfinder-x.x
+```
 
-3. Build and install
+3. Build 
 
-    python setup.py build
-    
-    python setup.py test -vv
-    
-    python setup.py install
+```bash
+python setup.py build
+```
 
-    to see all installation options "python setup.py --help"
+4. Test    
+
+```bash
+python setup.py test -vv
+```
+
+5. Install
+
+```bash
+sudo python setup.py install
+```
+
+    To see all installation options "python setup.py --help"
 
 See the INSTALL file for more details.
 
@@ -50,10 +69,29 @@ Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 
+Unit tests with gitlab-ci
+-------------------------
+[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  
+[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/htmlcov/index.html)
+
+
 
 Documentation
 -------------
 
-You will find complete documentation for setting up your project at the Read the Docs site.
+You will find complete documentation for setting up your project.
+for the development version on gitlab pages
 
-[![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
+
+
+for public version on readthedocs
+
+[![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+
+
+Note
+----
+
+The `setsid` binary in *utils* directory is used only for functional tests on macosx. 
+The binary has been build using the [setsid-macosx](https://github.com/tzvetkoff/setsid-macosx) project.
