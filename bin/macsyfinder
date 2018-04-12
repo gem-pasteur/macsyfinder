@@ -101,7 +101,7 @@ parser = argparse.ArgumentParser(epilog="For more details, visit the MacSyFinder
                                
 MacSyFinder - Detection of macromolecular systems in protein datasets 
 using systems modelling and similarity search.  
-     '''))
+'''))
 
 #, formatter_class=argparse.RawDescriptionHelpFormatter)
 #, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
