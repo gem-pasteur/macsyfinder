@@ -287,22 +287,22 @@ class Cluster(object):
         Check the status of the cluster regarding systems which have hits in it. 
         Update systems represented, and assign a putative system (self._putative_system),
         which is the system with most hits in the cluster.
-        The systems represented are stored in a dictionary in the self.systems variable. 
+        The systems represented are stored in a dictionary in the self.systems variable.
+        The list of compatible systems is created
+
         The execution of this function can be forced, even if it has already run
         for the cluster with the option force=True.
         """
         if not self.putative_system or force:
             # First compute the "Majoritary" system
-            systems = {} # Counter of occcurrences of systems in the cluster (keys are systems' names)
+            systems = {} # Counter of occurrences of systems in the cluster (keys are systems' names)
             genes = []
-            #systems_object={} # Store systems object. # To be replaced by "system_bank"? Yep ! done
 
             # Version with hits "reference" systems
             for h in self.hits:
                 syst = h.system.name
                 if not systems.has_key(syst):
                     systems[syst] = 1
-                    #systems_object[syst]=h.system
                 else:
                     systems[syst] += 1
                 if genes.count(h.gene.name) == 0:
@@ -321,17 +321,14 @@ class Cluster(object):
             self._putative_system = tmp_syst_name # Remove cause useless?
 
             # NEW Version with hits all "compatible" systems
-            systems_compat = {} # Counter of occcurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
+            systems_compat = {} # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
             for h in self.hits:
-                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect) # Need the list of systems (obj!) to be detected... in the cfg?
                 # Now exclude forbidden genes from those that define the list of compatible systems
                 syst_list = h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
-                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect, True) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before yep
                 for syst in syst_list:
                     syst_name = syst.name
                     if not systems_compat.has_key(syst_name):
                         systems_compat[syst_name] = 1
-                        #systems_object[syst]=h.system
                     else:
                         systems_compat[syst_name] += 1
                     if genes.count(h.gene.name) == 0:
@@ -350,21 +347,18 @@ class Cluster(object):
                 # even if they are tolerated in the cluster.
                 # Also deal with foreign "exchangeable" genes for the same reasons... NB !!
                 # Maybe just not add the system to the list if exchangeable?
-                #if len(systems.keys()) == 1:
                 if len(systems_compat.keys()) == 1:
                     self._state = "clear"
-                    #syst = systems.keys()[0]
                     syst = systems_compat.keys()[0]
                     #print syst
                     self._putative_system = syst
-                    #self._compatible_systems.append(system_bank[syst])
                     # Store only compatible systems that are searched for !!
                     self._compatible_systems.append(syst)
                 else:
                     # Check for foreign "accessory" genes regarding the majoritary system...
                     # They might increase nb of systems predicted in the cluster artificially,
                     # even if they are tolerated in the cluster.
-                    # For that need to scan again all hits and ask wether they are accessory foreign genes.
+                    # For that need to scan again all hits and ask whether they are accessory foreign genes.
                     def try_system(hits, putative_system, counter_systems_in_clust):
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
@@ -387,7 +381,7 @@ class Cluster(object):
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
                             #if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
-                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system has to be considered!
+                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system have to be considered!
                                 auth += 1
                             #if h.gene.is_forbidden(system_bank[putative_system]):
                             #    forbid +=1
