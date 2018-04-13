@@ -29,6 +29,59 @@ if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
 import logging
 
 
+class ConfigLight(object):
+    """
+    a Light Config to use when --list option is set.
+    --list option does not launch macsyfinder it just list the available system
+    so there is no need to handle a whole config but the more important
+    is that config create a working dir (needed by logger etc).
+    ConfigLight does nor create any working dir.
+    """
+
+    def __init__(self, cfg_file="", previous_run=None, profile_suffix=None):
+        self._new_cfg_name = "macsyfinder.conf"
+        if previous_run:
+            prev_config = os.path.join(previous_run, self._new_cfg_name)
+            if not os.path.exists(prev_config):
+                raise ValueError("No config file found in dir {}".format(previous_run))
+            config_files = [prev_config]
+        elif cfg_file:
+            config_files = [cfg_file]
+        else:
+            config_files = [os.path.join(_prefix_conf, 'macsyfinder.conf'),
+                            os.path.expanduser('~/.macsyfinder/macsyfinder.conf'),
+                            'macsyfinder.conf']
+
+        self._defaults = {'profile_suffix': '.hmm'}
+        self.parser = SafeConfigParser(defaults=self._defaults)
+
+        used_files = self.parser.read(config_files)
+
+        cmde_line_opt = {'profile_suffix': profile_suffix} if profile_suffix else {}
+        try:
+            self.profile_suffix = self.parser.get('directories', 'profile_suffix', vars=cmde_line_opt)
+        except NoSectionError:
+            if 'profile_suffix' in cmde_line_opt:
+                self.profile_suffix = cmde_line_opt['profile_suffix']
+            else:
+                self.profile_suffix = self._defaults['profile_suffix']
+        try:
+            self.models_dir = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
+        except NoSectionError:
+            if 'models_dir' in cmde_line_opt:
+                self.models_dir = cmde_line_opt['models_dir']
+            else:
+                self.models_dir = None
+        except NoOptionError:
+            self.models_dir = None
+        if self.models_dir is not None and not os.path.exists(self.models_dir):
+            raise ValueError("{0}: No such models directory".format(self.models_dir))
+
+
+    def old_data_organization(self):
+        return False
+
+
 class Config(object):
     """
     Parse configuration files and handle the configuration according to the following file location precedence:
@@ -42,39 +95,41 @@ class Config(object):
     options = ('cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file',
                'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci',
                 'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
-                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix',
-                'out_dir',
+                'def_dir', 'models_dir', 'res_search_dir', 'res_search_suffix',
+                'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
                 'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
-    def __init__(self, cfg_file="",
-                sequence_db=None,
-                db_type=None,
-                replicon_topology=None,
-                topology_file=None,
-                inter_gene_max_space=None,
-                min_mandatory_genes_required=None,
-                min_genes_required=None,
-                max_nb_genes=None,
-                multi_loci=None,
-                hmmer_exe=None,
-                index_db_exe=None,
-                e_value_res=None,
-                i_evalue_sel=None,
-                coverage_profile=None,
-                def_dir=None ,
-                res_search_dir=None,
-                res_search_suffix=None,
-                profile_dir=None,
-                profile_suffix=None,
-                res_extract_suffix=None,
-                out_dir=None,
-                log_level=None,
-                log_file=None,
-                worker_nb=None,
-                config_file=None,
-                previous_run=None,
-                build_indexes=None
-                ):
+    def __init__(self,
+                 cfg_file="",
+                 sequence_db=None,
+                 db_type=None,
+                 replicon_topology=None,
+                 topology_file=None,
+                 inter_gene_max_space=None,
+                 min_mandatory_genes_required=None,
+                 min_genes_required=None,
+                 max_nb_genes=None,
+                 multi_loci=None,
+                 hmmer_exe=None,
+                 index_db_exe=None,
+                 e_value_res=None,
+                 i_evalue_sel=None,
+                 coverage_profile=None,
+                 def_dir=None,
+                 models_dir=None,
+                 res_search_dir=None,
+                 res_search_suffix=None,
+                 profile_dir=None,
+                 profile_suffix=None,
+                 res_extract_suffix=None,
+                 out_dir=None,
+                 log_level=None,
+                 log_file=None,
+                 worker_nb=None,
+                 config_file=None,
+                 previous_run=None,
+                 build_indexes=None
+                 ):
         """
         :param cfg_file: the path to the MacSyFinder configuration file to use 
         :type cfg_file: string
@@ -83,10 +138,18 @@ class Config(object):
         :param sequence_db: the path to the sequence input dataset (fasta format)
         :type sequence_db: string
         :param db_type: the type of dataset to deal with. 
+<<<<<<< HEAD
+         \"unordered_replicon\" corresponds to a non-assembled genome, 
+         \"unordered\" to a metagenomic dataset, 
+         \"ordered_replicon\" to an assembled genome, and 
+         \"gembase\" to a set of replicons where sequence identifiers follow this convention:
+          \">RepliconName_SequenceID\"."
+=======
                         \"unordered_replicon\" corresponds to a non-assembled genome,
                         \"unordered\" to a metagenomic dataset,
                         \"ordered_replicon\" to an assembled genome, and
                         \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
+>>>>>>> master
         :type db_type: string
         :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningful
                                   only if the db_type is 'ordered_replicon' or 'gembase'
@@ -117,6 +180,8 @@ class Config(object):
         :type coverage_profile: float
         :param def_dir: the path to the directory containing systems definition files (.xml)
         :type def_dir: string
+        :param models_dir: the path to the directory containing models (profiles + definitions)
+        :type models_dir: string
         :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
         :type  res_search_dir: string
         :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date},
@@ -162,11 +227,9 @@ class Config(object):
                           'e_value_res': "1",
                           'i_evalue_sel': "0.001",
                           'coverage_profile': "0.5",
-                          'def_dir': os.path.join(_prefix_data, 'DEF'),
                           'res_search_dir': os.getcwd(),
                           'res_search_suffix': '.search_hmm.out',
                           'res_extract_suffix': '.res_hmm_extract',
-                          'profile_dir': os.path.join(_prefix_data, 'profiles'),
                           'profile_suffix': '.hmm',
                           'log_level': logging.WARNING,
                           'worker_nb': '1'
@@ -303,7 +366,7 @@ class Config(object):
         try:
             if cmde_line_opt.get('previous_run', None):
                 if os.path.exists(cmde_line_opt['previous_run']):
-                    options['previous_run'] = cmde_line_opt['previous_run']
+                    options['previous_run'] = os.path.normpath(cmde_line_opt['previous_run'])
                 else:
                     raise ValueError("previous run directory '{0}' was not found".format(cmde_line_opt['previous_run']))
             try:
@@ -325,7 +388,8 @@ class Config(object):
                 try:
                     options['db_type'] = self.parser.get('base', 'type')
                 except (NoSectionError, NoOptionError):
-                    raise ValueError("You must specify the type of the input dataset ({0}).".format(', '.join(val_4_db_type)))
+                    raise ValueError("You must specify the type of the input dataset ({0}).".format(
+                        ', '.join(val_4_db_type)))
             if options['db_type'] not in val_4_db_type:
                 raise ValueError("Allowed values for the input dataset are : {0}".format(', '.join(val_4_db_type)))
             val_4_replicon_topology = ('linear', 'circular')
@@ -337,7 +401,8 @@ class Config(object):
                 except (NoSectionError, NoOptionError):
                     options['replicon_topology'] = self._defaults['replicon_topology']
             if options['replicon_topology'] not in val_4_replicon_topology:
-                raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(', '.join(val_4_replicon_topology)))
+                raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(
+                    ', '.join(val_4_replicon_topology)))
             if options['replicon_topology'] == 'circular' and options['db_type'] in ('unordered_replicon', 'unordered'):
                 self._log.warning("As the input dataset type 'db_type' is set to {0},\
  the replicon_topology file was ignored".format(options['db_type']))
@@ -369,7 +434,7 @@ class Config(object):
                             raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
  but you provided {} in the configuration file".format(system, interval))
                 except StopIteration:
-                    raise ValueError( "Invalid syntax for 'inter_gene_max_space': you must have a list of\
+                    raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of\
  systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if 'inter_gene_max_space' not in options:
@@ -522,7 +587,8 @@ class Config(object):
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
 
             if options['i_evalue_sel'] > options['e_value_res']:
-                raise ValueError("i_evalue_sel ({:f}) must be lower or equal than e_value_res ({:f})".format(options['i_evalue_sel'], options['e_value_res']))
+                raise ValueError("i_evalue_sel ({:f}) must be lower or equal than e_value_res ({:f})".format(
+                    options['i_evalue_sel'], options['e_value_res']))
 
             try:
                 coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars=cmde_line_opt)
@@ -537,14 +603,32 @@ class Config(object):
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
             try:
+                options['models_dir'] = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
+            except NoSectionError:
+                if 'models_dir' in cmde_line_opt:
+                    options['models_dir'] = cmde_line_opt['models_dir']
+                else:
+                    options['models_dir'] = None
+            except NoOptionError:
+                options['models_dir'] = None
+            if options['models_dir'] is not None:
+                if not os.path.exists(options['models_dir']):
+                    raise ValueError("{0}: No such models directory".format(options['models_dir']))
+                options['models_dir'] = os.path.normpath(options['models_dir'])
+
+            try:
                 options['def_dir'] = self.parser.get('directories', 'def_dir', vars=cmde_line_opt)
             except NoSectionError:
                 if 'def_dir' in cmde_line_opt:
                     options['def_dir'] = cmde_line_opt['def_dir']
                 else:
-                    options['def_dir'] = self._defaults['def_dir']
-            if not os.path.exists(options['def_dir']):
-                raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+                    options['def_dir'] = None
+            except NoOptionError:
+                options['def_dir'] = None
+            if options['def_dir'] is not None:
+                if not os.path.exists(options['def_dir']):
+                    raise ValueError("{0}: No such definition directory".format(options['def_dir']))
+                options['def_dir'] = os.path.normpath(options['def_dir'])
 
             try:
                 options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars=cmde_line_opt)
@@ -552,9 +636,13 @@ class Config(object):
                 if 'profile_dir' in cmde_line_opt:
                     options['profile_dir'] = cmde_line_opt['profile_dir']
                 else:
-                    options['profile_dir'] = self._defaults['profile_dir']
-            if not os.path.exists(options['profile_dir']):
-                raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+                    options['profile_dir'] = None
+            except NoOptionError:
+                options['profile_dir'] = None
+            if options['profile_dir'] is not None:
+                if not os.path.exists(options['profile_dir']):
+                    raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
+                options['profile_dir'] = os.path.normpath(options['profile_dir'])
 
             try:
                 options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
@@ -601,7 +689,7 @@ class Config(object):
                 import shutil
                 try:
                     shutil.rmtree(working_dir)
-                except:
+                except Exception:
                     pass
                 
             raise err
@@ -620,9 +708,11 @@ class Config(object):
         parser.set('base', 'file', str(self.options['sequence_db']))
         parser.set('base', 'type', str(self.options['db_type']).lower())
         cfg_opts = [('base', ('replicon_topology', 'topology_file', 'index_db_exe',)),
-                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci')),
+                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
+                                'max_nb_genes', 'multi_loci')),
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile')),
-                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
+                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'models_dir',
+                                     'profile_suffix', 'res_extract_suffix')),
                     ('general', ('log_level', 'log_file', 'worker_nb'))
                     ]
 
@@ -632,17 +722,29 @@ class Config(object):
             for directive in directives:
                 try:
                     if self.options[directive] is not None:
-                        if directive in ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes'):
+                        if directive in ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required',
+                                         'max_nb_genes'):
                             s = ''
                             for system, space in self.options[directive].items():
                                 s += " {0} {1}".format(system, space)
                             parser.set(section, directive, s)
-                        elif directive != 'log_file' or self.options[directive] != os.path.join(self.options['working_dir'], 'macsyfinder.log'):
+                        elif directive != 'log_file' or \
+                                        self.options[directive] != os.path.join(self.options['working_dir'], 'macsyfinder.log'):
                             parser.set(section, directive, str(self.options[directive]))
                 except KeyError:
                     pass
         with open(os.path.join(dir_path, self._new_cfg_name), 'w') as new_cfg:
             parser.write(new_cfg)
+
+    def old_data_organization(self):
+        """
+        :return: True if the data are organized in old way, two independant directories:
+
+          * one directory for hmm profiles
+          * one directory for models definitions
+
+        """
+        return self.options['profile_dir'] is not None
 
     @property
     def sequence_db(self):
@@ -777,7 +879,8 @@ class Config(object):
     @property
     def i_evalue_sel(self):
         """
-        :return: the i_evalue threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
+        :return: the i_evalue threshold used to select a hit for systems detection and for the Hmmer report
+        (filtered hits)
         :rtype: float
         """
         return self.options['i_evalue_sel']
@@ -785,7 +888,8 @@ class Config(object):
     @property
     def coverage_profile(self):
         """
-        :return: the coverage threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
+        :return: the coverage threshold used to select a hit for systems detection and for the Hmmer report
+        (filtered hits)
         :rtype: float
         """
         return self.options['coverage_profile']
@@ -829,6 +933,14 @@ class Config(object):
         :rtype: string
         """
         return self.options['profile_dir']
+
+    @property
+    def models_dir(self):
+        """
+        :return: the path to the directory where are the models (definitions + profiles)
+        :rtype: string
+        """
+        return self.options['models_dir']
 
     @property
     def profile_suffix(self):

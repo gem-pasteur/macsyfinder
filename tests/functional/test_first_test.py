@@ -17,6 +17,7 @@ import tempfile
 import os
 from subprocess import Popen
 import json
+import unittest
 
 from tests import MacsyTest
 from macsypy.utils import which
@@ -40,7 +41,7 @@ class Test(MacsyTest):
         except:
             pass
 
-
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_basic_run(self):
         """
         test if returncode of macsyfinder is 0 and
@@ -52,14 +53,13 @@ class Test(MacsyTest):
         os.makedirs(self.out_dir)
         macsy_bin = os.path.join(self.macsy_home, 'bin', 'macsyfinder') if self.local_install else which('macsyfinder')
 
-        command = "{bin} --def={def_dir} --profile-dir={profiles} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase {systems}".format(
-                    bin=macsy_bin,
-                    out_dir=self.out_dir,
-                    def_dir=os.path.join(self._data_dir, 'data_set_1', 'def'),
-                    profiles=os.path.join(self._data_dir, 'data_set_1', 'profiles'),
-                    seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
-                    systems="T9SS T3SS T4SS_typeI",
-                    )
+        command = "{bin} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
+                  " --models {models}".format(bin=macsy_bin,
+                                              out_dir=self.out_dir,
+                                              models_dir=os.path.join(self._data_dir, 'data_set_1', 'models'),
+                                              seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
+                                              models="set_1 T9SS T3SS T4SS_typeI",
+                                              )
         if not bin:
             raise RuntimeError('macsyfinder not found, macsyfinder must be either in your path or MACSY_HOME must be defined')
         # I redirect stdout and stderr in dev null I don't want them on screen
@@ -68,10 +68,13 @@ class Test(MacsyTest):
 
         # I need to prepend the command by setsid because macsyfinder use killpg with group_id to terminated all
         # threads and subprocess when an error occurred in one hmmsearch. It's work fine but when
-        # macsyfinder is launched by the tests.py srcipt the kill group kill also the tests.py script
+        # macsyfinder is launched by the tests.py script the kill group kill also the tests.py script
         # so we must run macsyfinder in a new process group
+        # but setsid cmd does not exists on darwin so we provide one in utils
+        setsid = self.setsid()
         try:
-            macsy_process = Popen("setsid " + command,
+            macsy_process = Popen("{setsid} {cmd}".format(setsid=setsid,
+                                                          cmd=command),
                                   shell=True,
                                   stdin=None,
                                   stdout=open(os.devnull, 'w'),
@@ -118,20 +121,25 @@ class Test(MacsyTest):
                                                                              test_result_json['occurrence_number']))
         self.assertEqual(expected_result_json['id'],
                          test_result_json['id'],
-                         "system occurrence id expected {0}   retrieved: {1}".format(expected_result_json['id'],
-                                                                                     test_result_json['id']))
+                         "system occurrence id expected {0}    retrieved: {1}".format(expected_result_json['id'],
+                                                                                      test_result_json['id']))
         self.assertDictEqual(expected_result_json['summary']['mandatory'],
                              test_result_json['summary']['mandatory'],
-                             "mandatory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['mandatory'],
-                                                                                    test_result_json['summary']['mandatory']))
+                             "\nmandatory genes expected:  {0}"
+                             "\nmandatory genes retrieved: {1}".format(expected_result_json['summary']['mandatory'],
+                                                                       test_result_json['summary']['mandatory']))
         self.assertDictEqual(expected_result_json['summary']['accessory'],
                              test_result_json['summary']['accessory'],
-                             "accessory genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['accessory'],
-                                                                                    test_result_json['summary']['accessory']))
+                             "\naccessory genes expected:  {0}"
+                             "\naccessory genes retrieved: {1}".format(expected_result_json['summary']['accessory'],
+                                                                       test_result_json['summary']['accessory']))
         self.assertDictEqual(expected_result_json['summary']['forbidden'],
                              test_result_json['summary']['forbidden'],
-                             "forbidden genes expected {0}   retrieved: {1}".format(expected_result_json['summary']['forbidden'],
-                                                                                    test_result_json['summary']['forbidden']))
+                             "\nforbidden genes expected:  {0}"
+                             "\nforbidden genes retrieved: {1}".format(expected_result_json['summary']['forbidden'],
+                                                                       test_result_json['summary']['forbidden']))
         self.assertListEqual(expected_result_json['genes'], test_result_json['genes'],
-                             "genes expected {0}   retrieved: {1}".format(expected_result_json['genes'],
-                                                                          test_result_json['genes']))
+                             "\ngenes expected:  {0}"
+                             "\ngenes retrieved: {1}".format(expected_result_json['genes'], test_result_json['genes']))
+
+

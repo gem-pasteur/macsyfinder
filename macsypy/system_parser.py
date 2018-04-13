@@ -20,7 +20,7 @@ _log = logging.getLogger('macsyfinder')
 from .system import System
 from .gene import Gene
 from .gene import Homolog, Analog
-from .registries import ProfilesRegistry, DefinitionsRegistry
+from .registries import ModelRegistry, split_def_name, join_def_path
 from .macsypy_error import MacsypyError, SystemInconsistencyError
 
 
@@ -44,27 +44,35 @@ class SystemParser(object):
         self.cfg = cfg
         self.system_bank = system_bank
         self.gene_bank = gene_bank
-        self.profiles_registry = ProfilesRegistry(cfg)
-        self.definitions_registry = DefinitionsRegistry(cfg)
+        self.model_registry = ModelRegistry(cfg)
 
 
-    def system_to_parse(self, sys_2_parse, parsed_systems):
+    def definition_to_parse(self, def_2_parse, parsed_models):
         """
-        :param sys_2_parse: a dict of systems to parse
-        :type sys_2_parse: [string, ...]
-        :return: the list of systems' names to parse. Scan the whole chain of 'system_ref' in a recursive way.
-        :rtype: [string, ...]
+        :param sys_2_parse: the set of definitions fqn to parse ([TXSS/T6SS TXSS/T3SS, ...])
+        :type sys_2_parse: set of strings {string, ...}
+        :param parsed_models: the fully qualified name of the models already build.
+        :type parsed_models: set of strings {string, ...}
+        :return: a set of definitions' fully qualified names to parse. Scan the whole chain of 'system_ref' in a recursive way.
+        :rtype: {string, ...}
         """
-        #the list of system which must be parsed
-        diff_sys = list(set(parsed_systems.keys()) - set(sys_2_parse.keys()))
-        diff_sys_2 = list(set(sys_2_parse.keys()) - set(parsed_systems.keys()))
-        diff_sys += diff_sys_2
-        if diff_sys == []:
-            return sys_2_parse.keys()
+        diff_def = parsed_models ^ def_2_parse
+        if not diff_def:
+            return def_2_parse
         else:            
-            for system_name in diff_sys:
-                parsed_systems[system_name] = None
-                path = os.path.join(self.cfg.def_dir, system_name + ".xml")
+            for def_fqn in diff_def:
+                parsed_models.add(def_fqn)
+                def_path = split_def_name(def_fqn)
+                model_name = def_path[0]
+                try:
+                    model_location = self.model_registry[model_name]
+                    definition_location = model_location.get_definition(def_fqn)
+                except KeyError:
+                    raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir))
+                except ValueError:
+                    raise MacsypyError("{}: No such definition".format(def_fqn))
+
+                path = definition_location.path
                 if not os.path.exists(path):
                     raise MacsypyError("{}: No such system definitions".format(path))
                 try:
@@ -72,15 +80,19 @@ class SystemParser(object):
                     root = tree.getroot()
                     sys_ref = root.findall(".//gene[@system_ref]")
                     for gene_node in sys_ref:
-                        sys_2_parse[gene_node.get("system_ref")] = None
+                        def_ref = gene_node.get("system_ref")
+                        def_ref_fqn = def_path[:-1]
+                        def_ref_fqn.append(def_ref)
+                        def_ref_fqn = join_def_path(*def_ref_fqn)
+                        def_2_parse.add(def_ref_fqn)
                 except Exception as err:
-                    msg = "unable to parse system definition \"{0}\" : {1}".format(system_name, err)
+                    msg = "unable to parse system definition \"{0}\" : {1}".format(def_fqn, err)
                     _log.critical(msg)
                     raise MacsypyError(msg)
-                 
-            return self.system_to_parse(sys_2_parse, parsed_systems)
+            return self.definition_to_parse(def_2_parse, parsed_models)
 
-    def _create_system(self, system_name, system_node):
+
+    def _create_system(self, def_fqn, system_node):
         """
         :param system_name: the name of the system to create.\
           This name must match a XML file in the definition directory ("-d" option in the command-line)
@@ -90,7 +102,11 @@ class SystemParser(object):
         :return: the system corresponding to the name.
         :rtype: :class:`macsypy.system.System` object.
         """
-        path = os.path.join(self.cfg.def_dir, system_name + ".xml")
+        model_name = split_def_name(def_fqn)[0]
+        model_location = self.model_registry[model_name]
+        definition_location = model_location.get_definition(def_fqn)
+        path = definition_location.path
+
         inter_gene_max_space = system_node.get('inter_gene_max_space')
         if inter_gene_max_space is None:
             msg = "Invalid system definition ({0}): inter_gene_max_space must be defined".format(path)
@@ -138,7 +154,7 @@ class SystemParser(object):
         else:
             multi_loci = False
         system = System(self.cfg,
-                        system_name,
+                        def_fqn,
                         inter_gene_max_space,
                         min_mandatory_genes_required,
                         min_genes_required,
@@ -146,9 +162,11 @@ class SystemParser(object):
                         multi_loci)
         return system
 
+
     def _create_genes(self, system, system_node):
         """
         Create genes belonging to the systems. Be careful, the returned genes have not their homologs/analogs set yet.
+        all genes belonging to an other system (system_ref) are ignored
 
         :param system: the System currently parsing
         :type system: :class:`macsypy.system.System` object
@@ -158,10 +176,13 @@ class SystemParser(object):
         :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
         genes = []
+        created_genes = set()
         gene_nodes = system_node.findall(".//gene")
         gene_nodes = [gene_node for gene_node in gene_nodes if gene_node.get("system_ref") is None]
         for node in gene_nodes:
             name = node.get("name")
+            if name in created_genes:
+                continue
             if not name:
                 msg = "Invalid system definition '{0}': gene without a name".format(system.name)
                 _log.error(msg)
@@ -187,8 +208,13 @@ class SystemParser(object):
                 pass
             else:
                 attrs['inter_gene_max_space'] = inter_gene_max_space
-            genes.append(Gene(self.cfg, name, system, self.profiles_registry, **attrs))
+            model_name = split_def_name(system.fqn)[0]
+            model_location = self.model_registry[model_name]
+            new_gene = Gene(self.cfg, name, system, model_location, **attrs)
+            genes.append(new_gene)
+            created_genes.add(new_gene.name)
         return genes
+
 
     def _fill(self, system, system_node):
         """
@@ -207,7 +233,9 @@ class SystemParser(object):
                 _log.error(msg)
                 raise SyntaxError(msg)
             gene_name = gene_node.get('name')
-            gene = self.gene_bank[gene_name]
+            model_name = split_def_name(system.fqn)[0]
+            key = (model_name, gene_name)
+            gene = self.gene_bank[key]
             for homolog_node in gene_node.findall("homologs/gene"):
                 gene.add_homolog(self._parse_homolog(homolog_node, gene, system))
             for analog_node in gene_node.findall("analogs/gene"):
@@ -233,8 +261,11 @@ class SystemParser(object):
         :type node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
         :type gene_ref: class:`macsypy.gene.Gene` object
+        :param curr_system: the system being parsed .
+        :type curr_system: :class:`macsypy.system.System` object
         :return: the gene object corresponding to the node
-        :rtype: :class:`macsypy.gene.Homolog` object 
+        :rtype: :class:`macsypy.gene.Homolog` object
+        :raise SyntaxError: if the system definition does not follow the grammar.
         """
         name = node.get("name")
         if not name:
@@ -252,10 +283,12 @@ class SystemParser(object):
             _log.error(msg)
             raise SyntaxError(msg)
         try:
-            gene = self.gene_bank[name]
+            model_name = split_def_name(curr_system.fqn)[0]
+            key = (model_name, name)
+            gene = self.gene_bank[key]
         except KeyError:
             msg = "Invalid system definition '{0}': The gene '{1}' described as homolog of\
- '{2}' in system '{3}' is not in the \"GeneBank\" gene factory".format(curr_system.name, name,
+ '{2}' in system '{3}' is not in the 'GeneBank' gene factory".format(curr_system.name, name,
                                                                        gene_ref.name, curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
@@ -272,6 +305,7 @@ class SystemParser(object):
             homolog.add_homolog(h2)
         return homolog
 
+
     def _parse_analog(self, node, gene_ref, curr_system):
         """
         Parse a xml element gene and build the corresponding object
@@ -280,6 +314,8 @@ class SystemParser(object):
         :type node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
         :type gene_ref: class:`macsypy.gene.Gene` object.
+        :type curr_system: :class:`macsypy.system.System` object
+        :return: the gene object corresponding to the node
         :return: the gene object corresponding to the node
         :rtype: :class:`macsypy.gene.Analog` object 
         """
@@ -289,7 +325,9 @@ class SystemParser(object):
             _log.error(msg)
             raise SyntaxError(msg)
         try:
-            gene = self.gene_bank[name]
+            model_name = split_def_name(curr_system.fqn)[0]
+            key = (model_name, name)
+            gene = self.gene_bank[key]
         except KeyError:
             msg = "The gene '{0}' described as analog of '{1}' in system '{2}'\
  is not in the \"GeneBank\" gene factory".format(name, gene_ref.name, curr_system.name)
@@ -307,6 +345,7 @@ class SystemParser(object):
             h2 = self._parse_analog(analog_node, gene, curr_system)
             analog.add_analog(h2)
         return analog
+
 
     def check_consistency(self, systems):
         """
@@ -372,46 +411,54 @@ class SystemParser(object):
                 raise SystemInconsistencyError(msg)
 
 
-    def parse(self, systems_2_detect):
+    def parse(self, models_2_detect):
         """
-        Parse systems definition in XML format to build the corresponding system objects,
+        Parse models definition in XML format to build the corresponding system objects,
          and add them to the system factory after checking its consistency.
         To get the system ask it to system_bank
-        :param systems_2_detect: a list with the names of the systems to parse (eg 'T2SS')
-        :type systems_2_detect: list of string
+        :param models_2_detect: a list with the fully qualified names of the systems to parse 
+        (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
+        :type models_2_detect: list of string
         """
-        # one opening/closing file / system
-        parsed_systems = {}
-        systems_2_detect_dict = {}
-        for s in systems_2_detect:
-            systems_2_detect_dict[s] = None
-        
-        # one opening /closing file /system
-        systems_2_parse = self.system_to_parse(systems_2_detect_dict, parsed_systems)
+        # one opening/closing file / definition
+        parsed_defs = set()
+        models_2_detect = {s for s in models_2_detect}
+        # one opening /closing file /definition
+        defs_2_parse = self.definition_to_parse(models_2_detect, parsed_defs)
         msg = "\nSystem(s) to parse (recursive inclusion of 'system_ref'):"
         
-        for s in systems_2_parse:
+        for s in defs_2_parse:
             msg += "\n\t-{0}".format(s)
         _log.info(msg)
         
-        for system_name in systems_2_parse:
-            path = self.definitions_registry.get(system_name)
+        for def_fqn in defs_2_parse:
+            model_name = split_def_name(def_fqn)[0]
+            model_location = self.model_registry[model_name]
+            definition_location = model_location.get_definition(def_fqn)
+            path = definition_location.path
             if path is None:
                 raise MacsypyError("{0}: No such system definitions".format(path))
             tree = Et.parse(path)
-            system_node = tree.getroot()
-            sys = self._create_system(system_name, system_node)  # une ouverture par fichier
+            model_node = tree.getroot()
+            sys = self._create_system(def_fqn, model_node)  # one opening /closing file /definition
             self.system_bank.add_system(sys)
-            genes = self._create_genes(sys, system_node)
+            genes = self._create_genes(sys, model_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
+
+
         # Now, all systems related (e.g. via system_ref) to the one to detect are filled appropriately.
-        for system_name in systems_2_parse:   
-            system = self.system_bank[system_name]
-            path = os.path.join(self.cfg.def_dir, system_name + ".xml")
+        for def_fqn in defs_2_parse:
+            model = self.system_bank[def_fqn]
+            model_name = split_def_name(def_fqn)[0]
+            model_location = self.model_registry[model_name]
+            definition = model_location.get_definition(def_fqn)
+            path = definition.path
+
+            #path = os.path.join(self.cfg.def_dir, system_name + ".xml")
             tree = Et.parse(path)
             system_node = tree.getroot()
-            self._fill(system, system_node)
-        system_2_check = [self.system_bank[s] for s in systems_2_detect]
+            self._fill(model, system_node)
+        system_2_check = {self.system_bank[s] for s in models_2_detect}
         self.check_consistency(system_2_check)
 

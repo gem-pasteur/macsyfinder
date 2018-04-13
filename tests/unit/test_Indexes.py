@@ -13,10 +13,10 @@
 
 
 import os
+import platform
 import unittest
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
@@ -43,7 +43,7 @@ class Test(MacsyTest):
         # add only one handler to the macsypy logger
         from macsypy.database import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
@@ -52,10 +52,9 @@ class Test(MacsyTest):
                           db_type="gembase",
                           e_value_res=1,
                           i_evalue_sel=0.5,
-                          def_dir=os.path.join(self._data_dir, "DEF"),
+                          models_dir=os.path.join(self._data_dir, 'models'),
                           res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix=".search_hmm.out",
-                          profile_dir=os.path.join(self._data_dir, "profiles"),
+                          res_search_suffix="",
                           profile_suffix=".hmm",
                           res_extract_suffix="",
                           log_level=30,
@@ -77,11 +76,13 @@ class Test(MacsyTest):
         except:
             pass
 
+
     def test_find_hmmer_indexes_no_files(self):
         idx = Indexes(self.cfg)
         # tester pas de fichier
         hmmer_idx = idx.find_hmmer_indexes()
         self.assertListEqual(hmmer_idx, [])
+
 
     def test_find_hmmer_indexes_all_files(self):
         idx = Indexes(self.cfg)
@@ -202,7 +203,7 @@ class Test(MacsyTest):
        
         suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq')
         for s in suffixes:
-            new_idx = os.path.join( self.cfg.sequence_db + s)
+            new_idx = os.path.join(self.cfg.sequence_db + s)
             open(new_idx, 'w')
         idx = Indexes(self.cfg)
         idx.build(force=True)

@@ -10,6 +10,7 @@ variables:
 testing:
   stage: test
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+
   script:
     - python ${CI_PROJECT_DIR}/tests.py -vvv
   except:
@@ -24,6 +25,7 @@ coverage:
     - python-coverage run --source=macsypy tests.py --unit
     - python-coverage html
     - python-coverage report
+
   artifacts:
     paths:
       - htmlcov/
