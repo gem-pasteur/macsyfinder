@@ -384,6 +384,13 @@ new_options = (args.models_dir, args.models)
 if not args.systems and not args.models:
     parser.error("you MUST provided systems to search.")
 
+if not args.previous_run and not args.sequence_db:
+    parser.error("argument --sequence-db is required.")
+
+if not args.previous_run and not args.db_type:
+    parser.error("argument --db-type is required.")
+
+
 if args.systems and args.models:
     parser.error("""--models option is the new way to specify models to search.
 models as arguments is the old and DEPRECATED way to specify models.
