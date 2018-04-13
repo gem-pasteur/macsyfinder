@@ -68,7 +68,7 @@ class Indexes(object):
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db
         self.name = os.path.basename(cfg.sequence_db)
-        self._hmmer_indexes = None  # list of path
+        #self._hmmer_indexes = None  # list of path
         self._my_indexes = None  # path
 
     def build(self, force=False):
@@ -78,7 +78,7 @@ class Indexes(object):
         :param force: If True, force the index building even if the index files are present in the sequence dataset folder
         :type force: boolean
         """
-        hmmer_indexes = self.find_hmmer_indexes()
+        #hmmer_indexes = self.find_hmmer_indexes()
         my_indexes = self.find_my_indexes()
 
         ###########################
@@ -86,7 +86,7 @@ class Indexes(object):
         ###########################
         index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db))
 
-        if force or not hmmer_indexes or not my_indexes:
+        if force or not my_indexes:
             # formatdb create indexes in the same directory as the sequence_db
             # so it must be writable
             # if the directory is not writable, formatdb do a Segmentation fault
@@ -95,9 +95,9 @@ class Indexes(object):
                 _log.critical(msg)
                 raise IOError(msg)
 
-        if force or not hmmer_indexes:
-            # self._build_hmmer_indexes() is asynchron
-            hmmer_indexes_proc = self._build_hmmer_indexes()
+        # if force or not hmmer_indexes:
+        #     # self._build_hmmer_indexes() is asynchron
+        #     hmmer_indexes_proc = self._build_hmmer_indexes()
         if force or not my_indexes:
             # self._build_my_indexes() is synchron
             self._build_my_indexes()
@@ -106,19 +106,19 @@ class Indexes(object):
         # synchronization point between #
         # hmmer_indexes and my_indexes  #
         #################################
-        if force or not hmmer_indexes:
-            hmmer_indexes_proc.wait()
-            if hmmer_indexes_proc.returncode == 127:
-                msg = "neither makeblastdb nor formatdb can be found, check your config or install makeblastb"
-                _log.critical(msg, exc_info=True)
-                raise RuntimeError(msg)
-            if hmmer_indexes_proc.returncode != 0:
-                msg = "an error occurred during databases indexation see formatdb.log"
-                _log.critical(msg, exc_info=True)
-                raise RuntimeError(msg)
-        self._hmmer_indexes = self.find_hmmer_indexes()
+        # if force or not hmmer_indexes:
+        #     hmmer_indexes_proc.wait()
+        #     if hmmer_indexes_proc.returncode == 127:
+        #         msg = "neither makeblastdb nor formatdb can be found, check your config or install makeblastb"
+        #         _log.critical(msg, exc_info=True)
+        #         raise RuntimeError(msg)
+        #     if hmmer_indexes_proc.returncode != 0:
+        #         msg = "an error occurred during databases indexation see formatdb.log"
+        #         _log.critical(msg, exc_info=True)
+        #         raise RuntimeError(msg)
+        # self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
-        assert self._hmmer_indexes, "failed to create hmmer indexes"
+        # assert self._hmmer_indexes, "failed to create hmmer indexes"
         assert self._my_indexes, "failed create macsyfinder indexes"
 
 
