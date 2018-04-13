@@ -51,7 +51,6 @@ class Indexes(object):
     """
     Handle the indexes for macsyfinder:
 
-     - find the indexes for hmmer, or build them using formatdb or makeblastdb external tools
      - find the indexes required by macsyfinder to compute some scores, or build them.
     """
 
@@ -72,7 +71,7 @@ class Indexes(object):
 
     def build(self, force=False):
         """
-        Build the indexes from the sequence dataset in fasta format
+        Build the indexes from the sequence data set in fasta format
 
         :param force: If True, force the index building even if the index files are present in the sequence dataset folder
         :type force: boolean
