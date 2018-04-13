@@ -1627,8 +1627,6 @@ def disambiguate_cluster(cluster):
     :type cluster: :class:`macsypy.search_systems.Cluster`
 
     """
-    print "############################## disambiguate_cluster ###########################################"
-    print "### cluster", cluster
     res_clusters = []
     counter_genes_compat_systems = {}
     _log_out.info("Disambiguation step:")
@@ -1641,11 +1639,9 @@ def disambiguate_cluster(cluster):
     #print cluster.hits[0]
     #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
-        print "### h= ", h, " ####"
         #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
         compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
-        print "### compat_list", compat_list
         #print h
         #print "Hit's:"
         #print [syst.name for syst in compatible_systems]
@@ -1673,22 +1669,17 @@ def disambiguate_cluster(cluster):
                         counter_genes_compat_systems[syst.fqn] += len(cur_cluster.hits)
                     #print counter_genes_compat_systems
             else:
-                print "### compat_list =", compat_list, "and cur_cluster.state =", cur_cluster.state
                 # Update counts of compatibles systems for all the hits
                 #print "\nnope to store: "
                 #print cur_cluster
                 for h_clust in cur_cluster.hits:
                     #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
                     h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
-                    print "### L1699 h_compat=", h_compat
                     for syst in h_compat:
-                        print "#### syst", syst.fqn
-                        print "#### counter_genes_compat_systems", counter_genes_compat_systems
                         if not counter_genes_compat_systems.has_key(syst.fqn):
                             counter_genes_compat_systems[syst.fqn] = 1
                         else:
                             counter_genes_compat_systems[syst.fqn] += 1
-            print "#### counter_genes_compat_systems en sortie de boucle ", counter_genes_compat_systems
             cur_compatible = compatible_systems
             #print [syst.name for syst in cur_compatible]            
             cur_cluster = Cluster(cluster.systems_to_detect) # NEW
@@ -1697,7 +1688,6 @@ def disambiguate_cluster(cluster):
     cur_cluster.save()         
    
     # Check cluster status before storing it or not:
-    print "### 1716 cur_cluster.state ", cur_cluster.state
     if cur_cluster.state == "clear":
         #print "\nclear to store: "
         #print cur_cluster
@@ -1732,9 +1722,6 @@ def disambiguate_cluster(cluster):
         store = True
         print "r.compatible_systems", r.compatible_systems
         for c in r.compatible_systems:
-            print "####################################################################################################"
-            print "c =", c
-            print "c in counter_genes_compat_systems", c in counter_genes_compat_systems
             if c in counter_genes_compat_systems:
                 if counter_genes_compat_systems[c] != nb_genes:
                     store = False
@@ -1765,7 +1752,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     - check the QUORUM for each system to detect, *i.e.* mandatory + accessory - forbidden
 
     Only for \"ordered\" datasets representing a whole replicon.
-    Reports systems occurence.
+    Reports systems occurrences.
 
     :param clusters: the set of clusters to analyze
     :type clusters: :class:`macsypy.search_systems.ClustersHandler` 
@@ -1789,9 +1776,6 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
         _log_out.info("\n{0}".format(clust))
         #if clust.state == "clear":
         systems_to_consider = get_compatible_systems([system_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
-        print "################## systems_to_consider #######################"
-        print "###", clust
-        print "###", systems_to_consider
         if clust.state == "clear" and len(systems_to_consider) > 0:
             # Local Hits collector
             # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
