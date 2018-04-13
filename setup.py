@@ -725,11 +725,14 @@ def subst_vars(src, dst, vars):
 require_python = ['python (>=2.7, <3.0)']
 require_packages = []
 
+version='1.0.5'
 
 setup(name='macsyfinder',
-      version='1.0.4',
+      version=version,
       description="""MacSyFinder: Detection of macromolecular systems 
 in protein datasets using systems modelling and similarity search""",
+      url="https://github.com/gem-pasteur/macsyfinder",
+      download_url="https://bintray.com/gem-pasteur/MacSyFinder/download_file?file_path=macsyfinder-{}.tar.gz".format(version),
       author="Sophie Abby, Bertrand Néron",
       author_email="sabby@pasteur.fr, bneron@pasteur.fr",
       classifiers=[
@@ -753,7 +756,7 @@ in protein datasets using systems modelling and similarity search""",
       # file where some variable must be fix by install_conf
       fix_conf=['etc/macsyfinder.conf'],
       # file where some variable must be fix by macsyfinder_install
-      fix_prefix=['macsypy/config.py', 'macsypy/registries.py'],
+      fix_prefix=['macsypy/config.py', 'macsypy/registries.py', 'macsypy/__init__.py'],
       fix_viewer=['macsyview'],
       cmdclass={'build': check_and_build,
                 'build_scripts': build_scripts,

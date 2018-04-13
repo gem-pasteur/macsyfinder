@@ -23,7 +23,6 @@
 #################
 \.idea
 
-
 ##########################
 # Python complied source #
 ##########################
@@ -52,10 +51,18 @@ bin/formatdb.err
 macsypy/*_svg
 macsyfinder-201*
 
+####################
+# MacSyFinder data #
+####################
+data/macsyfinder/models/TXSS/*
+data/base/*
+
+
 ##############################
 # MacsyFinder generated file #
 ##############################
 MANIFEST
+
 uninstall.cfg
 uninstall_files
 

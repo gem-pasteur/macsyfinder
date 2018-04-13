@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.system import system_bank
 from macsypy.system import System
@@ -32,24 +31,24 @@ class Test(MacsyTest):
         # add only one handler to the macsypy logger
         from macsypy.system import _log
         macsy_log = _log.parent
-        log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
+        log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
         
-        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+        self.cfg = Config(hmmer_exe="",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type="gembase",
-                          hmmer_exe="",
                           e_value_res=1,
                           i_evalue_sel=0.5,
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
+                          models_dir=os.path.join(self._data_dir, 'models'),
                           res_search_dir=tempfile.gettempdir(),
                           res_search_suffix="",
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           profile_suffix=".hmm",
                           res_extract_suffix="",
                           log_level=30,
                           log_file=log_file
                           )
+
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -63,19 +62,19 @@ class Test(MacsyTest):
             pass
 
     def test_add_get_system(self):
-        system_name= 'foo'
-        self.assertRaises(KeyError, system_bank.__getitem__, system_name)
-        system_foo = System(self.cfg, system_name, 10)
+        model_name = 'foo'
+        self.assertRaises(KeyError, system_bank.__getitem__, model_name)
+        system_foo = System(self.cfg, model_name, 10)
         system_bank.add_system(system_foo)
-        self.assertTrue( isinstance( system_foo, System ))
-        self.assertEqual( system_foo, system_bank[system_name] )
+        self.assertTrue(isinstance(system_foo, System))
+        self.assertEqual(system_foo, system_bank[model_name])
 
     def test_contains(self):
         system_in = System(self.cfg, "foo", 10)
         system_bank.add_system(system_in)
         self.assertIn(system_in, system_bank)
         system_out = System(self.cfg, "bar", 10)
-        self.assertNotIn( system_out, system_bank)
+        self.assertNotIn(system_out, system_bank)
 
     def test_iter(self):
         systems = [System(self.cfg, 'foo', 10), System(self.cfg, 'bar', 10)]
@@ -93,4 +92,3 @@ class Test(MacsyTest):
         system_1 = system_bank[system_foo.name]
         system_2 = system_bank[system_foo.name]
         self.assertEqual(system_1, system_2)
-

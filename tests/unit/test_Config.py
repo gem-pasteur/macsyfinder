@@ -17,7 +17,6 @@ import shutil
 import time
 import tempfile
 import logging
-import platform
 
 from macsypy.config import Config
 from tests import MacsyTest
@@ -51,28 +50,17 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertFalse(self.cfg.build_indexes)
         self.tearDown()
 
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
-                  'build_indexes': True
-                  }
         config = Config(
-                cfg_file="nimportnaoik",
-                sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
-                db_type='gembase',
-                def_dir=os.path.join(self._data_dir, 'DEF'),
-                profile_dir=os.path.join(self._data_dir, 'profiles'),
-                res_search_dir=self.tmp_dir,
-                build_indexes=True
+            cfg_file="nimportnaoik",
+            sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+            db_type='gembase',
+            res_search_dir=self.tmp_dir,
+            build_indexes=True
         )
         self.assertTrue(config.build_indexes)
 
@@ -81,8 +69,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
@@ -92,8 +78,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir,
                           )
         self.assertEqual(self.cfg.coverage_profile, 0.5)
@@ -101,8 +85,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           coverage_profile=0.6,
                           res_search_dir=self.tmp_dir,
                           )
@@ -112,8 +94,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'coverage_profile': "foo",
                   'res_search_dir': self.tmp_dir
                   }
@@ -121,14 +101,22 @@ class Test(MacsyTest):
 
 
     def test_def_dir(self):
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertIsNone(self.cfg.def_dir)
+        self.tearDown()
+
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
-                  'def_dir': '/kjhdsjkg938268235764kjdsg',
+                  'def_dir': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
         self.assertRaises(ValueError, Config, **kwargs)
+        self.tearDown()
 
         def_dir = os.path.join(tempfile.gettempdir(), 'macsyfinder_DEF')
         if not os.path.exists(def_dir):
@@ -137,21 +125,43 @@ class Test(MacsyTest):
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
                           def_dir=def_dir,
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(def_dir, self.cfg.def_dir)
         shutil.rmtree(def_dir)
         self.tearDown()
-        def_dir = os.path.join(os.path.dirname(__file__), '..', 'data',  'DEF')
+
+
+    def test_models_dir(self):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=def_dir,
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
-        self.assertEqual(def_dir, self.cfg.def_dir)
+        self.assertIsNone(self.cfg.models_dir)
+        self.tearDown()
+
+        kwargs = {'cfg_file': "nimportnaoik",
+                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'db_type': 'gembase',
+                  'models_dir': 'foo',
+                  'res_search_dir': self.tmp_dir
+                  }
+        self.assertRaises(ValueError, Config, **kwargs)
+        self.tearDown()
+
+        models_dir = os.path.join(tempfile.gettempdir(), 'macsyfinder_models_dir')
+        if not os.path.exists(models_dir):
+            os.mkdir(models_dir)
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type='gembase',
+                          models_dir=models_dir,
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertEqual(models_dir, self.cfg.models_dir)
+        shutil.rmtree(models_dir)
+        self.tearDown()
 
 
     def test_e_value_res(self):
@@ -167,8 +177,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.e_value_res, 1)
@@ -176,8 +184,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           e_value_res=0.7,
                           res_search_dir=self.tmp_dir
                           )
@@ -186,8 +192,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'e_value_res': 0.7,
                   'i_evalue_sel': 1,
                   'res_search_dir': self.tmp_dir
@@ -199,8 +203,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
@@ -208,8 +210,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           hmmer_exe='truc',
                           res_search_dir=self.tmp_dir
                           )
@@ -220,8 +220,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.index_db_exe, 'makeblastdb')
@@ -229,8 +227,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           index_db_exe='truc',
                           res_search_dir=self.tmp_dir
                           )
@@ -241,8 +237,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'i_evalue_sel': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
@@ -250,8 +244,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.i_evalue_sel, 0.001)
@@ -259,8 +251,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           i_evalue_sel=0.7,
                           res_search_dir=self.tmp_dir
                           )
@@ -269,8 +259,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'e_value_res': 0.7,
                   'i_evalue_sel': 1,
                   'res_search_dir': self.tmp_dir
@@ -282,8 +270,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.db_type, 'gembase')
@@ -291,8 +277,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'foo',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'res_search_dir': self.tmp_dir
                   }
         self.assertRaises(ValueError, Config, **kwargs)
@@ -303,8 +287,7 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
+                  'models_dir': os.path.join(self._data_dir, 'models'),
                   'previous_run': 'foo',
                   'res_search_dir': out_dir
                   }
@@ -318,8 +301,7 @@ class Test(MacsyTest):
             cfg_base = Config(cfg_file="nimportnaoik",
                               sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                               db_type='gembase',
-                              def_dir=os.path.join(self._data_dir, 'DEF'),
-                              profile_dir=os.path.join(self._data_dir, 'profiles'),
+                              models_dir=os.path.join(self._data_dir, 'models'),
                               res_search_dir=self.tmp_dir
                               )
             self.assertIsNone(cfg_base.previous_run)
@@ -328,9 +310,7 @@ class Test(MacsyTest):
             time.sleep(1)
             new_cfg = Config(previous_run=cfg_base.working_dir)
             self.assertEqual(new_cfg.previous_run, cfg_base.working_dir)
-
         finally:
-
             # close loggers filehandles, so they don't block file deletion
             # in shutil.rmtree calls in Windows
             logging.shutdown()
@@ -345,31 +325,40 @@ class Test(MacsyTest):
 
 
     def test_profile_dir(self):
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertIsNone(self.cfg.def_dir)
+        self.tearDown()
+
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
                   'profile_dir': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
         self.assertRaises(ValueError, Config, **kwargs)
-        profile_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'profiles')
+        self.tearDown()
+
+        profile_dir = os.path.join(tempfile.gettempdir(), 'macsyfinder_PROFILE')
+        if not os.path.exists(profile_dir):
+            os.mkdir(profile_dir)
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
                           profile_dir=profile_dir,
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.profile_dir, profile_dir)
+        shutil.rmtree(profile_dir)
 
 
     def test_profile_suffix(self):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.profile_suffix, '.hmm')
@@ -378,8 +367,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           profile_suffix=profile_suffix,
                           res_search_dir=self.tmp_dir
                           )
@@ -390,8 +377,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.replicon_topology, 'circular')
@@ -399,8 +384,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           replicon_topology='linear',
                           res_search_dir=self.tmp_dir
                           )
@@ -409,8 +392,6 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'replicon_topology': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
@@ -422,8 +403,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           inter_gene_max_space=inter_gene_max_space,
                           res_search_dir=self.tmp_dir
                           )
@@ -437,8 +416,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           min_genes_required=min_genes_required,
                           res_search_dir=self.tmp_dir
                           )
@@ -451,8 +428,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           max_nb_genes=max_nb_genes,
                           res_search_dir=self.tmp_dir
                           )
@@ -466,8 +441,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           min_mandatory_genes_required=min_mandatory_genes_required,
                           res_search_dir=self.tmp_dir
                           )
@@ -481,8 +454,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           multi_loci=multi_loci,
                           res_search_dir=self.tmp_dir
                           )
@@ -495,8 +466,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.res_extract_suffix, '.res_hmm_extract')
@@ -505,8 +474,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_extract_suffix=res_extract_suffix,
                           res_search_dir=self.tmp_dir
                           )
@@ -517,23 +484,18 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
+                  'models_dir': os.path.join(self._data_dir, 'models'),
                   'res_search_dir': 'foo',
-                  'log_file': 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                  'log_file': os.devnull
                   }
         self.assertRaises(ValueError, Config, **kwargs)
         self.tearDown()
-
         res_search_dir = tempfile.gettempdir()
-
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=res_search_dir,
-                          log_file='NUL' if platform.system() == 'Windows' else '/dev/null'
+                          log_file=os.devnull
                           )
         self.assertEqual(self.cfg.res_search_dir, res_search_dir)
 
@@ -550,10 +512,8 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'out_dir': out_dir,
-                  'log_file': 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                  'log_file': os.devnull
                   }
         self.assertRaises(ValueError, Config, **kwargs)
         shutil.rmtree(out_dir)
@@ -563,10 +523,8 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           out_dir=out_dir,
-                          log_file='NUL' if platform.system() == 'Windows' else '/dev/null'
+                          log_file=os.devnull
                           )
         self.assertEqual(self.cfg.working_dir, out_dir)
 
@@ -575,8 +533,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(os.path.dirname(__file__), '..', 'data',  'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.res_search_suffix, '.search_hmm.out')
@@ -585,8 +541,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_suffix=res_search_suffix,
                           res_search_dir=self.tmp_dir
                           )
@@ -596,32 +550,26 @@ class Test(MacsyTest):
     def test_sequence_db(self):
         kwargs = {'cfg_file': "nimportnaoik",
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'worker_nb': '2.3',
                   'res_search_dir': self.tmp_dir,
-                  'log_file': 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                  'log_file': os.devnull
                   }
 
         self.assertRaises(ValueError, Config, **kwargs)
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': "foo",
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'worker_nb': '2.3',
                   'res_search_dir': self.tmp_dir,
-                  'log_file': 'NUL' if platform.system() == 'Windows' else '/dev/null'
+                  'log_file': os.devnull
                   }
         self.assertRaises(ValueError, Config, **kwargs)
         sequence_db = os.path.join(self._data_dir, "base", "test_base.fa")
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=sequence_db,
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir,
-                          log_file='NUL' if platform.system() == 'Windows' else '/dev/null'
+                          log_file=os.devnull
                           )
         self.assertEqual(self.cfg.sequence_db, sequence_db)
 
@@ -630,8 +578,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.worker_nb, 1)
@@ -639,8 +585,6 @@ class Test(MacsyTest):
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
                           db_type='gembase',
-                          def_dir=os.path.join(self._data_dir, 'DEF'),
-                          profile_dir=os.path.join(self._data_dir, 'profiles'),
                           res_search_dir=self.tmp_dir,
                           worker_nb=2
                           )
@@ -649,11 +593,8 @@ class Test(MacsyTest):
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
                   'res_search_dir': self.tmp_dir,
                   'worker_nb': '2.3'
                   }
         self.assertRaises(ValueError, Config, **kwargs)
-      
 

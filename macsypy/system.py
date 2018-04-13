@@ -16,6 +16,7 @@
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
 from .macsypy_error import SystemInconsistencyError
+from registries import split_def_name
 
 class SystemBank(object):
     """
@@ -54,12 +55,14 @@ class SystemBank(object):
         """
         return system in self._system_bank.values()
 
+
     def __iter__(self):
         """
         Return an iterator object on the systems contained in the bank
         """
         return self._system_bank.itervalues()
-    
+
+
     def __len__(self):
         """
         :return: the number of systems stored in the bank
@@ -77,7 +80,7 @@ class SystemBank(object):
         if system in self._system_bank:
             raise KeyError("a system named {0} is already registered in the systems' bank".format(system.name))
         else:
-            self._system_bank[system.name] = system
+            self._system_bank[system.fqn] = system
 
 system_bank = SystemBank()
 
@@ -93,7 +96,7 @@ class System(object):
 
     """
 
-    def __init__(self, cfg, name, inter_gene_max_space, min_mandatory_genes_required=None,
+    def __init__(self, cfg, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
         """
         :param cfg: the configuration object
@@ -112,7 +115,8 @@ class System(object):
         :type multi_loci: boolean
         """
         self.cfg = cfg
-        self.name = name
+        self.name = split_def_name(fqn)[-1]
+        self.fqn = fqn
         self._inter_gene_max_space = inter_gene_max_space
         self._min_mandatory_genes_required = min_mandatory_genes_required
         self._min_genes_required = min_genes_required
@@ -124,6 +128,22 @@ class System(object):
         self._mandatory_genes = []
         self._accessory_genes = []
         self._forbidden_genes = []
+
+    def __str__(self):
+        s = "name: {}\n".format(self.name)
+        s += "fqn: {}\n".format(self.fqn)
+        s += "==== mandatory genes ====\n"
+        for g in self._mandatory_genes:
+            s += "{}\n".format(g.name)
+        s += "==== accessory genes ====\n"
+        for g in self._accessory_genes:
+            s += "{}\n".format(g.name)
+        s += "==== forbidden genes ====\n"
+        for g in self._forbidden_genes:
+            s += "{}\n".format(g.name)
+        s += "============== end pprint system ================\n"
+        return s
+
 
     @property
     def inter_gene_max_space(self):
@@ -188,6 +208,7 @@ class System(object):
             return cfg_multi_loci
         else:
             return self._multi_loci
+
         
     def add_mandatory_gene(self, gene):
         """
@@ -198,6 +219,7 @@ class System(object):
         """
         self._mandatory_genes.append(gene)
 
+
     def add_accessory_gene(self, gene):
         """
         Add a gene to the list of accessory genes
@@ -206,6 +228,7 @@ class System(object):
         :type gene: :class:`macsypy.gene.Gene` object
         """
         self._accessory_genes.append(gene)
+
 
     def add_forbidden_gene(self, gene):
         """
@@ -216,6 +239,7 @@ class System(object):
         """
         self._forbidden_genes.append(gene)
 
+
     @property
     def mandatory_genes(self):
         """
@@ -224,6 +248,7 @@ class System(object):
         """
         return self._mandatory_genes
 
+
     @property
     def accessory_genes(self):
         """
@@ -231,6 +256,7 @@ class System(object):
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._accessory_genes
+
 
     @property
     def forbidden_genes(self):

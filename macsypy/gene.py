@@ -22,7 +22,7 @@ from subprocess import Popen
 from threading import Lock
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .macsypy_error import MacsypyError
-
+import registries
 
 class GeneBank(object):
     """
@@ -30,18 +30,20 @@ class GeneBank(object):
     """
     _genes_bank = {}
 
-    def __getitem__(self, name):
+    def __getitem__(self, key):
         """
-        :param name: the name of the Gene
-        :type name: string
-        :return: return the Gene corresponding to the name.
-          If the Gene already exists, return it, otherwise, build it and return it
+        :param key: The key to retrieve a gene.
+        The key is composed of the name of models family and the gene name.
+        for instance CRISPR-Cas/cas9_TypeIIB or TXSS/T6SS_tssH
+        :type name: tuple (string, string)
+        :return: return the Gene corresponding to the key.
         :rtype: :class:`macsypy.gene.Gene` object
+        :raise KeyError: if the key does not exist in GeneBank.
         """
-        if name in self._genes_bank:
-            return self._genes_bank[name]
-        else:
-            raise KeyError(name)
+        try:
+            return self._genes_bank[key]
+        except KeyError:
+            raise KeyError("No such gene {} in this bank".format(key))
 
 
     def __contains__(self, gene):
@@ -55,11 +57,13 @@ class GeneBank(object):
         """
         return gene in self._genes_bank.values()
 
+
     def __iter__(self):
         """
         Return an iterator object on the genes contained in the bank
         """
         return self._genes_bank.itervalues()
+
 
     def add_gene(self, gene):
         """
@@ -69,10 +73,13 @@ class GeneBank(object):
         :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
-        if gene in self._genes_bank:
-            raise KeyError("a gene named {0} is already registered".format(gene.name))
+        model_name = registries.split_def_name(gene.system.fqn)[0]
+        key = (model_name, gene.name)
+        if key in self._genes_bank:
+            raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
         else:
-            self._genes_bank[gene.name] = gene
+            self._genes_bank[key] = gene
+
 
 gene_bank = GeneBank()
 
@@ -85,7 +92,7 @@ class Gene(object):
 
     def __init__(self, cfg, name,
                  system,
-                 profiles_registry,
+                 model_location,
                  loner=False,
                  exchangeable=False,
                  multi_system=False,
@@ -99,8 +106,8 @@ class Gene(object):
         :type name: string.
         :param system: the system that owns this Gene
         :type system: :class:`macsypy.system.System` object.
-        :param profiles_registry: where all the paths profiles where register.
-        :type profiles_registry: :class:`macsypy.registries.ProfilesRegistry` object.
+        :param model_loc: where all the paths profiles and definitions are register for a kind of model.
+        :type model_loc: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
@@ -112,7 +119,7 @@ class Gene(object):
         :type inter_gene_max_space: integer
         """
         self.name = name 
-        self.profile = profile_factory.get_profile(self, cfg, profiles_registry)
+        self.profile = profile_factory.get_profile(self, cfg, model_location)
         """:ivar profile: The HMM protein Profile corresponding to this gene :class:`macsypy.gene.Profile` object"""
 
         self.homologs = []
@@ -215,6 +222,7 @@ class Gene(object):
         """
         return self.homologs
 
+
     def add_analog(self, analog):
         """
         Add an analogous gene to the Gene
@@ -231,6 +239,7 @@ class Gene(object):
         :type: list of :class:`macsypy.gene.Analog` object
         """
         return self.analogs
+
 
     def __eq__(self, gene):
         """
@@ -349,12 +358,9 @@ class Gene(object):
         :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
         :type include_forbidden: boolean
         :return: the list of compatible systems
-        :rtype: list of string, or void list if none compatible
+        :rtype: list of :class:`macsypy.system.System` objects, or void list if none compatible
         """
-        compatibles = []
-        for s in system_list:
-            if self.is_authorized(s, include_forbidden):
-                compatibles.append(s)
+        compatibles = [s for s in system_list if self.is_authorized(s, include_forbidden)]
         return compatibles
 
 
@@ -382,12 +388,14 @@ class Homolog(object):
     def __getattr__(self, name):
         return getattr(self.gene, name)
 
+
     def is_aligned(self):
         """
         :return: True if this gene homolog is aligned to its homolog, False otherwise.
         :rtype: boolean
         """
         return self.aligned
+
 
     @property
     def gene_ref(self):
@@ -415,8 +423,10 @@ class Analog(object):
 
         self.ref = gene_ref 
 
+
     def __getattr__(self, name):
         return getattr(self.gene, name)
+
 
     @property
     def gene_ref(self):
@@ -438,7 +448,7 @@ class ProfileFactory(object):
     """
     _profiles = {}
 
-    def get_profile(self, gene, cfg, profiles_registry):
+    def get_profile(self, gene, cfg, model_location):
         """
         :param gene: the gene associated to this profile
         :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
@@ -449,15 +459,18 @@ class ProfileFactory(object):
                  If the profile already exists, return it. Otherwise build it, store it and return it.
         :rtype: :class:`macsypy.gene.Profile` object
         """
-        if gene.name in self._profiles:
-            profile = self._profiles[gene.name]
+        key = (model_location.name, gene.name)
+        if key in self._profiles:
+            profile = self._profiles[key]
         else:
-            path = profiles_registry.get(gene.name)
-            if path is None:
+            try:
+                path = model_location.get_profile(gene.name)
+            except KeyError:
                 raise MacsypyError("{0}: No such profile".format(gene.name))
             profile = Profile(gene, cfg, path)
-            self._profiles[gene.name] = profile
+            self._profiles[key] = profile
         return profile
+
 
 profile_factory = ProfileFactory()
 
@@ -485,12 +498,14 @@ class Profile(object):
         self._report = None
         self._lock = Lock()
 
+
     def __len__(self):
         """
         :return: the length of the HMM protein profile
         :rtype: int
         """
         return self.len
+
 
     def _len(self):
         """
@@ -504,6 +519,7 @@ class Profile(object):
                     length = int(l.split()[1])
                     break
         return length
+
 
     def __str__(self):
         """

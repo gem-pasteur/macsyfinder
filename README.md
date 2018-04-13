@@ -1,11 +1,9 @@
 MacSyFinder
 ===========
 
-[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)]
-(https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
-[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)]
-(https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
-[![Documentation]()https://img.shields.io/badge/style-plastic-blue.svg?style=plastic
+[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
+[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
@@ -67,7 +65,6 @@ Installation from repository
  Please be careful, MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
  
  
- 
 Unit tests with Travis-CI
 -------------------------
  [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
@@ -85,9 +82,16 @@ Documentation
 You will find complete documentation for setting up your project.
 for the development version on gitlab pages
 
-[![Doc] (https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
+[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
 
 
 for public version on readthedocs
 
-[![Doc] (https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+[![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+
+
+Note
+----
+
+The `setsid` binary in *utils* directory is used only for functional tests on macosx. 
+The binary has been build using the [setsid-macosx](https://github.com/tzvetkoff/setsid-macosx) project.
