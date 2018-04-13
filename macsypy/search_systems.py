@@ -1819,7 +1819,8 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             break
             if store_scattered:
                 _log_out.info("=> Putative {} locus stored for later treatment of scattered systems.".format(clust.compatible_systems[0]))
-
+                systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
+                
         elif clust.state == "ambiguous":
             # Implement a way to "clean" the clusters. For instance :
             # - split the cluster in two if it seems that two systems are nearby
