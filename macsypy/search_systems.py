@@ -1629,6 +1629,7 @@ def disambiguate_cluster(cluster):
 
     """
     res_clusters = []
+    # This object counts how many different genes were found for each "compatible" system
     counter_genes_compat_systems = {}
     _log_out.info("Disambiguation step:")
 
@@ -1771,6 +1772,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     systems_occurences_scattered = {}
     systems_occurences_list = []
 
+    # Stores System objects in a dictionary which keys are the fully qualified name of the system
     syst_dict = {}
     for system in systems:
         ### Should'nt this be done only for multi-loci systems? CHECK!
@@ -1787,6 +1789,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
             #print clust.compatible_systems
             # Arbitrarily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
+            # For code refactoring: the "first" variable is useless, store_scattered could be used instead.
             first = True
             #store_scattered=True
             store_scattered = False
@@ -1814,7 +1817,8 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                         if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
                             # Do not do it if the so has a forbidden gene !!!
-                            # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
+                            # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop !
+                            # For code refactoring: condition could be changed by "if not store_scattered:"
                             if first:
                                 store_clust = clust
                                 store_scattered = True
@@ -1825,7 +1829,6 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                             break
             if store_scattered:
                 _log_out.info("=> Putative {} locus stored for later treatment of scattered systems.".format(clust.compatible_systems[0]))
-                systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
 
         elif clust.state == "ambiguous":
             # Implement a way to "clean" the clusters. For instance :
