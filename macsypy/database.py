@@ -68,7 +68,6 @@ class Indexes(object):
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db
         self.name = os.path.basename(cfg.sequence_db)
-        #self._hmmer_indexes = None  # list of path
         self._my_indexes = None  # path
 
     def build(self, force=False):
@@ -78,7 +77,6 @@ class Indexes(object):
         :param force: If True, force the index building even if the index files are present in the sequence dataset folder
         :type force: boolean
         """
-        #hmmer_indexes = self.find_hmmer_indexes()
         my_indexes = self.find_my_indexes()
 
         ###########################
@@ -95,70 +93,10 @@ class Indexes(object):
                 _log.critical(msg)
                 raise IOError(msg)
 
-        # if force or not hmmer_indexes:
-        #     # self._build_hmmer_indexes() is asynchron
-        #     hmmer_indexes_proc = self._build_hmmer_indexes()
-        if force or not my_indexes:
-            # self._build_my_indexes() is synchron
             self._build_my_indexes()
 
-        ################################# 
-        # synchronization point between #
-        # hmmer_indexes and my_indexes  #
-        #################################
-        # if force or not hmmer_indexes:
-        #     hmmer_indexes_proc.wait()
-        #     if hmmer_indexes_proc.returncode == 127:
-        #         msg = "neither makeblastdb nor formatdb can be found, check your config or install makeblastb"
-        #         _log.critical(msg, exc_info=True)
-        #         raise RuntimeError(msg)
-        #     if hmmer_indexes_proc.returncode != 0:
-        #         msg = "an error occurred during databases indexation see formatdb.log"
-        #         _log.critical(msg, exc_info=True)
-        #         raise RuntimeError(msg)
-        # self._hmmer_indexes = self.find_hmmer_indexes()
         self._my_indexes = self.find_my_indexes()
-        # assert self._hmmer_indexes, "failed to create hmmer indexes"
         assert self._my_indexes, "failed create macsyfinder indexes"
-
-
-    def find_hmmer_indexes(self):
-        """
-        :return: The hmmer index files. 
-                 If indexes are inconsistent (some file(s) missing), a Runtime Error is raised
-        :rtype: list of string 
-        """
-        suffixes = ('.phr', '.pin', '.psd', '.psi', '.psq', '.pal')
-        idx = []
-        file_nb = 0
-        for suffix in suffixes:
-            index_files = glob("{0}*{1}".format(self._fasta_path, suffix))
-            nb_of_index = len(index_files)
-            if suffix != '.pal':
-                if file_nb and file_nb != nb_of_index:
-                    msg = "some index files are missing.\
- Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
-                    _log.critical(msg)
-                    raise RuntimeError(msg)
-            else:
-                if nb_of_index > 1:
-                    msg = "too many .pal file.\
- Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
-                    _log.critical(msg)
-                    raise RuntimeError(msg)
-                elif file_nb > 1 and nb_of_index == 0:
-                    msg = "some index files are missing.\
- Delete all index files (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
-                    _log.critical(msg)
-                    raise RuntimeError(msg)
-                elif file_nb == 1 and nb_of_index == 1:
-                    msg = "a virtual index is detected (.pal) but there is only one file per index type.\
- Delete all index files  (*.phr, *.pin, *.psd, *.psi, *.psq, *.pal) and try to rebuild them."
-                    _log.critical(msg)
-                    raise RuntimeError(msg)
-            idx.extend(index_files)
-            file_nb = nb_of_index
-        return idx
 
 
     def find_my_indexes(self):
@@ -169,48 +107,6 @@ class Indexes(object):
         path = os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
         if os.path.exists(path):
             return path
-
-
-    def _build_hmmer_indexes(self):
-        """
-        build the index files for hmmer using the formatdb or makeblastdb tool
-        """
-        index_dir = os.path.dirname(self.cfg.sequence_db)
-        if self.cfg.index_db_exe.find('makeblast') != -1:
-            command = "{0} -title {1} -in {2} -dbtype prot -parse_seqids".format(self.cfg.index_db_exe,
-                                                                                 self.name,
-                                                                                 self.cfg.sequence_db)
-        elif self.cfg.index_db_exe.find('formatdb') != -1:
-            # -t  Title for database file [String]
-            # -i Input file(s) for formatting [File In]
-            # -p T Type of file = protein
-            # -o T Parse SeqId and create indexes.
-            # -s T Create indexes limited only to accessions
-            command = "{db_indexer} -t {db_name} -i {db_file} -p T -o T -s T".format(db_indexer=self.cfg.index_db_exe,
-                                                                                     db_name=self.name,
-                                                                                     db_file=self.cfg.sequence_db
-                                                                                    )
-        else:
-            raise MacsypyError("{0} is not supported to index the sequence dataset.\
- Please use makeblastdb or formatdb.".format(self.cfg.sequence_db))
-
-        _log.debug("hmmer index command: {0}".format(command))
-        err_path = os.path.join(index_dir, "formatdb.err")
-        with  open(err_path, 'w') as err_file:
-            try:
-                formatdb = Popen(command,
-                                 shell=True,
-                                 stdout=err_file,
-                                 stdin=None,
-                                 stderr=err_file,
-                                 close_fds=False,
-                                 )
-            except Exception as err:
-                msg = "unable to index the sequence dataset : {0} : {1}".format(command, err)
-                _log.critical(msg, exc_info=True)
-                raise err
-            return formatdb
-
 
     def _build_my_indexes(self):
         """
