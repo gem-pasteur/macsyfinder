@@ -87,7 +87,13 @@ system_bank = SystemBank()
 
 class System(object):
     """
-    Handle a secretion system.
+    Handles a macromolecular system.
+
+    Contains all its pre-defined characteristics expected to be fulfilled to predict a complete system:
+        - component list (genes that are required, accessory, forbidden)
+        - quorum (number of genes)
+        - genetic architecture
+
     """
 
     def __init__(self, cfg, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
@@ -237,7 +243,7 @@ class System(object):
     @property
     def mandatory_genes(self):
         """
-        :return: the list of genes that are mandatory in this secretion system
+        :return: the list of genes that are mandatory in this macromolecular system
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._mandatory_genes
@@ -246,7 +252,7 @@ class System(object):
     @property
     def accessory_genes(self):
         """
-        :return: the list of genes that are allowed in this secretion system
+        :return: the list of genes that are allowed in this macromolecular system
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._accessory_genes
@@ -255,7 +261,7 @@ class System(object):
     @property
     def forbidden_genes(self):
         """
-        :return: the list of genes that are forbidden in this secretion system
+        :return: the list of genes that are forbidden in this macromolecular system
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._forbidden_genes

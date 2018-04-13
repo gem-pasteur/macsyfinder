@@ -98,11 +98,9 @@ class ClustersHandler(object):
             if len(end_hits) == 2:
                 first = end_hits[0]
                 second = end_hits[1]
-                # if(first.gene.position > second.gene.position): # Genes do not have positions ! But Hits do!
                 if(first.position > second.position):
                     tmp = first
                     first = second
-                    # second = first
                     second = tmp
                 dist = second.position - pos_min + pos_max - first.position 
                 if(dist <= max(first.gene.inter_gene_max_space, second.gene.inter_gene_max_space)):
@@ -168,7 +166,6 @@ class ClustersHandler(object):
                 msg = "--- Two clusters should be merged into a new cluster \"circularized\" !\n"
                 # The "1st" cluster on the replicon is removed,
                 # as its hits will be appended to the "last" cluster on the replicon.
-                #self.clusters.pop(0) 
                 for h in clust_first.hits:
                     clust_last.add(h)
                 self.clusters.pop(0) 
@@ -291,17 +288,19 @@ class Cluster(object):
         Check the status of the cluster regarding systems which have hits in it. 
         Update systems represented, and assign a putative system (self._putative_system),
         which is the system with most hits in the cluster.
-        The systems represented are stored in a dictionary in the self.systems variable. 
+        The systems represented are stored in a dictionary in the self.systems variable.
+        The list of compatible systems is created
+
         The execution of this function can be forced, even if it has already run
         for the cluster with the option force=True.
         """
         if not self.putative_system or force:
             # First compute the "Majoritary" system
-            systems = {} # Counter of occcurrences of systems in the cluster (keys are systems' names)
+            systems = {} # Counter of occurrences of systems in the cluster (keys are systems' names)
             genes = []
-            #systems_object={} # Store systems object. # To be replaced by "system_bank"? Yep ! done
 
             # Version with hits "reference" systems
+            # Two below "for" now useless?
             for h in self.hits:
                 syst_fqn = h.system.fqn
                 systems[syst_fqn] = systems.get(syst_fqn, 0) + 1
@@ -320,12 +319,10 @@ class Cluster(object):
             self._putative_system = tmp_syst_fqn # Remove cause useless?
             
             # NEW Version with hits all "compatible" systems
-            systems_compat = {} # Counter of occcurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
+            systems_compat = {} # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
             for h in self.hits:
-                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect) # Need the list of systems (obj!) to be detected... in the cfg?
                 # Now exclude forbidden genes from those that define the list of compatible systems
                 syst_list = h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
-                #syst_list=h.gene.get_compatible_systems(self.systems_to_detect, True) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before yep
                 for syst in syst_list:
                     syst_fqn = syst.fqn
                     systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
@@ -345,21 +342,18 @@ class Cluster(object):
                 # even if they are tolerated in the cluster.
                 # Also deal with foreign "exchangeable" genes for the same reasons... NB !!
                 # Maybe just not add the system to the list if exchangeable?
-                #if len(systems.keys()) == 1:
                 if len(systems_compat.keys()) == 1:
                     self._state = "clear"
-                    #syst = systems.keys()[0]
                     syst = systems_compat.keys()[0]
                     #print syst
                     self._putative_system = syst
-                    #self._compatible_systems.append(system_bank[syst])
                     # Store only compatible systems that are searched for !!
                     self._compatible_systems.append(syst)
                 else:
                     # Check for foreign "accessory" genes regarding the majoritary system...
                     # They might increase nb of systems predicted in the cluster artificially,
                     # even if they are tolerated in the cluster.
-                    # For that need to scan again all hits and ask wether they are accessory foreign genes.
+                    # For that need to scan again all hits and ask whether they are accessory foreign genes.
                     def try_system(hits, putative_system, counter_systems_in_clust):
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
@@ -382,7 +376,7 @@ class Cluster(object):
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
                             #if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
-                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system has to be considered!
+                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system have to be considered!
                                 auth += 1
                             #if h.gene.is_forbidden(system_bank[putative_system]):
                             #    forbid +=1
@@ -1627,9 +1621,8 @@ def disambiguate_cluster(cluster):
     :type cluster: :class:`macsypy.search_systems.Cluster`
 
     """
-    print "############################## disambiguate_cluster ###########################################"
-    print "### cluster", cluster
     res_clusters = []
+    # This object counts how many different genes were found for each "compatible" system
     counter_genes_compat_systems = {}
     _log_out.info("Disambiguation step:")
 
@@ -1641,11 +1634,9 @@ def disambiguate_cluster(cluster):
     #print cluster.hits[0]
     #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
-        print "### h= ", h, " ####"
         #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
         compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
-        print "### compat_list", compat_list
         #print h
         #print "Hit's:"
         #print [syst.name for syst in compatible_systems]
@@ -1673,22 +1664,17 @@ def disambiguate_cluster(cluster):
                         counter_genes_compat_systems[syst.fqn] += len(cur_cluster.hits)
                     #print counter_genes_compat_systems
             else:
-                print "### compat_list =", compat_list, "and cur_cluster.state =", cur_cluster.state
-                # Update counts of compatibles systems for all the hits
+                # Update counts of compatible systems for all the hits
                 #print "\nnope to store: "
                 #print cur_cluster
                 for h_clust in cur_cluster.hits:
                     #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
                     h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
-                    print "### L1699 h_compat=", h_compat
                     for syst in h_compat:
-                        print "#### syst", syst.fqn
-                        print "#### counter_genes_compat_systems", counter_genes_compat_systems
                         if not counter_genes_compat_systems.has_key(syst.fqn):
                             counter_genes_compat_systems[syst.fqn] = 1
                         else:
                             counter_genes_compat_systems[syst.fqn] += 1
-            print "#### counter_genes_compat_systems en sortie de boucle ", counter_genes_compat_systems
             cur_compatible = compatible_systems
             #print [syst.name for syst in cur_compatible]            
             cur_cluster = Cluster(cluster.systems_to_detect) # NEW
@@ -1697,7 +1683,6 @@ def disambiguate_cluster(cluster):
     cur_cluster.save()         
    
     # Check cluster status before storing it or not:
-    print "### 1716 cur_cluster.state ", cur_cluster.state
     if cur_cluster.state == "clear":
         #print "\nclear to store: "
         #print cur_cluster
@@ -1732,9 +1717,6 @@ def disambiguate_cluster(cluster):
         store = True
         print "r.compatible_systems", r.compatible_systems
         for c in r.compatible_systems:
-            print "####################################################################################################"
-            print "c =", c
-            print "c in counter_genes_compat_systems", c in counter_genes_compat_systems
             if c in counter_genes_compat_systems:
                 if counter_genes_compat_systems[c] != nb_genes:
                     store = False
@@ -1765,14 +1747,14 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     - check the QUORUM for each system to detect, *i.e.* mandatory + accessory - forbidden
 
     Only for \"ordered\" datasets representing a whole replicon.
-    Reports systems occurence.
+    Reports systems occurrences, i.e., identified systems from the clusters given as an input.
 
     :param clusters: the set of clusters to analyze
     :type clusters: :class:`macsypy.search_systems.ClustersHandler` 
     :param systems: the set of systems to detect
     :type systems: a list of :class:`macsypy.system.System`
     :param multi_systems_genes: a dictionary with genes that could belong to multiple systems (keys are system names)
-    :return: a set of systems occurence filled with hits found in clusters
+    :return: a set of systems occurrence filled with hits found in clusters
     :rtype: a list of :class:`macsypy.search_systems.SystemOccurence` 
 
     """
@@ -1780,40 +1762,44 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     systems_occurences_scattered = {}
     systems_occurences_list = []
 
+    # Stores System objects in a dictionary which keys are the fully qualified name of the system
     syst_dict = {}
     for system in systems:
+        ### Should'nt this be done only for multi-loci systems? CHECK!
         syst_dict[system.fqn] = system
         systems_occurences_scattered[system.fqn] = SystemOccurence(system)
 
     for clust in clusters.clusters:
         _log_out.info("\n{0}".format(clust))
         #if clust.state == "clear":
+        # Get the intersection of compatible systems and systems to detect
         systems_to_consider = get_compatible_systems([system_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
-        print "################## systems_to_consider #######################"
-        print "###", clust
-        print "###", systems_to_consider
+        # For code refactoring: maybe the two conditions below are redundant?
         if clust.state == "clear" and len(systems_to_consider) > 0:
-            # Local Hits collector
-            # Check the putative system belongs to the list of systems to detect !! If it does not, do not go further with this cluster of genes.
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
             #print clust.compatible_systems
-            # Arbitratily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
+            # Arbitrarily, if none of the set of compatible_systems pass the decision rule step, then the 1st system will store a scattered version of this...
+            # For code refactoring: the "first" variable is useless, store_scattered could be used instead.
             first = True
             #store_scattered=True
             store_scattered = False
             store_clust = None
-            #store_so = None # unused_var
-            #store_msg = "" # unused_var
-            #exclude = False # unused_var
-            #for putative_system in clust.compatible_systems:
+
+            # Candidate systems are explored from a list ordered by priority
+            # ? IMPORTANT TO check they are really ordered as needed!
             for putative_system in [s.fqn for s in systems_to_consider]:
                 _log_out.info("Considering {}: ".format(putative_system))
+                # If the candidate system is in the list of systems searched
+                # ? Isn't that always the case by construction of systems_to_consider??! For code refactoring: following 'if' statement useless?
+                # YES! remove the following 'if'!
                 if putative_system in syst_dict:
+                    # An occurrence of this system is created and filled with genes from the cluster, or from multi-system genes stored.
                     so = SystemOccurence(syst_dict[putative_system])
                     so.fill_with_cluster(clust)
                     # NEW!
                     if putative_system in multi_systems_genes:
                         so.fill_with_multi_systems_genes(multi_systems_genes[putative_system])
+                    # The decision rule is applied
                     msg = so.decision_rule()
                     so_state = so.state
                     _log_out.info("-> {}".format(so_state))
@@ -1821,7 +1807,8 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
                         if so_state != "single_locus":
                             # Store it to pool genes found with genes from other clusters.
                             # Do not do it if the so has a forbidden gene !!!
-                            # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop ! 
+                            # NEW !! Now do not do this at the 1st try ! only if not complete is stored in the loop !
+                            # For code refactoring: condition could be changed by "if not store_scattered:"
                             if first:
                                 store_clust = clust
                                 store_scattered = True
@@ -1833,7 +1820,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             if store_scattered:
                 _log_out.info("=> Putative {} locus stored for later treatment of scattered systems.".format(clust.compatible_systems[0]))
                 systems_occurences_scattered[clust.compatible_systems[0]].fill_with_cluster(store_clust)
-
+                
         elif clust.state == "ambiguous":
             # Implement a way to "clean" the clusters. For instance :
             # - split the cluster in two if it seems that two systems are nearby
@@ -1942,28 +1929,33 @@ def build_clusters(hits, systems_to_detect, rep_info):
         else:
             # Storage of the previous cluster
             if len(cur_cluster) > 1:
-                # print "quatre - ADD cur_cluster"
-                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+                #print cur_cluster
+                #print "quatre - ADD cur_cluster"
+                # This calls the save() function of the Cluster()
+                clusters.add(cur_cluster) # Add an in-depth copy of the object?
 
                 cur_cluster = Cluster(systems_to_detect)
                 loner_state = False
 
-            elif len(cur_cluster) == 1 and loner_state is True:  # WTF?
-                # print cur_cluster
-                # print "cinq - ADD cur_cluster"
-                # print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
-                clusters.add(cur_cluster) # Add an in-depth copy of the object? 
+            elif len(cur_cluster) == 1 and loner_state is True: # WTF?
+                # For code refactoring, merge with above "if": same instructions are applied.
+                #print cur_cluster
+                #print "cinq - ADD cur_cluster"
+                #print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
+                clusters.add(cur_cluster) # Add an in-depth copy of the object?
 
                 cur_cluster = Cluster(systems_to_detect)
                 loner_state = False
 
             if prev.gene.loner:
+                # The "prev" loner gene is stored
                 #print "six - check"
                 #print "PREVLONER ?? {0} {1}".format(prev.id, prev.gene.name)
 
                 if positions.count(prev.position) == 0:
                     #print "six - ADD prev in cur_cluster, ADD cur_cluster"
                     cur_cluster.add(prev)
+                    # This calls the save() function of the Cluster()
                     clusters.add(cur_cluster)
 
                     # New : Storage of multi_system genes:
@@ -1981,6 +1973,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
         #print "Recap clusters"
+        # This calls the save() function of the Cluster()
         clusters.add(cur_cluster)
 
     # Deal both with the case of single loner hits, and of last hits that are loners... YES!
@@ -1988,6 +1981,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
     if len(cur_cluster) == 0 and prev.gene.loner:
         #print "FIFO or LIFO?"
         cur_cluster.add(prev)
+        # This calls the save() function of the Cluster()
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
         if prev.gene.multi_system:
