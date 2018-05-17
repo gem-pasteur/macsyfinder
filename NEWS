@@ -1,5 +1,12 @@
 CHANGES IN
 
+RELEASE 1.0.5
+
+# fix installation on MacOsX 'sierra' and 'High Sierra'.
+  Now macsyfinder is installed in /usr/local by default
+
+# fix functional tests on MacOsX
+
 RELEASE 1.0.3
 
 # fix unit tests
