@@ -8,7 +8,14 @@ Steps to reproduce
 ------------------
 
 (How one can reproduce the issue - this is very important)
+do not forget to add input data to reproduce the bug
 
+Operating System
+-----------------
+
+[] Linux
+[] Mac
+[] Windows
 
 What is the current bug behavior?
 ---------------------------------
