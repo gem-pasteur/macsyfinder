@@ -1,0 +1,50 @@
+stages:
+  - test
+  - coverage
+  - pages
+
+variables:
+  MACSY_HOME: ${CI_PROJECT_DIR}
+  MACSY_VERSION: ${CI_COMMIT_REF_NAME}
+
+testing:
+  stage: test
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+  script:
+    - python ${CI_PROJECT_DIR}/tests.py -vvv
+  except:
+    - /^feat.*$/
+    - /^fix.*$/
+
+coverage:
+  stage: coverage
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
+  script:
+    - cd ${CI_PROJECT_DIR}
+    - python-coverage run --source=macsypy tests.py --unit
+    - python-coverage html
+    - python-coverage report
+  artifacts:
+    paths:
+      - htmlcov/
+  except:
+    - /^feat.*$/
+    - /^fix.*$/
+
+pages:
+  stage: pages
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
+  dependencies:
+    - coverage
+  script:
+    - cd ${CI_PROJECT_DIR}/doc/
+    - make html
+    - cd ${CI_PROJECT_DIR}
+    - mv ${CI_PROJECT_DIR}/doc/_build/html/ public
+    - mv htmlcov public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+

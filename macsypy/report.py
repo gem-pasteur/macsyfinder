@@ -195,6 +195,12 @@ class HMMReport(object):
                 else:
                     fields = line.split()
                     try:
+                        # fields[2] = score
+                        # fields[5] = i_evalue
+                        # fields[6] = hmmfrom
+                        # fields[7] = hmm to
+                        # fields[9] = alifrom
+                        # fields[10] = ali to
                         if len(fields) > 1 and float(fields[5]) <= i_evalue_sel:
                             cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
                             begin = int(fields[9])

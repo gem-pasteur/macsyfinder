@@ -19,20 +19,18 @@ import sys
 import unittest
 
 
-def run(lib, tests, verbosity=0):
+def run(macsy_home, tests, verbosity=0):
     """
-    run the unit tests and print the results on stderr
+    run the functional tests and print the results on stderr
     
-    :param lib: the path where is the macsypy
-    :type lib: string
     :param tests: the name of test to run. if tests is empty list, discover recursively tests form this directory.
                   a test is python module with the test_*.py pattern
     :type tests: list of string
     :param verbosity: the verbosity of the output
     :type verbosity: int
     """
-    if lib not in sys.path:
-        sys.path.insert(0, lib)
+    if macsy_home not in sys.path:
+        sys.path.insert(0, macsy_home)
     if not tests:
         suite = unittest.TestLoader().discover(os.path.dirname(__file__), pattern="test_*.py")
     else:
