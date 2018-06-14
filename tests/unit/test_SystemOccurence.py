@@ -12,15 +12,11 @@
 ################################################################################
 
 
-
 import os
 import shutil
 import tempfile
-import platform
 import logging
-from macsypy.report import Hit
 from macsypy.config import Config
-from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.search_systems import SystemOccurence
 from macsypy.registries import ModelRegistry
@@ -54,10 +50,11 @@ class Test(MacsyTest):
                           log_file=log_file
                          )
 
-  
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
+
+
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
