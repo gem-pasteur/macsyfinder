@@ -41,11 +41,11 @@ class Test(MacsyTest):
         macsy_log.addHandler(log_handler)
         
         self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type="gembase",
                           e_value_res=1,
                           i_evalue_sel=0.5,
-                          models_dir=os.path.join(self._data_dir, 'models'),
+                          models_dir=self.find_data('models'),
                           res_search_dir=tempfile.gettempdir(),
                           res_search_suffix=".search_hmm.out",
                           profile_suffix=".hmm",
@@ -78,7 +78,7 @@ class Test(MacsyTest):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
-        shutil.copy(os.path.join(self._data_dir, "hmm", gene_name + self.cfg.res_search_suffix),
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
                     self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
@@ -88,7 +88,7 @@ class Test(MacsyTest):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
-        shutil.copy(os.path.join(self._data_dir, "hmm", gene_name + self.cfg.res_search_suffix),
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
                     self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = GembaseHMMReport(gene, report_path, self.cfg)
@@ -116,7 +116,7 @@ class Test(MacsyTest):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
-        shutil.copy(os.path.join(self._data_dir, "hmm", gene_name + self.cfg.res_search_suffix),
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
                     self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         reports = []
@@ -162,7 +162,7 @@ class Test(MacsyTest):
         system = System(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
-        shutil.copy(os.path.join(self._data_dir, "hmm", gene_name + self.cfg.res_search_suffix),
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
                     self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = GembaseHMMReport(gene, report_path, self.cfg)

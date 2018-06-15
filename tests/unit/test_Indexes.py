@@ -48,11 +48,11 @@ class Test(MacsyTest):
         macsy_log.addHandler(log_handler)
         
         self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type="gembase",
                           e_value_res=1,
                           i_evalue_sel=0.5,
-                          models_dir=os.path.join(self._data_dir, 'models'),
+                          models_dir=self.find_data('models'),
                           res_search_dir=tempfile.gettempdir(),
                           res_search_suffix="",
                           profile_suffix=".hmm",
