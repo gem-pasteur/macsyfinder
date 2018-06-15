@@ -37,7 +37,7 @@ class Test(MacsyTest):
         macsy_log.addHandler(log_handler)
 
         self.cfg = Config(hmmer_exe="",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type="gembase",
                           e_value_res=1,
                           i_evalue_sel=0.5,
@@ -46,7 +46,7 @@ class Test(MacsyTest):
                           profile_suffix=".hmm",
                           res_extract_suffix="",
                           log_level=30,
-                          models_dir=os.path.join(self._data_dir, 'models'),
+                          models_dir=self.find_data('models'),
                           log_file=log_file
                          )
 

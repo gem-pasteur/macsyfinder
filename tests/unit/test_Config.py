@@ -48,7 +48,7 @@ class Test(MacsyTest):
 
     def test_build_indexes(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -57,7 +57,7 @@ class Test(MacsyTest):
 
         config = Config(
             cfg_file="nimportnaoik",
-            sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+            sequence_db=self.find_data("base", "test_base.fa"),
             db_type='gembase',
             res_search_dir=self.tmp_dir,
             build_indexes=True
@@ -67,7 +67,7 @@ class Test(MacsyTest):
 
     def test_default(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -76,14 +76,14 @@ class Test(MacsyTest):
 
     def test_coverage_profile(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir,
                           )
         self.assertEqual(self.cfg.coverage_profile, 0.5)
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           coverage_profile=0.6,
                           res_search_dir=self.tmp_dir,
@@ -92,7 +92,7 @@ class Test(MacsyTest):
         self.tearDown()
         # coverage_profile must be a float
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'coverage_profile': "foo",
                   'res_search_dir': self.tmp_dir
@@ -102,7 +102,7 @@ class Test(MacsyTest):
 
     def test_def_dir(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -110,7 +110,7 @@ class Test(MacsyTest):
         self.tearDown()
 
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'def_dir': 'foo',
                   'res_search_dir': self.tmp_dir
@@ -122,7 +122,7 @@ class Test(MacsyTest):
         if not os.path.exists(def_dir):
             os.mkdir(def_dir)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           def_dir=def_dir,
                           res_search_dir=self.tmp_dir
@@ -134,7 +134,7 @@ class Test(MacsyTest):
 
     def test_models_dir(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -142,7 +142,7 @@ class Test(MacsyTest):
         self.tearDown()
 
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'models_dir': 'foo',
                   'res_search_dir': self.tmp_dir
@@ -154,7 +154,7 @@ class Test(MacsyTest):
         if not os.path.exists(models_dir):
             os.mkdir(models_dir)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           models_dir=models_dir,
                           res_search_dir=self.tmp_dir
@@ -166,7 +166,7 @@ class Test(MacsyTest):
 
     def test_e_value_res(self):
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'def_dir': os.path.join(self._data_dir, 'DEF'),
                   'profile_dir': os.path.join(self._data_dir, 'profiles'),
@@ -175,14 +175,14 @@ class Test(MacsyTest):
                   }
         self.assertRaises(ValueError, Config, **kwargs)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.e_value_res, 1)
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           e_value_res=0.7,
                           res_search_dir=self.tmp_dir
@@ -190,7 +190,7 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.e_value_res, 0.7)
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'e_value_res': 0.7,
                   'i_evalue_sel': 1,
@@ -201,14 +201,14 @@ class Test(MacsyTest):
 
     def test_hmmer_exe(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.hmmer_exe, 'hmmsearch')
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           hmmer_exe='truc',
                           res_search_dir=self.tmp_dir
@@ -218,14 +218,14 @@ class Test(MacsyTest):
 
     def test_index_db_exe(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.index_db_exe, 'makeblastdb')
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           index_db_exe='truc',
                           res_search_dir=self.tmp_dir
@@ -235,21 +235,21 @@ class Test(MacsyTest):
 
     def test_i_value_sel(self):
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'i_evalue_sel': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
         self.assertRaises(ValueError, Config, **kwargs)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.i_evalue_sel, 0.001)
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           i_evalue_sel=0.7,
                           res_search_dir=self.tmp_dir
@@ -257,7 +257,7 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.i_evalue_sel, 0.7)
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'e_value_res': 0.7,
                   'i_evalue_sel': 1,
@@ -268,14 +268,14 @@ class Test(MacsyTest):
 
     def test_db_type(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.db_type, 'gembase')
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'foo',
                   'res_search_dir': self.tmp_dir
                   }
@@ -285,9 +285,9 @@ class Test(MacsyTest):
     def test_previous_run(self):
         out_dir = os.path.join(self.tmp_dir, 'macsy_test_config')
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'models_dir': os.path.join(self._data_dir, 'models'),
+                  'models_dir': self.find_data('models'),
                   'previous_run': 'foo',
                   'res_search_dir': out_dir
                   }
@@ -299,9 +299,9 @@ class Test(MacsyTest):
         self.tearDown()
         try:
             cfg_base = Config(cfg_file="nimportnaoik",
-                              sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                              sequence_db=self.find_data("base", "test_base.fa"),
                               db_type='gembase',
-                              models_dir=os.path.join(self._data_dir, 'models'),
+                              models_dir=self.find_data('models'),
                               res_search_dir=self.tmp_dir
                               )
             self.assertIsNone(cfg_base.previous_run)
@@ -326,7 +326,7 @@ class Test(MacsyTest):
 
     def test_profile_dir(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -334,7 +334,7 @@ class Test(MacsyTest):
         self.tearDown()
 
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'profile_dir': 'foo',
                   'res_search_dir': self.tmp_dir
@@ -346,7 +346,7 @@ class Test(MacsyTest):
         if not os.path.exists(profile_dir):
             os.mkdir(profile_dir)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           profile_dir=profile_dir,
                           res_search_dir=self.tmp_dir
@@ -357,7 +357,7 @@ class Test(MacsyTest):
 
     def test_profile_suffix(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -365,7 +365,7 @@ class Test(MacsyTest):
         self.tearDown()
         profile_suffix = 'foo'
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           profile_suffix=profile_suffix,
                           res_search_dir=self.tmp_dir
@@ -375,14 +375,14 @@ class Test(MacsyTest):
 
     def test_replicon_topology(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.replicon_topology, 'circular')
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           replicon_topology='linear',
                           res_search_dir=self.tmp_dir
@@ -390,7 +390,7 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.replicon_topology, 'linear')
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'replicon_topology': 'foo',
                   'res_search_dir': self.tmp_dir
@@ -401,7 +401,7 @@ class Test(MacsyTest):
     def test_inter_gene_max_space(self):
         inter_gene_max_space = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           inter_gene_max_space=inter_gene_max_space,
                           res_search_dir=self.tmp_dir
@@ -414,7 +414,7 @@ class Test(MacsyTest):
     def test_min_genes_required(self):
         min_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           min_genes_required=min_genes_required,
                           res_search_dir=self.tmp_dir
@@ -426,7 +426,7 @@ class Test(MacsyTest):
     def test_max_nb_genes(self):
         max_nb_genes = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           max_nb_genes=max_nb_genes,
                           res_search_dir=self.tmp_dir
@@ -439,7 +439,7 @@ class Test(MacsyTest):
     def test_min_mandatory_genes_required(self):
         min_mandatory_genes_required = (["T2SS", 32], ['Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           min_mandatory_genes_required=min_mandatory_genes_required,
                           res_search_dir=self.tmp_dir
@@ -452,7 +452,7 @@ class Test(MacsyTest):
     def test_multi_loci(self):
         multi_loci = "T2SS,Flagellum"
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           multi_loci=multi_loci,
                           res_search_dir=self.tmp_dir
@@ -464,7 +464,7 @@ class Test(MacsyTest):
 
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -472,7 +472,7 @@ class Test(MacsyTest):
         self.tearDown()
         res_extract_suffix = 'foo'
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_extract_suffix=res_extract_suffix,
                           res_search_dir=self.tmp_dir
@@ -482,9 +482,9 @@ class Test(MacsyTest):
 
     def test_res_search_dir(self):
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
-                  'models_dir': os.path.join(self._data_dir, 'models'),
+                  'models_dir': self.find_data('models'),
                   'res_search_dir': 'foo',
                   'log_file': os.devnull
                   }
@@ -492,7 +492,7 @@ class Test(MacsyTest):
         self.tearDown()
         res_search_dir = tempfile.gettempdir()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=res_search_dir,
                           log_file=os.devnull
@@ -510,7 +510,7 @@ class Test(MacsyTest):
         f = open(os.path.join(out_dir, 'fake'), 'w')
         f.close()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'out_dir': out_dir,
                   'log_file': os.devnull
@@ -521,7 +521,7 @@ class Test(MacsyTest):
 
         os.makedirs(out_dir, 0775)
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           out_dir=out_dir,
                           log_file=os.devnull
@@ -531,7 +531,7 @@ class Test(MacsyTest):
 
     def test_res_search_suffix(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
@@ -539,7 +539,7 @@ class Test(MacsyTest):
         self.tearDown()
         res_search_suffix = 'foo'
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_suffix=res_search_suffix,
                           res_search_dir=self.tmp_dir
@@ -564,7 +564,7 @@ class Test(MacsyTest):
                   'log_file': os.devnull
                   }
         self.assertRaises(ValueError, Config, **kwargs)
-        sequence_db = os.path.join(self._data_dir, "base", "test_base.fa")
+        sequence_db = self.find_data("base", "test_base.fa")
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=sequence_db,
                           db_type='gembase',
@@ -576,14 +576,14 @@ class Test(MacsyTest):
 
     def test_worker_nb(self):
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.worker_nb, 1)
         self.tearDown()
         self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+                          sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           res_search_dir=self.tmp_dir,
                           worker_nb=2
@@ -591,7 +591,7 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.worker_nb, 2)
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': os.path.join(self._data_dir, "base", "test_base.fa"),
+                  'sequence_db': self.find_data("base", "test_base.fa"),
                   'db_type': 'gembase',
                   'res_search_dir': self.tmp_dir,
                   'worker_nb': '2.3'

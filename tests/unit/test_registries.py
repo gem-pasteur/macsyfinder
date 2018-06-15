@@ -383,12 +383,12 @@ class ModelRegistryTest(MacsyTest):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        self.cfg = Config(sequence_db=os.path.join(self._data_dir, "base", "test_base.fa"),
+        self.cfg = Config(sequence_db=self.find_data("base", "test_base.fa"),
                           db_type="gembase",
                           hmmer_exe="",
-                          # def_dir=os.path.join(self._data_dir, 'DEF'),
+                          # def_dir=self.find_data('DEF'),
                           res_search_dir=tempfile.gettempdir(),
-                          # profile_dir=os.path.join(self._data_dir, 'profiles'),
+                          # profile_dir=self.find_data('profiles'),
                           res_extract_suffix="",
                           log_level=30,
                           log_file=log_file)
