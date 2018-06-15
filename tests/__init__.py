@@ -19,9 +19,10 @@ class MacsyTest(unittest.TestCase):
             setsid = ''
         return setsid
 
+
     @classmethod
-    def find_data(cls, name):
-        data_path = os.path.join(cls._data_dir, name)
+    def find_data(cls, *args):
+        data_path = os.path.join(cls._data_dir, *args)
         if os.path.exists(data_path):
             return data_path
         else:
