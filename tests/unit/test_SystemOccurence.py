@@ -18,6 +18,7 @@ import tempfile
 import logging
 from macsypy.config import Config
 from macsypy.system import System
+from macsypy.gene import Gene
 from macsypy.search_systems import SystemOccurence
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -71,3 +72,66 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         state = system_occurence.state
         self.assertEqual(state, 'empty')
+
+    def test_decision_rule(self):
+
+        # test 'empty' state
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system_occurence = SystemOccurence(system)
+        system_occurence.decision_rule()
+        self.assertEqual(system_occurence.state, 'empty')
+
+        # test 'single_locus' state
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
+        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+        system_occurence = SystemOccurence(system)
+        system_occurence.mandatory_genes['sctJ_FLG'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 1 # simulate match
+        system_occurence.nb_cluster = 1
+        system_occurence.decision_rule()
+        self.assertEqual(system_occurence.state, 'single_locus')
+
+        # test 'multi_loci' state
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
+        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+        system_occurence = SystemOccurence(system)
+        system_occurence.mandatory_genes['sctJ_FLG'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 1 # simulate match
+        system_occurence.nb_cluster = 2
+        system_occurence.decision_rule()
+        self.assertEqual(system_occurence.state, 'multi_loci')
+
+        # test 'uncomplete' state
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+        system_occurence = SystemOccurence(system)
+        system_occurence.mandatory_genes['sctJ_FLG'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 1 # simulate match
+        system_occurence.nb_cluster = 2
+        system_occurence.decision_rule()
+        self.assertEqual(system_occurence.state, 'uncomplete')
+
+        # test 'exclude' state
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+        gene = Gene(self.cfg, 'fliE', system, self.models_location)
+        system.add_forbidden_gene(gene)
+        system_occurence = SystemOccurence(system)
+        system_occurence.mandatory_genes['sctJ_FLG'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 1 # simulate match
+        system_occurence.forbidden_genes['fliE'] = 1 # simulate match
+        system_occurence.nb_cluster = 2
+        system_occurence.decision_rule()
+        self.assertEqual(system_occurence.state, 'exclude')
