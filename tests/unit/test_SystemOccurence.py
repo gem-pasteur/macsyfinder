@@ -19,6 +19,7 @@ import logging
 from macsypy.config import Config
 from macsypy.system import System
 from macsypy.gene import Gene
+from macsypy.report import Hit
 from macsypy.search_systems import SystemOccurence
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -135,3 +136,34 @@ class Test(MacsyTest):
         system_occurence.nb_cluster = 2
         system_occurence.decision_rule()
         self.assertEqual(system_occurence.state, 'exclude')
+
+    def test_fill_with_multi_systems_genes(self):
+
+        def hit_mock(gene_name):
+            li = [None] * 12
+            hit = Hit(*li)
+            hit.gene = Gene(self.cfg, gene_name, system, self.models_location)
+            return hit
+
+        def multi_systems_hits_mock():
+            multi_systems_hits = []
+            multi_systems_hits.append(hit_mock("tadZ"))
+            multi_systems_hits.append(hit_mock("fliE"))
+            return multi_systems_hits
+            
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system_occurence = SystemOccurence(system)
+
+        multi_systems_hits = multi_systems_hits_mock() # create multi system genes (genes found in other systems)
+
+        system_occurence.multi_syst_genes = { "tadZ":0 } # create one missing multi system gene
+
+        system_occurence.mandatory_genes = {}
+        system_occurence.accessory_genes = { "tadZ":0 } # create one accessory gene
+        system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
+        self.assertEqual(system_occurence.accessory_genes["tadZ"], 1)
+
+        system_occurence.accessory_genes = {}
+        system_occurence.mandatory_genes = { "tadZ":0 } # create one mandatory gene
+        system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
+        self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
