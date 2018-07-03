@@ -169,7 +169,6 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
 
     def test_get_gene_counter_output(self):
-        
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
 
@@ -184,3 +183,9 @@ class Test(MacsyTest):
         out = system_occurence.get_gene_counter_output()
         expected = "{'fliE': 0}\t{'tadZ': 0}\t{'gspD': 0}"
         self.assertEqual(out, expected)
+
+    def test_nb_syst_genes(self):
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system_occurence = SystemOccurence(system)
+        system_occurence._nb_syst_genes = 3
+        self.assertEqual(system_occurence.nb_syst_genes, 3)
