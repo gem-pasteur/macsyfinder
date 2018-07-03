@@ -31,7 +31,7 @@ class Test(MacsyTest):
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
-        
+
         # add only one handler to the macsypy logger
         from macsypy.report import _log
         macsy_log = _log.parent
@@ -68,7 +68,7 @@ class Test(MacsyTest):
             shutil.rmtree(self.cfg.working_dir)
         except:
             pass
-        
+
     def test_state(self):
         system = System(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
@@ -151,21 +151,21 @@ class Test(MacsyTest):
             multi_systems_hits.append(hit_mock("tadZ"))
             multi_systems_hits.append(hit_mock("fliE"))
             return multi_systems_hits
-            
+
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
 
         multi_systems_hits = multi_systems_hits_mock() # create multi system genes (genes found in other systems)
 
-        system_occurence.multi_syst_genes = { "tadZ":0 } # create one missing multi system gene
+        system_occurence.multi_syst_genes = {"tadZ":0} # create one missing multi system gene
 
         system_occurence.mandatory_genes = {}
-        system_occurence.accessory_genes = { "tadZ":0 } # create one accessory gene
+        system_occurence.accessory_genes = {"tadZ":0} # create one accessory gene
         system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
         self.assertEqual(system_occurence.accessory_genes["tadZ"], 1)
 
         system_occurence.accessory_genes = {}
-        system_occurence.mandatory_genes = { "tadZ":0 } # create one mandatory gene
+        system_occurence.mandatory_genes = {"tadZ":0} # create one mandatory gene
         system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
         self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
 
@@ -173,9 +173,9 @@ class Test(MacsyTest):
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
 
-        system_occurence.accessory_genes = { "tadZ":0 } # create one accessory gene
-        system_occurence.mandatory_genes = { "fliE":0 } # create one mandatory gene
-        system_occurence.forbidden_genes = { "gspD":0 } # create one forbiden gene
+        system_occurence.accessory_genes = {"tadZ":0} # create one accessory gene
+        system_occurence.mandatory_genes = {"fliE":0} # create one mandatory gene
+        system_occurence.forbidden_genes = {"gspD":0} # create one forbiden gene
 
         out = system_occurence.get_gene_counter_output(True)
         expected = "{'fliE': 0}\t{'tadZ': 0}\t{}"
@@ -202,7 +202,7 @@ class Test(MacsyTest):
         # test case 1
 
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
-        analog=create_analog(system)
+        analog = create_analog(system)
         gene = Gene(self.cfg, 'fliE', system, self.models_location) # create regular gene
         gene.add_analog(analog) # attach analog to regular gene
 
