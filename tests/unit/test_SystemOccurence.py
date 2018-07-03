@@ -167,3 +167,20 @@ class Test(MacsyTest):
         system_occurence.mandatory_genes = { "tadZ":0 } # create one mandatory gene
         system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
         self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
+
+    def test_get_gene_counter_output(self):
+        
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system_occurence = SystemOccurence(system)
+
+        system_occurence.accessory_genes = { "tadZ":0 } # create one accessory gene
+        system_occurence.mandatory_genes = { "fliE":0 } # create one mandatory gene
+        system_occurence.forbidden_genes = { "gspD":0 } # create one forbiden gene
+
+        out = system_occurence.get_gene_counter_output(True)
+        expected = "{'fliE': 0}\t{'tadZ': 0}\t{}"
+        self.assertEqual(out, expected)
+
+        out = system_occurence.get_gene_counter_output()
+        expected = "{'fliE': 0}\t{'tadZ': 0}\t{'gspD': 0}"
+        self.assertEqual(out, expected)
