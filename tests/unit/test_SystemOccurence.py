@@ -19,6 +19,7 @@ import logging
 from macsypy.config import Config
 from macsypy.system import System
 from macsypy.gene import Gene
+from macsypy.gene import Analog
 from macsypy.report import Hit
 from macsypy.search_systems import SystemOccurence
 from macsypy.registries import ModelRegistry
@@ -189,3 +190,35 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         system_occurence._nb_syst_genes = 3
         self.assertEqual(system_occurence.nb_syst_genes, 3)
+
+    def test_get_gene_ref(self):
+
+        def create_analog(system):
+            gene_ref = Gene(self.cfg, 'tadZ', system, self.models_location)
+            gene_analog = Gene(self.cfg, 'sctC', system, self.models_location)
+            analog = Analog(gene_analog, gene_ref)
+            return analog
+
+        # test case 1
+
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        analog=create_analog(system)
+        gene = Gene(self.cfg, 'fliE', system, self.models_location) # create regular gene
+        gene.add_analog(analog) # attach analog to regular gene
+
+        system.add_mandatory_gene(gene)
+        system_occurence = SystemOccurence(system)
+
+        gref = system_occurence.get_gene_ref(analog)
+        self.assertEqual(gref.name, 'tadZ')
+
+        # test case 2
+
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        gene = Gene(self.cfg, 'fliE', system, self.models_location) # create regular gene
+
+        system.add_mandatory_gene(gene)
+        system_occurence = SystemOccurence(system)
+
+        gref = system_occurence.get_gene_ref(gene)
+        self.assertEqual(gref, None)
