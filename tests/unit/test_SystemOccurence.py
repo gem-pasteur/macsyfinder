@@ -237,3 +237,24 @@ class Test(MacsyTest):
         system_occurence.accessory_genes['tadZ'] = 1 # simulate match
         nb = system_occurence.compute_nb_syst_genes()
         self.assertEqual(nb, 2)
+
+    def test_str(self):
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+
+        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        system.add_mandatory_gene(gene)
+
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+
+        gene = Gene(self.cfg, 'flgC', system, self.models_location)
+        system.add_forbidden_gene(gene)
+
+        system_occurence = SystemOccurence(system)
+
+        gene = Gene(self.cfg, 'gspD', system, self.models_location)
+        system_occurence.multi_syst_genes[gene.name] = 0
+
+        out = system_occurence.__str__()
+        expected = 'sctJ\t0\ntadZ\t0\nflgC\t0\ngspD\t0\n'
+        self.assertEqual(out, expected)
