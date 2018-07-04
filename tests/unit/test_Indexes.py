@@ -20,7 +20,6 @@ import tempfile
 import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
-from macsypy.utils import which
 from tests import MacsyTest
 
 

@@ -17,7 +17,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.gene import Homolog
 from macsypy.gene import Gene

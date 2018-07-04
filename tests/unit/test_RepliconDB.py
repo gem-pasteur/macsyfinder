@@ -15,7 +15,6 @@
 import os
 import shutil
 import tempfile
-import platform
 import logging
 from macsypy.config import Config
 from macsypy.database import RepliconDB, Indexes, RepliconInfo
