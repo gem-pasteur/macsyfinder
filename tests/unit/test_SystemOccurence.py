@@ -18,11 +18,12 @@ import tempfile
 import logging
 from macsypy.config import Config
 from macsypy.system import System
-from macsypy.gene import Gene
-from macsypy.gene import Analog
+from macsypy.gene import Gene, Analog
 from macsypy.report import Hit
 from macsypy.search_systems import SystemOccurence
 from macsypy.registries import ModelRegistry
+from macsypy.database import RepliconDB, Indexes
+from macsypy.macsypy_error import SystemDetectionError
 from tests import MacsyTest
 
 
@@ -39,19 +40,25 @@ class Test(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
 
-        self.cfg = Config(hmmer_exe="",
+        self.cfg = Config(hmmer_exe="hmmsearch",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type="gembase",
                           e_value_res=1,
                           i_evalue_sel=0.5,
                           res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix="",
+                          res_search_suffix=".search_hmm.out",
                           profile_suffix=".hmm",
                           res_extract_suffix="",
                           log_level=30,
                           models_dir=self.find_data('models'),
                           log_file=log_file
                          )
+
+        shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
+        self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
+
+        idx = Indexes(self.cfg)
+        idx._build_my_indexes()
 
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
@@ -258,3 +265,34 @@ class Test(MacsyTest):
         out = system_occurence.__str__()
         expected = 'sctJ\t0\ntadZ\t0\nflgC\t0\ngspD\t0\n'
         self.assertEqual(out, expected)
+
+    def test_compute_system_length(self):
+
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        system_occurence = SystemOccurence(system)
+
+        self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
+        db_send = {'ESCO030p01':'circular', 'PSAE001c01':'linear'}
+        with open(self.cfg.topology_file, 'w') as f:
+            for k, v in db_send.items():
+                f.write('{0} : {1}\n'.format(k, v))
+        db = RepliconDB(self.cfg)
+
+        rep_info = db['PSAE001c01']
+        system_occurence.loci_positions = [(5, 10), (10, 20)]
+        length = system_occurence.compute_system_length(rep_info)
+        self.assertEqual(length, 17)
+
+        rep_info = db['NC_xxxxx_xx']
+        system_occurence.loci_positions = [(10, 5), (20, 10)]
+        length = system_occurence.compute_system_length(rep_info)
+        self.assertEqual(length, 3)
+
+        rep_info = db['PSAE001c01']
+        system_occurence.loci_positions = [(10, 5), (20, 10)]
+        with self.assertRaises(SystemDetectionError) as context:
+            length = system_occurence.compute_system_length(rep_info)
+        self.assertEqual(context.exception.message,
+                         "Inconsistency in locus positions in the case of a linear replicon. "
+                         "The begin position of a locus cannot be higher than the end position. \n"
+                         "Problem with locus found with positions begin: 10 end: 5")
