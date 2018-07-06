@@ -231,7 +231,6 @@ class Test(MacsyTest):
         self.assertEqual(gref, None)
 
     def test_compute_nb_syst_genes(self):
-
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
         gene = Gene(self.cfg, 'sctJ', system, self.models_location)
         system.add_mandatory_gene(gene)
@@ -241,7 +240,7 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
 
         system_occurence.mandatory_genes['sctJ'] = 1 # simulate match
-        system_occurence.accessory_genes['tadZ'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 4 # simulate match
         nb = system_occurence.compute_nb_syst_genes()
         self.assertEqual(nb, 2)
 
@@ -296,3 +295,17 @@ class Test(MacsyTest):
                          "Inconsistency in locus positions in the case of a linear replicon. "
                          "The begin position of a locus cannot be higher than the end position. \n"
                          "Problem with locus found with positions begin: 10 end: 5")
+
+    def test_compute_nb_syst_genes_tot(self):
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+
+        system_occurence = SystemOccurence(system)
+
+        system_occurence.mandatory_genes['sctJ'] = 1 # simulate match
+        system_occurence.accessory_genes['tadZ'] = 4 # simulate match
+        nb = system_occurence.compute_nb_syst_genes_tot()
+        self.assertEqual(nb, 5)
