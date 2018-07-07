@@ -318,3 +318,10 @@ class Test(MacsyTest):
 
         name = system_occurence.get_system_name_unordered('_bar')
         self.assertEqual(name, 'foo_bar')
+
+    def test_count_genes(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        genes = {'ACBA007p01':2, 'ZIIN001c01':0}
+        total = system_occurence.count_genes(genes)
+        self.assertEqual(total, 1)
