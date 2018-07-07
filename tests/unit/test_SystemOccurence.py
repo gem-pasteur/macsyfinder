@@ -338,3 +338,10 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         name = system_occurence.get_system_unique_name('ACBA007p01')
         self.assertEqual(name, 'ACBA007p01_foo_1')
+
+    def test_compute_missing_genes_list(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        genes = {'ACBA007p01':2, 'ZIIN001c01':0}
+        missing = system_occurence.compute_missing_genes_list(genes)
+        self.assertEqual(missing, ['ZIIN001c01'])
