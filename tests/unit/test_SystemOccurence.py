@@ -64,7 +64,6 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
 
-
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -309,3 +308,13 @@ class Test(MacsyTest):
         system_occurence.accessory_genes['tadZ'] = 4 # simulate match
         nb = system_occurence.compute_nb_syst_genes_tot()
         self.assertEqual(nb, 5)
+
+    def test_get_system_name_unordered(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+
+        name = system_occurence.get_system_name_unordered()
+        self.assertEqual(name, 'foo_putative')
+
+        name = system_occurence.get_system_name_unordered('_bar')
+        self.assertEqual(name, 'foo_bar')
