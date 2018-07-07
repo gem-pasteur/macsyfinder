@@ -325,3 +325,10 @@ class Test(MacsyTest):
         genes = {'ACBA007p01':2, 'ZIIN001c01':0}
         total = system_occurence.count_genes(genes)
         self.assertEqual(total, 1)
+
+    def test_count_genes_tot(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        genes = {'ACBA007p01':2, 'ZIIN001c01':1}
+        total = system_occurence.count_genes_tot(genes)
+        self.assertEqual(total, 3)
