@@ -352,3 +352,16 @@ class Test(MacsyTest):
         genes = {'ACBA007p01':2, 'ZIIN001c01':0}
         nb = system_occurence.count_missing_genes(genes)
         self.assertEqual(nb, 1)
+
+    def test_is_complete(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+
+        system_occurence._state = 'multi_loci'
+        self.assertEqual(system_occurence.is_complete(), True)
+
+        system_occurence._state = 'single_locus'
+        self.assertEqual(system_occurence.is_complete(), True)
+
+        system_occurence._state = 'empty'
+        self.assertEqual(system_occurence.is_complete(), False)
