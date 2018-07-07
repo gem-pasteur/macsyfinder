@@ -365,3 +365,13 @@ class Test(MacsyTest):
 
         system_occurence._state = 'empty'
         self.assertEqual(system_occurence.is_complete(), False)
+
+    def test_get_summary_header(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        expect = "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_accessory\
+\tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Accessory_NR\
+\tNb_missing_mandatory\tNb_missing_accessory\tList_missing_mandatory\tList_missing_accessory\tLoci_positions\
+\tOccur_Mandatory\tOccur_Accessory\tOccur_Forbidden"
+        out = system_occurence.get_summary_header()
+        self.assertEqual(out, expect)
