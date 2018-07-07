@@ -265,7 +265,6 @@ class Test(MacsyTest):
         self.assertEqual(out, expected)
 
     def test_compute_system_length(self):
-
         system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
         system_occurence = SystemOccurence(system)
 
@@ -374,4 +373,24 @@ class Test(MacsyTest):
 \tNb_missing_mandatory\tNb_missing_accessory\tList_missing_mandatory\tList_missing_accessory\tLoci_positions\
 \tOccur_Mandatory\tOccur_Accessory\tOccur_Forbidden"
         out = system_occurence.get_summary_header()
+        self.assertEqual(out, expect)
+
+    def test_get_summary(self):
+        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system.add_accessory_gene(gene)
+
+        system_occurence = SystemOccurence(system)
+
+        self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
+        db_send = {'ESCO030p01':'circular', 'PSAE001c01':'linear'}
+        with open(self.cfg.topology_file, 'w') as f:
+            for k, v in db_send.items():
+                f.write('{0} : {1}\n'.format(k, v))
+        db = RepliconDB(self.cfg)
+
+        rep_info = db['PSAE001c01']
+
+        out = system_occurence.get_summary('PSAE001c01', rep_info)
+        expect = "PSAE001c01	PSAE001c01_foo_1	foo	empty	0	0	1	0	0	0	0	0	0	1	[]	['tadZ']	[]	{}	{'tadZ': 0}	{}"
         self.assertEqual(out, expect)
