@@ -431,21 +431,10 @@ class Test(MacsyTest):
         idx = Indexes(config)
         idx._build_my_indexes()
 
-        # models_registry = ModelRegistry(config)
-        # model_name = 'set_1'
-        # models_location = models_registry[model_name]
-
-        # debug
-        # print(config.working_dir)
-        # print(models_location)
-
         parser = SystemParser(config, system_bank, gene_bank)
         parser.parse(['set_1/T9SS'])
 
         system = system_bank['set_1/T9SS']
-
-        # debug
-        # print(system)
 
         genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
 
@@ -462,38 +451,15 @@ class Test(MacsyTest):
 
         all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
-        # debug
-        # print (all_reports)
-        # print (all_hits)
-        # hit = all_hits[0]
-        # print (hit)
-
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
-        """
-        config.options['topology_file'] = config.sequence_db + ".topo"
-        db_send = {'ESCO030p01':'circular', 'PSAE001c01':'linear'}
-        with open(config.topology_file, 'w') as f:
-            for k, v in db_send.items():
-                f.write('{0} : {1}\n'.format(k, v))
-        """
-
         db = RepliconDB(config)
 
-        # debug
-        # print(RepliconDB.ordered_replicon_name)
-        # print(db._DB)
-
         rep_info = db['AESU001c01a']
-        # rep_info = db[RepliconDB.ordered_replicon_name]
 
         (clusters, multi_syst_genes) = build_clusters(all_hits, [system], rep_info)
-
         cluster = clusters.clusters[0]
-
-        # debug
-        # print(cluster)
 
         # case 1
         system_occurence = SystemOccurence(system)
