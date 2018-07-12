@@ -1,0 +1,186 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/data_set_1/models/set_1/profiles/T9SS_sprA-3_TIGR04189.hmm
+# target sequence database:        /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/base/test_aesu.fa
+# output directed to file:         /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/macsyfinder-20180710_12-41-33/hmmer_results/T9SS_sprA-3_TIGR04189.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       TIGR04189  [M=2319]
+Accession:   TIGR04189
+Description: surface_SprA: cell surface protein SprA
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+          0 2859.4  61.7          0 2859.2  61.7    1.0  1  AESU001c01a_008700  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_008700  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ! 2859.2  61.7         0         0       2    2319 .]      43    2409 ..      42    2409 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 2859.2 bits;  conditional E-value: 0
+           TIGR04189    2 ldlenPssikteveyDsatdryivteklgdtdvrvpivltpeeyeklvlresvksywkekakeeadk..etkekkklldlelsvnakaf 88  
+                          +dl +P si++ ++yD+ tdryi+t+ lg++++++pi+lt +ey++l ++e++k y+kek ++++++  +++e++k+l ++++vn+++f
+  AESU001c01a_008700   43 MDLPSPASIQDLYTYDPITDRYIYTKTLGSFKITYPIILTRQEYQRLIQEEQMKAYFKEKIDAADGRkdGAEEQQKNLLPTFYVNSSFF 131 
+                          7999**********************************************************999988899****************** PP
+
+           TIGR04189   89 ekifGsnkvklrtqGsvevdlgvkynkvdnpslserqrktlsfdFdqkislnvtGkvGdrlkvnvnydtestFdfqnqlkleYtgkedd 177 
+                          e++fG+  +++++qGsve+dlg+ y+k+dnp++s+r+r++ +fdFd++isl++ +kvG+rl+v++nydtestFdfqnqlkleYt++edd
+  AESU001c01a_008700  132 ESVFGGDSIEVIPQGSVEIDLGMLYTKQDNPAFSPRNRSNFGFDFDMRISLSLLAKVGTRLQVTANYDTESTFDFQNQLKLEYTPTEDD 220 
+                          ***************************************************************************************** PP
+
+           TIGR04189  178 iiqkiEvGnvslplssslisGaqslFGikaqlqfGklkvtavasqqksqkkevtikggaqttefelkaddydenRhFFLaqyfRdnYdk 266 
+                          iiqkiEvGnvs+pl+ssli+GaqslFG+k+qlqfGk+++t+v+s+qks++ +vt++gga+ t+fel a dydenRhFFL++yfRdnYd+
+  AESU001c01a_008700  221 IIQKIEVGNVSMPLNSSLIQGAQSLFGVKTQLQFGKTTITGVFSEQKSETRTVTAEGGATITDFELAALDYDENRHFFLSHYFRDNYDR 309 
+                          ***************************************************************************************** PP
+
+           TIGR04189  267 aleklPninsnvqitrvevwvtnkrnstenvrnivalqdLGepeklatknnnlvsps...asnrlpdneanklyeklisevn......a 346 
+                          al+++P+insnvqitr+e+w+tn++++t+nvrnivalqd+Ge + +++    + +     + n+ pdne+n +++  i   +      a
+  AESU001c01a_008700  310 ALQQYPFINSNVQITRMEIWITNRSSRTDNVRNIVALQDIGESDPTNIGLSVPPGGFiraGRNAYPDNENNLFNPFGIDGSEasllnpA 398 
+                          ******************************************77777666655444366699************9887655568999** PP
+
+           TIGR04189  347 irdvatveqelkgl.vqqgkdyeklenarklessdYtldpklGyisLnqrlqndevLavAfeYtydgrvyqvgefstdgee........ 426 
+                          irdva v+q+++g+ v++g+d+  lenar+le+s+Ytl+++lGyisLnqrl+ndevLa+++++t++g+vyqvgefs+dg e        
+  AESU001c01a_008700  399 IRDVASVSQGFTGVsVNEGTDFVTLENARRLEGSEYTLNSQLGYISLNQRLTNDEVLAISYQFTVNGKVYQVGEFSNDGVEasggtqtt 487 
+                          ************999************************************************************************** PP
+
+           TIGR04189  427 .............geateellvvkLlksttlsekspiwdLmmknvYslgasqlskedFkLnilykddttgnylkql......aegklkg 496 
+                                       ++  +++lvvkLlks+ +++k+p+wdLmmkn+Y +ga+ql+kedFk+ni+y++ +++ny+++       +++ +k+
+  AESU001c01a_008700  488 tgggggtnpppgpVSGLSQNLVVKLLKSSITNVKQPVWDLMMKNIYPIGAYQLEKEDFKMNIFYTEASPRNYIEPApggpelPDD-VKN 575 
+                          ************9999************************************************************999998888.*** PP
+
+           TIGR04189  497 rtlLqvlglDrLnqqndpqp..dgfFdfvegitidpekGkiifpvvePFgkkLakale............tenalakkYvfeeLYdstk 571 
+                          ++lL+v++lDrL+ +ndp++  dgfFdf++g+t+d+++G+iif++vePFgk+L+++l+            t+na++ kYvf+ LY+ tk
+  AESU001c01a_008700  576 QILLKVFNLDRLDFNNDPVQggDGFFDFLPGLTVDAQNGRIIFTSVEPFGKHLFDKLNvpsapatytiptTYNANQAKYVFRTLYTGTK 664 
+                          ***************************************************************************************** PP
+
+           TIGR04189  572 tqA.qqlaeknkyrlkGryksssgseislgainvprGSvrVtaGgttLqegvDYtVdYelGrvtilneallasgteIkvslEnnalFnl 659 
+                          t+A qq++eknk++lkG yks+++++i +ga+n+p+GSv+V aGg+tL+egvDYtV+Y+lGrv+il++ ll+s+ +I vs+Enn+lF++
+  AESU001c01a_008700  665 TEAeQQESEKNKFQLKGTYKSTGADGIPIGAFNIPQGSVTVKAGGRTLVEGVDYTVNYQLGRVQILDPGLLNSNIPITVSTENNSLFGQ 753 
+                          ***99************************************************************************************ PP
+
+           TIGR04189  660 qrktllGlrleykfnknlllGaTvlnlserpltekvnlGeEpisntiwGlnlnyktevqaLTrlvdklPlvqttapSnislegEfAqlr 748 
+                          q k+++Gl++e+kf++++l+GaT+lnl+erp+t+k+++G Epi+nt++G+nlny tev++LTr+v+ lP+++t+++Snisl+gEfA+l 
+  AESU001c01a_008700  754 QSKRFTGLNVEHKFSDKFLIGATYLNLNERPITQKSSYGVEPINNTVYGINLNYATEVPFLTRMVNHLPNIDTDVESNISLRGEFAYLM 842 
+                          ***************************************************************************************** PP
+
+           TIGR04189  749 pgankasdf.eegtsYidDFEgtqttidlkspssWklaStPasaaaslffegtlsddLdygkkraklawYsidpvlyrkssqtPeeise 836 
+                          pga+k sdf +++t+Y+dDFE++qt+ d+  pssW laStP       f +++  d+L+y++krakl+wY+idp++y++  q+Pe+i++
+  AESU001c01a_008700  843 PGAPKVSDFdGKTTVYVDDFEASQTGNDISTPSSWFLASTPT-----NFYDDKDPDKLSYNYKRAKLSWYTIDPIFYSS--QRPEGIND 924 
+                          *****************************************9.....8999**************************99..******** PP
+
+           TIGR04189  837 edlsnhfvrevlekevfpnrdvasgqnqvlqtLdlayyPnerGpYnlntsleadgslknpekrWgGimrklsssdfelsnieyiefwvl 925 
+                          edls+ f+r+v+ +e+fp++d+ +gq+q+l tLdl+yyP  rG Yn+n+ + ++g+l +p++++gGimr + ++dfe+sn+eyi+fwv+
+  AESU001c01a_008700  925 EDLSSPFTRRVFRDEIFPEQDIIQGQTQALFTLDLSYYPTTRGEYNYNP-AATSGTLPSPKDNFGGIMRPITTTDFEKSNVEYIQFWVM 1012
+                          *************************************************.8889*********************************** PP
+
+           TIGR04189  926 dpflenk..ttnggklyinLGeiSEdilkdgrkffengLpvngdtsktdetvwgkvpkqqslvyafdndseaRekqdvGlDgLtsedes 1012
+                          dpf++++  t+ gg++ +nLG+iSEdilkdgrk++engLp +g  ++t  t wgkvp +qslvy fd+d ++R +qd+GlDgL++++e+
+  AESU001c01a_008700 1013 DPFIYDEnnTNPGGTINFNLGSISEDILKDGRKQYENGLPKDGGDANTLPTEWGKVPLNQSLVYTFDSDGQERINQDIGLDGLSNAEEA 1101
+                          ****66655999***************************************************************************** PP
+
+           TIGR04189 1013 affssylnalrgnvnpdakllnDpagDdykyylnedydseeksilerYknynglegnSaeavqstaynrgsttlpDvEDinrdntlnti 1101
+                          a++  +                Dpa+Ddy+y+l++d     ++il+rY +yng++gnS+++v  t++nrgst+ pDvEDinrdnt+nti
+  AESU001c01a_008700 1102 AKYPGFG--------------DDPANDDYQYFLQAD-----GGILDRYLKYNGTQGNSPVEV--TNNNRGSTAQPDVEDINRDNTMNTI 1169
+                          9999993..............4************99.....*********************..************************* PP
+
+           TIGR04189 1102 esyfeYrvslsksdmkvgknyivdkrevevelknGkkeevkWyqfriPlreydekvgsiqdfksirfmRmyltgfkdevvlrfatleLv 1190
+                          +syfeY+v++ +  +k ++ yi d +e  v+ +n++   v+W+qf++P++++d + g+i+d++sirfmRm+l++f++++vlrf+tleLv
+  AESU001c01a_008700 1170 NSYFEYNVPVFPGMTKANNTYISDIKELDVTTQNNDVIPVRWVQFKVPISKPDAARGGISDYRSIRFMRMFLSKFSENTVLRFGTLELV 1258
+                          ************999999*********************************************************************** PP
+
+           TIGR04189 1191 rgdWrkyteklsekaksepsaentkvdvssvnieenssrkpinYvlPpGvvreqdstsntlvqqnEqaLslkvenLepgdaravyknvs 1279
+                          rgd+r+ +++l++ + ++p+ ++t ++v++v+ieen++r+pi+YvlPpG  re+ +++n+++++nEq+L l+v+ Lep+d r+vyk+++
+  AESU001c01a_008700 1259 RGDYRRFEKTLDDITFEDPANDDTLFEVEAVSIEENENRSPIPYVLPPGLRREEFNNNNNIIRENEQSLALRVCGLEPNDGRSVYKSFN 1347
+                          ***************************************************************************************** PP
+
+           TIGR04189 1280 vdlrqYkrLrmfvhaealaeedgelsdgelrafirlGsdfsenYYeyevPlkltpvgasseeevWpkeneldlklseltdlklernrak 1368
+                          vd+rqYk+L+mf+hae l+++ +el++g+++afirlG+d ++nYYe+++Pl++t++ga++ +e+Wp  n+l+l+l+ l+++k+    + 
+  AESU001c01a_008700 1348 VDMRQYKNLEMFIHAESLQNQ-TELANGDMYAFIRLGNDLTNNYYEIQIPLNPTNFGARTADEIWPLANRLNLPLELLQQVKTIVLGDR 1435
+                          ******************998.******************************************************************* PP
+
+           TIGR04189 1369 ssadsvvkkekdeseie...et...rnrlsvvGnPslgevrtimiGvrnpssadkndksgevWvNeLRlsdldekgGyAavanlnlnla 1451
+                          +  d+++ ++ ++se +   ++   + +++++GnPs+g+vr im+Gv+n   +++nd +gevW+NeLR+s+l++kgG+Aav+++++n+a
+  AESU001c01a_008700 1436 NLYDPTIVNYFNQSELDgggSNgenELVIGIKGNPSFGNVRNIMLGVKN---KTNNDICGEVWFNELRMSELKNKGGWAAVVSMDANIA 1521
+                          *********9999999977522666999*********************...667779******************************* PP
+
+           TIGR04189 1452 DlanvsasgrmetagFgaldqklnersredtlqydvatnleLgkllPeklglsiPfsvsyseetitpefdPldqdiklkdaldavesee 1540
+                          D+a++sa+g+++t+gFg+++q +n+rsred  qydv+tnl+Lg+l+P+k+g+++Pf+++ see itp++dP  qdi+l+++ld+++++e
+  AESU001c01a_008700 1522 DFATISATGKRSTVGFGSIEQGPNQRSREDLKQYDVVTNLNLGQLMPKKWGVQLPFNYGRSEELITPQYDPEFQDIELESRLDNTDDQE 1610
+                          ***************************************************************************************** PP
+
+           TIGR04189 1541 ereslrklaedytkrksfsltnvrkekkneekknefydienlslsysysetekrspeveeelelnvraaleYnytfkpktvePfkklkk 1629
+                          e++++++++ +ytkr+s++l++vrke++   +k ++yd+enl++s+sy++t+++++eve  le+nvr + +Yny+f +k+vePfkk ++
+  AESU001c01a_008700 1611 EKDRIQEQSVNYTKRQSVNLIGVRKERTG-DAKAKVYDVENLTASFSYNQTDHHDFEVEDALEQNVRLGATYNYNFTAKPVEPFKKNDS 1698
+                          ***************************88.799******************************************************** PP
+
+           TIGR04189 1630 l.kspylkllkdfnlnllPssislstdlnrsfsetqlrdvalsesgakepvlvqknfafnrkyalrwnltksLslnfnantnadirny. 1716
+                          + +s+y+k+lkdfn+n+lP++i +s++++r+++e+++r+++++ ++++ p l+q+n+ f+++y+++ nltk L++nf++++  +++ny 
+  AESU001c01a_008700 1699 IfRSQYWKFLKDFNFNYLPTNIAVSSNITRQYNEQKFREINVDSNNIGLPRLYQRNYLFDWQYTINHNLTKALRFNFTSSNTMIVNNYv 1787
+                          99**************************************************************************************8 PP
+
+           TIGR04189 1717 deealadvnkkekgeeykakkdsvlrsilklgrekkytqtfnvnytlpldkipalswvkaeltYtaqynwqrgskalr........... 1794
+                          d+ +++d+            ++ v++ ++++g ++++ q ++vny+lp++k+p+l++v+a+++Yt++y+wq+gsk+ +           
+  AESU001c01a_008700 1788 DDSGFVDN------------QIGVWDGFFDVGDPNQHFQSLQVNYDLPFSKFPFLKFVRATYSYTGDYQWQAGSKQFNelpitladgtt 1864
+                          77766443............567*****************************************************99*********** PP
+
+           TIGR04189 1795 .elelgntirnqrslslnaslnleklyrklkflkkvekk.kqskkkkakpktekpedkekqkktiikkerp.................. 1863
+                            ++lgn+i+n++++++n+s++++ +yr+++++k  ++k ++s+  + + k +++e+ke ++ +i++ +++                  
+  AESU001c01a_008700 1865 dTYNLGNAIQNASTHQINSSIDMNGFYRYVGLTKIKKSKvRKSTDGTGNDKPSDKEEKEGREGKISPDKNSalsngkegspnvmgrgaa 1953
+                          *********************************99999988888777777766665555555555554444444455555566666666 PP
+
+           TIGR04189 1864 .........kllsavirlltmlknidvnyseskgtvlpGfldsvkafgvdvegvlkpglgfafGlqsealreeaaengwlttaqslnsq 1943
+                                   k+++++i + tmlk+i++ny+e++g++lpG+l+s++++g+     lkp+ gf+fG+q e +re aa++gwlt + ++n+q
+  AESU001c01a_008700 1954 aagglnagdKAMNTLIGFATMLKKIQFNYQENNGIYLPGYLPSIGFIGT-----LKPTTGFVFGSQAE-VRELAAKKGWLTIYPEFNEQ 2036
+                          677777899****************************************.....9*************.******************** PP
+
+           TIGR04189 1944 ytqsesenlqlraqlepikdLkidltanrtytrrtqyrynvdelvyesstpnevGnfsistialktaFnssdknsseafekFrenrlvi 2032
+                          yt +es++++++a+lepikdL+id++  r y++++ ++y  +++ y+s tpn++Gnf+ist+ +ktaF++sd+ ss+af++Fr nrl+i
+  AESU001c01a_008700 2037 YTEVESRQMDIQANLEPIKDLTIDVNGSRIYSENYAENYIIQDGLYNSLTPNTYGNFNISTVLIKTAFSASDEFSSAAFDDFRTNRLTI 2125
+                          ***************************************************************************************** PP
+
+           TIGR04189 2033 anrlaeqksgaeapsed..a.gigisknsqdvlipaFlsaytgkdvdksslstfrsiplPnWqikYtGLlrlellkknfrsvtlkhsyr 2118
+                          anrlae++++  a ++d  + + g+++nsqdvl+p+Fl+ay g++++k++++  r+iplPnW ikYtGL++++++kknf++++l+h+yr
+  AESU001c01a_008700 2126 ANRLAEDYYQGAAIPRDtlGyPVGFGRNSQDVLLPSFLAAYKGSNASKEKTGILRDIPLPNWDIKYTGLMNVPWFKKNFKRFSLTHGYR 2214
+                          ******998877777666856******************************************************************** PP
+
+           TIGR04189 2119 ssysvnsyesnleyesesesdetkfiqvslegnliptyeisavslneqFsPLigvdvelknsltiklefkksralsLslsnyqltetas 2207
+                          +sy+vn+++snl+y      +e+    +++ gn+  +    +v+l+eqFsPL++vd+e++ns++i +e +k+ralsLs+ n+ lte++ 
+  AESU001c01a_008700 2215 ASYTVNQFQSNLDYDPT--FPEA----TDQAGNFKVKTLLTNVNLTEQFSPLLRVDFEMNNSVKILAEMRKDRALSLSFANNLLTEIKG 2297
+                          **************998..2333....5899********************************************************** PP
+
+           TIGR04189 2208 keykiglgYrvknlelvtkltkerkklkndlnlkldlslrdkltlirkldadtaqvtsgnkeisiklsadyalskrltlslyydyqine 2296
+                          +ey++glgYr+k+l++ t++ ++++++++dln+k+dls rd++t+ir ld  ++q t+g++    +ls+dyalsk+lt+ +yyd+++++
+  AESU001c01a_008700 2298 NEYIVGLGYRIKDLRVSTNFGGKKSVITSDLNFKVDLSRRDNITIIRYLDIMNNQTTAGQTIYGAQLSIDYALSKNLTALFYYDHSFSK 2386
+                          ***********************99**************************************************************** PP
+
+           TIGR04189 2297 plistsfprttinfglslrfsls 2319
+                           +ist+fp+tti+ g++lr++++
+  AESU001c01a_008700 2387 YAISTAFPQTTIRSGFTLRYNFG 2409
+                          *********************95 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (2319 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                       174  (0.055414); expected 62.8 (0.02)
+Passed bias filter:                       37  (0.0117834); expected 62.8 (0.02)
+Passed Vit filter:                         3  (0.000955414); expected 3.1 (0.001)
+Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.29u 0.04s 00:00:00.32 Elapsed: 00:00:00.33
+# Mc/sec: 7320.06
+//
+[ok]
