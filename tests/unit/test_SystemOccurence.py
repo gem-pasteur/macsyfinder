@@ -16,13 +16,17 @@ import os
 import shutil
 import tempfile
 import logging
+from operator import attrgetter
+from time import strftime
 from macsypy.config import Config
-from macsypy.system import System
-from macsypy.gene import Gene, Analog
+from macsypy.system import System, system_bank
+from macsypy.gene import Gene, Analog, gene_bank
 from macsypy.report import Hit
-from macsypy.search_systems import SystemOccurence
+from macsypy.search_systems import SystemOccurence, build_clusters
 from macsypy.registries import ModelRegistry
 from macsypy.database import RepliconDB, Indexes
+from macsypy.search_genes import search_genes
+from macsypy.system_parser import SystemParser
 from macsypy.macsypy_error import SystemDetectionError
 from tests import MacsyTest
 
@@ -51,8 +55,7 @@ class Test(MacsyTest):
                           res_extract_suffix="",
                           log_level=30,
                           models_dir=self.find_data('models'),
-                          log_file=log_file
-                         )
+                          log_file=log_file)
 
         shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
         self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
@@ -303,8 +306,8 @@ class Test(MacsyTest):
 
         system_occurence = SystemOccurence(system)
 
-        system_occurence.mandatory_genes['sctJ'] = 1 # simulate match
-        system_occurence.accessory_genes['tadZ'] = 4 # simulate match
+        system_occurence.mandatory_genes['sctJ'] = 1  # simulate match
+        system_occurence.accessory_genes['tadZ'] = 4  # simulate match
         nb = system_occurence.compute_nb_syst_genes_tot()
         self.assertEqual(nb, 5)
 
@@ -405,3 +408,114 @@ class Test(MacsyTest):
         out = system_occurence.get_summary_unordered('ESCO030p01')
         expect = "ESCO030p01	foo_putative	foo	empty	None	1	0	0	0	None	0	0	1	0	['sctJ']	[]	None	{'sctJ': 0}	{}	{}"
         self.assertEqual(out, expect)
+
+    def test_fill_with_cluster(self):
+
+        # for this test, we use a specific configuration with a dedicated
+        # working directory (i.e. we don't use the generic configuration
+        # defined in setUp() method).
+        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        config = Config(hmmer_exe="hmmsearch",
+                        out_dir=out_dir,
+                        db_type="gembase",
+                        previous_run="tests/data/data_set_1/complete_run_results",
+                        e_value_res=1,
+                        i_evalue_sel=0.5,
+                        res_search_suffix=".search_hmm.out",
+                        profile_suffix=".hmm",
+                        res_extract_suffix="",
+                        log_level=30,
+                        models_dir="tests/data/data_set_1/models",
+                        log_file=os.devnull)
+
+        idx = Indexes(config)
+        idx._build_my_indexes()
+
+        # models_registry = ModelRegistry(config)
+        # model_name = 'set_1'
+        # models_location = models_registry[model_name]
+
+        # debug
+        # print(config.working_dir)
+        # print(models_location)
+
+        parser = SystemParser(config, system_bank, gene_bank)
+        parser.parse(['set_1/T9SS'])
+
+        system = system_bank['set_1/T9SS']
+
+        # debug
+        # print(system)
+
+        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+
+        ex_genes = []
+        for g in genes:
+            if g.exchangeable:
+                h_s = g.get_homologs()
+                ex_genes += h_s
+                a_s = g.get_analogs()
+                ex_genes += a_s
+        all_genes = (genes + ex_genes)
+
+        all_reports = search_genes(all_genes, config)
+
+        all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
+
+        # debug
+        # print (all_reports)
+        # print (all_hits)
+        # hit = all_hits[0]
+        # print (hit)
+
+        all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
+        all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+        """
+        config.options['topology_file'] = config.sequence_db + ".topo"
+        db_send = {'ESCO030p01':'circular', 'PSAE001c01':'linear'}
+        with open(config.topology_file, 'w') as f:
+            for k, v in db_send.items():
+                f.write('{0} : {1}\n'.format(k, v))
+        """
+
+        db = RepliconDB(config)
+
+        # debug
+        # print(RepliconDB.ordered_replicon_name)
+        # print(db._DB)
+
+        rep_info = db['AESU001c01a']
+        # rep_info = db[RepliconDB.ordered_replicon_name]
+
+        (clusters, multi_syst_genes) = build_clusters(all_hits, [system], rep_info)
+
+        cluster = clusters.clusters[0]
+
+        # debug
+        # print(cluster)
+
+        # case 1
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.mandatory_genes['T9SS_sprT'], 1)
+
+        # case 2
+        gene = system.get_gene('T9SS_sprT')
+        system._mandatory_genes = []
+        system._accessory_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.accessory_genes['T9SS_sprT'], 1)
+
+        # case 3
+        system._accessory_genes = []
+        system._forbidden_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.forbidden_genes['T9SS_sprT'], 1)
+
+        try:
+            shutil.rmtree(out_dir)
+        except:
+            pass

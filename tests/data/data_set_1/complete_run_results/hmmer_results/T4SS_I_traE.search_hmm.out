@@ -1,0 +1,50 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/data_set_1/models/set_1/profiles/T4SS_I_traE.hmm
+# target sequence database:        /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/base/test_aesu.fa
+# output directed to file:         /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/macsyfinder-20180710_12-41-33/hmmer_results/T4SS_I_traE.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       I_traE  [M=274]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+  ------ inclusion threshold ------
+      0.014   12.2   0.0      0.018   11.9   0.0    1.1  1  AESU001c01a_009130  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_009130  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.9   0.0   5.7e-06     0.018      83     146 ..      66     128 ..      42     132 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 11.9 bits;  conditional E-value: 5.7e-06
+              I_traE  83 grllsrieyimlshdinatllatllspwnirsavirdparladylsadalealaecfnlnpdwl 146
+                             s iey m  h + + +la+ +s w+ +     +p+ +   ls + l++ ae f ++ + l
+  AESU001c01a_009130  66 AGETSPIEYYMELHKMDVGILASYVSFWQWKVKRHFKPSVF-KKLSDKSLNKYAEAFDVSVEEL 128
+                         334689***********************999988889765.6799999********9987765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (274 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                        84  (0.0267516); expected 62.8 (0.02)
+Passed bias filter:                       67  (0.0213376); expected 62.8 (0.02)
+Passed Vit filter:                         7  (0.0022293); expected 3.1 (0.001)
+Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.02
+# Mc/sec: 14270.81
+//
+[ok]
