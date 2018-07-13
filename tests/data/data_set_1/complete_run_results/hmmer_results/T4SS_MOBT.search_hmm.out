@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/data_set_1/models/set_1/profiles/T4SS_MOBT.hmm
-# target sequence database:        /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/base/test_aesu.fa
-# output directed to file:         /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/macsyfinder-20180710_12-41-33/hmmer_results/T4SS_MOBT.search_hmm.out
+# query HMM file:                  tests/data/data_set_1/models/set_1/profiles/T4SS_MOBT.hmm
+# target sequence database:        tests/data/base/test_aesu.fa
+# output directed to file:         tests/data/data_set_1/complete_run_results/hmmer_results/T4SS_MOBT.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,7 +43,7 @@ Passed Vit filter:                         9  (0.00286624); expected 3.1 (0.001)
 Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
 Initial search space (Z):               3140  [actual number of targets]
 Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.02
-# Mc/sec: 19062.47
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# Mc/sec: 12708.31
 //
 [ok]
