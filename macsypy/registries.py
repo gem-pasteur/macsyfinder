@@ -106,8 +106,12 @@ class ModelLocation(object):
         else:
             import glob
             for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
+
+                if not self.cfg.relative_path:
+                    model_path = os.path.abspath(model_path)
+
                 new_def = DefinitionLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
-                                             path=os.path.abspath(model_path))
+                                             path=model_path)
                 self._definitions[new_def.name] = new_def
 
 
@@ -153,7 +157,7 @@ class ModelLocation(object):
             if os.path.isfile(profile_path):
                 base, ext = os.path.splitext(profile)
                 if ext == self.cfg.profile_suffix:
-                    all_profiles[base] = os.path.abspath(profile_path)
+                    all_profiles[base] = profile_path if self.cfg.relative_path else os.path.abspath(profile_path)
         return all_profiles
 
 
