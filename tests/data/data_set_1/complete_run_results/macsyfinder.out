@@ -1,5 +1,5 @@
-MacSyFinder's results will be stored in /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/macsyfinder-20180710_12-41-33
-Analysis launched on /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/base/test_aesu.fa for system(s):
+MacSyFinder's results will be stored in tests/data/data_set_1/complete_run_results
+Analysis launched on tests/data/base/test_aesu.fa for system(s):
 	- set_1/T9SS
 	- set_1/T3SS
 	- set_1/T4SS_typeI

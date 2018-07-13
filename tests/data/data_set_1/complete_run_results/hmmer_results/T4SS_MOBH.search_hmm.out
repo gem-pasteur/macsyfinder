@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/data_set_1/models/set_1/profiles/T4SS_MOBH.hmm
-# target sequence database:        /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/tests/data/base/test_aesu.fa
-# output directed to file:         /home/jraciazek/snapshot/macsyfinder/src/MacSyFinder/macsyfinder-20180710_12-41-33/hmmer_results/T4SS_MOBH.search_hmm.out
+# query HMM file:                  tests/data/data_set_1/models/set_1/profiles/T4SS_MOBH.hmm
+# target sequence database:        tests/data/base/test_aesu.fa
+# output directed to file:         tests/data/data_set_1/complete_run_results/hmmer_results/T4SS_MOBH.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
