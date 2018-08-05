@@ -454,6 +454,9 @@ class Test(MacsyTest):
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
+        # debug
+        # print [h.gene.name for h in all_hits]
+
         db = RepliconDB(config)
 
         rep_info = db['AESU001c01a']
@@ -465,6 +468,8 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         system_occurence.fill_with_cluster(cluster)
         self.assertEqual(system_occurence.mandatory_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+        self.assertEqual(system_occurence.loci_positions, [(505, 505)])
 
         # case 2
         gene = system.get_gene('T9SS_sprT')
@@ -473,6 +478,7 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         system_occurence.fill_with_cluster(cluster)
         self.assertEqual(system_occurence.accessory_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 3
         system._accessory_genes = []
@@ -480,6 +486,52 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         system_occurence.fill_with_cluster(cluster)
         self.assertEqual(system_occurence.forbidden_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 0)
+        self.assertEqual(system_occurence.nb_cluster, 0)
+        self.assertEqual(system_occurence.loci_positions, [])
+
+        # case 4
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = [gene]
+        system._accessory_genes = []
+        system._forbidden_genes = []
+        system_occurence = SystemOccurence(system)
+        system_occurence.exmandatory_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.mandatory_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 5
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = []
+        system._accessory_genes = [gene]
+        system._forbidden_genes = []
+        system_occurence = SystemOccurence(system)
+        system_occurence.exaccessory_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.accessory_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 6
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = []
+        system._accessory_genes = []
+        system._forbidden_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.exforbidden_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(system_occurence.forbidden_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 7
+        system._mandatory_genes = []
+        system._accessory_genes = []
+        system._forbidden_genes = []
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_cluster(cluster)
+        self.assertEqual(len(system_occurence.forbidden_genes), 0)
+        self.assertEqual(len(system_occurence.valid_hits), 0)
+        self.assertEqual(system_occurence.nb_cluster, 1)
 
         try:
             shutil.rmtree(out_dir)
