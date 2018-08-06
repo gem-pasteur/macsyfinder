@@ -86,3 +86,10 @@ class Test(MacsyTest):
         cluster = Cluster(system)
         cluster._putative_system = system_name
         self.assertEqual(cluster.putative_system, system_name)
+
+    def test_compatible_systems(self):
+        system = System(self.cfg, 'set_1/T9SS', 10)
+        cluster = Cluster(system)
+        compatible_system_name = 'set_1/T2SS'
+        cluster._compatible_systems.append(compatible_system_name)
+        self.assertEqual(cluster.compatible_systems, [compatible_system_name])
