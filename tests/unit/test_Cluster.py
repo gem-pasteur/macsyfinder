@@ -79,3 +79,10 @@ class Test(MacsyTest):
         hit = Hit(*li)
         cluster.hits = [hit]
         self.assertEqual(len(cluster), 1)
+
+    def test_putative_system(self):
+        system_name = 'set_1/T9SS'
+        system = System(self.cfg, system_name, 10)
+        cluster = Cluster(system)
+        cluster._putative_system = system_name
+        self.assertEqual(cluster.putative_system, system_name)
