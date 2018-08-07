@@ -16,12 +16,18 @@ import os
 import shutil
 import tempfile
 import logging
+from operator import attrgetter
+from time import strftime
 from macsypy.config import Config
-from macsypy.system import System
+from macsypy.system import System, system_bank
+from macsypy.gene import gene_bank
 from macsypy.report import Hit
+from macsypy.system_parser import SystemParser
 from macsypy.search_systems import Cluster
+from macsypy.search_genes import search_genes
 from macsypy.registries import ModelRegistry
 from macsypy.database import Indexes
+from macsypy.macsypy_error import SystemDetectionError
 from tests import MacsyTest
 
 
@@ -72,6 +78,9 @@ class Test(MacsyTest):
         except:
             pass
 
+        system_bank._system_bank = {}
+        gene_bank._genes_bank = {}
+
     def test_len(self):
         system = System(self.cfg, 'foo', 10)
         cluster = Cluster(system)
@@ -99,3 +108,79 @@ class Test(MacsyTest):
         cluster = Cluster(system)
         state = cluster.state
         self.assertEqual(state, '')
+
+    def test_add(self):
+        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+
+        # for this test, we use a specific configuration with a dedicated
+        # working directory (i.e. we don't use the generic configuration
+        # defined in setUp() method).
+        config = Config(hmmer_exe="hmmsearch",
+                        out_dir=out_dir,
+                        db_type="gembase",
+                        previous_run="tests/data/data_set_1/complete_run_results",
+                        e_value_res=1,
+                        i_evalue_sel=0.5,
+                        res_search_suffix=".search_hmm.out",
+                        profile_suffix=".hmm",
+                        res_extract_suffix="",
+                        log_level=30,
+                        models_dir="tests/data/data_set_1/models",
+                        log_file=os.devnull)
+
+        idx = Indexes(config)
+        idx._build_my_indexes()
+
+        parser = SystemParser(config, system_bank, gene_bank)
+        parser.parse(['set_1/T9SS'])
+
+        system = system_bank['set_1/T9SS']
+
+        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+
+        ex_genes = []
+        for g in genes:
+            if g.exchangeable:
+                h_s = g.get_homologs()
+                ex_genes += h_s
+                a_s = g.get_analogs()
+                ex_genes += a_s
+        all_genes = (genes + ex_genes)
+
+        all_reports = search_genes(all_genes, config)
+
+        all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
+
+        all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
+        all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+        # debug
+        # print [h.gene.name for h in all_hits]
+
+        h1, h2, h3 = all_hits[:3]
+
+        system = System(self.cfg, 'foo', 4)
+        cluster = Cluster(system)
+
+        cluster.add(h1)
+        self.assertEqual(cluster.begin, 505)
+        self.assertEqual(cluster.end, 505)
+        self.assertEqual(cluster.replicon_name, 'AESU001c01a')
+        self.assertEqual(len(cluster.hits), 1)
+
+        cluster.add(h2)
+        self.assertEqual(cluster.begin, 505)
+        self.assertEqual(cluster.end, 773)
+        self.assertEqual(cluster.replicon_name, 'AESU001c01a')
+        self.assertEqual(len(cluster.hits), 2)
+
+        h3.replicon_name = 'bar'
+        with self.assertRaises(SystemDetectionError) as context:
+            cluster.add(h3)
+        self.assertEqual(context.exception.message,
+                         "Attempting to gather in a cluster hits from different replicons ! ")
+
+        try:
+            shutil.rmtree(out_dir)
+        except:
+            pass
