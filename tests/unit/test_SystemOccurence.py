@@ -78,6 +78,9 @@ class Test(MacsyTest):
         except:
             pass
 
+        system_bank._system_bank = {}
+        gene_bank._genes_bank = {}
+
     def test_state(self):
         system = System(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
@@ -532,6 +535,117 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.forbidden_genes), 0)
         self.assertEqual(len(system_occurence.valid_hits), 0)
         self.assertEqual(system_occurence.nb_cluster, 1)
+
+        try:
+            shutil.rmtree(out_dir)
+        except:
+            pass
+
+    def test_fill_with_hits(self):
+
+        # for this test, we use a specific configuration with a dedicated
+        # working directory (i.e. we don't use the generic configuration
+        # defined in setUp() method).
+        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        config = Config(hmmer_exe="hmmsearch",
+                        out_dir=out_dir,
+                        db_type="gembase",
+                        previous_run="tests/data/data_set_1/complete_run_results",
+                        e_value_res=1,
+                        i_evalue_sel=0.5,
+                        res_search_suffix=".search_hmm.out",
+                        profile_suffix=".hmm",
+                        res_extract_suffix="",
+                        log_level=30,
+                        models_dir="tests/data/data_set_1/models",
+                        log_file=os.devnull)
+
+        idx = Indexes(config)
+        idx._build_my_indexes()
+
+        parser = SystemParser(config, system_bank, gene_bank)
+        parser.parse(['set_1/T9SS'])
+
+        system = system_bank['set_1/T9SS']
+
+        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+
+        ex_genes = []
+        for g in genes:
+            if g.exchangeable:
+                h_s = g.get_homologs()
+                ex_genes += h_s
+                a_s = g.get_analogs()
+                ex_genes += a_s
+        all_genes = (genes + ex_genes)
+
+        all_reports = search_genes(all_genes, config)
+
+        all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
+
+        all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
+        all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+        # debug
+        # print [h.gene.name for h in all_hits]
+
+        # case 1
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_hits(all_hits[:1], False)
+        self.assertEqual(system_occurence.mandatory_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+        self.assertEqual(system_occurence._state, "no_decision")
+
+        # case 2
+        gene = system.get_gene('T9SS_sprT')
+        system._mandatory_genes = []
+        system._accessory_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_hits(all_hits[:2], False)
+        self.assertEqual(system_occurence.accessory_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 3
+        system._mandatory_genes = []
+        system._accessory_genes = []
+        system._forbidden_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.fill_with_hits(all_hits, True)
+        self.assertEqual(system_occurence.forbidden_genes['T9SS_sprT'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 4
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = [gene]
+        system._accessory_genes = []
+        system._forbidden_genes = []
+        system_occurence = SystemOccurence(system)
+        system_occurence.exmandatory_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_hits(all_hits, True)
+        self.assertEqual(system_occurence.mandatory_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 5
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = []
+        system._accessory_genes = [gene]
+        system._forbidden_genes = []
+        system_occurence = SystemOccurence(system)
+        system_occurence.exaccessory_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_hits(all_hits, True)
+        self.assertEqual(system_occurence.accessory_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
+
+        # case 6
+        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system._mandatory_genes = []
+        system._accessory_genes = []
+        system._forbidden_genes = [gene]
+        system_occurence = SystemOccurence(system)
+        system_occurence.exforbidden_genes['T9SS_sprT'] = 'tadZ'
+        system_occurence.fill_with_hits(all_hits, True)
+        self.assertEqual(system_occurence.forbidden_genes['tadZ'], 1)
+        self.assertEqual(len(system_occurence.valid_hits), 1)
 
         try:
             shutil.rmtree(out_dir)
