@@ -20,8 +20,8 @@ from macsypy.config import Config
 from macsypy.system import System
 from macsypy.search_systems import SystemOccurence, systemDetectionReportOrdered
 from macsypy.registries import ModelRegistry
-from macsypy.database import Indexes
-from tests import MacsyTest
+from macsypy.database import Indexes, RepliconDB
+from tests import MacsyTest, md5sum
 
 
 class Test(MacsyTest):
@@ -60,6 +60,8 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
 
+        self.test_dir = tempfile.mkdtemp()
+
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -68,21 +70,32 @@ class Test(MacsyTest):
         l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.test_dir)
         except:
             pass
 
     def test_counter_output(self):
         system = System(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
-        sdr = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
-        c = sdr.counter_output()
+        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
+        c = sdro.counter_output()
         self.assertEqual(c['foo_empty'], 1)
 
     def test_tabulated_output_header(self):
         system_occurences_states = ['single_locus', 'multi_loci']
         system = System(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
-        sdr = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
-        out = sdr.tabulated_output_header(system_occurences_states, [system.name])
+        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
+        out = sdro.tabulated_output_header(system_occurences_states, [system.name])
         expected_output = '#Replicon	foo_single_locus	foo_multi_loci\n'
         self.assertEqual(out, expected_output)
+
+    def test_summary_output(self):
+        test_file = os.path.join(self.test_dir, 'test.txt')
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
+        db = RepliconDB(self.cfg)
+        rep_info = db['NC_xxxxx_xx']
+        sdro.summary_output(test_file, rep_info)
+        self.assertEqual(md5sum(test_file), '81d35e845603dfc1124c348231f46547')
