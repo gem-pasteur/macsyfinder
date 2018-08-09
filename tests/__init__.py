@@ -4,6 +4,9 @@ import unittest
 import platform
 from StringIO import StringIO
 from contextlib import contextmanager
+import hashlib
+from functools import partial
+
 
 class MacsyTest(unittest.TestCase):
 
@@ -141,3 +144,11 @@ def which(name, flags=os.X_OK):
             result = p
             break
     return result
+
+
+def md5sum(filename):
+    with open(filename, mode='rb') as f:
+        d = hashlib.md5()
+        for buf in iter(partial(f.read, 128), b''):
+            d.update(buf)
+    return d.hexdigest()
