@@ -96,4 +96,4 @@ class Test(MacsyTest):
         sdr = systemDetectionReport([system_occurence], self.cfg)
         db = RepliconDB(self.cfg)
         rep_info = db['NC_xxxxx_xx']
-        sdr.json_output('foo', rep_info)
+        sdr.summary_output('foo', rep_info)
