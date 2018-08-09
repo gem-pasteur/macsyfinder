@@ -99,3 +99,12 @@ class Test(MacsyTest):
         rep_info = db['NC_xxxxx_xx']
         sdro.summary_output(test_file, rep_info)
         self.assertEqual(md5sum(test_file), '81d35e845603dfc1124c348231f46547')
+
+    def test_tabulated_output(self):
+        test_file = os.path.join(self.test_dir, 'test.txt')
+        system_occurences_states = ['single_locus', 'multi_loci']
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
+        sdro.tabulated_output(system_occurences_states, [system.name], test_file)
+        self.assertEqual(md5sum(test_file), '44feb14f77227e9a6dcb77905723d866')
