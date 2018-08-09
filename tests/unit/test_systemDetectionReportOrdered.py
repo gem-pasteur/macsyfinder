@@ -77,3 +77,12 @@ class Test(MacsyTest):
         sdr = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
         c = sdr.counter_output()
         self.assertEqual(c['foo_empty'], 1)
+
+    def test_tabulated_output_header(self):
+        system_occurences_states = ['single_locus', 'multi_loci']
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        sdr = systemDetectionReportOrdered('bar', [system_occurence], self.cfg)
+        out = sdr.tabulated_output_header(system_occurences_states, [system.name])
+        expected_output = '#Replicon	foo_single_locus	foo_multi_loci\n'
+        self.assertEqual(out, expected_output)
