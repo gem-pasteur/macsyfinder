@@ -86,3 +86,13 @@ class Test(MacsyTest):
         sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
         gene = sdro._match2json(valid_hit, so)
         self.assertEqual(md5sum(str_=str(gene)), '8c00bb9dfb43f4595f2f33a1a643c202')
+
+    def test_json_output(self):
+        test_file = os.path.join(self.test_dir, 'test_foo.txt')
+        so = self.macsy_test_env.system_occurence
+        so.get_system_unique_name('mew')
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        json_all_systems = sdro.system_2_json(rep_db)
+        sdro.json_output(test_file, json_all_systems)
+        self.assertEqual(md5sum(test_file), '662683cc95dfddbbbd7807027b7c3327')
