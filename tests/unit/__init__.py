@@ -57,10 +57,10 @@ class MacsyTestEnv():
             self.model_name = 'foo'
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_002":
-            out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
-            #print out_dir
+            self.out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+
             self.cfg = Config(hmmer_exe="hmmsearch",
-                            out_dir=out_dir,
+                            out_dir=self.out_dir,
                             db_type="gembase",
                             previous_run="tests/data/data_set_1/complete_run_results",
                             e_value_res=1,
@@ -138,7 +138,7 @@ class MacsyTestEnv():
             pass
         elif env_id == "env_002":
             try:
-                shutil.rmtree(out_dir)
+                shutil.rmtree(self.out_dir)
             except:
                 pass
         else:
