@@ -79,3 +79,10 @@ class Test(MacsyTest):
         rep_db = RepliconDB(self.macsy_test_env.cfg)
         out = sdro.system_2_json(rep_db)
         self.assertEqual(md5sum(str_=str(out)), '0a21f19165da3de2241f7602c61377cc')
+
+    def test_match2json(self):
+        so = self.macsy_test_env.system_occurence
+        valid_hit = so.valid_hits[0]
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        gene = sdro._match2json(valid_hit, so)
+        self.assertEqual(md5sum(str_=str(gene)), '8c00bb9dfb43f4595f2f33a1a643c202')
