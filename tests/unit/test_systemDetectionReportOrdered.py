@@ -16,7 +16,7 @@ import os
 import shutil
 import tempfile
 from macsypy.system import System
-from macsypy.search_systems import SystemOccurence, systemDetectionReportOrdered, system_name_generator
+from macsypy.search_systems import SystemOccurence, systemDetectionReportOrdered
 from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
@@ -69,3 +69,10 @@ class Test(MacsyTest):
         sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
         sdro.tabulated_output(system_occurences_states, [system.name], test_file)
         self.assertEqual(md5sum(test_file), '44feb14f77227e9a6dcb77905723d866')
+
+    def test_report_output(self):
+        test_file = os.path.join(self.test_dir, 'test_foo.txt')
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
+        sdro.report_output(test_file)
