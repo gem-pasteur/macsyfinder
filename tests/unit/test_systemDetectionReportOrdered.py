@@ -96,3 +96,9 @@ class Test(MacsyTest):
         json_all_systems = sdro.system_2_json(rep_db)
         sdro.json_output(test_file, json_all_systems)
         self.assertEqual(md5sum(test_file), '662683cc95dfddbbbd7807027b7c3327')
+
+    def test_gene2json(self):
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        gene = sdro._gene2json('foobar', 44, 72)
+        self.assertEqual(md5sum(str_=str(gene)), '6fce3f2b977ed8ddf267efcd313acba9')
