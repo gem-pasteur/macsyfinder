@@ -4,12 +4,12 @@ import tempfile
 import logging
 from time import strftime
 from operator import attrgetter
-from macsypy.database import Indexes
+from macsypy.database import Indexes, RepliconDB
 from macsypy.config import Config
 from macsypy.registries import ModelRegistry
 from macsypy.gene import gene_bank
 from macsypy.system import system_bank
-from macsypy.search_systems import system_name_generator
+from macsypy.search_systems import system_name_generator, build_clusters, analyze_clusters_replicon
 from macsypy.search_genes import search_genes
 from macsypy.system_parser import SystemParser
 from tests import MacsyTest
@@ -78,9 +78,9 @@ class MacsyTestEnv():
             parser = SystemParser(self.cfg, system_bank, gene_bank)
             parser.parse(['set_1/T9SS'])
 
-            system = system_bank['set_1/T9SS']
+            self.system = system_bank['set_1/T9SS']
 
-            genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+            genes = self.system.mandatory_genes + self.system.accessory_genes + self.system.forbidden_genes
 
             ex_genes = []
             for g in genes:
@@ -97,6 +97,22 @@ class MacsyTestEnv():
 
             all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
             all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+
+            # debug
+            # print [h.gene.name for h in all_hits]
+
+            rep_db = RepliconDB(self.cfg)
+            rep_info = rep_db['AESU001c01a']
+
+            (clusters, multi_syst_genes) = build_clusters(all_hits, [self.system], rep_info)
+            #cluster = clusters.clusters[0]
+
+            systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
+
+            self.system_occurence = systems_occurences_list[0]
+
+            # debug
+            #print system_occurence.valid_hits
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
