@@ -76,3 +76,4 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
         sdro.report_output(test_file)
+        self.assertEqual(md5sum(test_file), 'd41d8cd98f00b204e9800998ecf8427e')
