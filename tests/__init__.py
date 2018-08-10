@@ -145,11 +145,27 @@ def which(name, flags=os.X_OK):
             break
     return result
 
+def md5sum(file_=None, str_=None):
+    """Compute md5 checksum.
 
-def md5sum(filename):
-    """Compute file md5 checksum."""
-    with open(filename, mode='rb') as f:
-        d = hashlib.md5()
-        for buf in iter(partial(f.read, 128), b''):
-            d.update(buf)
+    :param file_: the name of the file to compute the checksum for
+    :type file_: str
+    :param str_: the string to compute the checksum for
+    :type str_: str
+    """
+    
+    assert not (file_ and str_)
+
+    d = hashlib.md5()
+
+    if file_:
+        with open(file_, mode='rb') as f:
+            for buf in iter(partial(f.read, 128), b''):
+                d.update(buf)
+    elif str_:
+        assert isinstance(str_,str)
+        d.update(str_)
+    else:
+        assert False
+
     return d.hexdigest()
