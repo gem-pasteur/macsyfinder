@@ -15,8 +15,7 @@
 import os
 import shutil
 import tempfile
-from macsypy.system import System
-from macsypy.search_systems import SystemOccurence, systemDetectionReportOrdered
+from macsypy.search_systems import systemDetectionReportOrdered
 from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
@@ -72,3 +71,11 @@ class Test(MacsyTest):
         sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
         sdro.report_output(test_file)
         self.assertEqual(md5sum(test_file), '10791ef7c77ec198863d645e00bc4d6e')
+
+    def test_system_2_json(self):
+        so = self.macsy_test_env.system_occurence
+        so.get_system_unique_name('mew')
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        out = sdro.system_2_json(rep_db)
+        self.assertEqual(md5sum(str_=str(out)), '0a21f19165da3de2241f7602c61377cc')
