@@ -105,7 +105,7 @@ class MacsyTestEnv():
             rep_info = rep_db['AESU001c01a']
 
             (clusters, multi_syst_genes) = build_clusters(all_hits, [self.system], rep_info)
-            #cluster = clusters.clusters[0]
+            self.cluster = clusters.clusters[0]
 
             systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
 

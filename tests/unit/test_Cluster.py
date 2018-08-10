@@ -28,7 +28,8 @@ from macsypy.search_genes import search_genes
 from macsypy.registries import ModelRegistry
 from macsypy.database import Indexes
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest
+from tests import MacsyTest, md5sum
+from tests.unit import MacsyTestEnv
 
 
 class Test(MacsyTest):
@@ -308,3 +309,10 @@ class Test(MacsyTest):
             shutil.rmtree(out_dir)
         except:
             pass
+
+    def test_str(self):
+        macsy_test_env = MacsyTestEnv()
+        macsy_test_env.load("env_002")
+        buffer_ = str(macsy_test_env.cluster)
+        self.assertEqual(md5sum(str_=buffer_), '752f66b832fee7ec71fecdaef52fd820')
+        macsy_test_env.unload("env_002")
