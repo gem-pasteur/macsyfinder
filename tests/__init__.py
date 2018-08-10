@@ -147,6 +147,7 @@ def which(name, flags=os.X_OK):
 
 
 def md5sum(filename):
+    """Compute file md5 checksum."""
     with open(filename, mode='rb') as f:
         d = hashlib.md5()
         for buf in iter(partial(f.read, 128), b''):
