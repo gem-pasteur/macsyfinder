@@ -26,54 +26,49 @@ class Test(MacsyTest):
 
     def setUp(self):
         self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_001")
+        self.macsy_test_env.load("env_002")
 
         self.test_dir = tempfile.mkdtemp()
 
     def tearDown(self):
-        self.macsy_test_env.unload("env_001")
+        self.macsy_test_env.unload("env_002")
 
         shutil.rmtree(self.test_dir)
 
     def test_counter_output(self):
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
-        system_occurence = SystemOccurence(system)
-        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
         c = sdro.counter_output()
-        self.assertEqual(c['foo_empty'], 1)
+        self.assertEqual(c['T9SS_multi_loci'], 1)
 
     def test_tabulated_output_header(self):
         system_occurences_states = ['single_locus', 'multi_loci']
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
-        system_occurence = SystemOccurence(system)
-        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
-        out = sdro.tabulated_output_header(system_occurences_states, [system.name])
-        expected_output = '#Replicon	foo_single_locus	foo_multi_loci\n'
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        out = sdro.tabulated_output_header(system_occurences_states, [self.macsy_test_env.system.name])
+        expected_output = '#Replicon\tT9SS_single_locus\tT9SS_multi_loci\n'
         self.assertEqual(out, expected_output)
 
     def test_summary_output(self):
         test_file = os.path.join(self.test_dir, 'test.txt')
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
-        system_occurence = SystemOccurence(system)
-        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
         db = RepliconDB(self.macsy_test_env.cfg)
-        rep_info = db['NC_xxxxx_xx']
+        rep_info = db['AESU001c01a']
         sdro.summary_output(test_file, rep_info)
-        self.assertEqual(md5sum(test_file), '81d35e845603dfc1124c348231f46547')
+        self.assertEqual(md5sum(test_file), 'ff58f3dbff33338db2f272ad0b3923b8')
 
     def test_tabulated_output(self):
         test_file = os.path.join(self.test_dir, 'test.txt')
         system_occurences_states = ['single_locus', 'multi_loci']
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
-        system_occurence = SystemOccurence(system)
-        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
-        sdro.tabulated_output(system_occurences_states, [system.name], test_file)
-        self.assertEqual(md5sum(test_file), '44feb14f77227e9a6dcb77905723d866')
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro.tabulated_output(system_occurences_states, [self.macsy_test_env.system.name], test_file)
+        self.assertEqual(md5sum(test_file), 'aa175729fe8a3b787cf84b9c09cf5e07')
 
     def test_report_output(self):
         test_file = os.path.join(self.test_dir, 'test_foo.txt')
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
-        system_occurence = SystemOccurence(system)
-        sdro = systemDetectionReportOrdered('bar', [system_occurence], self.macsy_test_env.cfg)
+        so = self.macsy_test_env.system_occurence
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
         sdro.report_output(test_file)
-        self.assertEqual(md5sum(test_file), 'd41d8cd98f00b204e9800998ecf8427e')
+        self.assertEqual(md5sum(test_file), '10791ef7c77ec198863d645e00bc4d6e')
