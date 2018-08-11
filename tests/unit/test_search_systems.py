@@ -14,7 +14,7 @@
 
 import shutil
 import tempfile
-from macsypy.search_systems import build_clusters, get_compatible_systems
+from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
 
@@ -64,3 +64,29 @@ class Test(MacsyTest):
     def test_get_compatible_systems(self):
         inter = get_compatible_systems([1, 2, 3], [3, 4])
         self.assertEqual(inter, [3])
+
+    def test_get_best_hits(self):
+        hits = self.macsy_test_env.all_hits[0:2]
+
+        hits[0].position = hits[1].position
+
+        # debug
+        """
+        for h in hits:
+            print h.position
+            print h.i_eval
+            print h.score
+            print h.profile_coverage
+            print h.gene.name
+        """
+
+        best_hits = get_best_hits(hits, criterion="score")
+        self.assertEqual(best_hits[0].gene.name, "T9SS_sprT")
+
+        hits[1].i_eval = 7.5e-106
+        best_hits = get_best_hits(hits, criterion="i_eval")
+        self.assertEqual(best_hits[0].gene.name, "T9SS_gldN_TIGR03523")
+
+        hits[0].profile_coverage = 0.92
+        best_hits = get_best_hits(hits, criterion="profile_coverage")
+        self.assertEqual(best_hits[0].gene.name, "T9SS_gldN_TIGR03523")
