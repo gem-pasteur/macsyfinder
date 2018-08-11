@@ -96,15 +96,15 @@ class MacsyTestEnv():
             all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
             all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
-            all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+            self.all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
             # debug
-            # print [h.gene.name for h in all_hits]
+            # print [h.gene.name for h in self.all_hits]
 
             rep_db = RepliconDB(self.cfg)
-            rep_info = rep_db['AESU001c01a']
+            self.rep_info = rep_db['AESU001c01a']
 
-            (clusters, multi_syst_genes) = build_clusters(all_hits, [self.system], rep_info)
+            (clusters, multi_syst_genes) = build_clusters(self.all_hits, [self.system], self.rep_info)
             self.cluster = clusters.clusters[0]
 
             systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
