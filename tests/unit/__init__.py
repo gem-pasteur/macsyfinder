@@ -117,6 +117,14 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
             # debug
             #print system_occurence.valid_hits
+        elif env_id == "env_003":
+            self.build_hits()
+
+            # debug
+            # print [h.gene.name for h in self.all_hits]
+
+            rep_db = RepliconDB(self.cfg)
+            self.rep_info = rep_db['AESU001c01a']
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -141,6 +149,11 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         if env_id == "env_001":
             pass
         elif env_id == "env_002":
+            try:
+                shutil.rmtree(self.out_dir)
+            except:
+                pass
+        elif env_id == "env_003":
             try:
                 shutil.rmtree(self.out_dir)
             except:
