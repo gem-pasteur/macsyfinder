@@ -14,7 +14,7 @@
 
 import shutil
 import tempfile
-from macsypy.search_systems import build_clusters
+from macsypy.search_systems import build_clusters, get_compatible_systems
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
 
@@ -60,3 +60,7 @@ class Test(MacsyTest):
         if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
             #print "Recap clusters"
         """
+
+    def test_get_compatible_systems(self):
+        inter = get_compatible_systems([1, 2, 3], [3, 4])
+        self.assertEqual(inter, [3])
