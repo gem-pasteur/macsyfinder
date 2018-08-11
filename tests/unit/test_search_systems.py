@@ -23,12 +23,12 @@ class Test(MacsyTest):
 
     def setUp(self):
         self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_002")
+        self.macsy_test_env.load("env_003")
 
         self.test_dir = tempfile.mkdtemp()
 
     def tearDown(self):
-        self.macsy_test_env.unload("env_002")
+        self.macsy_test_env.unload("env_003")
 
         shutil.rmtree(self.test_dir)
 
