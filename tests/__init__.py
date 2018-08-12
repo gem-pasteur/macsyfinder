@@ -6,6 +6,8 @@ from StringIO import StringIO
 from contextlib import contextmanager
 import hashlib
 from functools import partial
+from time import strftime
+import uuid
 
 
 class MacsyTest(unittest.TestCase):
@@ -107,6 +109,10 @@ class MacsyTest(unittest.TestCase):
                 hmm1_fields = hmm1_line.split('#')[:-1]
                 hmm2_fields = hmm2_line.split('#')[:-1]
                 self.assertListEqual(hmm1_fields, hmm2_fields)
+
+    @staticmethod
+    def get_uniq_tmp_dir_name():
+        return "/tmp/macsyfinder-{}-{}".format(strftime("%Y%m%d-%H%M%S"),str(uuid.uuid4()))
 
 
 class LoggerWrapper(object):

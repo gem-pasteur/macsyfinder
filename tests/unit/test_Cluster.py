@@ -17,7 +17,6 @@ import shutil
 import tempfile
 import logging
 from operator import attrgetter
-from time import strftime
 from macsypy.config import Config
 from macsypy.system import System, system_bank
 from macsypy.gene import gene_bank
@@ -111,7 +110,7 @@ class Test(MacsyTest):
         self.assertEqual(state, '')
 
     def test_add(self):
-        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
@@ -187,7 +186,7 @@ class Test(MacsyTest):
 
     def test_save(self):
 
-        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
