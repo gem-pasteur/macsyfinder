@@ -36,3 +36,9 @@ class Test(MacsyTest):
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
         report_str = valid_system_hit.output_system("foo132", "all_clear")
         self.assertEqual(md5sum(str_=report_str), 'ac7f5a5808e2c9875784b75358f80325')
+
+    def test_getattr(self):
+        hit = self.macsy_test_env.all_hits[0]
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        i_eval = valid_system_hit.i_eval
+        self.assertEqual(i_eval, 7.5e-103)
