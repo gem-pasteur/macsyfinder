@@ -14,7 +14,7 @@
 
 from macsypy.search_systems import ClustersHandler
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest
+from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
 
 
@@ -46,3 +46,11 @@ class Test(MacsyTest):
         cluster.replicon_name = 'bla'
         with self.assertRaises(SystemDetectionError):
             ch.add(cluster)
+
+    def test_str(self):
+        ch = ClustersHandler()
+        cluster = self.macsy_test_env.cluster
+        ch.add(cluster)
+        ch.add(cluster)
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), 'f08677489ff1dd2ed89f27995427233a')
