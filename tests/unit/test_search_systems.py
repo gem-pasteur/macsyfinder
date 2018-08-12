@@ -14,7 +14,7 @@
 
 import shutil
 import tempfile
-from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster
+from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon
 from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
@@ -111,3 +111,13 @@ class Test(MacsyTest):
         """
         Deal with "accessory foreign genes",
         """
+
+    def test_analyze_clusters_replicon(self):
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['AESU001c01a']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+        self.assertEqual(len(systems_occurences_list), 1)
+
+        # FIXME
+        # many part of analyze_clusters_replicon func not tested
