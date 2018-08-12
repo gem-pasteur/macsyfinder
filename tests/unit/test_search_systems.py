@@ -12,9 +12,10 @@
 ################################################################################
 
 
+import os
 import shutil
 import tempfile
-from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon
+from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
@@ -121,3 +122,23 @@ class Test(MacsyTest):
 
         # FIXME
         # many part of analyze_clusters_replicon func not tested
+
+    def test_search_systems(self):
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+
+        tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.tab')
+        reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.report')
+        summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.summary')
+
+        # debug
+        """
+        with open(tabfilename) as f:
+            print f.read()
+        """
+
+        self.assertEqual(md5sum(tabfilename), 'ecfb8fd9705884fff9773adb16bb22e0')
+        self.assertEqual(md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
+        self.assertEqual(md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+
+        # FIXME
+        # many part of search_systems func not tested
