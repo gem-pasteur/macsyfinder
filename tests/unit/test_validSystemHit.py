@@ -42,3 +42,9 @@ class Test(MacsyTest):
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
         i_eval = valid_system_hit.i_eval
         self.assertEqual(i_eval, 7.5e-103)
+
+    def test_output_system_header(self):
+        hit = self.macsy_test_env.all_hits[0]
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        header_str_ = valid_system_hit.output_system_header()
+        self.assertEqual(md5sum(str_=header_str_), 'c5a197c7ad1819944a90e082be4c2f0c')
