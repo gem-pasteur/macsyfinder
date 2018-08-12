@@ -17,7 +17,6 @@ import shutil
 import tempfile
 import logging
 from operator import attrgetter
-from time import strftime
 from macsypy.config import Config
 from macsypy.system import System, system_bank
 from macsypy.gene import Gene, Analog, gene_bank
@@ -417,7 +416,7 @@ class Test(MacsyTest):
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
         # defined in setUp() method).
-        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        out_dir = self.get_uniq_tmp_dir_name()
         config = Config(hmmer_exe="hmmsearch",
                         out_dir=out_dir,
                         db_type="gembase",
@@ -546,7 +545,7 @@ class Test(MacsyTest):
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
         # defined in setUp() method).
-        out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        out_dir = self.get_uniq_tmp_dir_name()
         config = Config(hmmer_exe="hmmsearch",
                         out_dir=out_dir,
                         db_type="gembase",

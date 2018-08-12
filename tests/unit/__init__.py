@@ -2,7 +2,6 @@ import os
 import shutil
 import tempfile
 import logging
-from time import strftime
 from operator import attrgetter
 from macsypy.database import Indexes, RepliconDB
 from macsypy.config import Config
@@ -16,7 +15,7 @@ from tests import MacsyTest
 
 class MacsyTestEnvSnippet():
     def build_hits(self):
-        self.out_dir = "/tmp/macsyfinder-test_fill_with_cluster-" + strftime("%Y%m%d_%H-%M-%S")
+        self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         self.cfg = Config(hmmer_exe="hmmsearch",
                         out_dir=self.out_dir,
