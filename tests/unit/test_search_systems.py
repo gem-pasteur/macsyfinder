@@ -14,7 +14,8 @@
 
 import shutil
 import tempfile
-from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits
+from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster
+from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
 
@@ -90,3 +91,23 @@ class Test(MacsyTest):
         hits[0].profile_coverage = 0.92
         best_hits = get_best_hits(hits, criterion="profile_coverage")
         self.assertEqual(best_hits[0].gene.name, "T9SS_gldN_TIGR03523")
+
+    def test_disambiguate_cluster(self):
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['AESU001c01a']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[1]
+
+        with self.catch_io(out=True, err=False) as stdxxx:
+            clusters = disambiguate_cluster(cluster)
+
+        stdout = stdxxx[0].getvalue()
+
+        self.assertEqual(md5sum(str_=stdout), '2567ef1661050233b190073a57400d42')
+
+        # FIXME
+        # in disambiguate_cluster func, block starting with comment below is
+        # not tested
+        """
+        Deal with "accessory foreign genes",
+        """
