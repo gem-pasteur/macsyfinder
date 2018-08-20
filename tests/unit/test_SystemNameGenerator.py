@@ -34,3 +34,8 @@ class Test(MacsyTest):
         name = sng.getSystemName('foo', 'bar')
         self.assertEqual(name, 'foo_bar_2')
         self.assertEqual(sng.name_bank, {'foo_bar_': 2})
+
+    def test_computeBasename(self):
+        sng = SystemNameGenerator()
+        name = sng._computeBasename('foo', 'bar')
+        self.assertEqual(name, 'foo_bar_')
