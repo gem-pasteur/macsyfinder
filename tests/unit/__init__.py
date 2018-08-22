@@ -158,19 +158,10 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         if env_id == "env_001":
             pass
         elif env_id == "env_002":
-            try:
-                shutil.rmtree(self.out_dir)
-            except:
-                pass
+            MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_003":
-            try:
-                shutil.rmtree(self.out_dir)
-            except:
-                pass
+            MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_004":
-            try:
-                shutil.rmtree(self.out_dir)
-            except:
-                pass
+            MacsyTest.rmtree(self.out_dir)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))

@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 import unittest
 import platform
 from StringIO import StringIO
@@ -24,7 +25,6 @@ class MacsyTest(unittest.TestCase):
             setsid = ''
         return setsid
 
-
     @classmethod
     def find_data(cls, *args):
         data_path = os.path.join(cls._data_dir, *args)
@@ -32,7 +32,6 @@ class MacsyTest(unittest.TestCase):
             return data_path
         else:
             raise IOError("data '{}' does not exists".format(data_path))
-
 
     @contextmanager
     def catch_io(self, out=False, err=False):
@@ -52,7 +51,6 @@ class MacsyTest(unittest.TestCase):
             yield sys.stdout, sys.stderr
         finally:
             sys.stdout, sys.stderr = old_out, old_err
-
 
     @staticmethod
     def fake_exit(*args, **kwargs):
@@ -77,7 +75,6 @@ class MacsyTest(unittest.TestCase):
                 res = call_ori(*args, **kwargs)
             return res
         return wrapper
-
 
     def assertFileEqual(self, f1, f2, msg=None):
         self.maxDiff = None
@@ -113,6 +110,19 @@ class MacsyTest(unittest.TestCase):
     @staticmethod
     def get_uniq_tmp_dir_name():
         return "/tmp/macsyfinder-{}-{}".format(strftime("%Y%m%d-%H%M%S"),str(uuid.uuid4()))
+
+    @staticmethod
+    def rmtree(path):
+        """
+        Remove directory tree.
+
+        :param path: the path to remove
+        :type path: str
+        """
+        try:
+            shutil.rmtree(path)
+        except:
+            pass
 
 
 class LoggerWrapper(object):
