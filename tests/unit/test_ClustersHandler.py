@@ -12,22 +12,75 @@
 ################################################################################
 
 
-from macsypy.search_systems import ClustersHandler
+from macsypy.database import RepliconInfo
+from macsypy.report import Hit
+from macsypy.gene import Gene
+from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
 from tests import MacsyTest, md5sum
 from tests.unit import MacsyTestEnv
+
+
+class TestCircularizeData(object):
+    """Helper class used in test_circularize() method."""
+
+    def __init__(self, cfg, models_location, system):
+        self.cfg = cfg
+        self.system = system
+        self.models_location = models_location
+
+        self._hits_group = (None, None, None, None, None, None)
+
+    def build_clusters_group(self):
+        c1 = self.build_cluster(10, 15)
+        c2 = self.build_cluster(11, 16)
+        c3 = self.build_cluster(12, 17)
+
+        return [c1, c2, c3]
+
+    def build_hit(self, pos, max_space):
+        gene_name = 'T9SS_gldJ_TIGR03524'
+        gene = Gene(self.cfg, gene_name, self.system, self.models_location, inter_gene_max_space=max_space)
+        hit = Hit(gene, self.system, None, None, '', pos, None, None, None, None, None, None)
+
+        return hit
+
+    def set_hits_group(self, p1, s1, p2, s2, p3, s3):
+        self._hits_group = (p1, s1, p2, s2, p3, s3)
+
+    def get_hits_group(self):
+        (p1, s1, p2, s2, p3, s3) = self._hits_group
+
+        h1 = self.build_hit(p1, s1)
+        h2 = self.build_hit(p2, s2)
+        h3 = self.build_hit(p3, s3)
+
+        return [h1, h2, h3]
+
+    def build_cluster(self, begin, end):
+        c = Cluster([self.system])
+        c.end = end
+        c.begin = begin
+        c.hits = self.get_hits_group()
+        return c
+
+    def get_end_hits(self, p1, s1, p2, s2):
+        h1 = self.build_hit(p1, s1)
+        h2 = self.build_hit(p2, s2)
+        return [h1, h2]
 
 
 class Test(MacsyTest):
 
     def setUp(self):
         self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_002")
 
     def tearDown(self):
-        self.macsy_test_env.unload("env_002")
+        self.macsy_test_env = None
 
     def test_add(self):
+        self.macsy_test_env.load("env_002")
+
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
 
@@ -47,10 +100,94 @@ class Test(MacsyTest):
         with self.assertRaises(SystemDetectionError):
             ch.add(cluster)
 
+        self.macsy_test_env.unload("env_002")
+
     def test_str(self):
+        self.macsy_test_env.load("env_002")
+
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
         ch.add(cluster)
         ch.add(cluster)
         str_ = str(ch)
         self.assertEqual(md5sum(str_=str_), 'f08677489ff1dd2ed89f27995427233a')
+
+        self.macsy_test_env.unload("env_002")
+
+    def test_circularize(self):
+        self.macsy_test_env.load("env_004")
+
+        system = self.macsy_test_env.system
+        cfg = self.macsy_test_env.cfg
+        models_location = self.macsy_test_env.models_location
+
+        ch = ClustersHandler()
+
+        tcd = TestCircularizeData(cfg, models_location, system)
+
+        # case 1
+
+        tcd.set_hits_group(1, 3, 6, 3, 15, 3)
+        ch.clusters = tcd.build_clusters_group()
+
+        end_hits = tcd.get_end_hits(11, 3, 6, 3)
+        rep_info = RepliconInfo('circular', 200, 400, [])
+
+        ch.circularize(rep_info, end_hits, [system])
+
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), '6371e866c6141a9782e4202f515d9649')
+
+        # case 2
+
+        tcd.set_hits_group(1, 3, 6, 3, 15, 3)
+        ch.clusters = tcd.build_clusters_group()
+
+        end_hits = tcd.get_end_hits(11, 50, 6, 50)
+        rep_info = RepliconInfo('circular', 200, 220, [])
+
+        ch.circularize(rep_info, end_hits, [system])
+
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), '29b0f48a0656a119e36ee4397770ffec')
+
+        # case 3
+
+        tcd.set_hits_group(1, 350, 6, 30, 15, 30)
+        ch.clusters = tcd.build_clusters_group()
+
+        end_hits = tcd.get_end_hits(11, 30, 6, 30)
+        rep_info = RepliconInfo('circular', 200, 400, [])
+
+        ch.circularize(rep_info, end_hits, [system])
+
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), 'dc9b00fc3e0bed7a95ad273d4c54227a')
+
+        # case 4
+
+        tcd.set_hits_group(30, 3, 6, 3, 15, 3)
+        ch.clusters = tcd.build_clusters_group()
+
+        end_hits = tcd.get_end_hits(11, 195, 6, 128)
+        rep_info = RepliconInfo('circular', 200, 400, [])
+
+        ch.circularize(rep_info, end_hits, [system])
+
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), 'ed355064670f75096721663aaa1c6cf9')
+
+        # case 5
+
+        tcd.set_hits_group(1, 3, 6, 3, 15, 400)
+        ch.clusters = tcd.build_clusters_group()
+
+        end_hits = tcd.get_end_hits(11, 3, 6, 3)
+        rep_info = RepliconInfo('circular', 200, 400, [])
+
+        ch.circularize(rep_info, end_hits, [system])
+
+        str_ = str(ch)
+        self.assertEqual(md5sum(str_=str_), 'f16547771922bd608931f178d468c0d7')
+
+        self.macsy_test_env.unload("env_004")
