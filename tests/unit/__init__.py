@@ -60,9 +60,16 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
     """Standard test environments.
     
     env_001 => environment loaded from scratch 
-               (data from "test_base.fa")
+               (data from "test_base.fa").
     env_002 => environment loaded using "previous_run" option
-               (data from "tests/data/data_set_1/complete_run_results")
+               (data from "tests/data/data_set_1/complete_run_results").
+               Create SystemOccurence.
+    env_003 => environment loaded using "previous_run" option
+               (data from "tests/data/data_set_1/complete_run_results").
+               Stops before calling build_clusters() method.
+    env_004 => environment loaded using "previous_run" option
+               (data from "tests/data/data_set_1/complete_run_results").
+               Create ModelRegistry.
     """
 
     def load(self, env_id):
@@ -119,11 +126,14 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_003":
             self.build_hits()
 
-            # debug
-            # print [h.gene.name for h in self.all_hits]
-
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
+        elif env_id == "env_004":
+            self.build_hits()
+
+            models_registry = ModelRegistry(self.cfg)
+            self.model_name = 'set_1'
+            self.models_location = models_registry[self.model_name]
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -153,6 +163,11 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             except:
                 pass
         elif env_id == "env_003":
+            try:
+                shutil.rmtree(self.out_dir)
+            except:
+                pass
+        elif env_id == "env_004":
             try:
                 shutil.rmtree(self.out_dir)
             except:
