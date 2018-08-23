@@ -56,6 +56,7 @@ class MacsyTestEnvSnippet():
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         self.all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
+
 class MacsyTestEnv(MacsyTestEnvSnippet):
     """Standard test environments.
     
