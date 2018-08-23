@@ -101,7 +101,7 @@ class Test(MacsyTest):
         cluster = Cluster(system)
         compatible_system_name = 'set_1/T2SS'
         cluster._compatible_systems.append(compatible_system_name)
-        self.assertEqual(cluster.compatible_systems, [compatible_system_name])
+        self.assertListEqual(cluster.compatible_systems, [compatible_system_name])
 
     def test_state(self):
         system = System(self.cfg, 'foo', 4)
@@ -115,6 +115,7 @@ class Test(MacsyTest):
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
         # defined in setUp() method).
+        # the config create a directory corresponding to out_dir option
         config = Config(hmmer_exe="hmmsearch",
                         out_dir=out_dir,
                         db_type="gembase",
@@ -179,10 +180,7 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          "Attempting to gather in a cluster hits from different replicons ! ")
 
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            pass
+        shutil.rmtree(out_dir)
 
     def test_save(self):
 
