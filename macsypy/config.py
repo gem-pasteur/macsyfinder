@@ -138,18 +138,11 @@ class Config(object):
         :param sequence_db: the path to the sequence input dataset (fasta format)
         :type sequence_db: string
         :param db_type: the type of dataset to deal with. 
-<<<<<<< HEAD
-         \"unordered_replicon\" corresponds to a non-assembled genome, 
+         \"unordered_replicon\" corresponds to a non-assembled genome,
          \"unordered\" to a metagenomic dataset, 
          \"ordered_replicon\" to an assembled genome, and 
          \"gembase\" to a set of replicons where sequence identifiers follow this convention:
           \">RepliconName_SequenceID\"."
-=======
-                        \"unordered_replicon\" corresponds to a non-assembled genome,
-                        \"unordered\" to a metagenomic dataset,
-                        \"ordered_replicon\" to an assembled genome, and
-                        \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
->>>>>>> master
         :type db_type: string
         :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningful
                                   only if the db_type is 'ordered_replicon' or 'gembase'
