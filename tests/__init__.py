@@ -8,6 +8,7 @@ from contextlib import contextmanager
 import hashlib
 from functools import partial
 from time import strftime
+import tempfile
 import uuid
 
 
@@ -109,7 +110,7 @@ class MacsyTest(unittest.TestCase):
 
     @staticmethod
     def get_uniq_tmp_dir_name():
-        return "/tmp/macsyfinder-{}-{}".format(strftime("%Y%m%d-%H%M%S"),str(uuid.uuid4()))
+        return os.path.join(tempfile.gettempdir(), "macsyfinder-{}".format(uuid.uuid4()))
 
     @staticmethod
     def rmtree(path):
