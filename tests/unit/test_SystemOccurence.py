@@ -535,10 +535,8 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 0)
         self.assertEqual(system_occurence.nb_cluster, 1)
 
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            pass
+        shutil.rmtree(out_dir)
+
 
     def test_fill_with_hits(self):
 
@@ -646,7 +644,4 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.forbidden_genes['tadZ'], 1)
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            pass
+        shutil.rmtree(out_dir)
