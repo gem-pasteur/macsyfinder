@@ -127,3 +127,10 @@ class Test(MacsyTest):
         s = "{id}\t{replicon_name}\t{position:d}\t{hit_seq_len:d}\t{gene_name}\t{system_name}\t{i_eval:.3e}" \
             "\t{score:.3f}\t{profil_coverage:.3f}\t{sequence_coverage:.3f}\t{begin:d}\t{end:d}\n".format(**hit_prop)
         self.assertEqual(s, str(hit))
+
+    def test_get_syst_inter_gene_max_space(self):
+        system = System(self.cfg, "foo/T2SS", 10)
+        gene = Gene(self.cfg, "gspD", system, self.models_location)
+        h0 = Hit(gene, system, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        self.assertEqual(h0.get_syst_inter_gene_max_space(), 10)
