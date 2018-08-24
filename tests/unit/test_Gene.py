@@ -17,7 +17,7 @@ import shutil
 import tempfile
 import logging
 from macsypy.gene import Gene
-from macsypy.gene import Homolog
+from macsypy.gene import Homolog, Analog
 from macsypy.system import System
 from macsypy.config import Config
 from macsypy.registries import ModelRegistry
@@ -67,7 +67,6 @@ class Test(MacsyTest):
         except:
             pass
 
-
     def test_add_homolog(self):
         system_foo = System(self.cfg, "foo", 10)
         system_bar = System(self.cfg, "bar", 10)
@@ -77,8 +76,7 @@ class Test(MacsyTest):
         gene.add_homolog(homolog)
         self.assertEqual(len(gene.homologs), 1)
         self.assertEqual(gene.homologs[0], homolog)
-    
-    
+
     def test_get_homologs(self):
         system_foo = System(self.cfg, "foo", 10)
         system_bar = System(self.cfg, "bar", 10)
@@ -89,9 +87,56 @@ class Test(MacsyTest):
         gene.add_homolog(homolog_1)
         homolog_2 = Homolog(sctJ, gene)
         gene.add_homolog(homolog_2)
-        self.assertEqual(gene.get_homologs(), [homolog_1, homolog_2] )
-    
-        
+        self.assertEqual(gene.get_homologs(), [homolog_1, homolog_2])
+
+    def test_is_homolog(self):
+        system_foo = System(self.cfg, "foo", 10)
+        system_bar = System(self.cfg, "bar", 10)
+        gene = Gene(self.cfg, 'sctN', system_foo, self.models_location)
+        sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
+        sctJ = Gene(self.cfg, 'sctJ', system_bar, self.models_location)
+        homolog = Homolog(sctJ_FLG, gene)
+        gene.add_homolog(homolog)
+        self.assertTrue(gene.is_homolog(gene))
+        self.assertTrue(gene.is_homolog(homolog))
+        self.assertFalse(gene.is_homolog(sctJ))
+
+
+    def test_add_analog(self):
+        system_foo = System(self.cfg, "foo", 10)
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
+        analog = Analog(self.cfg, gene)
+        gene.add_analog(analog)
+        self.assertEqual(len(gene.analogs), 1)
+        self.assertEqual(gene.analogs[0], analog)
+
+
+    def test_get_analogs(self):
+        system_foo = System(self.cfg, "foo", 10)
+        system_bar = System(self.cfg, "bar", 10)
+        gene = Gene(self.cfg, 'sctN', system_foo, self.models_location)
+        sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
+        sctJ = Gene(self.cfg, 'sctJ', system_bar, self.models_location)
+        analog_1 = Analog(sctJ_FLG, gene)
+        gene.add_analog(analog_1)
+        analog_2 = Analog(sctJ, gene)
+        gene.add_analog(analog_2)
+        self.assertEqual(gene.get_analogs(), [analog_1, analog_2])
+
+
+    def test_is_analog(self):
+        system_foo = System(self.cfg, "foo", 10)
+        system_bar = System(self.cfg, "bar", 10)
+        gene = Gene(self.cfg, 'sctN', system_foo, self.models_location)
+        sctJ_FLG = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
+        sctJ = Gene(self.cfg, 'sctJ', system_bar, self.models_location)
+        analog = Analog(sctJ_FLG, gene)
+        gene.add_analog(analog)
+        self.assertTrue(gene.is_analog(gene))
+        self.assertTrue(gene.is_analog(analog))
+        self.assertFalse(gene.is_analog(sctJ))
+
+
     def test_system(self):
         """
         test getter/setter for system property
@@ -99,8 +144,8 @@ class Test(MacsyTest):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         self.assertEqual(gene.system, system_foo)
-    
-    
+
+
     def test_loner(self):
         """
         test getter for loner property
@@ -121,7 +166,7 @@ class Test(MacsyTest):
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, self.models_location, exchangeable=True)
         self.assertTrue(gene.exchangeable)
- 
+
     def test_multi_system(self):
         """
         test getter for multi_system property
