@@ -200,7 +200,19 @@ class Test(MacsyTest):
         gene_homolog = Gene(self.cfg, 'sctJ', system_bar, self.models_location)
         homolog = Homolog(gene_homolog, gene, self.cfg)
         gene.add_homolog(homolog)
+        analog = Gene(self.cfg, 'sctN', system_foo, self.models_location)
+        gene.add_analog(analog)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
-    homologs: sctJ"""
+    homologs: sctJ
+    analogs: sctN"""
+        self.assertEqual(str(gene), s)
+
+        gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location,
+                    loner=True, exchangeable=True, multi_system=True, inter_gene_max_space=10)
+        s = """name : sctJ_FLG
+inter_gene_max_space: 10
+loner
+multi_system
+exchangeable"""
         self.assertEqual(str(gene), s)
