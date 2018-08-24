@@ -124,7 +124,7 @@ class Test(MacsyTest):
         db = RepliconDB(self.cfg)
         rcv_topo = db._fill_topology()
         self.assertDictEqual(db_send, rcv_topo)
-    
+
 
     def test_fill_ordered_replicon_min_max(self):
         self.tearDown()
@@ -180,8 +180,8 @@ class Test(MacsyTest):
         self.assertEqual(DBNC.max, 141)
         self.assertEqual(DBNC.genes, self.NCDB_genes)
 
- 
- 
+
+
     def test_fill_gembase_min_max_with_topology(self):
         self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
         with open(self.cfg.topology_file , 'w') as f:
@@ -207,8 +207,8 @@ class Test(MacsyTest):
         self.assertEqual(DBNC.min, 134)
         self.assertEqual(DBNC.max, 141)
         self.assertEqual(DBNC.genes, self.NCDB_genes)
-         
- 
+
+
     def test_in(self):
         db = RepliconDB(self.cfg)
         self.assertIn('ESCO030p01', db)
@@ -247,3 +247,21 @@ class Test(MacsyTest):
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
         self.assertItemsEqual(db.items(), [('ESCO030p01', ESCO030p01), ('NC_xxxxx_xx', NCXX),
                                            ('PSAE001c01', PSAE001c01)])
+
+    def test_iteritems(self):
+        db = RepliconDB(self.cfg)
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
+        NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
+        self.assertItemsEqual(db.iteritems(), [('ESCO030p01', ESCO030p01),
+                                               ('NC_xxxxx_xx', NCXX),
+                                               ('PSAE001c01', PSAE001c01)])
+
+
+    def test_replicon_infos(self):
+        db = RepliconDB(self.cfg)
+        ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
+        PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
+        NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
+        values = db.replicon_infos()
+        self.assertItemsEqual(values, [ESCO030p01, NCXX, PSAE001c01])
