@@ -60,19 +60,38 @@ def _create_fake_models_tree(root_models_dir, sys_def):
     return models_dir
 
 
+class RegitriesUtilsTest(MacsyTest):
+
+    def test_split_def_name(self):
+        items = ['CRISPR-Cas', 'typing', 'cas']
+        def_name = registries._separator.join(items)
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+        def_name = registries._separator.join(items) + registries._separator
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+        def_name = registries._separator + registries._separator.join(items)
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+
+
+    def test_join_def_path(self):
+        items = ['CRISPR-Cas', 'typing', 'cas']
+        self.assertEqual('/'.join(items), registries.join_def_path(*items))
+
 class ModelLocationTest(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
-        
+
         # add only one handler to the macsypy logger
         from macsypy.gene import _log
         macsy_log = _log.parent
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        
+
         self.cfg = ConfigLight()
         self.tmp_dir = tempfile.mkdtemp()
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
