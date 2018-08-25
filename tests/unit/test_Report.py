@@ -111,6 +111,10 @@ class Test(MacsyTest):
         ]
         self.assertListEqual(hits, report.hits)
 
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+        report.hits = hits
+        self.assertIsNone(report.extract())
+        
 
     def test_GembaseHMMReport_extract_concurent(self):
         system = System(self.cfg, "T2SS", 10)
