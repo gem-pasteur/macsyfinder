@@ -13,8 +13,6 @@
 
 
 import os
-import shutil
-import tempfile
 from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
 from tests import MacsyTest, md5sum
@@ -28,6 +26,9 @@ class Test(MacsyTest):
 
     def tearDown(self):
         self.macsy_test_env = None
+
+        # reset static members (hacked in test_search_systems func)
+        RepliconDB.ordered_replicon_name = 'UserReplicon'
 
     def test_build_clusters(self):
         self.macsy_test_env.load("env_003")
@@ -138,13 +139,16 @@ class Test(MacsyTest):
         self.macsy_test_env.unload("env_003")
 
     def test_search_systems(self):
-        self.macsy_test_env.load("env_003")
 
-        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+        # case 1
+
+        self.macsy_test_env.load("env_003")
 
         tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.tab')
         reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.report')
         summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.summary')
+
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
         # debug
         """
@@ -156,7 +160,58 @@ class Test(MacsyTest):
         self.assertEqual(md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
         self.assertEqual(md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
 
-        # FIXME
-        # many part of search_systems func not tested
-
         self.macsy_test_env.unload("env_003")
+
+        # case 2
+
+        self.macsy_test_env.load("env_005")
+
+        tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.tab')
+        reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.report')
+        summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.summary')
+
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+
+        self.assertEqual(md5sum(tabfilename), '9641c5b07036c25187d4e81300572771')
+        self.assertEqual(md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
+        self.assertEqual(md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+
+        # case 3
+
+        RepliconDB.ordered_replicon_name = 'AESU001c01a'
+
+        self.macsy_test_env.cfg.options['db_type'] = "ordered_replicon"
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+
+        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(md5sum(reportfilename), 'dbe75a1bab3be68b56c4cb95b18c10fc')
+        self.assertEqual(md5sum(summaryfilename), '0c0f3a682d393e1408f2e00d0cacb624')
+
+        # case 4
+
+        self.macsy_test_env.cfg.options['db_type'] = "unordered_replicon"
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+
+        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(md5sum(reportfilename), 'bba614dc69362195d5a264e2339dfe09')
+        self.assertEqual(md5sum(summaryfilename), '4af8657e1877ba123783db7088c7f132')
+
+        # case 5
+
+        self.macsy_test_env.cfg.options['db_type'] = "unordered_replicon"
+        forbidden_gene = self.macsy_test_env.all_hits[0].gene
+        self.macsy_test_env.system._forbidden_genes.append(forbidden_gene)
+        search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+
+        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(md5sum(reportfilename), 'a7d305b8194e1b0b58d0bef6f127d47f')
+        self.assertEqual(md5sum(summaryfilename), '4d0453c5a03d7e56fa5231a88ba2b7f6')
+
+        # case 6
+
+        self.macsy_test_env.cfg.options['db_type'] = "foobar"
+        with self.assertRaises(ValueError) as context:
+            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+        self.assertEqual(context.exception.message, 'Invalid database type. ')
+
+        self.macsy_test_env.unload("env_005")
