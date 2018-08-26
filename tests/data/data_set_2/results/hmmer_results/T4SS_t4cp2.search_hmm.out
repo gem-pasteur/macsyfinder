@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_t4cp2.hmm
+# target sequence database:        tests/data/data_set_2/base/test.fa
+# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_t4cp2.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       t4cp2  [M=222]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+     0.0013   15.6   1.2     0.0033   14.2   0.0    2.2  2  AESU001c01a_005760  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_005760  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.2   0.0   1.1e-06    0.0033      20     117 ..     222     328 ..     184     335 .. 0.80
+   2 ?   -2.0   0.7     0.098   3.1e+02     155     185 ..     465     479 ..     426     495 .. 0.50
+
+  Alignments for each domain:
+  == domain 1  score: 14.2 bits;  conditional E-value: 1.1e-06
+               t4cp2  20 atsksdfdlkdvik..kpvalyivlpa.edlaslrplaslfisqlinalaklapekkkklkrpvlfllDEf......gnlgkiegleeala 101
+                         ++ + +fd +d+ +  ++++ yi +    d  +   l s f+ +l+ +++   pe++ + ++++++++DE+      ++ + ++++e ++ 
+  AESU001c01a_005760 222 FFGEKSFDPQDLLRinENGMGYINILRlTDIQDRPKLFSTFMLSLLAEIYATFPEQGDSGRPELVIFVDEAhlifneASSALLNQIESIVK 312
+                         44568899999988887788888777767777788999999999999999999998888888888888887333333344599******** PP
+
+               t4cp2 102 vargrgirfiliiQsl 117
+                          +r++g+ +++++Q+ 
+  AESU001c01a_005760 313 LIRSKGVGLYFVTQNP 328
+                         **************96 PP
+
+  == domain 2  score: -2.0 bits;  conditional E-value: 0.098
+               t4cp2 155 kllGektvkvkssssssglgersgtsrtese 185
+                         k++  kt++                 r++s 
+  AESU001c01a_005760 465 KEAARKTTSS----------------RSSSS 479
+                         1111111111................22111 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (222 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                       132  (0.0420382); expected 62.8 (0.02)
+Passed bias filter:                       86  (0.0273885); expected 62.8 (0.02)
+Passed Vit filter:                         8  (0.00254777); expected 3.1 (0.001)
+Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# Mc/sec: 7708.32
+//
+[ok]

@@ -1,0 +1,6 @@
+# gene: T9SS_porU extract from tests/data/data_set_2/results/hmmer_results/T9SS_porU.search_hmm.out hmm output
+# profile length= 1110
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+AESU001c01a_016930	AESU001c01a	1668	1282	T9SS_porU	T9SS	0.000e+00	1396.400	1.000	0.876	159	1281
