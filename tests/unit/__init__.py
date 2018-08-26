@@ -14,20 +14,20 @@ from macsypy.system_parser import SystemParser
 from tests import MacsyTest
 
 class MacsyTestEnvSnippet():
-    def build_hits(self):
+    def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         self.cfg = Config(hmmer_exe="hmmsearch",
                         out_dir=self.out_dir,
                         db_type="gembase",
-                        previous_run="tests/data/data_set_1/complete_run_results",
+                        previous_run=previous_run,
                         e_value_res=1,
                         i_evalue_sel=0.5,
                         res_search_suffix=".search_hmm.out",
                         profile_suffix=".hmm",
                         res_extract_suffix="",
                         log_level=30,
-                        models_dir="tests/data/data_set_1/models",
+                        models_dir=models_dir,
                         log_file=os.devnull)
 
         idx = Indexes(self.cfg)
