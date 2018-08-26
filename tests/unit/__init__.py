@@ -72,7 +72,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                (data from "tests/data/data_set_1/complete_run_results").
                Create ModelRegistry.
     env_005 => environment loaded using "previous_run" option
-               (data from "tests/data/data_set_2/complete_run_results").
+               (data from "tests/data/data_set_2/results").
                Stops before calling build_clusters() method.
                Do not contain RepliconDB instance.
     """
@@ -140,7 +140,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_005":
-            self.build_hits()
+            self.build_hits(previous_run="tests/data/data_set_2/results", models_dir="tests/data/data_set_2/models")
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
