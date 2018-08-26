@@ -13,22 +13,23 @@ from macsypy.search_genes import search_genes
 from macsypy.system_parser import SystemParser
 from tests import MacsyTest
 
+
 class MacsyTestEnvSnippet():
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         self.cfg = Config(hmmer_exe="hmmsearch",
-                        out_dir=self.out_dir,
-                        db_type="gembase",
-                        previous_run=previous_run,
-                        e_value_res=1,
-                        i_evalue_sel=0.5,
-                        res_search_suffix=".search_hmm.out",
-                        profile_suffix=".hmm",
-                        res_extract_suffix="",
-                        log_level=30,
-                        models_dir=models_dir,
-                        log_file=os.devnull)
+                          out_dir=self.out_dir,
+                          db_type="gembase",
+                          previous_run=previous_run,
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          res_search_suffix=".search_hmm.out",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          models_dir=models_dir,
+                          log_file=os.devnull)
 
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
@@ -59,8 +60,8 @@ class MacsyTestEnvSnippet():
 
 class MacsyTestEnv(MacsyTestEnvSnippet):
     """Standard test environments.
-    
-    env_001 => environment loaded from scratch 
+
+    env_001 => environment loaded from scratch
                (data from "test_base.fa").
     env_002 => environment loaded using "previous_run" option
                (data from "tests/data/data_set_1/complete_run_results").
@@ -127,7 +128,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.system_occurence = systems_occurences_list[0]
 
             # debug
-            #print system_occurence.valid_hits
+            # print system_occurence.valid_hits
         elif env_id == "env_003":
             self.build_hits()
 
