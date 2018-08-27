@@ -79,6 +79,9 @@ class MacsyTest(unittest.TestCase):
 
     def assertFileEqual(self, f1, f2, msg=None):
         self.maxDiff = None
+        # the StringIO does not support context in python2.7
+        # so we can use the following statement only in python3
+        # with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
         with open(f1) as fh1, open(f2) as fh2:
             self.assertMultiLineEqual(fh1.read(), fh2.read(), msg=msg)
 
