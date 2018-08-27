@@ -174,11 +174,13 @@ class TestHMMReport(TestReport):
                     self.cfg.working_dir)
         report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
         report = GembaseHMMReport(gene, report_path, self.cfg)
+        self.assertIsNone(report.best_hit())
         report.extract()
         best_hit = report.best_hit()
         hit_expected = Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
                            float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         self.assertEqual(hit_expected, best_hit)
+
 
     def test_hit_start(self):
         system = System(self.cfg, "T2SS", 10)
