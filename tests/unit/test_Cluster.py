@@ -12,13 +12,7 @@
 ################################################################################
 
 
-import os
-import unittest
-import shutil
-import tempfile
-import logging
 from operator import attrgetter
-from macsypy.config import Config
 from macsypy.system import System, system_bank
 from macsypy.gene import gene_bank
 from macsypy.report import Hit
@@ -84,59 +78,15 @@ class Test(MacsyTest):
 
         self.macsy_test_env.unload("env_001")
 
-    @unittest.skip("")
     def test_add(self):
-        out_dir = MacsyTest.get_uniq_tmp_dir_name()
-
-        # for this test, we use a specific configuration with a dedicated
-        # working directory (i.e. we don't use the generic configuration
-        # defined in setUp() method).
-        # the config create a directory corresponding to out_dir option
-        config = Config(hmmer_exe="hmmsearch",
-                        out_dir=out_dir,
-                        db_type="gembase",
-                        previous_run="tests/data/data_set_1/complete_run_results",
-                        e_value_res=1,
-                        i_evalue_sel=0.5,
-                        res_search_suffix=".search_hmm.out",
-                        profile_suffix=".hmm",
-                        res_extract_suffix="",
-                        log_level=30,
-                        models_dir="tests/data/data_set_1/models",
-                        log_file=os.devnull)
-
-        idx = Indexes(config)
-        idx._build_my_indexes()
-
-        parser = SystemParser(config, system_bank, gene_bank)
-        parser.parse(['set_1/T9SS'])
-
-        system = system_bank['set_1/T9SS']
-
-        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
-
-        ex_genes = []
-        for g in genes:
-            if g.exchangeable:
-                h_s = g.get_homologs()
-                ex_genes += h_s
-                a_s = g.get_analogs()
-                ex_genes += a_s
-        all_genes = (genes + ex_genes)
-
-        all_reports = search_genes(all_genes, config)
-
-        all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
-
-        all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
-        all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+        self.macsy_test_env.load("env_007")
 
         # debug
         # print [h.gene.name for h in all_hits]
 
-        h1, h2, h3 = all_hits[:3]
+        h1, h2, h3 = self.macsy_test_env.all_hits[:3]
 
-        cluster = Cluster([system])
+        cluster = Cluster([self.macsy_test_env.system])
 
         cluster.add(h1)
         self.assertEqual(cluster.begin, 505)
@@ -156,33 +106,12 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          "Attempting to gather in a cluster hits from different replicons ! ")
 
-        shutil.rmtree(out_dir)
+        self.macsy_test_env.unload("env_007")
 
-    @unittest.skip("")
     def test_save(self):
+        self.macsy_test_env.load("env_008")
 
-        out_dir = MacsyTest.get_uniq_tmp_dir_name()
-
-        # for this test, we use a specific configuration with a dedicated
-        # working directory (i.e. we don't use the generic configuration
-        # defined in setUp() method).
-        config = Config(hmmer_exe="hmmsearch",
-                        out_dir=out_dir,
-                        db_type="gembase",
-                        previous_run="tests/data/data_set_1/complete_run_results",
-                        e_value_res=1,
-                        i_evalue_sel=0.5,
-                        res_search_suffix=".search_hmm.out",
-                        profile_suffix=".hmm",
-                        res_extract_suffix="",
-                        log_level=30,
-                        models_dir="tests/data/data_set_1/models",
-                        log_file=os.devnull)
-
-        idx = Indexes(config)
-        idx._build_my_indexes()
-
-        parser = SystemParser(config, system_bank, gene_bank)
+        parser = SystemParser(self.macsy_test_env.config, system_bank, gene_bank)
         parser.parse(['set_1/T9SS'])
 
         system_1 = system_bank['set_1/T9SS']
@@ -199,7 +128,7 @@ class Test(MacsyTest):
                     ex_genes += a_s
             all_genes = (genes + ex_genes)
 
-            all_reports = search_genes(all_genes, config)
+            all_reports = search_genes(all_genes, self.macsy_test_env.config)
 
             all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
@@ -279,10 +208,7 @@ class Test(MacsyTest):
         cluster.save()
         """
 
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            pass
+        self.macsy_test_env.unload("env_008")
 
     def test_str(self):
         self.macsy_test_env.load("env_002")
