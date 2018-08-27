@@ -214,7 +214,26 @@ class TestHMMReport(TestReport):
                                   'NC_xxxxx_xx_056141': None,
                                   'PSAE001c01_006940': None})
 
-
+    def test_fill_my_db(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+        idx = Indexes(self.cfg)
+        macsyfinder_idx = idx.find_my_indexes()
+        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+        db = report._build_my_db(gspD_hmmer_path)
+        report._fill_my_db(macsyfinder_idx, db)
+        self.assertDictEqual(db, {'PSAE001c01_031420': (658, 73),
+                                  'PSAE001c01_051090': (714, 75),
+                                  'PSAE001c01_018920': (776, 71),
+                                  'PSAE001c01_043580': (416, 74),
+                                  'PSAE001c01_017350': (600, 70),
+                                  'PSAE001c01_013980': (759, 69),
+                                  'PSAE001c01_026600': (273, 72),
+                                  'NC_xxxxx_xx_056141': (803, 141),
+                                  'PSAE001c01_006940': (803, 68)})
 
 class TestGembaseHMMReport(TestReport):
 
