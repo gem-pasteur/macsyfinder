@@ -180,6 +180,38 @@ class TestHMMReport(TestReport):
                            float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         self.assertEqual(hit_expected, best_hit)
 
+    def test_hit_start(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
+                    self.cfg.working_dir)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+
+        self.assertFalse(report._hit_start("NOT starting hit"))
+        self.assertTrue(report._hit_start(">> starting hit"))
+
+
+    def test_build_my_db(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+
+        db = report._build_my_db(gspD_hmmer_path)
+        self.assertDictEqual(db, {'PSAE001c01_031420': None,
+                                  'PSAE001c01_051090': None,
+                                  'PSAE001c01_018920': None,
+                                  'PSAE001c01_043580': None,
+                                  'PSAE001c01_017350': None,
+                                  'PSAE001c01_013980': None,
+                                  'PSAE001c01_026600': None,
+                                  'NC_xxxxx_xx_056141': None,
+                                  'PSAE001c01_006940': None})
+
 
 
 class TestGembaseHMMReport(TestReport):
