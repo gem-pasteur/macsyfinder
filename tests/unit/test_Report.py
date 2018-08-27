@@ -235,6 +235,19 @@ class TestHMMReport(TestReport):
                                   'NC_xxxxx_xx_056141': (803, 141),
                                   'PSAE001c01_006940': (803, 68)})
 
+
+    def test_parse_hmm_header(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+
+        hmm_hit = [">> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific"]
+        hit_id = report._parse_hmm_header(hmm_hit)
+        self.assertEqual(hit_id, 'NC_xxxxx_xx_056141')
+
+
 class TestGembaseHMMReport(TestReport):
 
 
