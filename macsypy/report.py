@@ -157,7 +157,8 @@ class HMMReport(object):
             hit_id = line.split()[1]
         return hit_id
 
-    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_treshold, replicon_name, position_hit, i_evalue_sel, b_grp):
+    def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_threshold, replicon_name,
+                        position_hit, i_evalue_sel, b_grp):
         """
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
@@ -168,8 +169,8 @@ class HMMReport(object):
         :type gene_profile_lg: integer
         :param seq_lg: the length of the sequence
         :type seq_lg: integer
-        :param coverage_treshold: the minimal coverage of the profile to be reached in the Hmmer alignment for hit selection
-        :type coverage_treshold: float
+        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment for hit selection
+        :type coverage_threshold: float
         :param replicon_name: the identifier of the replicon
         :type replicon_name: string
         :param position_hit: the rank of the sequence matched in the input dataset file
@@ -206,7 +207,7 @@ class HMMReport(object):
                             begin = int(fields[9])
                             end = int(fields[10])
                             cov_gene = (float(end) - float(begin) + 1) / seq_lg # To be added in Gene: sequence_length
-                            if cov_profile >= coverage_treshold:
+                            if cov_profile >= coverage_threshold:
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
                                 hits.append(Hit(self.gene,
