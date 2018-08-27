@@ -1,0 +1,97 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_3/models/set_1/profiles/T2SS_gspK.hmm
+# target sequence database:        tests/data/data_set_3/base/VICH001.B.00001.C001.prt
+# output directed to file:         tests/data/data_set_3/results/hmmer_results/T2SS_gspK.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspK_tcoffee_aln  [M=247]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.4e-56  189.4   0.4    1.7e-56  189.1   0.4    1.1  1  VICH001.B.00001.C001_02594  C ATG TAG 2899354 2900364 Valid V
+    1.4e-07   28.9   0.1    4.8e-05   20.6   0.1    2.1  2  VICH001.B.00001.C001_01831  C ATG TAA 2066452 2066763 Valid V
+      0.001   16.2   0.1     0.0015   15.7   0.1    1.2  1  VICH001.B.00001.C001_00853  D TTG TAA 925340 926581 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02594  C ATG TAG 2899354 2900364 Valid VC2726 1011 @NP_232353.1@ VC2726 1 2899354 2900364 | gene
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  189.1   0.4   2.1e-59   1.7e-56       1     247 []       6     255 ..       6     255 .. 0.95
+
+  Alignments for each domain:
+  == domain 1  score: 189.1 bits;  conditional E-value: 2.1e-59
+            gspK_tcoffee_aln   1 rGvAlitvLlvvAlvavlvaglllrqqvqirrtenqrllaQAqwyargglelarsvLrsdlrrepkkttLgqiWaqpiqkfkl 83 
+                                 rGvAli++Ll++A+++ ++a+++ r+ +q +r   q +++QA wy++g ++la++ ++++ ++++   +L q Wa + q ++l
+  VICH001.B.00001.C001_02594   6 RGVALIVILLLLAVMVSIAATMAERLFSQFQRATHQLNYQQAYWYSLGVEALAKKGIEQSYQDSE-TINLSQPWALKEQTYPL 87 
+                                 9*********************************************************8888855.899************** PP
+
+            gspK_tcoffee_aln  84 edagelsvrleDaqgkfnLnnlvekq.apealqrkeagvqqfarLlatlgldakladllaerladwldadqspqpdqGaedse 165
+                                 +  g+++++++D q++fnLn+l+  + +p+ + +k+   + +++Ll+ l+++ ++a+++a++ ++++d+d+s+++  G eds+
+  VICH001.B.00001.C001_02594  88 DY-GQVRGKIRDMQACFNLNALAGVKlTPDSV-KKPYLLTVLQALLEGLEVESYQAEVIADSTLEFIDKDDSVRTAYGVEDSY 168
+                                 *8.7******************9655155655.77999********************************************* PP
+
+            gspK_tcoffee_aln 166 ylsaalpyraanqpladvdeLravkGltpallerLrPfvtvlpet.tpinvntapa...evLaAlv.pglsldqArallqaRd 243
+                                 y s  ++y aa++ lad +e rav+ +  +++++ +P+v++lp++  ++nvnt+pa   ++LaA++ p+ls+++A+ ll+ R+
+  VICH001.B.00001.C001_02594 169 YESMIPAYMAADTWLADASEWRAVQQVGGETMNKALPYVCALPTDqWRLNVNTLPAeqaALLAAMFsPTLSPESAKTLLEGRP 251
+                                 *999999**************************************778********9999*********************** PP
+
+            gspK_tcoffee_aln 244 regf 247
+                                   g+
+  VICH001.B.00001.C001_02594 252 FDGW 255
+                                 9998 PP
+
+>> VICH001.B.00001.C001_01831  C ATG TAA 2066452 2066763 Valid VC1917 312 @NP_231551.1@ VC1917 1 2066452 2066763 | hypot
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   20.6   0.1   5.7e-08   4.8e-05     212     245 ..      41      74 ..      34      75 .. 0.94
+   2 !   12.2   0.0   2.1e-05     0.018     172     198 ..      69      95 ..      68      97 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 20.6 bits;  conditional E-value: 5.7e-08
+            gspK_tcoffee_aln 212 pinvntapaevLaAlvpglsldqArallqaRdre 245
+                                  +n+nta+ae La l +g++l++A+a+++ R+++
+  VICH001.B.00001.C001_01831  41 TVNINTASAEELATLLKGIGLKKAQAIVDYREAN 74 
+                                 69*****************************997 PP
+
+  == domain 2  score: 12.2 bits;  conditional E-value: 2.1e-05
+            gspK_tcoffee_aln 172 pyraanqpladvdeLravkGltpalle 198
+                                 +yr an+p++++d+L +vkG+ +a+++
+  VICH001.B.00001.C001_01831  69 DYREANGPFTHIDDLTNVKGIGEATVR 95 
+                                 799********************9997 PP
+
+>> VICH001.B.00001.C001_00853  D TTG TAA 925340 926581 Valid VC0860 1242 @NP_230507.1@ VC0860 1 925340 926581 | hypothet
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.7   0.1   1.7e-06    0.0015       2      54 ..      10      63 ..       9      70 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 15.7 bits;  conditional E-value: 1.7e-06
+            gspK_tcoffee_aln  2 GvA.litvLlvvAlvavlvaglllrqqvqirrtenqrllaQAqwyargglelar 54
+                                GvA l+++ +++ ++ v++ g   ++  qi+r +n+ +++Q  w a+ggle + 
+  VICH001.B.00001.C001_00853 10 GVAtLLITAILLSIALVVTLGSYKNLFYQIKRAQNEVKARQEHWLAEGGLECGY 63
+                                77745556667789999999******************************9765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (247 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       155  (0.0613133); expected 50.6 (0.02)
+Passed bias filter:                       87  (0.0344146); expected 50.6 (0.02)
+Passed Vit filter:                        13  (0.00514241); expected 2.5 (0.001)
+Passed Fwd filter:                         3  (0.00118671); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.03
+# Mc/sec: 6944.89
+//
+[ok]

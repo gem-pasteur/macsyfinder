@@ -1,0 +1,54 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_3/models/set_1/profiles/T4P_pilP.hmm
+# target sequence database:        tests/data/data_set_3/base/VICH001.B.00001.C001.prt
+# output directed to file:         tests/data/data_set_3/results/hmmer_results/T4P_pilP.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilP_buen.tab.seqid  [M=143]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    4.9e-23   79.0   0.0    5.7e-23   78.8   0.0    1.0  1  VICH001.B.00001.C001_02506  C ATG TAA 2802910 2803428 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02506  C ATG TAA 2802910 2803428 Valid VC2631 519 @NP_232259.1@ VC2631 1 2802910 2803428 | fimbr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   78.8   0.0   2.3e-26   5.7e-23       1     141 [.      25     167 ..      25     169 .. 0.92
+
+  Alignments for each domain:
+  == domain 1  score: 78.8 bits;  conditional E-value: 2.3e-26
+         pilP_buen.tab.seqid   1 elnqlmqqvrsekkteilplpeykpdtatvyslsklrnpfnvdvkkaeiirkqenk..vikPeekrikesLekyplesfklvG 81 
+                                 +l ++++qv +e++ e+  l+     +at y+  k r+pf ++ k a ++ +   k    +P ++    +Le+ypl +++l+G
+  VICH001.B.00001.C001_02506  25 DLTSYVAQVEREARKEVTKLKPILEFEATPYQQHKGREPFVLP-KEALVQNQPLAKadCWQPVPRAKNGPLERYPLHQLRLKG 106
+                                 7999***************************************.8887777765555578899988888************** PP
+
+         pilP_buen.tab.seqid  82 vlkqnqkksavve.vegkvqrvkvGeylGqNyGrveditdeeivldElvkddtknwlekiq 141
+                                 v+++++  sa+v+  +g v +vk G+y+G N G+v ++ d+ + ++E  +d+++ w ++  
+  VICH001.B.00001.C001_02506 107 VMSSGGSISALVQtPAGSVVKVKAGQYVGINNGKVTRVDDNYLLINETLPDGLGCWNQRNV 167
+                                 *************889****************************************99975 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (143 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                        59  (0.0233386); expected 50.6 (0.02)
+Passed bias filter:                       46  (0.0181962); expected 50.6 (0.02)
+Passed Vit filter:                         7  (0.00276899); expected 2.5 (0.001)
+Passed Fwd filter:                         1  (0.00039557); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.02
+# Mc/sec: 6031.09
+//
+[ok]

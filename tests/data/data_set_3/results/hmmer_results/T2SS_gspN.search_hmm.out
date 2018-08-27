@@ -1,0 +1,74 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_3/models/set_1/profiles/T2SS_gspN.hmm
+# target sequence database:        tests/data/data_set_3/base/VICH001.B.00001.C001.prt
+# output directed to file:         tests/data/data_set_3/results/hmmer_results/T2SS_gspN.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  [M=217]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.1e-48  163.6  12.7    1.3e-48  163.4  12.7    1.0  1  VICH001.B.00001.C001_02591  C ATG TAG 2896907 2897665 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02591  C ATG TAG 2896907 2897665 Valid VC2723 759 @NP_232350.1@ VC2723 1 2896907 2897665 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  163.4  12.7   5.1e-52   1.3e-48       2     215 ..       9     235 ..       8     237 .. 0.95
+
+  Alignments for each domain:
+  == domain 1  score: 163.4 bits;  conditional E-value: 5.1e-52
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1   2 llllavflvallallParlvlqwlpg..gvslqgvsGtlW 39 
+                                                                                                                     ll+  v++++++++lPa+++l+ lp+  g++l+g++GtlW
+                                                                                      VICH001.B.00001.C001_02591   9 LLFSTVLMTSVVVHLPAQVALSPLPLpeGLELTGIEGTLW 48 
+                                                                                                                     899999******************6666************ PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  40 qGsarlvlaggaplgrvhWrlsplsLllgrlrldlrlgsa 79 
+                                                                                                                     qG+a++v+++g++lg+++W+l++++Lllg+l++d+r+g+ 
+                                                                                      VICH001.B.00001.C001_02591  49 QGQAAQVRWQGMSLGDLNWDLHLSALLLGQLEADIRFGR- 87 
+                                                                                                                     ***************************************. PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  80 saegvalrgk...........ledvtlrlpasllag.lpn 107
+                                                                                                                      +++++lrgk           ++d+ l+lpa+  ++ lp+
+                                                                                      VICH001.B.00001.C001_02591  88 -GSSTQLRGKgvvgvglsgpyADDFLLSLPAAQAITwLPL 126
+                                                                                                                     .777777777778889********************88** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 108 tvpvqasGqvrlslaelleswap.....aGklawrdasvs 142
+                                                                                                                     +vp+ a+Gq++++++++ ++++p     +G law++a+++
+                                                                                      VICH001.B.00001.C001_02591 127 PVPLMAQGQLEMAVKQY-RFGEPycqqaEGSLAWSAAQLE 165
+                                                                                                                     *****************.8999999989999********* PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 143 glsgllplgsyrleldlacedggqltlalstksgplqlsg 182
+                                                                                                                     ++ g l+lg  +++ d++c+ ++ +tl+  +k ++++ ++
+                                                                                      VICH001.B.00001.C001_02591 166 SPIGALQLG--TVVSDFTCQ-ESVVTLKGGQKTAQVSSEF 202
+                                                                                                                     *********..*********.7799*************** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 183 qgtlrvdgrlrfegtakptaeappalrqlLall 215
+                                                                                                                     +++l++d+r++ ++++kp+ae+p+ l+++L++l
+                                                                                      VICH001.B.00001.C001_02591 203 NLSLQPDNRYQAQAWFKPEAEFPESLKEQLSWL 235
+                                                                                                                     *******************************98 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (217 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       133  (0.0526108); expected 50.6 (0.02)
+Passed bias filter:                       64  (0.0253165); expected 50.6 (0.02)
+Passed Vit filter:                         5  (0.00197785); expected 2.5 (0.001)
+Passed Fwd filter:                         1  (0.00039557); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 9152.07
+//
+[ok]

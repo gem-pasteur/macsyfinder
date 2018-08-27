@@ -142,6 +142,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_005":
             self.build_hits(previous_run="tests/data/data_set_2/results", models_dir="tests/data/data_set_2/models")
+        elif env_id == "env_006":
+            self.build_hits(previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models")
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -172,6 +174,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_004":
             MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_005":
+            MacsyTest.rmtree(self.out_dir)
+        elif env_id == "env_006":
             MacsyTest.rmtree(self.out_dir)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
