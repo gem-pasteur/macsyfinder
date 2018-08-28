@@ -18,6 +18,7 @@ import tempfile
 import platform
 import logging
 from StringIO import StringIO
+from itertools import groupby
 
 from macsypy.report import HMMReport, GembaseHMMReport, Hit
 from macsypy.gene import Gene
@@ -246,6 +247,70 @@ class TestHMMReport(TestReport):
         hmm_hit = [">> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific"]
         hit_id = report._parse_hmm_header(hmm_hit)
         self.assertEqual(hit_id, 'NC_xxxxx_xx_056141')
+
+    def test_parse_hmm_body(self):
+        def make_hmm_group(hmm_string):
+            hmm_file = StringIO(hmm_string)
+            hmm_hits = (x[1] for x in groupby(hmm_file, lambda l: l.startswith('>>')))
+            header = hmm_hits.next()
+            body = hmm_hits.next()
+            return body
+
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = GembaseHMMReport(gene, report_path, self.cfg)
+
+        # with one significant hit
+        hmm = """>> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  779.2   5.5  1.4e-237    2e-236       1     596 []     104     741 ..     104     741 .. 0.93
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        hits = report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
+                           float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)]
+        self.assertListEqual(hits, expected_hits)
+        # with no significant hit
+        hmm = """>> PSAE001c01_051090  C ATG TGA 5675714 5677858 Valid pilQ 2145 _PA5040_NP_253727.1_ PA5040 1 5675714 5677858 | type 4 f
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   27.1   0.2   6.3e-10   6.6e-07       1     120 [.     286     402 ..     286     407 .. 0.86
+   2 !  186.2   0.1   4.2e-58   4.3e-55     294     590 ..     405     709 ..     397     712 .. 0.84
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        hits = report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = []
+        self.assertListEqual(hits, expected_hits)
+
+        # with no hit
+        hmm = """>> PSAE001c01_051090  C ATG TGA 5675714 5677858 Valid pilQ 2145 _PA5040_NP_253727.1_ PA5040 1 5675714 5677858 | type 4 f
+        bla bla
+        """
+        body = make_hmm_group(hmm)
+        hits = report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = []
+        self.assertListEqual(hits, expected_hits)
+
+        # with invalid hmm
+        hmm = """>> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  779.2   5.5  1.4e-237    foo       1     596 []     104     741 ..     104     741 .. 0.93
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        with self.assertRaises(ValueError) as ctx:
+            hits = report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        self.assertEqual(str(ctx.exception), """Invalid line to parse :   1 !  779.2   5.5  1.4e-237    foo       1     596 []     104     741 ..     104     741 .. 0.93
+:could not convert string to float: foo""")
 
 
 class TestGembaseHMMReport(TestReport):
