@@ -1,3 +1,4 @@
+```
 data_set_2
     base            => Contains Genome and Index.
         test.fa.ori => This file was used to produce the output in the 'results' folder
@@ -15,3 +16,4 @@ data_set_2
                                          --db-type=gembase \
                                          --models-dir=tests/data/data_set_2/models \
                                          --models set_1 T9SS T3SS T4SS_typeI
+```
