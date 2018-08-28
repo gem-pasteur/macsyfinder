@@ -1,12 +1,6 @@
 ```
-data_set_2
+data_set_3
     base            => Contains Genome and Index.
-        test.fa.ori => This file was used to produce the output in the 'results' folder
-                       (during the run, test.fa.ori was named test.fa).
-                       This file is not used during test execution.
-        test.fa     => Manually modifed version of test.fa.ori file, 
-                       created after the production of 'results' folder.
-                       This file is used during test execution.
     models          => Contains Models definition and Profiles.
     results         => Contains output produced by MacSyFinder when processing this dataset.
                        Command line details:
