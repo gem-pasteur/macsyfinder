@@ -76,6 +76,15 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                (data from "tests/data/data_set_2/results").
                Stops before calling build_clusters() method.
                Do not contain RepliconDB instance.
+    env_006 => environment loaded using "previous_run" option
+               (use data from "tests/data/data_set_3").
+               Stops after creating hits.
+    env_007 => environment loaded using "previous_run" option.
+               (use data from "tests/data/data_set_1").
+               Stops after creating hits.
+    env_008 => environment loaded using "previous_run" option
+               (use data from "tests/data/data_set_1").
+               Stops after creating indexes.
     """
 
     def load(self, env_id):
