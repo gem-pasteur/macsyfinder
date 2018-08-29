@@ -420,7 +420,9 @@ class SystemNameGenerator(object):
     """
     Creates and stores the names of detected systems. Ensures the uniqueness of the names.
     """
-    name_bank = {}
+
+    def __init__(self):
+        self.name_bank = {}
 
     def getSystemName(self, replicon, system):
         """
@@ -455,8 +457,8 @@ class SystemNameGenerator(object):
         """
         return "{0}_{1}_".format(replicon, system)
 
-system_name_generator = SystemNameGenerator()
 
+system_name_generator = SystemNameGenerator()
 
 
 class SystemOccurence(object):

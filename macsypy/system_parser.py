@@ -53,7 +53,8 @@ class SystemParser(object):
         :type sys_2_parse: set of strings {string, ...}
         :param parsed_models: the fully qualified name of the models already build.
         :type parsed_models: set of strings {string, ...}
-        :return: a set of definitions' fully qualified names to parse. Scan the whole chain of 'system_ref' in a recursive way.
+        :return: a set of definitions' fully qualified names to parse.
+                 Scan the whole chain of 'system_ref' in a recursive way.
         :rtype: {string, ...}
         """
         diff_def = parsed_models ^ def_2_parse
@@ -78,6 +79,8 @@ class SystemParser(object):
                 try:
                     tree = Et.parse(path)
                     root = tree.getroot()
+                    # get all gen which are define in an other systems
+                    # and add these systems to the list of systems to parse
                     sys_ref = root.findall(".//gene[@system_ref]")
                     for gene_node in sys_ref:
                         def_ref = gene_node.get("system_ref")

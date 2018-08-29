@@ -1,9 +1,16 @@
 import os
 import sys
+import shutil
 import unittest
 import platform
 from StringIO import StringIO
 from contextlib import contextmanager
+import hashlib
+from functools import partial
+from time import strftime
+import tempfile
+import uuid
+
 
 class MacsyTest(unittest.TestCase):
 
@@ -19,7 +26,6 @@ class MacsyTest(unittest.TestCase):
             setsid = ''
         return setsid
 
-
     @classmethod
     def find_data(cls, *args):
         data_path = os.path.join(cls._data_dir, *args)
@@ -27,7 +33,6 @@ class MacsyTest(unittest.TestCase):
             return data_path
         else:
             raise IOError("data '{}' does not exists".format(data_path))
-
 
     @contextmanager
     def catch_io(self, out=False, err=False):
@@ -47,7 +52,6 @@ class MacsyTest(unittest.TestCase):
             yield sys.stdout, sys.stderr
         finally:
             sys.stdout, sys.stderr = old_out, old_err
-
 
     @staticmethod
     def fake_exit(*args, **kwargs):
@@ -73,9 +77,11 @@ class MacsyTest(unittest.TestCase):
             return res
         return wrapper
 
-
     def assertFileEqual(self, f1, f2, msg=None):
         self.maxDiff = None
+        # the StringIO does not support context in python2.7
+        # so we can use the following statement only in python3
+        # with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
         with open(f1) as fh1, open(f2) as fh2:
             self.assertMultiLineEqual(fh1.read(), fh2.read(), msg=msg)
 
@@ -104,6 +110,23 @@ class MacsyTest(unittest.TestCase):
                 hmm1_fields = hmm1_line.split('#')[:-1]
                 hmm2_fields = hmm2_line.split('#')[:-1]
                 self.assertListEqual(hmm1_fields, hmm2_fields)
+
+    @staticmethod
+    def get_uniq_tmp_dir_name():
+        return os.path.join(tempfile.gettempdir(), "macsyfinder-{}".format(uuid.uuid4()))
+
+    @staticmethod
+    def rmtree(path):
+        """
+        Remove directory tree.
+
+        :param path: the path to remove
+        :type path: str
+        """
+        try:
+            shutil.rmtree(path)
+        except:
+            pass
 
 
 class LoggerWrapper(object):
@@ -141,3 +164,28 @@ def which(name, flags=os.X_OK):
             result = p
             break
     return result
+
+def md5sum(file_=None, str_=None):
+    """Compute md5 checksum.
+
+    :param file_: the name of the file to compute the checksum for
+    :type file_: str
+    :param str_: the string to compute the checksum for
+    :type str_: str
+    """
+    
+    assert not (file_ and str_)
+
+    d = hashlib.md5()
+
+    if file_:
+        with open(file_, mode='rb') as f:
+            for buf in iter(partial(f.read, 128), b''):
+                d.update(buf)
+    elif str_:
+        assert isinstance(str_,str)
+        d.update(str_)
+    else:
+        assert False
+
+    return d.hexdigest()
