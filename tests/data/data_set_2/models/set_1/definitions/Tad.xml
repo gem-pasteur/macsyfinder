@@ -1,0 +1,17 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="4" min_genes_required="6" multi_loci="0">
+    <gene name="Tad_rcpA" presence="mandatory">    	
+        <homologs>
+    	    <gene name="T2SS_gspD" system_ref="T2SS"/>
+    	    <gene name="T4P_pilQ" system_ref="T4P"/>
+    	    <gene name="T3SS_sctC" system_ref="T3SS"/>
+    	</homologs> 
+    </gene>
+    <gene name="Tad_tadA" presence="mandatory"/>
+    <gene name="Tad_tadB" presence="mandatory"/>
+    <gene name="Tad_tadC" presence="mandatory"/>
+    <gene name="Tad_tadV" presence="mandatory"/>
+    <gene name="Tad_tadZ" presence="mandatory"/>
+    <gene name="Tad_flp" presence="accessory"/>
+    <gene name="Tad_tadE" presence="accessory"/>
+    <gene name="Tad_tadF" presence="accessory"/>
+</system>

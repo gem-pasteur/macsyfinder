@@ -1,0 +1,157 @@
+MacSyFinder's results will be stored in tests/data/data_set_3/results
+Analysis launched on tests/data/data_set_3/base/VICH001.B.00001.C001.prt for system(s):
+	- set_1/T2SS
+	- set_1/T4P
+
+************************************
+ Analyzing clusters for VICH001.B.00001.C001 
+************************************
+
+--- Cluster set_1/T2SS ? ---
+['VICH001.B.00001.C001_00406', 'VICH001.B.00001.C001_00407', 'VICH001.B.00001.C001_00409', 'VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416', 'VICH001.B.00001.C001_00417']
+['T2SS_gspL', 'T2SS_gspM', 'T2SS_gspD', 'T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE', 'T2SS_gspH']
+[366, 367, 369, 372, 373, 375, 376, 377]
+Disambiguation step:
+Store: 
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416']
+['T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE']
+[372, 373, 375, 376]
+=> disambiguated cluster(s) stored for later treatment
+
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_00476', 'VICH001.B.00001.C001_00477']
+['T4P_pilT_pilU', 'T4P_pilT_pilU']
+[427, 428]
+Considering set_1/T4P: 
+-> uncomplete
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
+
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_00829', 'VICH001.B.00001.C001_00830', 'VICH001.B.00001.C001_00833']
+['T4P_pilB', 'T4P_pilC', 'T4P_pilD']
+[760, 761, 764]
+Considering set_1/T4P: 
+-> uncomplete
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
+
+--- Cluster set_1/T2SS ? ---
+['VICH001.B.00001.C001_00850', 'VICH001.B.00001.C001_00851', 'VICH001.B.00001.C001_00852']
+['T4P_pilAE', 'T4P_pilAE', 'T2SS_gspJ']
+[781, 782, 783]
+Disambiguation step:
+=> none kept
+
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_02305', 'VICH001.B.00001.C001_02306', 'VICH001.B.00001.C001_02307', 'VICH001.B.00001.C001_02308']
+['T4P_pilAE', 'T4P_pilB', 'T4P_pilC', 'T4P_pilD']
+[2202, 2203, 2204, 2205]
+Considering set_1/T4P: 
+-> uncomplete
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
+
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_02505', 'VICH001.B.00001.C001_02506', 'VICH001.B.00001.C001_02507', 'VICH001.B.00001.C001_02508', 'VICH001.B.00001.C001_02509']
+['T4P_pilQ', 'T4P_pilP', 'T4P_pilO', 'T4P_pilN', 'T4P_pilM']
+[2394, 2395, 2396, 2397, 2398]
+Considering set_1/T4P: 
+-> uncomplete
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
+
+--- Cluster set_1/T2SS  ---
+['VICH001.B.00001.C001_02591', 'VICH001.B.00001.C001_02592', 'VICH001.B.00001.C001_02593', 'VICH001.B.00001.C001_02594', 'VICH001.B.00001.C001_02595', 'VICH001.B.00001.C001_02596', 'VICH001.B.00001.C001_02597', 'VICH001.B.00001.C001_02598', 'VICH001.B.00001.C001_02599', 'VICH001.B.00001.C001_02600', 'VICH001.B.00001.C001_02601']
+['T2SS_gspN', 'T2SS_gspM', 'T2SS_gspL', 'T2SS_gspK', 'T2SS_gspJ', 'T2SS_gspI', 'T2SS_gspH', 'T2SS_gspG', 'T2SS_gspF', 'T2SS_gspE', 'T2SS_gspC']
+[2480, 2481, 2482, 2483, 2484, 2485, 2486, 2487, 2488, 2489, 2490]
+Considering set_1/T2SS: 
+-> single_locus
+====> Decision rule for putative system T2SS:
+T2SS_gspD	0
+T2SS_gspE	1
+T2SS_gspF	1
+T2SS_gspG	1
+T2SS_gspM	1
+T2SS_gspH	1
+T2SS_gspI	1
+T2SS_gspJ	1
+T2SS_gspK	1
+T2SS_gspL	1
+T2SS_gspN	1
+T2SS_gspO	0
+T2SS_gspC	1
+Tad_tadZ	0
+T4P_pilM	0
+
+nb_forbid : 0
+nb_mandat : 8
+nb_accessory : 3
+Complete "single_locus" system.
+******************************************
+
+
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416']
+['T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE']
+[372, 373, 375, 376]
+Considering set_1/T4P: 
+-> uncomplete
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
+
+    
+****************************************************
+******* Report scattered/uncompleted systems *******
+****************************************************
+
+====> Decision rule for putative system T2SS:
+T2SS_gspD	0
+T2SS_gspE	0
+T2SS_gspF	0
+T2SS_gspG	0
+T2SS_gspM	0
+T2SS_gspH	0
+T2SS_gspI	0
+T2SS_gspJ	0
+T2SS_gspK	0
+T2SS_gspL	0
+T2SS_gspN	0
+T2SS_gspO	0
+T2SS_gspC	0
+Tad_tadZ	0
+T4P_pilM	0
+
+nb_forbid : 0
+nb_mandat : 0
+nb_accessory : 0
+Empty system.
+******************************************
+
+====> Decision rule for putative system T4P:
+T4P_pilT_pilU	2
+T4P_pilP	1
+T4P_pilQ	1
+T4P_pilAE	3
+T4P_pilB	3
+T4P_pilC	3
+T4P_pilI_pilV	0
+T4P_pilN	1
+T4P_pilO	1
+T4P_pilM	1
+T4P_pilD	2
+T2SS_gspN	0
+Tad_tadZ	0
+T2SS_gspC	0
+
+nb_forbid : 0
+nb_mandat : 9
+nb_accessory : 1
+Complete "multi_loci" system.
+******************************************
+
+******************************************
+
+******************************************
+Building reports for VICH001.B.00001.C001: 
+
+Counter({'T2SS_single_locus': 1, 'T4P_multi_loci': 1})
+******************************************
+
+--- Replicons with no hits: ---
