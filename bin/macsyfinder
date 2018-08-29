@@ -353,11 +353,14 @@ general_options.add_argument("--relative-path",
                              action='store_true',
                              dest='relative_path',
                              default=False,
-                             hidden=True,
-                             help="""Use relative paths instead of absolute paths. This option is used
-                                     by developers to generate portable data set, as for example test 
-                                     data set, which are used on many different machines (using
-                                     previous-run option).""")
+                             help=argparse.SUPPRESS)
+# 'relative-path' option help message (currently hidden)
+"""
+Use relative paths instead of absolute paths. This option is used
+by developers to generate portable data set, as for example test 
+data set, which are used on many different machines (using
+previous-run option).
+"""
 
 args = parser.parse_args()
 if args.version:
