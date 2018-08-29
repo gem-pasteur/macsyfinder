@@ -4,10 +4,10 @@ data_set_3
     models          => Contains Models definition and Profiles.
     results         => Contains output produced by MacSyFinder when processing this dataset.
                        Command line details:
-                       ./bin/macsyfinder --out-dir=tests/data/data_set_2/results \
+                       ./bin/macsyfinder --out-dir=tests/data/data_set_3/results \
                                          --relative-path \
-                                         --sequence-db=tests/data/data_set_2/base/test.fa \
+                                         --sequence-db=tests/data/data_set_3/base/VICH001.B.00001.C001.prt \
                                          --db-type=gembase \
-                                         --models-dir=tests/data/data_set_2/models \
-                                         --models set_1 T9SS T3SS T4SS_typeI
+                                         --models-dir=tests/data/data_set_3/models \
+                                         --models set_1 T2SS T4P
 ```
