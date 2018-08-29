@@ -107,10 +107,12 @@ class ModelLocation(object):
             import glob
             for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
 
+                model_fqn = os.path.basename(os.path.splitext(model_path)[0])
+
                 if not self.cfg.relative_path:
                     model_path = os.path.abspath(model_path)
 
-                new_def = DefinitionLocation(name=os.path.basename(os.path.splitext(model_path)[0]),
+                new_def = DefinitionLocation(name=model_fqn,
                                              path=model_path)
                 self._definitions[new_def.name] = new_def
 
