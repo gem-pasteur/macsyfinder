@@ -17,8 +17,7 @@ import shutil
 import tempfile
 from macsypy.search_systems import systemDetectionReportOrdered
 from macsypy.database import RepliconDB
-from tests import MacsyTest, md5sum
-from tests.unit import MacsyTestEnv
+from tests import MacsyTest, md5sum, MacsyTestEnv
 
 
 class Test(MacsyTest):

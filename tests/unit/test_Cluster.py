@@ -19,11 +19,8 @@ from macsypy.report import Hit
 from macsypy.system_parser import SystemParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
-from macsypy.registries import ModelRegistry
-from macsypy.database import Indexes
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, md5sum
-from tests.unit import MacsyTestEnv
+from tests import MacsyTest, md5sum, MacsyTestEnv
 
 
 class Test(MacsyTest):

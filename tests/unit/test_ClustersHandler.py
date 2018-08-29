@@ -17,8 +17,7 @@ from macsypy.report import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, md5sum
-from tests.unit import MacsyTestEnv
+from tests import MacsyTest, md5sum, MacsyTestEnv
 
 
 class TestCircularizeData(object):

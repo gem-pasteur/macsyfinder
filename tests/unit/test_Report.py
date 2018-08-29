@@ -17,7 +17,6 @@ import shutil
 import tempfile
 import platform
 import logging
-from StringIO import StringIO
 
 from macsypy.report import HMMReport, GembaseHMMReport, Hit
 from macsypy.gene import Gene

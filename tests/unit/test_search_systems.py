@@ -15,8 +15,7 @@
 import os
 from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
-from tests import MacsyTest, md5sum
-from tests.unit import MacsyTestEnv
+from tests import MacsyTest, md5sum, MacsyTestEnv
 
 
 class Test(MacsyTest):
