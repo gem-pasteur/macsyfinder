@@ -1,68 +1,68 @@
 MacSyFinder's results will be stored in tests/data/data_set_3/results
 Analysis launched on tests/data/data_set_3/base/VICH001.B.00001.C001.prt for system(s):
-	- definitions/T2SS
-	- definitions/T4P
+	- set_1/T2SS
+	- set_1/T4P
 
 ************************************
  Analyzing clusters for VICH001.B.00001.C001 
 ************************************
 
---- Cluster definitions/T4P ? ---
+--- Cluster set_1/T2SS ? ---
 ['VICH001.B.00001.C001_00406', 'VICH001.B.00001.C001_00407', 'VICH001.B.00001.C001_00409', 'VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416', 'VICH001.B.00001.C001_00417']
 ['T2SS_gspL', 'T2SS_gspM', 'T2SS_gspD', 'T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE', 'T2SS_gspH']
 [366, 367, 369, 372, 373, 375, 376, 377]
 Disambiguation step:
 Store: 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416']
 ['T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE']
 [372, 373, 375, 376]
 => disambiguated cluster(s) stored for later treatment
 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_00476', 'VICH001.B.00001.C001_00477']
 ['T4P_pilT_pilU', 'T4P_pilT_pilU']
 [427, 428]
-Considering definitions/T4P: 
+Considering set_1/T4P: 
 -> uncomplete
-=> Putative definitions/T4P locus stored for later treatment of scattered systems.
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_00829', 'VICH001.B.00001.C001_00830', 'VICH001.B.00001.C001_00833']
 ['T4P_pilB', 'T4P_pilC', 'T4P_pilD']
 [760, 761, 764]
-Considering definitions/T4P: 
+Considering set_1/T4P: 
 -> uncomplete
-=> Putative definitions/T4P locus stored for later treatment of scattered systems.
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
 
---- Cluster definitions/T4P ? ---
+--- Cluster set_1/T2SS ? ---
 ['VICH001.B.00001.C001_00850', 'VICH001.B.00001.C001_00851', 'VICH001.B.00001.C001_00852']
 ['T4P_pilAE', 'T4P_pilAE', 'T2SS_gspJ']
 [781, 782, 783]
 Disambiguation step:
 => none kept
 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_02305', 'VICH001.B.00001.C001_02306', 'VICH001.B.00001.C001_02307', 'VICH001.B.00001.C001_02308']
 ['T4P_pilAE', 'T4P_pilB', 'T4P_pilC', 'T4P_pilD']
 [2202, 2203, 2204, 2205]
-Considering definitions/T4P: 
+Considering set_1/T4P: 
 -> uncomplete
-=> Putative definitions/T4P locus stored for later treatment of scattered systems.
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_02505', 'VICH001.B.00001.C001_02506', 'VICH001.B.00001.C001_02507', 'VICH001.B.00001.C001_02508', 'VICH001.B.00001.C001_02509']
 ['T4P_pilQ', 'T4P_pilP', 'T4P_pilO', 'T4P_pilN', 'T4P_pilM']
 [2394, 2395, 2396, 2397, 2398]
-Considering definitions/T4P: 
+Considering set_1/T4P: 
 -> uncomplete
-=> Putative definitions/T4P locus stored for later treatment of scattered systems.
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
 
---- Cluster definitions/T2SS  ---
+--- Cluster set_1/T2SS  ---
 ['VICH001.B.00001.C001_02591', 'VICH001.B.00001.C001_02592', 'VICH001.B.00001.C001_02593', 'VICH001.B.00001.C001_02594', 'VICH001.B.00001.C001_02595', 'VICH001.B.00001.C001_02596', 'VICH001.B.00001.C001_02597', 'VICH001.B.00001.C001_02598', 'VICH001.B.00001.C001_02599', 'VICH001.B.00001.C001_02600', 'VICH001.B.00001.C001_02601']
 ['T2SS_gspN', 'T2SS_gspM', 'T2SS_gspL', 'T2SS_gspK', 'T2SS_gspJ', 'T2SS_gspI', 'T2SS_gspH', 'T2SS_gspG', 'T2SS_gspF', 'T2SS_gspE', 'T2SS_gspC']
 [2480, 2481, 2482, 2483, 2484, 2485, 2486, 2487, 2488, 2489, 2490]
-Considering definitions/T2SS: 
+Considering set_1/T2SS: 
 -> single_locus
 ====> Decision rule for putative system T2SS:
 T2SS_gspD	0
@@ -88,13 +88,13 @@ Complete "single_locus" system.
 ******************************************
 
 
---- Cluster definitions/T4P  ---
+--- Cluster set_1/T4P  ---
 ['VICH001.B.00001.C001_00412', 'VICH001.B.00001.C001_00413', 'VICH001.B.00001.C001_00415', 'VICH001.B.00001.C001_00416']
 ['T4P_pilB', 'T4P_pilC', 'T4P_pilAE', 'T4P_pilAE']
 [372, 373, 375, 376]
-Considering definitions/T4P: 
+Considering set_1/T4P: 
 -> uncomplete
-=> Putative definitions/T4P locus stored for later treatment of scattered systems.
+=> Putative set_1/T4P locus stored for later treatment of scattered systems.
 
     
 ****************************************************

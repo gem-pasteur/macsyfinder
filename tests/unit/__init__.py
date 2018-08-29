@@ -15,6 +15,26 @@ from tests import MacsyTest
 
 
 class MacsyTestEnvSnippet():
+
+    def build_config(self, previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models"):
+            self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
+
+            self.config = Config(hmmer_exe="hmmsearch",
+                            out_dir=self.out_dir,
+                            db_type="gembase",
+                            previous_run=previous_run,
+                            e_value_res=1,
+                            i_evalue_sel=0.5,
+                            res_search_suffix=".search_hmm.out",
+                            profile_suffix=".hmm",
+                            res_extract_suffix="",
+                            log_level=30,
+                            models_dir=models_dir,
+                            log_file=os.devnull)
+
+            idx = Indexes(self.config)
+            idx._build_my_indexes()
+
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
@@ -78,7 +98,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                Do not contain RepliconDB instance.
     env_006 => environment loaded using "previous_run" option
                (use data from "tests/data/data_set_3").
-               Stops after creating hits.
+               Stops after creating indexes.
     env_007 => environment loaded using "previous_run" option.
                (use data from "tests/data/data_set_1").
                Stops after creating hits.
@@ -152,27 +172,11 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_005":
             self.build_hits(previous_run="tests/data/data_set_2/results", models_dir="tests/data/data_set_2/models")
         elif env_id == "env_006":
-            self.build_hits(previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models")
+            self.build_config(previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models")
         elif env_id == "env_007":
             self.build_hits()
         elif env_id == "env_008":
-            self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
-
-            self.config = Config(hmmer_exe="hmmsearch",
-                            out_dir=self.out_dir,
-                            db_type="gembase",
-                            previous_run="tests/data/data_set_1/complete_run_results",
-                            e_value_res=1,
-                            i_evalue_sel=0.5,
-                            res_search_suffix=".search_hmm.out",
-                            profile_suffix=".hmm",
-                            res_extract_suffix="",
-                            log_level=30,
-                            models_dir="tests/data/data_set_1/models",
-                            log_file=os.devnull)
-
-            idx = Indexes(self.config)
-            idx._build_my_indexes()
+            self.build_config(previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models")
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
