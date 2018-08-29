@@ -7,7 +7,6 @@ from StringIO import StringIO
 from contextlib import contextmanager
 import hashlib
 from functools import partial
-from time import strftime
 import tempfile
 import uuid
 import logging
@@ -176,6 +175,7 @@ def which(name, flags=os.X_OK):
             break
     return result
 
+
 def md5sum(file_=None, str_=None):
     """Compute md5 checksum.
 
@@ -184,7 +184,6 @@ def md5sum(file_=None, str_=None):
     :param str_: the string to compute the checksum for
     :type str_: str
     """
-    
     assert not (file_ and str_)
 
     d = hashlib.md5()
@@ -194,7 +193,7 @@ def md5sum(file_=None, str_=None):
             for buf in iter(partial(f.read, 128), b''):
                 d.update(buf)
     elif str_:
-        assert isinstance(str_,str)
+        assert isinstance(str_, str)
         d.update(str_)
     else:
         assert False
@@ -205,23 +204,23 @@ def md5sum(file_=None, str_=None):
 class MacsyTestEnvSnippet():
 
     def build_config(self, previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models"):
-            self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
+        self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
-            self.config = Config(hmmer_exe="hmmsearch",
-                            out_dir=self.out_dir,
-                            db_type="gembase",
-                            previous_run=previous_run,
-                            e_value_res=1,
-                            i_evalue_sel=0.5,
-                            res_search_suffix=".search_hmm.out",
-                            profile_suffix=".hmm",
-                            res_extract_suffix="",
-                            log_level=30,
-                            models_dir=models_dir,
-                            log_file=os.devnull)
+        self.config = Config(hmmer_exe="hmmsearch",
+                             out_dir=self.out_dir,
+                             db_type="gembase",
+                             previous_run=previous_run,
+                             e_value_res=1,
+                             i_evalue_sel=0.5,
+                             res_search_suffix=".search_hmm.out",
+                             profile_suffix=".hmm",
+                             res_extract_suffix="",
+                             log_level=30,
+                             models_dir=models_dir,
+                             log_file=os.devnull)
 
-            idx = Indexes(self.config)
-            idx._build_my_indexes()
+        idx = Indexes(self.config)
+        idx._build_my_indexes()
 
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
