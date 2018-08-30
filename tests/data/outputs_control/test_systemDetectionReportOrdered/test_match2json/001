@@ -1,0 +1,1 @@
+{'gene_status': 'mandatory', 'end_match': 234, 'begin_match': 1, 'system': 'T9SS', 'score': 340.4, 'sequence_coverage': 0.9957446808510638, 'sequence_length': 235, 'i_eval': 7.5e-103, 'position': 505, 'profile_coverage': 1.0, 'id': 'AESU001c01a_005140', 'match': 'T9SS_sprT'}

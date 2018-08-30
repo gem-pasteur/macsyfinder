@@ -228,5 +228,5 @@ class Test(MacsyTest):
     def test_str(self):
         self.macsy_test_env.load("env_002")
         buffer_ = str(self.macsy_test_env.cluster)
-        self.assertEqual(self.md5sum(str_=buffer_), '752f66b832fee7ec71fecdaef52fd820')
+        self.assertEqual(str(buffer_), self.output_control_str('001'))
         self.macsy_test_env.unload("env_002")

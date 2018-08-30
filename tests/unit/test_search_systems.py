@@ -37,7 +37,7 @@ class Test(MacsyTest):
         (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
                                                       [self.macsy_test_env.system],
                                                       self.macsy_test_env.rep_info)
-        self.assertEqual(self.md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
+        self.assertEqual(str(clusters), self.output_control_str('001'))
         self.assertEqual(len(multi_syst_genes), 0)
 
         # case 2
@@ -47,7 +47,7 @@ class Test(MacsyTest):
         (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
                                                       [self.macsy_test_env.system],
                                                       self.macsy_test_env.rep_info)
-        self.assertEqual(self.md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
+        self.assertEqual(str(clusters), self.output_control_str('002'))
         self.assertEqual(len(multi_syst_genes), 1)
 
         # FIXME: parts below are not tested
@@ -112,7 +112,7 @@ class Test(MacsyTest):
 
         stdout = stdxxx[0].getvalue()
 
-        self.assertEqual(self.md5sum(str_=stdout), '2567ef1661050233b190073a57400d42')
+        self.assertEqual(str(stdout), self.output_control_str('001'))
 
         # FIXME
         # in disambiguate_cluster func, block starting with comment below is
@@ -155,9 +155,9 @@ class Test(MacsyTest):
             print f.read()
         """
 
-        self.assertFileEqual(tabfilename, self.output_control('tabfilename_001'))
-        self.assertFileEqual(reportfilename, self.output_control('reportfilename_001'))
-        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_001'))
+        self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_001'))
+        self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_001'))
+        self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_001'))
 
         self.macsy_test_env.unload("env_003")
 
@@ -171,9 +171,9 @@ class Test(MacsyTest):
 
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertFileEqual(tabfilename, self.output_control('tabfilename_002'))
-        self.assertFileEqual(reportfilename, self.output_control('reportfilename_002'))
-        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_002'))
+        self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_002'))
+        self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_002'))
+        self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_002'))
 
         # case 3
 
@@ -182,18 +182,18 @@ class Test(MacsyTest):
         self.macsy_test_env.cfg.options['db_type'] = "ordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertFileEqual(tabfilename, self.output_control('tabfilename_003'))
-        self.assertFileEqual(reportfilename, self.output_control('reportfilename_003'))
-        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_003'))
+        self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_003'))
+        self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_003'))
+        self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_003'))
 
         # case 4
 
         self.macsy_test_env.cfg.options['db_type'] = "unordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertFileEqual(tabfilename, self.output_control('tabfilename_004'))
-        self.assertFileEqual(reportfilename, self.output_control('reportfilename_004'))
-        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_004'))
+        self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_004'))
+        self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_004'))
+        self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_004'))
 
         # case 5
 
@@ -202,9 +202,9 @@ class Test(MacsyTest):
         self.macsy_test_env.system._forbidden_genes.append(forbidden_gene)
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertFileEqual(tabfilename, self.output_control('tabfilename_005'))
-        self.assertFileEqual(reportfilename, self.output_control('reportfilename_005'))
-        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_005'))
+        self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_005'))
+        self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_005'))
+        self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_005'))
 
         # case 6
 
