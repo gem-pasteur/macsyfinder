@@ -24,7 +24,9 @@ from macsypy.system_parser import SystemParser
 
 class MacsyTest(unittest.TestCase):
 
-    _data_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), "data"))
+    _tests_dir = os.path.normpath(os.path.dirname(__file__))
+    _data_dir = os.path.join(_tests_dir, "data")
+    _output_control_dir = os.path.join(_data_dir, "outputs_control")
 
     def setsid(self):
         platform = sys.platform
