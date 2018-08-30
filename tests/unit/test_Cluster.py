@@ -20,7 +20,7 @@ from macsypy.system_parser import SystemParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, md5sum, MacsyTestEnv
+from tests import MacsyTest, MacsyTestEnv
 
 
 class Test(MacsyTest):
@@ -228,5 +228,5 @@ class Test(MacsyTest):
     def test_str(self):
         self.macsy_test_env.load("env_002")
         buffer_ = str(self.macsy_test_env.cluster)
-        self.assertEqual(md5sum(str_=buffer_), '752f66b832fee7ec71fecdaef52fd820')
+        self.assertEqual(self.md5sum(str_=buffer_), '752f66b832fee7ec71fecdaef52fd820')
         self.macsy_test_env.unload("env_002")

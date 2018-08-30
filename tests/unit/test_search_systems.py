@@ -15,7 +15,7 @@
 import os
 from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
-from tests import MacsyTest, md5sum, MacsyTestEnv
+from tests import MacsyTest, MacsyTestEnv
 
 
 class Test(MacsyTest):
@@ -37,7 +37,7 @@ class Test(MacsyTest):
         (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
                                                       [self.macsy_test_env.system],
                                                       self.macsy_test_env.rep_info)
-        self.assertEqual(md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
+        self.assertEqual(self.md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
         self.assertEqual(len(multi_syst_genes), 0)
 
         # case 2
@@ -47,7 +47,7 @@ class Test(MacsyTest):
         (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
                                                       [self.macsy_test_env.system],
                                                       self.macsy_test_env.rep_info)
-        self.assertEqual(md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
+        self.assertEqual(self.md5sum(str_=str(clusters)), '5e8f78636b7d480ce6f6b6db949755ce')
         self.assertEqual(len(multi_syst_genes), 1)
 
         # FIXME: parts below are not tested
@@ -112,7 +112,7 @@ class Test(MacsyTest):
 
         stdout = stdxxx[0].getvalue()
 
-        self.assertEqual(md5sum(str_=stdout), '2567ef1661050233b190073a57400d42')
+        self.assertEqual(self.md5sum(str_=stdout), '2567ef1661050233b190073a57400d42')
 
         # FIXME
         # in disambiguate_cluster func, block starting with comment below is
@@ -155,9 +155,9 @@ class Test(MacsyTest):
             print f.read()
         """
 
-        self.assertEqual(md5sum(tabfilename), 'ecfb8fd9705884fff9773adb16bb22e0')
-        self.assertEqual(md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
-        self.assertEqual(md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+        self.assertEqual(self.md5sum(tabfilename), 'ecfb8fd9705884fff9773adb16bb22e0')
+        self.assertEqual(self.md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
+        self.assertEqual(self.md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
 
         self.macsy_test_env.unload("env_003")
 
@@ -171,9 +171,9 @@ class Test(MacsyTest):
 
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(md5sum(tabfilename), '9641c5b07036c25187d4e81300572771')
-        self.assertEqual(md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
-        self.assertEqual(md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+        self.assertEqual(self.md5sum(tabfilename), '9641c5b07036c25187d4e81300572771')
+        self.assertEqual(self.md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
+        self.assertEqual(self.md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
 
         # case 3
 
@@ -182,18 +182,18 @@ class Test(MacsyTest):
         self.macsy_test_env.cfg.options['db_type'] = "ordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(md5sum(reportfilename), 'dbe75a1bab3be68b56c4cb95b18c10fc')
-        self.assertEqual(md5sum(summaryfilename), '0c0f3a682d393e1408f2e00d0cacb624')
+        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(self.md5sum(reportfilename), 'dbe75a1bab3be68b56c4cb95b18c10fc')
+        self.assertEqual(self.md5sum(summaryfilename), '0c0f3a682d393e1408f2e00d0cacb624')
 
         # case 4
 
         self.macsy_test_env.cfg.options['db_type'] = "unordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(md5sum(reportfilename), 'bba614dc69362195d5a264e2339dfe09')
-        self.assertEqual(md5sum(summaryfilename), '4af8657e1877ba123783db7088c7f132')
+        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(self.md5sum(reportfilename), 'bba614dc69362195d5a264e2339dfe09')
+        self.assertEqual(self.md5sum(summaryfilename), '4af8657e1877ba123783db7088c7f132')
 
         # case 5
 
@@ -202,9 +202,9 @@ class Test(MacsyTest):
         self.macsy_test_env.system._forbidden_genes.append(forbidden_gene)
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(md5sum(reportfilename), 'a7d305b8194e1b0b58d0bef6f127d47f')
-        self.assertEqual(md5sum(summaryfilename), '4d0453c5a03d7e56fa5231a88ba2b7f6')
+        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
+        self.assertEqual(self.md5sum(reportfilename), 'a7d305b8194e1b0b58d0bef6f127d47f')
+        self.assertEqual(self.md5sum(summaryfilename), '4d0453c5a03d7e56fa5231a88ba2b7f6')
 
         # case 6
 

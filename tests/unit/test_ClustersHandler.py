@@ -17,7 +17,7 @@ from macsypy.report import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, md5sum, MacsyTestEnv
+from tests import MacsyTest, MacsyTestEnv
 
 
 class TestCircularizeData(object):
@@ -109,7 +109,7 @@ class Test(MacsyTest):
         ch.add(cluster)
         ch.add(cluster)
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'f08677489ff1dd2ed89f27995427233a')
+        self.assertEqual(self.md5sum(str_=str_), 'f08677489ff1dd2ed89f27995427233a')
 
         self.macsy_test_env.unload("env_002")
 
@@ -135,7 +135,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), '6371e866c6141a9782e4202f515d9649')
+        self.assertEqual(self.md5sum(str_=str_), '6371e866c6141a9782e4202f515d9649')
 
         # case 2
 
@@ -148,7 +148,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), '29b0f48a0656a119e36ee4397770ffec')
+        self.assertEqual(self.md5sum(str_=str_), '29b0f48a0656a119e36ee4397770ffec')
 
         # case 3
 
@@ -161,7 +161,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'dc9b00fc3e0bed7a95ad273d4c54227a')
+        self.assertEqual(self.md5sum(str_=str_), 'dc9b00fc3e0bed7a95ad273d4c54227a')
 
         # case 4
 
@@ -174,7 +174,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'ed355064670f75096721663aaa1c6cf9')
+        self.assertEqual(self.md5sum(str_=str_), 'ed355064670f75096721663aaa1c6cf9')
 
         # case 5
 
@@ -187,6 +187,6 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'f16547771922bd608931f178d468c0d7')
+        self.assertEqual(self.md5sum(str_=str_), 'f16547771922bd608931f178d468c0d7')
 
         self.macsy_test_env.unload("env_004")

@@ -13,7 +13,7 @@
 
 
 from macsypy.search_systems import validSystemHit
-from tests import MacsyTest, md5sum, MacsyTestEnv
+from tests import MacsyTest, MacsyTestEnv
 
 
 class Test(MacsyTest):
@@ -28,13 +28,13 @@ class Test(MacsyTest):
     def test_str(self):
         hit = self.macsy_test_env.all_hits[0]
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
-        self.assertEqual(md5sum(str_=str(valid_system_hit)), '55efaa255d201e98cc104cfefe7ea8c0')
+        self.assertEqual(self.md5sum(str_=str(valid_system_hit)), '55efaa255d201e98cc104cfefe7ea8c0')
 
     def test_output_system(self):
         hit = self.macsy_test_env.all_hits[0]
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
         report_str = valid_system_hit.output_system("foo132", "all_clear")
-        self.assertEqual(md5sum(str_=report_str), 'ac7f5a5808e2c9875784b75358f80325')
+        self.assertEqual(self.md5sum(str_=report_str), 'ac7f5a5808e2c9875784b75358f80325')
 
     def test_getattr(self):
         hit = self.macsy_test_env.all_hits[0]
@@ -46,4 +46,4 @@ class Test(MacsyTest):
         hit = self.macsy_test_env.all_hits[0]
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
         header_str_ = valid_system_hit.output_system_header()
-        self.assertEqual(md5sum(str_=header_str_), 'c5a197c7ad1819944a90e082be4c2f0c')
+        self.assertEqual(self.md5sum(str_=header_str_), 'c5a197c7ad1819944a90e082be4c2f0c')
