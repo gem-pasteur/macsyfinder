@@ -155,9 +155,9 @@ class Test(MacsyTest):
             print f.read()
         """
 
-        self.assertEqual(self.md5sum(tabfilename), 'ecfb8fd9705884fff9773adb16bb22e0')
-        self.assertEqual(self.md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
-        self.assertEqual(self.md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+        self.assertFileEqual(tabfilename, self.output_control('tabfilename_001'))
+        self.assertFileEqual(reportfilename, self.output_control('reportfilename_001'))
+        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_001'))
 
         self.macsy_test_env.unload("env_003")
 
@@ -171,9 +171,9 @@ class Test(MacsyTest):
 
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(self.md5sum(tabfilename), '9641c5b07036c25187d4e81300572771')
-        self.assertEqual(self.md5sum(reportfilename), 'f6fc34319ef2e97c6f6b837fd7093709')
-        self.assertEqual(self.md5sum(summaryfilename), '678a182c63ba693d08ebe5f263096f42')
+        self.assertFileEqual(tabfilename, self.output_control('tabfilename_002'))
+        self.assertFileEqual(reportfilename, self.output_control('reportfilename_002'))
+        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_002'))
 
         # case 3
 
@@ -182,18 +182,18 @@ class Test(MacsyTest):
         self.macsy_test_env.cfg.options['db_type'] = "ordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(self.md5sum(reportfilename), 'dbe75a1bab3be68b56c4cb95b18c10fc')
-        self.assertEqual(self.md5sum(summaryfilename), '0c0f3a682d393e1408f2e00d0cacb624')
+        self.assertFileEqual(tabfilename, self.output_control('tabfilename_003'))
+        self.assertFileEqual(reportfilename, self.output_control('reportfilename_003'))
+        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_003'))
 
         # case 4
 
         self.macsy_test_env.cfg.options['db_type'] = "unordered_replicon"
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(self.md5sum(reportfilename), 'bba614dc69362195d5a264e2339dfe09')
-        self.assertEqual(self.md5sum(summaryfilename), '4af8657e1877ba123783db7088c7f132')
+        self.assertFileEqual(tabfilename, self.output_control('tabfilename_004'))
+        self.assertFileEqual(reportfilename, self.output_control('reportfilename_004'))
+        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_004'))
 
         # case 5
 
@@ -202,9 +202,9 @@ class Test(MacsyTest):
         self.macsy_test_env.system._forbidden_genes.append(forbidden_gene)
         search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
 
-        self.assertEqual(self.md5sum(tabfilename), '650f42eca24eb2357fec9f63b5c41c05')
-        self.assertEqual(self.md5sum(reportfilename), 'a7d305b8194e1b0b58d0bef6f127d47f')
-        self.assertEqual(self.md5sum(summaryfilename), '4d0453c5a03d7e56fa5231a88ba2b7f6')
+        self.assertFileEqual(tabfilename, self.output_control('tabfilename_005'))
+        self.assertFileEqual(reportfilename, self.output_control('reportfilename_005'))
+        self.assertFileEqual(summaryfilename, self.output_control('summaryfilename_005'))
 
         # case 6
 

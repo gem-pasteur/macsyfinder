@@ -10,6 +10,7 @@ from functools import partial
 import tempfile
 import uuid
 import logging
+import inspect
 from operator import attrgetter
 
 from macsypy.database import Indexes, RepliconDB
@@ -20,6 +21,15 @@ from macsypy.system import system_bank
 from macsypy.search_systems import system_name_generator, build_clusters, analyze_clusters_replicon
 from macsypy.search_genes import search_genes
 from macsypy.system_parser import SystemParser
+
+
+def path_to_modulename(p):
+    """
+    Example: foo/bar.py become bar
+    """
+    filename = os.path.basename(p)
+    modulename = os.path.splitext(filename)[0]
+    return modulename
 
 
 class MacsyTest(unittest.TestCase):
@@ -45,6 +55,18 @@ class MacsyTest(unittest.TestCase):
             return data_path
         else:
             raise IOError("data '{}' does not exists".format(data_path))
+
+    @classmethod
+    def output_control(cls, _id):
+        frame,outer_filename,outer_line_number,outer_function_name,lines,index = inspect.stack()[1]
+
+        # example: tests/unit/test_systemDetectionReportUnordered.py become systemDetectionReportUnordered
+        modulename = path_to_modulename(outer_filename)
+
+        expected_file = os.path.join(cls._output_control_dir, modulename, outer_function_name, _id)
+
+        # example: tests/data/outputs_control/test_systemDetectionReportUnordered/test_json_output/011
+        return expected_file
 
     @contextmanager
     def catch_io(self, out=False, err=False):
