@@ -37,18 +37,18 @@ class Test(MacsyTest):
         so = self.macsy_test_env.system_occurence
         sdru = systemDetectionReportUnordered([so], self.macsy_test_env.cfg)
         sdru.json_output(test_file)
-        self.assertFileEqual(test_file, self.output_control('001'))
+        self.assertFileEqual(test_file, self.output_control_file('001'))
 
     def test_summary_output(self):
         test_file = os.path.join(self.test_dir, 'test_bar.txt')
         so = self.macsy_test_env.system_occurence
         sdru = systemDetectionReportUnordered([so], self.macsy_test_env.cfg)
         sdru.summary_output(test_file, print_header=True)
-        self.assertFileEqual(test_file, self.output_control('001'))
+        self.assertFileEqual(test_file, self.output_control_file('001'))
 
     def test_report_output(self):
         test_file = os.path.join(self.test_dir, 'test_foo.txt')
         so = self.macsy_test_env.system_occurence
         sdru = systemDetectionReportUnordered([so], self.macsy_test_env.cfg)
         sdru.report_output(test_file, print_header=True)
-        self.assertFileEqual(test_file, self.output_control('001'))
+        self.assertFileEqual(test_file, self.output_control_file('001'))
