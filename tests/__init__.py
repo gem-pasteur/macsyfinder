@@ -138,6 +138,31 @@ class MacsyTest(unittest.TestCase):
         except:
             pass
 
+    @staticmethod
+    def md5sum(file_=None, str_=None):
+        """Compute md5 checksum.
+
+        :param file_: the name of the file to compute the checksum for
+        :type file_: str
+        :param str_: the string to compute the checksum for
+        :type str_: str
+        """
+        assert not (file_ and str_)
+
+        d = hashlib.md5()
+
+        if file_:
+            with open(file_, mode='rb') as f:
+                for buf in iter(partial(f.read, 128), b''):
+                    d.update(buf)
+        elif str_:
+            assert isinstance(str_, str)
+            d.update(str_)
+        else:
+            assert False
+
+        return d.hexdigest()
+
 
 class LoggerWrapper(object):
 
@@ -149,56 +174,6 @@ class LoggerWrapper(object):
 
     def get_value(self):
         return self.logger.handlers[0].stream.getvalue()
-
-
-def which(name, flags=os.X_OK):
-    """
-    Search PATH for executable files with the given name.
-
-    :param name: the name of the executable to search
-    :type name: str
-    :param flags: os mod the name must have, default is executable (os.X_OK).
-    :type flags: os file mode R_OK|R_OK|W_OK|X_OK
-    :return: the path of the executable
-    :rtype: string or None
-    """
-    result = None
-    path = os.environ.get('PATH', None)
-    if path is None:
-        return result
-    for p in os.environ.get('PATH', '').split(os.pathsep):
-        p = os.path.join(p, name)
-        if platform.system() == 'Windows':
-            p += '.exe'
-        if os.access(p, flags):
-            result = p
-            break
-    return result
-
-
-def md5sum(file_=None, str_=None):
-    """Compute md5 checksum.
-
-    :param file_: the name of the file to compute the checksum for
-    :type file_: str
-    :param str_: the string to compute the checksum for
-    :type str_: str
-    """
-    assert not (file_ and str_)
-
-    d = hashlib.md5()
-
-    if file_:
-        with open(file_, mode='rb') as f:
-            for buf in iter(partial(f.read, 128), b''):
-                d.update(buf)
-    elif str_:
-        assert isinstance(str_, str)
-        d.update(str_)
-    else:
-        assert False
-
-    return d.hexdigest()
 
 
 class MacsyTestEnvSnippet():
@@ -403,3 +378,28 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             MacsyTest.rmtree(self.out_dir)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
+
+
+def which(name, flags=os.X_OK):
+    """
+    Search PATH for executable files with the given name.
+
+    :param name: the name of the executable to search
+    :type name: str
+    :param flags: os mod the name must have, default is executable (os.X_OK).
+    :type flags: os file mode R_OK|R_OK|W_OK|X_OK
+    :return: the path of the executable
+    :rtype: string or None
+    """
+    result = None
+    path = os.environ.get('PATH', None)
+    if path is None:
+        return result
+    for p in os.environ.get('PATH', '').split(os.pathsep):
+        p = os.path.join(p, name)
+        if platform.system() == 'Windows':
+            p += '.exe'
+        if os.access(p, flags):
+            result = p
+            break
+    return result
