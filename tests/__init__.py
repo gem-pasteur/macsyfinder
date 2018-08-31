@@ -233,7 +233,7 @@ class MacsyTestEnvSnippet():
     def build_config(self, previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
-        self.config = Config(hmmer_exe="hmmsearch",
+        self.cfg = Config(hmmer_exe="hmmsearch",
                              out_dir=self.out_dir,
                              db_type="gembase",
                              previous_run=previous_run,
@@ -246,7 +246,7 @@ class MacsyTestEnvSnippet():
                              models_dir=models_dir,
                              log_file=os.devnull)
 
-        idx = Indexes(self.config)
+        idx = Indexes(self.cfg)
         idx._build_my_indexes()
 
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
