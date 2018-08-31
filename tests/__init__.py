@@ -38,6 +38,14 @@ class MacsyTest(unittest.TestCase):
     _data_dir = os.path.join(_tests_dir, "data")
     _output_control_dir = os.path.join(_data_dir, "outputs_control")
 
+    def load_env(self, env_id):
+        self.macsy_test_env = MacsyTestEnv()
+        self.macsy_test_env.load(env_id)
+
+    def unload_env(self, env_id):
+        self.macsy_test_env.unload(env_id)
+        self.macsy_test_env = None
+
     def setsid(self):
         platform = sys.platform
         if platform.startswith('linux'):

@@ -17,7 +17,7 @@ from macsypy.report import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, MacsyTestEnv
+from tests import MacsyTest
 
 
 class TestCircularizeData(object):
@@ -72,13 +72,13 @@ class TestCircularizeData(object):
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
+        pass
 
     def tearDown(self):
-        self.macsy_test_env = None
+        pass
 
     def test_add(self):
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
 
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
@@ -99,10 +99,10 @@ class Test(MacsyTest):
         with self.assertRaises(SystemDetectionError):
             ch.add(cluster)
 
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
 
     def test_str(self):
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
 
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
@@ -111,10 +111,10 @@ class Test(MacsyTest):
         str_ = str(ch)
         self.assertEqual(str(str_), self.output_control_str('001'))
 
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
 
     def test_circularize(self):
-        self.macsy_test_env.load("env_004")
+        self.load_env("env_004")
 
         system = self.macsy_test_env.system
         cfg = self.macsy_test_env.cfg
@@ -189,4 +189,4 @@ class Test(MacsyTest):
         str_ = str(ch)
         self.assertEqual(str(str_), self.output_control_str('005'))
 
-        self.macsy_test_env.unload("env_004")
+        self.unload_env("env_004")

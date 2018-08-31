@@ -16,19 +16,18 @@ import os
 import shutil
 import tempfile
 from macsypy.search_systems import systemDetectionReportUnordered
-from tests import MacsyTest, MacsyTestEnv
+from tests import MacsyTest
 
 
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
 
         self.test_dir = tempfile.mkdtemp()
 
     def tearDown(self):
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
 
         shutil.rmtree(self.test_dir)
 

@@ -15,22 +15,21 @@
 import os
 from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
-from tests import MacsyTest, MacsyTestEnv
+from tests import MacsyTest
 
 
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
+        pass
 
     def tearDown(self):
-        self.macsy_test_env = None
 
         # reset static members (hacked in test_search_systems func)
         RepliconDB.ordered_replicon_name = 'UserReplicon'
 
     def test_build_clusters(self):
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         # case 1
 
@@ -59,18 +58,18 @@ class Test(MacsyTest):
             #print "Recap clusters"
         """
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_get_compatible_systems(self):
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         inter = get_compatible_systems([1, 2, 3], [3, 4])
         self.assertEqual(inter, [3])
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_get_best_hits(self):
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         hits = self.macsy_test_env.all_hits[0:2]
 
@@ -97,10 +96,10 @@ class Test(MacsyTest):
         best_hits = get_best_hits(hits, criterion="profile_coverage")
         self.assertEqual(best_hits[0].gene.name, "T9SS_gldN_TIGR03523")
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_disambiguate_cluster(self):
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         rep_db = RepliconDB(self.macsy_test_env.cfg)
         rep_info = rep_db['AESU001c01a']
@@ -121,10 +120,10 @@ class Test(MacsyTest):
         Deal with "accessory foreign genes",
         """
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_analyze_clusters_replicon(self):
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         rep_db = RepliconDB(self.macsy_test_env.cfg)
         rep_info = rep_db['AESU001c01a']
@@ -135,13 +134,13 @@ class Test(MacsyTest):
         # FIXME
         # many part of analyze_clusters_replicon func not tested
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_search_systems(self):
 
         # case 1
 
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
         tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.tab')
         reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.report')
@@ -159,11 +158,11 @@ class Test(MacsyTest):
         self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_001'))
         self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_001'))
 
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
         # case 2
 
-        self.macsy_test_env.load("env_005")
+        self.load_env("env_005")
 
         tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.tab')
         reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir, 'macsyfinder.report')
@@ -213,4 +212,4 @@ class Test(MacsyTest):
             search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
         self.assertEqual(context.exception.message, 'Invalid database type. ')
 
-        self.macsy_test_env.unload("env_005")
+        self.unload_env("env_005")
