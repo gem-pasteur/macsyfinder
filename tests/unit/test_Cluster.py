@@ -119,7 +119,7 @@ class Test(MacsyTest):
                     ex_genes += a_s
             all_genes = (genes + ex_genes)
 
-            all_reports = search_genes(all_genes, self.macsy_test_env.config)
+            all_reports = search_genes(all_genes, self.macsy_test_env.cfg)
 
             all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
@@ -130,7 +130,7 @@ class Test(MacsyTest):
 
         self.load_env("env_008")
 
-        parser = SystemParser(self.macsy_test_env.config, system_bank, gene_bank)
+        parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
 
         parser.parse(['set_1/T9SS'])
         system_1 = system_bank['set_1/T9SS']
@@ -196,7 +196,7 @@ class Test(MacsyTest):
 
         self.load_env("env_006")
 
-        parser = SystemParser(self.macsy_test_env.config, system_bank, gene_bank)
+        parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
 
         fqn_1 = 'set_1/T2SS'
         fqn_2 = 'set_1/T4P'
