@@ -13,17 +13,16 @@
 
 
 from macsypy.search_systems import validSystemHit
-from tests import MacsyTest, MacsyTestEnv
+from tests import MacsyTest
 
 
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_003")
+        self.load_env("env_003")
 
     def tearDown(self):
-        self.macsy_test_env.unload("env_003")
+        self.unload_env("env_003")
 
     def test_str(self):
         hit = self.macsy_test_env.all_hits[0]

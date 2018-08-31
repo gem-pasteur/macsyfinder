@@ -20,19 +20,19 @@ from macsypy.system_parser import SystemParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, MacsyTestEnv
+from tests import MacsyTest
 
 
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
+        pass
 
     def tearDown(self):
-        self.macsy_test_env = None
+        pass
 
     def test_len(self):
-        self.macsy_test_env.load("env_001")
+        self.load_env("env_001")
 
         system = System(self.macsy_test_env.cfg, 'foo', 10)
         cluster = Cluster(system)
@@ -41,10 +41,10 @@ class Test(MacsyTest):
         cluster.hits = [hit]
         self.assertEqual(len(cluster), 1)
 
-        self.macsy_test_env.unload("env_001")
+        self.unload_env("env_001")
 
     def test_putative_system(self):
-        self.macsy_test_env.load("env_001")
+        self.load_env("env_001")
 
         system_name = 'set_1/T9SS'
         system = System(self.macsy_test_env.cfg, system_name, 10)
@@ -52,10 +52,10 @@ class Test(MacsyTest):
         cluster._putative_system = system_name
         self.assertEqual(cluster.putative_system, system_name)
 
-        self.macsy_test_env.unload("env_001")
+        self.unload_env("env_001")
 
     def test_compatible_systems(self):
-        self.macsy_test_env.load("env_001")
+        self.load_env("env_001")
 
         system = System(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
         cluster = Cluster(system)
@@ -63,20 +63,20 @@ class Test(MacsyTest):
         cluster._compatible_systems.append(compatible_system_name)
         self.assertListEqual(cluster.compatible_systems, [compatible_system_name])
 
-        self.macsy_test_env.unload("env_001")
+        self.unload_env("env_001")
 
     def test_state(self):
-        self.macsy_test_env.load("env_001")
+        self.load_env("env_001")
 
         system = System(self.macsy_test_env.cfg, 'foo', 4)
         cluster = Cluster(system)
         state = cluster.state
         self.assertEqual(state, '')
 
-        self.macsy_test_env.unload("env_001")
+        self.unload_env("env_001")
 
     def test_add(self):
-        self.macsy_test_env.load("env_007")
+        self.load_env("env_007")
 
         # debug
         # print [h.gene.name for h in all_hits]
@@ -103,7 +103,7 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          "Attempting to gather in a cluster hits from different replicons ! ")
 
-        self.macsy_test_env.unload("env_007")
+        self.unload_env("env_007")
 
     def test_save(self):
 
@@ -128,7 +128,7 @@ class Test(MacsyTest):
 
             return all_hits
 
-        self.macsy_test_env.load("env_008")
+        self.load_env("env_008")
 
         parser = SystemParser(self.macsy_test_env.config, system_bank, gene_bank)
 
@@ -190,12 +190,11 @@ class Test(MacsyTest):
         self.assertEqual(cluster._compatible_systems, [])
         self.assertEqual(cluster._state, 'ambiguous')
 
-        self.macsy_test_env.unload("env_008")
+        self.unload_env("env_008")
 
         # test case 4
 
-        self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load("env_006")
+        self.load_env("env_006")
 
         parser = SystemParser(self.macsy_test_env.config, system_bank, gene_bank)
 
@@ -223,10 +222,10 @@ class Test(MacsyTest):
 
         cluster.save()
 
-        self.macsy_test_env.unload("env_006")
+        self.unload_env("env_006")
 
     def test_str(self):
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
         buffer_ = str(self.macsy_test_env.cluster)
         self.assertEqual(str(buffer_), self.output_control_str('001'))
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
