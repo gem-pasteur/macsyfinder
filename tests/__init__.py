@@ -249,13 +249,13 @@ class MacsyTestEnvSnippet():
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
 
-    def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
+    def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models", model_fqn="set_1/T9SS"):
         self.build_config(previous_run=previous_run, models_dir=models_dir)
 
         parser = SystemParser(self.cfg, system_bank, gene_bank)
-        parser.parse(['set_1/T9SS'])
+        parser.parse([model_fqn])
 
-        self.system = system_bank['set_1/T9SS']
+        self.system = system_bank[model_fqn]
 
         genes = self.system.mandatory_genes + self.system.accessory_genes + self.system.forbidden_genes
 
@@ -303,6 +303,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
     env_008 => environment loaded using "previous_run" option
                (use data from "tests/data/data_set_1").
                Stops after creating indexes.
+    env_009 => environment loaded using "previous_run" option
+               (use data from "tests/data/data_set_3").
+               Stops after creating ModelRegistry.
     """
 
     def load(self, env_id):
@@ -375,6 +378,12 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.build_hits()
         elif env_id == "env_008":
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models")
+        elif env_id == "env_009":
+            self.build_hits(previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models", model_fqn="set_1/T4P")
+
+            models_registry = ModelRegistry(self.cfg)
+            self.model_name = 'set_1'
+            self.models_location = models_registry[self.model_name]
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -411,6 +420,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_007":
             MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_008":
+            MacsyTest.rmtree(self.out_dir)
+        elif env_id == "env_009":
             MacsyTest.rmtree(self.out_dir)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
