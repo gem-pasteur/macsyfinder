@@ -250,23 +250,7 @@ class MacsyTestEnvSnippet():
         idx._build_my_indexes()
 
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models"):
-        self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
-
-        self.cfg = Config(hmmer_exe="hmmsearch",
-                          out_dir=self.out_dir,
-                          db_type="gembase",
-                          previous_run=previous_run,
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          res_search_suffix=".search_hmm.out",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          models_dir=models_dir,
-                          log_file=os.devnull)
-
-        idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        self.build_config(previous_run=previous_run, models_dir=models_dir)
 
         parser = SystemParser(self.cfg, system_bank, gene_bank)
         parser.parse(['set_1/T9SS'])
