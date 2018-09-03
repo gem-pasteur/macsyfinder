@@ -1,0 +1,20 @@
+
+---Counter compatible systems ! ---
+{'set_1/T9SS': 5}
+
+res_cluster : 
+--- Cluster set_1/T9SS  ---
+['AESU001c01a_007870', 'AESU001c01a_007880', 'AESU001c01a_007890']
+['T9SS_gldM_TIGR03517', 'T9SS_gldL_TIGR03513', 'T9SS_gldK_TIGR03525']
+[774, 775, 776]
+3
+r.compatible_systems ['set_1/T9SS']
+
+res_cluster : 
+--- Cluster set_1/T9SS  ---
+['AESU001c01a_007870', 'AESU001c01a_007880']
+['T9SS_gldM_TIGR03517', 'T9SS_gldL_TIGR03513']
+[774, 775]
+2
+r.compatible_systems ['set_1/T9SS']
+
