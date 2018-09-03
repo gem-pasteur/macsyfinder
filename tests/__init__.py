@@ -66,7 +66,7 @@ class MacsyTest(unittest.TestCase):
 
     @classmethod
     def _output_control(cls, _id):
-        frame,outer_filename,outer_line_number,outer_function_name,lines,index = inspect.stack()[2]
+        frame, outer_filename, outer_line_number, outer_function_name, lines, index = inspect.stack()[2]
 
         # example: tests/unit/test_systemDetectionReportUnordered.py become systemDetectionReportUnordered
         modulename = path_to_modulename(outer_filename)
@@ -234,17 +234,17 @@ class MacsyTestEnvSnippet():
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
 
         self.cfg = Config(hmmer_exe="hmmsearch",
-                             out_dir=self.out_dir,
-                             db_type="gembase",
-                             previous_run=previous_run,
-                             e_value_res=1,
-                             i_evalue_sel=0.5,
-                             res_search_suffix=".search_hmm.out",
-                             profile_suffix=".hmm",
-                             res_extract_suffix="",
-                             log_level=30,
-                             models_dir=models_dir,
-                             log_file=os.devnull)
+                          out_dir=self.out_dir,
+                          db_type="gembase",
+                          previous_run=previous_run,
+                          e_value_res=1,
+                          i_evalue_sel=0.5,
+                          res_search_suffix=".search_hmm.out",
+                          profile_suffix=".hmm",
+                          res_extract_suffix="",
+                          log_level=30,
+                          models_dir=models_dir,
+                          log_file=os.devnull)
 
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
