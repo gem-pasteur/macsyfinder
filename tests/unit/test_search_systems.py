@@ -13,8 +13,11 @@
 
 
 import os
+import copy
 from macsypy.search_systems import build_clusters, get_compatible_systems, get_best_hits, disambiguate_cluster, analyze_clusters_replicon, search_systems
 from macsypy.database import RepliconDB
+from macsypy.registries import ModelRegistry
+from macsypy.gene import Gene
 from tests import MacsyTest
 
 
@@ -99,6 +102,22 @@ class Test(MacsyTest):
         self.unload_env("env_003")
 
     def test_disambiguate_cluster(self):
+
+        def dc_helper(cluster): # 'dc' stands for Disambiguate Cluster
+            """
+            This method
+                - calls disambiguate_cluster()
+                - returns stdxxx
+            """
+            with self.catch_io(out=True, err=True) as stdxxx:
+                clusters = disambiguate_cluster(cluster)
+            stdout = stdxxx[0].getvalue()
+            stderr = stdxxx[1].getvalue()
+            buffer_ = os.linesep.join([stdout, stderr])
+            return buffer_
+
+        # case 1
+
         self.load_env("env_003")
 
         rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -106,21 +125,115 @@ class Test(MacsyTest):
         (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
         cluster = clusters.clusters[1]
 
-        with self.catch_io(out=True, err=False) as stdxxx:
-            clusters = disambiguate_cluster(cluster)
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('001'))
 
-        stdout = stdxxx[0].getvalue()
+        # case 2
 
-        self.assertEqual(str(stdout), self.output_control_str('001'))
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['AESU001c01a']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[1]
+        cluster.systems_to_detect = []
 
-        # FIXME
-        # in disambiguate_cluster func, block starting with comment below is
-        # not tested
-        """
-        Deal with "accessory foreign genes",
-        """
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('002'))
 
         self.unload_env("env_003")
+
+        # case 3
+
+        self.load_env("env_009")
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['VICH001.B.00001.C001']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[6]
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('003'))
+
+        # case 4
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['VICH001.B.00001.C001']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[6]
+
+        for h in cluster.hits:
+            h.gene._loner = True
+
+        li = copy.copy(cluster.hits[1:3])
+        li[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, self.macsy_test_env.models_location)
+        cluster.hits.extend(li)
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('004'))
+
+        # case 5
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['VICH001.B.00001.C001']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[6]
+
+        cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, self.macsy_test_env.models_location)
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('005'))
+
+        # case 6
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['VICH001.B.00001.C001']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[6]
+
+        li = copy.copy(cluster.hits[0:2])
+        cluster.hits.extend(li)
+        cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, self.macsy_test_env.models_location)
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('006'))
+
+        self.unload_env("env_009")
+
+        # case 7
+
+        self.load_env("env_003")
+
+        models_registry = ModelRegistry(self.macsy_test_env.cfg)
+        model_name = 'set_1'
+        models_location = models_registry[model_name]
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['AESU001c01a']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[1]
+
+        li = copy.copy(cluster.hits[0:3])
+        cluster.hits.extend(li)
+        new_gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, models_location)
+        cluster.hits[4].gene = new_gene
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('007'))
+
+        self.unload_env("env_003")
+
+        # case 8
+
+        self.load_env("env_009")
+
+        rep_db = RepliconDB(self.macsy_test_env.cfg)
+        rep_info = rep_db['VICH001.B.00001.C001']
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        cluster = clusters.clusters[3]
+
+        str_= dc_helper(cluster)
+        self.assertEqual(str_, self.output_control_str('008'))
+
+        self.unload_env("env_009")
 
     def test_analyze_clusters_replicon(self):
         self.load_env("env_003")
