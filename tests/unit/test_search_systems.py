@@ -236,18 +236,111 @@ class Test(MacsyTest):
         self.unload_env("env_009")
 
     def test_analyze_clusters_replicon(self):
+        def stringify(so_list):
+            buffer_ = os.linesep.join([str(so) for so in so_list])
+            return buffer_
+
+        # case 1
+
         self.load_env("env_003")
 
-        rep_db = RepliconDB(self.macsy_test_env.cfg)
-        rep_info = rep_db['AESU001c01a']
-        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], rep_info)
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.rep_info)
+        multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
         systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
-        self.assertEqual(len(systems_occurences_list), 1)
-
-        # FIXME
-        # many part of analyze_clusters_replicon func not tested
+        str_ = stringify(systems_occurences_list)
+        self.assertEqual(str_, self.output_control_str('001'))
 
         self.unload_env("env_003")
+
+        # case 2
+
+        self.load_env("env_004")
+
+        cfg = self.macsy_test_env.cfg
+        models_location = self.macsy_test_env.models_location
+        system = self.macsy_test_env.system
+
+        system._min_mandatory_genes_required = 1
+        system._min_genes_required = 1
+
+        rep_db = RepliconDB(cfg)
+        rep_info = rep_db['AESU001c01a']
+
+        gene = Gene(cfg, 'T4SS_t4cp2', system, models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
+        system.add_accessory_gene(gene)
+
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+        clusters.clusters = clusters.clusters[:1] # keep only one cluster
+
+        multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
+
+        systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+
+        str_ = stringify(systems_occurences_list)
+        self.assertEqual(str_, self.output_control_str('002'))
+
+        # case 3
+
+        cfg = self.macsy_test_env.cfg
+        models_location = self.macsy_test_env.models_location
+        system = self.macsy_test_env.system
+
+        system._min_mandatory_genes_required = 1
+        system._min_genes_required = 1
+
+        rep_db = RepliconDB(cfg)
+        rep_info = rep_db['AESU001c01a']
+
+        gene = Gene(cfg, 'T4SS_t4cp2', system, models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
+        system.add_accessory_gene(gene)
+
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+        clusters.clusters = clusters.clusters[:1] # keep only one cluster
+        cluster = clusters.clusters[0]
+        cluster._state = "ambiguous"
+
+        multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
+
+        with self.catch_io(out=True, err=True) as stdxxx:
+            systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+
+        str_ = stringify(systems_occurences_list)
+        self.assertEqual(str_, self.output_control_str('003'))
+
+        # case 4
+
+        cfg = self.macsy_test_env.cfg
+        models_location = self.macsy_test_env.models_location
+        system = self.macsy_test_env.system
+
+        system._min_mandatory_genes_required = 1
+        system._min_genes_required = 1
+
+        rep_db = RepliconDB(cfg)
+        rep_info = rep_db['AESU001c01a']
+
+        gene = Gene(cfg, 'T4SS_t4cp2', system, models_location)
+        system.add_mandatory_gene(gene)
+        gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
+        system.add_accessory_gene(gene)
+
+        (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+        clusters.clusters = clusters.clusters[:1] # keep only one cluster
+        cluster = clusters.clusters[0]
+        cluster._state = "ineligible"
+
+        multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
+
+        systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+
+        str_ = stringify(systems_occurences_list)
+        self.assertEqual(str_, self.output_control_str('004'))
+
+        self.unload_env("env_004")
 
     def test_search_systems(self):
 
