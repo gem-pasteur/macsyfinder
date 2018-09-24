@@ -52,15 +52,6 @@ class Test(MacsyTest):
         self.assertEqual(str(clusters), self.output_control_str('002'))
         self.assertEqual(len(multi_syst_genes), 1)
 
-        # FIXME: parts below are not tested
-        """
-        if positions.count(first.position) == 0:
-            hitstoconsider.append(first)
-
-        if len(cur_cluster) > 1 or (len(cur_cluster) == 1 and prev.gene.loner):
-            #print "Recap clusters"
-        """
-
         self.unload_env("env_003")
 
     def test_get_compatible_systems(self):
