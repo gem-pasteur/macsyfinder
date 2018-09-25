@@ -46,7 +46,8 @@ class MacsyTest(unittest.TestCase):
         self.macsy_test_env.unload(env_id)
         self.macsy_test_env = None
 
-    def setsid(self):
+    @staticmethod
+    def setsid():
         platform = sys.platform
         if platform.startswith('linux'):
             setsid = 'setsid'
