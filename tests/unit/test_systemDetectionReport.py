@@ -82,8 +82,8 @@ class Test(MacsyTest):
         system_occurence = SystemOccurence(system)
         os.environ['MACSY_DEBUG'] = '1'
         sdr = systemDetectionReport([system_occurence], self.cfg)
-        sdr.report_output('foo')
         del os.environ['MACSY_DEBUG']
+        self.assertEqual(sdr._indent, 2)
 
     def test_report_output(self):
         system = System(self.cfg, 'foo', 10)
