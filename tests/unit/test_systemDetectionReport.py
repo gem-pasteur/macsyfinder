@@ -77,6 +77,14 @@ class Test(MacsyTest):
 
         systemDetectionReport.__abstractmethods__ = self.abstractmethods
 
+    def test_init(self):
+        system = System(self.cfg, 'foo', 10)
+        system_occurence = SystemOccurence(system)
+        os.environ['MACSY_DEBUG'] = '1'
+        sdr = systemDetectionReport([system_occurence], self.cfg)
+        sdr.report_output('foo')
+        del os.environ['MACSY_DEBUG']
+
     def test_report_output(self):
         system = System(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
