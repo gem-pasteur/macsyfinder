@@ -79,10 +79,32 @@ class Test(MacsyTest):
         #models_2_detect = ['nimportnaoik']
         parsed = set()
         models_2_detect = set()
-        models_2_detect.add('foo/nimportnaoik')
+        definition_name = 'foo/nimportnaoik'
+        models_2_detect.add(definition_name)
         with self.assertRaises(MacsypyError) as context:
             #self.parser.system_to_parse(system_2_detect)
             self.parser.definition_to_parse(models_2_detect, parsed)
+        self.assertEqual(str(context.exception), '{}: No such definition'.format(definition_name))
+
+        parsed = set()
+        models_2_detect = set()
+        model_name = 'bar'
+        definition = '{}/nimportnaoik'.format(model_name)
+        models_2_detect.add(definition)
+        with self.assertRaises(MacsypyError) as context:
+            #self.parser.system_to_parse(system_2_detect)
+            self.parser.definition_to_parse(models_2_detect, parsed)
+        self.assertEqual(str(context.exception), '{}: No such Models in {}'.format(model_name, self.cfg.models_dir))
+
+        parsed = set()
+        models_2_detect = set()
+        model_name = 'foo'
+        def_name = 'not_xml'
+        fqn = '{}/{}'.format(model_name, def_name)
+        models_2_detect.add(fqn)
+        with self.assertRaises(MacsypyError) as context:
+            self.parser.definition_to_parse(models_2_detect, parsed)
+        self.assertTrue(str(context.exception).startswith('unable to parse system definition "{}" :'.format(fqn)))
 
     def test_parse(self):
         def_2_parse = set()
@@ -140,14 +162,14 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          "Invalid system 'fail_invalid_presence' definition: presence value must be either "
                          "[mandatory, accessory, forbidden] not foo_bar")
- 
+
     def test_gene_no_name(self):
         system_2_detect = ['foo/gene_no_name']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
                          "Invalid system definition 'gene_no_name': gene without a name")
- 
+
     def test_invalid_aligned(self):
         system_2_detect = ['foo/invalid_aligned']
         with self.assertRaises(SyntaxError) as context:
@@ -155,7 +177,7 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene '
                          '\'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
-  
+
     def test_invalid_homolg(self):
         system_2_detect = ['foo/invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
@@ -179,7 +201,7 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser '
                          'or equal than the number of "accessory" and "mandatory" components in the system: 6')
- 
+
     def test_bad_min_mandatory_genes_required(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
@@ -187,7 +209,7 @@ class Test(MacsyTest):
         self.assertEqual(context.exception.message,
                          'system \'bad_min_mandatory_genes_required\' is not consistent: min_genes_required 16 must '
                          'be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
- 
+
     def test_bad_min_mandatory_genes_required_2(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required_2']
         with self.assertRaises(SystemInconsistencyError) as context:
@@ -207,3 +229,4 @@ class Test(MacsyTest):
                                           model_name,
                                           'definitions',
                                           def_name)))
+
