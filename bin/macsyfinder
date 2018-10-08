@@ -349,6 +349,18 @@ general_options.add_argument("--previous-run",
                                      The configuration file from this previous run will be used.
                                      (conflict with options  --config, --sequence-db, --profile-suffix,
                                      --res-extract-suffix, --e-value-res, --db-type, --hmmer)""")
+general_options.add_argument("--relative-path",
+                             action='store_true',
+                             dest='relative_path',
+                             default=False,
+                             help=argparse.SUPPRESS)
+# 'relative-path' option help message (currently hidden)
+"""
+Use relative paths instead of absolute paths. This option is used
+by developers to generate portable data set, as for example test 
+data set, which are used on many different machines (using
+previous-run option).
+"""
 
 args = parser.parse_args()
 if args.version:
@@ -456,7 +468,8 @@ config = Config(previous_run=args.previous_run,
                 res_extract_suffix=args.res_extract_suffix,
                 log_level=log_level,
                 log_file=args.log_file,
-                worker_nb=args.worker_nb
+                worker_nb=args.worker_nb,
+                relative_path=args.relative_path
                 )
 logger = logging.getLogger('macsyfinder')
 config.save(config.working_dir)

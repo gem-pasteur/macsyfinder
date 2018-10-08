@@ -17,8 +17,7 @@ from macsypy.report import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
-from tests import MacsyTest, md5sum
-from tests.unit import MacsyTestEnv
+from tests import MacsyTest
 
 
 class TestCircularizeData(object):
@@ -73,13 +72,13 @@ class TestCircularizeData(object):
 class Test(MacsyTest):
 
     def setUp(self):
-        self.macsy_test_env = MacsyTestEnv()
+        pass
 
     def tearDown(self):
-        self.macsy_test_env = None
+        pass
 
     def test_add(self):
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
 
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
@@ -100,22 +99,22 @@ class Test(MacsyTest):
         with self.assertRaises(SystemDetectionError):
             ch.add(cluster)
 
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
 
     def test_str(self):
-        self.macsy_test_env.load("env_002")
+        self.load_env("env_002")
 
         ch = ClustersHandler()
         cluster = self.macsy_test_env.cluster
         ch.add(cluster)
         ch.add(cluster)
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'f08677489ff1dd2ed89f27995427233a')
+        self.assertEqual(str(str_), self.output_control_str('001'))
 
-        self.macsy_test_env.unload("env_002")
+        self.unload_env("env_002")
 
     def test_circularize(self):
-        self.macsy_test_env.load("env_004")
+        self.load_env("env_004")
 
         system = self.macsy_test_env.system
         cfg = self.macsy_test_env.cfg
@@ -136,7 +135,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), '6371e866c6141a9782e4202f515d9649')
+        self.assertEqual(str(str_), self.output_control_str('001'))
 
         # case 2
 
@@ -149,7 +148,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), '29b0f48a0656a119e36ee4397770ffec')
+        self.assertEqual(str(str_), self.output_control_str('002'))
 
         # case 3
 
@@ -162,7 +161,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'dc9b00fc3e0bed7a95ad273d4c54227a')
+        self.assertEqual(str(str_), self.output_control_str('003'))
 
         # case 4
 
@@ -175,7 +174,7 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'ed355064670f75096721663aaa1c6cf9')
+        self.assertEqual(str(str_), self.output_control_str('004'))
 
         # case 5
 
@@ -188,6 +187,6 @@ class Test(MacsyTest):
         ch.circularize(rep_info, end_hits, [system])
 
         str_ = str(ch)
-        self.assertEqual(md5sum(str_=str_), 'f16547771922bd608931f178d468c0d7')
+        self.assertEqual(str(str_), self.output_control_str('005'))
 
-        self.macsy_test_env.unload("env_004")
+        self.unload_env("env_004")

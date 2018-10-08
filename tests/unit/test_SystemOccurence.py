@@ -33,55 +33,13 @@ from tests import MacsyTest
 class Test(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.report import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
-        self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix=".search_hmm.out",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          models_dir=self.find_data('models'),
-                          log_file=log_file)
-
-        shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
-        self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
-
-        idx = Indexes(self.cfg)
-        idx._build_my_indexes()
-
-        models_registry = ModelRegistry(self.cfg)
-        self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.load_env('env_001')
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except:
-            pass
-
-        system_bank._system_bank = {}
-        gene_bank._genes_bank = {}
+        self.unload_env('env_001')
 
     def test_state(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         state = system_occurence.state
         self.assertEqual(state, 'empty')
@@ -89,16 +47,16 @@ class Test(MacsyTest):
     def test_decision_rule(self):
 
         # test 'empty' state
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
         system_occurence.decision_rule()
         self.assertEqual(system_occurence.state, 'empty')
 
         # test 'single_locus' state
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ_FLG', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
         system_occurence = SystemOccurence(system)
         system_occurence.mandatory_genes['sctJ_FLG'] = 1  # simulate match
@@ -108,10 +66,10 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.state, 'single_locus')
 
         # test 'multi_loci' state
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=1, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ_FLG', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
         system_occurence = SystemOccurence(system)
         system_occurence.mandatory_genes['sctJ_FLG'] = 1  # simulate match
@@ -121,10 +79,10 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.state, 'multi_loci')
 
         # test 'uncomplete' state
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ_FLG', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
         system_occurence = SystemOccurence(system)
         system_occurence.mandatory_genes['sctJ_FLG'] = 1  # simulate match
@@ -134,12 +92,12 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.state, 'uncomplete')
 
         # test 'exclude' state
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ_FLG', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
-        gene = Gene(self.cfg, 'fliE', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'fliE', system, self.macsy_test_env.models_location)
         system.add_forbidden_gene(gene)
         system_occurence = SystemOccurence(system)
         system_occurence.mandatory_genes['sctJ_FLG'] = 1  # simulate match
@@ -154,7 +112,7 @@ class Test(MacsyTest):
         def hit_mock(gene_name):
             li = [None] * 12
             hit = Hit(*li)
-            hit.gene = Gene(self.cfg, gene_name, system, self.models_location)
+            hit.gene = Gene(self.macsy_test_env.cfg, gene_name, system, self.macsy_test_env.models_location)
             return hit
 
         def multi_systems_hits_mock():
@@ -163,7 +121,7 @@ class Test(MacsyTest):
             multi_systems_hits.append(hit_mock("fliE"))
             return multi_systems_hits
 
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
 
         multi_systems_hits = multi_systems_hits_mock()  # create multi system genes (genes found in other systems)
@@ -181,7 +139,7 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
 
     def test_get_gene_counter_output(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
 
         system_occurence.accessory_genes = {"tadZ": 0}  # create one accessory gene
@@ -197,7 +155,7 @@ class Test(MacsyTest):
         self.assertEqual(out, expected)
 
     def test_nb_syst_genes(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
         system_occurence._nb_syst_genes = 3
         self.assertEqual(system_occurence.nb_syst_genes, 3)
@@ -205,16 +163,16 @@ class Test(MacsyTest):
     def test_get_gene_ref(self):
 
         def create_analog(system):
-            gene_ref = Gene(self.cfg, 'tadZ', system, self.models_location)
-            gene_analog = Gene(self.cfg, 'sctC', system, self.models_location)
+            gene_ref = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
+            gene_analog = Gene(self.macsy_test_env.cfg, 'sctC', system, self.macsy_test_env.models_location)
             analog = Analog(gene_analog, gene_ref)
             return analog
 
         # test case 1
 
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         analog = create_analog(system)
-        gene = Gene(self.cfg, 'fliE', system, self.models_location)  # create regular gene
+        gene = Gene(self.macsy_test_env.cfg, 'fliE', system, self.macsy_test_env.models_location)  # create regular gene
         gene.add_analog(analog)  # attach analog to regular gene
 
         system.add_mandatory_gene(gene)
@@ -225,8 +183,8 @@ class Test(MacsyTest):
 
         # test case 2
 
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
-        gene = Gene(self.cfg, 'fliE', system, self.models_location)  # create regular gene
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
+        gene = Gene(self.macsy_test_env.cfg, 'fliE', system, self.macsy_test_env.models_location)  # create regular gene
 
         system.add_mandatory_gene(gene)
         system_occurence = SystemOccurence(system)
@@ -235,10 +193,10 @@ class Test(MacsyTest):
         self.assertEqual(gref, None)
 
     def test_compute_nb_syst_genes(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
 
         system_occurence = SystemOccurence(system)
@@ -249,20 +207,20 @@ class Test(MacsyTest):
         self.assertEqual(nb, 2)
 
     def test_str(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
 
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
 
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
 
-        gene = Gene(self.cfg, 'flgC', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'flgC', system, self.macsy_test_env.models_location)
         system.add_forbidden_gene(gene)
 
         system_occurence = SystemOccurence(system)
 
-        gene = Gene(self.cfg, 'gspD', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'gspD', system, self.macsy_test_env.models_location)
         system_occurence.multi_syst_genes[gene.name] = 0
 
         out = system_occurence.__str__()
@@ -270,15 +228,15 @@ class Test(MacsyTest):
         self.assertEqual(out, expected)
 
     def test_compute_system_length(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
         system_occurence = SystemOccurence(system)
 
-        self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
+        self.macsy_test_env.cfg.options['topology_file'] = self.macsy_test_env.cfg.sequence_db + ".topo"
         db_send = {'ESCO030p01': 'circular', 'PSAE001c01': 'linear'}
-        with open(self.cfg.topology_file, 'w') as f:
+        with open(self.macsy_test_env.cfg.topology_file, 'w') as f:
             for k, v in db_send.items():
                 f.write('{0} : {1}\n'.format(k, v))
-        db = RepliconDB(self.cfg)
+        db = RepliconDB(self.macsy_test_env.cfg)
 
         rep_info = db['PSAE001c01']
         system_occurence.loci_positions = [(5, 10), (10, 20)]
@@ -300,10 +258,10 @@ class Test(MacsyTest):
                          "Problem with locus found with positions begin: 10 end: 5")
 
     def test_compute_nb_syst_genes_tot(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
 
         system_occurence = SystemOccurence(system)
@@ -314,7 +272,7 @@ class Test(MacsyTest):
         self.assertEqual(nb, 5)
 
     def test_get_system_name_unordered(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
 
         name = system_occurence.get_system_name_unordered()
@@ -324,41 +282,41 @@ class Test(MacsyTest):
         self.assertEqual(name, 'foo_bar')
 
     def test_count_genes(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         genes = {'ACBA007p01': 2, 'ZIIN001c01': 0}
         total = system_occurence.count_genes(genes)
         self.assertEqual(total, 1)
 
     def test_count_genes_tot(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         genes = {'ACBA007p01': 2, 'ZIIN001c01': 1}
         total = system_occurence.count_genes_tot(genes)
         self.assertEqual(total, 3)
 
     def test_get_system_unique_name(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         name = system_occurence.get_system_unique_name('ACBA007p01')
         self.assertEqual(name, 'ACBA007p01_foo_1')
 
     def test_compute_missing_genes_list(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         genes = {'ACBA007p01': 2, 'ZIIN001c01': 0}
         missing = system_occurence.compute_missing_genes_list(genes)
         self.assertEqual(missing, ['ZIIN001c01'])
 
     def test_count_missing_genes(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         genes = {'ACBA007p01': 2, 'ZIIN001c01': 0}
         nb = system_occurence.count_missing_genes(genes)
         self.assertEqual(nb, 1)
 
     def test_is_complete(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
 
         system_occurence._state = 'multi_loci'
@@ -371,7 +329,7 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.is_complete(), False)
 
     def test_get_summary_header(self):
-        system = System(self.cfg, 'foo', 10)
+        system = System(self.macsy_test_env.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         expect = "#Replicon_name\tSystem_Id\tReference_system\tSystem_status\tNb_loci\tNb_Ref_mandatory\tNb_Ref_accessory\
 \tNb_Ref_Genes_detected_NR\tNb_Genes_with_match\tSystem_length\tNb_Mandatory_NR\tNb_Accessory_NR\
@@ -381,18 +339,18 @@ class Test(MacsyTest):
         self.assertEqual(out, expect)
 
     def test_get_summary(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system.add_accessory_gene(gene)
 
         system_occurence = SystemOccurence(system)
 
-        self.cfg.options['topology_file'] = self.cfg.sequence_db + ".topo"
+        self.macsy_test_env.cfg.options['topology_file'] = self.macsy_test_env.cfg.sequence_db + ".topo"
         db_send = {'ESCO030p01': 'circular', 'PSAE001c01': 'linear'}
-        with open(self.cfg.topology_file, 'w') as f:
+        with open(self.macsy_test_env.cfg.topology_file, 'w') as f:
             for k, v in db_send.items():
                 f.write('{0} : {1}\n'.format(k, v))
-        db = RepliconDB(self.cfg)
+        db = RepliconDB(self.macsy_test_env.cfg)
 
         rep_info = db['PSAE001c01']
 
@@ -401,8 +359,8 @@ class Test(MacsyTest):
         self.assertEqual(out, expect)
 
     def test_get_summary_unordered(self):
-        system = System(self.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=2, min_genes_required=2)
+        gene = Gene(self.macsy_test_env.cfg, 'sctJ', system, self.macsy_test_env.models_location)
         system.add_mandatory_gene(gene)
 
         system_occurence = SystemOccurence(system)
@@ -493,7 +451,7 @@ class Test(MacsyTest):
         self.assertEqual(system_occurence.loci_positions, [])
 
         # case 4
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = [gene]
         system._accessory_genes = []
         system._forbidden_genes = []
@@ -504,7 +462,7 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 5
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = []
         system._accessory_genes = [gene]
         system._forbidden_genes = []
@@ -515,7 +473,7 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 6
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = []
         system._accessory_genes = []
         system._forbidden_genes = [gene]
@@ -612,7 +570,7 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 4
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = [gene]
         system._accessory_genes = []
         system._forbidden_genes = []
@@ -623,7 +581,7 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 5
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = []
         system._accessory_genes = [gene]
         system._forbidden_genes = []
@@ -634,7 +592,7 @@ class Test(MacsyTest):
         self.assertEqual(len(system_occurence.valid_hits), 1)
 
         # case 6
-        gene = Gene(self.cfg, 'tadZ', system, self.models_location)
+        gene = Gene(self.macsy_test_env.cfg, 'tadZ', system, self.macsy_test_env.models_location)
         system._mandatory_genes = []
         system._accessory_genes = []
         system._forbidden_genes = [gene]

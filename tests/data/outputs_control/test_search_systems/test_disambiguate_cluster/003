@@ -1,0 +1,12 @@
+
+---Counter compatible systems ! ---
+{'set_1/T4P': 2}
+
+res_cluster : 
+--- Cluster set_1/T4P  ---
+['VICH001.B.00001.C001_02599', 'VICH001.B.00001.C001_02600']
+['T4P_pilC', 'T4P_pilB']
+[2488, 2489]
+2
+r.compatible_systems ['set_1/T4P']
+
