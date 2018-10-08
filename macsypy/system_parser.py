@@ -56,6 +56,7 @@ class SystemParser(object):
         :return: a set of definitions' fully qualified names to parse.
                  Scan the whole chain of 'system_ref' in a recursive way.
         :rtype: {string, ...}
+        :raises: MacsypyError when Models or System definition is not found.
         """
         diff_def = parsed_models ^ def_2_parse
         if not diff_def:
@@ -68,9 +69,9 @@ class SystemParser(object):
                 try:
                     model_location = self.model_registry[model_name]
                     definition_location = model_location.get_definition(def_fqn)
-                except KeyError:
+                except KeyError as err:
                     raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir))
-                except ValueError:
+                except ValueError as err:
                     raise MacsypyError("{}: No such definition".format(def_fqn))
 
                 path = definition_location.path
