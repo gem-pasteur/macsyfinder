@@ -106,7 +106,7 @@ class Test(MacsyTest):
             self.parser.definition_to_parse(models_2_detect, parsed)
         self.assertTrue(str(context.exception).startswith('unable to parse system definition "{}" :'.format(fqn)))
 
-    def test_parse(self):
+    def test_parse_with_homologs(self):
         def_2_parse = set()
         def_2_parse.add('foo/system_1')
         parsed = set()
@@ -145,6 +145,50 @@ class Test(MacsyTest):
         self.assertEqual(len(s1.forbidden_genes), 1)
         self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
         self.assertEqual(s1.forbidden_genes[0].system, self.system_bank['foo/system_2'])
+
+
+    def test_parse_with_analogs(self):
+        def_2_parse = set()
+        def_2_parse.add('foo/system_3')
+        parsed = set()
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+
+        self.assertEqual(len(self.system_bank), 2)
+
+        s2 = self.system_bank['foo/system_4']
+        self.assertEqual(s2.name, 'system_4')
+        self.assertEqual(s2.fqn, 'foo/system_4')
+
+        s1 = self.system_bank['foo/system_3']
+        self.assertEqual(s1.name, 'system_3')
+        self.assertEqual(s1.fqn, 'foo/system_3')
+        self.assertEqual(s1.inter_gene_max_space, 20)
+        self.assertEqual(s1.min_mandatory_genes_required, 4)
+        self.assertEqual(s1.min_genes_required, 6)
+        self.assertTrue(s1.multi_loci)
+        self.assertFalse(s2.multi_loci)
+        self.assertIsNone(s1.max_nb_genes)
+        self.assertEqual(s2.max_nb_genes, 1)
+        self.assertEqual(len(s1.mandatory_genes), 5)
+        mandatory_genes_name = [g.name for g in s1.mandatory_genes]
+        mandatory_genes_name.sort()
+        theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
+        theoric_list.sort()
+        self.assertListEqual(mandatory_genes_name, theoric_list)
+        sctJ_FLG = [g for g in s1.mandatory_genes if g.name == 'sctJ_FLG'][0]
+        sctJ_FLG_homologs = sctJ_FLG.get_homologs()
+        self.assertListEqual(sctJ_FLG_homologs, [])
+        sctJ_FLG_analogs = sctJ_FLG.get_analogs()
+        self.assertEqual(len(sctJ_FLG_analogs), 1)
+        self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
+        self.assertEqual(sctJ_FLG_analogs[0].system, self.system_bank['foo/system_4'])
+        self.assertEqual(len(s1.accessory_genes), 1)
+        self.assertEqual(s1.accessory_genes[0].name, 'tadZ')
+        self.assertEqual(s1.accessory_genes[0].system, self.system_bank['foo/system_4'])
+        self.assertEqual(len(s1.forbidden_genes), 1)
+        self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
+        self.assertEqual(s1.forbidden_genes[0].system, self.system_bank['foo/system_4'])
 
 
     def test_wo_presence(self):
