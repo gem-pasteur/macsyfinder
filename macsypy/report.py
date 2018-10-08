@@ -149,7 +149,7 @@ class HMMReport(object):
     def _parse_hmm_header(self, h_grp):
         """
         :param h_grp: the sequence of string return by groupby function representing the header of a hit 
-        :type h_grp: sequence of string
+        :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
         :returns: the sequence identifier from a set of lines that corresponds to a single hit
         :rtype: string
         """
@@ -179,7 +179,7 @@ class HMMReport(object):
         :type i_evalue_sel: float
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
-        :returns: a set of hits
+        :returns: a sequence of hits
         :rtype: list of :class:`macsypy.report.Hit` objects
 
         """
