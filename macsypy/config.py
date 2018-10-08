@@ -77,6 +77,7 @@ class ConfigLight(object):
         if self.models_dir is not None and not os.path.exists(self.models_dir):
             raise ValueError("{0}: No such models directory".format(self.models_dir))
 
+        self.relative_path = False
 
     def old_data_organization(self):
         return False
@@ -97,7 +98,7 @@ class Config(object):
                 'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
                 'def_dir', 'models_dir', 'res_search_dir', 'res_search_suffix',
                 'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
-                'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
+                'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes', 'relative_path')
 
     def __init__(self,
                  cfg_file="",
@@ -128,7 +129,8 @@ class Config(object):
                  worker_nb=None,
                  config_file=None,
                  previous_run=None,
-                 build_indexes=None
+                 build_indexes=None,
+                 relative_path=None
                  ):
         """
         :param cfg_file: the path to the MacSyFinder configuration file to use 
@@ -200,6 +202,8 @@ class Config(object):
         :type worker_nb: int
         :param build_indexes: build the indexes from the sequence dataset in fasta format
         :type build_indexes: boolean
+        :param relative_path: use relative paths instead of absolute paths
+        :type relative_path: boolean
         """
 
         self._new_cfg_name = "macsyfinder.conf"
@@ -225,7 +229,8 @@ class Config(object):
                           'res_extract_suffix': '.res_hmm_extract',
                           'profile_suffix': '.hmm',
                           'log_level': logging.WARNING,
-                          'worker_nb': '1'
+                          'worker_nb': '1',
+                          'relative_path': False
                           }
         self.parser = SafeConfigParser(defaults=self._defaults)
         used_files = self.parser.read(config_files)
@@ -373,7 +378,9 @@ class Config(object):
             if not os.path.exists(options['sequence_db']):
                 raise ValueError("{0}: The input sequence file does not exist ".format(options['sequence_db']))
 
-            options['sequence_db'] = os.path.abspath(options['sequence_db'])
+            if not cmde_line_values['relative_path']:
+                options['sequence_db'] = os.path.abspath(options['sequence_db'])
+
             val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
             if 'db_type' in cmde_line_opt:
                 options['db_type'] = cmde_line_opt['db_type']
@@ -674,6 +681,18 @@ class Config(object):
                 msg = "the number of worker must be an integer"
                 raise ValueError(msg)
 
+            try:
+                relative_path = self.parser.get('general', 'relative_path', vars=cmde_line_opt)
+            except NoSectionError:
+                if 'relative_path' in cmde_line_opt:
+                    relative_path = cmde_line_opt['relative_path']
+                else:
+                    relative_path = self._defaults['relative_path']
+            try:
+                options['relative_path'] = bool(relative_path)
+            except ValueError:
+                raise ValueError(msg)
+
         except ValueError as err:
             self._log.error(str(err), exc_info=True)
             logging.shutdown()
@@ -706,7 +725,7 @@ class Config(object):
                     ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile')),
                     ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'models_dir',
                                      'profile_suffix', 'res_extract_suffix')),
-                    ('general', ('log_level', 'log_file', 'worker_nb'))
+                    ('general', ('log_level', 'log_file', 'worker_nb', 'relative_path'))
                     ]
 
         for section, directives in cfg_opts:
@@ -974,3 +993,11 @@ class Config(object):
         :rtype: string
         """
         return "hmmer_results"
+
+    @property
+    def relative_path(self):
+        """
+        :return: True if macsyfinder uses relative paths instead of absolute paths, False otherwise
+        :rtype: boolean
+        """
+        return self.options['relative_path']
