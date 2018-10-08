@@ -20,11 +20,11 @@ import logging
 from StringIO import StringIO
 from itertools import groupby
 
-from macsypy.report import HMMReport, GembaseHMMReport, Hit
+from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, Hit
 from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.config import Config
-from macsypy.database import Indexes
+from macsypy.database import Indexes, RepliconDB
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
@@ -394,3 +394,83 @@ class TestGembaseHMMReport(TestReport):
             self.assertEqual(len(report.hits), len(hits))
             self.assertListEqual(report.hits, hits)
 
+class TestOrderedHMMReport(TestReport):
+
+
+    def test_extract(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
+                    self.cfg.working_dir)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        report = OrderedHMMReport(gene, report_path, self.cfg)
+        report.extract()
+        self.assertEqual(len(report.hits), 6)
+        #           gene, system,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
+        #           score,       profile_coverage, sequence_coverage, begin_match, end_match
+        hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
+                    float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
+                Hit(gene, system, "PSAE001c01_006940", 803, RepliconDB.ordered_replicon_name, 68, float(1.2e-234), float(779.2),
+                    float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
+                Hit(gene, system, "PSAE001c01_013980", 759, RepliconDB.ordered_replicon_name, 69, float(3.7e-76), float(255.8),
+                    float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
+                Hit(gene, system, "PSAE001c01_017350", 600, RepliconDB.ordered_replicon_name, 70, float(3.2e-27), float(94.2),
+                    float(0.500000), (506.0 - 226.0 + 1) / 600,  226, 506),
+                Hit(gene, system, "PSAE001c01_018920", 776, RepliconDB.ordered_replicon_name, 71, float(6.1e-183), float(608.4),
+                    float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
+                Hit(gene, system, "PSAE001c01_031420", 658, RepliconDB.ordered_replicon_name, 73, float(1.8e-210), float(699.3),
+                    float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
+        ]
+        self.assertListEqual(hits, report.hits)
+
+        report = OrderedHMMReport(gene, report_path, self.cfg)
+        report.hits = hits
+        self.assertIsNone(report.extract())
+
+
+    def test_extract_concurent(self):
+        system = System(self.cfg, "T2SS", 10)
+        gene_name = "gspD"
+        gene = Gene(self.cfg, gene_name, system, self.models_location)
+        shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix),
+                    self.cfg.working_dir)
+        report_path = os.path.join(self.cfg.working_dir, gene_name + self.cfg.res_search_suffix)
+        reports = []
+        for i in range(5):
+            report = OrderedHMMReport(gene, report_path, self.cfg)
+            reports.append(report)
+
+        import threading
+
+        def worker(report):
+            report.extract()
+
+        for report in reports:
+            t = threading.Thread(target=worker, args=(report,))
+            t.start()
+        main_thread = threading.currentThread()
+        for t in threading.enumerate():
+            if t is main_thread:
+                continue
+        t.join()
+
+        #          gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
+        #          profile_coverage, sequence_coverage, begin_match, end_match
+        hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
+                    float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
+                Hit(gene, system, "PSAE001c01_006940", 803, RepliconDB.ordered_replicon_name, 68, float(1.2e-234), float(779.2),
+                    float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
+                Hit(gene, system, "PSAE001c01_013980", 759, RepliconDB.ordered_replicon_name, 69, float(3.7e-76), float(255.8),
+                    float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736),
+                Hit(gene, system, "PSAE001c01_017350", 600, RepliconDB.ordered_replicon_name, 70, float(3.2e-27), float(94.2),
+                    float(0.500000), (506.0 - 226.0 + 1) / 600,  226, 506),
+                Hit(gene, system, "PSAE001c01_018920", 776, RepliconDB.ordered_replicon_name, 71, float(6.1e-183), float(608.4),
+                    float(1.000000), (606.0 - 48.0 + 1) / 776, 48, 606),
+                Hit(gene, system, "PSAE001c01_031420", 658, RepliconDB.ordered_replicon_name, 73, float(1.8e-210), float(699.3),
+                    float(1.000000), (614.0 - 55.0 + 1) / 658, 55, 614)
+                ]
+        for report in reports:
+            report.save_extract()
+            self.assertEqual(len(report.hits), len(hits))
+            self.assertListEqual(report.hits, hits)
