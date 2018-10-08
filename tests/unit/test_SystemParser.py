@@ -230,3 +230,25 @@ class Test(MacsyTest):
                                           'definitions',
                                           def_name)))
 
+
+    def test_bad_inter_gene_max_space(self):
+        system_2_detect = ['foo/bad_inter_gene_max_space']
+        with self.assertRaises(SyntaxError) as context:
+            self.parser.parse(system_2_detect)
+
+        self.assertEqual(str(context.exception),
+                         "Invalid system definition ({}):  inter_gene_max_space must be an integer: 12.5".format(
+                             os.path.join(self.cfg.models_dir, "foo/definitions/bad_inter_gene_max_space.xml")
+                         )
+                         )
+
+    def test_no_inter_gene_max_space(self):
+        system_2_detect = ['foo/no_inter_gene_max_space']
+        with self.assertRaises(SyntaxError) as context:
+            self.parser.parse(system_2_detect)
+
+        self.assertEqual(str(context.exception),
+                         "Invalid system definition ({}): inter_gene_max_space must be defined".format(
+                             os.path.join(self.cfg.models_dir, "foo/definitions/no_inter_gene_max_space.xml")
+                         )
+                         )
