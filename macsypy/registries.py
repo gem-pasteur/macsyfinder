@@ -265,6 +265,7 @@ class DefinitionLocation(dict):
     """
     Manage were models are stored. a Model is a xml definition of a system.
     It has 3 attributes
+
     name: the fully qualified definitions name like TXSS/T3SS or CRISPR-cas/Typing/Cas
     path: the absolute path to the definitions or set of definitions
     subdefinitions: the subdefintions if it exists
