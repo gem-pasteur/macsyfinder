@@ -16,7 +16,7 @@ import os
 import shutil
 import tempfile
 import logging
-from macsypy.system import system_bank
+from macsypy.system import SystemBank
 from macsypy.system import System
 from macsypy.config import Config
 from tests import MacsyTest
@@ -48,6 +48,7 @@ class Test(MacsyTest):
                           log_level=30,
                           log_file=log_file
                           )
+        self.system_bank = SystemBank()
 
 
     def tearDown(self):
@@ -60,35 +61,40 @@ class Test(MacsyTest):
             shutil.rmtree(self.cfg.working_dir)
         except:
             pass
+        SystemBank._system_bank = {}
 
     def test_add_get_system(self):
         model_name = 'foo'
-        self.assertRaises(KeyError, system_bank.__getitem__, model_name)
+        self.assertRaises(KeyError,  self.system_bank.__getitem__, model_name)
         system_foo = System(self.cfg, model_name, 10)
-        system_bank.add_system(system_foo)
+        self.system_bank.add_system(system_foo)
         self.assertTrue(isinstance(system_foo, System))
-        self.assertEqual(system_foo, system_bank[model_name])
+        self.assertEqual(system_foo,  self.system_bank[model_name])
+        with self.assertRaises(KeyError) as ctx:
+            self.system_bank.add_system(system_foo)
+        self.assertEqual(ctx.exception.message,
+                         "a system named {0} is already registered in the systems' bank".format(model_name))
 
     def test_contains(self):
         system_in = System(self.cfg, "foo", 10)
-        system_bank.add_system(system_in)
-        self.assertIn(system_in, system_bank)
+        self.system_bank.add_system(system_in)
+        self.assertIn(system_in,  self.system_bank)
         system_out = System(self.cfg, "bar", 10)
-        self.assertNotIn(system_out, system_bank)
+        self.assertNotIn(system_out,  self.system_bank)
 
     def test_iter(self):
         systems = [System(self.cfg, 'foo', 10), System(self.cfg, 'bar', 10)]
         for s in systems:
-            system_bank.add_system(s)
+            self.system_bank.add_system(s)
         i = 0
-        for s in system_bank:
+        for s in self.system_bank:
             self.assertIn(s, systems)
             i += 1
         self.assertEqual(i, len(systems))
 
     def test_get_uniq_object(self):
         system_foo = System(self.cfg, "foo", 10)
-        system_bank.add_system(system_foo)
-        system_1 = system_bank[system_foo.name]
-        system_2 = system_bank[system_foo.name]
+        self.system_bank.add_system(system_foo)
+        system_1 = self.system_bank[system_foo.name]
+        system_2 = self.system_bank[system_foo.name]
         self.assertEqual(system_1, system_2)
