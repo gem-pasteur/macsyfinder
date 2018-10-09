@@ -61,11 +61,13 @@ class Test(MacsyTest):
         logging.shutdown()
         l = logging.getLogger()
         l.manager.loggerDict.clear()
+        self.clean_working_dir()
+
+    def clean_working_dir(self):
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
             pass
-
 
     def test_name(self):
         name = 'foo'
@@ -74,57 +76,159 @@ class Test(MacsyTest):
 
 
     def test_inter_gene_max_space(self):
-        name = 'foo'
-        inter_gene_max_space = 40
-        system = System(self.cfg, name, inter_gene_max_space)
-        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space)
+        system_fqn = 'foo/bar'
+        inter_gene_max_space_xml = 40
+        # test inter_gene_max_space from xml
+        system = System(self.cfg, system_fqn, inter_gene_max_space_xml)
+        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space_xml)
 
+        self.clean_working_dir()
+
+        # test inter_gene_max_space overloaded by the config
+        inter_gene_max_space_cfg = [[system_fqn, '22']]
+        cfg = Config(hmmer_exe="",
+                     sequence_db=self.find_data("base", "test_base.fa"),
+                     db_type="gembase",
+                     e_value_res=1,
+                     i_evalue_sel=0.5,
+                     models_dir=self.find_data('models'),
+                     res_search_dir=tempfile.gettempdir(),
+                     res_search_suffix="",
+                     profile_suffix=".hmm",
+                     res_extract_suffix="",
+                     log_level=30,
+                     log_file=os.devnull,
+                     inter_gene_max_space=inter_gene_max_space_cfg
+                     )
+        system = System(cfg, system_fqn, inter_gene_max_space_xml)
+        self.assertEqual(system.inter_gene_max_space, int(inter_gene_max_space_cfg[0][1]))
 
     def test_min_genes_required(self):
-        name = 'foo'
-        min_genes_required = 40
-        system = System(self.cfg, name, 10, min_genes_required=min_genes_required)
-        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene( gene )
-        self.assertEqual(system.min_genes_required, min_genes_required)
-        # see https://projets.pasteur.fr/issues/1850
-        system = System(self.cfg, name, 10)
-        self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
-        
-        
-    def test_min_mandatory_genes_required(self):
-        name = 'foo'
-        min_mandatory_genes_required = 40
-        system = System(self.cfg, name, 10, min_mandatory_genes_required=min_mandatory_genes_required)
+        system_fqn = 'foo/bar'
+        min_genes_required_xml = 40
+        system = System(self.cfg, system_fqn, 10, min_genes_required=min_genes_required_xml)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
-        self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required)
+        self.assertEqual(system.min_genes_required, min_genes_required_xml)
         # see https://projets.pasteur.fr/issues/1850
-        system = System(self.cfg, name, 10)
+        system = System(self.cfg, system_fqn, 10)
+        self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
+
+        self.clean_working_dir()
+
+        # test inter_gene_max_space overloaded by the config
+        min_genes_required_cfg = [[system_fqn, '22']]
+        cfg = Config(hmmer_exe="",
+                     sequence_db=self.find_data("base", "test_base.fa"),
+                     db_type="gembase",
+                     e_value_res=1,
+                     i_evalue_sel=0.5,
+                     models_dir=self.find_data('models'),
+                     res_search_dir=tempfile.gettempdir(),
+                     res_search_suffix="",
+                     profile_suffix=".hmm",
+                     res_extract_suffix="",
+                     log_level=30,
+                     log_file=os.devnull,
+                     min_genes_required=min_genes_required_cfg
+                     )
+        system = System(cfg, system_fqn, min_genes_required_xml)
+        self.assertEqual(system.min_genes_required, int(min_genes_required_cfg[0][1]))
+
+
+    def test_min_mandatory_genes_required(self):
+        system_fqn = 'foo/bar'
+        min_mandatory_genes_required_xml = 40
+        system = System(self.cfg, system_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
+        gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(gene)
+        self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required_xml)
+        # see https://projets.pasteur.fr/issues/1850
+        system = System(self.cfg, system_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
 
+        self.clean_working_dir()
+
+        # test inter_gene_max_space overloaded by the config
+        min_mandatory_genes_required_cfg = [[system_fqn, '22']]
+        cfg = Config(hmmer_exe="",
+                     sequence_db=self.find_data("base", "test_base.fa"),
+                     db_type="gembase",
+                     e_value_res=1,
+                     i_evalue_sel=0.5,
+                     models_dir=self.find_data('models'),
+                     res_search_dir=tempfile.gettempdir(),
+                     res_search_suffix="",
+                     profile_suffix=".hmm",
+                     res_extract_suffix="",
+                     log_level=30,
+                     log_file=os.devnull,
+                     min_mandatory_genes_required=min_mandatory_genes_required_cfg
+                     )
+        system = System(cfg, system_fqn, 10)
+        self.assertEqual(system.min_mandatory_genes_required, int(min_mandatory_genes_required_cfg[0][1]))
 
     def test_max_nb_genes(self):
-        name = 'foo'
+        system_fqn = 'foo/bar'
         inter_gene_max_space = 40
-        max_nb_genes = 10
-        system = System(self.cfg, name, inter_gene_max_space, max_nb_genes=max_nb_genes)
-        self.assertEqual(system.max_nb_genes, max_nb_genes)
-        name = 'bar'
-        system = System(self.cfg, name, inter_gene_max_space)
+        max_nb_genes_xml = 10
+        system = System(self.cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
+        self.assertEqual(system.max_nb_genes, max_nb_genes_xml)
+        system = System(self.cfg, system_fqn, inter_gene_max_space)
         self.assertIsNone(system.max_nb_genes)
+
+        self.clean_working_dir()
+
+        # test inter_gene_max_space overloaded by the config
+        max_nb_genes_cfg = [[system_fqn, '22']]
+        cfg = Config(hmmer_exe="",
+                     sequence_db=self.find_data("base", "test_base.fa"),
+                     db_type="gembase",
+                     e_value_res=1,
+                     i_evalue_sel=0.5,
+                     models_dir=self.find_data('models'),
+                     res_search_dir=tempfile.gettempdir(),
+                     res_search_suffix="",
+                     profile_suffix=".hmm",
+                     res_extract_suffix="",
+                     log_level=30,
+                     log_file=os.devnull,
+                     max_nb_genes=max_nb_genes_cfg
+                     )
+        system = System(cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
+        self.assertEqual(system.max_nb_genes, int(max_nb_genes_cfg[0][1]))
 
 
     def test_multi_loci(self):
-        name = 'True'
+        system_fqn = 'foo/True'
         inter_gene_max_space = 40
-        system = System(self.cfg, name, inter_gene_max_space, multi_loci=True)
+        system = System(self.cfg, system_fqn, inter_gene_max_space, multi_loci=True)
         self.assertTrue(system.multi_loci)
-        name = 'False'
+        system_fqn = 'foo/False'
         inter_gene_max_space = 40
-        system = System(self.cfg, name, inter_gene_max_space)
+        system = System(self.cfg, system_fqn, inter_gene_max_space)
         self.assertFalse(system.multi_loci)
 
+        self.clean_working_dir()
+
+        cfg = Config(hmmer_exe="",
+                     sequence_db=self.find_data("base", "test_base.fa"),
+                     db_type="gembase",
+                     e_value_res=1,
+                     i_evalue_sel=0.5,
+                     models_dir=self.find_data('models'),
+                     res_search_dir=tempfile.gettempdir(),
+                     res_search_suffix="",
+                     profile_suffix=".hmm",
+                     res_extract_suffix="",
+                     log_level=30,
+                     log_file=os.devnull,
+                     multi_loci='foo/False'
+                     )
+        system_fqn = 'foo/False'
+        inter_gene_max_space = 40
+        system = System(cfg, system_fqn, inter_gene_max_space, multi_loci=False)
+        self.assertTrue(system.multi_loci)
 
     def test_add_mandatory_gene(self):
         system = System(self.cfg, "foo", 10)
@@ -151,7 +255,6 @@ class Test(MacsyTest):
         self.assertEqual(system._forbidden_genes, [gene])
         self.assertEqual(system._accessory_genes, [])
         self.assertEqual(system._mandatory_genes, [])
-
 
     def test_mandatory_genes(self):
         system = System(self.cfg, "foo", 10)
@@ -228,3 +331,36 @@ class Test(MacsyTest):
         self.assertIsNone(system.get_gene_ref(gene_ref))
         gene_ukn = Gene(self.cfg, 'abc', system, self.models_location)
         self.assertRaises(KeyError, system.get_gene_ref, gene_ukn)
+
+    def test_str(self):
+        system_fqn = "foo/bar"
+        system = System(self.cfg, system_fqn, 10)
+        mandatory_gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
+        system.add_mandatory_gene(mandatory_gene)
+        homolog_name = 'sctJ'
+        gene_homolg = Gene(self.cfg, homolog_name, system, self.models_location)
+        homolog = Homolog(gene_homolg, mandatory_gene)
+        mandatory_gene.add_homolog(homolog)
+
+        accessory_gene = Gene(self.cfg, 'sctN_FLG', system, self.models_location)
+        system.add_accessory_gene(accessory_gene)
+        analog_name = 'sctN'
+        gene_analog = Gene(self.cfg, analog_name, system, self.models_location)
+        analog = Analog(gene_analog, accessory_gene)
+        accessory_gene.add_analog(analog)
+
+        forbidden_gene = Gene(self.cfg, 'sctC', system, self.models_location)
+        system.add_forbidden_gene(forbidden_gene)
+
+        exp_str = """name: bar
+fqn: foo/bar
+==== mandatory genes ====
+sctJ_FLG
+==== accessory genes ====
+sctN_FLG
+==== forbidden genes ====
+sctC
+============== end pprint system ================
+"""
+        self.assertEqual(str(system), exp_str)
+
