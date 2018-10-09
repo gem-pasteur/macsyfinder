@@ -333,8 +333,8 @@ class SystemParser(object):
             key = (model_name, name)
             gene = self.gene_bank[key]
         except KeyError:
-            msg = "The gene '{0}' described as analog of '{1}' in system '{2}'\
- is not in the \"GeneBank\" gene factory".format(name, gene_ref.name, curr_system.name)
+            msg = "Invalid system definition '{}': The gene '{}' described as analog of '{}' in system '{}'\
+ is not in the 'GeneBank' gene factory".format(curr_system.name, name, gene_ref.name, curr_system.name)
             _log.critical(msg)
             raise SystemInconsistencyError(msg)
         system_ref = node.get("system_ref")       
@@ -402,9 +402,9 @@ class SystemParser(object):
                 raise SystemInconsistencyError(msg)
 
             if not (system.min_mandatory_genes_required <= len_mandatory_genes):
-                msg = "system '{0}' is not consistent: min_mandatory_genes_required {1:d}\
+                msg = "system '{}' is not consistent: \"min_mandatory_genes_required\": {:d}\
  must be lesser or equal than the number of \"mandatory\" components\
- in the system: {2:d}".format(system.name, len_mandatory_genes)
+ in the system: {:d}".format(system.name, system.min_mandatory_genes_required, len_mandatory_genes)
                 _log.critical(msg)
                 raise SystemInconsistencyError(msg)
             if not(system.min_mandatory_genes_required <= system.min_genes_required):
