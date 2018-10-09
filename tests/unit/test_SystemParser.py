@@ -230,13 +230,29 @@ class Test(MacsyTest):
                          "Invalid system definition 'invalid_homolog': The gene 'foo_bar' described as "
                          "homolog of 'gspD' in system 'invalid_homolog' is not in the 'GeneBank' gene factory")
 
-    def test_bad_sys_ref(self):
-        system_2_detect = ['foo/bad_sys_ref']
+    def test_invalid_homolg(self):
+        system_2_detect = ['foo/invalid_analog']
+        with self.assertRaises(SystemInconsistencyError) as context:
+            self.parser.parse(system_2_detect)
+        self.assertEqual(context.exception.message,
+                         "Invalid system definition 'invalid_analog': The gene 'foo_bar' described as "
+                         "analog of 'gspD' in system 'invalid_analog' is not in the 'GeneBank' gene factory")
+
+    def test_bad_homolog_sys_ref(self):
+        system_2_detect = ['foo/bad_homolog_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
                          "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctN' "
                          "with system_ref 'system_1' has an other system in bank (system_2)")
+
+    def test_bad_analog_sys_ref(self):
+        system_2_detect = ['foo/bad_analog_sys_ref']
+        with self.assertRaises(SystemInconsistencyError) as context:
+            self.parser.parse(system_2_detect)
+        self.assertEqual(context.exception.message,
+                         "Inconsistency in systems definitions: the gene 'sctJ' described as analog of 'sctN' "
+                         "with system_ref 'system_3' has an other system in bank (system_4)")
 
     def test_bad_min_genes_required(self):
         system_2_detect = ['foo/bad_min_genes_required']
@@ -257,9 +273,23 @@ class Test(MacsyTest):
     def test_bad_min_mandatory_genes_required_2(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required_2']
         with self.assertRaises(SystemInconsistencyError) as context:
+            # error raised by System initialization
+            # which occur before check_consistency
+            # the last test : not(system.min_mandatory_genes_required <= system.min_genes_required)
+            # seems to be useless
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
                          "min_genes_required must be greater or equal than min_mandatory_genes_required")
+
+
+    def test_min_mandatory_genes_required_lesser_than_mandatory_genes(self):
+        system_2_detect = ['foo/bad_min_mandatory_genes_required_3']
+        with self.assertRaises(SystemInconsistencyError) as context:
+            self.parser.parse(system_2_detect)
+        self.assertEqual(context.exception.message,
+                         "system 'bad_min_mandatory_genes_required_3' is not consistent:"
+                         " \"min_mandatory_genes_required\": 6 must be lesser or equal than the number of \"mandatory\" "
+                         "components in the system: 5")
 
 
     def test_bad_max_nb_genes(self):
@@ -296,3 +326,5 @@ class Test(MacsyTest):
                              os.path.join(self.cfg.models_dir, "foo/definitions/no_inter_gene_max_space.xml")
                          )
                          )
+
+
