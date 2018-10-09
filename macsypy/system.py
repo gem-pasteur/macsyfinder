@@ -18,6 +18,7 @@ _log = logging.getLogger('macsyfinder.' + __name__)
 from .macsypy_error import SystemInconsistencyError
 from registries import split_def_name
 
+
 class SystemBank(object):
     """
     Build and store all Systems objects. Systems must not be instanciated directly.
@@ -77,7 +78,7 @@ class SystemBank(object):
         :type system: :class:`macsypy.system.System` object
         :raise: KeyError if a system with the same name is already registered.
         """
-        if system in self._system_bank:
+        if system.fqn in self._system_bank:
             raise KeyError("a system named {0} is already registered in the systems' bank".format(system.name))
         else:
             self._system_bank[system.fqn] = system
