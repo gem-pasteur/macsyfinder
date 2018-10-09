@@ -101,8 +101,8 @@ class System(object):
         """
         :param cfg: the configuration object
         :type cfg: :class:`macsypy.config.Config` object
-        :param name: the name of the system
-        :type name: string
+        :param fqn: the fully qualified name of the system CRISPR-Cas/sub-typing/CAS-TypeIE
+        :type fqn: string
         :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
         :type inter_gene_max_space: integer
         :param min_mandatory_genes_required: the quorum of mandatory genes to define this system
@@ -151,7 +151,7 @@ class System(object):
         :return: set the maximum distance allowed between 2 genes for this system
         :rtype: integer
         """
-        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(self.name)
+        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(self.fqn)
         if cfg_inter_gene_max_space is not None:
             return cfg_inter_gene_max_space
         return self._inter_gene_max_space
@@ -162,7 +162,7 @@ class System(object):
         :return: get the quorum of mandatory genes required for this system
         :rtype: integer
         """
-        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(self.name)
+        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(self.fqn)
         if cfg_min_mandatory_genes_required is not None:
             return cfg_min_mandatory_genes_required
         elif self._min_mandatory_genes_required is None:
@@ -177,9 +177,9 @@ class System(object):
         :return: get the minimum number of genes to assess for the system presence.
         :rtype: integer
         """
-        cfg_min_genes_requireds = self.cfg.min_genes_required(self.name)
-        if cfg_min_genes_requireds is not None:
-            return cfg_min_genes_requireds
+        cfg_min_genes_required = self.cfg.min_genes_required(self.fqn)
+        if cfg_min_genes_required is not None:
+            return cfg_min_genes_required
         elif self._min_genes_required is None:
             return len(self._mandatory_genes)
         else:
@@ -191,7 +191,7 @@ class System(object):
         :return: the maximum number of genes to assess the system presence.
         :rtype: int (or None)
         """
-        cfg_max_nb_genes = self.cfg.max_nb_genes(self.name)
+        cfg_max_nb_genes = self.cfg.max_nb_genes(self.fqn)
         if cfg_max_nb_genes:
             return cfg_max_nb_genes
         else:
@@ -203,7 +203,7 @@ class System(object):
         :return: True if the system is authorized to be inferred from multiple loci, False otherwise
         :rtype: boolean
         """
-        cfg_multi_loci = self.cfg.multi_loci(self.name)
+        cfg_multi_loci = self.cfg.multi_loci(self.fqn)
         if cfg_multi_loci:
             return cfg_multi_loci
         else:
