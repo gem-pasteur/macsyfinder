@@ -320,7 +320,10 @@ class ModelLocationTest(MacsyTest):
 
 
     def test_str(self):
-        pass
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc.name = 'foo20'
+        self.assertEqual('foo20', str(model_loc.name))
 
 
 class DefinitionLocationTest(MacsyTest):
