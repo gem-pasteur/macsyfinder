@@ -38,7 +38,7 @@ class ConfigLight(object):
     ConfigLight does nor create any working dir.
     """
 
-    def __init__(self, cfg_file="", previous_run=None, profile_suffix=None):
+    def __init__(self, cfg_file="", previous_run=None, profile_suffix=None, models_dir=None):
         self._new_cfg_name = "macsyfinder.conf"
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
@@ -57,7 +57,12 @@ class ConfigLight(object):
 
         used_files = self.parser.read(config_files)
 
-        cmde_line_opt = {'profile_suffix': profile_suffix} if profile_suffix else {}
+        cmde_line_opt = {}
+        if profile_suffix:
+            cmde_line_opt['profile_suffix'] = profile_suffix
+        if models_dir:
+            cmde_line_opt['models_dir'] = models_dir
+
         try:
             self.profile_suffix = self.parser.get('directories', 'profile_suffix', vars=cmde_line_opt)
         except NoSectionError:
@@ -508,6 +513,8 @@ class Config(object):
                         raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer,\
  but you provided {1} on command line".format(system, quorum_genes))
 
+            # we should check if definition exists but at this step regitries are not build yet
+            # so just store the fqn
             if self.parser.has_option("system", "max_nb_genes"):
                 options['max_nb_genes'] = {}
                 max_nb_genes = self.parser.get("system", "max_nb_genes") 
@@ -520,11 +527,11 @@ class Config(object):
                             max_genes = int(max_genes)
                             options['max_nb_genes'][system] = max_genes
                         except ValueError:
-                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer,\
-                             but you provided {1} in the configuration file".format(system, max_genes))
+                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                             "but you provided {1} in the configuration file".format(system, max_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and\
- corresponding 'max_nb_genes' separated by spaces")
+                    raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and "
+                                     "corresponding 'max_nb_genes' separated by spaces")
             if 'max_nb_genes' in cmde_line_values and cmde_line_values['max_nb_genes'] is not None: 
                 if 'max_nb_genes' not in options:
                     options['max_nb_genes'] = {}
@@ -534,8 +541,8 @@ class Config(object):
                         max_genes = int(max_genes)
                         options['max_nb_genes'][system] = max_genes
                     except ValueError:
-                        raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, \
- but you provided {1} on command line".format(system, max_genes))
+                        raise ValueError("The value for 'max_nb_genes' option for system {} must be an integer, "
+                                         "but you provided {} on command line".format(system, max_genes))
 
             if self.parser.has_option("system", "multi_loci"):
                 options['multi_loci'] = self.parser.get("system", "multi_loci").split(',')
