@@ -383,7 +383,7 @@ class DefinitionLocationTest(MacsyTest):
         model_path = '/path/to/model.xml'
         mdfl = DefinitionLocation(name=model_name,
                                   path=model_path)
-        self.assertEqual(mdfl.name, model_name)
+        self.assertEqual('foo', str(mdfl))
 
 
     def test_all(self):
