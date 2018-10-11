@@ -22,7 +22,7 @@ from macsypy.config import Config
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestConfig(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
@@ -424,16 +424,95 @@ class Test(MacsyTest):
         self.assertIsNone(self.cfg.min_genes_required('Foo'))
 
     def test_max_nb_genes(self):
-        max_nb_genes = (["T2SS", 32], ['Flagellum', 64])
+        max_nb_genes = (["Foo/T2SS", 32], ['Foo/Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           max_nb_genes=max_nb_genes,
                           res_search_dir=self.tmp_dir
                           )
-        self.assertEqual(self.cfg.max_nb_genes('T2SS'), 32)
-        self.assertEqual(self.cfg.max_nb_genes('Flagellum'), 64)
-        self.assertIsNone(self.cfg.max_nb_genes('Foo'))
+        self.assertEqual(self.cfg.max_nb_genes('Foo/T2SS'), 32)
+        self.assertEqual(self.cfg.max_nb_genes('Foo/Flagellum'), 64)
+        self.assertIsNone(self.cfg.max_nb_genes('nimportnaoik'))
+
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   max_nb_genes=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                             "but you provided {1} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]  
+max_nb_genes = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in max_nb_genes])))
+            cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(cfg.max_nb_genes(max_nb_genes[0][0]),max_nb_genes[0][1])
+            self.assertEqual(cfg.max_nb_genes(max_nb_genes[1][0]),max_nb_genes[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+            except:
+                pass
+
+            self.tearDown()
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]  
+max_nb_genes = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception), "The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                                     "but you provided {1} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+            self.tearDown()
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]  
+max_nb_genes = Foo/T2SS 
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'max_nb_genes': you must have a list of systems and "
+                                 "corresponding 'max_nb_genes' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+        self.tearDown()
 
 
     def test_min_mandatory_genes_required(self):
