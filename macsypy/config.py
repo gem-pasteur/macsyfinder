@@ -465,11 +465,11 @@ class Config(object):
                             quorum_mandatory_genes = int(quorum_mandatory_genes)
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {0}\
- must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
+                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {} "
+                                             "must be an integer, but you provided {} in the configuration file".format(system, quorum_mandatory_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of\
- systems and corresponding 'min_mandatory_genes_required' separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of "
+                                     "systems and corresponding 'min_mandatory_genes_required' separated by spaces")
 
             if 'min_mandatory_genes_required' in cmde_line_values and \
                             cmde_line_values['min_mandatory_genes_required'] is not None:
@@ -481,8 +481,8 @@ class Config(object):
                         quorum_mandatory_genes = int(quorum_mandatory_genes)
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {0} must be an\
- integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
+                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {} must be an "
+                                         "integer, but you provided {} on command line".format(system, quorum_mandatory_genes))
 
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
@@ -496,11 +496,11 @@ class Config(object):
                             quorum_genes = int(quorum_genes)
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an\
- integer, but you provided {1} in the configuration file".format(system, quorum_genes))
+                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an "
+                                             "integer, but you provided {1} in the configuration file".format(system, quorum_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and\
- corresponding 'min_mandatory_genes_required' separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and "
+                                     "corresponding 'min_genes_required' separated by spaces")
             if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
                 if 'min_genes_required' not in options:
                     options['min_genes_required'] = {}
@@ -510,8 +510,8 @@ class Config(object):
                         quorum_genes = int(quorum_genes)
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer,\
- but you provided {1} on command line".format(system, quorum_genes))
+                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer, "
+                                         "but you provided {1} on command line".format(system, quorum_genes))
 
             # we should check if definition exists but at this step regitries are not build yet
             # so just store the fqn
