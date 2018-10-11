@@ -436,11 +436,11 @@ class Config(object):
                             interval = int(interval)
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
-                            raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {} in the configuration file".format(system, interval))
+                            raise ValueError("The value for 'inter_gene_max_space' option for system {} must be an integer, "
+                                             "but you provided {} in the configuration file".format(system, interval))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of\
- systems and corresponding 'inter_gene_max_space' separated by spaces")
+                    raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of "
+                                     "systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if 'inter_gene_max_space' not in options:
                     options['inter_gene_max_space'] = {}
@@ -450,8 +450,8 @@ class Config(object):
                         interval = int(interval)
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
-                        raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {1} on command line".format(system, interval))
+                        raise ValueError("The value for 'inter_gene_max_space' option for system {0} must be an integer, "
+                                         "but you provided {1} on command line".format(system, interval))
 
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
