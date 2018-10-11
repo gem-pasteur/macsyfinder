@@ -325,6 +325,18 @@ class ModelLocationTest(MacsyTest):
         model_loc.name = 'foo20'
         self.assertEqual('foo20', str(model_loc.name))
 
+    def test_get_definitions(self):
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
+
+        model_loc._definitions = None
+        defs = model_loc.get_definitions()
+        self.assertEqual({}, defs)
+
+        model_loc._definitions = {'foo': 'bar'}
+        defs = model_loc.get_definitions()
+        self.assertListEqual(['bar'], defs)
+
 
 class DefinitionLocationTest(MacsyTest):
 
