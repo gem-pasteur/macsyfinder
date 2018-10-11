@@ -410,6 +410,85 @@ class TestConfig(MacsyTest):
         self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
         self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
 
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   inter_gene_max_space=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'inter_gene_max_space' option for system {0} must be an integer, "
+                                             "but you provided {1} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]  
+inter_gene_max_space = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in inter_gene_max_space])))
+            cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(cfg.inter_gene_max_space(inter_gene_max_space[0][0]), inter_gene_max_space[0][1])
+            self.assertEqual(cfg.inter_gene_max_space(inter_gene_max_space[1][0]), inter_gene_max_space[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+            except:
+                pass
+
+            self.tearDown()
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]  
+inter_gene_max_space = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "The value for 'inter_gene_max_space' option for system {} must be an integer, "
+                                 "but you provided {} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+            self.tearDown()
+
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]  
+inter_gene_max_space = Foo/T2SS 
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'inter_gene_max_space': you must have a list of systems and "
+                                 "corresponding 'inter_gene_max_space' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+        self.tearDown()
+
 
     def test_min_genes_required(self):
         min_genes_required = (["T2SS", 32], ['Flagellum', 64])
