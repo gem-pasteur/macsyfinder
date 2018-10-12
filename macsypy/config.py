@@ -213,7 +213,7 @@ class Config(object):
 
         self._new_cfg_name = "macsyfinder.conf"
         if previous_run:
-            prev_config = os.path.join(previous_run, self._new_cfg_name)
+            prev_config = os.path.normpath(os.path.join(previous_run, self._new_cfg_name))
             if not os.path.exists(prev_config):
                 raise ValueError("No config file found in dir {}".format(previous_run))
             config_files = [prev_config]
@@ -368,10 +368,9 @@ class Config(object):
             self._log.warn(error)
         try:
             if cmde_line_opt.get('previous_run', None):
-                if os.path.exists(cmde_line_opt['previous_run']):
-                    options['previous_run'] = os.path.normpath(cmde_line_opt['previous_run'])
-                else:
-                    raise ValueError("previous run directory '{0}' was not found".format(cmde_line_opt['previous_run']))
+                # the existance of the previous_run value already tested in the __init__
+                # but the options dict is not fill at this moment
+                options['previous_run'] = os.path.normpath(cmde_line_opt['previous_run'])
             try:
                 options['sequence_db'] = self.parser.get('base', 'file', vars=cmde_line_opt)
             except NoSectionError:
