@@ -506,3 +506,7 @@ class ModelRegistryTest(MacsyTest):
         self.assertEqual(len(models_received), 2)
         self.assertIn(model_complex_expected, models_received)
         self.assertIn(model_complex_expected, models_received)
+
+    def test_str(self):
+        sr = ModelRegistry(self.cfg)
+        self.assertEqual(str(sr), self.output_control_str('001'))
