@@ -16,6 +16,7 @@ import os
 import shutil
 import tempfile
 import logging
+import copy
 
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
@@ -477,8 +478,25 @@ class ModelRegistryTest(MacsyTest):
 
 
     def test_ModelRegistry(self):
+
+        # test (new way models organization)
+
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
+
+
+        # test (old way models organization)
+
+        profile_dir = os.path.join(self.simple_dir, 'profiles')
+        def_dir = os.path.join(self.simple_dir, 'definitions')
+
+        cfg_old = copy.copy(self.cfg)
+        cfg_old.old_data_organization = lambda : True
+        cfg_old.options['profile_dir'] = profile_dir
+        cfg_old.options['def_dir'] = def_dir
+
+        sr = ModelRegistry(cfg_old)
+        self.assertListEqual(sr._registry.keys(), ['definitions'])
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
