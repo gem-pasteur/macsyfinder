@@ -101,6 +101,7 @@ class SystemParser(object):
         :type system_name: string
         :param system_node: the node corresponding to the system.
         :type system_node: :class"`Et.ElementTree` object.
+
         :return: the system corresponding to the name.
         :rtype: :class:`macsypy.system.System` object.
         """
@@ -117,8 +118,8 @@ class SystemParser(object):
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
-            msg = "Invalid system definition ({0}): \
- inter_gene_max_space must be an integer: {1}".format(path, inter_gene_max_space)
+            msg = "Invalid system definition ({0}): " \
+                  "inter_gene_max_space must be an integer: {1}".format(path, inter_gene_max_space)
             _log.critical(msg)
             raise SyntaxError(msg)
         min_mandatory_genes_required = system_node.get('min_mandatory_genes_required')
@@ -126,8 +127,8 @@ class SystemParser(object):
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
             except ValueError:
-                msg = "Invalid system definition ({0}):\
- min_mandatory_genes_required must be an integer:{1}".format(path, min_mandatory_genes_required)
+                msg = "Invalid system definition ({0}): " \
+                      "min_mandatory_genes_required must be an integer: {1}".format(path, min_mandatory_genes_required)
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -202,8 +203,8 @@ class SystemParser(object):
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
             except ValueError:
-                msg = "Invalid system definition '{0}':\
-                 inter_gene_max_space must be an integer: {1}".format(system.name, inter_gene_max_space)
+                msg = "Invalid system definition '{0}': " \
+                      "inter_gene_max_space must be an integer: {1}".format(system.name, inter_gene_max_space)
                 _log.critical(msg)
                 raise SyntaxError(msg)
             except TypeError:
