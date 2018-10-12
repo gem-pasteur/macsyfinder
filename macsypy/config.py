@@ -578,9 +578,14 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'e_value_res' in cmde_line_opt:
-                    options['e_value_res'] = float(cmde_line_opt['e_value_res'])
+                    try:
+                        options['e_value_res'] = float(cmde_line_opt['e_value_res'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(cmde_line_opt['e_value_res'])
+                        raise ValueError(msg)
                 else:
                     options['e_value_res'] = float(self._defaults['e_value_res'])
+
             try:
                 i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars=cmde_line_opt)
                 options['i_evalue_sel'] = float(i_evalue_sel)
@@ -589,7 +594,11 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'i_evalue_sel' in cmde_line_opt:
-                    options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
+                    try:
+                        options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(cmde_line_opt['i_evalue_sel'])
+                        raise ValueError(msg)
                 else:
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
 
@@ -605,7 +614,11 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'coverage_profile' in cmde_line_opt:
-                    options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
+                    try:
+                        options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer coverage_profile :{}: (float expected)".format(cmde_line_opt['coverage_profile'])
+                        raise ValueError(msg)
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
