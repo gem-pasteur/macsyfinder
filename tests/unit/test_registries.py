@@ -483,13 +483,13 @@ class ModelRegistryTest(MacsyTest):
 
     def test_ModelRegistry(self):
 
-        # test (new way models organization)
+        # new way models organization
 
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
 
 
-        # test (old way models organization)
+        # old way models organization
 
         profile_dir = os.path.join(self.simple_dir, 'profiles')
         def_dir = os.path.join(self.simple_dir, 'definitions')
@@ -514,3 +514,15 @@ class ModelRegistryTest(MacsyTest):
     def test_str(self):
         sr = ModelRegistry(self.cfg)
         self.assertEqual(str(sr), self.output_control_str('001'))
+
+
+class ModuleScopeTest(MacsyTest):
+
+    def test_module_scope(self):
+        os.environ['MACSY_HOME'] = 'foo'
+        reload(registries)
+
+        self.assertEqual(registries._prefix_data, 'foo/data')
+
+        del os.environ['MACSY_HOME']
+        reload(registries)
