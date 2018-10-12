@@ -22,7 +22,7 @@ from macsypy.config import Config
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestConfig(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
@@ -91,13 +91,56 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.coverage_profile, 0.6)
         self.tearDown()
         # coverage_profile must be a float
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'coverage_profile': "foo",
-                  'res_search_dir': self.tmp_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   coverage_profile="foo",
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "Invalid value for hmmer coverage_profile :foo: (float expected)")
+        self.tearDown()
+
+        coverage_profile = 0.6
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[hmmer]
+coverage_profile = {}
+""".format(coverage_profile))
+            cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(cfg.coverage_profile, coverage_profile)
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+            coverage_profile = 'foo'
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[hmmer]
+coverage_profile = {}
+""".format(coverage_profile))
+                with self.assertRaises(ValueError) as ctx:
+                    cfg = Config(cfg_file=cfg_file,
+                                 sequence_db=self.find_data("base", "test_base.fa"),
+                                 db_type='gembase',
+                                 res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception), "Invalid value for hmmer coverage_profile :foo: (float expected)")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
 
 
     def test_def_dir(self):
@@ -165,15 +208,66 @@ class Test(MacsyTest):
 
 
     def test_e_value_res(self):
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'def_dir': os.path.join(self._data_dir, 'DEF'),
-                  'profile_dir': os.path.join(self._data_dir, 'profiles'),
-                  'e_value_res': 'foo',
-                  'res_search_dir': self.tmp_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
+        e_value_res = 'foo'
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[hmmer]
+e_value_res = {}
+""".format(e_value_res))
+            with self.assertRaises(ValueError) as ctx:
+                Config(cfg_file=cfg_file,
+                       sequence_db=self.find_data("base", "test_base.fa"),
+                       db_type='gembase',
+                       res_search_dir=self.tmp_dir)
+            self.assertEqual(str(ctx.exception), "Invalid value for hmmer e_value_res :foo: (float expected)")
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+        e_value_res = 0.9
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[hmmer]
+e_value_res = {}
+""".format(e_value_res))
+            self.cfg = Config(cfg_file=cfg_file,
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                              res_search_dir=self.tmp_dir)
+            self.assertEqual(self.cfg.e_value_res, e_value_res)
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   e_value_res='foo',
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "Invalid value for hmmer e_value_res :foo: (float expected)")
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   def_dir=os.path.join(self._data_dir, 'DEF'),
+                   profile_dir=os.path.join(self._data_dir, 'profiles'),
+                   e_value_res='foo',
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "Invalid value for hmmer e_value_res :foo: (float expected)")
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
@@ -189,15 +283,19 @@ class Test(MacsyTest):
                           )
         self.assertEqual(self.cfg.e_value_res, 0.7)
         self.tearDown()
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'e_value_res': 0.7,
-                  'i_evalue_sel': 1,
-                  'res_search_dir': self.tmp_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
-
+        e_value_res = 0.7
+        i_evalue_sel = 1
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   e_value_res=e_value_res,
+                   i_evalue_sel=i_evalue_sel,
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception),
+                         "i_evalue_sel ({:f}) must be lower or equal than e_value_res ({:f})".format(i_evalue_sel,
+                                                                                                     e_value_res))
 
     def test_hmmer_exe(self):
         self.cfg = Config(cfg_file="nimportnaoik",
@@ -234,20 +332,56 @@ class Test(MacsyTest):
 
 
     def test_i_value_sel(self):
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'i_evalue_sel': 'foo',
-                  'res_search_dir': self.tmp_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
-        self.cfg = Config(cfg_file="nimportnaoik",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type='gembase',
-                          res_search_dir=self.tmp_dir
-                          )
-        self.assertEqual(self.cfg.i_evalue_sel, 0.001)
+        i_evalue_sel = 'foo'
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[hmmer]
+i_evalue_sel = {}
+""".format(i_evalue_sel))
+            with self.assertRaises(ValueError) as ctx:
+                Config(cfg_file=cfg_file,
+                       sequence_db=self.find_data("base", "test_base.fa"),
+                       db_type='gembase',
+                       res_search_dir=self.tmp_dir)
+            self.assertEqual(str(ctx.exception), "Invalid value for hmmer i_evalue_sel :foo: (float expected)")
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+        i_evalue_sel = 0.9
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[hmmer]
+i_evalue_sel = {}
+""".format(i_evalue_sel))
+            self.cfg = Config(cfg_file=cfg_file,
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                              res_search_dir=self.tmp_dir)
+            self.assertEqual(self.cfg.i_evalue_sel, i_evalue_sel)
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   i_evalue_sel='foo',
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "Invalid value for hmmer i_evalue_sel :foo: (float expected)")
         self.tearDown()
+
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
@@ -255,6 +389,14 @@ class Test(MacsyTest):
                           res_search_dir=self.tmp_dir
                           )
         self.assertEqual(self.cfg.i_evalue_sel, 0.7)
+        self.tearDown()
+
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=self.find_data("base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertEqual(self.cfg.i_evalue_sel, 0.001)
         self.tearDown()
         kwargs = {'cfg_file': "nimportnaoik",
                   'sequence_db': self.find_data("base", "test_base.fa"),
@@ -410,6 +552,82 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.inter_gene_max_space('Flagellum'), 64)
         self.assertIsNone(self.cfg.inter_gene_max_space('Foo'))
 
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   inter_gene_max_space=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'inter_gene_max_space' option for system {0} must be an integer, "
+                                             "but you provided {1} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]
+inter_gene_max_space = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in inter_gene_max_space])))
+            self.cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(self.cfg.inter_gene_max_space(inter_gene_max_space[0][0]), inter_gene_max_space[0][1])
+            self.assertEqual(self.cfg.inter_gene_max_space(inter_gene_max_space[1][0]), inter_gene_max_space[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+inter_gene_max_space = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "The value for 'inter_gene_max_space' option for system {} must be an integer, "
+                                 "but you provided {} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
+
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+inter_gene_max_space = Foo/T2SS
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'inter_gene_max_space': you must have a list of systems and "
+                                 "corresponding 'inter_gene_max_space' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
+
 
     def test_min_genes_required(self):
         min_genes_required = (["T2SS", 32], ['Flagellum', 64])
@@ -423,17 +641,171 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.min_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_genes_required('Foo'))
 
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   min_genes_required=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'min_genes_required' option for system {} must be an integer, "
+                                             "but you provided {} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]
+min_genes_required = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in min_genes_required])))
+            self.cfg = Config(cfg_file=cfg_file,
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                             res_search_dir=self.tmp_dir)
+            self.assertEqual(self.cfg.min_genes_required(min_genes_required[0][0]), min_genes_required[0][1])
+            self.assertEqual(self.cfg.min_genes_required(min_genes_required[1][0]), min_genes_required[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+min_genes_required = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "The value for 'min_genes_required' option for system {} must be an integer, "
+                                 "but you provided {} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+min_genes_required = Foo/T2SS
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'min_genes_required': you must have a list of systems and "
+                                 "corresponding 'min_genes_required' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
+
+
     def test_max_nb_genes(self):
-        max_nb_genes = (["T2SS", 32], ['Flagellum', 64])
+        max_nb_genes = (["Foo/T2SS", 32], ['Foo/Flagellum', 64])
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           max_nb_genes=max_nb_genes,
                           res_search_dir=self.tmp_dir
                           )
-        self.assertEqual(self.cfg.max_nb_genes('T2SS'), 32)
-        self.assertEqual(self.cfg.max_nb_genes('Flagellum'), 64)
-        self.assertIsNone(self.cfg.max_nb_genes('Foo'))
+        self.assertEqual(self.cfg.max_nb_genes('Foo/T2SS'), 32)
+        self.assertEqual(self.cfg.max_nb_genes('Foo/Flagellum'), 64)
+        self.assertIsNone(self.cfg.max_nb_genes('nimportnaoik'))
+
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   max_nb_genes=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                             "but you provided {1} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]
+max_nb_genes = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in max_nb_genes])))
+            self.cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(self.cfg.max_nb_genes(max_nb_genes[0][0]),max_nb_genes[0][1])
+            self.assertEqual(self.cfg.max_nb_genes(max_nb_genes[1][0]),max_nb_genes[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+                self.tearDown()
+            except:
+                pass
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+max_nb_genes = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception), "The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                                     "but you provided {1} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+max_nb_genes = Foo/T2SS
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'max_nb_genes': you must have a list of systems and "
+                                 "corresponding 'max_nb_genes' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                    self.tearDown()
+                except:
+                    pass
 
 
     def test_min_mandatory_genes_required(self):
@@ -448,19 +820,105 @@ class Test(MacsyTest):
         self.assertEqual(self.cfg.min_mandatory_genes_required('Flagellum'), 64)
         self.assertIsNone(self.cfg.min_mandatory_genes_required('Foo'))
 
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            Config(cfg_file="nimportnaoik",
+                   sequence_db=self.find_data("base", "test_base.fa"),
+                   db_type='gembase',
+                   min_mandatory_genes_required=(["Foo/T2SS", 'blabla'],),
+                   res_search_dir=self.tmp_dir
+                   )
+        self.assertEqual(str(ctx.exception), "The value for 'min_mandatory_genes_required' option for system {0} must be an integer, "
+                                             "but you provided {1} on command line".format('Foo/T2SS', 'blabla'))
+        self.tearDown()
+
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[system]
+min_mandatory_genes_required = {}
+""".format(' '.join(["{} {}".format(definition, nb) for definition, nb in min_mandatory_genes_required])))
+            cfg = Config(cfg_file=cfg_file,
+                         sequence_db=self.find_data("base", "test_base.fa"),
+                         db_type='gembase',
+                         res_search_dir=self.tmp_dir)
+            self.assertEqual(cfg.min_mandatory_genes_required(min_mandatory_genes_required[0][0]), min_mandatory_genes_required[0][1])
+            self.assertEqual(cfg.min_mandatory_genes_required(min_mandatory_genes_required[1][0]), min_mandatory_genes_required[1][1])
+        finally:
+            try:
+                os.unlink(cfg_file)
+            except:
+                pass
+
+            self.tearDown()
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+min_mandatory_genes_required = Foo/T2SS blabla
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "The value for 'min_mandatory_genes_required' option for system {} must be an integer, "
+                                 "but you provided {} in the configuration file".format('Foo/T2SS', 'blabla'))
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+            self.tearDown()
+
+            cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+            try:
+                with open(cfg_file, 'w') as f:
+                    f.write("""
+[system]
+min_mandatory_genes_required = Foo/T2SS
+""")
+                with self.assertRaises(ValueError) as ctx:
+                    Config(cfg_file=cfg_file,
+                           sequence_db=self.find_data("base", "test_base.fa"),
+                           db_type='gembase',
+                           res_search_dir=self.tmp_dir)
+                self.assertEqual(str(ctx.exception),
+                                 "Invalid syntax for 'min_mandatory_genes_required': you must have a list of systems and "
+                                 "corresponding 'min_mandatory_genes_required' separated by spaces")
+            finally:
+                try:
+                    os.unlink(cfg_file)
+                except:
+                    pass
+
+        self.tearDown()
+
 
     def test_multi_loci(self):
-        multi_loci = "T2SS,Flagellum"
+        multi_loci = "Foo/T2SS,Bar/Flagellum"
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
                           multi_loci=multi_loci,
                           res_search_dir=self.tmp_dir
                           )
-        self.assertTrue(self.cfg.multi_loci('T2SS'))
-        self.assertTrue(self.cfg.multi_loci('Flagellum'))
+        self.assertTrue(self.cfg.multi_loci('Foo/T2SS'))
+        self.assertTrue(self.cfg.multi_loci('Bar/Flagellum'))
         self.assertFalse(self.cfg.multi_loci('Foo'))
-
+        self.tearDown()
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=self.find_data("base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertFalse(self.cfg.multi_loci('Foo'))
 
     def test_res_extract_suffix(self):
         self.cfg = Config(cfg_file="nimportnaoik",

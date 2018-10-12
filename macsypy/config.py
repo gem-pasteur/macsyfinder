@@ -38,7 +38,7 @@ class ConfigLight(object):
     ConfigLight does nor create any working dir.
     """
 
-    def __init__(self, cfg_file="", previous_run=None, profile_suffix=None):
+    def __init__(self, cfg_file="", previous_run=None, profile_suffix=None, models_dir=None):
         self._new_cfg_name = "macsyfinder.conf"
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
@@ -57,7 +57,12 @@ class ConfigLight(object):
 
         used_files = self.parser.read(config_files)
 
-        cmde_line_opt = {'profile_suffix': profile_suffix} if profile_suffix else {}
+        cmde_line_opt = {}
+        if profile_suffix:
+            cmde_line_opt['profile_suffix'] = profile_suffix
+        if models_dir:
+            cmde_line_opt['models_dir'] = models_dir
+
         try:
             self.profile_suffix = self.parser.get('directories', 'profile_suffix', vars=cmde_line_opt)
         except NoSectionError:
@@ -404,8 +409,8 @@ class Config(object):
                 raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(
                     ', '.join(val_4_replicon_topology)))
             if options['replicon_topology'] == 'circular' and options['db_type'] in ('unordered_replicon', 'unordered'):
-                self._log.warning("As the input dataset type 'db_type' is set to {0},\
- the replicon_topology file was ignored".format(options['db_type']))
+                self._log.warning("As the input dataset type 'db_type' is set to {0}, "
+                                  "the replicon_topology file was ignored".format(options['db_type']))
             
             if 'topology_file' in cmde_line_opt:
                 options['topology_file'] = cmde_line_opt['topology_file']
@@ -431,11 +436,11 @@ class Config(object):
                             interval = int(interval)
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
-                            raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {} in the configuration file".format(system, interval))
+                            raise ValueError("The value for 'inter_gene_max_space' option for system {} must be an integer, "
+                                             "but you provided {} in the configuration file".format(system, interval))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of\
- systems and corresponding 'inter_gene_max_space' separated by spaces")
+                    raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of "
+                                     "systems and corresponding 'inter_gene_max_space' separated by spaces")
             if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
                 if 'inter_gene_max_space' not in options:
                     options['inter_gene_max_space'] = {}
@@ -445,8 +450,8 @@ class Config(object):
                         interval = int(interval)
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
-                        raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {1} on command line".format(system, interval))
+                        raise ValueError("The value for 'inter_gene_max_space' option for system {0} must be an integer, "
+                                         "but you provided {1} on command line".format(system, interval))
 
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
@@ -460,11 +465,11 @@ class Config(object):
                             quorum_mandatory_genes = int(quorum_mandatory_genes)
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {0}\
- must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
+                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {} "
+                                             "must be an integer, but you provided {} in the configuration file".format(system, quorum_mandatory_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of\
- systems and corresponding 'min_mandatory_genes_required' separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of "
+                                     "systems and corresponding 'min_mandatory_genes_required' separated by spaces")
 
             if 'min_mandatory_genes_required' in cmde_line_values and \
                             cmde_line_values['min_mandatory_genes_required'] is not None:
@@ -476,8 +481,8 @@ class Config(object):
                         quorum_mandatory_genes = int(quorum_mandatory_genes)
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {0} must be an\
- integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
+                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {} must be an "
+                                         "integer, but you provided {} on command line".format(system, quorum_mandatory_genes))
 
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
@@ -491,11 +496,11 @@ class Config(object):
                             quorum_genes = int(quorum_genes)
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an\
- integer, but you provided {1} in the configuration file".format(system, quorum_genes))
+                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an "
+                                             "integer, but you provided {1} in the configuration file".format(system, quorum_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and\
- corresponding 'min_mandatory_genes_required' separated by spaces")
+                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and "
+                                     "corresponding 'min_genes_required' separated by spaces")
             if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
                 if 'min_genes_required' not in options:
                     options['min_genes_required'] = {}
@@ -505,9 +510,11 @@ class Config(object):
                         quorum_genes = int(quorum_genes)
                         options['min_genes_required'][system] = quorum_genes
                     except ValueError:
-                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer,\
- but you provided {1} on command line".format(system, quorum_genes))
+                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer, "
+                                         "but you provided {1} on command line".format(system, quorum_genes))
 
+            # we should check if definition exists but at this step regitries are not build yet
+            # so just store the fqn
             if self.parser.has_option("system", "max_nb_genes"):
                 options['max_nb_genes'] = {}
                 max_nb_genes = self.parser.get("system", "max_nb_genes") 
@@ -520,11 +527,11 @@ class Config(object):
                             max_genes = int(max_genes)
                             options['max_nb_genes'][system] = max_genes
                         except ValueError:
-                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer,\
-                             but you provided {1} in the configuration file".format(system, max_genes))
+                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, "
+                                             "but you provided {1} in the configuration file".format(system, max_genes))
                 except StopIteration:
-                    raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and\
- corresponding 'max_nb_genes' separated by spaces")
+                    raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and "
+                                     "corresponding 'max_nb_genes' separated by spaces")
             if 'max_nb_genes' in cmde_line_values and cmde_line_values['max_nb_genes'] is not None: 
                 if 'max_nb_genes' not in options:
                     options['max_nb_genes'] = {}
@@ -534,15 +541,15 @@ class Config(object):
                         max_genes = int(max_genes)
                         options['max_nb_genes'][system] = max_genes
                     except ValueError:
-                        raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, \
- but you provided {1} on command line".format(system, max_genes))
+                        raise ValueError("The value for 'max_nb_genes' option for system {} must be an integer, "
+                                         "but you provided {} on command line".format(system, max_genes))
 
             if self.parser.has_option("system", "multi_loci"):
                 options['multi_loci'] = self.parser.get("system", "multi_loci").split(',')
             else:
                 options['multi_loci'] = []
             if 'multi_loci' in cmde_line_values and cmde_line_values['multi_loci'] is not None:
-                if 'min_genes_required' not in options:
+                if 'multi_loci' not in options:
                     options['multi_loci'] = []
                 for item in cmde_line_values['multi_loci'].split(','):
                     options['multi_loci'].append(item)
@@ -571,9 +578,14 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'e_value_res' in cmde_line_opt:
-                    options['e_value_res'] = float(cmde_line_opt['e_value_res'])
+                    try:
+                        options['e_value_res'] = float(cmde_line_opt['e_value_res'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(cmde_line_opt['e_value_res'])
+                        raise ValueError(msg)
                 else:
                     options['e_value_res'] = float(self._defaults['e_value_res'])
+
             try:
                 i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars=cmde_line_opt)
                 options['i_evalue_sel'] = float(i_evalue_sel)
@@ -582,7 +594,11 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'i_evalue_sel' in cmde_line_opt:
-                    options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
+                    try:
+                        options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(cmde_line_opt['i_evalue_sel'])
+                        raise ValueError(msg)
                 else:
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
 
@@ -598,7 +614,11 @@ class Config(object):
                 raise ValueError(msg)
             except NoSectionError:
                 if 'coverage_profile' in cmde_line_opt:
-                    options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
+                    try:
+                        options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
+                    except ValueError:
+                        msg = "Invalid value for hmmer coverage_profile :{}: (float expected)".format(cmde_line_opt['coverage_profile'])
+                        raise ValueError(msg)
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
 
