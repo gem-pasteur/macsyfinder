@@ -17,6 +17,9 @@ import unittest
 import shutil
 import tempfile
 import logging
+import sysconfig
+import stat
+
 from macsypy.gene import Profile
 from macsypy.gene import Gene
 from macsypy.system import System
@@ -88,21 +91,26 @@ class Test(MacsyTest):
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute(self):
-        system = System(self.cfg, "foo/T2SS", 10)
-        gene = Gene(self.cfg, "abc", system, self.models_location)
-        profile_path = self.models_location.get_profile("abc")
-        profile = Profile(gene, self.cfg, profile_path)
-        report = profile.execute()
-        hmmer_raw_out = profile.hmm_raw_output
-        with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
-            first_l = hmmer_raw_out_file.readline()
-            # a hmmsearch output file has been produced
-            self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
-            for i in range(5):
-                # skip 4 lines
-                l = hmmer_raw_out_file.readline()
-            # a hmmsearch used the abc profile line should become with: "# query HMM file:"
-            self.assertTrue(l.find(profile_path) != -1)
+        for db_type in ("gembase", "ordered_replicon", "unordered"):
+            self.cfg.options['db_type'] = db_type
+            system = System(self.cfg, "foo/T2SS", 10)
+            gene = Gene(self.cfg, "abc", system, self.models_location)
+            profile_path = self.models_location.get_profile("abc")
+            profile = Profile(gene, self.cfg, profile_path)
+            report = profile.execute()
+            hmmer_raw_out = profile.hmm_raw_output
+            with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
+                first_l = hmmer_raw_out_file.readline()
+                # a hmmsearch output file has been produced
+                self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
+                for i in range(5):
+                    # skip 4 lines
+                    l = hmmer_raw_out_file.readline()
+                # a hmmsearch used the abc profile line should become with: "# query HMM file:"
+                self.assertTrue(l.find(profile_path) != -1)
+
+            report_bis = profile.execute()
+            self.assertIs(report, report_bis)
 
 
     def test_execute_unknown_binary(self):
@@ -112,4 +120,32 @@ class Test(MacsyTest):
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         self.assertRaises(RuntimeError, profile.execute)
+
+
+    def test_execute_hmmer_failed(self):
+        fake_hmmer = os.path.join(tempfile.gettempdir(), 'hmmer_failed')
+        with open(fake_hmmer, 'w') as hmmer:
+            hmmer.write("""#! {}
+import sys
+sys.exit(127)
+""".format(sysconfig.sys.executable))
+        try:
+            os.chmod(hmmer.name, 0755)
+            self.cfg.options['hmmer_exe'] = hmmer.name
+            system = System(self.cfg, "foo/T2SS", 10)
+            gene = Gene(self.cfg, "abc", system, self.models_location)
+            path = self.models_location.get_profile("abc")
+            profile = Profile(gene, self.cfg, path)
+            with self.assertRaisesRegexp(RuntimeError,
+                                         "an error occurred during Hmmer execution: command = .* : return code = 127 .*") as ctx:
+                profile.execute()
+        finally:
+            try:
+                os.unlink(fake_hmmer)
+            except Exception:
+                pass
+
+
+
+
 
