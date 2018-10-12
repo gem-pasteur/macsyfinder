@@ -1144,3 +1144,18 @@ min_mandatory_genes_required = Foo/T2SS
                   }
         self.assertRaises(ValueError, Config, **kwargs)
 
+    def test_relative_path(self):
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=self.find_data("base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertFalse(self.cfg.relative_path)
+        self.tearDown()
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=self.find_data("base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir,
+                          relative_path=True
+                          )
+        self.assertTrue(self.cfg.relative_path)
