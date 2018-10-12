@@ -75,8 +75,6 @@ class SystemParser(object):
                     raise MacsypyError("{}: No such definition".format(def_fqn))
 
                 path = definition_location.path
-                if not os.path.exists(path):
-                    raise MacsypyError("{}: No such system definitions".format(path))
                 try:
                     tree = Et.parse(path)
                     root = tree.getroot()
