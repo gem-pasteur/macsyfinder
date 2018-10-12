@@ -305,6 +305,10 @@ class ModelLocationTest(MacsyTest):
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
+        with self.assertRaises(ValueError) as e:
+            model_loc.get_all_definitions(root_def_name='foobar')
+        self.assertEqual(e.exception.message, "root_def_name foobar does not match with any definitions")
+
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
