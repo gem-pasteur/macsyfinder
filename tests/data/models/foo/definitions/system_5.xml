@@ -1,0 +1,8 @@
+<system inter_gene_max_space="20" min_mandatory_genes_required="2" min_genes_required="3">
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+    <gene name="fliE" presence="mandatory"/>
+    <gene name="tadZ" presence="accessory"/>
+    <gene name="sctC" presence="forbidden"/>
+</system>
+

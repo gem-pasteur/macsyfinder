@@ -92,7 +92,6 @@ class Test(MacsyTest):
         definition = '{}/nimportnaoik'.format(model_name)
         models_2_detect.add(definition)
         with self.assertRaises(MacsypyError) as context:
-            #self.parser.system_to_parse(system_2_detect)
             self.parser.definition_to_parse(models_2_detect, parsed)
         self.assertEqual(str(context.exception), '{}: No such Models in {}'.format(model_name, self.cfg.models_dir))
 
@@ -222,7 +221,7 @@ class Test(MacsyTest):
                          'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene '
                          '\'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
 
-    def test_invalid_homolg(self):
+    def test_invalid_homolog(self):
         system_2_detect = ['foo/invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
@@ -230,13 +229,25 @@ class Test(MacsyTest):
                          "Invalid system definition 'invalid_homolog': The gene 'foo_bar' described as "
                          "homolog of 'gspD' in system 'invalid_homolog' is not in the 'GeneBank' gene factory")
 
-    def test_invalid_homolg(self):
+    def test_invalid_homolog_2(self):
+        system_2_detect = ['foo/invalid_homolog_2']
+        with self.assertRaises(SyntaxError) as ctx:
+            self.parser.parse(system_2_detect)
+        self.assertEqual(str(ctx.exception), "Invalid system definition: gene without name")
+
+    def test_invalid_analog(self):
         system_2_detect = ['foo/invalid_analog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
                          "Invalid system definition 'invalid_analog': The gene 'foo_bar' described as "
                          "analog of 'gspD' in system 'invalid_analog' is not in the 'GeneBank' gene factory")
+
+    def test_invalid_analog_2(self):
+        system_2_detect = ['foo/invalid_analog_2']
+        with self.assertRaises(SyntaxError) as ctx:
+            self.parser.parse(system_2_detect)
+        self.assertEqual(str(ctx.exception), "Invalid system definition 'invalid_analog_2': gene without name")
 
     def test_bad_homolog_sys_ref(self):
         system_2_detect = ['foo/bad_homolog_sys_ref']
@@ -262,6 +273,12 @@ class Test(MacsyTest):
                          'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser '
                          'or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
+    def test_bad_min_genes_required_2(self):
+        system_2_detect = ['foo/bad_min_genes_required_2']
+        with self.assertRaisesRegexp(SyntaxError, "Invalid system definition (.*): "
+                                                  "min_genes_required must be an integer: 16.5"):
+            self.parser.parse(system_2_detect)
+
     def test_bad_min_mandatory_genes_required(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
@@ -280,6 +297,12 @@ class Test(MacsyTest):
             self.parser.parse(system_2_detect)
         self.assertEqual(context.exception.message,
                          "min_genes_required must be greater or equal than min_mandatory_genes_required")
+
+    def test_bad_min_mandatory_genes_required_4(self):
+        system_2_detect = ['foo/bad_min_mandatory_genes_required_4']
+        with self.assertRaisesRegexp(SyntaxError, "Invalid system definition (.*): "
+                                                  "min_mandatory_genes_required must be an integer: 12.5"):
+            self.parser.parse(system_2_detect)
 
 
     def test_min_mandatory_genes_required_lesser_than_mandatory_genes(self):
@@ -309,9 +332,8 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_inter_gene_max_space']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-
         self.assertEqual(str(context.exception),
-                         "Invalid system definition ({}):  inter_gene_max_space must be an integer: 12.5".format(
+                         "Invalid system definition ({}): inter_gene_max_space must be an integer: 12.5".format(
                              os.path.join(self.cfg.models_dir, "foo/definitions/bad_inter_gene_max_space.xml")
                          )
                          )
@@ -327,4 +349,33 @@ class Test(MacsyTest):
                          )
                          )
 
+    def test_gene_inter_gene_max_space(self):
+        def_2_parse = set()
+        def_2_parse.add('foo/system_5')
+        parsed = set()
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
 
+        s1 = self.system_bank['foo/system_5']
+        self.assertEqual(s1.name, 'system_5')
+        self.assertEqual(s1.fqn, 'foo/system_5')
+        self.assertEqual(s1.inter_gene_max_space, 20)
+        self.assertEqual(s1.min_mandatory_genes_required, 2)
+        self.assertEqual(s1.min_genes_required, 3)
+        self.assertFalse(s1.multi_loci)
+        self.assertEqual(len(s1.mandatory_genes), 3)
+        mandatory_genes_name = [g.name for g in s1.mandatory_genes]
+        mandatory_genes_name.sort()
+        theoric_list = ["flgB", "flgC", "fliE"]
+        theoric_list.sort()
+        self.assertListEqual(mandatory_genes_name, theoric_list)
+        flgC = s1.get_gene('flgC')
+        self.assertEqual(flgC.inter_gene_max_space, 2)
+
+    def test_bad_gene_inter_gene_max_space_2(self):
+        models_2_detect = ['foo/bad_inter_gene_max_space_2']
+        with self.assertRaises(SyntaxError) as ctx:
+            self.parser.parse(models_2_detect)
+
+        self.assertEqual(str(ctx.exception), "Invalid system definition 'bad_inter_gene_max_space_2': "
+                                             "inter_gene_max_space must be an integer: 2.5")
