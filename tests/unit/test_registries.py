@@ -17,6 +17,7 @@ import shutil
 import tempfile
 import logging
 import copy
+import unittest
 
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
@@ -305,6 +306,10 @@ class ModelLocationTest(MacsyTest):
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
+        with self.assertRaises(ValueError) as e:
+            model_loc.get_all_definitions(root_def_name='foobar')
+        self.assertEqual(e.exception.message, "root_def_name foobar does not match with any definitions")
+
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
@@ -479,13 +484,13 @@ class ModelRegistryTest(MacsyTest):
 
     def test_ModelRegistry(self):
 
-        # test (new way models organization)
+        # new way models organization
 
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
 
 
-        # test (old way models organization)
+        # old way models organization
 
         profile_dir = os.path.join(self.simple_dir, 'profiles')
         def_dir = os.path.join(self.simple_dir, 'definitions')
@@ -510,3 +515,26 @@ class ModelRegistryTest(MacsyTest):
     def test_str(self):
         sr = ModelRegistry(self.cfg)
         self.assertEqual(str(sr), self.output_control_str('001'))
+
+
+class ModuleScopeTest(MacsyTest):
+
+    @unittest.skip('FIXME')
+    def test_module_scope(self):
+
+        # backup env
+        macsy_home_missing = ('MACSY_HOME' not in os.environ)
+        if not macsy_home_missing:
+            macsy_home_orig = os.environ['MACSY_HOME']
+
+        # test
+        os.environ['MACSY_HOME'] = 'foo'
+        reload(registries)
+        self.assertEqual(registries._prefix_data, 'foo/data')
+
+        # restore env
+        if macsy_home_missing:
+            del os.environ['MACSY_HOME']
+        else:
+            os.environ['MACSY_HOME'] = macsy_home_orig
+        reload(registries)
