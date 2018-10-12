@@ -307,6 +307,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
     env_009 => environment loaded using "previous_run" option
                (use data from "tests/data/data_set_3").
                Stops after creating ModelRegistry.
+    env_010 => environment loaded from scratch
+               (data from "test_base_with_errors.fa").
+               Index not created.
     """
 
     def load(self, env_id):
@@ -385,6 +388,19 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
+        elif env_id == "env_010":
+            self.cfg = Config(hmmer_exe="hmmsearch",
+                              sequence_db=MacsyTest.find_data("base", "test_base_with_errors.fa"),
+                              db_type="gembase",
+                              e_value_res=1,
+                              i_evalue_sel=0.5,
+                              out_dir=MacsyTest.get_uniq_tmp_dir_name(),
+                              res_search_suffix=".search_hmm.out",
+                              profile_suffix=".hmm",
+                              res_extract_suffix="",
+                              log_level=30,
+                              models_dir=MacsyTest.find_data('models'),
+                              log_file=os.devnull)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -424,6 +440,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_009":
             MacsyTest.rmtree(self.out_dir)
+        elif env_id == "env_010":
+            pass
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
