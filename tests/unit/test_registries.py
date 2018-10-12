@@ -16,6 +16,7 @@ import os
 import shutil
 import tempfile
 import logging
+import copy
 
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
@@ -320,7 +321,22 @@ class ModelLocationTest(MacsyTest):
 
 
     def test_str(self):
-        pass
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc.name = 'foo20'
+        self.assertEqual('foo20', str(model_loc))
+
+    def test_get_definitions(self):
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(self.cfg, path=simple_dir)
+
+        model_loc._definitions = None
+        defs = model_loc.get_definitions()
+        self.assertEqual({}, defs)
+
+        model_loc._definitions = {'foo': 'bar'}
+        defs = model_loc.get_definitions()
+        self.assertListEqual(['bar'], defs)
 
 
 class DefinitionLocationTest(MacsyTest):
@@ -368,7 +384,7 @@ class DefinitionLocationTest(MacsyTest):
         model_path = '/path/to/model.xml'
         mdfl = DefinitionLocation(name=model_name,
                                   path=model_path)
-        self.assertEqual(mdfl.name, model_name)
+        self.assertEqual('foo', str(mdfl))
 
 
     def test_all(self):
@@ -462,8 +478,25 @@ class ModelRegistryTest(MacsyTest):
 
 
     def test_ModelRegistry(self):
+
+        # test (new way models organization)
+
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
+
+
+        # test (old way models organization)
+
+        profile_dir = os.path.join(self.simple_dir, 'profiles')
+        def_dir = os.path.join(self.simple_dir, 'definitions')
+
+        cfg_old = copy.copy(self.cfg)
+        cfg_old.old_data_organization = lambda : True
+        cfg_old.options['profile_dir'] = profile_dir
+        cfg_old.options['def_dir'] = def_dir
+
+        sr = ModelRegistry(cfg_old)
+        self.assertListEqual(sr._registry.keys(), ['definitions'])
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
@@ -473,3 +506,7 @@ class ModelRegistryTest(MacsyTest):
         self.assertEqual(len(models_received), 2)
         self.assertIn(model_complex_expected, models_received)
         self.assertIn(model_complex_expected, models_received)
+
+    def test_str(self):
+        sr = ModelRegistry(self.cfg)
+        self.assertEqual(str(sr), self.output_control_str('001'))
