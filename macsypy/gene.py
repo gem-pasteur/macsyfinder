@@ -532,7 +532,7 @@ class Profile(object):
         """
         Launch the Hmmer search (hmmsearch executable) with this profile
 
-        :return: an object storing information on th results of the HMM search (HMMReport)
+        :return: an object storing information on the results of the HMM search (HMMReport)
         :rtype:  :class:`macsypy.report.HMMReport` object
         """
         with self._lock:
