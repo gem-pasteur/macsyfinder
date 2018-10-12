@@ -409,8 +409,8 @@ class Config(object):
                 raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(
                     ', '.join(val_4_replicon_topology)))
             if options['replicon_topology'] == 'circular' and options['db_type'] in ('unordered_replicon', 'unordered'):
-                self._log.warning("As the input dataset type 'db_type' is set to {0},\
- the replicon_topology file was ignored".format(options['db_type']))
+                self._log.warning("As the input dataset type 'db_type' is set to {0}, "
+                                  "the replicon_topology file was ignored".format(options['db_type']))
             
             if 'topology_file' in cmde_line_opt:
                 options['topology_file'] = cmde_line_opt['topology_file']
