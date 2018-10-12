@@ -574,7 +574,7 @@ class Profile(object):
 
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
-                    msg = "the Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
+                    msg = "The Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
                     _log.critical(msg)
                     return
                 else:
