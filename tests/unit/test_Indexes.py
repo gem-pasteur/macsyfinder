@@ -114,3 +114,11 @@ class Test(MacsyTest):
         self.assertRaises(IOError, idx.build)
         os.chmod(idx_dir, 0777)
 
+
+    def test_build_my_indexes(self):
+        self.load_env("env_010")
+        idx = Indexes(self.macsy_test_env.cfg)
+        with self.assertRaises(IndexError) as e:
+            idx._build_my_indexes()
+        self.assertEqual(e.exception.message, "list index out of range")
+        self.unload_env("env_010")
