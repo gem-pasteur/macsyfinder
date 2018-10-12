@@ -549,7 +549,7 @@ class Config(object):
             else:
                 options['multi_loci'] = []
             if 'multi_loci' in cmde_line_values and cmde_line_values['multi_loci'] is not None:
-                if 'min_genes_required' not in options:
+                if 'multi_loci' not in options:
                     options['multi_loci'] = []
                 for item in cmde_line_values['multi_loci'].split(','):
                     options['multi_loci'].append(item)
