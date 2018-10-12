@@ -123,7 +123,7 @@ class ModelLocation(object):
         them.
 
         :param model_def: the current model definition to add new submodel location
-        :type definition: :class:`DefinitionLocation`
+        :type model_def: :class:`DefinitionLocation`
         :param def_path: the absolute path to analyse
         :type def_path: string
         :returns: a definition location
@@ -269,7 +269,7 @@ class ModelLocation(object):
 
 class DefinitionLocation(dict):
     """
-    Manage were models are stored. a Model is a xml definition of a system.
+    Manage were definitions are stored. a Model is a xml definition of a system.
     It has 3 attributes
 
     name: the fully qualified definitions name like TXSS/T3SS or CRISPR-cas/Typing/Cas
