@@ -416,29 +416,38 @@ i_evalue_sel = {}
                           )
         self.assertEqual(self.cfg.db_type, 'gembase')
         self.tearDown()
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'foo',
-                  'res_search_dir': self.tmp_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
 
+        with self.assertRaises(ValueError) as ctx:
+            self.cfg = Config(cfg_file="nimportnaoik",
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              res_search_dir=self.tmp_dir
+                              )
+        self.assertEqual(str(ctx.exception), 'You must specify the type of the input dataset '
+                                             '(unordered_replicon, ordered_replicon, gembase, unordered).')
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            self.cfg = Config(cfg_file="nimportnaoik",
+                             sequence_db=self.find_data("base", "test_base.fa"),
+                             db_type='foo',
+                             res_search_dir=self.tmp_dir
+                             )
+        self.assertEqual(str(ctx.exception), 'Allowed values for the input dataset are : '
+                                             'unordered_replicon, ordered_replicon, gembase, unordered')
+        self.tearDown()
 
     def test_previous_run(self):
-        out_dir = os.path.join(self.tmp_dir, 'macsy_test_config')
-        kwargs = {'cfg_file': "nimportnaoik",
-                  'sequence_db': self.find_data("base", "test_base.fa"),
-                  'db_type': 'gembase',
-                  'models_dir': self.find_data('models'),
-                  'previous_run': 'foo',
-                  'res_search_dir': out_dir
-                  }
-        self.assertRaises(ValueError, Config, **kwargs)
-        try:
-            shutil.rmtree(out_dir)
-        except:
-            pass
+        with self.assertRaises(ValueError) as ctx:
+            self.cfg = Config(cfg_file="nimportnaoik",
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                              models_dir=self.find_data('models'),
+                              previous_run='foo',
+                              res_search_dir=tempfile.gettempdir()
+                              )
+        self.assertEqual(str(ctx.exception), "No config file found in dir foo")
         self.tearDown()
+
         try:
             cfg_base = Config(cfg_file="nimportnaoik",
                               sequence_db=self.find_data("base", "test_base.fa"),
@@ -538,6 +547,85 @@ i_evalue_sel = {}
                   'res_search_dir': self.tmp_dir
                   }
         self.assertRaises(ValueError, Config, **kwargs)
+
+
+    def test_topology_file(self):
+        self.cfg = Config(cfg_file="nimportnaoik",
+                          sequence_db=self.find_data("base", "test_base.fa"),
+                          db_type='gembase',
+                          res_search_dir=self.tmp_dir
+                          )
+        self.assertIsNone(self.cfg.topology_file)
+        self.tearDown()
+
+        with self.assertRaises(ValueError) as ctx:
+            self.cfg = Config(cfg_file="nimportnaoik",
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                              res_search_dir=self.tmp_dir,
+                              topology_file='foo'
+                              )
+        self.assertEqual(str(ctx.exception), 'topology_file cannot access foo: No such file')
+        self.tearDown()
+
+        topo_file = os.path.join(tempfile.gettempdir(), 'test_macsy_topofile')
+        open(topo_file, 'w').close()
+        try:
+            self.cfg = Config(cfg_file="nimportnaoik",
+                                  sequence_db=self.find_data("base", "test_base.fa"),
+                                  db_type='gembase',
+                                  res_search_dir=self.tmp_dir,
+                                  topology_file=topo_file
+                                  )
+            self.assertEqual(self.cfg.topology_file, topo_file)
+        finally:
+            self.tearDown()
+            try:
+                os.unlink(topo_file)
+            except:
+                pass
+
+
+        topo_file = os.path.join(tempfile.gettempdir(), 'test_macsy_topofile')
+        os.mkdir(topo_file)
+        try:
+            with self.assertRaises(ValueError) as ctx:
+                self.cfg = Config(cfg_file="nimportnaoik",
+                                  sequence_db=self.find_data("base", "test_base.fa"),
+                                  db_type='gembase',
+                                  res_search_dir=self.tmp_dir,
+                                  topology_file=topo_file
+                                  )
+            self.assertEqual(str(ctx.exception), "topology_file {} is not a regular file".format(topo_file))
+        finally:
+            self.tearDown()
+            try:
+                shutil.rmtree(topo_file)
+            except:
+                pass
+
+        topo_file = os.path.join(tempfile.gettempdir(), 'test_macsy_topofile')
+        open(topo_file, 'w').close()
+        cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
+
+        try:
+            with open(cfg_file, 'w') as f:
+                f.write("""
+[base]
+topology_file = {}
+""".format(topo_file))
+            self.cfg = Config(cfg_file=cfg_file,
+                              sequence_db=self.find_data("base", "test_base.fa"),
+                              db_type='gembase',
+                              res_search_dir=self.tmp_dir,
+                              )
+            self.assertEqual(self.cfg.topology_file, topo_file)
+        finally:
+            self.tearDown()
+            try:
+                os.unlink(topo_file)
+            except:
+                pass
 
 
     def test_inter_gene_max_space(self):
