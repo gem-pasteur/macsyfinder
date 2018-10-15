@@ -455,16 +455,17 @@ class Hit(object):
         :return: the result of the comparison
         :rtype: boolean
         """
+        epsilon = 0.001
         return (self.gene.name == other.gene.name and
                 self.system.name == other.system.name and
                 self.id == other.id and
                 self.seq_length == other.seq_length and
                 self.replicon_name == other.replicon_name and
                 self.position == other.position and
-                self.i_eval == other.i_eval and
-                self.score == other.score and
-                self.profile_coverage == other.profile_coverage and
-                self.sequence_coverage == other.sequence_coverage and
+                abs(self.i_eval - other.i_eval) <= epsilon and
+                abs(self.score - other.score) <= epsilon and
+                abs(self.profile_coverage - other.profile_coverage) <= epsilon and
+                abs(self.sequence_coverage - other.sequence_coverage) <= epsilon and
                 self.begin_match == other.begin_match and
                 self.end_match == other.end_match 
                 )
