@@ -20,6 +20,7 @@ import logging
 from macsypy.report import Hit
 from macsypy.config import Config
 from macsypy.gene import Gene
+import macsypy.gene
 from macsypy.system import System
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -54,6 +55,14 @@ class Test(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        macsypy.gene.profile_factory = macsypy.gene.ProfileFactory()
+        macsypy.gene.profile_factory._profiles = {}
+
   
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -65,6 +74,9 @@ class Test(MacsyTest):
             shutil.rmtree(self.cfg.working_dir)
         except:
             pass
+        macsypy.gene.profile_factory = macsypy.gene.ProfileFactory()
+        macsypy.gene.profile_factory._profiles = {}
+
 
     def test_cmp(self):
         system = System(self.cfg, "foo/T2SS", 10)
