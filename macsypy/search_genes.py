@@ -69,10 +69,11 @@ def search_genes(genes, cfg):
             except Exception as err:
                 _log.critical(err)
                 stop(signal.SIGKILL, None)
-            if report:
-                report.extract()
-                report.save_extract()
-                all_reports.append(report)
+            else:
+                if report:
+                    report.extract()
+                    report.save_extract()
+                    all_reports.append(report)
 
 
     def recover(gene, all_reports, cfg, sema):
