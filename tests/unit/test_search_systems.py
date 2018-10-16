@@ -19,9 +19,10 @@ from macsypy.database import RepliconDB
 from macsypy.registries import ModelRegistry
 from macsypy.gene import Gene
 from tests import MacsyTest
+from tests.macsy_test_env import MacsyEnvManager
 
 
-class Test(MacsyTest):
+class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
         pass
