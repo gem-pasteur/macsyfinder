@@ -21,9 +21,10 @@ import logging
 from macsypy.config import Config
 from macsypy.database import Indexes
 from tests import MacsyTest
+from tests.macsy_test_env import MacsyEnvManager
 
 
-class Test(MacsyTest):
+class Test(MacsyTest, MacsyEnvManager):
 
     def __init__(self, methodName = 'runTest'):
         super(Test, self).__init__(methodName)

@@ -18,6 +18,7 @@ from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.macsypy_error import SystemDetectionError
 from tests import MacsyTest
+from tests.macsy_test_env import MacsyEnvManager
 
 
 class TestCircularizeData(object):
@@ -69,7 +70,7 @@ class TestCircularizeData(object):
         return [h1, h2]
 
 
-class Test(MacsyTest):
+class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
         pass
