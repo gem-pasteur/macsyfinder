@@ -17,9 +17,10 @@ import shutil
 import tempfile
 from macsypy.search_systems import systemDetectionReportUnordered
 from tests import MacsyTest
+from tests.macsy_test_env import MacsyEnvManager
 
 
-class Test(MacsyTest):
+class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
         self.load_env("env_002")
