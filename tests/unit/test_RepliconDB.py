@@ -118,7 +118,7 @@ class Test(MacsyTest):
                    'PSAE001c01': 'linear'
                    }
         with open(self.cfg.topology_file, 'w') as f:
-            for k, v in db_send.items():
+            for k, v in list(db_send.items()):
                 f.write('{0} : {1}\n'.format(k,v))
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(self.cfg)
@@ -245,7 +245,7 @@ class Test(MacsyTest):
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
-        self.assertItemsEqual(db.items(), [('ESCO030p01', ESCO030p01), ('NC_xxxxx_xx', NCXX),
+        self.assertCountEqual(list(db.items()), [('ESCO030p01', ESCO030p01), ('NC_xxxxx_xx', NCXX),
                                            ('PSAE001c01', PSAE001c01)])
 
     def test_iteritems(self):
@@ -253,7 +253,7 @@ class Test(MacsyTest):
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology, 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
-        self.assertItemsEqual(db.iteritems(), [('ESCO030p01', ESCO030p01),
+        self.assertCountEqual(iter(db.items()), [('ESCO030p01', ESCO030p01),
                                                ('NC_xxxxx_xx', NCXX),
                                                ('PSAE001c01', PSAE001c01)])
 
@@ -264,4 +264,4 @@ class Test(MacsyTest):
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology, 68, 133, self.PSAE001c01_genes)
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
         values = db.replicon_infos()
-        self.assertItemsEqual(values, [ESCO030p01, NCXX, PSAE001c01])
+        self.assertCountEqual(values, [ESCO030p01, NCXX, PSAE001c01])
