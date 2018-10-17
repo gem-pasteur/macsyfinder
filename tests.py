@@ -117,9 +117,9 @@ if __name__ == '__main__':
     result_all_tests = []
 
     if args.unit:
-        print "\n", "#" * 70
-        print "Test Runner: Unit tests"
-        print "#" * 70
+        print("\n", "#" * 70)
+        print("Test Runner: Unit tests")
+        print("#" * 70)
 
         old_path = sys.path
         if 'MACSY_HOME' in os.environ:
@@ -131,9 +131,9 @@ if __name__ == '__main__':
         sys.path = old_path
 
     if args.functional:
-        print "\n", "#" * 70
-        print "Test Runner: Functional tests"
-        print "#" * 70
+        print("\n", "#" * 70)
+        print("Test Runner: Functional tests")
+        print("#" * 70)
 
         old_path = sys.path
         if 'MACSY_HOME' in os.environ:
@@ -154,9 +154,9 @@ if __name__ == '__main__':
         sys.path = old_path
 
     if args.integration:
-        print "\n", "#" * 70
-        print "Test Runner: Integration tests"
-        print "#" * 70
+        print("\n", "#" * 70)
+        print("Test Runner: Integration tests")
+        print("#" * 70)
         old_path = sys.path
         integration_results = run_integration_tests(args.tests, verbosity=args.verbosity)
         result_all_tests.append(integration_results)
