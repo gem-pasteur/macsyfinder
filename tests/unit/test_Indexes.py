@@ -80,8 +80,9 @@ class Test(MacsyTest, MacsyEnvManager):
         idx = Indexes(self.cfg)
         self.assertIsNone(idx.find_my_indexes())
         new_idx = os.path.join(os.path.dirname(self.cfg.sequence_db), idx.name + ".idx")
-        open(new_idx, 'w')
+        fh = open(new_idx, 'w')
         self.assertEqual(idx.find_my_indexes(), new_idx)
+        fh.close()
 
     def test_build_no_idx(self):
         idx = Indexes(self.cfg)
@@ -113,7 +114,7 @@ class Test(MacsyTest, MacsyEnvManager):
         idx_dir = os.path.join(os.path.dirname(self.cfg.sequence_db))
         os.chmod(idx_dir, 0000)
         self.assertRaises(IOError, idx.build)
-        os.chmod(idx_dir, 0777)
+        os.chmod(idx_dir, 0o777)
 
 
     def test_build_my_indexes(self):
@@ -121,5 +122,5 @@ class Test(MacsyTest, MacsyEnvManager):
         idx = Indexes(self.macsy_test_env.cfg)
         with self.assertRaises(IndexError) as e:
             idx._build_my_indexes()
-        self.assertEqual(e.exception.message, "list index out of range")
+        self.assertEqual(str(e.exception), "list index out of range")
         self.unload_env("env_010")
