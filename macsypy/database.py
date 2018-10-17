@@ -294,7 +294,7 @@ class RepliconDB(object):
         """
         :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs
         """
-        return iter(self._DB.items())
+        return iter(list(self._DB.items()))
 
 
     def replicon_names(self):

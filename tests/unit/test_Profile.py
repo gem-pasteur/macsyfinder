@@ -130,13 +130,13 @@ import sys
 sys.exit(127)
 """.format(sysconfig.sys.executable))
         try:
-            os.chmod(hmmer.name, 0755)
+            os.chmod(hmmer.name, 0o755)
             self.cfg.options['hmmer_exe'] = hmmer.name
             system = System(self.cfg, "foo/T2SS", 10)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, path)
-            with self.assertRaisesRegexp(RuntimeError,
+            with self.assertRaisesRegex(RuntimeError,
                                          "an error occurred during Hmmer execution: command = .* : return code = 127 .*") as ctx:
                 profile.execute()
         finally:

@@ -12,8 +12,6 @@
 ################################################################################
 
 
-
-
 import os
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
@@ -22,7 +20,7 @@ from subprocess import Popen
 from threading import Lock
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .macsypy_error import MacsypyError
-import registries
+from . import registries
 
 class GeneBank(object):
     """
@@ -55,14 +53,14 @@ class GeneBank(object):
         :return: True if the gene is in, False otherwise
         :rtype: boolean
         """
-        return gene in self._genes_bank.values()
+        return gene in list(self._genes_bank.values())
 
 
     def __iter__(self):
         """
         Return an iterator object on the genes contained in the bank
         """
-        return self._genes_bank.itervalues()
+        return iter(list(self._genes_bank.values()))
 
 
     def add_gene(self, gene):
