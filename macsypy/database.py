@@ -38,11 +38,11 @@ def fasta_iter(fasta_file):
     faiter = (x[1] for x in groupby(fasta_file, lambda line: line[0] == ">"))
     for header in faiter:
         # drop the ">"
-        header = header.next()[1:].strip()
+        header = next(header)[1:].strip()
         header = header.split()
         _id = header[0]
         comment = ' '.join(header[1:])
-        seq = ''.join(s.strip() for s in faiter.next())
+        seq = ''.join(s.strip() for s in next(faiter))
         length = len(seq)
         yield _id, comment, length
 
@@ -234,7 +234,7 @@ class RepliconDB(object):
             replicons = (x[1] for x in groupby(idx_f, grp_replicon))
             for replicon in replicons:
                 genes = []
-                entry = replicon.next()
+                entry = next(replicon)
                 replicon_name, seq_name, seq_length, _min = parse_entry(entry)
                 genes.append((seq_name, seq_length))
                 for entry in replicon:
@@ -287,21 +287,21 @@ class RepliconDB(object):
         """
         :return: a copy of the RepliconDB as a list of (replicon_name, RepliconInfo) pairs
         """
-        return self._DB.items()
+        return list(self._DB.items())
 
 
     def iteritems(self):
         """
         :return: an iterator over the RepliconDB as a list (replicon_name, RepliconInfo) pairs
         """
-        return self._DB.iteritems()
+        return iter(list(self._DB.items()))
 
 
     def replicon_names(self):
         """
         :return: a copy of the RepliconDB as a list of replicon_names
         """
-        return self._DB.keys()
+        return list(self._DB.keys())
 
 
     def replicon_infos(self):
@@ -309,4 +309,4 @@ class RepliconDB(object):
         :return: a copy of the RepliconDB as list of replicons info
         :rtype: RepliconInfo instance
         """
-        return self._DB.values()
+        return list(self._DB.values())
