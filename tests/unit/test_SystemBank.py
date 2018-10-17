@@ -50,7 +50,6 @@ class Test(MacsyTest):
                           )
         self.system_bank = SystemBank()
 
-
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -72,8 +71,8 @@ class Test(MacsyTest):
         self.assertEqual(system_foo,  self.system_bank[model_name])
         with self.assertRaises(KeyError) as ctx:
             self.system_bank.add_system(system_foo)
-        self.assertEqual(ctx.exception.message,
-                         "a system named {0} is already registered in the systems' bank".format(model_name))
+        self.assertEqual(str(ctx.exception),
+                         '"a system named {0} is already registered in the systems\' bank"'.format(model_name))
 
     def test_contains(self):
         system_in = System(self.cfg, "foo", 10)

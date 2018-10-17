@@ -56,7 +56,6 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
 
-
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -69,7 +68,6 @@ class Test(MacsyTest):
         except:
             pass
 
-
     def test_get_profile(self):
         system_foo = System(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
@@ -78,7 +76,6 @@ class Test(MacsyTest):
         self.assertTrue(isinstance(profile, Profile))
         self.assertEqual(profile.gene.name, gene_name)
 
-
     def test_get_uniq_object(self):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
@@ -86,10 +83,8 @@ class Test(MacsyTest):
         profile2 = profile_factory.get_profile(gene, self.cfg, self.models_location)
         self.assertEqual(profile1, profile2)
 
-
     def test_unknow_profile(self):
         system_foo = System(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         gene.name = "foo"
         self.assertRaises(MacsypyError, profile_factory.get_profile, gene, self.cfg, self.models_location)
-
