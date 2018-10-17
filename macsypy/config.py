@@ -16,11 +16,12 @@ import os
 import sys
 import inspect
 from time import strftime
-from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
+from configparser import SafeConfigParser, NoSectionError, NoOptionError
 
 _prefix_path = '$PREFIX'
 _prefix_conf = '$PREFIXCONF'
 _prefix_data = '$PREFIXDATA'
+
 if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
     _prefix_path = os.environ['MACSY_HOME']
     _prefix_conf = os.path.join(os.environ['MACSY_HOME'], 'etc')
@@ -99,11 +100,12 @@ class Config(object):
     
     # if a new option is added think to add it also (if needed) in save
     options = ('cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file',
-               'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci',
-                'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
-                'def_dir', 'models_dir', 'res_search_dir', 'res_search_suffix',
-                'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
-                'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes', 'relative_path')
+               'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes',
+               'multi_loci',
+               'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile',
+               'def_dir', 'models_dir', 'res_search_dir', 'res_search_suffix',
+               'profile_dir', 'profile_suffix', 'res_extract_suffix', 'out_dir',
+               'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes', 'relative_path')
 
     def __init__(self,
                  cfg_file="",
@@ -336,7 +338,8 @@ class Config(object):
                 log_error.append(err)
                 log_handler = logging.StreamHandler(sys.stderr)
                 options['log_file'] = ''
-        handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
+        handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : "
+                                              "L %(lineno)d : %(asctime)s : %(message)s")
         log_handler.setFormatter(handler_formatter)
         log_handler.setLevel(log_level)
 
@@ -430,13 +433,14 @@ class Config(object):
                 it = iter(inter_gene_max_space)
                 try:
                     for system in it:
-                        interval = it.next()
+                        interval = next(it)
                         try:
                             interval = int(interval)
                             options['inter_gene_max_space'][system] = interval
                         except ValueError:
-                            raise ValueError("The value for 'inter_gene_max_space' option for system {} must be an integer, "
-                                             "but you provided {} in the configuration file".format(system, interval))
+                            raise ValueError("The value for 'inter_gene_max_space' option for system {} "
+                                             "must be an integer, but you provided {} "
+                                             "in the configuration file".format(system, interval))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'inter_gene_max_space': you must have a list of "
                                      "systems and corresponding 'inter_gene_max_space' separated by spaces")
@@ -449,8 +453,9 @@ class Config(object):
                         interval = int(interval)
                         options['inter_gene_max_space'][system] = interval
                     except ValueError:
-                        raise ValueError("The value for 'inter_gene_max_space' option for system {0} must be an integer, "
-                                         "but you provided {1} on command line".format(system, interval))
+                        raise ValueError("The value for 'inter_gene_max_space' option for system {0} "
+                                         "must be an integer, but you provided {1} on command line".format(system,
+                                                                                                           interval))
 
             if self.parser.has_option("system", "min_mandatory_genes_required"):
                 options['min_mandatory_genes_required'] = {}
@@ -459,13 +464,14 @@ class Config(object):
                 it = iter(min_mandatory_genes_required)
                 try:
                     for system in it:
-                        quorum_mandatory_genes = it.next()
+                        quorum_mandatory_genes = next(it)
                         try:
                             quorum_mandatory_genes = int(quorum_mandatory_genes)
                             options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {} "
-                                             "must be an integer, but you provided {} in the configuration file".format(system, quorum_mandatory_genes))
+                            raise ValueError("The value for 'min_mandatory_genes_required' "
+                                             "option for system {} must be an integer, but you provided {} "
+                                             "in the configuration file".format(system, quorum_mandatory_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of "
                                      "systems and corresponding 'min_mandatory_genes_required' separated by spaces")
@@ -481,7 +487,8 @@ class Config(object):
                         options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
                     except ValueError:
                         raise ValueError("The value for 'min_mandatory_genes_required' option for system {} must be an "
-                                         "integer, but you provided {} on command line".format(system, quorum_mandatory_genes))
+                                         "integer, but you provided {} on command line".format(system,
+                                                                                               quorum_mandatory_genes))
 
             if self.parser.has_option("system", "min_genes_required"):
                 options['min_genes_required'] = {}
@@ -490,13 +497,14 @@ class Config(object):
                 it = iter(min_genes_required)
                 try:
                     for system in it:
-                        quorum_genes = it.next()
+                        quorum_genes = next(it)
                         try:
                             quorum_genes = int(quorum_genes)
                             options['min_genes_required'][system] = quorum_genes
                         except ValueError:
-                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an "
-                                             "integer, but you provided {1} in the configuration file".format(system, quorum_genes))
+                            raise ValueError("The value for 'min_genes_required' option for system {0} "
+                                             "must be an integer, but you provided {1} "
+                                             "in the configuration file".format(system, quorum_genes))
                 except StopIteration:
                     raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and "
                                      "corresponding 'min_genes_required' separated by spaces")
@@ -521,7 +529,7 @@ class Config(object):
                 it = iter(max_nb_genes)
                 try:
                     for system in it:
-                        max_genes = it.next()
+                        max_genes = next(it)
                         try:
                             max_genes = int(max_genes)
                             options['max_nb_genes'][system] = max_genes
@@ -580,7 +588,8 @@ class Config(object):
                     try:
                         options['e_value_res'] = float(cmde_line_opt['e_value_res'])
                     except ValueError:
-                        msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(cmde_line_opt['e_value_res'])
+                        msg = "Invalid value for hmmer e_value_res :{0}: " \
+                              "(float expected)".format(cmde_line_opt['e_value_res'])
                         raise ValueError(msg)
                 else:
                     options['e_value_res'] = float(self._defaults['e_value_res'])
@@ -596,7 +605,8 @@ class Config(object):
                     try:
                         options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
                     except ValueError:
-                        msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(cmde_line_opt['i_evalue_sel'])
+                        msg = "Invalid value for hmmer i_evalue_sel :{0}: " \
+                              "(float expected)".format(cmde_line_opt['i_evalue_sel'])
                         raise ValueError(msg)
                 else:
                     options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
@@ -616,7 +626,8 @@ class Config(object):
                     try:
                         options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
                     except ValueError:
-                        msg = "Invalid value for hmmer coverage_profile :{}: (float expected)".format(cmde_line_opt['coverage_profile'])
+                        msg = "Invalid value for hmmer coverage_profile :{}: " \
+                              "(float expected)".format(cmde_line_opt['coverage_profile'])
                         raise ValueError(msg)
                 else:
                     options['coverage_profile'] = float(self._defaults['coverage_profile'])
@@ -709,6 +720,7 @@ class Config(object):
                     relative_path = self._defaults['relative_path']
             try:
                 options['relative_path'] = bool(relative_path)
+                msg = "The relative path must be a boolean: {}".format(relative_path)
             except ValueError:
                 raise ValueError(msg)
 
@@ -760,7 +772,7 @@ class Config(object):
                                 s += " {0} {1}".format(system, space)
                             parser.set(section, directive, s)
                         elif directive != 'log_file' or \
-                                        self.options[directive] != os.path.join(self.options['working_dir'], 'macsyfinder.log'):
+                                self.options[directive] != os.path.join(self.options['working_dir'], 'macsyfinder.log'):
                             parser.set(section, directive, str(self.options[directive]))
                 except KeyError:
                     pass
