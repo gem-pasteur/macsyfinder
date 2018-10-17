@@ -3,7 +3,7 @@ import sys
 import shutil
 import unittest
 import platform
-from StringIO import StringIO
+from io import StringIO
 from contextlib import contextmanager
 import hashlib
 from functools import partial
