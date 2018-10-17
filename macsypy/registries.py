@@ -162,6 +162,14 @@ class ModelLocation(object):
                     all_profiles[base] = profile_path if self.cfg.relative_path else os.path.abspath(profile_path)
         return all_profiles
 
+    def __lt__(self, other):
+        return self.name < other.name
+
+    def __gt__(self, other):
+        return self.name > other.name
+
+    def __eq__(self, other):
+        return self.name == other.name
 
     def get_definition(self, fqn):
         """
@@ -241,7 +249,7 @@ class ModelLocation(object):
         :return:
         """
         if self._definitions is not None:
-            return self._definitions.values()
+            return list(self._definitions.values())
         else:
             return {}
 
@@ -316,6 +324,12 @@ class DefinitionLocation(dict):
                self.path == other.path and \
                self.subdefinitions == other.subdefinitions
 
+    def __lt__(self, other):
+        return self.fqn < other.fqn
+
+    def __gt__(self, other):
+        return self.fqn > other.fqn
+
 
 class ModelRegistry(object):
     """
@@ -350,7 +364,7 @@ class ModelRegistry(object):
         :returns: the list of models
         :rtype: list of :class:`ModelLocation` object
         """
-        return self._registry.values() # level 0 like TXSS ou CRISPR_Cas
+        return sorted(list(self._registry.values()))  # level 0 like TXSS ou CRISPR_Cas
 
 
     def __getitem__(self, name):
@@ -372,12 +386,12 @@ class ModelRegistry(object):
 
         def model_to_str(model, pad):
             if model.subdefinitions:
-                model_s = "{}\{}\n".format(' ' * pad, model.name)
+                model_s = "{}/{}\n".format(' ' * pad, model.name)
                 pad = pad + len(model.name) + 1
-                for submodel in model.subdefinitions.values():
+                for submodel in sorted(model.subdefinitions.values()):
                     model_s += model_to_str(submodel, pad)
             else:
-                model_s = "{}\{}\n".format(' ' * pad, model.name)
+                model_s = "{}/{}\n".format(' ' * pad, model.name)
             return model_s
 
         for model in self.models():
