@@ -1,10 +1,10 @@
-simple
-       \def_1
-       \def_2
 complex
-        \subdef_2
-                 \def_2_1
-                 \def_2_2
-        \subdef_1
-                 \def_1_2
-                 \def_1_1
+        /subdef_2
+                 /def_2_1
+                 /def_2_2
+        /subdef_1
+                 /def_1_1
+                 /def_1_2
+simple
+       /def_2
+       /def_1

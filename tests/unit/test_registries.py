@@ -18,6 +18,7 @@ import tempfile
 import logging
 import copy
 import unittest
+import imp
 
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
@@ -139,22 +140,22 @@ class ModelLocationTest(MacsyTest):
     def test_ModelLocation(self):
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, path='foo', profile_dir='bar')
-        self.assertEqual(cm.exception.message,
+        self.assertEqual(str(cm.exception),
                          "'path' and 'profile_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, path='foo', def_dir='bar')
-        self.assertEqual(cm.exception.message,
+        self.assertEqual(str(cm.exception),
                          "'path' and 'def_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, def_dir='foo')
-        self.assertEqual(cm.exception.message,
+        self.assertEqual(str(cm.exception),
                          "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         with self.assertRaises(MacsypyError) as cm:
             ModelLocation(self.cfg, profile_dir='foo')
-        self.assertEqual(cm.exception.message,
+        self.assertEqual(str(cm.exception),
                          "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         # test new way to specify profiles and defitions
@@ -212,13 +213,13 @@ class ModelLocationTest(MacsyTest):
 
         def_fqn = '{}{}{}'.format(model_loc.name,
                                   registries._separator,
-                                  os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
-        defloc_expected_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
+                                  os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
+        defloc_expected_name = os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0]
         defloc_expected = DefinitionLocation(name=defloc_expected_name,
                                              path=os.path.join(simple_dir, 'definitions', defloc_expected_name + '.xml'))
         defloc_expected.fqn = "{}{}{}".format(model_loc.name,
                                               registries._separator,
-                                              os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
+                                              os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
 
         defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
@@ -247,8 +248,8 @@ class ModelLocationTest(MacsyTest):
 
         function_orig = self.cfg.old_data_organization
         self.cfg.old_data_organization = lambda : True
-        def_fqn = "definitions/{0}".format(os.path.splitext(self.simple_models['definitions'].keys()[0])[0])
-        def_name = os.path.splitext(self.simple_models['definitions'].keys()[0])[0]
+        def_fqn = "definitions/{0}".format(os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
+        def_name = os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0]
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
         defloc_received = model_loc.get_definition(def_fqn)
@@ -306,9 +307,9 @@ class ModelLocationTest(MacsyTest):
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
-        with self.assertRaises(ValueError) as e:
+        with self.assertRaises(ValueError) as ctx:
             model_loc.get_all_definitions(root_def_name='foobar')
-        self.assertEqual(e.exception.message, "root_def_name foobar does not match with any definitions")
+        self.assertEqual(str(ctx.exception), "root_def_name foobar does not match with any definitions")
 
 
     def test_get_profile(self):
@@ -485,13 +486,10 @@ class ModelRegistryTest(MacsyTest):
     def test_ModelRegistry(self):
 
         # new way models organization
-
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
 
-
         # old way models organization
-
         profile_dir = os.path.join(self.simple_dir, 'profiles')
         def_dir = os.path.join(self.simple_dir, 'definitions')
 
@@ -501,7 +499,7 @@ class ModelRegistryTest(MacsyTest):
         cfg_old.options['def_dir'] = def_dir
 
         sr = ModelRegistry(cfg_old)
-        self.assertListEqual(sr._registry.keys(), ['definitions'])
+        self.assertListEqual(list(sr._registry.keys()), ['definitions'])
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
@@ -515,26 +513,3 @@ class ModelRegistryTest(MacsyTest):
     def test_str(self):
         sr = ModelRegistry(self.cfg)
         self.assertEqual(str(sr), self.output_control_str('001'))
-
-
-class ModuleScopeTest(MacsyTest):
-
-    @unittest.skip('FIXME')
-    def test_module_scope(self):
-
-        # backup env
-        macsy_home_missing = ('MACSY_HOME' not in os.environ)
-        if not macsy_home_missing:
-            macsy_home_orig = os.environ['MACSY_HOME']
-
-        # test
-        os.environ['MACSY_HOME'] = 'foo'
-        reload(registries)
-        self.assertEqual(registries._prefix_data, 'foo/data')
-
-        # restore env
-        if macsy_home_missing:
-            del os.environ['MACSY_HOME']
-        else:
-            os.environ['MACSY_HOME'] = macsy_home_orig
-        reload(registries)
