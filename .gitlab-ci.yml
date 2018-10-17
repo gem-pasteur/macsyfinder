@@ -9,22 +9,22 @@ variables:
 
 testing:
   stage: test
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep_py3_6
 
   script:
-    - python ${CI_PROJECT_DIR}/tests.py -vvv
+    - python3.6 ${CI_PROJECT_DIR}/tests.py -vvv
   except:
     - /^feat.*$/
     - /^fix.*$/
 
 coverage:
   stage: coverage
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage_py3_6
   script:
     - cd ${CI_PROJECT_DIR}
-    - python-coverage run --source=macsypy tests.py --unit
-    - python-coverage html
-    - python-coverage report
+    - python3.6-coverage run --source=macsypy tests.py --unit
+    - python3.6-coverage html
+    - python3.6-coverage report
 
   artifacts:
     paths:
@@ -35,7 +35,7 @@ coverage:
 
 pages:
   stage: pages
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages_py3_6
   dependencies:
     - coverage
   script:
