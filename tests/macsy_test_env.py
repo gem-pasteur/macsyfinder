@@ -111,6 +111,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
     def load(self, env_id):
         l = logging.getLogger()
+        logging._handlers.clear()                                                                                                                                                                                             
+        logging.shutdown(logging._handlerList[:])                                                                                                                                                                             
+        del logging._handlerList[:]                                                                                                                                                                                           
         l.manager.loggerDict.clear()
 
         # add only one handler to the macsypy logger
