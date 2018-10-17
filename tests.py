@@ -117,7 +117,7 @@ if __name__ == '__main__':
     result_all_tests = []
 
     if args.unit:
-        print("\n", "#" * 70)
+        print("\n", "#" * 70, sep='')
         print("Test Runner: Unit tests")
         print("#" * 70)
 
@@ -131,7 +131,7 @@ if __name__ == '__main__':
         sys.path = old_path
 
     if args.functional:
-        print("\n", "#" * 70)
+        print("\n", "#" * 70, sep='')
         print("Test Runner: Functional tests")
         print("#" * 70)
 
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         sys.path = old_path
 
     if args.integration:
-        print("\n", "#" * 70)
+        print("\n", "#" * 70, sep='')
         print("Test Runner: Integration tests")
         print("#" * 70)
         old_path = sys.path
