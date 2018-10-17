@@ -130,16 +130,16 @@ coverage_profile = {}
 coverage_profile = {}
 """.format(coverage_profile))
                 with self.assertRaises(ValueError) as ctx:
-                    cfg = Config(cfg_file=cfg_file,
-                                 sequence_db=self.find_data("base", "test_base.fa"),
-                                 db_type='gembase',
-                                 res_search_dir=self.tmp_dir)
+                    self.cfg = Config(cfg_file=cfg_file,
+                                      sequence_db=self.find_data("base", "test_base.fa"),
+                                      db_type='gembase',
+                                      res_search_dir=self.tmp_dir)
                 self.assertEqual(str(ctx.exception), "Invalid value for hmmer coverage_profile :foo: (float expected)")
             finally:
                 try:
                     os.unlink(cfg_file)
                     self.tearDown()
-                except:
+                except Exception:
                     pass
 
 
@@ -1052,7 +1052,7 @@ min_mandatory_genes_required = Foo/T2SS
             shutil.rmtree(out_dir)
         except:
             pass
-        os.makedirs(out_dir, 0775)
+        os.makedirs(out_dir, 0o775)
         f = open(os.path.join(out_dir, 'fake'), 'w')
         f.close()
         kwargs = {'cfg_file': "nimportnaoik",
@@ -1065,7 +1065,7 @@ min_mandatory_genes_required = Foo/T2SS
         shutil.rmtree(out_dir)
         self.tearDown()
 
-        os.makedirs(out_dir, 0775)
+        os.makedirs(out_dir, 0o775)
         self.cfg = Config(cfg_file="nimportnaoik",
                           sequence_db=self.find_data("base", "test_base.fa"),
                           db_type='gembase',
