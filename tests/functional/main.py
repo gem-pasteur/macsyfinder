@@ -49,7 +49,6 @@ def run(macsy_home, tests, verbosity=0):
     return res
 
 
-
 if __name__ == '__main__':
 
     if 'MACSY_HOME' in os.environ:
@@ -73,4 +72,3 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     res = run(MACSY_HOME, args.tests, args.verbosity)
-    
