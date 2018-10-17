@@ -16,7 +16,13 @@ from macsypy.system_parser import SystemParser
 from tests import MacsyTest
 
 
-class MacsyTestEnvSnippet():
+class MacsyTestEnvSnippet(object):
+
+    def __init__(self):
+        self.out_dir = None
+        self.cfg = None
+        self.system = None
+        self.all_hits = []
 
     def build_config(self, previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models"):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
@@ -35,16 +41,14 @@ class MacsyTestEnvSnippet():
                           log_file=os.devnull)
 
         idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        idx.build()
+
 
     def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models", model_fqn="set_1/T9SS"):
         self.build_config(previous_run=previous_run, models_dir=models_dir)
-
         parser = SystemParser(self.cfg, system_bank, gene_bank)
         parser.parse([model_fqn])
-
         self.system = system_bank[model_fqn]
-
         genes = self.system.mandatory_genes + self.system.accessory_genes + self.system.forbidden_genes
 
         ex_genes = []
@@ -55,11 +59,8 @@ class MacsyTestEnvSnippet():
                 a_s = g.get_analogs()
                 ex_genes += a_s
         all_genes = (genes + ex_genes)
-
         all_reports = search_genes(all_genes, self.cfg)
-
         all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
-
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         self.all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
@@ -99,6 +100,15 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                Index not created.
     """
 
+
+    def __init__(self):
+        super(MacsyTestEnv, self).__init__()
+        self.model_name = None
+        self.models_location = None
+        self.rep_info = None
+        self.cluster = None
+        self.system_occurence = None
+
     def load(self, env_id):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
@@ -127,37 +137,27 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
 
             idx = Indexes(self.cfg)
-            idx._build_my_indexes()
+            idx.build()
 
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'foo'
             self.models_location = models_registry[self.model_name]
+
         elif env_id == "env_002":
             self.build_hits()
-
-            # debug
-            # print [h.gene.name for h in self.all_hits]
-
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
-
             (clusters, multi_syst_genes) = build_clusters(self.all_hits, [self.system], self.rep_info)
             self.cluster = clusters.clusters[0]
-
             systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
-
             self.system_occurence = systems_occurences_list[0]
 
-            # debug
-            # print system_occurence.valid_hits
         elif env_id == "env_003":
             self.build_hits()
-
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
         elif env_id == "env_004":
             self.build_hits()
-
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
@@ -168,9 +168,11 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_007":
             self.build_hits()
         elif env_id == "env_008":
-            self.build_config(previous_run="tests/data/data_set_1/complete_run_results", models_dir="tests/data/data_set_1/models")
+            self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
+                              models_dir="tests/data/data_set_1/models")
         elif env_id == "env_009":
-            self.build_hits(previous_run="tests/data/data_set_3/results", models_dir="tests/data/data_set_3/models", model_fqn="set_1/T4P")
+            self.build_hits(previous_run="tests/data/data_set_3/results",
+                            models_dir="tests/data/data_set_3/models", model_fqn="set_1/T4P")
 
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
@@ -200,7 +202,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
-        except:
+        except Exception:
             pass
 
         # reset global vars
@@ -233,7 +235,10 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             raise Exception('Test environment not found ({})'.format(env_id))
 
 
-class MacsyEnvManager():
+class MacsyEnvManager(object):
+
+    def __init__(self):
+        self.macsy_test_env = None
 
     def load_env(self, env_id):
         self.macsy_test_env = MacsyTestEnv()
