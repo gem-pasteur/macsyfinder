@@ -12,8 +12,6 @@
 ################################################################################
 
 
-
-
 class MacsypyError(Exception):
     """
     The base class for MacSyFinder specific exceptions.
