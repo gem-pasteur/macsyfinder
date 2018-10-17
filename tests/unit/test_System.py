@@ -312,7 +312,6 @@ class Test(MacsyTest):
             meth(gene)
             self.assertEqual(analog, system.get_gene(analog_name))
 
-
     def test_get_gene_ref(self):
         system = System(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
