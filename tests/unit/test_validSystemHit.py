@@ -45,5 +45,5 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_output_system_header(self):
         hit = self.macsy_test_env.all_hits[0]
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
-        header_str_ = valid_system_hit.output_system_header()
-        self.assertEqual(str(header_str_), self.output_control_str('001'))
+        header_str = valid_system_hit.output_system_header()
+        self.assertEqual(header_str, self.output_control_str('001'))
