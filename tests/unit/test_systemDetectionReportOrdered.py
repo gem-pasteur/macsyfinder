@@ -25,12 +25,10 @@ class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
         self.load_env("env_002")
-
         self.test_dir = tempfile.mkdtemp()
 
     def tearDown(self):
         self.unload_env("env_002")
-
         shutil.rmtree(self.test_dir)
 
     def test_counter_output(self):
