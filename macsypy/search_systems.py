@@ -20,6 +20,7 @@ from collections import Counter, OrderedDict
 import itertools
 import operator
 import json
+import functools
 
 from .macsypy_error import MacsypyError, SystemDetectionError
 from .database import RepliconDB
@@ -312,7 +313,7 @@ class Cluster(object):
             # Useless ?! Or change? 
             max_syst = 0
             tmp_syst_fqn = ""
-            for x, y in systems.iteritems():
+            for x, y in systems.items():
                 if y >= max_syst:
                     tmp_syst_fqn = x
                     max_fqn = y
@@ -344,7 +345,7 @@ class Cluster(object):
                 # Maybe just not add the system to the list if exchangeable?
                 if len(systems_compat.keys()) == 1:
                     self._state = "clear"
-                    syst = systems_compat.keys()[0]
+                    syst = list(systems_compat.keys())[0]
                     #print syst
                     self._putative_system = syst
                     # Store only compatible systems that are searched for !!
@@ -555,17 +556,17 @@ class SystemOccurence(object):
         """
         out = ""
         if self.mandatory_genes:
-            for k, g in self.mandatory_genes.iteritems():
+            for k, g in self.mandatory_genes.items():
                 out += "{0}\t{1:d}\n".format(k, g)
         if self.accessory_genes:
-            for k, g in self.accessory_genes.iteritems():
+            for k, g in self.accessory_genes.items():
                 out += "{0}\t{1:d}\n".format(k, g)
         if self.forbidden_genes:
-            for k, g in self.forbidden_genes.iteritems():
+            for k, g in self.forbidden_genes.items():
                 out += "{0}\t{1:d}\n".format(k, g)
         # NEW
         if self.multi_syst_genes:
-            for k, g in self.multi_syst_genes.iteritems():
+            for k, g in self.multi_syst_genes.items():
                 out += "{0}\t{1:d}\n".format(k, g)
         return out
 
@@ -708,7 +709,7 @@ class SystemOccurence(object):
         :rtype: list
         """
         missing = []
-        for k, v in gene_dict.iteritems():
+        for k, v in gene_dict.items():
             if v == 0:
                 missing.append(k)
         return missing
@@ -1001,11 +1002,11 @@ class SystemOccurence(object):
         When a decision is made, the status (self.status) of the 
         :class:`macsypy.search_systems.SystemOccurence` is set either to:
 
-            - "\single_locus\" when a complete system in the form of a single cluster was found
-            - "\multi_loci\" when a complete system in the form of several clusters was found
-            - "\uncomplete\" when no system was assessed (quorum not reached)
-            - "\empty\" when no gene for this system was found
-            - "\exclude\" when no system was assessed (at least one forbidden gene was found)
+            - \"single_locus\" when a complete system in the form of a single cluster was found
+            - \"multi_loci\" when a complete system in the form of several clusters was found
+            - \"uncomplete\" when no system was assessed (quorum not reached)
+            - \"empty\" when no gene for this system was found
+            - \"exclude\" when no system was assessed (at least one forbidden gene was found)
 
         :return: a printable message of the output decision with this SystemOccurrence
         :rtype: string
@@ -1136,9 +1137,7 @@ class validSystemHit(object):
 
 
 
-class systemDetectionReport(object):
-
-    __metaclass__ = abc.ABCMeta
+class systemDetectionReport(object, metaclass=abc.ABCMeta):
 
     def __init__(self, systems_occurrences_list, cfg):
         self._systems_occurrences_list = systems_occurrences_list
@@ -1414,8 +1413,8 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 if pos_min < pos_max:
                     pos_in_bk_2_display = range(pos_min, pos_max + 1)
                 else:
-                    before_orig = range(pos_min, rep_info.max + 1)
-                    after_orig = range(rep_info.min, pos_max + 1)
+                    before_orig = list(range(pos_min, rep_info.max + 1))
+                    after_orig = list(range(rep_info.min, pos_max + 1))
                     pos_in_bk_2_display = before_orig + after_orig
                 pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
                 for curr_position in pos_in_rep_2_display:
@@ -1522,6 +1521,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
         :type path: string
         """
         def cmp_so(so, vh_1, vh_2):
+            def cmp(x, y): return (x > y) - (x < y) # https://stackoverflow.com/questions/37603757/how-to-convert-sort-using-cmp-from-python-2-to-python-3
             gene_1 = so.get_gene_ref(vh_1.gene)
             if not gene_1:
                 gene_1 = vh_1.gene
@@ -1562,7 +1562,7 @@ class systemDetectionReportUnordered(systemDetectionReport):
                 system['replicon'] = {}
                 system['replicon']['name'] = so.valid_hits[0].replicon_name # Ok, Otherwise the object has a field self.replicon_name
                 system['genes'] = []
-                so.valid_hits.sort(cmp=lambda x, y: cmp_so(so, x, y))
+                so.valid_hits.sort(key=functools.cmp_to_key(lambda x, y: cmp_so(so, x, y)))
                 for valid_hit in so.valid_hits:
                     gene = {}
                     gene['id'] = valid_hit.id
@@ -1660,7 +1660,7 @@ def disambiguate_cluster(cluster):
                 #print cur_cluster
                 res_clusters.append(cur_cluster)
                 for syst in cur_compatible: # Good list of compatible??
-                    if not counter_genes_compat_systems.has_key(syst.fqn):
+                    if syst.fqn not in counter_genes_compat_systems:
                         counter_genes_compat_systems[syst.fqn] = len(cur_cluster.hits)
                     else:
                         counter_genes_compat_systems[syst.fqn] += len(cur_cluster.hits)
@@ -1673,7 +1673,7 @@ def disambiguate_cluster(cluster):
                     #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
                     h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
                     for syst in h_compat:
-                        if not counter_genes_compat_systems.has_key(syst.fqn):
+                        if syst.fqn not in counter_genes_compat_systems:
                             counter_genes_compat_systems[syst.fqn] = 1
                         else:
                             counter_genes_compat_systems[syst.fqn] += 1
@@ -1691,7 +1691,7 @@ def disambiguate_cluster(cluster):
         res_clusters.append(cur_cluster) 
         for syst in cur_compatible: # Good list of compatible??
             #print syst.name
-            if not counter_genes_compat_systems.has_key(syst.fqn):
+            if syst.fqn not in counter_genes_compat_systems:
                 counter_genes_compat_systems[syst.fqn] = len(cur_cluster.hits)
             else:
                 counter_genes_compat_systems[syst.fqn] += len(cur_cluster.hits)
@@ -1703,21 +1703,21 @@ def disambiguate_cluster(cluster):
             h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
             for syst in h_compat:
                 #print syst.name
-                if not counter_genes_compat_systems.has_key(syst.fqn):
+                if syst.fqn not in counter_genes_compat_systems:
                     counter_genes_compat_systems[syst.fqn] = 1
                 else:
                     counter_genes_compat_systems[syst.fqn] += 1
-    print "\n---Counter compatible systems ! ---\n{0}".format(counter_genes_compat_systems)
+    print("\n---Counter compatible systems ! ---\n{0}".format(counter_genes_compat_systems))
 
     # Now final check: return only sub-clusters that consist in hits from systems represented at a single locus in the cluster to disambiguate.
     real_res = []
     for r in res_clusters:
-        print "\nres_cluster : "
-        print r
+        print("\nres_cluster : ")
+        print(r)
         nb_genes = len(r.hits)
-        print nb_genes
+        print(nb_genes)
         store = True
-        print "r.compatible_systems", r.compatible_systems
+        print("r.compatible_systems", r.compatible_systems)
         for c in r.compatible_systems:
             if c in counter_genes_compat_systems:
                 if counter_genes_compat_systems[c] != nb_genes:
