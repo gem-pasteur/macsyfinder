@@ -408,6 +408,6 @@ class Test(MacsyTest, MacsyEnvManager):
         self.macsy_test_env.cfg.options['db_type'] = "foobar"
         with self.assertRaises(ValueError) as context:
             search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-        self.assertEqual(context.exception.message, 'Invalid database type. ')
+        self.assertEqual(str(context.exception), 'Invalid database type. ')
 
         self.unload_env("env_005")
