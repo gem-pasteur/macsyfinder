@@ -253,7 +253,7 @@ class Test(MacsyTest, MacsyEnvManager):
         system_occurence.loci_positions = [(10, 5), (20, 10)]
         with self.assertRaises(SystemDetectionError) as context:
             length = system_occurence.compute_system_length(rep_info)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Inconsistency in locus positions in the case of a linear replicon. "
                          "The begin position of a locus cannot be higher than the end position. \n"
                          "Problem with locus found with positions begin: 10 end: 5")
