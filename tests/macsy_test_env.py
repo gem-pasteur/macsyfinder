@@ -200,9 +200,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
+        MacsyTest.close_loggers_filehandles()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except Exception:
