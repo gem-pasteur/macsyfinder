@@ -10,6 +10,7 @@ from functools import partial
 import tempfile
 import uuid
 import inspect
+import logging
 
 
 def path_to_modulename(p):
@@ -171,6 +172,12 @@ class MacsyTest(unittest.TestCase):
             shutil.rmtree(path)
         except:
             pass
+
+    @staticmethod
+    def close_loggers_filehandles():
+        logging.shutdown()
+        l = logging.getLogger()
+        l.manager.loggerDict.clear()
 
     @staticmethod
     def md5sum(file_=None, str_=None):
