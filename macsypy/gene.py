@@ -249,6 +249,13 @@ class Gene(object):
         return self.name == gene.name
 
 
+    def __hash__(self):
+        # needed to be hashable in Py3 when __eq__ is defined
+        # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable  
+        
+        return id(self)
+
+
     def is_homolog(self, gene):
         """
         :return: True if the two genes are homologs, False otherwise.
