@@ -12,7 +12,8 @@ testing:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep_py3_6
 
   script:
-    - python3.6 ${CI_PROJECT_DIR}/tests.py -vvv
+    - cd ${CI_PROJECT_DIR}
+    - python3.6 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
     - /^fix.*$/
@@ -22,7 +23,7 @@ coverage:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage_py3_6
   script:
     - cd ${CI_PROJECT_DIR}
-    - python3.6-coverage run --source=macsypy tests.py --unit
+    - python3.6-coverage run --source=macsypy tests/run_tests.py
     - python3.6-coverage html
     - python3.6-coverage report
 
