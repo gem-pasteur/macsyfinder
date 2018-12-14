@@ -55,6 +55,7 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
 
+
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
         # in shutil.rmtree calls in Windows
@@ -66,6 +67,7 @@ class Test(MacsyTest):
         except:
             pass
 
+
     def test_add_homolog(self):
         system_foo = System(self.cfg, "foo", 10)
         system_bar = System(self.cfg, "bar", 10)
@@ -75,6 +77,7 @@ class Test(MacsyTest):
         gene.add_homolog(homolog)
         self.assertEqual(len(gene.homologs), 1)
         self.assertEqual(gene.homologs[0], homolog)
+
 
     def test_get_homologs(self):
         system_foo = System(self.cfg, "foo", 10)
@@ -87,6 +90,7 @@ class Test(MacsyTest):
         homolog_2 = Homolog(sctJ, gene)
         gene.add_homolog(homolog_2)
         self.assertEqual(gene.get_homologs(), [homolog_1, homolog_2])
+
 
     def test_is_homolog(self):
         system_foo = System(self.cfg, "foo", 10)
@@ -165,6 +169,7 @@ class Test(MacsyTest):
         self.assertFalse(gene.exchangeable)
         gene = Gene(self.cfg, 'sctJ', system_foo, self.models_location, exchangeable=True)
         self.assertTrue(gene.exchangeable)
+
 
     def test_multi_system(self):
         """
