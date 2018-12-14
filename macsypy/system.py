@@ -146,6 +146,10 @@ class System(object):
         return s
 
 
+    def __hash__(self):
+        return id(self)
+
+
     def __lt__(self, other):
         """
         :param other: the other system to compare
