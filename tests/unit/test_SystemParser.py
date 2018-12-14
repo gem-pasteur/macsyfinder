@@ -194,7 +194,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/fail_wo_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system definition 'fail_wo_presence': gene without presence")
 
 
@@ -202,7 +202,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/fail_invalid_presence']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system 'fail_invalid_presence' definition: presence value must be either "
                          "[mandatory, accessory, forbidden] not foo_bar")
 
@@ -210,14 +210,14 @@ class Test(MacsyTest):
         system_2_detect = ['foo/gene_no_name']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system definition 'gene_no_name': gene without a name")
 
     def test_invalid_aligned(self):
         system_2_detect = ['foo/invalid_aligned']
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          'Invalid system definition \'invalid_aligned\': invalid value for an attribute of gene '
                          '\'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
 
@@ -225,7 +225,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/invalid_homolog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system definition 'invalid_homolog': The gene 'foo_bar' described as "
                          "homolog of 'gspD' in system 'invalid_homolog' is not in the 'GeneBank' gene factory")
 
@@ -239,7 +239,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/invalid_analog']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system definition 'invalid_analog': The gene 'foo_bar' described as "
                          "analog of 'gspD' in system 'invalid_analog' is not in the 'GeneBank' gene factory")
 
@@ -253,7 +253,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_homolog_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Inconsistency in systems definitions: the gene 'sctJ' described as homolog of 'sctN' "
                          "with system_ref 'system_1' has an other system in bank (system_2)")
 
@@ -261,7 +261,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_analog_sys_ref']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Inconsistency in systems definitions: the gene 'sctJ' described as analog of 'sctN' "
                          "with system_ref 'system_3' has an other system in bank (system_4)")
 
@@ -269,13 +269,13 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_min_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          'system \'bad_min_genes_required\' is not consistent: min_genes_required 16 must be lesser '
                          'or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
     def test_bad_min_genes_required_2(self):
         system_2_detect = ['foo/bad_min_genes_required_2']
-        with self.assertRaisesRegexp(SyntaxError, "Invalid system definition (.*): "
+        with self.assertRaisesRegex(SyntaxError, "Invalid system definition (.*): "
                                                   "min_genes_required must be an integer: 16.5"):
             self.parser.parse(system_2_detect)
 
@@ -283,7 +283,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_min_mandatory_genes_required']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          'system \'bad_min_mandatory_genes_required\' is not consistent: min_genes_required 16 must '
                          'be lesser or equal than the number of "accessory" and "mandatory" components in the system: 6')
 
@@ -295,12 +295,12 @@ class Test(MacsyTest):
             # the last test : not(system.min_mandatory_genes_required <= system.min_genes_required)
             # seems to be useless
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "min_genes_required must be greater or equal than min_mandatory_genes_required")
 
     def test_bad_min_mandatory_genes_required_4(self):
         system_2_detect = ['foo/bad_min_mandatory_genes_required_4']
-        with self.assertRaisesRegexp(SyntaxError, "Invalid system definition (.*): "
+        with self.assertRaisesRegex(SyntaxError, "Invalid system definition (.*): "
                                                   "min_mandatory_genes_required must be an integer: 12.5"):
             self.parser.parse(system_2_detect)
 
@@ -309,7 +309,7 @@ class Test(MacsyTest):
         system_2_detect = ['foo/bad_min_mandatory_genes_required_3']
         with self.assertRaises(SystemInconsistencyError) as context:
             self.parser.parse(system_2_detect)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "system 'bad_min_mandatory_genes_required_3' is not consistent:"
                          " \"min_mandatory_genes_required\": 6 must be lesser or equal than the number of \"mandatory\" "
                          "components in the system: 5")
@@ -320,7 +320,7 @@ class Test(MacsyTest):
         with self.assertRaises(SyntaxError) as context:
             self.parser.parse([system_2_detect])
         model_name, def_name = system_2_detect.split('/')
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Invalid system definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(
                              os.path.join(self.cfg.models_dir,
                                           model_name,
