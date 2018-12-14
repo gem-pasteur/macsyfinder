@@ -101,7 +101,7 @@ class Test(MacsyTest, MacsyEnvManager):
         h3.replicon_name = 'bar'
         with self.assertRaises(SystemDetectionError) as context:
             cluster.add(h3)
-        self.assertEqual(context.exception.message,
+        self.assertEqual(str(context.exception),
                          "Attempting to gather in a cluster hits from different replicons ! ")
 
         self.unload_env("env_007")
@@ -218,7 +218,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
         cluster = Cluster([system_1, system_2])
 
-        for id, h in hits.iteritems():
+        for h in hits.values():
             cluster.add(h)
 
         cluster.save()
