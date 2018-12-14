@@ -23,7 +23,7 @@ from itertools import groupby
 from .database import Indexes, RepliconDB
 
 
-class HMMReport(object):
+class HMMReport(object, metaclass=abc.ABCMeta):
     """
     Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,
     after having applied a hit filtering.
@@ -31,8 +31,6 @@ class HMMReport(object):
     depending on whether the input sequence dataset is "ordered" ("gembase" or "ordered_replicon" db_type)
     or not ("unordered" or "unordered_replicon" db_type).
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, gene, hmmer_output, cfg):
         """
@@ -157,6 +155,7 @@ class HMMReport(object):
             hit_id = line.split()[1]
         return hit_id
 
+
     def _parse_hmm_body(self, hit_id, gene_profile_lg, seq_lg, coverage_threshold, replicon_name,
                         position_hit, i_evalue_sel, b_grp):
         """
@@ -183,7 +182,7 @@ class HMMReport(object):
         :rtype: list of :class:`macsypy.report.Hit` objects
 
         """
-        first_line = b_grp.next()
+        first_line = next(b_grp)
         if not first_line.startswith('   #    score'):
             return []
         else:
@@ -259,7 +258,7 @@ class GeneralHMMReport(HMMReport):
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
-                hmm_hits.next()
+                next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
@@ -267,7 +266,7 @@ class GeneralHMMReport(HMMReport):
                     # replicon_name = self.cfg. # Define a variable in further devt
                     replicon_name = "Unordered"
 
-                    body = hmm_hits.next()
+                    body = next(hmm_hits)
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                              replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
@@ -305,13 +304,13 @@ class OrderedHMMReport(HMMReport):
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
-                hmm_hits.next()
+                next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
                     replicon_name = RepliconDB.ordered_replicon_name
 
-                    body = hmm_hits.next()
+                    body = next(hmm_hits)
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                              replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
@@ -348,12 +347,12 @@ class GembaseHMMReport(HMMReport):
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
-                hmm_hits.next()
+                next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
                     seq_lg, position_hit = my_db[hit_id]
                     replicon_name = "_".join(hit_id.split('_')[:-1])
-                    body = hmm_hits.next()
+                    body = next(hmm_hits)
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                              replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
@@ -425,14 +424,14 @@ class Hit(object):
                                                                              begin_match=self.begin_match,
                                                                              end_match=self.end_match)
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         """
-        Compare two Hits. If the sequence identifier is the same, do the comparison on the score.
+        compare two Hits. If the sequence identifier is the same, do the comparison on the score.
         Otherwise, do it on alphabetical comparison of the sequence identifier.
 
         :param other: the hit to compare to the current object
         :type other: :class:`macsypy.report.Hit` object
-        :return: the result of the comparison
+        :return: True if self is < other, False otherwise
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene): 
@@ -442,9 +441,34 @@ class Hit(object):
                     other_g_name=other.gene.name,
                     other_sys_name=other.system.name,
                     id=self.id))
-            return cmp(self.score, other.score)
+            return self.score < other.score
         else:
-            return cmp(self.id, other.id)
+            return self.id < other.id
+
+
+    def __gt__(self, other):
+        """
+        compare two Hits. If the sequence identifier is the same, do the comparison on the score.
+        Otherwise, do it on alphabetical comparison of the sequence identifier.
+
+        :param other: the hit to compare to the current object
+        :type other: :class:`macsypy.report.Hit` object
+        :return: True if self is > other, False otherwise
+        """
+        if self.id == other.id:
+            if not self.gene.is_homolog(other.gene):
+                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(\
+                    g_name=self.gene.name,
+                    sys_name=self.system.name,
+                    other_g_name=other.gene.name,
+                    other_sys_name=other.system.name,
+                    id=self.id))
+            return self.score > other.score
+        else:
+            return self.id > other.id
+
+
+
  
     def __eq__(self, other):
         """
