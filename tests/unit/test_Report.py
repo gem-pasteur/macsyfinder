@@ -17,7 +17,7 @@ import shutil
 import tempfile
 import platform
 import logging
-from StringIO import StringIO
+from io import StringIO
 from itertools import groupby
 
 from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, GeneralHMMReport, Hit
@@ -252,8 +252,8 @@ class TestHMMReport(TestReport):
         def make_hmm_group(hmm_string):
             hmm_file = StringIO(hmm_string)
             hmm_hits = (x[1] for x in groupby(hmm_file, lambda l: l.startswith('>>')))
-            header = hmm_hits.next()
-            body = hmm_hits.next()
+            header = next(hmm_hits)
+            body = next(hmm_hits)
             return body
 
         system = System(self.cfg, "T2SS", 10)
@@ -308,13 +308,12 @@ class TestHMMReport(TestReport):
 """
         body = make_hmm_group(hmm)
         with self.assertRaises(ValueError) as ctx:
-            hits = report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+            report._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
         self.assertEqual(str(ctx.exception), """Invalid line to parse :   1 !  779.2   5.5  1.4e-237    foo       1     596 []     104     741 ..     104     741 .. 0.93
-:could not convert string to float: foo""")
+:could not convert string to float: 'foo'""")
 
 
 class TestGembaseHMMReport(TestReport):
-
 
     def test_extract(self):
         system = System(self.cfg, "T2SS", 10)
