@@ -369,7 +369,7 @@ if args.version:
         version = "NOT packaged, development version"
     else:
         version = macsypy.__version__
-    print >> sys.stderr, """Macsyfinder {0}
+    print("""Macsyfinder {0}
 Python {1}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
@@ -378,7 +378,8 @@ See the COPYING file for details.
 If you use this software please cite:
 Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
 MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
-PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version),
+          file=sys.stderr)
     sys.exit(0)
 
 if args.list_models:
@@ -387,7 +388,7 @@ if args.list_models:
                          profile_suffix=args.profile_suffix,
                          )
     registry = ModelRegistry(config)
-    print >> sys.stderr, registry
+    print(registry, file=sys.stderr)
     sys.exit(0)
 
 old_options = (args.def_dir, args.profile_dir, args.systems)
