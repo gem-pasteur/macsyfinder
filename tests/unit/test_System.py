@@ -363,3 +363,19 @@ sctC
 """
         self.assertEqual(str(system), exp_str)
 
+    def test_eq(self):
+        aa1 = System(self.cfg, "aaa", 10)
+        aa2 = System(self.cfg, "aaa", 10)
+        self.assertEqual(aa1, aa2)
+
+    def test_lt(self):
+        aaa = System(self.cfg, "aaa", 10)
+        zzz = System(self.cfg, "zzz", 10)
+        self.assertLess(aaa, zzz)
+
+    def test_gt(self):
+        aaa = System(self.cfg, "aaa", 10)
+        zzz = System(self.cfg, "zzz", 10)
+        self.assertGreater(zzz, aaa)
+
+

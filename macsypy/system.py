@@ -129,6 +129,7 @@ class System(object):
         self._accessory_genes = []
         self._forbidden_genes = []
 
+
     def __str__(self):
         s = "name: {}\n".format(self.name)
         s += "fqn: {}\n".format(self.fqn)
@@ -143,6 +144,36 @@ class System(object):
             s += "{}\n".format(g.name)
         s += "============== end pprint system ================\n"
         return s
+
+
+    def __lt__(self, other):
+        """
+        :param other: the other system to compare
+        :return: True if this fully qualified name is lesser than to other fully qualified name.
+                 False otherwise.
+        :rtype: boolean
+        """
+        return self.fqn < other.fqn
+
+
+    def __gt__(self, other):
+        """
+        :param other: the other system to compare
+        :return: True if this fully qualified name is greater than to other fully qualified name.
+                 False otherwise.
+        :rtype: boolean
+        """
+        return self.fqn > other.fqn
+
+
+    def __eq__(self, other):
+        """
+        :param other: the other system to compare
+        :return: True if this fully qualified name is equal to other fully qualified name.
+                 False otherwise.
+        :rtype: boolean
+        """
+        return self.fqn == other.fqn
 
 
     @property
