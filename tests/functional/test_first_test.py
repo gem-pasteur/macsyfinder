@@ -83,8 +83,7 @@ class Test(MacsyTest):
                                   )
         except Exception as err:
             msg = "macsyfinder execution failed: command = {0} : {1}".format(command, err)
-            print
-            print msg
+            print(msg)
             raise err
 
         macsy_process.wait()
