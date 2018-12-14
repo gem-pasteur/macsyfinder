@@ -13,7 +13,6 @@
 ################################################################################
 
 
-
 import os
 import sys
 import unittest
@@ -56,7 +55,7 @@ if __name__ == '__main__':
     if 'MACSY_HOME' in os.environ:
         MACSY_HOME = os.environ['MACSY_HOME']
     else:
-        MACSY_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", '..'))
+        MACSY_HOME = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     from argparse import ArgumentParser
     parser = ArgumentParser()
