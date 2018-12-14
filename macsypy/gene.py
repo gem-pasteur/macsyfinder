@@ -60,7 +60,7 @@ class GeneBank(object):
         """
         Return an iterator object on the genes contained in the bank
         """
-        return iter(list(self._genes_bank.values()))
+        return iter(self._genes_bank.values())
 
 
     def add_gene(self, gene):
@@ -574,6 +574,7 @@ class Profile(object):
                     msg = "Hmmer execution failed: command = {0} : {1}".format(command, err)
                     _log.critical(msg, exc_info=True)
                     raise err
+
 
                 hmmer.wait()
 
