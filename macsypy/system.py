@@ -53,14 +53,14 @@ class SystemBank(object):
         :return: True if the system is in the System factory, False otherwise
         :rtype: boolean
         """
-        return system in list(self._system_bank.values())
+        return system in self._system_bank.values()
 
 
     def __iter__(self):
         """
         Return an iterator object on the systems contained in the bank
         """
-        return iter(list(self._system_bank.values()))
+        return iter(self._system_bank.values())
 
 
     def __len__(self):
