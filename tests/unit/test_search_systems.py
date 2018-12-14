@@ -27,10 +27,12 @@ class Test(MacsyTest, MacsyEnvManager):
     def setUp(self):
         pass
 
+
     def tearDown(self):
 
         # reset static members (hacked in test_search_systems func)
         RepliconDB.ordered_replicon_name = 'UserReplicon'
+
 
     def test_build_clusters(self):
         self.load_env("env_003")
@@ -55,6 +57,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
         self.unload_env("env_003")
 
+
     def test_get_compatible_systems(self):
         self.load_env("env_003")
 
@@ -62,6 +65,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.assertEqual(inter, [3])
 
         self.unload_env("env_003")
+
 
     def test_get_best_hits(self):
         self.load_env("env_003")
@@ -92,6 +96,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.assertEqual(best_hits[0].gene.name, "T9SS_gldN_TIGR03523")
 
         self.unload_env("env_003")
+
 
     def test_disambiguate_cluster(self):
 
@@ -227,11 +232,11 @@ class Test(MacsyTest, MacsyEnvManager):
 
         self.unload_env("env_009")
 
+
     def test_analyze_clusters_replicon(self):
         def stringify(so_list):
             buffer_ = os.linesep.join([str(so) for so in so_list])
             return buffer_
-
         # case 1
 
         self.load_env("env_003")
@@ -334,8 +339,8 @@ class Test(MacsyTest, MacsyEnvManager):
 
         self.unload_env("env_004")
 
-    def test_search_systems(self):
 
+    def test_search_systems(self):
         # case 1
 
         self.load_env("env_003")
