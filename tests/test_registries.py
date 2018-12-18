@@ -434,7 +434,7 @@ class ModelRegistryTest(MacsyTest):
                           log_level=30,
                           log_file=log_file)
         self.tmp_dir = tempfile.mkdtemp()
-        self._prefix_data_ori = registries._prefix_data
+        self._prefix_data_ori = os.path.join(registries.__MACSY_DATA__, 'data')
         registries._prefix_data = self.tmp_dir
         self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
         os.makedirs(self.root_models_dir)
