@@ -15,21 +15,20 @@
 
 import os
 from macsypy.macsypy_error import MacsypyError
+from macsypy import __MACSY_DATA__
 
-_prefix_data = '$PREFIXDATA'
-if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
-    _prefix_data = os.path.join(os.environ['MACSY_HOME'], 'data')
+
 
 _separator = '/'
 
 
 def split_def_name(fqn):
     """
-    :param fqn: the fully quallified de name of a DefinitionLocation object
+    :param fqn: the fully qualified de name of a DefinitionLocation object
            the follow the schema model_name/<def_name>*/def_name
            for instance CRISPR-Cas/typing/cas
     :type fqn: string
-    :return: the list of coponents of the def path
+    :return: the list of components of the def path
              ['CRISPR-Cas', 'typing', 'cas']
     :rtype: list of string
     """
@@ -351,7 +350,7 @@ class ModelRegistry(object):
             if cfg.models_dir:
                 models_def_root = cfg.models_dir
             else:
-                models_def_root = os.path.join(_prefix_data, 'macsyfinder', 'models')
+                models_def_root = os.path.join(__MACSY_DATA__, 'data', 'models')
             for models_type in os.listdir(models_def_root):
                 model_path = os.path.join(models_def_root, models_type)
                 if os.path.isdir(model_path):

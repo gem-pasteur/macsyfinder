@@ -17,15 +17,8 @@ import sys
 import inspect
 from time import strftime
 from configparser import SafeConfigParser, NoSectionError, NoOptionError
+from macsypy import  __MACSY_CONF__
 
-_prefix_path = '$PREFIX'
-_prefix_conf = '$PREFIXCONF'
-_prefix_data = '$PREFIXDATA'
-
-if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
-    _prefix_path = os.environ['MACSY_HOME']
-    _prefix_conf = os.path.join(os.environ['MACSY_HOME'], 'etc')
-    _prefix_data = os.path.join(os.environ['MACSY_HOME'], 'data')
 
 import logging
 
@@ -49,7 +42,7 @@ class ConfigLight(object):
         elif cfg_file:
             config_files = [cfg_file]
         else:
-            config_files = [os.path.join(_prefix_conf, 'macsyfinder.conf'),
+            config_files = [os.path.join(__MACSY_CONF__, 'macsyfinder.conf'),
                             os.path.expanduser('~/.macsyfinder/macsyfinder.conf'),
                             'macsyfinder.conf']
 
@@ -222,7 +215,7 @@ class Config(object):
         elif cfg_file:
             config_files = [cfg_file]
         else:
-            config_files = [os.path.join(_prefix_conf, 'macsyfinder.conf'),
+            config_files = [os.path.join(__MACSY_CONF__, 'macsyfinder.conf'),
                             os.path.expanduser('~/.macsyfinder/macsyfinder.conf'),
                             'macsyfinder.conf']
         self._defaults = {'replicon_topology': 'circular',
