@@ -69,7 +69,8 @@ class install_lib(_install_lib):
 
         inst = self.distribution.command_options.get('install', {})
         _file = os.path.join('macsypy', '__init__.py')
-        subst_file(_file, {'MACSYDATA': os.path.join(get_install_data_dir(inst), 'macsyfinder')})
+        subst_file(_file, {'MACSYDATA': os.path.join(get_install_data_dir(inst), 'macsyfinder'),
+                           'MACSYCONF': os.path.join(get_install_conf_dir(inst), 'macsyfinder')})
 
         _install_lib.run(self)
 
@@ -240,13 +241,16 @@ except ImportError:
                   ImportWarning)
 
     def read_md(f):
-        return open(f, 'r').read()
+        import codecs
+        with codecs.open(f, 'r', encoding='utf8') as f:
+            text = f.read()
+        return text
 
 ###################################################
 # the configuration of the installer start bellow #
 ###################################################
 
-setup(name='MacSyFinder',
+setup(name='macsyfinder',
       version=mf_version,
       description="MacSyFinder: Detection of macromolecular systems in protein datasets using systems modelling and similarity search",
       long_description=read_md('README.md'),
@@ -277,14 +281,14 @@ setup(name='MacSyFinder',
       fix_prefix=['macsypy/__init__.py'],
       entry_points={
           'console_scripts': [
-              'macsyfinder=macsyfinder.scripts.macsyfinder:main',
+              'macsyfinder=macsypy.scripts.macsyfinder:main',
           ]
       },
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files=expand_data([('share/macsyfinder/data/', ['data']),
                               ('share/macsyfinder/doc/html', ['doc/build/html']),
-                              ('share/macsyfinder/doc/pdf', ['doc/build/latex/MacSyFinder.pdf'])
-                              ('etc/macsyfinder.conf', ['etc/macsyfinder.conf'])
+                              ('share/macsyfinder/doc/pdf', ['doc/build/latex/MacSyFinder.pdf']),
+                              ('etc/macsyfinder', ['etc/macsyfinder.conf'])
                               ]),
 
       cmdclass={'install_lib': install_lib},
