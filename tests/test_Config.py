@@ -181,7 +181,8 @@ coverage_profile = {}
                           db_type='gembase',
                           res_search_dir=self.tmp_dir
                           )
-        self.assertIsNone(self.cfg.models_dir)
+        self.assertEqual(self.cfg.models_dir,
+                         os.path.normpath(os.path.join(__file__, '..', '..', 'data', 'models')))
         self.tearDown()
 
         kwargs = {'cfg_file': "nimportnaoik",

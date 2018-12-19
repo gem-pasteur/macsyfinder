@@ -51,7 +51,8 @@ class TestConfigLight(MacsyTest):
 
     def test_models_dir(self):
         cfg = ConfigLight(cfg_file="nimportnaoik")
-        self.assertIsNone(cfg.models_dir)
+        self.assertEqual(cfg.models_dir,
+                         os.path.normpath(os.path.join(__file__, '..', '..', 'data', 'models')))
 
         models_dir = 'foo_bar_baz'
         cfg_file = os.path.join(tempfile.gettempdir(), 'test_macsy_config.cfg')
