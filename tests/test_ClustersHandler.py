@@ -16,7 +16,7 @@ from macsypy.database import RepliconInfo
 from macsypy.report import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
-from macsypy.macsypy_error import SystemDetectionError
+from macsypy.error import SystemDetectionError
 from tests import MacsyTest
 from tests.macsy_test_env import MacsyEnvManager
 

@@ -26,7 +26,7 @@ from macsypy.registries import ModelRegistry
 from macsypy.database import RepliconDB, Indexes
 from macsypy.search_genes import search_genes
 from macsypy.system_parser import SystemParser
-from macsypy.macsypy_error import SystemDetectionError
+from macsypy.error import SystemDetectionError
 from tests import MacsyTest
 from tests.macsy_test_env import MacsyEnvManager
 

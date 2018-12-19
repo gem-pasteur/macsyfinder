@@ -19,7 +19,7 @@ from macsypy.report import Hit
 from macsypy.system_parser import SystemParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
-from macsypy.macsypy_error import SystemDetectionError
+from macsypy.error import SystemDetectionError
 from tests import MacsyTest
 from tests.macsy_test_env import MacsyEnvManager
 

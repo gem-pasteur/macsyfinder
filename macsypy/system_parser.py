@@ -21,7 +21,7 @@ from .system import System
 from .gene import Gene
 from .gene import Homolog, Analog
 from .registries import ModelRegistry, split_def_name, join_def_path
-from .macsypy_error import MacsypyError, SystemInconsistencyError
+from .error import MacsypyError, SystemInconsistencyError
 
 
 class SystemParser(object):
@@ -357,7 +357,7 @@ class SystemParser(object):
         
         :param systems: the list of systems to check
         :type systems: list of `class:macsypy.system.System` object
-        :raise: :class:`macsypy.macsypy_error.SystemInconsistencyError` if one test fails
+        :raise: :class:`macsypy.error.SystemInconsistencyError` if one test fails
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)
           

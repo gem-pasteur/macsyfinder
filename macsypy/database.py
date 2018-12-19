@@ -21,7 +21,7 @@ import os.path
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
 from subprocess import Popen
-from .macsypy_error import MacsypyError
+from .error import MacsypyError
 
 
 def fasta_iter(fasta_file):

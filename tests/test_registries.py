@@ -23,7 +23,7 @@ import imp
 from macsypy.config import ConfigLight, Config
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry
-from macsypy.macsypy_error import MacsypyError
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 

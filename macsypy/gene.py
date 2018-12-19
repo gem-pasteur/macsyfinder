@@ -19,7 +19,7 @@ _log = logging.getLogger('macsyfinder.' + __name__)
 from subprocess import Popen
 from threading import Lock
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
-from .macsypy_error import MacsypyError
+from .error import MacsypyError
 from . import registries
 
 class GeneBank(object):
