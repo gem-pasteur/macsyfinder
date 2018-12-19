@@ -21,7 +21,7 @@ from macsypy.config import Config
 from macsypy.system import SystemBank
 from macsypy.gene import GeneBank
 from macsypy.system_parser import SystemParser
-from macsypy.macsypy_error import MacsypyError, SystemInconsistencyError
+from macsypy.error import MacsypyError, SystemInconsistencyError
 from tests import MacsyTest
 
 

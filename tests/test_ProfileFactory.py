@@ -22,7 +22,7 @@ from macsypy.gene import Gene
 from macsypy.system import System
 from macsypy.config import Config
 from macsypy.registries import ModelRegistry
-from macsypy.macsypy_error import MacsypyError
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 

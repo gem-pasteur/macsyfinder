@@ -22,7 +22,7 @@ import operator
 import json
 import functools
 
-from .macsypy_error import MacsypyError, SystemDetectionError
+from .error import MacsypyError, SystemDetectionError
 from .database import RepliconDB
 from .system import system_bank
 
@@ -264,7 +264,7 @@ class Cluster(object):
 
         :param hit: the Hit to add
         :type hit: a :class:`macsypy.report.Hit`
-        :raise: a :class:`macsypy.macsypy_error.SystemDetectionError`
+        :raise: a :class:`macsypy.error.SystemDetectionError`
         """
         # need to update cluster bounds
         if len(self.hits) == 0:
@@ -2023,7 +2023,7 @@ def get_best_hits(hits, tosort=False, criterion="score"):
     :type criterion: string
     :return: the list of best matching hits
     :rtype: list of :class:`macsypy.report.Hit`
-    :raise: a :class:`macsypy.macsypy_error.MacsypyError`
+    :raise: a :class:`macsypy.error.MacsypyError`
     """
     if tosort:
         hits = sorted(hits, key=operator.attrgetter('position'))

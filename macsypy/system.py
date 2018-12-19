@@ -14,7 +14,7 @@
 
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
-from .macsypy_error import SystemInconsistencyError
+from .error import SystemInconsistencyError
 from .registries import split_def_name
 
 
