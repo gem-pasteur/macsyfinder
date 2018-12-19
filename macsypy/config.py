@@ -17,7 +17,7 @@ import sys
 import inspect
 from time import strftime
 from configparser import SafeConfigParser, NoSectionError, NoOptionError
-from macsypy import  __MACSY_CONF__
+from macsypy import  __MACSY_CONF__, __MACSY_DATA__
 
 
 import logging
@@ -34,6 +34,21 @@ class ConfigLight(object):
 
     def __init__(self, cfg_file="", previous_run=None, profile_suffix=None, models_dir=None):
         self._new_cfg_name = "macsyfinder.conf"
+
+        self._new_cfg_name = "macsyfinder.conf"
+
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            self._prefix_data = os.path.normpath(os.path.join(os.path.join(os.path.dirname(__file__)), '..', 'data'))
+        else:
+            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
+
+        if __MACSY_CONF__ == '$' + 'MACSYCONF':
+            self._conf_dir = os.path.normpath(os.path.join(os.path.join(os.path.dirname(__file__)),
+                                                                        '..',
+                                                                        self._new_cfg_name))
+        else:
+            self._conf_dir = os.path.join(__MACSY_CONF__, self._new_cfg_name)
+
         if previous_run:
             prev_config = os.path.join(previous_run, self._new_cfg_name)
             if not os.path.exists(prev_config):
@@ -65,18 +80,31 @@ class ConfigLight(object):
             else:
                 self.profile_suffix = self._defaults['profile_suffix']
         try:
-            self.models_dir = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
+            self._models_dir = self.parser.get('directories', 'models_dir', vars=cmde_line_opt)
         except NoSectionError:
             if 'models_dir' in cmde_line_opt:
-                self.models_dir = cmde_line_opt['models_dir']
+                self._models_dir = cmde_line_opt['models_dir']
             else:
-                self.models_dir = None
+                self._models_dir = None
         except NoOptionError:
-            self.models_dir = None
-        if self.models_dir is not None and not os.path.exists(self.models_dir):
+            self._models_dir = None
+        if self._models_dir is not None and not os.path.exists(self.models_dir):
             raise ValueError("{0}: No such models directory".format(self.models_dir))
 
         self.relative_path = False
+
+    @property
+    def models_dir(self):
+        """
+        :return: the path to the directory where are the models (definitions + profiles)
+        :rtype: string
+        """
+        if self._models_dir is None:
+            models_dir = os.path.join(self._prefix_data, 'models')
+        else:
+            models_dir = self._models_dir
+        print("### models_dir", models_dir)
+        return models_dir
 
     def old_data_organization(self):
         return False
@@ -207,6 +235,19 @@ class Config(object):
         """
 
         self._new_cfg_name = "macsyfinder.conf"
+
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            self._prefix_data = os.path.normpath(os.path.join(os.path.join(os.path.dirname(__file__)), '..', 'data'))
+        else:
+            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
+
+        if __MACSY_CONF__ == '$' + 'MACSYCONF':
+            self._conf_dir = os.path.normpath(os.path.join(os.path.join(os.path.dirname(__file__)),
+                                                                        '..',
+                                                                        self._new_cfg_name))
+        else:
+            self._conf_dir = os.path.join(__MACSY_CONF__, self._new_cfg_name)
+
         if previous_run:
             prev_config = os.path.normpath(os.path.join(previous_run, self._new_cfg_name))
             if not os.path.exists(prev_config):
@@ -976,7 +1017,12 @@ class Config(object):
         :return: the path to the directory where are the models (definitions + profiles)
         :rtype: string
         """
-        return self.options['models_dir']
+        models_dir = self.options['models_dir']
+        print("### models_dir", models_dir)
+        if models_dir is None:
+            models_dir = os.path.join(self._prefix_data, 'data', 'models')
+        print("### models_dir", models_dir)
+        return models_dir
 
     @property
     def profile_suffix(self):
