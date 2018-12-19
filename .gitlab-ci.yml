@@ -11,6 +11,7 @@ testing:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep_py3_6
 
   script:
+    - pip install .
     - python3.6 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
