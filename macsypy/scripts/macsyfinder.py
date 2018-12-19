@@ -17,16 +17,10 @@ import sys
 import os
 import argparse
 import logging
-
-try:
-    from macsypy.config import Config, ConfigLight
-except ImportError as err:
-    msg = "Cannot import macsypy, check your installation or your MACSY_HOME variable : {0!s}".format(err)
-    sys.exit(msg)
-
 from operator import attrgetter # To be used with "sorted"
 from textwrap import dedent
 
+from macsypy.config import Config, ConfigLight
 from macsypy.registries import ModelRegistry
 from macsypy.system_parser import SystemParser
 from macsypy.search_genes import search_genes
@@ -34,6 +28,7 @@ from macsypy.database import Indexes
 from macsypy.search_systems import search_systems
 from macsypy.system import system_bank
 from macsypy.gene import gene_bank
+from macsypy.error import OptionError
 
 
 def models_to_detect(cmd_args, cfg, model_registry):
@@ -49,14 +44,15 @@ def models_to_detect(cmd_args, cfg, model_registry):
     :raise KeyError: if a model name provided in cmd_args is not in model_registry.
     """
     if cfg.old_data_organization():
-        if 'all' in [m.lower() for m in args.systems]:
-            model = model_registry.models()[0]
-            model_name = model.name
-            models_name_to_detect = ['{}/{}'.format(model_name, d.name) for d in model.get_all_definitions()]
-        else:
-            model_name = os.path.basename(os.path.normpath(cfg.def_dir))
-            models_name_to_detect = ['{}/{}'.format(model_name, d) for d in cmd_args.systems]
-    else:
+        pass
+    #     if 'all' in [m.lower() for m in args.systems]:
+    #         model = model_registry.models()[0]
+    #         model_name = model.name
+    #         models_name_to_detect = ['{}/{}'.format(model_name, d.name) for d in model.get_all_definitions()]
+    #     else:
+    #         model_name = os.path.basename(os.path.normpath(cfg.def_dir))
+    #         models_name_to_detect = ['{}/{}'.format(model_name, d) for d in cmd_args.systems]
+    # else:
         models_name_to_detect = []
         for group_of_defs in cmd_args.models:
             root = group_of_defs[0]
@@ -87,6 +83,15 @@ Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
 MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
 PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
     return vers_msg
+
+
+def list_models(args):
+    config = ConfigLight(previous_run=args.previous_run,
+                         cfg_file=args.cfg_file,
+                         profile_suffix=args.profile_suffix,
+                         )
+    registry = ModelRegistry(config)
+    return str(registry)
 
 
 def parse_args(args):
@@ -349,7 +354,7 @@ def parse_args(args):
                                  action='store',
                                  dest='cfg_file',
                                  default=None,
-                                 help="Path to a putative MacSyFinder configuration file to be used.")
+                                 help="Path to a MacSyFinder configuration file to be used.")
     general_options.add_argument("--previous-run",
                                  action='store',
                                  dest='previous_run',
@@ -373,42 +378,9 @@ def parse_args(args):
     previous-run option).
     """
     parsed_args = parser.parse_args()
-
-    old_options = (args.def_dir, args.profile_dir, args.systems)
-    new_options = (args.models_dir, args.models)
-
-    if not args.systems and not args.models:
-        parser.error("you MUST provided systems to search.")
-
-    if not args.previous_run and not args.sequence_db:
-        parser.error("argument --sequence-db is required.")
-
-    if not args.previous_run and not args.db_type:
-        parser.error("argument --db-type is required.")
-
-    if args.systems and args.models:
-        parser.error("""--models option is the new way to specify models to search.
-        models as arguments is the old and DEPRECATED way to specify models.
-        You cannot use the two ways in the same time.
-        """)
-
-    if any(old_options) and any(new_options):
-        parser.error("""--models --models-dir options are the new way to specify models to search.
-        --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
-        You cannot use the two ways in the same time.
-        """)
-
-
     return parsed_args
 
 
-def list_models(args):
-    config = ConfigLight(previous_run=args.previous_run,
-                         cfg_file=args.cfg_file,
-                         profile_suffix=args.profile_suffix,
-                         )
-    registry = ModelRegistry(config)
-    return str(registry)
 
 
 def search_systems(args, logger, log_level):
@@ -521,23 +493,46 @@ def main(args=None, loglevel=None):
     sh = logging.StreamHandler(sys.stderr)
     sh.setFormatter(sh_formatter)
 
-    if args.verbosity == 0:
+    if parsed_args.verbosity == 0:
         log_level = None
-    elif args.verbosity == 1:
+    elif parsed_args.verbosity == 1:
         log_level = logging.WARNING
-    elif args.verbosity == 2:
+    elif parsed_args.verbosity == 2:
         log_level = logging.INFO
-    elif args.verbosity == 3:
+    elif parsed_args.verbosity == 3:
         log_level = logging.DEBUG
     else:
         log_level = logging.NOTSET
 
     logger = logging.getLogger('macsyfinder')
 
-    if args.list_models:
+    if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stderr)
         sys.exit(0)
     else:
+        old_options = (parsed_args.def_dir, parsed_args.profile_dir, parsed_args.systems)
+        new_options = (parsed_args.models_dir, parsed_args.models)
+
+        if not parsed_args.systems and not parsed_args.models:
+            raise OptionError("you MUST provided systems to search.")
+
+        if not parsed_args.previous_run and not parsed_args.sequence_db:
+            raise OptionError("argument --sequence-db is required.")
+
+        if not parsed_args.previous_run and not parsed_args.db_type:
+            raise OptionError("argument --db-type is required.")
+
+        if parsed_args.systems and parsed_args.models:
+            raise OptionError("""--models option is the new way to specify models to search.
+                models as arguments is the old and DEPRECATED way to specify models.
+                You cannot use the two ways in the same time.
+                """)
+
+        if any(old_options) and any(new_options):
+            raise OptionError("""--models --models-dir options are the new way to specify models to search.
+                --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
+                You cannot use the two ways in the same time.
+                """)
         search_systems(parsed_args, logger, log_level)
     logger.debug("END")
 
