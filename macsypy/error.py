@@ -18,6 +18,11 @@ class MacsypyError(Exception):
     """
     pass
 
+class OptionError(MacsypyError):
+    """
+    Raised when command line option is not set properly
+    """
+    pass
 
 class SystemInconsistencyError(MacsypyError):
     """
