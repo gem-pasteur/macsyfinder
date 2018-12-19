@@ -14,7 +14,7 @@
 
 
 import os
-from macsypy.macsypy_error import MacsypyError
+from macsypy.error import MacsypyError
 from macsypy import __MACSY_DATA__
 
 
@@ -347,10 +347,7 @@ class ModelRegistry(object):
             new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
             self._registry[new_model.name] = new_model
         else:
-            if cfg.models_dir:
-                models_def_root = cfg.models_dir
-            else:
-                models_def_root = os.path.join(__MACSY_DATA__, 'data', 'models')
+            models_def_root = cfg.models_dir
             for models_type in os.listdir(models_def_root):
                 model_path = os.path.join(models_def_root, models_type)
                 if os.path.isdir(model_path):
