@@ -20,52 +20,45 @@ http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 ## Installation from distribution
 
-1. Uncompress and untar the package:
+We encourage to install macsyfinder in a [virtualenv](https://virtualenv.pypa.io/en/latest/)
 
-```bash
-tar -xzf macsyfinder-x.x.tar.gz
-```
+After creating a virtualenv dedicated to macsyfinder and activating it
 
-2. Go to the MacSyFinder directory
- 
-```bash
-cd macsyfinder-x.x
-```
+    python -m venv my_project
+    cd my_project
+    source bin/activate
 
-3. Build 
+you can install macsyfinder as describe below.
+    
+### from distribution
 
-```bash
-python setup.py build
-```
+    pip install macsyfinder-xxx.tar.gz
 
-4. Test    
+### from git repository
 
-```bash
-python setup.py test -vv
-```
+    git clone https://gitlab.pasteur.fr/gem/MacSyFinder.git
+    cd macsyfinder
+    pip install .
+    
+### for developers
 
-5. Install
-
-```bash
-sudo python setup.py install
-```
-
-    To see all installation options "python setup.py --help"
-
-See the INSTALL file for more details.
-
-
-## Installation from repository
-
- Please be careful, MacSyView has its own repository: https://github.com/gem-pasteur/macsyview
- 
+    git clone https://gitlab.pasteur.fr/gem/MacSyFinder.git
+    cd macsyfinder
+    pip install .[dev]
  
 ## Unit tests 
 
-### with Travis-CI
- 
- [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+    python setup.py test
+    
+or 
+    
+    python tests/run_tests.py -vv
+    
+or to run a specific test
 
+    python tests/run_tests.py -vv tests/test_xxx.py
+        
+     
 ### with gitlab-ci
 
 [![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  
