@@ -103,7 +103,6 @@ class ConfigLight(object):
             models_dir = os.path.join(self._prefix_data, 'models')
         else:
             models_dir = self._models_dir
-        print("### models_dir", models_dir)
         return models_dir
 
     def old_data_organization(self):
@@ -1018,10 +1017,8 @@ class Config(object):
         :rtype: string
         """
         models_dir = self.options['models_dir']
-        print("### models_dir", models_dir)
         if models_dir is None:
-            models_dir = os.path.join(self._prefix_data, 'data', 'models')
-        print("### models_dir", models_dir)
+            models_dir = os.path.join(self._prefix_data, 'models')
         return models_dir
 
     @property
