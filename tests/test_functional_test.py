@@ -51,8 +51,7 @@ class Test(MacsyTest):
         """
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_basic_run')
         os.makedirs(self.out_dir)
-        macsy_bin = os.path.join(self.macsy_home, 'bin', 'macsyfinder') if self.local_install else which('macsyfinder')
-
+        macsy_bin = 'macsyfinder'
         command = "{bin} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
                   " --models {models}".format(bin=macsy_bin,
                                               out_dir=self.out_dir,
@@ -60,11 +59,6 @@ class Test(MacsyTest):
                                               seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
                                               models="set_1 T9SS T3SS T4SS_typeI",
                                               )
-        if not bin:
-            raise RuntimeError('macsyfinder not found, macsyfinder must be either in your path or MACSY_HOME must be defined')
-        # I redirect stdout and stderr in dev null I don't want them on screen
-        # I cannot redirect them in output directory as --out-dir expect a non existing directory or an empty one
-        # but Popen need to have a file as argument of stdout/err
 
         # I need to prepend the command by setsid because macsyfinder use killpg with group_id to terminated all
         # threads and subprocess when an error occurred in one hmmsearch. It's work fine but when
