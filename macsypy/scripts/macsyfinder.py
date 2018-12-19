@@ -31,7 +31,7 @@ from macsypy.gene import gene_bank
 from macsypy.error import OptionError
 
 
-def models_to_detect(cmd_args, cfg, model_registry):
+def get_models_name_to_detect(cmd_args, cfg, model_registry):
     """
     :param cmd_args: the result of commandline parsing.
     :type cmd_args: class:`argparse.Namespace` object.
@@ -53,19 +53,19 @@ def models_to_detect(cmd_args, cfg, model_registry):
     #         model_name = os.path.basename(os.path.normpath(cfg.def_dir))
     #         models_name_to_detect = ['{}/{}'.format(model_name, d) for d in cmd_args.systems]
     # else:
-        models_name_to_detect = []
-        for group_of_defs in cmd_args.models:
-            root = group_of_defs[0]
-            definitions = group_of_defs[1:]
+    models_name_to_detect = []
+    for group_of_defs in cmd_args.models:
+        root = group_of_defs[0]
+        definitions = group_of_defs[1:]
 
-            model = model_registry[root.split('/')[0]]
-            if 'all' in [d.lower() for d in definitions]:
-                if root == model.name:
-                    root = None
-                def_loc = model.get_all_definitions(root_def_name=root)
-                models_name_to_detect.extend([d.fqn for d in def_loc])
-            else:
-                models_name_to_detect.extend(['{}/{}'.format(root, one_def) for one_def in definitions])
+        model = model_registry[root.split('/')[0]]
+        if 'all' in [d.lower() for d in definitions]:
+            if root == model.name:
+                root = None
+            def_loc = model.get_all_definitions(root_def_name=root)
+            models_name_to_detect.extend([d.fqn for d in def_loc])
+        else:
+            models_name_to_detect.extend(['{}/{}'.format(root, one_def) for one_def in definitions])
     return models_name_to_detect
 
 
@@ -383,7 +383,7 @@ def parse_args(args):
 
 
 
-def search_systems(args, logger, log_level):
+def main_search_systems(args, logger, log_level):
 
     config = Config(previous_run=args.previous_run,
                     cfg_file=args.cfg_file,
@@ -426,7 +426,7 @@ def search_systems(args, logger, log_level):
     # create models
     parser = SystemParser(config, system_bank, gene_bank)
     try:
-        models_name_to_detect = models_to_detect(args, config, registry)
+        models_name_to_detect = get_models_name_to_detect(args, config, registry)
     except KeyError as err:
         sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
@@ -533,7 +533,7 @@ def main(args=None, loglevel=None):
                 --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
                 You cannot use the two ways in the same time.
                 """)
-        search_systems(parsed_args, logger, log_level)
+        main_search_systems(parsed_args, logger, log_level)
     logger.debug("END")
 
 if __name__ == "__main__":
