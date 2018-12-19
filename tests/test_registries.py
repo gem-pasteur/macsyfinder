@@ -434,7 +434,7 @@ class ModelRegistryTest(MacsyTest):
                           log_level=30,
                           log_file=log_file)
         self.tmp_dir = tempfile.mkdtemp()
-        self._prefix_data_ori = os.path.join(registries.__MACSY_DATA__, 'data')
+        self._prefix_data_ori = self.cfg.models_dir
         registries._prefix_data = self.tmp_dir
         self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
         os.makedirs(self.root_models_dir)
@@ -464,7 +464,7 @@ class ModelRegistryTest(MacsyTest):
 
         self.simple_dir = _create_fake_models_tree(self.root_models_dir, simple_models)
         self.complex_dir = _create_fake_models_tree(self.root_models_dir, complex_models)
-
+        self.cfg.options['models_dir'] = self.root_models_dir
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -490,16 +490,16 @@ class ModelRegistryTest(MacsyTest):
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
 
         # old way models organization
-        profile_dir = os.path.join(self.simple_dir, 'profiles')
-        def_dir = os.path.join(self.simple_dir, 'definitions')
+        #profile_dir = os.path.join(self.simple_dir, 'profiles')
+        #def_dir = os.path.join(self.simple_dir, 'definitions')
 
-        cfg_old = copy.copy(self.cfg)
-        cfg_old.old_data_organization = lambda : True
-        cfg_old.options['profile_dir'] = profile_dir
-        cfg_old.options['def_dir'] = def_dir
+        #cfg_old = copy.copy(self.cfg)
+        #cfg_old.old_data_organization = lambda : True
+        #cfg_old.options['profile_dir'] = profile_dir
+        #cfg_old.options['def_dir'] = def_dir
 
-        sr = ModelRegistry(cfg_old)
-        self.assertListEqual(list(sr._registry.keys()), ['definitions'])
+        #sr = ModelRegistry(cfg_old)
+        #self.assertListEqual(list(sr._registry.keys()), ['definitions'])
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
