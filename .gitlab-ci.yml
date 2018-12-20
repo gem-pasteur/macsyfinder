@@ -45,7 +45,7 @@ coverage:
 
 pages:
   stage: pages
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages_py3_6
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
   dependencies:
     - coverage
   script:
