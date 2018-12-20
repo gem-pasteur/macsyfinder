@@ -26,12 +26,6 @@ from macsypy.utils import which
 class Test(MacsyTest):
 
     def setUp(self):
-        if 'MACSY_HOME' in os.environ:
-            self.macsy_home = os.environ['MACSY_HOME']
-            self.local_install = True
-        else:
-            self.local_install = False
-            self.macsy_home = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), '..' '..')))
         self.tmp_dir = tempfile.gettempdir()
 
 
