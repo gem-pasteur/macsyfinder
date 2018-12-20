@@ -6,20 +6,31 @@ stages:
 variables:
   MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
-testing:
+testing36:
   stage: test
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep_py3_6
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
 
   script:
-    - pip install .
+    - pip3 install --no-binary=macsyfinder .
     - python3.6 tests/run_tests.py -vvv
+  except:
+    - /^feat.*$/
+    - /^fix.*$/
+
+testing37:
+  stage: test
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+
+  script:
+    - python3.7 /usr/bin/pip3 install --no-binary=macsyfinder .
+    - python3.7 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
     - /^fix.*$/
 
 coverage:
   stage: coverage
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage_py3_6
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
   script:
     - python3.6-coverage run --source=macsypy tests/run_tests.py
     - python3.6-coverage html
