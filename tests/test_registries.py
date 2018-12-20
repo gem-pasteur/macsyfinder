@@ -512,9 +512,4 @@ class ModelRegistryTest(MacsyTest):
 
     def test_str(self):
         sr = ModelRegistry(self.cfg)
-        print("\n#######################################################")
-        print(sr)
-        print("="*50)
-        print(self.output_control_str('001'))
-        print("#######################################################")
         self.assertEqual(str(sr), self.output_control_str('001'))
