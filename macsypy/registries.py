@@ -243,7 +243,7 @@ class ModelLocation(object):
         :return:
         """
         if self._definitions is not None:
-            return list(self._definitions.values())
+            return sorted(list(self._definitions.values()))
         else:
             return {}
 
@@ -385,7 +385,7 @@ class ModelRegistry(object):
                 model_s = "{}/{}\n".format(' ' * pad, model.name)
             return model_s
 
-        for model in self.models():
+        for model in sorted(self.models()):
             s += model.name + '\n'
             pad = len(model.name) + 1
             for definition in model.get_definitions():
