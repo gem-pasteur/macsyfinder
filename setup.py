@@ -276,7 +276,7 @@ setup(name='macsyfinder',
       extras_require={'dev': open("requirements_dev.txt").read().split()},
       test_suite='tests.run_tests.discover',
       zip_safe=False,
-      packages=find_packages(),
+      packages=[p for p in find_packages() if p != 'tests'],
       # file where some variables must be fixed by install
       fix_prefix=['macsypy/__init__.py'],
       entry_points={
