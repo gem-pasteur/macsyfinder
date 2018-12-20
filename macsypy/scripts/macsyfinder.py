@@ -31,20 +31,18 @@ from macsypy.gene import gene_bank
 from macsypy.error import OptionError
 
 
-def get_models_name_to_detect(cmd_args, cfg, model_registry):
+def get_models_name_to_detect(cmd_args, model_registry):
     """
     :param cmd_args: the result of commandline parsing.
     :type cmd_args: class:`argparse.Namespace` object.
-    :param cfg: the configuration of this run.
-    :type cfg: :class:`macsypy.config.Config object.
     :param model_registry: the models registry for this run.
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: list of system to launch a detection on.
     :rtype: list of :class:`macsypy.system.System` objects
     :raise KeyError: if a model name provided in cmd_args is not in model_registry.
     """
-    if cfg.old_data_organization():
-        pass
+    #if cfg.old_data_organization():
+    #    pass
     #     if 'all' in [m.lower() for m in args.systems]:
     #         model = model_registry.models()[0]
     #         model_name = model.name
@@ -70,6 +68,10 @@ def get_models_name_to_detect(cmd_args, cfg, model_registry):
 
 
 def get_version_message():
+    """
+    :return: the long description of the macsyfinder version
+    :rtype: str
+    """
     import macsypy
     version = macsypy.__version__
     vers_msg = """Macsyfinder {0}
@@ -86,6 +88,12 @@ PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys
 
 
 def list_models(args):
+    """
+    :param args: The command line argument onve parsed
+    :type args: :class:`argparse.Namespace` object
+    :return: a string representaion of the models and submodels.
+    :rtype: str
+    """
     config = ConfigLight(previous_run=args.previous_run,
                          cfg_file=args.cfg_file,
                          profile_suffix=args.profile_suffix,
@@ -381,8 +389,6 @@ def parse_args(args):
     return parsed_args
 
 
-
-
 def main_search_systems(args, logger, log_level):
 
     config = Config(previous_run=args.previous_run,
@@ -426,7 +432,8 @@ def main_search_systems(args, logger, log_level):
     # create models
     parser = SystemParser(config, system_bank, gene_bank)
     try:
-        models_name_to_detect = get_models_name_to_detect(args, config, registry)
+        models_name_to_detect = get_models_name_to_detect(args
+                                                          , registry)
     except KeyError as err:
         sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
