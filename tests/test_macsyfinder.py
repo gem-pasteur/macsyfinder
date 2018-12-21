@@ -25,7 +25,7 @@ from tests import MacsyTest
 class Test(MacsyTest):
 
     def setUp(self):
-        self.tmp_dir = tempfile.gettempdir()
+        self.tmp_dir = tempfile.mkdtemp()
 
 
     def tearDown(self):
