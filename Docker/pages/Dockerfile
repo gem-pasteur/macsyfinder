@@ -1,4 +1,4 @@
-FROM registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+FROM registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
 
 MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
