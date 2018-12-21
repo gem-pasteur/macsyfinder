@@ -499,7 +499,7 @@ class ModelRegistryTest(MacsyTest):
         model_simple_expected = ModelLocation(self.cfg, path=self.simple_dir)
         models_received = md.models()
         self.assertEqual(len(models_received), 2)
-        self.assertIn(model_complex_expected, models_received)
+        self.assertIn(model_simple_expected, models_received)
         self.assertIn(model_complex_expected, models_received)
 
     def test_str(self):
