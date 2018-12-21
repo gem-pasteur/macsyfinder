@@ -16,7 +16,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.config import Config
+from macsypy.config import ConfigLight
 from macsypy.registries import ModelRegistry
 from macsypy.scripts.macsyfinder import get_models_name_to_detect
 from tests import MacsyTest
@@ -30,7 +30,7 @@ class Test(MacsyTest):
 
     def tearDown(self):
         try:
-            shutil.rmtree(self.out_dir)
+            shutil.rmtree(self.tmp_dir)
         except:
             pass
 
@@ -38,16 +38,8 @@ class Test(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         cmd_args.models = [['set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
-        log_file = os.devnull
-        config = Config(sequence_db=self.find_data("base", "test_base.fa"),
-                        db_type="gembase",
-                        hmmer_exe="",
-                        res_search_dir=tempfile.gettempdir(),
-                        res_extract_suffix="",
-                        log_level=30,
-                        log_file=log_file,
-                        models_dir=os.path.join(self._data_dir, 'data_set_1', 'models'))
-
+        config = ConfigLight()
+        config._models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         registry = ModelRegistry(config)
         res = get_models_name_to_detect(cmd_args, registry)
         exp = ['set_1/T9SS', 'set_1/T3SS', 'set_1/T4SS_typeI']
