@@ -1,4 +1,4 @@
-FROM ubuntu:bionic
+FROM ubuntu:cosmic
 
 MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
