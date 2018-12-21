@@ -133,7 +133,7 @@ class ModelLocationTest(MacsyTest):
         l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.tmp_dir)
-        except:
+        except Exception as err:
             pass
 
 
@@ -424,15 +424,7 @@ class ModelRegistryTest(MacsyTest):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        self.cfg = Config(sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          hmmer_exe="",
-                          # def_dir=self.find_data('DEF'),
-                          res_search_dir=tempfile.gettempdir(),
-                          # profile_dir=self.find_data('profiles'),
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file)
+        self.cfg = ConfigLight()
         self.tmp_dir = tempfile.mkdtemp()
         self._prefix_data_ori = self.cfg.models_dir
         registries._prefix_data = self.tmp_dir
@@ -464,7 +456,7 @@ class ModelRegistryTest(MacsyTest):
 
         self.simple_dir = _create_fake_models_tree(self.root_models_dir, simple_models)
         self.complex_dir = _create_fake_models_tree(self.root_models_dir, complex_models)
-        self.cfg.options['models_dir'] = self.root_models_dir
+        self.cfg._models_dir = self.root_models_dir
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
