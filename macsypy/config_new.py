@@ -97,6 +97,12 @@ class Config:
 
 
     def __getattr__(self, option_name):
+        # some getter return just a value they can be transformed in property
+        # but some other need extra argument so they cannot be a property, they must be methods
+        # to have something generic and with the same behavior
+        # that mean need to call all of them
+        # for generic getter, that mean no code in config
+        # I simulate a function (lambda) which can be called without argument
         if option_name in self._options:
             return lambda : self._options[option_name]
         else:
@@ -104,6 +110,12 @@ class Config:
 
 
     def _str_2_tuple(self, value):
+        """
+        transform a string with syntax  {model_fqn int} n in list of tuple
+        :param str value: the string to parse
+        :return:
+        :rtype: [(model_fqn, int), ...]
+        """
         try:
             it = iter(value.split())
             res = [(a, next(it)) for a in it]
@@ -119,7 +131,7 @@ class Config:
         The defaults is just used to know the type of the properties and cast them. It is not used to fill
         the dict with default values.
 
-        :param defaults:
+        :param defaults: the macsyfinder defaults value
         :type defaults: a :class:`macsypy.config.MacsyDefaults` object
         :param files: the configuration files to parse
         :type files: list of string
@@ -145,6 +157,12 @@ class Config:
 
 
     def _set_db_type(self, value):
+        """
+        set value for 'db_type' option
+        :param str value: the value for db_type, allowed values are :
+                          'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
+        :raise ValueError: if value is not allowed
+        """
         auth_values = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
         if value in auth_values:
             self._options['db_type'] = value
@@ -153,6 +171,13 @@ class Config:
 
 
     def _set_inter_gene_max_space(self, value):
+        """
+        set value for 'inter_gene_max_space' option
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
+        """
         opt = {}
         if isinstance(value, str):
             try:
@@ -169,12 +194,24 @@ class Config:
 
 
     def inter_gene_max_space(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the gene_max_space for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
         if self._options['inter_gene_max_space']:
             return self._options['inter_gene_max_space'].get(model_fqn, None)
         else:
             return None
 
     def _set_max_nb_genes(self, value):
+        """
+        set value for 'max_nb_genes' option
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
+        """
         opt = {}
         if isinstance(value, str):
             try:
@@ -191,12 +228,24 @@ class Config:
 
 
     def max_nb_genes(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the max_nb_genes for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
         if self._options['max_nb_genes']:
             return self._options['max_nb_genes'].get(model_fqn, None)
         else:
             return None
 
     def _set_min_genes_required(self, value):
+        """
+        set value for 'min_genes_required' option
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
+        """
         opt = {}
         if isinstance(value, str):
             try:
@@ -213,12 +262,24 @@ class Config:
 
 
     def min_genes_required(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the min_genes_required for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
         if self._options['min_genes_required']:
             return self._options['min_genes_required'].get(model_fqn, None)
         else:
             return None
 
     def _set_min_mandatory_genes_required(self, value):
+        """
+        set value for 'min_mandatory_genes_required' option
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
+        """
         opt = {}
         try:
             value = self._str_2_tuple(value)
@@ -228,12 +289,17 @@ class Config:
             try:
                 opt[model_fqn] = int(quorum)
             except ValueError:
-                raise ValueError("The value for 'min_mandatory_genes_required(' option for model {} must be an integer, "
-                                 "but you provided {}".format(model_fqn, quorum))
+                raise ValueError("The value for 'min_mandatory_genes_required' option "
+                                 "for model {} must be an integer, but you provided {}".format(model_fqn, quorum))
         self._options['min_mandatory_genes_required'] = opt
 
 
     def min_mandatory_genes_required(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the min_mandatory_genes_required for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
         if self._options['min_mandatory_genes_required']:
             return self._options['min_mandatory_genes_required'].get(model_fqn, None)
         else:
@@ -245,11 +311,6 @@ class Config:
 
     def out_dir(self):
         out_dir = self._options['out_dir']
-        if out_dir is None:
-            out_dir = os.path.join(os.getcwd(),
-                                   "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S"))
-                                   )
-            self._options['out_dir'] = out_dir
         return out_dir
 
     def working_dir(self):
