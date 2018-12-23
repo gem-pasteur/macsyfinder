@@ -130,19 +130,8 @@ def parse_args(args):
 
     # , formatter_class=argparse.RawDescriptionHelpFormatter)
     # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("systems",
-                        nargs='*',
-                        help="The list (separated by spaces) of models to detect  \
-                             To detect all the protein secretion systems and related appendages:\
-                             set to \"all\" (case insensitive).\
-                             Otherwise, a single or multiple models can be specified. For example: \"T2SS T4P\". \
-                             This the old way to specified systems to detect. It is better to install models in macsyfinder \
-                             or use the --models-dir dir_options (for more information about data organization see \
-                             (http://macsyfinder.readthedocs.org/en/latest/#) ")
-
     parser.add_argument("-m", "--models",
                         action='append',
-                        dest='models',
                         nargs='*',
                         default=None,
                         help='TODO bla-bla')
@@ -150,13 +139,11 @@ def parse_args(args):
     genome_options = parser.add_argument_group(title="Input dataset options")
     genome_options.add_argument("--sequence-db",
                                 action='store',
-                                dest='sequence_db',
                                 default=None,
                                 help="Path to the sequence dataset in fasta format.")
 
     genome_options.add_argument("--db-type",
                                 choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
-                                dest="db_type",
                                 default=None,
                                 help="The type of dataset to deal with. \"unordered_replicon\" corresponds\
                                      to a non-assembled genome,\"unordered\" to a metagenomic dataset,\
@@ -166,13 +153,11 @@ def parse_args(args):
 
     genome_options.add_argument("--replicon-topology",
                                 choices=['linear', 'circular'],
-                                dest="replicon_topology",
                                 default=None,
                                 help="The topology of the replicons \
                                 (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
 
     genome_options.add_argument("--topology-file",
-                                dest="topology_file",
                                 default=None,
                                 help="Topology file path. The topology file allows to specify a topology \
                                      (linear or circular) for each replicon (this option is meaningful only if\
@@ -182,7 +167,6 @@ def parse_args(args):
 
     genome_options.add_argument("--idx",
                                 action='store_true',
-                                dest="build_indexes",
                                 default=False,
                                 help="Forces to build the indexes for the sequence dataset even \
                                      if they were previously computed and present at the dataset location (default = False)"
@@ -192,7 +176,6 @@ def parse_args(args):
     system_options.add_argument("--inter-gene-max-space",
                                 action='append',
                                 nargs=2,
-                                dest='inter_gene_max_space',
                                 default=None,
                                 help="Co-localization criterion: maximum number of components non-matched by a\
                                      profile allowed between two matched components for them to be considered contiguous.\
@@ -204,7 +187,6 @@ def parse_args(args):
     system_options.add_argument("--min-mandatory-genes-required",
                                 action='append',
                                 nargs=2,
-                                dest='min_mandatory_genes_required',
                                 default=None,
                                 help="The minimal number of mandatory genes required for system assessment.\
                                      The first value must correspond to a system name, the second value to an integer.\
@@ -214,7 +196,6 @@ def parse_args(args):
     system_options.add_argument("--min-genes-required",
                                 action='append',
                                 nargs=2,
-                                dest='min_genes_required',
                                 default=None,
                                 help="The minimal number of genes required for system assessment\
                                      (includes both 'mandatory' and 'accessory' components).\
@@ -225,7 +206,6 @@ def parse_args(args):
     system_options.add_argument("--max-nb-genes",
                                 action='append',
                                 nargs=2,
-                                dest='max_nb_genes',
                                 default=None,
                                 help="The maximal number of genes required for system assessment.\
                                      The first value must correspond to a system name, the second value to an integer.\
@@ -234,7 +214,6 @@ def parse_args(args):
                                 )
     system_options.add_argument("--multi-loci",
                                 action='store',
-                                dest='multi_loci',
                                 default=None,
                                 help="Allow the storage of multi-loci systems for the specified systems.\
                                 The systems are specified as a comma separated list \
@@ -244,32 +223,21 @@ def parse_args(args):
     hmmer_options = parser.add_argument_group(title="Options for Hmmer execution and hits filtering")
     hmmer_options.add_argument('--hmmer',
                                action='store',
-                               dest='hmmer_exe',
                                default=None,
                                help='Path to the Hmmer program.')
-    hmmer_options.add_argument('--index-db',
-                               action='store',
-                               dest='index_db_exe',
-                               default=None,
-                               help="The indexer to be used for Hmmer.\
-                                    The value can be either 'makeblastdb' or 'formatdb' or the path to one of these binary\
-                                    (default = makeblastb)")
     hmmer_options.add_argument('--e-value-search',
                                action='store',
-                               dest='e_value_res',
                                type=float,
                                default=None,
                                help='Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
-    hmmer_options.add_argument('--i-evalue-select',
+    hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
-                               dest='i_evalue_sel',
                                type=float,
                                default=None,
                                help='Maximal independent e-value for Hmmer hits to be selected for system detection.\
                                      (default = 0.001)')
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
-                               dest='coverage_profile',
                                type=float,
                                default=None,
                                help='Minimal profile coverage required in the hit alignment to allow\
@@ -286,42 +254,26 @@ def parse_args(args):
                               "profiles" which contains all hmm profile for gene describe in definitions and\
                               "models" which contains either xml file of definitions or subdirectories\
                               to organize the system in subsystems.')
-    dir_options.add_argument('-d', '--def-dir',
-                             action='store',
-                             dest='def_dir',
-                             default=None,
-                             help='Path to the systems definition files. (DEPRECATED see --models and --models-path options)')
-    dir_options.add_argument('-p', '--profile-dir',
-                             action='store',
-                             dest='profile_dir',
-                             default=None,
-                             help='Path to the profiles directory. (DEPRECATED see --models and --models-path options)')
-
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
-                             dest='out_dir',
                              default=None,
                              help='Path to the directory where to store results.\
                              if out-dir is specified res-search-dir will be ignored.')
     dir_options.add_argument('-r', '--res-search-dir',
                              action='store',
-                             dest='res_search_dir',
                              default=None,
                              help='Path to the directory where to store MacSyFinder search results directories\
                              (default current working directory).')
     dir_options.add_argument('--res-search-suffix',
                              action='store',
-                             dest='res_search_suffix',
                              default=None,
                              help='The suffix to give to Hmmer raw output files.')
     dir_options.add_argument('--res-extract-suffix',
                              action='store',
-                             dest='res_extract_suffix',
                              default=None,
                              help='The suffix to give to filtered hits output files.')
     dir_options.add_argument('--profile-suffix',
                              action='store',
-                             dest='profile_suffix',
                              default=None,
                              help="The suffix of profile files. For each 'Gene' element, the corresponding profile is \
                                   searched in the 'profile_dir', in a file which name is based on the \
@@ -332,7 +284,6 @@ def parse_args(args):
     general_options = parser.add_argument_group(title="General options", description=None)
     general_options.add_argument("-w", "--worker",
                                  action='store',
-                                 dest='worker_nb',
                                  type=int,
                                  default=None,
                                  help="Number of workers to be used by MacSyFinder.\
@@ -340,32 +291,24 @@ def parse_args(args):
                                       (0 mean all cores will be used, default 1)")
     general_options.add_argument("-v", "--verbosity",
                                  action="count",
-                                 dest="verbosity",
                                  default=0,
                                  help="Increases the verbosity level. There are 4 levels:\
                                        Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)")
     general_options.add_argument("--version",
                                  action="version",
-                                 dest="version",
                                  version=get_version_message()),
     general_options.add_argument("-l", "--list-models",
                                  action="store_true",
-                                 dest="list_models",
                                  default=False,
                                  help="display the all models installed in generic location and quit.")
-    general_options.add_argument("--log",
+    general_options.add_argument("--log-file",
                                  action='store',
-                                 dest='log_file',
-                                 default=None,
                                  help="Path to the directory where to store the 'macsyfinder.log' log file.")
-    general_options.add_argument("--config",
+    general_options.add_argument("--cfg-file",
                                  action='store',
-                                 dest='cfg_file',
-                                 default=None,
                                  help="Path to a MacSyFinder configuration file to be used.")
     general_options.add_argument("--previous-run",
                                  action='store',
-                                 dest='previous_run',
                                  default=None,
                                  help="""Path to a previous MacSyFinder run directory.
                                          It allows to skip the Hmmer search step on same dataset,
@@ -375,7 +318,6 @@ def parse_args(args):
                                          --res-extract-suffix, --e-value-res, --db-type, --hmmer)""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
-                                 dest='relative_path',
                                  default=False,
                                  help=argparse.SUPPRESS)
     # 'relative-path' option help message (currently hidden)
