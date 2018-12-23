@@ -29,7 +29,7 @@ from macsypy.utils import which
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestProfile(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
