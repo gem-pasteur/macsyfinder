@@ -553,7 +553,7 @@ class Config(object):
                         raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer, "
                                          "but you provided {1} on command line".format(system, quorum_genes))
 
-            # we should check if definition exists but at this step regitries are not build yet
+            # we should check if definition exists but at this step registries are not build yet
             # so just store the fqn
             if self.parser.has_option("system", "max_nb_genes"):
                 options['max_nb_genes'] = {}
