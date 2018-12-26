@@ -21,6 +21,10 @@ class MacsyDefaults(dict):
         To define a new default value just add an attribute with the default value
         """
         self.__dict__ = self
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        else:
+            prefix_data = os.path.join(__MACSY_DATA__, 'data')
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
         self.e_value_search = kwargs.get('e_value_search', 1.0)
@@ -35,6 +39,7 @@ class MacsyDefaults(dict):
         self.min_genes_required = kwargs.get('min_genes_required', None)
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', None)
+        self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
         self.multi_loci = kwargs.get('multi_loci', False)
         self.out_dir = kwargs.get('out_dir', os.path.join(os.getcwd(),
                                                           "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S"))))

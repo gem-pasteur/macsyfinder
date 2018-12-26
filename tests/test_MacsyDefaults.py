@@ -37,6 +37,7 @@ class TestMacsyDefaults(MacsyTest):
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
                          'models': None,
+                         'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data', 'models')),
                          'multi_loci': False,
                          'out_dir': os.path.join(os.getcwd(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S"))),
                          'previous_run': False,
@@ -62,3 +63,14 @@ class TestMacsyDefaults(MacsyTest):
         defaults = MacsyDefaults(previous_run=True,
                                  worker=5)
         self.assertDictEqual(defaults, new_defaults)
+
+
+    def test_MacsyDefaults_with_MACSY_DATA(self):
+        import macsypy.config_new
+        macsydata = macsypy.config_new.__MACSY_DATA__
+        macsypy.config_new.__MACSY_DATA__ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
+        try:
+            defaults = MacsyDefaults()
+            self.assertDictEqual(defaults, self.defaults)
+        finally:
+            macsypy.config_new.__MACSY_DATA__ = macsydata
