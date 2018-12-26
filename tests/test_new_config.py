@@ -12,9 +12,10 @@
 ################################################################################
 
 import os
-import logging
+import shutil
 from argparse import Namespace
 from configparser import ParsingError
+import tempfile
 
 from macsypy.config_new import MacsyDefaults, Config
 
@@ -38,7 +39,7 @@ class TestConfig(MacsyTest):
             s = 'Flagellum 12 t4ss'
             cfg._str_2_tuple(s)
         self.assertEqual(str(ctx.exception),
-                         "You must provide a list of model name and value separated by spaces")
+                         "You must provide a list of model name and value separated by spaces: {}".format(s))
 
 
     def test_config_file_2_dict(self):
@@ -58,7 +59,7 @@ class TestConfig(MacsyTest):
 
         bad_cfg_file = self.find_data(os.path.join('conf_files', 'macsy_test_bad_conf.conf'))
         with self.assertRaises(ParsingError):
-            res = cfg._config_file_2_dict(self.defaults, [bad_cfg_file])
+            cfg._config_file_2_dict(self.defaults, [bad_cfg_file])
 
 
     def test_Config(self):
@@ -66,7 +67,7 @@ class TestConfig(MacsyTest):
         methods_needing_args = {'inter_gene_max_space': None,
                                 'max_nb_genes': None,
                                 'min_genes_required': None,
-                                'min_mandatory_genes_required':None,
+                                'min_mandatory_genes_required': None,
                                 }
         for opt, val in self.defaults.items():
             if opt in methods_needing_args:
@@ -91,10 +92,37 @@ class TestConfig(MacsyTest):
 
         for opt, val in expected_values.items():
             if opt in methods_needing_args:
-                for model, genes in methods_needing_args[opt]:
+                for model, genes in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), genes)
             else:
                 self.assertEqual(getattr(cfg, opt)(), val)
+
+    def test_Config_default_conf_file(self):
+        methods_needing_args = {'inter_gene_max_space': [('Flagellum', 4), ('T2SS', 2)],
+                                'max_nb_genes':  [('Flagellum', 6), ('T3SS', 3)],
+                                'min_genes_required': [('Flagellum', 8), ('T4SS', 4)],
+                                'min_mandatory_genes_required': [('Flagellum', 12), ('T6SS', 6)],
+                                }
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            ori_conf_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
+            dest_conf_file = os.path.join(tmpdirname, 'macsyfinder.conf')
+            shutil.copy(ori_conf_file, dest_conf_file)
+            import macsypy.config_new
+            macsyconf = macsypy.config_new.__MACSY_CONF__
+            macsypy.config_new.__MACSY_CONF__ = tmpdirname
+            try:
+                cfg = Config(self.defaults, self.parsed_args)
+
+                expected_values = {k: v for k, v in self.defaults.items()}
+                expected_values.update(methods_needing_args)
+                for opt, val in expected_values.items():
+                    if opt in methods_needing_args:
+                        for model, genes in expected_values[opt]:
+                            self.assertEqual(getattr(cfg, opt)(model), genes)
+                    else:
+                        self.assertEqual(getattr(cfg, opt)(), val)
+            finally:
+                macsypy.config_new.__MACSY_CONF__ = macsyconf
 
 
     def test_Config_args(self):
@@ -103,21 +131,143 @@ class TestConfig(MacsyTest):
                                 'min_genes_required': [('Flagellum', 18), ('T4SS', 14)],
                                 'min_mandatory_genes_required': [('Flagellum', 22), ('T6SS', 16)],
                                 }
+        for opt, value in methods_needing_args.items():
+            setattr(self.parsed_args, opt, value)
 
-        self.parsed_args.cfg_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
+        simple_opt = {'hmmer': 'foo',
+                      'i_evalue_sel': 20,
+                      'multi_loci': True,
+                      'replicon_topology': 'linear',
+                      'db_type': 'gembase',
+                      'sequence_db': self.find_data(os.path.join('base', 'test_aesu.fa')),
+                      'topology_file': __file__  # test only the existence of a file
+                      }
+
+        for opt, val in simple_opt.items():
+            setattr(self.parsed_args, opt, val)
+
         cfg = Config(self.defaults, self.parsed_args)
 
         expected_values = {k: v for k, v in self.defaults.items()}
-        expected_values['cfg_file'] = self.parsed_args.cfg_file
         expected_values.update(methods_needing_args)
-        print()
+        expected_values.update(simple_opt)
         for opt, val in expected_values.items():
-            print("======================")
-            print(opt)
             if opt in methods_needing_args:
-                print("methods with args")
-                print(cfg._options[opt])
-                for model, genes in methods_needing_args[opt]:
+                for model, genes in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), genes)
             else:
-                self.assertEqual(getattr(cfg, opt)(), val)
+                self.assertEqual(getattr(cfg, opt)(), val,
+                                 msg="{} failed: expected: val '{}' != got '{}'".format(opt, val, getattr(cfg, opt)()))
+
+    def test_Config_file_n_args(self):
+        cfg_needing_args = {'inter_gene_max_space': [('Flagellum', 4), ('T2SS', 2)],
+                            'max_nb_genes':  [('Flagellum', 6), ('T3SS', 3)],
+                            'min_genes_required': [('Flagellum', 8), ('T4SS', 4)],
+                            'min_mandatory_genes_required': [('Flagellum', 12), ('T6SS', 6)],
+                            }
+
+        self.parsed_args.cfg_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
+        expected_values = {k: v for k, v in self.defaults.items()}
+        expected_values['cfg_file'] = self.parsed_args.cfg_file
+        expected_values.update(cfg_needing_args)
+
+        cmd_needing_args = {'min_genes_required': [('Flagellum', 18), ('T4SS', 14)],
+                            'min_mandatory_genes_required': [('Flagellum', 22), ('T6SS', 16)],
+                            }
+        for opt, value in cmd_needing_args.items():
+            setattr(self.parsed_args, opt, ' '.join(["{} {}".format(m, v) for m, v in value]))
+
+        simple_opt = {'hmmer': 'foo',
+                      'i_evalue_sel': 20,
+                      'multi_loci': True,
+                      'db_type': 'gembase'}
+        for opt, val in simple_opt.items():
+            setattr(self.parsed_args, opt, val)
+
+        cfg = Config(self.defaults, self.parsed_args)
+
+        expected_values.update(cmd_needing_args)
+        expected_values.update(simple_opt)
+
+        for opt, exp_val in expected_values.items():
+            if opt in cfg_needing_args:
+                for model, val in expected_values[opt]:
+                    self.assertEqual(getattr(cfg, opt)(model), val)
+            else:
+                self.assertEqual(getattr(cfg, opt)(), exp_val)
+
+    def test_bad_values(self):
+        invalid_syntax = {'inter_gene_max_space': 'Flagellum 4 2',
+                          'max_nb_genes': 'Flagellum T3SS 3',
+                          'min_genes_required': 'Flagellum T4SS 4',
+                          'min_mandatory_genes_required': '12 T6SS 6',
+                          }
+
+        for opt, val in invalid_syntax.items():
+            args = Namespace()
+            setattr(args, opt, val)
+            with self.assertRaises(ValueError) as ctx:
+                Config(self.defaults, args)
+            self.assertEqual(str(ctx.exception), "Invalid syntax for '{}': You must provide a list of model name "
+                                                 "and value separated by spaces: {}.".format(opt, val))
+
+        int_error = {'inter_gene_max_space': 'Flagellum 4.2 T2SS 2',
+                     'max_nb_genes': 'Flagellum 4 T3SS FOO',
+                     'min_genes_required': 'Flagellum FOO T4SS 4',
+                     'min_mandatory_genes_required': 'Flagellum 12 T6SS 6.4',
+                     }
+
+        for opt, val in int_error.items():
+            args = Namespace()
+            setattr(args, opt, val)
+            with self.assertRaises(ValueError):
+                Config(self.defaults, args)
+
+
+    def test_bad_db_type(self):
+        self.parsed_args.db_type = "FOO"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "db_type as unauthorized value : 'FOO'.")
+
+    def test_bad_topology(self):
+        self.parsed_args.replicon_topology = "FOO"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "replicon_topology as unauthorized value : 'FOO'.")
+
+    def test_bad_topology_file(self):
+        self.parsed_args.topology_file = "FOO"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "topology_file 'FOO' does not exists or is not a file.")
+
+
+    def test_bad_sequence_db(self):
+        self.parsed_args.sequence_db = "FOO"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "sequence_db 'FOO' does not exists or is not a file.")
+
+
+    def test_bad_models_dir(self):
+        self.parsed_args.models_dir = "FOO"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "models_dir 'FOO' does not exists or is not a directory.")
+
+    def test_save(self):
+        self.parsed_args.max_nb_genes = [['T2SS', 5], ['Flagelum', 12]]
+        cfg = Config(self.defaults, self.parsed_args)
+        expected = {k: v for k, v in cfg._options.items() if v is not None}
+        expected['max_nb_genes'] = 'T2SS 5 Flagelum 12'
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
+            cfg.save(path_or_buf=cfg_path)
+            saved_opt = cfg._config_file_2_dict(self.defaults, [cfg_path])
+            self.assertEqual(saved_opt, expected)
