@@ -58,12 +58,35 @@ class MacsyDefaults(dict):
 
 class Config:
 
+    cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
+                ('models', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
+                            'min_genes_required', 'models', 'multi_loci')),
+                ('hmmer', ('coverage_profile', 'e_value_search', 'i_evalue_sel', 'hmmer')),
+                ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
+                                 'res_search_suffix', 'res_extract_suffix')),
+                ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
+                             'verbosity', 'worker'))
+                ]
+
     def __init__(self, defaults, parsed_args):
+        """
+        Store macsyfinder configuration options and propose an interface to access
+        to them.
+
+        The config object is populated with the defaults then superseded with the
+        value specified in configuration files and finally by the options set on the
+        command line.
+
+        :param defaults:
+        :type defaults: a :class:`MacsyDefaults` object
+        :param parsed_args: the command line arguments parsed
+        :type parsed_args: a :class:`argspace.Namescape` object
+        """
         self._cfg_name = "macsyfinder.conf"
         self._defaults = defaults
 
         if __MACSY_DATA__ == '$' + 'MACSYDATA':
-            self._prefix_data = os.path.normpath(os.path.join(os.path.join(os.path.dirname(__file__)), '..', 'data'))
+            self._prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
         else:
             self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
 
@@ -72,7 +95,7 @@ class Config:
                                                            '..', 'etc'
                                                            ))
         else:
-            self._conf_dir = os.path.join(__MACSY_CONF__, self._cfg_name)
+            self._conf_dir = __MACSY_CONF__
 
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
             prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
@@ -90,14 +113,19 @@ class Config:
         config_files_values = self._config_file_2_dict(defaults, config_files)
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
 
+        # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
+
         for bag_of_opts in config_files_values, args_dict:
             for opt, val in bag_of_opts.items():
                 if val is not None:
                     met_name = '_set_{}'.format(opt)
                     if hasattr(self, met_name):
+                        # config has a specific method to parse and store the value
+                        # for this option
                         getattr(self, met_name)(val)
                     else:
+                        # config has no method defined to set this option
                         self._options[opt] = val
 
 
@@ -126,7 +154,8 @@ class Config:
             res = [(a, next(it)) for a in it]
             return res
         except StopIteration:
-            raise ValueError("You must provide a list of model name and value separated by spaces")
+            raise ValueError("You must provide a list of model name and"
+                             " value separated by spaces: {}".format(value))
 
 
     def _config_file_2_dict(self, defaults, files):
@@ -148,7 +177,7 @@ class Config:
                       bool: parser.getboolean
                       }
         try:
-            parser.read(files)
+            used_files = parser.read(files)
         except ParsingError as err:
             raise ParsingError("A macsyfinder configuration file is not well formed: {}".format(err)) from None
 
@@ -160,6 +189,37 @@ class Config:
                 opts[option] = opt_value
         return opts
 
+    def save(self, path_or_buf=None):
+        """
+        save itself in a file in ini format.
+
+        .. note::
+            the undefined options (set to None) are omitted
+
+        :param path_or_buf: where to serialize itself.
+        :type path_or_buf: str or file like object
+        """
+        def save(fh):
+            for section, options in self.cfg_opts:
+                print("[{}]".format(section), file=fh)
+                for opt in options:
+                    opt_value = self._options[opt]
+                    if opt_value is None:
+                        continue
+                    elif isinstance(opt_value, dict):
+                        value = ""
+                        for model, v in opt_value.items():
+                            value += "{} {} ".format(model, v)
+                        opt_value = value
+                    print("{} = {}".format(opt, opt_value), file=fh)
+
+        if path_or_buf is None:
+            path_or_buf = os.path.join(self.out_dir(), self._cfg_name)
+        if isinstance(path_or_buf, str):
+            with open(path_or_buf, 'w') as cfg_file:
+                save(cfg_file)
+        else:
+            save(path_or_buf)
 
     def _set_db_type(self, value):
         """
@@ -172,7 +232,7 @@ class Config:
         if value in auth_values:
             self._options['db_type'] = value
         else:
-            raise ValueError("db_type as unauthorized value : '{}'".format(value))
+            raise ValueError("db_type as unauthorized value : '{}'.".format(value))
 
 
     def _set_inter_gene_max_space(self, value):
@@ -188,7 +248,7 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'inter_gene_max_space': {}".format(err))
+                raise ValueError("Invalid syntax for 'inter_gene_max_space': {}.".format(err))
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
@@ -222,7 +282,7 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'max_nb_genes': {}".format(err))
+                raise ValueError("Invalid syntax for 'max_nb_genes': {}.".format(err))
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
@@ -256,7 +316,7 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'min_genes_required': {}".format(err))
+                raise ValueError("Invalid syntax for 'min_genes_required': {}.".format(err))
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
@@ -286,10 +346,11 @@ class Config:
         :raise ValueError: if value is not well formed
         """
         opt = {}
-        try:
-            value = self._str_2_tuple(value)
-        except ValueError as err:
-            raise ValueError("Invalid syntax for 'min_mandatory_genes_required': {}".format(err))
+        if isinstance(value, str):
+            try:
+                value = self._str_2_tuple(value)
+            except ValueError as err:
+                raise ValueError("Invalid syntax for 'min_mandatory_genes_required': {}.".format(err))
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
@@ -324,28 +385,39 @@ class Config:
 
     def _set_replicon_topology(self, value):
         auth_values = ('linear', 'circular')
-        value = value.lower()
+        value_low = value.lower()
         new_topo = None
         for topo in auth_values:
-            if topo.startswith(value):
+            if topo.startswith(value_low):
                 new_topo = topo
                 break
         if new_topo is not None:
-            self._options['db_type'] = new_topo
+            self._options['replicon_topology'] = new_topo
         else:
-            raise ValueError("replicon_topology as unauthorized value : '{}'".format(value))
+            raise ValueError("replicon_topology as unauthorized value : '{}'.".format(value))
 
 
-    def _set_sequence_db(self, value):
-        pass
+    def _set_sequence_db(self, path):
+        if os.path.exists(path) and os.path.isfile(path):
+            self._options['sequence_db'] = path
+        else:
+            raise ValueError("sequence_db '{}' does not exists or is not a file.".format(path))
+
 
     def _set_topology_file(self, path):
-        path = os.path.realpath(path)
         if os.path.exists(path) and os.path.isfile(path):
             self._options['topology_file'] = path
         else:
             raise ValueError("topology_file '{}' does not exists or is not a file.".format(path))
 
 
+    def _set_models_dir(self, path):
+        """
 
-
+        :param path:
+        :return:
+        """
+        if os.path.exists(path) and os.path.isdir(path):
+            self._options['models_dir'] = path
+        else:
+            raise ValueError("models_dir '{}' does not exists or is not a directory.".format(path))
