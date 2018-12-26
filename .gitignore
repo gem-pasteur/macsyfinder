@@ -37,6 +37,7 @@ doc/_build/
 ##########################
 htmlcov/
 .coverage
+coverage_html/
 
 ###################################
 # MacsyFinder results directories #
