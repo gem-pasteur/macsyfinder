@@ -103,7 +103,7 @@ class ModelLocation(object):
 
                 model_fqn = os.path.basename(os.path.splitext(model_path)[0])
 
-                if not self.cfg.relative_path:
+                if not self.cfg.relative_path():
                     model_path = os.path.abspath(model_path)
 
                 new_def = DefinitionLocation(name=model_fqn,
@@ -152,8 +152,8 @@ class ModelLocation(object):
             profile_path = os.path.join(path, profile)
             if os.path.isfile(profile_path):
                 base, ext = os.path.splitext(profile)
-                if ext == self.cfg.profile_suffix:
-                    all_profiles[base] = profile_path if self.cfg.relative_path else os.path.abspath(profile_path)
+                if ext == self.cfg.profile_suffix():
+                    all_profiles[base] = profile_path if self.cfg.relative_path() else os.path.abspath(profile_path)
         return all_profiles
 
     def __lt__(self, other):
@@ -342,7 +342,7 @@ class ModelRegistry(object):
             new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
             self._registry[new_model.name] = new_model
         else:
-            models_def_root = cfg.models_dir
+            models_def_root = cfg.models_dir()
             for models_type in os.listdir(models_def_root):
                 model_path = os.path.join(models_def_root, models_type)
                 if os.path.isdir(model_path):

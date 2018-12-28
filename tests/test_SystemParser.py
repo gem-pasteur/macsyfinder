@@ -17,7 +17,9 @@ import shutil
 import tempfile
 import platform
 import logging
-from macsypy.config import Config
+import argparse
+
+from macsypy.config import Config, MacsyDefaults
 from macsypy.system import SystemBank
 from macsypy.gene import GeneBank
 from macsypy.system_parser import SystemParser
@@ -37,20 +39,16 @@ class Test(MacsyTest):
         log_file = 'NUL' if platform.system() == 'Windows' else '/dev/null'
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        
-        self.cfg = Config(sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          hmmer_exe="",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          models_dir=self.find_data('models'),
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix="",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file
-                          )
+        defaults = MacsyDefaults()
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = tempfile.gettempdir()
+        args.log_level = 30
+        args.log_file = log_file
+
+        self.cfg = Config(defaults, args)
         self.system_bank = SystemBank()
         self.system_bank._system_bank = {}
         self.gene_bank = GeneBank()
@@ -65,7 +63,7 @@ class Test(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
         except:
             pass
 
@@ -93,7 +91,7 @@ class Test(MacsyTest):
         models_2_detect.add(definition)
         with self.assertRaises(MacsypyError) as context:
             self.parser.definition_to_parse(models_2_detect, parsed)
-        self.assertEqual(str(context.exception), '{}: No such Models in {}'.format(model_name, self.cfg.models_dir))
+        self.assertEqual(str(context.exception), '{}: No such Models in {}'.format(model_name, self.cfg.models_dir()))
 
         parsed = set()
         models_2_detect = set()
@@ -322,7 +320,7 @@ class Test(MacsyTest):
         model_name, def_name = system_2_detect.split('/')
         self.assertEqual(str(context.exception),
                          "Invalid system definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(
-                             os.path.join(self.cfg.models_dir,
+                             os.path.join(self.cfg.models_dir(),
                                           model_name,
                                           'definitions',
                                           def_name)))
@@ -334,7 +332,7 @@ class Test(MacsyTest):
             self.parser.parse(system_2_detect)
         self.assertEqual(str(context.exception),
                          "Invalid system definition ({}): inter_gene_max_space must be an integer: 12.5".format(
-                             os.path.join(self.cfg.models_dir, "foo/definitions/bad_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir(), "foo/definitions/bad_inter_gene_max_space.xml")
                          )
                          )
 
@@ -345,7 +343,7 @@ class Test(MacsyTest):
 
         self.assertEqual(str(context.exception),
                          "Invalid system definition ({}): inter_gene_max_space must be defined".format(
-                             os.path.join(self.cfg.models_dir, "foo/definitions/no_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir(), "foo/definitions/no_inter_gene_max_space.xml")
                          )
                          )
 

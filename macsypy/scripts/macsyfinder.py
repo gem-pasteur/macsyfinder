@@ -17,10 +17,10 @@ import sys
 import os
 import argparse
 import logging
-from operator import attrgetter # To be used with "sorted"
+from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
 
-from macsypy.config import Config, ConfigLight
+from macsypy.config_new import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
 from macsypy.system_parser import SystemParser
 from macsypy.search_genes import search_genes
@@ -89,20 +89,22 @@ PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys
 
 def list_models(args):
     """
-    :param args: The command line argument onve parsed
+    :param args: The command line argument once parsed
     :type args: :class:`argparse.Namespace` object
     :return: a string representaion of the models and submodels.
     :rtype: str
     """
-    config = ConfigLight(previous_run=args.previous_run,
-                         cfg_file=args.cfg_file,
-                         profile_suffix=args.profile_suffix,
-                         )
+    config = Config(MacsyDefaults(), args)
     registry = ModelRegistry(config)
     return str(registry)
 
 
 def parse_args(args):
+    """
+
+    :param args:
+    :return:
+    """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -246,7 +248,6 @@ def parse_args(args):
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
-                             dest='models_dir',
                              default=None,
                              help='specify the path to the models if the models are not installed in the canonical place.\
                               It gather definitions (xml files) and hmm profiles in a specific\
@@ -259,11 +260,6 @@ def parse_args(args):
                              default=None,
                              help='Path to the directory where to store results.\
                              if out-dir is specified res-search-dir will be ignored.')
-    dir_options.add_argument('-r', '--res-search-dir',
-                             action='store',
-                             default=None,
-                             help='Path to the directory where to store MacSyFinder search results directories\
-                             (default current working directory).')
     dir_options.add_argument('--res-search-suffix',
                              action='store',
                              default=None,
@@ -331,40 +327,28 @@ def parse_args(args):
     return parsed_args
 
 
-def main_search_systems(args, logger, log_level):
+def main_search_systems(parsed_args, logger, log_level):
+    """
 
-    config = Config(previous_run=args.previous_run,
-                    cfg_file=args.cfg_file,
-                    sequence_db=args.sequence_db,
-                    db_type=args.db_type,
-                    build_indexes=args.build_indexes,
-                    replicon_topology=args.replicon_topology,
-                    topology_file=args.topology_file,
-                    inter_gene_max_space=args.inter_gene_max_space,
-                    min_mandatory_genes_required=args.min_mandatory_genes_required,
-                    min_genes_required=args.min_genes_required,
-                    max_nb_genes=args.max_nb_genes,
-                    multi_loci=args.multi_loci,
-                    hmmer_exe=args.hmmer_exe,
-                    index_db_exe=args.index_db_exe,
-                    e_value_res=args.e_value_res,
-                    i_evalue_sel=args.i_evalue_sel,
-                    coverage_profile=args.coverage_profile,
-                    def_dir=args.def_dir,
-                    models_dir=args.models_dir,
-                    res_search_dir=args.res_search_dir,
-                    out_dir=args.out_dir,
-                    res_search_suffix=args.res_search_suffix,
-                    profile_dir=args.profile_dir,
-                    profile_suffix=args.profile_suffix,
-                    res_extract_suffix=args.res_extract_suffix,
-                    log_level=log_level,
-                    log_file=args.log_file,
-                    worker_nb=args.worker_nb,
-                    relative_path=args.relative_path
-                    )
+    :param parsed_args: the command line arguments
+    :type parsed_args: a :class:`argparse.Namespace` object
+    :param logger:
+    :param log_level:
+    :return:
+    """
+    defaults = MacsyDefaults()
+    config = Config(defaults, parsed_args)
+    working_dir = config.working_dir()
+    if not os.path.exists(working_dir):
+        os.mkdirs(working_dir)
+    else:
+        if os.path.is_dir(working_dir):
+            if os.listdir(working_dir):
+                raise ValueError("'' already exists and is not a empty".format(working_dir))
+        else:
+            raise ValueError("'' already exists and is not a directory".format(working_dir))
 
-    config.save(config.working_dir)
+    config.save(path_or_buf=working_dir)
 
     registry = ModelRegistry(config)
     # build indexes
@@ -374,16 +358,15 @@ def main_search_systems(args, logger, log_level):
     # create models
     parser = SystemParser(config, system_bank, gene_bank)
     try:
-        models_name_to_detect = get_models_name_to_detect(args
-                                                          , registry)
+        models_name_to_detect = get_models_name_to_detect(parsed_args, registry)
     except KeyError as err:
         sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
     parser.parse(models_name_to_detect)
 
     out_logger = logging.getLogger('macsyfinder.out')
-    out_logger.info("MacSyFinder's results will be stored in {0}".format(config.working_dir))
-    out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db))
+    out_logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
+    out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db()))
 
     for s in models_name_to_detect:
         out_logger.info("\t- {}".format(s))
@@ -424,7 +407,6 @@ def main_search_systems(args, logger, log_level):
         search_systems(all_hits, models_to_detect, config)
     else:
         logger.info("No hits found in this dataset.")
-
 
 
 def main(args=None, loglevel=None):

@@ -16,7 +16,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.config import ConfigLight
+from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from macsypy.scripts.macsyfinder import get_models_name_to_detect
 from tests import MacsyTest
@@ -38,8 +38,8 @@ class Test(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         cmd_args.models = [['set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
-        config = ConfigLight()
-        config._models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
+        config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'data_set_1', 'models')),
+                        cmd_args)
         registry = ModelRegistry(config)
         res = get_models_name_to_detect(cmd_args, registry)
         exp = ['set_1/T9SS', 'set_1/T3SS', 'set_1/T4SS_typeI']

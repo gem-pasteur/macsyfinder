@@ -11,8 +11,6 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
-
-
 import threading
 import logging
 _log = logging.getLogger('macsyfinder.' + __name__)
@@ -34,7 +32,7 @@ def search_genes(genes, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
-    worker_nb = cfg.worker_nb
+    worker_nb = cfg.worker()
     if not worker_nb:
         worker_nb = len(genes)
     _log.debug("worker_nb = {0:d}".format(worker_nb))
@@ -67,6 +65,7 @@ def search_genes(genes, cfg):
             try:
                 report = profile.execute()
             except Exception as err:
+                print("\n### ERROR ", err)
                 _log.critical(err)
                 stop(signal.SIGKILL, None)
             else:
@@ -92,10 +91,11 @@ def search_genes(genes, cfg):
         :rtype: list of `macsypy.report.HMMReport` object
         """
         with sema:
-            hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
+            hmm_old_path = os.path.join(cfg.previous_run(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
             _log.info("recover hmm {0}".format(hmm_old_path))
-            hmm_new_path = os.path.join(cfg.working_dir, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
+            hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
             shutil.copy(hmm_old_path, hmm_new_path)
+            print("### copy ", hmm_old_path, " -> ", hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
             if cfg.db_type == 'gembase':
                 report = GembaseHMMReport(gene, hmm_new_path, cfg)
@@ -115,9 +115,18 @@ def search_genes(genes, cfg):
     genes = set(genes)
     _log.debug("start searching genes")
 
-    previous_run = cfg.previous_run
+    hmmer_dir = os.path.join(cfg.working_dir(), cfg.hmmer_dir())
+    if not os.path.exists(hmmer_dir):
+        # it works because mkdir is an atomic operation
+        os.mkdir(hmmer_dir)
+
+    previous_run = cfg.previous_run()
+    print("\n############ previous_run", previous_run)
     for gene in genes:
-        if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)):
+        if previous_run and os.path.exists(os.path.join(previous_run,
+                                                        cfg.hmmer_dir(),
+                                                        gene.name + cfg.res_search_suffix())):
+            print("#### ", os.path.join(previous_run, cfg.hmmer_dir(), gene.name + cfg.res_search_suffix()), " .. exists")
             t = threading.Thread(target=recover, args=(gene, all_reports, cfg, sema))
         else:
             t = threading.Thread(target=search, args=(gene, all_reports, sema))

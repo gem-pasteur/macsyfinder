@@ -16,6 +16,7 @@ import shutil
 from argparse import Namespace
 from configparser import ParsingError
 import tempfile
+from time import strftime
 
 from macsypy.config import MacsyDefaults, Config
 
@@ -68,9 +69,17 @@ class TestConfig(MacsyTest):
                                 'max_nb_genes': None,
                                 'min_genes_required': None,
                                 'min_mandatory_genes_required': None,
+                                'multi_loci': None
                                 }
+
         for opt, val in self.defaults.items():
-            if opt in methods_needing_args:
+            if opt == 'out_dir':
+                self.assertEqual(cfg.out_dir(),
+                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 )
+            elif opt == 'multi_loci':
+                self.assertFalse(cfg.multi_loci('whatever'))
+            elif opt in methods_needing_args:
                 self.assertEqual(getattr(cfg, opt)('whatever'), val)
             else:
                 self.assertEqual(getattr(cfg, opt)(), val)
@@ -81,6 +90,7 @@ class TestConfig(MacsyTest):
                                 'max_nb_genes':  [('Flagellum', 6), ('T3SS', 3)],
                                 'min_genes_required': [('Flagellum', 8), ('T4SS', 4)],
                                 'min_mandatory_genes_required': [('Flagellum', 12), ('T6SS', 6)],
+                                'multi_loci': {'Flagellum', 'T4SS'}
                                 }
 
         self.parsed_args.cfg_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
@@ -91,7 +101,16 @@ class TestConfig(MacsyTest):
         expected_values.update(methods_needing_args)
 
         for opt, val in expected_values.items():
-            if opt in methods_needing_args:
+            if opt == 'out_dir':
+                self.assertEqual(cfg.out_dir(),
+                                 os.path.join(cfg.res_search_dir(),
+                                              "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 )
+            elif opt == 'multi_loci':
+                self.assertTrue(cfg.multi_loci('Flagellum'))
+                self.assertTrue(cfg.multi_loci('T4SS'))
+                self.assertFalse(cfg.multi_loci('T6SS'))
+            elif opt in methods_needing_args:
                 for model, genes in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), genes)
             else:
@@ -102,6 +121,7 @@ class TestConfig(MacsyTest):
                                 'max_nb_genes':  [('Flagellum', 6), ('T3SS', 3)],
                                 'min_genes_required': [('Flagellum', 8), ('T4SS', 4)],
                                 'min_mandatory_genes_required': [('Flagellum', 12), ('T6SS', 6)],
+                                'multi_loci': {'Flagellum', 'T4SS'}
                                 }
         with tempfile.TemporaryDirectory() as tmpdirname:
             ori_conf_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
@@ -116,7 +136,16 @@ class TestConfig(MacsyTest):
                 expected_values = {k: v for k, v in self.defaults.items()}
                 expected_values.update(methods_needing_args)
                 for opt, val in expected_values.items():
-                    if opt in methods_needing_args:
+                    if opt == 'out_dir':
+                        self.assertEqual(cfg.out_dir(),
+                                         os.path.join(cfg.res_search_dir(),
+                                                      "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                         )
+                    elif opt == 'multi_loci':
+                        self.assertTrue(cfg.multi_loci('Flagellum'))
+                        self.assertTrue(cfg.multi_loci('T4SS'))
+                        self.assertFalse(cfg.multi_loci('T6SS'))
+                    elif opt in methods_needing_args:
                         for model, genes in expected_values[opt]:
                             self.assertEqual(getattr(cfg, opt)(model), genes)
                     else:
@@ -126,17 +155,17 @@ class TestConfig(MacsyTest):
 
 
     def test_Config_args(self):
-        methods_needing_args = {'inter_gene_max_space': [('Flagellum', 14), ('T2SS', 12)],
-                                'max_nb_genes': [('Flagellum', 16), ('T3SS', 13)],
-                                'min_genes_required': [('Flagellum', 18), ('T4SS', 14)],
-                                'min_mandatory_genes_required': [('Flagellum', 22), ('T6SS', 16)],
+        methods_needing_args = {'inter_gene_max_space': [('Flagellum', '14'), ('T2SS', '12')],
+                                'max_nb_genes': [('Flagellum', '16'), ('T3SS', '13')],
+                                'min_genes_required': [('Flagellum', '18'), ('T4SS', '14')],
+                                'min_mandatory_genes_required': [('Flagellum', '22'), ('T6SS', '16')],
+                                'multi_loci': 'Flagellum, T4SS',
                                 }
         for opt, value in methods_needing_args.items():
             setattr(self.parsed_args, opt, value)
 
         simple_opt = {'hmmer': 'foo',
                       'i_evalue_sel': 20,
-                      'multi_loci': True,
                       'replicon_topology': 'linear',
                       'db_type': 'gembase',
                       'sequence_db': self.find_data(os.path.join('base', 'test_aesu.fa')),
@@ -152,19 +181,29 @@ class TestConfig(MacsyTest):
         expected_values.update(methods_needing_args)
         expected_values.update(simple_opt)
         for opt, val in expected_values.items():
-            if opt in methods_needing_args:
+            if opt == 'out_dir':
+                self.assertEqual(cfg.out_dir(),
+                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 )
+            elif opt == 'multi_loci':
+                self.assertTrue(cfg.multi_loci('Flagellum'))
+                self.assertTrue(cfg.multi_loci('T4SS'))
+                self.assertFalse(cfg.multi_loci('T6SS'))
+            elif opt in methods_needing_args:
                 for model, genes in expected_values[opt]:
-                    self.assertEqual(getattr(cfg, opt)(model), genes)
+                    self.assertEqual(getattr(cfg, opt)(model), int(genes))
+
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
                                  msg="{} failed: expected: val '{}' != got '{}'".format(opt, val, getattr(cfg, opt)()))
 
     def test_Config_file_n_args(self):
-        cfg_needing_args = {'inter_gene_max_space': [('Flagellum', 4), ('T2SS', 2)],
-                            'max_nb_genes':  [('Flagellum', 6), ('T3SS', 3)],
-                            'min_genes_required': [('Flagellum', 8), ('T4SS', 4)],
-                            'min_mandatory_genes_required': [('Flagellum', 12), ('T6SS', 6)],
-                            }
+        cfg_needing_args = {'inter_gene_max_space': [('Flagellum', '4'), ('T2SS', '2')],
+                                'max_nb_genes': [('Flagellum', '6'), ('T3SS', '3')],
+                                'min_genes_required': [('Flagellum', '8'), ('T4SS', '4')],
+                                'min_mandatory_genes_required': [('Flagellum', '12'), ('T6SS', '6')],
+                                'multi_loci': 'Flagellum, T4SS',
+                                }
 
         self.parsed_args.cfg_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
         expected_values = {k: v for k, v in self.defaults.items()}
@@ -179,7 +218,6 @@ class TestConfig(MacsyTest):
 
         simple_opt = {'hmmer': 'foo',
                       'i_evalue_sel': 20,
-                      'multi_loci': True,
                       'db_type': 'gembase'}
         for opt, val in simple_opt.items():
             setattr(self.parsed_args, opt, val)
@@ -190,11 +228,21 @@ class TestConfig(MacsyTest):
         expected_values.update(simple_opt)
 
         for opt, exp_val in expected_values.items():
-            if opt in cfg_needing_args:
+            if opt == 'out_dir':
+                self.assertEqual(cfg.out_dir(),
+                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 )
+            elif opt == 'multi_loci':
+                self.assertTrue(cfg.multi_loci('Flagellum'))
+                self.assertTrue(cfg.multi_loci('T4SS'))
+                self.assertFalse(cfg.multi_loci('T6SS'))
+            elif opt in cfg_needing_args:
                 for model, val in expected_values[opt]:
-                    self.assertEqual(getattr(cfg, opt)(model), val)
+                    self.assertEqual(getattr(cfg, opt)(model), int(val))
+
             else:
                 self.assertEqual(getattr(cfg, opt)(), exp_val)
+
 
     def test_bad_values(self):
         invalid_syntax = {'inter_gene_max_space': 'Flagellum 4 2',
@@ -263,11 +311,28 @@ class TestConfig(MacsyTest):
 
     def test_save(self):
         self.parsed_args.max_nb_genes = [['T2SS', 5], ['Flagelum', 12]]
+        self.parsed_args.multi_loci = 'T2SS,Flagelum'
         cfg = Config(self.defaults, self.parsed_args)
-        expected = {k: v for k, v in cfg._options.items() if v is not None}
+        expected = {k: v for k, v in cfg._options.items() if v}
         expected['max_nb_genes'] = 'T2SS 5 Flagelum 12'
+        expected['multi_loci'] = {'T2SS', 'Flagelum'}
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
             saved_opt = cfg._config_file_2_dict(self.defaults, [cfg_path])
+            # the order of model_fqn is not guarantee
+            saved_opt['multi_loci'] = {v for v in [v.strip() for v in saved_opt['multi_loci'].split(',')] if v}
             self.assertEqual(saved_opt, expected)
+
+    def test_out_dir(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.out_dir(),
+                         os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                         )
+        self.parsed_args.out_dir = 'foo'
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.out_dir(), 'foo')
+
+    def test_working_dir(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.out_dir(), cfg.working_dir())

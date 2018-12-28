@@ -18,7 +18,7 @@ import time
 import tempfile
 import logging
 
-from macsypy.config import Config
+from macsypy.config_legacy import Config
 from tests import MacsyTest
 
 

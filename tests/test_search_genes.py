@@ -17,8 +17,9 @@ import unittest
 import shutil
 import tempfile
 import logging
+import argparse
 
-from macsypy.config import Config
+from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import Gene
 import macsypy.gene
 from macsypy.system import System
@@ -31,7 +32,7 @@ import macsypy.search_genes
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestSearchGenes(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
@@ -44,19 +45,21 @@ class Test(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
 
-        self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          models_dir=self.find_data('models'),
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix=".hmm_extract",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file
-                          )
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = tempfile.gettempdir()
+        args.log_level = 30
+        args.log_file = log_file
+        args.out_dir = os.path.join(args.res_search_dir,
+                                    'test_macsyfinder_search_genes')
+        if os.path.exists(args.out_dir):
+            shutil.rmtree(args.out_dir)
+        os.mkdir(args.out_dir)
+
+        self.cfg = Config(MacsyDefaults(), args)
+
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
@@ -72,7 +75,7 @@ class Test(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
             pass
         except:
             pass
