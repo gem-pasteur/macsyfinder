@@ -16,7 +16,9 @@ import os
 import shutil
 import tempfile
 import logging
-from macsypy.config import Config
+import argparse
+
+from macsypy.config import Config, MacsyDefaults
 from macsypy.system import System
 from macsypy.gene import Gene
 from macsypy.gene import Homolog
@@ -37,20 +39,21 @@ class Test(MacsyTest):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        
-        self.cfg = Config(hmmer_exe="",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          models_dir=self.find_data('models'),
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix="",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file
-                          )
+
+        self.args = argparse.Namespace()
+        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.db_type = 'gembase'
+        self.args.models_dir = self.find_data('models')
+        self.args.res_search_dir = tempfile.gettempdir()
+        self.args.log_level = 30
+        self.args.log_file = log_file
+        self.args.out_dir = os.path.join(self.args.res_search_dir,
+                                    'test_macsyfinder_System')
+        if os.path.exists(self.args.out_dir):
+            shutil.rmtree(self.args.out_dir)
+        os.mkdir(self.args.out_dir)
+
+        self.cfg = Config(MacsyDefaults(), self.args)
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
@@ -65,7 +68,7 @@ class Test(MacsyTest):
 
     def clean_working_dir(self):
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
         except:
             pass
 
@@ -86,20 +89,9 @@ class Test(MacsyTest):
 
         # test inter_gene_max_space overloaded by the config
         inter_gene_max_space_cfg = [[system_fqn, '22']]
-        cfg = Config(hmmer_exe="",
-                     sequence_db=self.find_data("base", "test_base.fa"),
-                     db_type="gembase",
-                     e_value_res=1,
-                     i_evalue_sel=0.5,
-                     models_dir=self.find_data('models'),
-                     res_search_dir=tempfile.gettempdir(),
-                     res_search_suffix="",
-                     profile_suffix=".hmm",
-                     res_extract_suffix="",
-                     log_level=30,
-                     log_file=os.devnull,
-                     inter_gene_max_space=inter_gene_max_space_cfg
-                     )
+
+        self.args.inter_gene_max_space = inter_gene_max_space_cfg
+        cfg = Config(MacsyDefaults(), self.args)
         system = System(cfg, system_fqn, inter_gene_max_space_xml)
         self.assertEqual(system.inter_gene_max_space, int(inter_gene_max_space_cfg[0][1]))
 
@@ -118,20 +110,9 @@ class Test(MacsyTest):
 
         # test inter_gene_max_space overloaded by the config
         min_genes_required_cfg = [[system_fqn, '22']]
-        cfg = Config(hmmer_exe="",
-                     sequence_db=self.find_data("base", "test_base.fa"),
-                     db_type="gembase",
-                     e_value_res=1,
-                     i_evalue_sel=0.5,
-                     models_dir=self.find_data('models'),
-                     res_search_dir=tempfile.gettempdir(),
-                     res_search_suffix="",
-                     profile_suffix=".hmm",
-                     res_extract_suffix="",
-                     log_level=30,
-                     log_file=os.devnull,
-                     min_genes_required=min_genes_required_cfg
-                     )
+
+        self.args.min_genes_required = min_genes_required_cfg
+        cfg = Config(MacsyDefaults(), self.args)
         system = System(cfg, system_fqn, min_genes_required_xml)
         self.assertEqual(system.min_genes_required, int(min_genes_required_cfg[0][1]))
 
@@ -151,20 +132,9 @@ class Test(MacsyTest):
 
         # test inter_gene_max_space overloaded by the config
         min_mandatory_genes_required_cfg = [[system_fqn, '22']]
-        cfg = Config(hmmer_exe="",
-                     sequence_db=self.find_data("base", "test_base.fa"),
-                     db_type="gembase",
-                     e_value_res=1,
-                     i_evalue_sel=0.5,
-                     models_dir=self.find_data('models'),
-                     res_search_dir=tempfile.gettempdir(),
-                     res_search_suffix="",
-                     profile_suffix=".hmm",
-                     res_extract_suffix="",
-                     log_level=30,
-                     log_file=os.devnull,
-                     min_mandatory_genes_required=min_mandatory_genes_required_cfg
-                     )
+
+        self.args.min_mandatory_genes_required = min_mandatory_genes_required_cfg
+        cfg = Config(MacsyDefaults(), self.args)
         system = System(cfg, system_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, int(min_mandatory_genes_required_cfg[0][1]))
 
@@ -181,20 +151,9 @@ class Test(MacsyTest):
 
         # test inter_gene_max_space overloaded by the config
         max_nb_genes_cfg = [[system_fqn, '22']]
-        cfg = Config(hmmer_exe="",
-                     sequence_db=self.find_data("base", "test_base.fa"),
-                     db_type="gembase",
-                     e_value_res=1,
-                     i_evalue_sel=0.5,
-                     models_dir=self.find_data('models'),
-                     res_search_dir=tempfile.gettempdir(),
-                     res_search_suffix="",
-                     profile_suffix=".hmm",
-                     res_extract_suffix="",
-                     log_level=30,
-                     log_file=os.devnull,
-                     max_nb_genes=max_nb_genes_cfg
-                     )
+
+        self.args.max_nb_genes = max_nb_genes_cfg
+        cfg = Config(MacsyDefaults(), self.args)
         system = System(cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
         self.assertEqual(system.max_nb_genes, int(max_nb_genes_cfg[0][1]))
 
@@ -211,24 +170,14 @@ class Test(MacsyTest):
 
         self.clean_working_dir()
 
-        cfg = Config(hmmer_exe="",
-                     sequence_db=self.find_data("base", "test_base.fa"),
-                     db_type="gembase",
-                     e_value_res=1,
-                     i_evalue_sel=0.5,
-                     models_dir=self.find_data('models'),
-                     res_search_dir=tempfile.gettempdir(),
-                     res_search_suffix="",
-                     profile_suffix=".hmm",
-                     res_extract_suffix="",
-                     log_level=30,
-                     log_file=os.devnull,
-                     multi_loci='foo/False'
-                     )
+        self.args.multi_loci = 'foo/False'
+        cfg = Config(MacsyDefaults(), self.args)
+
         system_fqn = 'foo/False'
         inter_gene_max_space = 40
         system = System(cfg, system_fqn, inter_gene_max_space, multi_loci=False)
         self.assertTrue(system.multi_loci)
+
 
     def test_add_mandatory_gene(self):
         system = System(self.cfg, "foo", 10)

@@ -18,7 +18,9 @@ import unittest
 import shutil
 import tempfile
 import logging
-from macsypy.config import Config
+import argparse
+
+from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes
 from tests import MacsyTest
 from tests.macsy_test_env import MacsyEnvManager
@@ -46,23 +48,28 @@ class Test(MacsyTest, MacsyEnvManager):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        
-        self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          models_dir=self.find_data('models'),
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix="",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file
-                          )
 
-        shutil.copy(self.cfg.sequence_db, self.cfg.working_dir)
-        self.cfg.options['sequence_db'] = os.path.join(self.cfg.working_dir, os.path.basename(self.cfg.sequence_db))
+        args = argparse.Namespace()
+
+        args.db_type = 'gembase'
+        args.e_value_res = 1
+        args.i_evalue_sel = 0.5
+        args.models_dir = self.find_data('models')
+        args.res_search_suffix = ''
+        args.log_level = 30
+        args.log_file = log_file
+
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes', 'seq')
+        if os.path.exists(args.out_dir):
+            shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
+        os.makedirs(args.out_dir)
+        seq_db = self.find_data("base", "test_base.fa")
+        shutil.copy(seq_db, args.out_dir)
+
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
+
+        self.cfg = Config(MacsyDefaults(), args)
+
 
 
     def tearDown(self):
@@ -72,14 +79,14 @@ class Test(MacsyTest, MacsyEnvManager):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
         except:
             pass
 
     def test_find_my_indexes(self):
         idx = Indexes(self.cfg)
         self.assertIsNone(idx.find_my_indexes())
-        new_idx = os.path.join(os.path.dirname(self.cfg.sequence_db), idx.name + ".idx")
+        new_idx = os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx")
         fh = open(new_idx, 'w')
         self.assertEqual(idx.find_my_indexes(), new_idx)
         fh.close()
@@ -88,12 +95,12 @@ class Test(MacsyTest, MacsyEnvManager):
         idx = Indexes(self.cfg)
         idx.build()
         my_idx = idx.find_my_indexes()
-        self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db), idx.name + ".idx"))
+        self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"))
 
 
     def test_build_with_idx(self):
         idx = Indexes(self.cfg)
-        open(os.path.join(os.path.dirname(self.cfg.sequence_db), idx.name + ".idx"), 'w').close()
+        open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"), 'w').close()
         idx.build()
         my_idx = idx.find_my_indexes()
         self.assertEqual(os.path.getsize(my_idx), 0)
@@ -111,7 +118,7 @@ class Test(MacsyTest, MacsyEnvManager):
         # Skip test on Windows, since setting the folder permissions is not affecting files inside
         # in Singularity container tess are run as root and this test as non sense
         idx = Indexes(self.cfg)
-        idx_dir = os.path.join(os.path.dirname(self.cfg.sequence_db))
+        idx_dir = os.path.join(os.path.dirname(self.cfg.sequence_db()))
         os.chmod(idx_dir, 0000)
         self.assertRaises(IOError, idx.build)
         os.chmod(idx_dir, 0o777)

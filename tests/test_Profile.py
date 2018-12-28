@@ -18,12 +18,12 @@ import shutil
 import tempfile
 import logging
 import sysconfig
-import stat
+import argparse
 
 from macsypy.gene import Profile
 from macsypy.gene import Gene
 from macsypy.system import System
-from macsypy.config import Config
+from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from macsypy.utils import which
 from tests import MacsyTest
@@ -41,20 +41,20 @@ class TestProfile(MacsyTest):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        
-        self.cfg = Config(hmmer_exe="hmmsearch",
-                          sequence_db=self.find_data("base", "test_base.fa"),
-                          db_type="gembase",
-                          e_value_res=1,
-                          i_evalue_sel=0.5,
-                          models_dir=self.find_data('models'),
-                          res_search_dir=tempfile.gettempdir(),
-                          res_search_suffix="",
-                          profile_suffix=".hmm",
-                          res_extract_suffix="",
-                          log_level=30,
-                          log_file=log_file
-                          )
+
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = tempfile.gettempdir()
+        args.log_level = 30
+        args.log_file = log_file
+        self.cfg = Config(MacsyDefaults(), args)
+
+        if os.path.exists(self.cfg.working_dir()):
+            shutil(self.cfg.working_dir())
+        os.makedirs(self.cfg.working_dir())
+
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
@@ -67,7 +67,7 @@ class TestProfile(MacsyTest):
         l = logging.getLogger()
         l.manager.loggerDict.clear()
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
         except:
             pass
 
@@ -92,7 +92,7 @@ class TestProfile(MacsyTest):
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_execute(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
-            self.cfg.options['db_type'] = db_type
+            self.cfg._set_db_type(db_type)
             system = System(self.cfg, "foo/T2SS", 10)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             profile_path = self.models_location.get_profile("abc")
@@ -114,7 +114,7 @@ class TestProfile(MacsyTest):
 
 
     def test_execute_unknown_binary(self):
-        self.cfg.options['hmmer_exe'] = "Nimportnaoik"
+        self.cfg._options['hmmer'] = "Nimportnaoik"
         system = System(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
@@ -131,7 +131,7 @@ sys.exit(127)
 """.format(sysconfig.sys.executable))
         try:
             os.chmod(hmmer.name, 0o755)
-            self.cfg.options['hmmer_exe'] = hmmer.name
+            self.cfg._options['hmmer'] = hmmer.name
             system = System(self.cfg, "foo/T2SS", 10)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")

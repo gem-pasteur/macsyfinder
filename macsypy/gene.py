@@ -548,17 +548,17 @@ class Profile(object):
             # the other calls return directly this report
             if self._report is not None:
                 return self._report
-            output_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir,
-                                       self.gene.name + self.cfg.res_search_suffix)
-            err_path = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir,
-                                    self.gene.name + os.path.splitext(self.cfg.res_search_suffix)[0] + ".err")
+            hmmer_dir = os.path.join(self.cfg.working_dir(), self.cfg.hmmer_dir())
+            output_path = os.path.join(hmmer_dir,  self.gene.name + self.cfg.res_search_suffix())
+            err_path = os.path.join(hmmer_dir,
+                                    self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                options = {"hmmer_exe": self.cfg.hmmer_exe,
+                options = {"hmmer_exe": self.cfg.hmmer(),
                            "output_file": output_path,
-                           "e_value_res": self.cfg.e_value_res,
+                           "e_value_res": self.cfg.e_value_search(),
                            "profile": self.path,
-                           "sequence_db": self.cfg.sequence_db,
+                           "sequence_db": self.cfg.sequence_db(),
                            }
                 command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
                 _log.info("{0} Hmmer command line : {1}".format(self.gene.name, command))
@@ -574,8 +574,6 @@ class Profile(object):
                     msg = "Hmmer execution failed: command = {0} : {1}".format(command, err)
                     _log.critical(msg, exc_info=True)
                     raise err
-
-
                 hmmer.wait()
 
             if hmmer.returncode != 0:
@@ -589,9 +587,10 @@ class Profile(object):
                     _log.critical(msg)
                     raise RuntimeError(msg)
             self.hmm_raw_output = output_path
-            if self.cfg.db_type == 'gembase':
+            db_type = self.cfg.db_type()
+            if db_type == 'gembase':
                 report = GembaseHMMReport(self.gene, output_path, self.cfg)
-            elif self.cfg.db_type == 'ordered_replicon':
+            elif db_type == 'ordered_replicon':
                 report = OrderedHMMReport(self.gene, output_path, self.cfg)
             else:
                 report = GeneralHMMReport(self.gene, output_path, self.cfg)

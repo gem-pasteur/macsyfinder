@@ -15,7 +15,7 @@ import os
 import logging
 from time import strftime
 
-from macsypy.config_new import MacsyDefaults
+from macsypy.config import MacsyDefaults
 
 from tests import MacsyTest
 
@@ -38,8 +38,8 @@ class TestMacsyDefaults(MacsyTest):
                          'min_mandatory_genes_required': None,
                          'models': None,
                          'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data', 'models')),
-                         'multi_loci': False,
-                         'out_dir': os.path.join(os.getcwd(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S"))),
+                         'multi_loci': set(),
+                         'out_dir': None,
                          'previous_run': False,
                          'profile_suffix': '.hmm',
                          'relative_path': False,
@@ -66,11 +66,11 @@ class TestMacsyDefaults(MacsyTest):
 
 
     def test_MacsyDefaults_with_MACSY_DATA(self):
-        import macsypy.config_new
-        macsydata = macsypy.config_new.__MACSY_DATA__
-        macsypy.config_new.__MACSY_DATA__ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
+        import macsypy.config
+        macsydata = macsypy.config.__MACSY_DATA__
+        macsypy.config.__MACSY_DATA__ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
         try:
             defaults = MacsyDefaults()
             self.assertDictEqual(defaults, self.defaults)
         finally:
-            macsypy.config_new.__MACSY_DATA__ = macsydata
+            macsypy.config.__MACSY_DATA__ = macsydata

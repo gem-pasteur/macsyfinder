@@ -16,11 +16,9 @@ import os
 import shutil
 import tempfile
 import logging
-import copy
-import unittest
-import imp
+import argparse
 
-from macsypy.config import ConfigLight, Config
+from macsypy.config import Config, MacsyDefaults
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry
 from macsypy.error import MacsypyError
@@ -82,6 +80,7 @@ class RegitriesUtilsTest(MacsyTest):
         items = ['CRISPR-Cas', 'typing', 'cas']
         self.assertEqual('/'.join(items), registries.join_def_path(*items))
 
+
 class ModelLocationTest(MacsyTest):
 
     def setUp(self):
@@ -95,10 +94,11 @@ class ModelLocationTest(MacsyTest):
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
 
-        self.cfg = ConfigLight()
         self.tmp_dir = tempfile.mkdtemp()
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
         os.mkdir(self.root_models_dir)
+        self.cfg = Config(MacsyDefaults(models_dir=self.root_models_dir),
+                          argparse.Namespace())
 
         self.simple_models = {'name': 'simple',
                               'profiles': ('prof_1.hmm', 'prof_2.hmm'),
@@ -424,11 +424,12 @@ class ModelRegistryTest(MacsyTest):
         log_file = os.devnull
         log_handler = logging.FileHandler(log_file)
         macsy_log.addHandler(log_handler)
-        self.cfg = ConfigLight()
         self.tmp_dir = tempfile.mkdtemp()
-        self._prefix_data_ori = self.cfg.models_dir
         registries._prefix_data = self.tmp_dir
         self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
+        self.cfg = Config(MacsyDefaults(models_dir=self.root_models_dir),
+                          argparse.Namespace())
+
         os.makedirs(self.root_models_dir)
         simple_models = {'name': 'simple',
                          'profiles': ('prof_1.hmm', 'prof_2.hmm'),
@@ -456,7 +457,7 @@ class ModelRegistryTest(MacsyTest):
 
         self.simple_dir = _create_fake_models_tree(self.root_models_dir, simple_models)
         self.complex_dir = _create_fake_models_tree(self.root_models_dir, complex_models)
-        self.cfg._models_dir = self.root_models_dir
+
 
     def tearDown(self):
         # close loggers filehandles, so they don't block file deletion
@@ -472,7 +473,6 @@ class ModelRegistryTest(MacsyTest):
             shutil.rmtree(self.tmp_dir)
         except:
             pass
-        registries._prefix_data = self._prefix_data_ori
 
 
     def test_ModelRegistry(self):

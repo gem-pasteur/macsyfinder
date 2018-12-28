@@ -65,8 +65,8 @@ class Indexes(object):
         :type cfg: :class:`macsypy.config.Config` object
         """
         self.cfg = cfg
-        self._fasta_path = cfg.sequence_db
-        self.name = os.path.basename(cfg.sequence_db)
+        self._fasta_path = cfg.sequence_db()
+        self.name = os.path.basename(self._fasta_path)
         self._my_indexes = None  # path
 
     def build(self, force=False):
@@ -81,7 +81,7 @@ class Indexes(object):
         ###########################
         # build indexes if needed #
         ###########################
-        index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db))
+        index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db()))
 
         if force or not my_indexes:
             # formatdb create indexes in the same directory as the sequence_db
@@ -103,7 +103,7 @@ class Indexes(object):
         :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
         """ 
-        path = os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx")
+        path = os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx")
         if os.path.exists(path):
             return path
 
@@ -118,14 +118,14 @@ class Indexes(object):
         """
         try:
             with open(self._fasta_path, 'r') as fasta_file:
-                with open(os.path.join(os.path.dirname(self.cfg.sequence_db), self.name + ".idx"), 'w') as my_base:
+                with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx"), 'w') as my_base:
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
                     for seqid, comment, length in f_iter:
                         seq_nb += 1
                         my_base.write("{seq_id};{length:d};{seq_nb:d}\n".format(seq_id=seqid, length=length, seq_nb=seq_nb))
         except Exception as err:
-            msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db, err)
+            msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db(), err)
             _log.critical(msg, exc_info=True)
             raise err
 
@@ -151,19 +151,19 @@ class RepliconDB(object):
             This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
         """
         self.cfg = cfg
-        assert self.cfg.db_type in ('gembase', 'ordered_replicon')
+        assert self.cfg.db_type() in ('gembase', 'ordered_replicon')
         idx = Indexes(self.cfg)
         self.sequence_idx = idx.find_my_indexes()
-        self.topology_file = self.cfg.topology_file
+        self.topology_file = self.cfg.topology_file()
         self._DB = {}
         if self.topology_file:
             topo_dict = self._fill_topology()
         else:
             topo_dict = {}
-        if self.cfg.db_type == 'gembase':
-            self._fill_gembase_min_max(topo_dict, default_topology=self.cfg.replicon_topology)
+        if self.cfg.db_type() == 'gembase':
+            self._fill_gembase_min_max(topo_dict, default_topology=self.cfg.replicon_topology())
         else:
-            self._fill_ordered_min_max(self.cfg.replicon_topology)
+            self._fill_ordered_min_max(self.cfg.replicon_topology())
 
 
     def _fill_topology(self):

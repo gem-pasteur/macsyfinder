@@ -69,8 +69,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
 """.format(gene_name=self.gene.name, hmmer_out=self._hmmer_raw_out,
                                      profile_len=len(self.gene.profile),
-                                     i_evalue=self.cfg.i_evalue_sel,
-                                     coverage=self.cfg.coverage_profile)
+                                     i_evalue=self.cfg.i_evalue_sel(),
+                                     coverage=self.cfg.coverage_profile())
         
         for h in self.hits:
             s += str(h)
@@ -84,8 +84,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         from the config object
         """
         with self._lock:
-            extract_out_name = self.gene.name + self.cfg.res_extract_suffix
-            self._extract_out = os.path.join(self.cfg.working_dir, self.cfg.hmmer_dir, extract_out_name)
+            extract_out_name = self.gene.name + self.cfg.res_extract_suffix()
+            self._extract_out = os.path.join(self.cfg.working_dir(), self.cfg.hmmer_dir(), extract_out_name)
             with open(self._extract_out, 'w') as _file:
                 _file.write(str(self))
 
@@ -137,6 +137,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
+        print("##### _fill_my_db", macsyfinder_idx)
         with open(macsyfinder_idx, 'r') as idx:
             for l in idx:
                 seqid, length, rank = l.split(';')
@@ -253,14 +254,17 @@ class GeneralHMMReport(HMMReport):
             self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
-                i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_threshold = self.cfg.coverage_profile
+                i_evalue_sel = self.cfg.i_evalue_sel()
+                coverage_threshold = self.cfg.coverage_profile()
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
                 next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
+                    print("@@@@ my_db",my_db )
+                    print("@@@@ hit_id", hit_id)
+                    print("@@@@ my_db[hit_id]", my_db[hit_id])
                     seq_lg, position_hit = my_db[hit_id]
 
                     # replicon_name = self.cfg. # Define a variable in further devt
@@ -299,8 +303,8 @@ class OrderedHMMReport(HMMReport):
             self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
-                i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_threshold = self.cfg.coverage_profile
+                i_evalue_sel = self.cfg.i_evalue_sel()
+                coverage_threshold = self.cfg.coverage_profile()
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
@@ -342,8 +346,8 @@ class GembaseHMMReport(HMMReport):
             self._fill_my_db(macsyfinder_idx, my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
-                i_evalue_sel = self.cfg.i_evalue_sel
-                coverage_threshold = self.cfg.coverage_profile
+                i_evalue_sel = self.cfg.i_evalue_sel()
+                coverage_threshold = self.cfg.coverage_profile()
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary

@@ -40,9 +40,8 @@ class MacsyDefaults(dict):
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', None)
         self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
-        self.multi_loci = kwargs.get('multi_loci', False)
-        self.out_dir = kwargs.get('out_dir', os.path.join(os.getcwd(),
-                                                          "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S"))))
+        self.multi_loci = kwargs.get('multi_loci', set())
+        self.out_dir = kwargs.get('out_dir', None)
         self.previous_run = kwargs.get('previous_run', False)
         self.profile_suffix = kwargs.get('profile_suffix', '.hmm')
         self.relative_path = kwargs.get('relative_path', False)
@@ -185,7 +184,10 @@ class Config:
         for section in parser.sections():
             for option in parser.options(section):
                 opt_type = type(defaults.get(option, None))
-                opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                try:
+                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                except ValueError as err:
+                    raise ValueError("Invalid value in config_file for option '{}' :  {} ".format(option, err))
                 opts[option] = opt_value
         return opts
 
@@ -204,13 +206,15 @@ class Config:
                 print("[{}]".format(section), file=fh)
                 for opt in options:
                     opt_value = self._options[opt]
-                    if opt_value is None:
+                    if not opt_value:
                         continue
                     elif isinstance(opt_value, dict):
                         value = ""
                         for model, v in opt_value.items():
                             value += "{} {} ".format(model, v)
                         opt_value = value
+                    elif isinstance(opt_value, set):
+                        opt_value = ', '.join(opt_value)
                     print("{} = {}".format(opt, opt_value), file=fh)
 
         if path_or_buf is None:
@@ -374,10 +378,16 @@ class Config:
     def _set_models(self, value):
         pass
 
-
     def out_dir(self):
         out_dir = self._options['out_dir']
-        return out_dir
+        if out_dir:
+            return out_dir
+        else:
+            out_dir = os.path.join(self._options['res_search_dir'],
+                                   "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+            self._options['out_dir'] = out_dir
+            return out_dir
+
 
     def working_dir(self):
         return self.out_dir()
@@ -421,3 +431,17 @@ class Config:
             self._options['models_dir'] = path
         else:
             raise ValueError("models_dir '{}' does not exists or is not a directory.".format(path))
+
+    def _set_multi_loci(self, value):
+        models_fqn = {v for v in [v.strip() for v in value.split(',')] if v}
+        self._options['multi_loci'] = set(models_fqn)
+
+    def multi_loci(self, model_fqn):
+        return model_fqn in self._options['multi_loci']
+
+    def hmmer_dir(self):
+        return 'hmmer_results'
+
+    def old_data_organization(self):
+        # just time to integrate new_config
+        return False
