@@ -5,6 +5,8 @@ from configparser import ConfigParser, ParsingError
 
 from macsypy import __MACSY_CONF__, __MACSY_DATA__
 
+_log = logging.getLogger('macsyfinder.' + __name__)
+
 
 class MacsyDefaults(dict):
     """
@@ -95,10 +97,11 @@ class Config:
                                                            ))
         else:
             self._conf_dir = __MACSY_CONF__
-
+        previous_run =False
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
             prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
                                                         self._cfg_name))
+            previous_run = True
             if not os.path.exists(prev_config):
                 raise ValueError("No config file found in dir {}".format(parsed_args.previous_run))
             config_files = [prev_config]
@@ -111,7 +114,11 @@ class Config:
 
         config_files_values = self._config_file_2_dict(defaults, config_files)
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
-
+        if previous_run:
+            if 'sequence_db' in args_dict:
+                _log.warning("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
+                    args_dict['sequence_db'], parsed_args.sequence_db))
+                del args_dict['sequence_db']
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
 

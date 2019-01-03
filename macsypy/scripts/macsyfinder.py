@@ -20,7 +20,7 @@ import logging
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
 
-from macsypy.config_new import MacsyDefaults, Config
+from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
 from macsypy.system_parser import SystemParser
 from macsypy.search_genes import search_genes

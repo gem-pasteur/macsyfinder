@@ -27,7 +27,7 @@ from macsypy.error import MacsypyError, SystemInconsistencyError
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestSystemParser(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()

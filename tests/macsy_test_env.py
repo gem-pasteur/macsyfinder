@@ -25,36 +25,41 @@ class MacsyTestEnvSnippet(object):
         self.system = None
         self.all_hits = []
 
-    def build_config(self, previous_run="tests/data/data_set_3/results",
-                           models_dir="tests/data/data_set_3/models",
-                           sequence_db="test_base.fa"):
+    def build_config(self, **config_opts):
         self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
-        seq_ori = MacsyTest.find_data("base", sequence_db)
-
         defaults = MacsyDefaults()
+
+        seq_ori = MacsyTest.find_data("base", config_opts.get('sequence_db', 'test_base.fa'))
+        if 'sequence_db' in config_opts:
+            del config_opts['sequence_db']
+
         args = argparse.Namespace()
         args.out_dir = self.out_dir
         args.db_type = 'gembase'
-        args.previous_run = previous_run
+        args.previous_run = MacsyTest.find_data("data_set_3", "results")
         args.log_level = 30
-        args.models_dir = models_dir
+        args.models_dir = MacsyTest.find_data("data_set_3", "models")
         args.log_file = os.devnull
+        for opt, v in config_opts.items():
+            setattr(args, opt, v)
+
         if os.path.exists(args.out_dir):
             shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
         shutil.copy(seq_ori, args.out_dir)
+
         self.cfg = Config(defaults, args)
-        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~ previous_run", self.cfg.previous_run())
-        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~ sequence_db", self.cfg.sequence_db())
         idx = Indexes(self.cfg)
         idx.build()
 
 
-    def build_hits(self, previous_run="tests/data/data_set_1/complete_run_results",
-                   models_dir="tests/data/data_set_1/models",
-                   model_fqn="set_1/T9SS"):
-        self.build_config(previous_run=previous_run, models_dir=models_dir)
+    def build_hits(self, model_fqn="set_1/T9SS", **config_opts):
+        default_opts = {'previous_run': "tests/data/data_set_1/complete_run_results",
+                        'models_dir': "tests/data/data_set_1/models"
+                        }
+        default_opts.update(config_opts)
+        self.build_config(**default_opts)
         parser = SystemParser(self.cfg, system_bank, gene_bank)
         parser.parse([model_fqn])
         self.system = system_bank[model_fqn]
@@ -68,9 +73,7 @@ class MacsyTestEnvSnippet(object):
                 a_s = g.get_analogs()
                 ex_genes += a_s
         all_genes = (genes + ex_genes)
-        print("\n########## all_genes", [g.name for g in all_genes] )
         all_reports = search_genes(all_genes, self.cfg)
-        print("\n################# all_reports", all_reports)
         all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         self.all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
@@ -121,7 +124,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.system_occurence = None
         self.defaults = MacsyDefaults()
 
-    def load(self, env_id):
+    def load(self, env_id, **cfg_args):
         l = logging.getLogger()
         logging._handlers.clear()                                                                                                                                                                                             
         logging.shutdown(logging._handlerList[:])                                                                                                                                                                             
@@ -135,9 +138,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         macsy_log.addHandler(log_handler)
 
         if env_id == "env_001":
-            self.build_config(previous_run=None,
-                              models_dir=MacsyTest.find_data('models')
-                              )
+            cfg_args.update({'models_dir': MacsyTest.find_data('models')})
+            self.build_config(**cfg_args)
             idx = Indexes(self.cfg)
             idx.build()
 
@@ -211,7 +213,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
         # environment specific cleanup
         if env_id == "env_001":
-            pass
+            MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_002":
             MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_003":
@@ -239,9 +241,9 @@ class MacsyEnvManager(object):
     def __init__(self):
         self.macsy_test_env = None
 
-    def load_env(self, env_id):
+    def load_env(self, env_id, **cfg_args):
         self.macsy_test_env = MacsyTestEnv()
-        self.macsy_test_env.load(env_id)
+        self.macsy_test_env.load(env_id, **cfg_args)
 
     def unload_env(self, env_id):
         self.macsy_test_env.unload(env_id)

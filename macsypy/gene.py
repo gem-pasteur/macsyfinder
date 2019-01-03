@@ -549,6 +549,8 @@ class Profile(object):
             if self._report is not None:
                 return self._report
             hmmer_dir = os.path.join(self.cfg.working_dir(), self.cfg.hmmer_dir())
+            if not os.path.exists(hmmer_dir):
+                os.mkdir(hmmer_dir)
             output_path = os.path.join(hmmer_dir,  self.gene.name + self.cfg.res_search_suffix())
             err_path = os.path.join(hmmer_dir,
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")

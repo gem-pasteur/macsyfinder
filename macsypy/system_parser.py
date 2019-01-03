@@ -70,7 +70,7 @@ class SystemParser(object):
                     model_location = self.model_registry[model_name]
                     definition_location = model_location.get_definition(def_fqn)
                 except KeyError as err:
-                    raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir))
+                    raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir()))
                 except ValueError as err:
                     raise MacsypyError("{}: No such definition".format(def_fqn))
 

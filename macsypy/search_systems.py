@@ -1106,6 +1106,7 @@ class validSystemHit(object):
                                            begin_match=self.begin_match,
                                            end_match=self.end_match)
 
+
     def output_system(self, system_name, system_status):
         return "{id}\t{rpl_name}\t{pos:d}\t{seq_l:d}\t{gene_name}\t{ref_sys}\t{predict_sys}\
         \t{sys_name}\t{sys_status}\t{gene_status}\t{i_eval:.3e}\t{score:.3f}\t{prof_cov:.3f}\t{seq_cov:.3f}\
@@ -1419,7 +1420,7 @@ class systemDetectionReportOrdered(systemDetectionReport):
                 pos_in_rep_2_display = [pos - rep_info.min for pos in pos_in_bk_2_display]
                 for curr_position in pos_in_rep_2_display:
                     gene_name, gene_length = rep_info.genes[curr_position]
-                    if self.cfg.db_type == 'gembase':
+                    if self.cfg.db_type() == 'gembase':
                         # SO - PB WAS HERE, NAMES WERE WRONG after the 1st replicon. Thus the gene_id is NEVER in the valid_hits.
                         gene_id = "{0}_{1}".format(system['replicon']['name'], gene_name)
                     else:
@@ -2084,9 +2085,9 @@ def search_systems(hits, systems, cfg):
     :type cfg: :class:`macsypy.config.Config`
     """
 
-    tabfilename = os.path.join(cfg.working_dir, 'macsyfinder.tab')
-    reportfilename = os.path.join(cfg.working_dir, 'macsyfinder.report')
-    summaryfilename = os.path.join(cfg.working_dir, 'macsyfinder.summary')
+    tabfilename = os.path.join(cfg.working_dir(), 'macsyfinder.tab')
+    reportfilename = os.path.join(cfg.working_dir(), 'macsyfinder.report')
+    summaryfilename = os.path.join(cfg.working_dir(), 'macsyfinder.summary')
 
 
     # For the headers of the output files: no report so far ! print them in the loop at the 1st round ! 
@@ -2110,7 +2111,7 @@ def search_systems(hits, systems, cfg):
     #rep_info=RepInfo("circular", 1, 5569)
 
     header_print = True
-    if cfg.db_type == 'gembase':
+    if cfg.db_type() == 'gembase':
         # Construction of the replicon database storing info on replicons: 
         rep_db = RepliconDB(cfg)
         replicons_w_hits = []
@@ -2143,7 +2144,7 @@ def search_systems(hits, systems, cfg):
             # To add replicons with no systems in the 
             replicons_w_hits.append(k)
 
-        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        json_path = os.path.join(cfg.working_dir(), report.json_file_name)
         report.json_output(json_path, json_all_systems)
 
         _log_out.info("\n--- Replicons with no hits: ---")
@@ -2155,7 +2156,7 @@ def search_systems(hits, systems, cfg):
                     #print text.strip()
                     _f.write(text)
 
-    elif cfg.db_type == 'ordered_replicon':
+    elif cfg.db_type() == 'ordered_replicon':
         # Basically the same as for 'gembase' (except the loop on replicons)
         rep_db = RepliconDB(cfg)
         rep_info = rep_db[RepliconDB.ordered_replicon_name]
@@ -2177,11 +2178,11 @@ def search_systems(hits, systems, cfg):
         report.summary_output(summaryfilename, rep_info, header_print)
 
         json_all_systems = report.system_2_json(rep_db)
-        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        json_path = os.path.join(cfg.working_dir(), report.json_file_name)
         report.json_output(json_path, json_all_systems)
         _log_out.info("******************************************")
 
-    elif cfg.db_type == 'unordered_replicon' or cfg.db_type == 'unordered':
+    elif cfg.db_type() == 'unordered_replicon' or cfg.db_type() == 'unordered':
         # implement a new function "analyze_cluster" => Fills a systemOccurence per system
         systems_occurences_list = []
         # Hits with best score are first selected. 
@@ -2218,7 +2219,7 @@ def search_systems(hits, systems, cfg):
         report = systemDetectionReportUnordered(systems_occurences_list, cfg)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
-        json_path = os.path.join(cfg.working_dir, report.json_file_name)
+        json_path = os.path.join(cfg.working_dir(), report.json_file_name)
         report.json_output(json_path)
         _log_out.info("******************************************")
 

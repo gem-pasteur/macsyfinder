@@ -24,7 +24,7 @@ from macsypy.database import RepliconDB, Indexes
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestSystemDetectionReport(MacsyTest):
 
     def setUp(self):
         l = logging.getLogger()
@@ -60,7 +60,8 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
 
-        # hack to test abstract methods (more info => https://stackoverflow.com/questions/36413844/writing-unittests-for-abstract-classes)
+        # hack to test abstract methods (more info =>
+        # https://stackoverflow.com/questions/36413844/writing-unittests-for-abstract-classes)
         self.abstractmethods = systemDetectionReport.__abstractmethods__
         systemDetectionReport.__abstractmethods__ = frozenset()
 

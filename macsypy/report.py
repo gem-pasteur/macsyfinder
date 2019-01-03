@@ -137,7 +137,6 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
-        print("##### _fill_my_db", macsyfinder_idx)
         with open(macsyfinder_idx, 'r') as idx:
             for l in idx:
                 seqid, length, rank = l.split(';')
@@ -262,9 +261,6 @@ class GeneralHMMReport(HMMReport):
                 next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
-                    print("@@@@ my_db",my_db )
-                    print("@@@@ hit_id", hit_id)
-                    print("@@@@ my_db[hit_id]", my_db[hit_id])
                     seq_lg, position_hit = my_db[hit_id]
 
                     # replicon_name = self.cfg. # Define a variable in further devt
