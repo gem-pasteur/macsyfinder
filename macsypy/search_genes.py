@@ -95,11 +95,11 @@ def search_genes(genes, cfg):
             _log.info("recover hmm {0}".format(hmm_old_path))
             hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
             shutil.copy(hmm_old_path, hmm_new_path)
-            print("### copy ", hmm_old_path, " -> ", hmm_new_path)
             gene.profile.hmm_raw_output = hmm_new_path
-            if cfg.db_type == 'gembase':
+            db_type = cfg.db_type()
+            if db_type == 'gembase':
                 report = GembaseHMMReport(gene, hmm_new_path, cfg)
-            elif cfg.db_type == 'ordered_replicon':
+            elif db_type == 'ordered_replicon':
                 report = OrderedHMMReport(gene, hmm_new_path, cfg)
             else:
                 report = GeneralHMMReport(gene, hmm_new_path, cfg)
@@ -121,12 +121,10 @@ def search_genes(genes, cfg):
         os.mkdir(hmmer_dir)
 
     previous_run = cfg.previous_run()
-    print("\n############ previous_run", previous_run)
     for gene in genes:
         if previous_run and os.path.exists(os.path.join(previous_run,
                                                         cfg.hmmer_dir(),
                                                         gene.name + cfg.res_search_suffix())):
-            print("#### ", os.path.join(previous_run, cfg.hmmer_dir(), gene.name + cfg.res_search_suffix()), " .. exists")
             t = threading.Thread(target=recover, args=(gene, all_reports, cfg, sema))
         else:
             t = threading.Thread(target=search, args=(gene, all_reports, sema))

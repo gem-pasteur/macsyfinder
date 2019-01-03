@@ -132,7 +132,7 @@ class Test(MacsyTest):
                     }
         
         hit = Hit(gene, system, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'],
-                  hit_prop['position'] , hit_prop['i_eval'], hit_prop['score'],
+                  hit_prop['position'], hit_prop['i_eval'], hit_prop['score'],
                   hit_prop['profil_coverage'], hit_prop['sequence_coverage'], hit_prop['begin'],hit_prop['end'])
         s = "{id}\t{replicon_name}\t{position:d}\t{hit_seq_len:d}\t{gene_name}\t{system_name}\t{i_eval:.3e}" \
             "\t{score:.3f}\t{profil_coverage:.3f}\t{sequence_coverage:.3f}\t{begin:d}\t{end:d}\n".format(**hit_prop)

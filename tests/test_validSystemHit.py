@@ -23,7 +23,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_003")
 
     def tearDown(self):
-        #self.unload_env("env_003")
+        self.unload_env("env_003")
         pass
 
     def test_str(self):
@@ -31,20 +31,20 @@ class Test(MacsyTest, MacsyEnvManager):
         valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
         self.assertEqual(str(valid_system_hit), self.output_control_str('001'))
 
-    # def test_output_system(self):
-    #     hit = self.macsy_test_env.all_hits[0]
-    #     valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
-    #     report_str = valid_system_hit.output_system("foo132", "all_clear")
-    #     self.assertEqual(str(report_str), self.output_control_str('001'))
-    #
-    # def test_getattr(self):
-    #     hit = self.macsy_test_env.all_hits[0]
-    #     valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
-    #     i_eval = valid_system_hit.i_eval
-    #     self.assertEqual(i_eval, 7.5e-103)
-    #
-    # def test_output_system_header(self):
-    #     hit = self.macsy_test_env.all_hits[0]
-    #     valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
-    #     header_str = valid_system_hit.output_system_header()
-    #     self.assertEqual(header_str, self.output_control_str('001'))
+    def test_output_system(self):
+        hit = self.macsy_test_env.all_hits[0]
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        report_str = valid_system_hit.output_system("foo132", "all_clear")
+        self.assertEqual(str(report_str), self.output_control_str('001'))
+
+    def test_getattr(self):
+        hit = self.macsy_test_env.all_hits[0]
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        i_eval = valid_system_hit.i_eval
+        self.assertEqual(i_eval, 7.5e-103)
+
+    def test_output_system_header(self):
+        hit = self.macsy_test_env.all_hits[0]
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        header_str = valid_system_hit.output_system_header()
+        self.assertEqual(header_str, self.output_control_str('001'))
