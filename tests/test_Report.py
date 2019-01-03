@@ -51,7 +51,7 @@ class TestReport(MacsyTest):
         args.log_level = 30
         args.log_file = log_file
         args.out_dir = os.path.join(args.res_search_dir,
-                                    'test_macsyfinder_repliconDB')
+                                    'test_macsyfinder_Report')
         if os.path.exists(args.out_dir):
             shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
