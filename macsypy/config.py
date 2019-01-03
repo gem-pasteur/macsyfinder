@@ -83,7 +83,7 @@ class Config:
         :param parsed_args: the command line arguments parsed
         :type parsed_args: a :class:`argspace.Namescape` object
         """
-        self._cfg_name = "macsyfinder.conf"
+        self.cfg_name = "macsyfinder.conf"
         self._defaults = defaults
 
         if __MACSY_DATA__ == '$' + 'MACSYDATA':
@@ -100,7 +100,7 @@ class Config:
         previous_run =False
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
             prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
-                                                        self._cfg_name))
+                                                        self.cfg_name))
             previous_run = True
             if not os.path.exists(prev_config):
                 raise ValueError("No config file found in dir {}".format(parsed_args.previous_run))
@@ -108,8 +108,8 @@ class Config:
         elif hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
             config_files = [parsed_args.cfg_file]
         else:
-            config_files = [os.path.join(self._conf_dir, self._cfg_name),
-                            os.path.join(os.path.expanduser('~'), '.macsyfinder', self._cfg_name),
+            config_files = [os.path.join(self._conf_dir, self.cfg_name),
+                            os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name),
                             'macsyfinder.conf']
 
         config_files_values = self._config_file_2_dict(defaults, config_files)
@@ -225,7 +225,7 @@ class Config:
                     print("{} = {}".format(opt, opt_value), file=fh)
 
         if path_or_buf is None:
-            path_or_buf = os.path.join(self.out_dir(), self._cfg_name)
+            path_or_buf = os.path.join(self.out_dir(), self.cfg_name)
         if isinstance(path_or_buf, str):
             with open(path_or_buf, 'w') as cfg_file:
                 save(cfg_file)
