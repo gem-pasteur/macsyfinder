@@ -36,7 +36,7 @@ class TestMacsyDefaults(MacsyTest):
                          'max_nb_genes': None,
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
-                         'models': None,
+                         'models': [],
                          'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data', 'models')),
                          'multi_loci': set(),
                          'out_dir': None,

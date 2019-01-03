@@ -1,7 +1,7 @@
 import os
 from time import strftime
 import logging
-from configparser import ConfigParser, ParsingError
+from configparser import ConfigParser, ParsingError, NoSectionError
 
 from macsypy import __MACSY_CONF__, __MACSY_DATA__
 
@@ -40,7 +40,7 @@ class MacsyDefaults(dict):
         self.max_nb_genes = kwargs.get('max_nb_genes', None)
         self.min_genes_required = kwargs.get('min_genes_required', None)
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
-        self.models = kwargs.get('models', None)
+        self.models = kwargs.get('models', [])
         self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
         self.multi_loci = kwargs.get('multi_loci', set())
         self.out_dir = kwargs.get('out_dir', None)
@@ -60,8 +60,9 @@ class MacsyDefaults(dict):
 class Config:
 
     cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
-                ('models', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
-                            'min_genes_required', 'models', 'multi_loci')),
+                ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
+                            'min_genes_required', 'multi_loci')),
+                ('models', tuple()),
                 ('hmmer', ('coverage_profile', 'e_value_search', 'i_evalue_sel', 'hmmer')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix')),
@@ -112,7 +113,7 @@ class Config:
                             os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name),
                             'macsyfinder.conf']
 
-        config_files_values = self._config_file_2_dict(defaults, config_files)
+        config_files_values = self._config_file_2_dict(defaults, config_files, previous_run=previous_run)
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
             if 'sequence_db' in args_dict:
@@ -164,7 +165,7 @@ class Config:
                              " value separated by spaces: {}".format(value))
 
 
-    def _config_file_2_dict(self, defaults, files):
+    def _config_file_2_dict(self, defaults, files, previous_run=False):
         """
         parse config files files, the last one have precedence on the previous on so on, and return a dict
         with properties, values.
@@ -184,19 +185,29 @@ class Config:
                       }
         try:
             used_files = parser.read(files)
+            _log.debug("Files parsed for configuration: {}".format(', '.join(used_files)))
         except ParsingError as err:
             raise ParsingError("A macsyfinder configuration file is not well formed: {}".format(err)) from None
 
         opts = {}
-        for section in parser.sections():
+        sections = [s for s in parser.sections() if s != 'models']
+        for section in sections:
             for option in parser.options(section):
+                if previous_run and option == 'out_dir':
+                    # set the out_dir from the previous_run is a non sense
+                    continue
                 opt_type = type(defaults.get(option, None))
                 try:
                     opt_value = parse_meth.get(opt_type, parser.get)(section, option)
                 except ValueError as err:
                     raise ValueError("Invalid value in config_file for option '{}' :  {} ".format(option, err))
                 opts[option] = opt_value
+        try:
+            opts['models'] = parser.items('models')
+        except NoSectionError:
+            pass
         return opts
+
 
     def save(self, path_or_buf=None):
         """
@@ -208,29 +219,38 @@ class Config:
         :param path_or_buf: where to serialize itself.
         :type path_or_buf: str or file like object
         """
-        def save(fh):
+        def serialize():
+            conf_str = ''
             for section, options in self.cfg_opts:
-                print("[{}]".format(section), file=fh)
-                for opt in options:
-                    opt_value = self._options[opt]
-                    if not opt_value:
-                        continue
-                    elif isinstance(opt_value, dict):
-                        value = ""
-                        for model, v in opt_value.items():
-                            value += "{} {} ".format(model, v)
-                        opt_value = value
-                    elif isinstance(opt_value, set):
-                        opt_value = ', '.join(opt_value)
-                    print("{} = {}".format(opt, opt_value), file=fh)
+                conf_str += "[{}]\n".format(section)
+                if section == 'models':
+                    # [(model_family, (def_name1, ...)), ... ]
+                    for model_family, def_names in self._options['models']:
+                        def_names = ', '.join(def_names)
+                        conf_str += "{} = {}\n".format(model_family, def_names)
+                else:
+                    for opt in options:
+                        opt_value = self._options[opt]
+                        if not opt_value:
+                            continue
+                        elif isinstance(opt_value, dict):
+                            value = ""
+                            for model, v in opt_value.items():
+                                value += "{} {} ".format(model, v)
+                            opt_value = value
+                        elif isinstance(opt_value, set):
+                            opt_value = ', '.join(opt_value)
+                        conf_str += "{} = {}\n".format(opt, opt_value)
+            return conf_str
 
         if path_or_buf is None:
             path_or_buf = os.path.join(self.out_dir(), self.cfg_name)
         if isinstance(path_or_buf, str):
             with open(path_or_buf, 'w') as cfg_file:
-                save(cfg_file)
+                print(serialize(), file=cfg_file)
         else:
-            save(path_or_buf)
+            print(serialize(), file=path_or_buf)
+
 
     def _set_db_type(self, value):
         """
@@ -383,7 +403,32 @@ class Config:
             return None
 
     def _set_models(self, value):
-        pass
+        """
+
+        :param value:
+        :return:
+        """
+        # if value come from command_line
+        #  [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4']
+        # if value come from config file
+        #   [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
+        print("\n@@@@@@@@@@@@@@@ _set_models", value)
+        # [(model_family, [def_name1, ...]), ... ]
+        opt = []
+        for models in value:
+            print("@@@@@@@@@@@ models", models)
+            model_family_name = models[0]
+            if ',' in models[1]:
+                def_name = [d.strip() for d in models[1].split(',')]
+            elif len(models) > 2:
+                def_name = models[1:]
+            else:
+                def_name = [models[1]]
+            print("@@@@@@@@@@@@ def_name", def_name)
+            opt.append((model_family_name, def_name))
+        self._options['models'] = opt
+        print("@@@@@@@@@@@@ self._options['models']", self._options['models'])
+
 
     def out_dir(self):
         out_dir = self._options['out_dir']

@@ -312,17 +312,23 @@ class TestConfig(MacsyTest):
     def test_save(self):
         self.parsed_args.max_nb_genes = [['T2SS', 5], ['Flagelum', 12]]
         self.parsed_args.multi_loci = 'T2SS,Flagelum'
+        self.parsed_args.models = [['set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
         cfg = Config(self.defaults, self.parsed_args)
         expected = {k: v for k, v in cfg._options.items() if v}
         expected['max_nb_genes'] = 'T2SS 5 Flagelum 12'
         expected['multi_loci'] = {'T2SS', 'Flagelum'}
+        expected['models'] = [('set_1', ['T9SS', 'T3SS', 'T4SS_typeI'])]
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
             saved_opt = cfg._config_file_2_dict(self.defaults, [cfg_path])
             # the order of model_fqn is not guarantee
             saved_opt['multi_loci'] = {v for v in [v.strip() for v in saved_opt['multi_loci'].split(',')] if v}
-            self.assertEqual(saved_opt, expected)
+            print("\n############################")
+            print(saved_opt)
+            print("==========================")
+            print(expected)
+            self.assertDictEqual(saved_opt, expected)
 
     def test_out_dir(self):
         cfg = Config(self.defaults, self.parsed_args)

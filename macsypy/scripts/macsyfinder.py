@@ -31,7 +31,8 @@ from macsypy.gene import gene_bank
 from macsypy.error import OptionError
 
 
-def get_models_name_to_detect(cmd_args, model_registry):
+
+def get_models_name_to_detect(models_arg, model_registry):
     """
     :param cmd_args: the result of commandline parsing.
     :type cmd_args: class:`argparse.Namespace` object.
@@ -41,22 +42,17 @@ def get_models_name_to_detect(cmd_args, model_registry):
     :rtype: list of :class:`macsypy.system.System` objects
     :raise KeyError: if a model name provided in cmd_args is not in model_registry.
     """
-    #if cfg.old_data_organization():
-    #    pass
-    #     if 'all' in [m.lower() for m in args.systems]:
-    #         model = model_registry.models()[0]
-    #         model_name = model.name
-    #         models_name_to_detect = ['{}/{}'.format(model_name, d.name) for d in model.get_all_definitions()]
-    #     else:
-    #         model_name = os.path.basename(os.path.normpath(cfg.def_dir))
-    #         models_name_to_detect = ['{}/{}'.format(model_name, d) for d in cmd_args.systems]
-    # else:
+    #  [('set_1', ('T9SS, T3SS, T4SS_typeI',)), ('set_2', ('T4P',))]
     models_name_to_detect = []
-    for group_of_defs in cmd_args.models:
+    print("!!!!!!!!!!!! models_arg", models_arg )
+    for group_of_defs in models_arg:
+        print("!!!!!!!!!!!!! group_of_defs ", group_of_defs, "!!!!!!!!!!!!!!!")
         root = group_of_defs[0]
-        definitions = group_of_defs[1:]
-
+        definitions = group_of_defs[1]
+        print("!!!!!!!!!!!!! root", root)
+        print("!!!!!!!!!!!!! definitions", definitions)
         model = model_registry[root.split('/')[0]]
+        print("!!!!!!!!!!!!! model", model)
         if 'all' in [d.lower() for d in definitions]:
             if root == model.name:
                 root = None
@@ -64,6 +60,7 @@ def get_models_name_to_detect(cmd_args, model_registry):
             models_name_to_detect.extend([d.fqn for d in def_loc])
         else:
             models_name_to_detect.extend(['{}/{}'.format(root, one_def) for one_def in definitions])
+    print("!!!!!!!!! models_name_to_detect", models_name_to_detect)
     return models_name_to_detect
 
 
@@ -91,7 +88,7 @@ def list_models(args):
     """
     :param args: The command line argument once parsed
     :type args: :class:`argparse.Namespace` object
-    :return: a string representaion of the models and submodels.
+    :return: a string representation of all models and submodels installed.
     :rtype: str
     """
     config = Config(MacsyDefaults(), args)
@@ -340,25 +337,26 @@ def main_search_systems(parsed_args, logger, log_level):
     config = Config(defaults, parsed_args)
     working_dir = config.working_dir()
     if not os.path.exists(working_dir):
-        os.mkdirs(working_dir)
+        os.makedirs(working_dir)
     else:
-        if os.path.is_dir(working_dir):
+        if os.path.isdir(working_dir):
             if os.listdir(working_dir):
-                raise ValueError("'' already exists and is not a empty".format(working_dir))
+                raise ValueError("'{}' already exists and is not a empty".format(working_dir))
         else:
-            raise ValueError("'' already exists and is not a directory".format(working_dir))
+            raise ValueError("'{}' already exists and is not a directory".format(working_dir))
 
-    config.save(path_or_buf=working_dir)
+    config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
 
     registry = ModelRegistry(config)
     # build indexes
     idx = Indexes(config)
-    idx.build(force=config.build_indexes)
+    idx.build(force=config.idx)
 
     # create models
     parser = SystemParser(config, system_bank, gene_bank)
     try:
-        models_name_to_detect = get_models_name_to_detect(parsed_args, registry)
+        models_name_to_detect = get_models_name_to_detect(config.models(), registry)
+        print("@@@@@@@@@@@ models_name_to_detect", models_name_to_detect)
     except KeyError as err:
         sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
@@ -441,11 +439,11 @@ def main(args=None, loglevel=None):
         print(list_models(parsed_args), file=sys.stderr)
         sys.exit(0)
     else:
-        old_options = (parsed_args.def_dir, parsed_args.profile_dir, parsed_args.systems)
+        # old_options = (parsed_args.def_dir, parsed_args.profile_dir, parsed_args.systems)
         new_options = (parsed_args.models_dir, parsed_args.models)
 
-        if not parsed_args.systems and not parsed_args.models:
-            raise OptionError("you MUST provided systems to search.")
+        # if not parsed_args.systems and not parsed_args.models:
+        #     raise OptionError("you MUST provided systems to search.")
 
         if not parsed_args.previous_run and not parsed_args.sequence_db:
             raise OptionError("argument --sequence-db is required.")
@@ -453,17 +451,17 @@ def main(args=None, loglevel=None):
         if not parsed_args.previous_run and not parsed_args.db_type:
             raise OptionError("argument --db-type is required.")
 
-        if parsed_args.systems and parsed_args.models:
-            raise OptionError("""--models option is the new way to specify models to search.
-                models as arguments is the old and DEPRECATED way to specify models.
-                You cannot use the two ways in the same time.
-                """)
+        # if parsed_args.systems and parsed_args.models:
+        #     raise OptionError("""--models option is the new way to specify models to search.
+        #         models as arguments is the old and DEPRECATED way to specify models.
+        #         You cannot use the two ways in the same time.
+        #         """)
 
-        if any(old_options) and any(new_options):
-            raise OptionError("""--models --models-dir options are the new way to specify models to search.
-                --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
-                You cannot use the two ways in the same time.
-                """)
+        # if any(old_options) and any(new_options):
+        #     raise OptionError("""--models --models-dir options are the new way to specify models to search.
+        #         --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
+        #         You cannot use the two ways in the same time.
+        #         """)
         main_search_systems(parsed_args, logger, log_level)
     logger.debug("END")
 
