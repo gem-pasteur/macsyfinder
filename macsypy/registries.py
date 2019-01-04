@@ -263,10 +263,8 @@ class ModelLocation(object):
         return self.name
 
     def __eq__(self, other):
-        return self.path == other.path and \
-               self.name == other.name and \
-               self._profiles == other._profiles and \
-               self._definitions == other._definitions
+        return self.path, self.name, self._profiles, self._definitions == \
+               other.path, other.name, other._profiles, other._definitions
 
 
 class DefinitionLocation(dict):
@@ -314,9 +312,7 @@ class DefinitionLocation(dict):
         return self.name
 
     def __eq__(self, other):
-        return self.fqn == other.fqn and \
-               self.path == other.path and \
-               self.subdefinitions == other.subdefinitions
+        return self.fqn, self.path, self.subdefinitions == other.fqn, other.path, other.subdefinitions
 
     def __lt__(self, other):
         return self.fqn < other.fqn
