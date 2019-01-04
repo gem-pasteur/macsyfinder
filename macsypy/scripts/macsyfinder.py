@@ -32,35 +32,30 @@ from macsypy.error import OptionError
 
 
 
-def get_models_name_to_detect(models_arg, model_registry):
+def get_models_name_to_detect(models, model_registry):
     """
-    :param cmd_args: the result of commandline parsing.
-    :type cmd_args: class:`argparse.Namespace` object.
+    :param models: the list of models to detect as returned by config.models.
+    :type models: list of tuple with the following structure:
+                  [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
-    :return: list of system to launch a detection on.
-    :rtype: list of :class:`macsypy.system.System` objects
-    :raise KeyError: if a model name provided in cmd_args is not in model_registry.
+    :return: the models fully qualified name to launch a detection on.
+    :rtype: list of string ['model_1/def1', 'model_1/def2', ..., 'model_2/def1', ...]
+    :raise ValueError: if a model name provided in models is not in model_registry.
     """
-    #  [('set_1', ('T9SS, T3SS, T4SS_typeI',)), ('set_2', ('T4P',))]
     models_name_to_detect = []
-    print("!!!!!!!!!!!! models_arg", models_arg )
-    for group_of_defs in models_arg:
-        print("!!!!!!!!!!!!! group_of_defs ", group_of_defs, "!!!!!!!!!!!!!!!")
+    for group_of_defs in models:
         root = group_of_defs[0]
         definitions = group_of_defs[1]
-        print("!!!!!!!!!!!!! root", root)
-        print("!!!!!!!!!!!!! definitions", definitions)
-        model = model_registry[root.split('/')[0]]
-        print("!!!!!!!!!!!!! model", model)
+        model_loc = model_registry[root.split('/')[0]]
         if 'all' in [d.lower() for d in definitions]:
-            if root == model.name:
+            if root == model_loc.name:
                 root = None
-            def_loc = model.get_all_definitions(root_def_name=root)
+            def_loc = model_loc.get_all_definitions(root_def_name=root)
             models_name_to_detect.extend([d.fqn for d in def_loc])
         else:
-            models_name_to_detect.extend(['{}/{}'.format(root, one_def) for one_def in definitions])
-    print("!!!!!!!!! models_name_to_detect", models_name_to_detect)
+            models_name_to_detect.extend([model_loc.get_definition('{}/{}'.format(root, one_def)).fqn
+                                          for one_def in definitions])
     return models_name_to_detect
 
 
@@ -356,7 +351,6 @@ def main_search_systems(parsed_args, logger, log_level):
     parser = SystemParser(config, system_bank, gene_bank)
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
-        print("@@@@@@@@@@@ models_name_to_detect", models_name_to_detect)
     except KeyError as err:
         sys.exit("macsyfinder: {}".format(str(err).strip('"')))
 
