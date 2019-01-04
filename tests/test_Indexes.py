@@ -59,7 +59,7 @@ class Test(MacsyTest, MacsyEnvManager):
         args.log_level = 30
         args.log_file = log_file
 
-        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes', 'seq')
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         if os.path.exists(args.out_dir):
             shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
         os.makedirs(args.out_dir)
@@ -87,9 +87,9 @@ class Test(MacsyTest, MacsyEnvManager):
         idx = Indexes(self.cfg)
         self.assertIsNone(idx.find_my_indexes())
         new_idx = os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx")
-        fh = open(new_idx, 'w')
+        with open(new_idx, 'w'):
+            pass
         self.assertEqual(idx.find_my_indexes(), new_idx)
-        fh.close()
 
     def test_build_no_idx(self):
         idx = Indexes(self.cfg)
