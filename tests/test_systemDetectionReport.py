@@ -75,7 +75,7 @@ class TestSystemDetectionReport(MacsyTest):
         # in shutil.rmtree calls in Windows
         MacsyTest.close_loggers_filehandles()
         try:
-            shutil.rmtree(self.cfg.working_dir)
+            shutil.rmtree(self.cfg.working_dir())
         except:
             pass
 
