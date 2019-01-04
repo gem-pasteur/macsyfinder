@@ -409,14 +409,12 @@ class Config:
         :return:
         """
         # if value come from command_line
-        #  [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4']
+        #  [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
         # if value come from config file
         #   [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
-        print("\n@@@@@@@@@@@@@@@ _set_models", value)
         # [(model_family, [def_name1, ...]), ... ]
         opt = []
         for models in value:
-            print("@@@@@@@@@@@ models", models)
             model_family_name = models[0]
             if ',' in models[1]:
                 def_name = [d.strip() for d in models[1].split(',')]
@@ -424,10 +422,8 @@ class Config:
                 def_name = models[1:]
             else:
                 def_name = [models[1]]
-            print("@@@@@@@@@@@@ def_name", def_name)
             opt.append((model_family_name, def_name))
         self._options['models'] = opt
-        print("@@@@@@@@@@@@ self._options['models']", self._options['models'])
 
 
     def out_dir(self):
