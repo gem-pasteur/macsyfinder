@@ -19,7 +19,10 @@ import argparse
 import logging
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
+import colorlog
+_log = colorlog.getLogger('macsypy')
 
+import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
 from macsypy.system_parser import SystemParser
@@ -64,7 +67,6 @@ def get_version_message():
     :return: the long description of the macsyfinder version
     :rtype: str
     """
-    import macsypy
     version = macsypy.__version__
     vers_msg = """Macsyfinder {0}
 Python {1}
@@ -282,6 +284,11 @@ def parse_args(args):
                                  default=0,
                                  help="Increases the verbosity level. There are 4 levels:\
                                        Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)")
+    general_options.add_argument("--mute",
+                                 action="store_true",
+                                 default=False,
+                                 help="mute the log on stdout."
+                                      " (continue to log on macsyfinder.out)")
     general_options.add_argument("--version",
                                  action="version",
                                  version=get_version_message()),
@@ -289,9 +296,6 @@ def parse_args(args):
                                  action="store_true",
                                  default=False,
                                  help="display the all models installed in generic location and quit.")
-    general_options.add_argument("--log-file",
-                                 action='store',
-                                 help="Path to the directory where to store the 'macsyfinder.log' log file.")
     general_options.add_argument("--cfg-file",
                                  action='store',
                                  help="Path to a MacSyFinder configuration file to be used.")
@@ -319,7 +323,7 @@ def parse_args(args):
     return parsed_args
 
 
-def main_search_systems(parsed_args, logger, log_level):
+def main_search_systems(config, logger, log_level):
     """
 
     :param parsed_args: the command line arguments
@@ -328,8 +332,7 @@ def main_search_systems(parsed_args, logger, log_level):
     :param log_level:
     :return:
     """
-    defaults = MacsyDefaults()
-    config = Config(defaults, parsed_args)
+
     working_dir = config.working_dir()
     if not os.path.exists(working_dir):
         os.makedirs(working_dir)
@@ -412,6 +415,15 @@ def main(args=None, loglevel=None):
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)
 
+    defaults = MacsyDefaults()
+    config = Config(defaults, parsed_args)
+
+    ################
+    # init loggers #
+    ################
+    log_file = os.path.join(config.out_dir, 'macsyfinder.out')
+    macsypy.init_logger(log_file=log_file,
+                        out=not config.mute)
     sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
     sh = logging.StreamHandler(sys.stderr)
     sh.setFormatter(sh_formatter)
