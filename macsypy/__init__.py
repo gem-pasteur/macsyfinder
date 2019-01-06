@@ -1,6 +1,88 @@
 from time import strftime, localtime
+import sys
 
 __version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
 
 __MACSY_CONF__ = '$MACSYCONF'
 __MACSY_DATA__ = '$MACSYDATA'
+
+def init_logger(log_file=None, out=True):
+    import colorlog
+    logger = colorlog.getLogger('macsypy')
+    logging = colorlog.logging.logging
+    if out:
+        stdout_handler = colorlog.StreamHandler(sys.stdout)
+        stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(levelname)-8s : %(reset)s %(message)s",
+                                                     datefmt=None,
+                                                     reset=True,
+                                                     log_colors={
+                                                         'DEBUG':    'cyan',
+                                                         'INFO':     'green',
+                                                         'WARNING':  'yellow',
+                                                         'ERROR':    'red',
+                                                         'CRITICAL': 'bold_red',
+                                                     },
+                                                     secondary_log_colors={},
+                                                     style='%'
+                                                     )
+        stdout_handler.setFormatter(stdout_formatter)
+        logger.addHandler(stdout_handler)
+    else:
+        null_handler = logging.NullHandler()
+        logger.addHandler(null_handler)
+    if log_file:
+        file_handler = logging.FileHandler(log_file)
+        file_formatter = logging.Formatter("%(levelname)-8s : %(message)s")
+        file_handler.setFormatter(file_formatter)
+        logger.addHandler(file_handler)
+    logger.setLevel(logging.WARNING)
+
+
+def logger_set_level(level='WARNING'):
+    # default value must be a string
+    # cannot be colorlog.logging.logging.WARNING for instance
+    # because setup import __init__ to get __version__
+    # so logger_set_level is defined
+    # if level is colorlog.logging.logging.WARNING
+    # that mean that colorlog must be already installed
+    # otherwise an error occured during pip install
+    #  NameError: name 'colorlog' is not defined
+    import colorlog
+
+    levels = {'NOTSET': colorlog.logging.logging.NOTSET,
+              'DEBUG': colorlog.logging.logging.DEBUG,
+              'INFO': colorlog.logging.logging.INFO,
+              'WARNING': colorlog.logging.logging.WARNING,
+              'ERROR': colorlog.logging.logging.ERROR,
+              'CRITICAL': colorlog.logging.logging.CRITICAL,
+              }
+    if level in levels:
+        level = levels[level]
+    elif not isinstance(level, int) and level < 0:
+        raise ValueError("Level must be {} or a positive integer".format(', '.join(levels.keys())))
+
+    logger = colorlog.getLogger('macsypy')
+    if level <= colorlog.logging.logging.DEBUG:
+        stdout_formatter = colorlog.ColoredFormatter(
+            "%(log_color)s%(levelname)-8s : %(module)s: L %(lineno)d :%(reset)s %(message)s",
+            datefmt=None,
+            reset=True,
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'bold_red',
+            },
+            secondary_log_colors={},
+            style='%'
+            )
+        stdout_handler = logger.handlers[0]
+        stdout_handler.setFormatter(stdout_formatter)
+
+        logging = colorlog.logging.logging
+        file_formatter = logging.Formatter("%(levelname)-8s : %(module)s: L %(lineno)d : %(message)s")
+        file_handler = logger.handlers[1]
+        file_handler.setFormatter(file_formatter)
+
+    logger.setLevel(level)
