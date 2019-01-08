@@ -98,23 +98,21 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_003")
 
+    def dc_helper(self, cluster): # 'dc' stands for Disambiguate Cluster
+        """
+        This method
+            - calls disambiguate_cluster()
+            - returns stdxxx
+        """
+        with self.catch_io(out=True, err=True) as stdxxx:
+            clusters = disambiguate_cluster(cluster)
+        stdout = stdxxx[0].getvalue()
+        stderr = stdxxx[1].getvalue()
+        buffer_ = os.linesep.join([stdout, stderr])
+        return buffer_
 
-    def test_disambiguate_cluster(self):
+    def test_disambiguate_cluster_case01(self):
 
-        def dc_helper(cluster): # 'dc' stands for Disambiguate Cluster
-            """
-            This method
-                - calls disambiguate_cluster()
-                - returns stdxxx
-            """
-            with self.catch_io(out=True, err=True) as stdxxx:
-                clusters = disambiguate_cluster(cluster)
-            stdout = stdxxx[0].getvalue()
-            stderr = stdxxx[1].getvalue()
-            buffer_ = os.linesep.join([stdout, stderr])
-            return buffer_
-
-        # case 1
         self.load_env("env_003")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -122,11 +120,13 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
                                                         [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[1]
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('001'))
         finally:
             self.unload_env("env_003")
-        # case 2
+
+    def test_disambiguate_cluster_case02(self):
+
         self.load_env("env_003")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -135,12 +135,14 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                                                           [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[1]
             cluster.systems_to_detect = []
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('002'))
         finally:
             self.unload_env("env_003")
 
-        # case 3
+
+    def test_disambiguate_cluster_case03(self):
+
         self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -149,12 +151,14 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                                                           [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('003'))
         finally:
             self.unload_env("env_009")
 
-        # case 4
+
+    def test_disambiguate_cluster_case04(self):
+
         self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -171,12 +175,14 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                               self.macsy_test_env.models_location)
             cluster.hits.extend(li)
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('004'))
         finally:
             self.unload_env("env_009")
 
-        # case 5
+
+    def test_disambiguate_cluster_case05(self):
+
         self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -185,15 +191,21 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                                                           [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
 
+            for h in cluster.hits:
+                h.gene._loner = True
+
             cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV',
                                         self.macsy_test_env.system, self.macsy_test_env.models_location)
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('005'))
         finally:
             self.unload_env("env_009")
 
-        # case 6
+
+    def test_disambiguate_cluster_case06(self):
+
+        self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
@@ -201,17 +213,22 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                                                         [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
 
+            for h in cluster.hits:
+                h.gene._loner = True
+
             li = copy.copy(cluster.hits[0:2])
             cluster.hits.extend(li)
             cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV',
                                         self.macsy_test_env.system, self.macsy_test_env.models_location)
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('006'))
         finally:
             self.unload_env("env_009")
 
-        # case 7
+
+    def test_disambiguate_cluster_case07(self):
+
         self.load_env("env_003")
         try:
             models_registry = ModelRegistry(self.macsy_test_env.cfg)
@@ -229,12 +246,14 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             new_gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, models_location)
             cluster.hits[4].gene = new_gene
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('007'))
         finally:
             self.unload_env("env_003")
 
-        # case 8
+
+    def test_disambiguate_cluster_case08(self):
+
         self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
@@ -243,7 +262,7 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
                                                           [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[3]
 
-            str_ = dc_helper(cluster)
+            str_ = self.dc_helper(cluster)
             self.assertEqual(str_, self.output_control_str('008'))
         finally:
             self.unload_env("env_009")
