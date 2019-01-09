@@ -26,7 +26,8 @@ class MacsyTestEnvSnippet(object):
         self.all_hits = []
 
     def build_config(self, **config_opts):
-        self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
+        assert self.out_dir is not None
+
         defaults = MacsyDefaults()
 
         seq_ori = MacsyTest.find_data("base", config_opts.get('sequence_db', 'test_base.fa'))
@@ -125,6 +126,10 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.defaults = MacsyDefaults()
 
     def load(self, env_id, **cfg_args):
+        self.out_dir = MacsyTest.get_tmp_dir_name()
+
+        MacsyTest.rmtree(self.out_dir)
+
         l = logging.getLogger()
         logging._handlers.clear()                                                                                                                                                                                             
         logging.shutdown(logging._handlerList[:])                                                                                                                                                                             
@@ -188,7 +193,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             args = argparse.Namespace()
             args.sequence_db = MacsyTest.find_data("base",  "test_base_with_errors.fa")
             args.db_type = 'gembase'
-            args.res_search_dir = MacsyTest.get_uniq_tmp_dir_name()
+            args.res_search_dir = self.out_dir
             args.log_level = 30
             args.log_file = os.devnull
             args.models_dir = MacsyTest.find_data('models')
@@ -199,12 +204,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
     def unload(self, env_id):
 
         # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
+        # in rmtree calls in Windows
         MacsyTest.close_loggers_filehandles()
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except Exception:
-            pass
+        MacsyTest.rmtree(self.cfg.working_dir)
 
         # reset global vars
         system_bank._system_bank = {}
