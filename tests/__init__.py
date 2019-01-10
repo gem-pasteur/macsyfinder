@@ -157,6 +157,10 @@ class MacsyTest(unittest.TestCase):
                 self.assertListEqual(hmm1_fields, hmm2_fields)
 
     @staticmethod
+    def get_tmp_dir_name():
+        return os.path.join(tempfile.gettempdir(), "macsyfinder_test_run")
+
+    @staticmethod
     def get_uniq_tmp_dir_name():
         return os.path.join(tempfile.gettempdir(), "macsyfinder-{}".format(uuid.uuid4()))
 
