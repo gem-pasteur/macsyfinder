@@ -380,8 +380,7 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             self.unload_env("env_004")
 
 
-    def test_search_systems(self):
-        # case 1
+    def test_search_systems_case01(self):
         self.load_env("env_003")
         try:
             tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
@@ -397,7 +396,8 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_003")
 
-        # case 2
+
+    def test_search_systems_case02(self):
         self.load_env("env_005")
         try:
             tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
@@ -412,7 +412,8 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_005")
 
-        # case 3
+
+    def test_search_systems_case03(self):
         self.load_env("env_005", db_type="ordered_replicon")
         try:
             tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
@@ -428,7 +429,8 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_005")
 
-        # case 4
+
+    def test_search_systems_case04(self):
         self.load_env("env_005", db_type="unordered_replicon")
         try:
             tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
@@ -444,7 +446,8 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_005")
 
-        # case 5
+
+    def test_search_systems_case05(self):
         self.load_env("env_005", db_type="unordered_replicon")
         try:
             tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
@@ -462,7 +465,9 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_005'))
         finally:
             self.unload_env("env_005")
-        # case 6
+
+
+    def test_search_systems_case06(self):
         self.load_env("env_005", db_type="foobar")
         try:
             RepliconDB.ordered_replicon_name = 'AESU001c01a'
