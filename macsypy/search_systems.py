@@ -1880,7 +1880,11 @@ def build_clusters(hits, systems_to_detect, rep_info):
     :return: a set of clusters and a dictionary with \"multi_system\" genes stored in a system-wise way for further utilization.
     :rtype: :class:`macsypy.search_systems.ClustersHandler`
     """
-
+    import sys
+    print("\n############## build_clusters #######################",file=sys.stderr)
+    print("### hits",hits , file=sys.stderr)
+    print("### len(hits)",len(hits) , file=sys.stderr)
+    print("### systems_to_detect", systems_to_detect,file=sys.stderr)
     _log.debug("Starting cluster detection with build_clusters... ")
 
     # Deals with different dataset types using Pipeline ??
@@ -2005,6 +2009,9 @@ def build_clusters(hits, systems_to_detect, rep_info):
             hitstoconsider.append(last)
 
         clusters.circularize(rep_info, hitstoconsider, systems_to_detect)
+    print("### clusters", clusters, file=sys.stderr)
+    print("### multi_system_genes_system_wise", multi_system_genes_system_wise, file=sys.stderr)
+    print("######################## END build_clusters ###################", file=sys.stderr)
     return (clusters, multi_system_genes_system_wise)
 
 

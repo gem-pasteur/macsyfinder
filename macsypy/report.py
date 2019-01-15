@@ -329,6 +329,10 @@ class GembaseHMMReport(HMMReport):
         Parse the output file of Hmmer obtained from a search in a 'gembase' set of sequences
         and produce a new synthetic report file.
         """
+        import sys
+        if self._hmmer_raw_out.endswith("T4P_pilAE.search_hmm.out"):
+            print("\n###################### start GembaseHMMReport.extract ######################", file=sys.stderr)
+            print("### extract", self._hmmer_raw_out, file=sys.stderr)
         with self._lock:
             # so the extract of a given HMM output is executed only once per run
             # if this method is called several times the first call induce the parsing of HMM out
@@ -344,6 +348,9 @@ class GembaseHMMReport(HMMReport):
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel()
                 coverage_threshold = self.cfg.coverage_profile()
+                if self._hmmer_raw_out.endswith("T4P_pilAE.search_hmm.out"):
+                    print("### self.cfg.i_evalue_sel()", self.cfg.i_evalue_sel(), file=sys.stderr)
+                    print("### self.cfg.coverage_profile()", self.cfg.coverage_profile(), file=sys.stderr)
                 gene_profile_lg = len(self.gene.profile)
                 hmm_hits = (x[1] for x in groupby(hmm_out, self._hit_start))
                 # drop summary
@@ -356,8 +363,12 @@ class GembaseHMMReport(HMMReport):
                     h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
                                              replicon_name, position_hit, i_evalue_sel, body)
                     self.hits += h
-                self.hits.sort()
-                return self.hits
+        self.hits.sort()
+        if self._hmmer_raw_out.endswith("T4P_pilAE.search_hmm.out"):
+            print("### self.hits", self.hits, file=sys.stderr)
+            print("### len(self.hits)", len(self.hits), file=sys.stderr)
+            print("###################### end GembaseHMMReport.extract ######################\n", file=sys.stderr)
+        return self.hits
 
 
 class Hit(object):

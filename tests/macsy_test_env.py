@@ -75,10 +75,18 @@ class MacsyTestEnvSnippet(object):
                 ex_genes += a_s
         all_genes = (genes + ex_genes)
         all_reports = search_genes(all_genes, self.cfg)
+        import sys
+        print("######################## DEBUT build_hits ######################################", file=sys.stderr)
+        print("\n@@@ all_reports", all_reports, file=sys.stderr)
+        print("\n@@@ len(all_reports)", len(all_reports), file=sys.stderr)
+
         all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         self.all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
-
+        print("======================================", file=sys.stderr)
+        for h in self.all_hits:
+            print("###", h, end='', file=sys.stderr)
+        print("######################## END build_hits ######################################", file=sys.stderr)
 
 class MacsyTestEnv(MacsyTestEnvSnippet):
     """Standard test environments.
