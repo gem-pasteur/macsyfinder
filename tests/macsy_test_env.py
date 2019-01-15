@@ -184,7 +184,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         elif env_id == "env_009":
             self.build_hits(previous_run="tests/data/data_set_3/results",
                             models_dir="tests/data/data_set_3/models",
-                            model_fqn="set_1/T4P")
+                            model_fqn="set_1/T4P",
+                            i_evalue_sel=0.5)
 
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
