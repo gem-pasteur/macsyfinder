@@ -517,7 +517,3 @@ class Config:
 
     def hmmer_dir(self):
         return 'hmmer_results'
-
-    def old_data_organization(self):
-        # just time to integrate new_config
-        return False
