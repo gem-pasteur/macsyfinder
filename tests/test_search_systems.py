@@ -414,65 +414,33 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
 
 
     def test_search_systems_case03(self):
-        self.load_env("env_005", db_type="ordered_replicon")
+        self.load_env("env_013", db_type="ordered_replicon")
         try:
-            tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
-            reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.report')
-            summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.summary')
-
-            RepliconDB.ordered_replicon_name = 'AESU001c01a'
+            json_expected = self.output_control_file('results.macsyfinder.json')
             search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-
-            self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_003'))
-            self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_003'))
-            self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_003'))
+            json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
+            self.assertJsonEqual(json_expected, json_result)
         finally:
-            self.unload_env("env_005")
+            self.unload_env("env_013")
 
 
     def test_search_systems_case04(self):
-        self.load_env("env_005", db_type="unordered_replicon")
+        self.load_env("env_011", db_type="unordered_replicon")
         try:
-            tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
-            reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.report')
-            summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.summary')
-
-            RepliconDB.ordered_replicon_name = 'AESU001c01a'
+            json_expected = self.output_control_file('results.macsyfinder.json')
             search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-
-            self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_004'))
-            self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_004'))
-            self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_004'))
+            json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
+            self.assertJsonEqual(json_expected, json_result)
         finally:
-            self.unload_env("env_005")
+            self.unload_env("env_011")
 
 
     def test_search_systems_case05(self):
-        self.load_env("env_005", db_type="unordered_replicon")
+        self.load_env("env_012", db_type="unordered_replicon")
         try:
-            tabfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.tab')
-            reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.report')
-            summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.summary')
-
-            RepliconDB.ordered_replicon_name = 'AESU001c01a'
-
-            forbidden_gene = self.macsy_test_env.all_hits[0].gene
-            self.macsy_test_env.system._forbidden_genes.append(forbidden_gene)
+            json_expected = self.output_control_file('results.macsyfinder.json')
             search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-
-            self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_005'))
-            self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_005'))
-            self.assertFileEqual(summaryfilename, self.output_control_file('summaryfilename_005'))
+            json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
+            self.assertJsonEqual(json_expected, json_result)
         finally:
-            self.unload_env("env_005")
-
-
-    def test_search_systems_case06(self):
-        self.load_env("env_005", db_type="foobar")
-        try:
-            RepliconDB.ordered_replicon_name = 'AESU001c01a'
-            with self.assertRaises(ValueError) as context:
-                search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-            self.assertEqual(str(context.exception), 'Invalid database type. ')
-        finally:
-            self.unload_env("env_005")
+            self.unload_env("env_012")
