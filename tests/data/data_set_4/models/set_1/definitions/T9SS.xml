@@ -1,0 +1,25 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="7" min_genes_required="7" multi_loci="1">
+
+    <gene name="T9SS_gldJ_TIGR03524" presence="accessory"/>    
+
+    <gene name="T9SS_gldK_TIGR03525" presence="mandatory"/>
+    <gene name="T9SS_gldL_TIGR03513" presence="mandatory"/>
+    <gene name="T9SS_gldM_TIGR03517" presence="mandatory"/>
+    <gene name="T9SS_gldN_TIGR03523" presence="mandatory"/>
+
+    <gene name="T9SS_porU" presence="accessory"/>
+    <gene name="T9SS_porV" presence="mandatory"/>
+    <gene name="T9SS_porQ" presence="accessory" loner="1"/>
+
+    <gene name="T9SS_sprA_PF14349" presence="mandatory" exchangeable="1" loner="1">
+        <homologs>
+            <gene name="T9SS_sprA-2_PF12118" loner="1"/>
+    	    <gene name="T9SS_sprA-3_TIGR04189" loner="1"/>
+        </homologs>
+    </gene> 
+
+    <gene name="T9SS_sprE" presence="mandatory" loner="1"/>
+
+    <gene name="T9SS_sprT" presence="mandatory" loner="1"/>
+
+</system>

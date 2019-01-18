@@ -300,6 +300,7 @@ class Config:
         else:
             return None
 
+
     def _set_max_nb_genes(self, value):
         """
         set value for 'max_nb_genes' option
@@ -333,6 +334,7 @@ class Config:
             return self._options['max_nb_genes'].get(model_fqn, None)
         else:
             return None
+
 
     def _set_min_genes_required(self, value):
         """
@@ -404,15 +406,15 @@ class Config:
 
     def _set_models(self, value):
         """
+        :param value: Te models to search as return by the command line parsing or
+                      the configuration files
 
-        :param value:
-        :return:
+                      if value come from command_line
+                          [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
+                      if value come from config file
+                         [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
+                         [(model_family, [def_name1, ...]), ... ]
         """
-        # if value come from command_line
-        #  [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
-        # if value come from config file
-        #   [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
-        # [(model_family, [def_name1, ...]), ... ]
         opt = []
         for models in value:
             model_family_name = models[0]
@@ -427,6 +429,9 @@ class Config:
 
 
     def out_dir(self):
+        """
+        :return: the path to the directory where the results are stored
+        """
         out_dir = self._options['out_dir']
         if out_dir:
             return out_dir
@@ -438,10 +443,18 @@ class Config:
 
 
     def working_dir(self):
+        """
+        alias to :py:meth:`config.Config.out_dir`
+        """
         return self.out_dir()
 
 
     def _set_replicon_topology(self, value):
+        """
+        set the default replicon topology
+
+        :param str value: 'circular' or 'linear'
+        """
         auth_values = ('linear', 'circular')
         value_low = value.lower()
         new_topo = None
@@ -456,6 +469,9 @@ class Config:
 
 
     def _set_sequence_db(self, path):
+        """
+        :param str path: set the path to the sequence file (in fasta format) to analysed
+        """
         if os.path.exists(path) and os.path.isfile(path):
             self._options['sequence_db'] = path
         else:
@@ -463,6 +479,10 @@ class Config:
 
 
     def _set_topology_file(self, path):
+        """
+        test if the path exists and set it in config
+        :param str path: the path to the topology file
+        """
         if os.path.exists(path) and os.path.isfile(path):
             self._options['topology_file'] = path
         else:
@@ -471,25 +491,29 @@ class Config:
 
     def _set_models_dir(self, path):
         """
-
-        :param path:
-        :return:
+        :param str path: the path to the models (definitions + profiles) are stored.
         """
         if os.path.exists(path) and os.path.isdir(path):
             self._options['models_dir'] = path
         else:
             raise ValueError("models_dir '{}' does not exists or is not a directory.".format(path))
 
+
     def _set_multi_loci(self, value):
+        """
+        :param str value: the models fqn list separated by comma of multi loc models
+        """
         models_fqn = {v for v in [v.strip() for v in value.split(',')] if v}
         self._options['multi_loci'] = set(models_fqn)
 
+
     def multi_loci(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualified name
+        :return: True if the model is multi loci, False otherwise
+        :rtype: bool
+        """
         return model_fqn in self._options['multi_loci']
 
     def hmmer_dir(self):
         return 'hmmer_results'
-
-    def old_data_organization(self):
-        # just time to integrate new_config
-        return False

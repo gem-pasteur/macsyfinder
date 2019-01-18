@@ -1,0 +1,9 @@
+# gene: T9SS_gldJ_TIGR03524 extract from /home/bneron/Projects/GEM/macsyfinder-github/src/macsyfinder/macsyfinder-20190116_16-28-21/hmmer_results/T9SS_gldJ_TIGR03524.search_hmm.out hmm output
+# profile length= 559
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+AESU001c01a_015840	Unordered	1562	552	T9SS_gldJ_TIGR03524	T9SS	1.300e-259	861.100	0.980	0.993	5	552
+AESU001c01a_016920	Unordered	1667	557	T9SS_gldJ_TIGR03524	T9SS	1.900e-286	949.600	0.996	0.995	4	557
+AETU001c01a_015840	Unordered	4702	552	T9SS_gldJ_TIGR03524	T9SS	1.300e-259	861.100	0.980	0.993	5	552
+AETU001c01a_016920	Unordered	4807	557	T9SS_gldJ_TIGR03524	T9SS	1.900e-286	949.600	0.996	0.995	4	557

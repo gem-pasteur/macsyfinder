@@ -11,6 +11,7 @@ import tempfile
 import uuid
 import inspect
 import logging
+import json
 
 
 def path_to_modulename(p):
@@ -59,6 +60,7 @@ class MacsyTest(unittest.TestCase):
         # example: tests/data/outputs_control/test_systemDetectionReportUnordered/test_json_output/011
         return expected_file
 
+
     @classmethod
     def output_control_file(cls, _id):
         """
@@ -67,6 +69,7 @@ class MacsyTest(unittest.TestCase):
         'output_control_str' method).
         """
         return cls._output_control(_id)
+
 
     @classmethod
     def output_control_str(cls, _id):
@@ -155,6 +158,20 @@ class MacsyTest(unittest.TestCase):
                 hmm1_fields = hmm1_line.split('#')[:-1]
                 hmm2_fields = hmm2_line.split('#')[:-1]
                 self.assertListEqual(hmm1_fields, hmm2_fields)
+
+
+    def assertJsonEqual(self, json_file_1, json_file_2):
+        with open(json_file_1) as f1:
+            j1 = json.load(f1)
+        with open(json_file_2) as f2:
+            j2 = json.load(f2)
+        self.maxDiff = None
+        self.assertListEqual(j1, j2)
+
+
+    @staticmethod
+    def get_tmp_dir_name():
+        return os.path.join(tempfile.gettempdir(), "macsyfinder_test_run")
 
     @staticmethod
     def get_uniq_tmp_dir_name():
