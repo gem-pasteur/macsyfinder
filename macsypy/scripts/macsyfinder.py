@@ -288,7 +288,7 @@ def parse_args(args):
                                  action="store_true",
                                  default=False,
                                  help="mute the log on stdout."
-                                      " (continue to log on macsyfinder.out)")
+                                      " (continue to log on macsyfinder.log)")
     general_options.add_argument("--version",
                                  action="version",
                                  version=get_version_message()),
@@ -419,8 +419,7 @@ def main(args=None, loglevel=None):
     ################
     # init loggers #
     ################
-    log_file = os.path.join(config.out_dir, 'macsyfinder.out')
-    macsypy.init_logger(log_file=log_file,
+    macsypy.init_logger(log_file=config.log_file(),
                         out=not config.mute)
     sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
     sh = logging.StreamHandler(sys.stderr)
