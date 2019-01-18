@@ -421,22 +421,29 @@ def main(args=None, loglevel=None):
     ################
     macsypy.init_logger(log_file=config.log_file(),
                         out=not config.mute)
-    sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
-    sh = logging.StreamHandler(sys.stderr)
-    sh.setFormatter(sh_formatter)
-
-    if parsed_args.verbosity == 0:
-        log_level = None
-    elif parsed_args.verbosity == 1:
-        log_level = logging.WARNING
-    elif parsed_args.verbosity == 2:
-        log_level = logging.INFO
-    elif parsed_args.verbosity == 3:
-        log_level = logging.DEBUG
+    if not loglevel:
+        # logs are specify from args options
+        macsypy.logger_set_level(config.log_level)
     else:
-        log_level = logging.NOTSET
+        # used by unit tests to mute or unmute logs
+        macsypy.logger_set_level(loglevel)
 
-    logger = logging.getLogger('macsyfinder')
+    # sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
+    # sh = logging.StreamHandler(sys.stderr)
+    # sh.setFormatter(sh_formatter)
+    #
+    # if parsed_args.verbosity == 0:
+    #     log_level = None
+    # elif parsed_args.verbosity == 1:
+    #     log_level = logging.WARNING
+    # elif parsed_args.verbosity == 2:
+    #     log_level = logging.INFO
+    # elif parsed_args.verbosity == 3:
+    #     log_level = logging.DEBUG
+    # else:
+    #     log_level = logging.NOTSET
+    #
+    # logger = logging.getLogger('macsyfinder')
 
     if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stderr)
