@@ -309,12 +309,10 @@ def parse_args(args):
                                  default=False,
                                  help=argparse.SUPPRESS)
     # 'relative-path' option help message (currently hidden)
-    """
-    Use relative paths instead of absolute paths. This option is used
-    by developers to generate portable data set, as for example test 
-    data set, which are used on many different machines (using
-    previous-run option).
-    """
+    # Use relative paths instead of absolute paths. This option is used
+    # by developers to generate portable data set, as for example test
+    # data set, which are used on many different machines (using previous-run option).
+
     parsed_args = parser.parse_args()
     return parsed_args
 
