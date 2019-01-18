@@ -165,6 +165,7 @@ class ModelLocation(object):
     def __eq__(self, other):
         return self.name == other.name
 
+
     def get_definition(self, fqn):
         """
         :param fqn: the fully qualified name of the definition to retrieve.
@@ -178,21 +179,7 @@ class ModelLocation(object):
         :type fqn: string.
         :returns: the definition corresponding to the given name.
         :rtype: a :class:`DefinitionLocation` object.
-        :raise: valueError if name does not match with any model definition.
-        """
-        if self.cfg.old_data_organization():
-            definition = self._old_get_definition(fqn)
-        else:
-            definition = self._new_get_definition(fqn)
-        return definition
-
-
-    def _new_get_definition(self, fqn):
-        """
-        work on new data organization.
-
-        :param fqn:
-        :return: the definition corresponding to the given fully qualified name
+        :raise: valueError if fqn does not match with any model definition.
         """
         name_path = fqn.split(_separator)
         def_full_name = name_path[1:]
@@ -205,17 +192,6 @@ class ModelLocation(object):
             else:
                 raise ValueError("{} does not match with any definitions".format(level))
         return definition
-
-
-    def _old_get_definition(self, name):
-        """
-        work on old data organization.
-
-        :param name: the fqn of the definition. In this case it match <definition dir>/<definition name>.
-        :return: the definition corresponding to the given name
-        """
-        name = name.split(_separator)[1]
-        return self._definitions[name]
 
 
     def get_all_definitions(self, root_def_name=None):
@@ -334,16 +310,12 @@ class ModelRegistry(object):
         :type cfg: :class:`macsypy.config.Config` object
         """
         self._registry = {}
-        if cfg.old_data_organization():
-            new_model = ModelLocation(cfg, profile_dir=cfg.profile_dir, def_dir=cfg.def_dir)
-            self._registry[new_model.name] = new_model
-        else:
-            models_def_root = cfg.models_dir()
-            for models_type in os.listdir(models_def_root):
-                model_path = os.path.join(models_def_root, models_type)
-                if os.path.isdir(model_path):
-                    new_model = ModelLocation(cfg, path=model_path)
-                    self._registry[new_model.name] = new_model
+        models_def_root = cfg.models_dir()
+        for models_type in os.listdir(models_def_root):
+            model_path = os.path.join(models_def_root, models_type)
+            if os.path.isdir(model_path):
+                new_model = ModelLocation(cfg, path=model_path)
+                self._registry[new_model.name] = new_model
 
 
     def models(self):

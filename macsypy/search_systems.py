@@ -2222,7 +2222,3 @@ def search_systems(hits, systems, cfg):
         json_path = os.path.join(cfg.working_dir(), report.json_file_name)
         report.json_output(json_path)
         _log_out.info("******************************************")
-
-    else:
-        raise ValueError("Invalid database type. ")
-

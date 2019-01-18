@@ -26,7 +26,8 @@ class MacsyTestEnvSnippet(object):
         self.all_hits = []
 
     def build_config(self, **config_opts):
-        self.out_dir = MacsyTest.get_uniq_tmp_dir_name()
+        assert self.out_dir is not None
+
         defaults = MacsyDefaults()
 
         seq_ori = MacsyTest.find_data("base", config_opts.get('sequence_db', 'test_base.fa'))
@@ -42,13 +43,11 @@ class MacsyTestEnvSnippet(object):
         args.log_file = os.devnull
         for opt, v in config_opts.items():
             setattr(args, opt, v)
-
         if os.path.exists(args.out_dir):
             shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
         shutil.copy(seq_ori, args.out_dir)
-
         self.cfg = Config(defaults, args)
         idx = Indexes(self.cfg)
         idx.build()
@@ -112,6 +111,18 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
     env_010 => environment loaded from scratch
                (data from "test_base_with_errors.fa").
                Index not created.
+    env_011 => environment loaded using "previous_run" option
+               (data from "tests/data/data_set_4/results").
+               Stops before calling build_clusters() method.
+               Do not contain RepliconDB instance.
+    env_012 => environment loaded using "previous_run" option
+               (data from "tests/data/data_set_5/results").
+               Stops before calling build_clusters() method.
+               Do not contain RepliconDB instance.
+    env_013 => environment loaded using "previous_run" option
+               (data from "tests/data/data_set_6/results").
+               Stops before calling build_clusters() method.
+               Do not contain RepliconDB instance.
     """
 
 
@@ -125,6 +136,10 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.defaults = MacsyDefaults()
 
     def load(self, env_id, **cfg_args):
+        self.out_dir = MacsyTest.get_tmp_dir_name()
+
+        MacsyTest.rmtree(self.out_dir)
+
         l = logging.getLogger()
         logging._handlers.clear()                                                                                                                                                                                             
         logging.shutdown(logging._handlerList[:])                                                                                                                                                                             
@@ -148,7 +163,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.models_location = models_registry[self.model_name]
 
         elif env_id == "env_002":
-            self.build_hits()
+            self.build_hits(**cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
             clusters, multi_syst_genes = build_clusters(self.all_hits, [self.system], self.rep_info)
@@ -157,29 +172,34 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":
-            self.build_hits()
+            self.build_hits(**cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
         elif env_id == "env_004":
-            self.build_hits()
+            self.build_hits(**cfg_args)
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_005":
             self.build_hits(previous_run="tests/data/data_set_2/results",
-                            models_dir="tests/data/data_set_2/models")
+                            models_dir="tests/data/data_set_2/models",
+                            **cfg_args)
         elif env_id == "env_006":
             self.build_config(previous_run="tests/data/data_set_3/results",
-                              models_dir="tests/data/data_set_3/models")
+                              models_dir="tests/data/data_set_3/models",
+                              **cfg_args)
         elif env_id == "env_007":
-            self.build_hits()
+            self.build_hits(**cfg_args)
         elif env_id == "env_008":
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
-                              models_dir="tests/data/data_set_1/models")
+                              models_dir="tests/data/data_set_1/models",
+                              **cfg_args)
         elif env_id == "env_009":
             self.build_hits(previous_run="tests/data/data_set_3/results",
                             models_dir="tests/data/data_set_3/models",
-                            model_fqn="set_1/T4P")
+                            model_fqn="set_1/T4P",
+                            i_evalue_sel=0.5,
+                            **cfg_args)
 
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
@@ -188,23 +208,32 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             args = argparse.Namespace()
             args.sequence_db = MacsyTest.find_data("base",  "test_base_with_errors.fa")
             args.db_type = 'gembase'
-            args.res_search_dir = MacsyTest.get_uniq_tmp_dir_name()
+            args.res_search_dir = self.out_dir
             args.log_level = 30
             args.log_file = os.devnull
             args.models_dir = MacsyTest.find_data('models')
             self.cfg = Config(self.defaults, args)
+        elif env_id == "env_011":
+            self.build_hits(previous_run="tests/data/data_set_4/results",
+                            models_dir="tests/data/data_set_4/models",
+                            **cfg_args)
+        elif env_id == "env_012":
+            self.build_hits(previous_run="tests/data/data_set_5/results",
+                            models_dir="tests/data/data_set_5/models",
+                            **cfg_args)
+        elif env_id == "env_013":
+            self.build_hits(previous_run="tests/data/data_set_6/results",
+                            models_dir="tests/data/data_set_6/models",
+                            **cfg_args)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
     def unload(self, env_id):
 
         # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
+        # in rmtree calls in Windows
         MacsyTest.close_loggers_filehandles()
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except Exception:
-            pass
+        MacsyTest.rmtree(self.cfg.working_dir)
 
         # reset global vars
         system_bank._system_bank = {}
@@ -232,6 +261,12 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             MacsyTest.rmtree(self.out_dir)
         elif env_id == "env_010":
             pass
+        elif env_id == "env_011":
+            MacsyTest.rmtree(self.out_dir)
+        elif env_id == "env_012":
+            MacsyTest.rmtree(self.out_dir)
+        elif env_id == "env_013":
+            MacsyTest.rmtree(self.out_dir)
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 

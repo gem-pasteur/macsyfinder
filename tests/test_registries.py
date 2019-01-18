@@ -193,7 +193,7 @@ class ModelLocationTest(MacsyTest):
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
-        # test old way to specify profiles and defitions
+        # test old way to specify profiles and definitions
         model_loc = ModelLocation(self.cfg,
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
@@ -246,16 +246,12 @@ class ModelLocationTest(MacsyTest):
                                   profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
-        function_orig = self.cfg.old_data_organization
-        self.cfg.old_data_organization = lambda : True
         def_fqn = "definitions/{0}".format(os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
         def_name = os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0]
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
         defloc_received = model_loc.get_definition(def_fqn)
-
         self.assertEqual(defloc_expected, defloc_received)
-        self.cfg.old_data_organization = function_orig
 
 
     def test_get_all_definitions(self):
