@@ -1,0 +1,11 @@
+# gene: T9SS_porQ extract from /home/bneron/Projects/GEM/macsyfinder-github/src/macsyfinder/macsyfinder-20190116_16-28-21/hmmer_results/T9SS_porQ.search_hmm.out hmm output
+# profile length= 332
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+AESU001c01a_016940	Unordered	1669	392	T9SS_porQ	T9SS	5.800e-11	40.400	0.545	0.510	43	242
+AESU001c01a_022180	Unordered	2186	361	T9SS_porQ	T9SS	6.900e-23	79.600	0.985	0.950	12	354
+AESU001c01a_025840	Unordered	2551	339	T9SS_porQ	T9SS	2.900e-136	452.300	0.997	0.982	6	338
+AETU001c01a_016940	Unordered	4809	392	T9SS_porQ	T9SS	5.800e-11	40.400	0.545	0.510	43	242
+AETU001c01a_022180	Unordered	5326	361	T9SS_porQ	T9SS	6.900e-23	79.600	0.985	0.950	12	354
+AETU001c01a_025840	Unordered	5691	339	T9SS_porQ	T9SS	2.900e-136	452.300	0.997	0.982	6	338
