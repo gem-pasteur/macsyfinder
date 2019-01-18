@@ -1,0 +1,122 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/data_set_2/models/set_1/profiles/T9SS_gldM_TIGR03517.hmm
+# target sequence database:        /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/data_set_2/base/test.fa
+# output directed to file:         /home/bneron/Projects/GEM/macsyfinder-github/src/macsyfinder/macsyfinder-20190116_16-28-21/hmmer_results/T9SS_gldM_TIGR03517.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       fa_alignment_TIGR03517  [M=524]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+   4.3e-130  433.4   4.2   4.9e-130  433.2   4.2    1.0  1  AESU001c01a_007870  
+   4.3e-130  433.4   4.2   4.9e-130  433.2   4.2    1.0  1  AETU001c01a_007870  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_007870  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  433.2   4.2  1.5e-133  4.9e-130       1     523 [.       1     522 [.       1     523 [. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: 433.2 bits;  conditional E-value: 1.5e-133
+  fa_alignment_TIGR03517   1 makgkespRQkMInLmYlVliAmLALnvSsevlegFgllnesleaavknsekeNkallaeldkavaeapekvkavkekAekvraksd 87 
+                             ma+gk+spRQkMInLmYlV+iAmLALn+S+evl++Fgllne++  a+ + +++N+a ++ l++++ ++p++++avk+kA++v + sd
+      AESU001c01a_007870   1 MAGGKLSPRQKMINLMYLVFIAMLALNMSKEVLSAFGLLNEKISVANVATSQRNTAFMEGLAQKATDEPAQYAAVKAKADEVSQVSD 87 
+                             9************************************************************************************** PP
+
+  fa_alignment_TIGR03517  88 slvdyieeLkeeivkkadgededgklkeakekedleaemvvtlgkingkgkeLqaklnkyreevlellkddkkmkl.....iksald 169
+                              l  yie +k + ++k  ++      +e+++k d  ++ ++t  k+   g+++ +++nkyr e +++l d++  k+     ik  ++
+      AESU001c01a_007870  88 GLDAYIESVKSASMEKIKDPTD----YEVMDKPDYFNNLFFTGDKYKEGGQKFLDNINKYRTEMMSILSDPALAKVagiedIKKSVE 170
+                             ***********99999877766....79******************************************976554233337899** PP
+
+  fa_alignment_TIGR03517 170 tksdp.eqknaegkkkdweklnFeelPlvAavtllsklqsdvkkiesevlnsllaevgqadlrvdklqAivvakskavfaGetyeae 255
+                             t++ +  +kn +gk++ w+++n+e++P vA++t+l+++q+d+k ++sevl+ +la +++a+l+++++  +  a++ a+++Ge +++ 
+      AESU001c01a_007870 171 TNFSTaPVKNRDGKEVAWLNYNYEGFPQVASITKLTQIQADIKTTKSEVLQRMLAGQQAAALSFSNYSTLMEASKSAYYSGEAFDGA 257
+                             *****99******************************************************************************** PP
+
+  fa_alignment_TIGR03517 256 vvlgavdstqqptvvvn...gqllev.......egigvlklkAggvgkqtikgqikikedgkdirlsisedYvVvk.epvaqIaaal 331
+                             +vlg+ d++++p+       g++l+         g+++lk+ Ag +g ++i+g + + e g+++ + ++  +  +  ++ a+Iaa++
+      AESU001c01a_007870 258 IVLGRTDESTKPKRAELtldGRKLAEgtdytfeGGKVKLKVGAGSPGDHKIEGFLYYGEGGEETEVAVKTGFATISkPNAAVIAADK 344
+                             ************87543234999987676666557788888899****************************988769********* PP
+
+  fa_alignment_TIGR03517 332 mnvlYagvdNpisisvpgvganevsasaaglkslgrkgkvliapptaqgtevtisvtgqlpgrkkvigkktfrVkaiPdPtpyirve 418
+                             mnv+Y+gvdNp+++s+pg++ n+v+as++gl+ l+ + k+++ p+   g++v+i+++g+lp +++v+ + +fr+k+iP P+++ir+e
+      AESU001c01a_007870 345 MNVVYRGVDNPMTVSIPGIPDNNVNASGSGLSKLS-GSKYVMRPG--AGRTVNITASGKLPDGQNVSSSSEFRIKDIPSPMGTIRGE 428
+                             ***********************************.666777777..89************************************** PP
+
+  fa_alignment_TIGR03517 419 dkevnakrfkgavllkkellkaatieaalddddldvnyeVtsfelvlargkrnavkivvtgskfsarqkaqlrqagkgkrvyiteiv 505
+                             d         g v +++  l+++ ++aal+d+d++++++Vt f +++a+++    ++ v+g+k++  + ++l++ag+g+ v+i +i+
+      AESU001c01a_007870 429 D------GNGGPVRMERGGLEISSVGAALQDFDFELKLNVTGFSFKVAGQP----TVKVSGNKLNGAAVSALKRAGRGETVQIFDIN 505
+                             4......3458899*************************************....******************************97 PP
+
+  fa_alignment_TIGR03517 506 vkgpggtkeklkkaatvv 523
+                              +++ g++ klk++++v 
+      AESU001c01a_007870 506 -TNISGSSVKLKRTSPVF 522
+                             .689999*****998875 PP
+
+>> AETU001c01a_007870  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  433.2   4.2  1.5e-133  4.9e-130       1     523 [.       1     522 [.       1     523 [. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: 433.2 bits;  conditional E-value: 1.5e-133
+  fa_alignment_TIGR03517   1 makgkespRQkMInLmYlVliAmLALnvSsevlegFgllnesleaavknsekeNkallaeldkavaeapekvkavkekAekvraksd 87 
+                             ma+gk+spRQkMInLmYlV+iAmLALn+S+evl++Fgllne++  a+ + +++N+a ++ l++++ ++p++++avk+kA++v + sd
+      AETU001c01a_007870   1 MAGGKLSPRQKMINLMYLVFIAMLALNMSKEVLSAFGLLNEKISVANVATSQRNTAFMEGLAQKATDEPAQYAAVKAKADEVSQVSD 87 
+                             9************************************************************************************** PP
+
+  fa_alignment_TIGR03517  88 slvdyieeLkeeivkkadgededgklkeakekedleaemvvtlgkingkgkeLqaklnkyreevlellkddkkmkl.....iksald 169
+                              l  yie +k + ++k  ++      +e+++k d  ++ ++t  k+   g+++ +++nkyr e +++l d++  k+     ik  ++
+      AETU001c01a_007870  88 GLDAYIESVKSASMEKIKDPTD----YEVMDKPDYFNNLFFTGDKYKEGGQKFLDNINKYRTEMMSILSDPALAKVagiedIKKSVE 170
+                             ***********99999877766....79******************************************976554233337899** PP
+
+  fa_alignment_TIGR03517 170 tksdp.eqknaegkkkdweklnFeelPlvAavtllsklqsdvkkiesevlnsllaevgqadlrvdklqAivvakskavfaGetyeae 255
+                             t++ +  +kn +gk++ w+++n+e++P vA++t+l+++q+d+k ++sevl+ +la +++a+l+++++  +  a++ a+++Ge +++ 
+      AETU001c01a_007870 171 TNFSTaPVKNRDGKEVAWLNYNYEGFPQVASITKLTQIQADIKTTKSEVLQRMLAGQQAAALSFSNYSTLMEASKSAYYSGEAFDGA 257
+                             *****99******************************************************************************** PP
+
+  fa_alignment_TIGR03517 256 vvlgavdstqqptvvvn...gqllev.......egigvlklkAggvgkqtikgqikikedgkdirlsisedYvVvk.epvaqIaaal 331
+                             +vlg+ d++++p+       g++l+         g+++lk+ Ag +g ++i+g + + e g+++ + ++  +  +  ++ a+Iaa++
+      AETU001c01a_007870 258 IVLGRTDESTKPKRAELtldGRKLAEgtdytfeGGKVKLKVGAGSPGDHKIEGFLYYGEGGEETEVAVKTGFATISkPNAAVIAADK 344
+                             ************87543234999987676666557788888899****************************988769********* PP
+
+  fa_alignment_TIGR03517 332 mnvlYagvdNpisisvpgvganevsasaaglkslgrkgkvliapptaqgtevtisvtgqlpgrkkvigkktfrVkaiPdPtpyirve 418
+                             mnv+Y+gvdNp+++s+pg++ n+v+as++gl+ l+ + k+++ p+   g++v+i+++g+lp +++v+ + +fr+k+iP P+++ir+e
+      AETU001c01a_007870 345 MNVVYRGVDNPMTVSIPGIPDNNVNASGSGLSKLS-GSKYVMRPG--AGRTVNITASGKLPDGQNVSSSSEFRIKDIPSPMGTIRGE 428
+                             ***********************************.666777777..89************************************** PP
+
+  fa_alignment_TIGR03517 419 dkevnakrfkgavllkkellkaatieaalddddldvnyeVtsfelvlargkrnavkivvtgskfsarqkaqlrqagkgkrvyiteiv 505
+                             d         g v +++  l+++ ++aal+d+d++++++Vt f +++a+++    ++ v+g+k++  + ++l++ag+g+ v+i +i+
+      AETU001c01a_007870 429 D------GNGGPVRMERGGLEISSVGAALQDFDFELKLNVTGFSFKVAGQP----TVKVSGNKLNGAAVSALKRAGRGETVQIFDIN 505
+                             4......3458899*************************************....******************************97 PP
+
+  fa_alignment_TIGR03517 506 vkgpggtkeklkkaatvv 523
+                              +++ g++ klk++++v 
+      AETU001c01a_007870 506 -TNISGSSVKLKRTSPVF 522
+                             .689999*****998875 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (524 nodes)
+Target sequences:                         6280  (2083330 residues searched)
+Passed MSV filter:                       338  (0.0538217); expected 125.6 (0.02)
+Passed bias filter:                      120  (0.0191083); expected 125.6 (0.02)
+Passed Vit filter:                        14  (0.0022293); expected 6.3 (0.001)
+Passed Fwd filter:                         2  (0.000318471); expected 0.1 (1e-05)
+Initial search space (Z):               6280  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
+# Mc/sec: 21833.30
+//
+[ok]
