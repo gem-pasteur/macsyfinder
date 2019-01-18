@@ -36,6 +36,7 @@ class MacsyDefaults(dict):
         self.idx = kwargs.get('idx', False)
         self.inter_gene_max_space = kwargs.get('inter_gene_max_space', None)
         self.log_level = kwargs.get('log_level', logging.WARNING)
+        self.log_file = kwargs.get('log_file', 'macsyfinder.log')
         self.max_nb_genes = kwargs.get('max_nb_genes', None)
         self.min_genes_required = kwargs.get('min_genes_required', None)
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)

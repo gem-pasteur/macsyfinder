@@ -39,6 +39,7 @@ class TestMacsyDefaults(MacsyTest):
                          'models': [],
                          'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data', 'models')),
                          'multi_loci': set(),
+                         'mute' : False,
                          'out_dir': None,
                          'previous_run': False,
                          'profile_suffix': '.hmm',
