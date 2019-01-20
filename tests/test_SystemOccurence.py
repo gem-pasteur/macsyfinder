@@ -18,7 +18,6 @@ import tempfile
 import argparse
 from operator import attrgetter
 
-
 from macsypy.config import Config, MacsyDefaults
 from macsypy.system import System, system_bank
 from macsypy.gene import Gene, Analog, gene_bank
@@ -137,12 +136,14 @@ class Test(MacsyTest, MacsyEnvManager):
 
         system_occurence.mandatory_genes = {}
         system_occurence.accessory_genes = {"tadZ": 0}  # create one accessory gene
-        system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
+        with self.catch_log():
+            system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
         self.assertEqual(system_occurence.accessory_genes["tadZ"], 1)
 
         system_occurence.accessory_genes = {}
         system_occurence.mandatory_genes = {"tadZ": 0}  # create one mandatory gene
-        system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
+        with self.catch_log():
+            system_occurence.fill_with_multi_systems_genes(multi_systems_hits)
         self.assertEqual(system_occurence.mandatory_genes["tadZ"], 1)
 
 
@@ -289,12 +290,13 @@ class Test(MacsyTest, MacsyEnvManager):
 
             rep_info = db['PSAE001c01']
             system_occurence.loci_positions = [(10, 5), (20, 10)]
-            with self.assertRaises(SystemDetectionError) as context:
-                length = system_occurence.compute_system_length(rep_info)
-            self.assertEqual(str(context.exception),
-                             "Inconsistency in locus positions in the case of a linear replicon. "
-                             "The begin position of a locus cannot be higher than the end position. \n"
-                             "Problem with locus found with positions begin: 10 end: 5")
+            with self.catch_log():
+                with self.assertRaises(SystemDetectionError) as context:
+                    length = system_occurence.compute_system_length(rep_info)
+                self.assertEqual(str(context.exception),
+                                 "Inconsistency in locus positions in the case of a linear replicon. "
+                                 "The begin position of a locus cannot be higher than the end position. \n"
+                                 "Problem with locus found with positions begin: 10 end: 5")
         finally:
             shutil.rmtree(out_dir)
 
@@ -502,8 +504,8 @@ class Test(MacsyTest, MacsyEnvManager):
             db = RepliconDB(config)
 
             rep_info = db['AESU001c01a']
-
-            (clusters, multi_syst_genes) = build_clusters(all_hits, [system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(all_hits, [system], rep_info)
             cluster = clusters.clusters[0]
 
             # case 1
@@ -570,7 +572,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._accessory_genes = []
             system._forbidden_genes = []
             system_occurence = SystemOccurence(system)
-            system_occurence.fill_with_cluster(cluster)
+            with self.catch_log():
+                system_occurence.fill_with_cluster(cluster)
             self.assertEqual(len(system_occurence.forbidden_genes), 0)
             self.assertEqual(len(system_occurence.valid_hits), 0)
             self.assertEqual(system_occurence.nb_cluster, 1)
@@ -596,7 +599,7 @@ class Test(MacsyTest, MacsyEnvManager):
         config = Config(MacsyDefaults(), args)
 
         if os.path.exists(config.working_dir()):
-            shutil(config.working_dir())
+            shutil.rmtree(config.working_dir())
         os.makedirs(config.working_dir())
 
         try:
@@ -641,7 +644,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._mandatory_genes = []
             system._accessory_genes = [gene]
             system_occurence = SystemOccurence(system)
-            system_occurence.fill_with_hits(all_hits[:2], False)
+            with self.catch_log():
+                system_occurence.fill_with_hits(all_hits[:2], False)
             self.assertEqual(system_occurence.accessory_genes['T9SS_sprT'], 1)
             self.assertEqual(len(system_occurence.valid_hits), 1)
 
@@ -650,7 +654,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._accessory_genes = []
             system._forbidden_genes = [gene]
             system_occurence = SystemOccurence(system)
-            system_occurence.fill_with_hits(all_hits, True)
+            with self.catch_log():
+                system_occurence.fill_with_hits(all_hits, True)
             self.assertEqual(system_occurence.forbidden_genes['T9SS_sprT'], 1)
             self.assertEqual(len(system_occurence.valid_hits), 1)
 
@@ -661,7 +666,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._forbidden_genes = []
             system_occurence = SystemOccurence(system)
             system_occurence.exmandatory_genes['T9SS_sprT'] = 'tadZ'
-            system_occurence.fill_with_hits(all_hits, True)
+            with self.catch_log():
+                system_occurence.fill_with_hits(all_hits, True)
             self.assertEqual(system_occurence.mandatory_genes['tadZ'], 1)
             self.assertEqual(len(system_occurence.valid_hits), 1)
 
@@ -672,7 +678,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._forbidden_genes = []
             system_occurence = SystemOccurence(system)
             system_occurence.exaccessory_genes['T9SS_sprT'] = 'tadZ'
-            system_occurence.fill_with_hits(all_hits, True)
+            with self.catch_log():
+                system_occurence.fill_with_hits(all_hits, True)
             self.assertEqual(system_occurence.accessory_genes['tadZ'], 1)
             self.assertEqual(len(system_occurence.valid_hits), 1)
 
@@ -683,7 +690,8 @@ class Test(MacsyTest, MacsyEnvManager):
             system._forbidden_genes = [gene]
             system_occurence = SystemOccurence(system)
             system_occurence.exforbidden_genes['T9SS_sprT'] = 'tadZ'
-            system_occurence.fill_with_hits(all_hits, True)
+            with self.catch_log():
+                system_occurence.fill_with_hits(all_hits, True)
             self.assertEqual(system_occurence.forbidden_genes['tadZ'], 1)
             self.assertEqual(len(system_occurence.valid_hits), 1)
         finally:
