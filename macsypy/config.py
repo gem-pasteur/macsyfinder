@@ -35,7 +35,7 @@ class MacsyDefaults(dict):
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
         self.idx = kwargs.get('idx', False)
         self.inter_gene_max_space = kwargs.get('inter_gene_max_space', None)
-        self.log_level = kwargs.get('log_level', logging.WARNING)
+        self.log_level = kwargs.get('log_level', logging.INFO)
         self.log_file = kwargs.get('log_file', 'macsyfinder.log')
         self.max_nb_genes = kwargs.get('max_nb_genes', None)
         self.min_genes_required = kwargs.get('min_genes_required', None)
@@ -47,6 +47,7 @@ class MacsyDefaults(dict):
         self.out_dir = kwargs.get('out_dir', None)
         self.previous_run = kwargs.get('previous_run', False)
         self.profile_suffix = kwargs.get('profile_suffix', '.hmm')
+        self.quiet = kwargs.get('quiet', 0)
         self.relative_path = kwargs.get('relative_path', False)
         self.replicon_topology = kwargs.get('replicon_topology', 'circular')
         self.res_extract_suffix = kwargs.get('res_extract_suffix', '.res_hmm_extract')
@@ -518,3 +519,9 @@ class Config:
 
     def hmmer_dir(self):
         return 'hmmer_results'
+
+    def log_level(self):
+        level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
+        level = min(50, max(10, level))
+        return level
+
