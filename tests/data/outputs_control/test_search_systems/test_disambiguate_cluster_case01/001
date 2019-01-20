@@ -1,3 +1,4 @@
+Disambiguation step:
 
 ---Counter compatible systems ! ---
 {'set_1/T9SS': 4}
@@ -9,4 +10,8 @@ res_cluster :
 [773, 774, 775, 776]
 4
 r.compatible_systems ['set_1/T9SS']
-
+Store:
+--- Cluster set_1/T9SS  ---
+['AESU001c01a_007860', 'AESU001c01a_007870', 'AESU001c01a_007880', 'AESU001c01a_007890']
+['T9SS_gldN_TIGR03523', 'T9SS_gldM_TIGR03517', 'T9SS_gldL_TIGR03513', 'T9SS_gldK_TIGR03525']
+[773, 774, 775, 776]
