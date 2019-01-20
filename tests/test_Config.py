@@ -80,9 +80,17 @@ class TestConfig(MacsyTest):
             elif opt == 'multi_loci':
                 self.assertFalse(cfg.multi_loci('whatever'))
             elif opt in methods_needing_args:
-                self.assertEqual(getattr(cfg, opt)('whatever'), val)
+                self.assertEqual(getattr(cfg, opt)('whatever'), val,
+                                 msg="test of '{}' failed : expected{} !=  got {}".format(opt,
+                                                                                          getattr(cfg, opt)('whatever'),
+                                                                                          val
+                                                                                          ))
             else:
-                self.assertEqual(getattr(cfg, opt)(), val)
+                self.assertEqual(getattr(cfg, opt)(), val,
+                                 msg="test of '{}' failed : expected{} !=  got {}".format(opt,
+                                                                                          getattr(cfg, opt)(),
+                                                                                          val
+                                                                                          ))
 
 
     def test_Config_file(self):
