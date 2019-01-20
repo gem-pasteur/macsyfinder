@@ -321,26 +321,15 @@ def parse_args(args):
     return parsed_args
 
 
-def main_search_systems(config, logger, log_level):
+def main_search_systems(config, logger):
     """
 
     :param parsed_args: the command line arguments
     :type parsed_args: a :class:`argparse.Namespace` object
     :param logger:
-    :param log_level:
     :return:
     """
-
     working_dir = config.working_dir()
-    if not os.path.exists(working_dir):
-        os.makedirs(working_dir)
-    else:
-        if os.path.isdir(working_dir):
-            if os.listdir(working_dir):
-                raise ValueError("'{}' already exists and is not a empty".format(working_dir))
-        else:
-            raise ValueError("'{}' already exists and is not a directory".format(working_dir))
-
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
 
     registry = ModelRegistry(config)
@@ -357,12 +346,11 @@ def main_search_systems(config, logger, log_level):
 
     parser.parse(models_name_to_detect)
 
-    out_logger = logging.getLogger('macsyfinder.out')
-    out_logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
-    out_logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db()))
+    logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
+    logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db()))
 
     for s in models_name_to_detect:
-        out_logger.info("\t- {}".format(s))
+        logger.info("\t- {}".format(s))
 
     models_to_detect = [system_bank[model_fqn] for model_fqn in models_name_to_detect]
     all_genes = []
@@ -416,63 +404,47 @@ def main(args=None, loglevel=None):
     defaults = MacsyDefaults()
     config = Config(defaults, parsed_args)
 
+    ###########################
+    # creation of working dir
+    ###########################
+
+    working_dir = config.working_dir()
+    if not os.path.exists(working_dir):
+        os.makedirs(working_dir)
+    else:
+        if os.path.isdir(working_dir):
+            if os.listdir(working_dir):
+                raise ValueError("'{}' already exists and is not a empty".format(working_dir))
+        else:
+            raise ValueError("'{}' already exists and is not a directory".format(working_dir))
+
     ################
     # init loggers #
     ################
-    macsypy.init_logger(log_file=config.log_file(),
-                        out=not config.mute)
+    macsypy.init_logger(log_file=os.path.join(config.working_dir(), config.log_file()),
+                        out=not config.mute())
     if not loglevel:
         # logs are specify from args options
-        macsypy.logger_set_level(config.log_level)
+        macsypy.logger_set_level(level=config.log_level())
     else:
         # used by unit tests to mute or unmute logs
-        macsypy.logger_set_level(loglevel)
+        macsypy.logger_set_level(level=loglevel)
 
-    # sh_formatter = logging.Formatter("%(levelname)-8s : L %(lineno)d : %(message)s")
-    # sh = logging.StreamHandler(sys.stderr)
-    # sh.setFormatter(sh_formatter)
-    #
-    # if parsed_args.verbosity == 0:
-    #     log_level = None
-    # elif parsed_args.verbosity == 1:
-    #     log_level = logging.WARNING
-    # elif parsed_args.verbosity == 2:
-    #     log_level = logging.INFO
-    # elif parsed_args.verbosity == 3:
-    #     log_level = logging.DEBUG
-    # else:
-    #     log_level = logging.NOTSET
-    #
-    # logger = logging.getLogger('macsyfinder')
+    logger = logging.getLogger('macsypy.macsyfinder')
+
 
     if parsed_args.list_models:
-        print(list_models(parsed_args), file=sys.stderr)
+        print(list_models(parsed_args), file=sys.stdout)
         sys.exit(0)
     else:
-        # old_options = (parsed_args.def_dir, parsed_args.profile_dir, parsed_args.systems)
-        new_options = (parsed_args.models_dir, parsed_args.models)
-
-        # if not parsed_args.systems and not parsed_args.models:
-        #     raise OptionError("you MUST provided systems to search.")
-
+        if not parsed_args.previous_run and not parsed_args.models:
+            raise OptionError("argument --models is required.")
         if not parsed_args.previous_run and not parsed_args.sequence_db:
             raise OptionError("argument --sequence-db is required.")
-
         if not parsed_args.previous_run and not parsed_args.db_type:
             raise OptionError("argument --db-type is required.")
 
-        # if parsed_args.systems and parsed_args.models:
-        #     raise OptionError("""--models option is the new way to specify models to search.
-        #         models as arguments is the old and DEPRECATED way to specify models.
-        #         You cannot use the two ways in the same time.
-        #         """)
-
-        # if any(old_options) and any(new_options):
-        #     raise OptionError("""--models --models-dir options are the new way to specify models to search.
-        #         --def-dir and --profile-dir is the old and DEPRECATED way to specify models.
-        #         You cannot use the two ways in the same time.
-        #         """)
-        main_search_systems(parsed_args, logger, log_level)
+        main_search_systems(config, logger)
     logger.debug("END")
 
 if __name__ == "__main__":
