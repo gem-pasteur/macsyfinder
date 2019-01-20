@@ -29,7 +29,6 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
 
 
     def tearDown(self):
-
         # reset static members (hacked in test_search_systems func)
         RepliconDB.ordered_replicon_name = 'UserReplicon'
 
@@ -38,9 +37,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         # case 1
         self.load_env("env_003")
         try:
-            clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system],
-                                                          self.macsy_test_env.rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system],
+                                                            self.macsy_test_env.rep_info)
             self.assertEqual(str(clusters), self.output_control_str('001'))
             self.assertEqual(len(multi_syst_genes), 0)
         finally:
@@ -51,9 +51,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             for h in self.macsy_test_env.all_hits:
                 h.gene._multi_system = True
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system],
-                                                          self.macsy_test_env.rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system],
+                                                            self.macsy_test_env.rep_info)
             self.assertEqual(str(clusters), self.output_control_str('002'))
             self.assertEqual(len(multi_syst_genes), 1)
         finally:
@@ -98,30 +99,25 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             self.unload_env("env_003")
 
-    def dc_helper(self, cluster): # 'dc' stands for Disambiguate Cluster
-        """
-        This method
-            - calls disambiguate_cluster()
-            - returns stdxxx
-        """
-        with self.catch_io(out=True, err=True) as stdxxx:
-            clusters = disambiguate_cluster(cluster)
-        stdout = stdxxx[0].getvalue()
-        stderr = stdxxx[1].getvalue()
-        buffer_ = os.linesep.join([stdout, stderr])
-        return buffer_
 
     def test_disambiguate_cluster_case01(self):
-
-        self.load_env("env_003")
+        with self.catch_log():
+            self.load_env("env_003", verbosity=1)
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['AESU001c01a']
-            clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
-                                                        [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[1]
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('001'))
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
+
+            self.maxDiff = None
+            self.assertEqual(catch_msg, self.output_control_str('001'))
+            self.assertEqual(len(dc_clusters), 1)
+            self.assertEqual(str(dc_clusters[0]), str(cluster))
         finally:
             self.unload_env("env_003")
 
@@ -131,12 +127,17 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['AESU001c01a']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                           [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[1]
             cluster.systems_to_detect = []
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('002'))
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
+
+            self.assertEqual(catch_msg, self.output_control_str('002').strip())
+            self.assertListEqual(dc_clusters, [])
         finally:
             self.unload_env("env_003")
 
@@ -147,12 +148,17 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
-
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('003'))
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
+            del (cluster.hits[-1])
+            self.assertEqual(catch_msg, self.output_control_str('003').strip())
+            self.assertEqual(len(dc_clusters), 1)
+            self.assertEqual(str(dc_clusters[0]), str(cluster))
         finally:
             self.unload_env("env_009")
 
@@ -163,20 +169,23 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
-
             for h in cluster.hits:
                 h.gene._loner = True
-
             li = copy.copy(cluster.hits[1:3])
             li[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system,
                               self.macsy_test_env.models_location)
             cluster.hits.extend(li)
 
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('004'))
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
+
+            self.assertEqual(catch_msg, self.output_control_str('004').strip())
+            self.assertListEqual(dc_clusters, [])
         finally:
             self.unload_env("env_009")
 
@@ -187,42 +196,46 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
-
             for h in cluster.hits:
                 h.gene._loner = True
-
             cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV',
                                         self.macsy_test_env.system, self.macsy_test_env.models_location)
-
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('005'))
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
+            del(cluster.hits[-2:])
+            self.assertEqual(catch_msg, self.output_control_str('005').strip())
+            self.assertEqual(len(dc_clusters), 1)
+            self.assertEqual(str(dc_clusters[0]), str(cluster))
         finally:
             self.unload_env("env_009")
 
 
     def test_disambiguate_cluster_case06(self):
-
         self.load_env("env_009")
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
-            clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
-                                                        [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[6]
-
             for h in cluster.hits:
                 h.gene._loner = True
-
             li = copy.copy(cluster.hits[0:2])
             cluster.hits.extend(li)
             cluster.hits[1].gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV',
                                         self.macsy_test_env.system, self.macsy_test_env.models_location)
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
 
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('006'))
+            self.assertEqual(catch_msg, self.output_control_str('006').strip())
+            self.assertListEqual(dc_clusters, [])
         finally:
             self.unload_env("env_009")
 
@@ -237,17 +250,20 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
 
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['AESU001c01a']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[1]
-
             li = copy.copy(cluster.hits[0:3])
             cluster.hits.extend(li)
             new_gene = Gene(self.macsy_test_env.cfg, 'T4SS_MOBV', self.macsy_test_env.system, models_location)
             cluster.hits[4].gene = new_gene
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
 
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('007'))
+            self.assertEqual(catch_msg, self.output_control_str('007').strip())
+            self.assertListEqual(dc_clusters, [])
         finally:
             self.unload_env("env_003")
 
@@ -258,12 +274,16 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         try:
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['VICH001.B.00001.C001']
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits,
-                                                          [self.macsy_test_env.system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [self.macsy_test_env.system], rep_info)
             cluster = clusters.clusters[3]
+            with self.catch_log() as log:
+                dc_clusters = disambiguate_cluster(cluster)
+                catch_msg = log.get_value().strip()
 
-            str_ = self.dc_helper(cluster)
-            self.assertEqual(str_, self.output_control_str('008'))
+            self.assertEqual(catch_msg, self.output_control_str('008').strip())
+            self.assertListEqual(dc_clusters, [])
         finally:
             self.unload_env("env_009")
 
@@ -276,9 +296,13 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         # case 1
         self.load_env("env_003")
         try:
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.rep_info)
             multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
-            systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+            with self.catch_log():
+                systems_occurences_list = analyze_clusters_replicon(clusters,
+                                                                    [self.macsy_test_env.system],
+                                                                    multi_syst_genes)
             str_ = stringify(systems_occurences_list)
             self.assertEqual(str_, self.output_control_str('001'))
         finally:
@@ -302,12 +326,15 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
             system.add_accessory_gene(gene)
 
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
             clusters.clusters = clusters.clusters[:1] # keep only one cluster
 
             multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
-
-            systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+            with self.catch_log():
+                systems_occurences_list = analyze_clusters_replicon(clusters,
+                                                                    [self.macsy_test_env.system],
+                                                                    multi_syst_genes)
 
             str_ = stringify(systems_occurences_list)
             self.assertEqual(str_, self.output_control_str('002'))
@@ -332,15 +359,19 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
             system.add_accessory_gene(gene)
 
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                            [system], rep_info)
             clusters.clusters = clusters.clusters[:1] # keep only one cluster
             cluster = clusters.clusters[0]
             cluster._state = "ambiguous"
 
             multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
 
-            with self.catch_io(out=True, err=True) as stdxxx:
-                systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+            with self.catch_log():
+                systems_occurences_list = analyze_clusters_replicon(clusters,
+                                                                    [self.macsy_test_env.system],
+                                                                    multi_syst_genes)
 
             str_ = stringify(systems_occurences_list)
             self.assertEqual(str_, self.output_control_str('003'))
@@ -365,14 +396,15 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             gene = Gene(cfg, 'T4SS_MOBH', system, models_location)
             system.add_accessory_gene(gene)
 
-            (clusters, multi_syst_genes) = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
-            clusters.clusters = clusters.clusters[:1] # keep only one cluster
+            with self.catch_log():
+                clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits, [system], rep_info)
+            clusters.clusters = clusters.clusters[:1]  # keep only one cluster
             cluster = clusters.clusters[0]
             cluster._state = "ineligible"
 
             multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
-
-            systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
+            with self.catch_log():
+                systems_occurences_list = analyze_clusters_replicon(clusters, [self.macsy_test_env.system], multi_syst_genes)
 
             str_ = stringify(systems_occurences_list)
             self.assertEqual(str_, self.output_control_str('004'))
@@ -387,8 +419,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.report')
             summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.summary')
 
-            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
-
+            with self.catch_log():
+                search_systems(self.macsy_test_env.all_hits,
+                               [self.macsy_test_env.system],
+                               self.macsy_test_env.cfg)
 
             self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_001'))
             self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_001'))
@@ -404,7 +438,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             reportfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.report')
             summaryfilename = os.path.join(self.macsy_test_env.cfg.working_dir(), 'macsyfinder.summary')
 
-            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+            with self.catch_log():
+                search_systems(self.macsy_test_env.all_hits,
+                               [self.macsy_test_env.system],
+                               self.macsy_test_env.cfg)
 
             self.assertFileEqual(tabfilename, self.output_control_file('tabfilename_002'))
             self.assertFileEqual(reportfilename, self.output_control_file('reportfilename_002'))
@@ -417,7 +454,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         self.load_env("env_013", db_type="ordered_replicon")
         try:
             json_expected = self.output_control_file('results.macsyfinder.json')
-            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+            with self.catch_log():
+                search_systems(self.macsy_test_env.all_hits,
+                               [self.macsy_test_env.system],
+                               self.macsy_test_env.cfg)
             json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
             self.assertJsonEqual(json_expected, json_result)
         finally:
@@ -428,7 +468,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         self.load_env("env_011", db_type="unordered_replicon")
         try:
             json_expected = self.output_control_file('results.macsyfinder.json')
-            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+            with self.catch_log():
+                search_systems(self.macsy_test_env.all_hits,
+                               [self.macsy_test_env.system],
+                               self.macsy_test_env.cfg)
             json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
             self.assertJsonEqual(json_expected, json_result)
         finally:
@@ -439,7 +482,10 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         self.load_env("env_012", db_type="unordered_replicon")
         try:
             json_expected = self.output_control_file('results.macsyfinder.json')
-            search_systems(self.macsy_test_env.all_hits, [self.macsy_test_env.system], self.macsy_test_env.cfg)
+            with self.catch_log():
+                search_systems(self.macsy_test_env.all_hits,
+                               [self.macsy_test_env.system],
+                               self.macsy_test_env.cfg)
             json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
             self.assertJsonEqual(json_expected, json_result)
         finally:
