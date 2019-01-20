@@ -10,7 +10,8 @@ from functools import partial
 import tempfile
 import uuid
 import inspect
-import logging
+import colorlog
+# import logging
 import json
 
 
@@ -190,11 +191,11 @@ class MacsyTest(unittest.TestCase):
         except:
             pass
 
-    @staticmethod
-    def close_loggers_filehandles():
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
+    # @staticmethod
+    # def close_loggers_filehandles():
+    #     logging.shutdown()
+    #     l = logging.getLogger()
+    #     l.manager.loggerDict.clear()
 
     @staticmethod
     def md5sum(file_=None, str_=None):
@@ -218,8 +219,19 @@ class MacsyTest(unittest.TestCase):
             d.update(str_)
         else:
             assert False
-
         return d.hexdigest()
+
+
+    @contextmanager
+    def catch_log(self):
+        logger = colorlog.getLogger('macsypy')
+        handlers_ori = logger.handlers
+        fake_handler = colorlog.StreamHandler(StringIO())
+        try:
+            logger.handlers = [fake_handler]
+            yield LoggerWrapper(logger)
+        finally:
+            logger.handlers = handlers_ori
 
 
 class LoggerWrapper(object):
