@@ -17,6 +17,7 @@ from macsypy.system_parser import SystemParser
 from tests import MacsyTest
 import macsypy
 
+
 class MacsyTestEnvSnippet(object):
 
     def __init__(self):
@@ -36,7 +37,6 @@ class MacsyTestEnvSnippet(object):
         args = argparse.Namespace()
         args.out_dir = self.out_dir
         args.db_type = 'gembase'
-        args.previous_run = MacsyTest.find_data("data_set_3", "results")
         args.log_level = 20
         args.models_dir = MacsyTest.find_data("data_set_3", "models")
         args.log_file = os.devnull
@@ -165,7 +165,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.models_location = models_registry[self.model_name]
 
         elif env_id == "env_002":
-            self.build_hits(**cfg_args)
+            self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
+                            **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
             clusters, multi_syst_genes = build_clusters(self.all_hits, [self.system], self.rep_info)
@@ -174,11 +175,13 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":
-            self.build_hits(**cfg_args)
+            self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
+                            **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
         elif env_id == "env_004":
-            self.build_hits(**cfg_args)
+            self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
+                            **cfg_args)
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
@@ -191,7 +194,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                               models_dir="tests/data/data_set_3/models",
                               **cfg_args)
         elif env_id == "env_007":
-            self.build_hits(**cfg_args)
+            self.build_hits(previous_run="tests/data/data_set_1",
+                            **cfg_args)
         elif env_id == "env_008":
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
                               models_dir="tests/data/data_set_1/models",
