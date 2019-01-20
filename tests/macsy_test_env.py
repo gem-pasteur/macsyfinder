@@ -15,7 +15,7 @@ from macsypy.search_genes import search_genes
 from macsypy.system_parser import SystemParser
 
 from tests import MacsyTest
-
+import macsypy
 
 class MacsyTestEnvSnippet(object):
 
@@ -29,7 +29,6 @@ class MacsyTestEnvSnippet(object):
         assert self.out_dir is not None
 
         defaults = MacsyDefaults()
-
         seq_ori = MacsyTest.find_data("base", config_opts.get('sequence_db', 'test_base.fa'))
         if 'sequence_db' in config_opts:
             del config_opts['sequence_db']
@@ -38,7 +37,7 @@ class MacsyTestEnvSnippet(object):
         args.out_dir = self.out_dir
         args.db_type = 'gembase'
         args.previous_run = MacsyTest.find_data("data_set_3", "results")
-        args.log_level = 30
+        args.log_level = 20
         args.models_dir = MacsyTest.find_data("data_set_3", "models")
         args.log_file = os.devnull
         for opt, v in config_opts.items():
@@ -140,17 +139,19 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
         MacsyTest.rmtree(self.out_dir)
 
-        l = logging.getLogger()
-        logging._handlers.clear()                                                                                                                                                                                             
-        logging.shutdown(logging._handlerList[:])                                                                                                                                                                             
-        del logging._handlerList[:]                                                                                                                                                                                           
-        l.manager.loggerDict.clear()
+        macsypy.init_logger(out=True)
+        macsypy.logger_set_level(level=logging.INFO)
+        #l = logging.getLogger()
+        #logging._handlers.clear()
+        #logging.shutdown(logging._handlerList[:])
+        #del logging._handlerList[:]
+        #l.manager.loggerDict.clear()
 
         # add only one handler to the macsypy logger
-        from macsypy.report import _log
-        macsy_log = _log.parent
-        log_handler = logging.FileHandler(os.devnull)
-        macsy_log.addHandler(log_handler)
+        #from macsypy.report import _log
+        #macsy_log = _log.parent
+        #log_handler = logging.FileHandler(os.devnull)
+        #macsy_log.addHandler(log_handler)
 
         if env_id == "env_001":
             cfg_args.update({'models_dir': MacsyTest.find_data('models')})
@@ -232,7 +233,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
 
         # close loggers filehandles, so they don't block file deletion
         # in rmtree calls in Windows
-        MacsyTest.close_loggers_filehandles()
+        # MacsyTest.close_loggers_filehandles()
         MacsyTest.rmtree(self.cfg.working_dir)
 
         # reset global vars
