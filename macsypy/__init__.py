@@ -12,7 +12,7 @@ def init_logger(log_file=None, out=True):
     logging = colorlog.logging.logging
     if out:
         stdout_handler = colorlog.StreamHandler(sys.stdout)
-        stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(levelname)-8s : %(reset)s %(message)s",
+        stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
                                                      datefmt=None,
                                                      reset=True,
                                                      log_colors={
@@ -38,7 +38,7 @@ def init_logger(log_file=None, out=True):
     logger.setLevel(logging.WARNING)
 
 
-def logger_set_level(level='WARNING'):
+def logger_set_level(level='INFO'):
     # default value must be a string
     # cannot be colorlog.logging.logging.WARNING for instance
     # because setup import __init__ to get __version__
