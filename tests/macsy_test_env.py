@@ -45,8 +45,9 @@ class MacsyTestEnvSnippet(object):
         if os.path.exists(args.out_dir):
             shutil.rmtree(args.out_dir)
         os.mkdir(args.out_dir)
-        args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
-        shutil.copy(seq_ori, args.out_dir)
+        if 'previous_run' not in config_opts:
+            args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
+            shutil.copy(seq_ori, args.out_dir)
         self.cfg = Config(defaults, args)
         idx = Indexes(self.cfg)
         idx.build()
