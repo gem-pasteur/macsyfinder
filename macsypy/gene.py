@@ -563,7 +563,7 @@ class Profile(object):
                            "sequence_db": self.cfg.sequence_db(),
                            }
                 command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
-                _log.info("{0} Hmmer command line : {1}".format(self.gene.name, command))
+                _log.debug("{0} Hmmer command line : {1}".format(self.gene.name, command))
                 try:
                     hmmer = Popen(command,
                                   shell=True,
