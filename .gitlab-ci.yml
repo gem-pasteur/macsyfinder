@@ -8,7 +8,7 @@ variables:
 
 testing36:
   stage: test
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
 
   script:
     - pip3 install --no-binary=macsyfinder .
@@ -19,7 +19,7 @@ testing36:
 
 testing37:
   stage: test
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
 
   script:
     - python3.7 /usr/bin/pip3 install --no-binary=macsyfinder .
@@ -30,7 +30,7 @@ testing37:
 
 coverage:
   stage: coverage
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
     - pip3 install --no-binary=macsyfinder .
     - python3.6-coverage run --source=macsypy tests/run_tests.py
@@ -46,7 +46,7 @@ coverage:
 
 pages:
   stage: pages
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/pages
   dependencies:
     - coverage
   script:
