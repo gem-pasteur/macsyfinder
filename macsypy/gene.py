@@ -71,7 +71,7 @@ class GeneBank(object):
         :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
-        model_name = registries.split_def_name(gene.system.fqn)[0]
+        model_name = registries.split_def_name(gene.model.fqn)[0]
         key = (model_name, gene.name)
         if key in self._genes_bank:
             raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
@@ -89,7 +89,7 @@ class Gene(object):
     """
 
     def __init__(self, cfg, name,
-                 system,
+                 model,
                  model_location,
                  loner=False,
                  exchangeable=False,
@@ -102,8 +102,8 @@ class Gene(object):
         :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the Gene.
         :type name: string.
-        :param system: the system that owns this Gene
-        :type system: :class:`macsypy.model.Model` object.
+        :param model: the system that owns this Gene
+        :type model: :class:`macsypy.model.Model` object.
         :param model_loc: where all the paths profiles and definitions are register for a kind of model.
         :type model_loc: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
@@ -122,7 +122,7 @@ class Gene(object):
 
         self.homologs = []
         self.analogs = []
-        self._system = system
+        self._model = model
         self._loner = loner
         self._exchangeable = exchangeable
         self._multi_system = multi_system
@@ -155,12 +155,12 @@ class Gene(object):
 
 
     @property
-    def system(self):
+    def model(self):
         """
-        :return: the System that owns this Gene
+        :return: the Model that owns this Gene
         :rtype: :class:`macsypy.model.Model` object
         """
-        return self._system
+        return self._model
 
 
     @property
@@ -200,7 +200,7 @@ class Gene(object):
         if self._inter_gene_max_space is not None:
             return self._inter_gene_max_space
         else:
-            return self._system.inter_gene_max_space
+            return self._model.inter_gene_max_space
 
 
     def add_homolog(self, homolog):

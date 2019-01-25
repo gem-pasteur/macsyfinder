@@ -293,9 +293,9 @@ class DefinitionParser(object):
             raise ModelInconsistencyError(msg)
 
         model_ref = node.get("system_ref")
-        if model_ref is not None and model_ref != gene.system.name:
+        if model_ref is not None and model_ref != gene.model.name:
             msg = "Inconsistency in models definitions: the gene '{}' described as homolog of '{}'\
- with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name, model_ref, gene.system.name)
+ with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name, model_ref, gene.model.name)
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref, aligned)
@@ -333,10 +333,10 @@ class DefinitionParser(object):
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         model_ref = node.get("system_ref")
-        if model_ref is not None and model_ref != gene.system.name:
+        if model_ref is not None and model_ref != gene.model.name:
             msg = "Inconsistency in models definitions: the gene '{}' described as analog of\
  '{}' with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name,
-                                                                      model_ref, gene.system.name)
+                                                                      model_ref, gene.model.name)
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         analog = Analog(gene, gene_ref)

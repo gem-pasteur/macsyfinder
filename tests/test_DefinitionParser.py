@@ -117,13 +117,13 @@ class TestModelParser(MacsyTest):
         sctJ_FLG_homologs = sctJ_FLG.get_homologs()
         self.assertEqual(len(sctJ_FLG_homologs), 1)
         self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
-        self.assertEqual(sctJ_FLG_homologs[0].system, self.model_bank['foo/model_2'])
+        self.assertEqual(sctJ_FLG_homologs[0].model, self.model_bank['foo/model_2'])
         self.assertEqual(len(s1.accessory_genes), 1)
         self.assertEqual(s1.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(s1.accessory_genes[0].system, self.model_bank['foo/model_2'])
+        self.assertEqual(s1.accessory_genes[0].model, self.model_bank['foo/model_2'])
         self.assertEqual(len(s1.forbidden_genes), 1)
         self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(s1.forbidden_genes[0].system, self.model_bank['foo/model_2'])
+        self.assertEqual(s1.forbidden_genes[0].model, self.model_bank['foo/model_2'])
 
 
     def test_parse_with_analogs(self):
@@ -161,13 +161,13 @@ class TestModelParser(MacsyTest):
         sctJ_FLG_analogs = sctJ_FLG.get_analogs()
         self.assertEqual(len(sctJ_FLG_analogs), 1)
         self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
-        self.assertEqual(sctJ_FLG_analogs[0].system, self.model_bank['foo/model_4'])
+        self.assertEqual(sctJ_FLG_analogs[0].model, self.model_bank['foo/model_4'])
         self.assertEqual(len(s1.accessory_genes), 1)
         self.assertEqual(s1.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(s1.accessory_genes[0].system, self.model_bank['foo/model_4'])
+        self.assertEqual(s1.accessory_genes[0].model, self.model_bank['foo/model_4'])
         self.assertEqual(len(s1.forbidden_genes), 1)
         self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(s1.forbidden_genes[0].system, self.model_bank['foo/model_4'])
+        self.assertEqual(s1.forbidden_genes[0].model, self.model_bank['foo/model_4'])
 
 
     def test_wo_presence(self):

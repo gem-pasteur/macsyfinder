@@ -210,7 +210,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
                                 hits.append(Hit(self.gene,
-                                                self.gene.system,
+                                                self.gene.model,
                                                 hit_id,
                                                 seq_lg,
                                                 replicon_name,
@@ -507,4 +507,4 @@ class Hit(object):
         :returns: the 'inter_gene_max_space' parameter defined for the gene of the hit
         :rtype: integer
         """
-        return self.gene.system.inter_gene_max_space
+        return self.gene.model.inter_gene_max_space
