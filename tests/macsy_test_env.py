@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 import logging
 from operator import attrgetter
 import argparse
@@ -9,10 +8,10 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from macsypy.gene import gene_bank
-from macsypy.system import system_bank
+from macsypy.model import model_bank
 from macsypy.search_systems import system_name_generator, build_clusters, analyze_clusters_replicon
 from macsypy.search_genes import search_genes
-from macsypy.system_parser import SystemParser
+from macsypy.definition_parser import DefinitionParser
 
 from tests import MacsyTest
 import macsypy
@@ -23,7 +22,7 @@ class MacsyTestEnvSnippet(object):
     def __init__(self):
         self.out_dir = None
         self.cfg = None
-        self.system = None
+        self.model = None
         self.all_hits = []
 
     def build_config(self, **config_opts):
@@ -59,10 +58,10 @@ class MacsyTestEnvSnippet(object):
                         }
         default_opts.update(config_opts)
         self.build_config(**default_opts)
-        parser = SystemParser(self.cfg, system_bank, gene_bank)
+        parser = DefinitionParser(self.cfg, model_bank, gene_bank)
         parser.parse([model_fqn])
-        self.system = system_bank[model_fqn]
-        genes = self.system.mandatory_genes + self.system.accessory_genes + self.system.forbidden_genes
+        self.model = model_bank[model_fqn]
+        genes = self.model.mandatory_genes + self.model.accessory_genes + self.model.forbidden_genes
 
         ex_genes = []
         for g in genes:
@@ -159,9 +158,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                             **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
-            clusters, multi_syst_genes = build_clusters(self.all_hits, [self.system], self.rep_info)
+            clusters, multi_syst_genes = build_clusters(self.all_hits, [self.model], self.rep_info)
             self.cluster = clusters.clusters[0]
-            systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
+            systems_occurences_list = analyze_clusters_replicon(clusters, [self.model], multi_syst_genes)
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":
@@ -234,7 +233,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         MacsyTest.rmtree(self.cfg.working_dir)
 
         # reset global vars
-        system_bank._system_bank = {}
+        model_bank._model_bank = {}
         gene_bank._genes_bank = {}
         system_name_generator.name_bank = {}
 

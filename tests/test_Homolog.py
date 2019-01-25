@@ -12,15 +12,13 @@
 ################################################################################
 
 
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.gene import Homolog
 from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -49,14 +47,14 @@ class Test(MacsyTest):
             pass
 
     def test_gene_ref(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         gene = Gene(self.cfg, 'sctJ', system, self.models_location)
         homolog_1 = Homolog(gene, gene_ref)
         self.assertEqual(homolog_1.gene_ref, gene_ref)
  
     def test_is_aligned(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         gene = Gene(self.cfg, 'sctJ', system, self.models_location)
         homolog = Homolog(gene, gene_ref)
@@ -65,7 +63,7 @@ class Test(MacsyTest):
         self.assertTrue(homolog.is_aligned())
 
     def test_delegation(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         gene = Gene(self.cfg, 'sctJ', system, self.models_location)
         homolog = Homolog(gene, gene_ref)

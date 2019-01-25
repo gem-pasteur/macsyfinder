@@ -14,20 +14,21 @@
 
 import logging
 _log = logging.getLogger(__name__)
-from .error import SystemInconsistencyError
+
+from .error import ModelInconsistencyError
 from .registries import split_def_name
 
 
-class SystemBank(object):
+class ModelBank(object):
     """
-    Build and store all Systems objects. Systems must not be instanciated directly.
+    Build and store all Models objects. Systems must not be instantiated directly.
     This system factory must be used. It ensures there is a unique instance
     of a system for a given system name.
-    To get a system, use the method __getitem__ via the "[]". If the System is already cached in the SystemBank,
-    it is returned. Otherwise a new system is built, stored and then returned.
+    To get a model, use the method __getitem__ via the "[]". If the System is already cached in the ModelBank,
+    it is returned. Otherwise a new model is built, stored and then returned.
     """
 
-    _system_bank = {}
+    _model_bank = {}
 
 
     def __getitem__(self, name):
@@ -36,31 +37,31 @@ class SystemBank(object):
         :type name: string
         :return: the system corresponding to the name.
          If the system already exists, return it, otherwise build it and return it.
-        :rtype: :class:`macsypy.system.System` object
+        :rtype: :class:`macsypy.model.Model` object
         """
-        if name in self._system_bank:
-            return self._system_bank[name]
+        if name in self._model_bank:
+            return self._model_bank[name]
         else:
             raise KeyError(name)
 
 
-    def __contains__(self, system):
+    def __contains__(self, model):
         """
         Implement the membership test operator
         
-        :param system: the system to test
-        :type system: :class:`macsypy.system.System` object
-        :return: True if the system is in the System factory, False otherwise
+        :param model: the model to test
+        :type model: :class:`macsypy.model.Model` object
+        :return: True if the model is in the System factory, False otherwise
         :rtype: boolean
         """
-        return system in self._system_bank.values()
+        return model in self._model_bank.values()
 
 
     def __iter__(self):
         """
         Return an iterator object on the systems contained in the bank
         """
-        return iter(self._system_bank.values())
+        return iter(self._model_bank.values())
 
 
     def __len__(self):
@@ -68,26 +69,27 @@ class SystemBank(object):
         :return: the number of systems stored in the bank
         :rtype: integer
         """
-        return len(self._system_bank)
+        return len(self._model_bank)
     
     
-    def add_system(self, system):
+    def add_model(self, system):
         """
         :param system: the system to add
-        :type system: :class:`macsypy.system.System` object
+        :type system: :class:`macsypy.model.Model` object
         :raise: KeyError if a system with the same name is already registered.
         """
-        if system.fqn in self._system_bank:
-            raise KeyError("a system named {0} is already registered in the systems' bank".format(system.name))
+        if system.fqn in self._model_bank:
+            raise KeyError("a model named {0} is already registered in the models' bank".format(system.name))
         else:
-            self._system_bank[system.fqn] = system
-
-system_bank = SystemBank()
+            self._model_bank[system.fqn] = system
 
 
-class System(object):
+model_bank = ModelBank()
+
+
+class Model(object):
     """
-    Handles a macromolecular system.
+    Handles a macromolecular model.
 
     Contains all its pre-defined characteristics expected to be fulfilled to predict a complete system:
         - component list (genes that are required, accessory, forbidden)
@@ -122,7 +124,7 @@ class System(object):
         self._min_genes_required = min_genes_required
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
-                raise SystemInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
+                raise ModelInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
         self._mandatory_genes = []
@@ -190,6 +192,7 @@ class System(object):
         if cfg_inter_gene_max_space is not None:
             return cfg_inter_gene_max_space
         return self._inter_gene_max_space
+
 
     @property
     def min_mandatory_genes_required(self):

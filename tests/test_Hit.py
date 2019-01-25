@@ -12,18 +12,15 @@
 ################################################################################
 
 
-
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.report import Hit
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import Gene
 import macsypy.gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
@@ -61,7 +58,7 @@ class Test(MacsyTest):
 
 
     def test_cmp(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "gspD", system, self.models_location)
         # compare hit with different id (comparison based on seq identifier)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
@@ -89,7 +86,7 @@ class Test(MacsyTest):
             self.assertLess(h2, h0)
 
     def test_eq(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "gspD", system, self.models_location)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -101,7 +98,7 @@ class Test(MacsyTest):
         self.assertNotEqual(h0, h2)
         
     def test_str(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "gspD", system, self.models_location)
         hit_prop = {'id': "PSAE001c01_006940",
                     'hit_seq_len': 803,
@@ -125,7 +122,7 @@ class Test(MacsyTest):
         self.assertEqual(s, str(hit))
 
     def test_get_syst_inter_gene_max_space(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "gspD", system, self.models_location)
         h0 = Hit(gene, system, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)

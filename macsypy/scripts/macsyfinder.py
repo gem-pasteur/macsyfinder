@@ -25,11 +25,11 @@ _log = colorlog.getLogger('macsypy')
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
-from macsypy.system_parser import SystemParser
+from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes
 from macsypy.search_systems import search_systems
-from macsypy.system import system_bank
+from macsypy.model import model_bank
 from macsypy.gene import gene_bank
 from macsypy.error import OptionError
 
@@ -338,7 +338,7 @@ def main_search_systems(config, logger):
     idx.build(force=config.idx)
 
     # create models
-    parser = SystemParser(config, system_bank, gene_bank)
+    parser = DefinitionParser(config, model_bank, gene_bank)
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
     except KeyError as err:
@@ -352,7 +352,7 @@ def main_search_systems(config, logger):
     for s in models_name_to_detect:
         logger.info("\t- {}".format(s))
 
-    models_to_detect = [system_bank[model_fqn] for model_fqn in models_name_to_detect]
+    models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
     all_genes = []
     for system in models_to_detect:
         genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes

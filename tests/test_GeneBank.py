@@ -12,15 +12,13 @@
 ################################################################################
 
 
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.gene import gene_bank
 from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -52,7 +50,7 @@ class Test(MacsyTest):
     def test_add_get_gene(self):
         gene_name = 'sctJ_FLG'
         self.assertRaises(KeyError, gene_bank.__getitem__, gene_name)
-        system_foo = System(self.cfg, "foo/bar", 10)
+        system_foo = Model(self.cfg, "foo/bar", 10)
         gene = Gene(self.cfg, gene_name, system_foo, self.models_location)
         gene_bank.add_gene(gene)
         gene_from_bank = gene_bank[(self.model_name, gene_name)]
@@ -64,7 +62,7 @@ class Test(MacsyTest):
                          '"a gene named \'{0}/{1}\' is already registered"'.format("foo", gene.name))
 
     def test_contains(self):
-        system_foo = System(self.cfg, "foo/bar", 10)
+        system_foo = Model(self.cfg, "foo/bar", 10)
         gene_in = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         gene_bank.add_gene(gene_in)
         self.assertIn(gene_in, gene_bank)
@@ -72,7 +70,7 @@ class Test(MacsyTest):
         self.assertNotIn(gene_out, gene_bank)
 
     def test_iter(self):
-        system_foo = System(self.cfg, "foo/bar", 10)
+        system_foo = Model(self.cfg, "foo/bar", 10)
         genes = [Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location),
                  Gene(self.cfg, 'abc', system_foo, self.models_location)]
         for g in genes:
@@ -85,7 +83,7 @@ class Test(MacsyTest):
 
 
     def test_get_uniq_object(self):
-        system_foo = System(self.cfg, "foo", 10)
+        system_foo = Model(self.cfg, "foo", 10)
         gene_in = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         gene_bank.add_gene(gene_in)
         gene1 = gene_bank[(self.model_name, 'sctJ_FLG')]

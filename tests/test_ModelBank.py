@@ -12,14 +12,11 @@
 ################################################################################
 
 
-import os
-import shutil
 import tempfile
-import logging
 import argparse
 
-from macsypy.system import SystemBank
-from macsypy.system import System
+from macsypy.model import ModelBank
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from tests import MacsyTest
 
@@ -34,34 +31,34 @@ class Test(MacsyTest):
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
-        self.system_bank = SystemBank()
+        self.system_bank = ModelBank()
 
     def tearDown(self):
-        SystemBank._system_bank = {}
+        ModelBank._model_bank = {}
 
     def test_add_get_system(self):
         model_name = 'foo'
         self.assertRaises(KeyError,  self.system_bank.__getitem__, model_name)
-        system_foo = System(self.cfg, model_name, 10)
-        self.system_bank.add_system(system_foo)
-        self.assertTrue(isinstance(system_foo, System))
+        system_foo = Model(self.cfg, model_name, 10)
+        self.system_bank.add_model(system_foo)
+        self.assertTrue(isinstance(system_foo, Model))
         self.assertEqual(system_foo,  self.system_bank[model_name])
         with self.assertRaises(KeyError) as ctx:
-            self.system_bank.add_system(system_foo)
+            self.system_bank.add_model(system_foo)
         self.assertEqual(str(ctx.exception),
-                         '"a system named {0} is already registered in the systems\' bank"'.format(model_name))
+                         '"a model named {0} is already registered in the models\' bank"'.format(model_name))
 
     def test_contains(self):
-        system_in = System(self.cfg, "foo", 10)
-        self.system_bank.add_system(system_in)
+        system_in = Model(self.cfg, "foo", 10)
+        self.system_bank.add_model(system_in)
         self.assertIn(system_in,  self.system_bank)
-        system_out = System(self.cfg, "bar", 10)
+        system_out = Model(self.cfg, "bar", 10)
         self.assertNotIn(system_out,  self.system_bank)
 
     def test_iter(self):
-        systems = [System(self.cfg, 'foo', 10), System(self.cfg, 'bar', 10)]
+        systems = [Model(self.cfg, 'foo', 10), Model(self.cfg, 'bar', 10)]
         for s in systems:
-            self.system_bank.add_system(s)
+            self.system_bank.add_model(s)
         i = 0
         for s in self.system_bank:
             self.assertIn(s, systems)
@@ -69,8 +66,8 @@ class Test(MacsyTest):
         self.assertEqual(i, len(systems))
 
     def test_get_uniq_object(self):
-        system_foo = System(self.cfg, "foo", 10)
-        self.system_bank.add_system(system_foo)
+        system_foo = Model(self.cfg, "foo", 10)
+        self.system_bank.add_model(system_foo)
         system_1 = self.system_bank[system_foo.name]
         system_2 = self.system_bank[system_foo.name]
         self.assertEqual(system_1, system_2)

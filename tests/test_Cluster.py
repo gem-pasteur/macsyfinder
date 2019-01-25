@@ -13,10 +13,10 @@
 
 
 from operator import attrgetter
-from macsypy.system import System, system_bank
+from macsypy.model import Model, model_bank
 from macsypy.gene import gene_bank
 from macsypy.report import Hit
-from macsypy.system_parser import SystemParser
+from macsypy.definition_parser import DefinitionParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
 from macsypy.error import SystemDetectionError
@@ -35,7 +35,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_len(self):
         self.load_env("env_001", log_out=False)
 
-        system = System(self.macsy_test_env.cfg, 'foo', 10)
+        system = Model(self.macsy_test_env.cfg, 'foo', 10)
         cluster = Cluster(system)
         li = [None] * 12
         hit = Hit(*li)
@@ -48,7 +48,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_001", log_out=False)
 
         system_name = 'set_1/T9SS'
-        system = System(self.macsy_test_env.cfg, system_name, 10)
+        system = Model(self.macsy_test_env.cfg, system_name, 10)
         cluster = Cluster(system)
         cluster._putative_system = system_name
         self.assertEqual(cluster.putative_system, system_name)
@@ -58,7 +58,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_compatible_systems(self):
         self.load_env("env_001", log_out=False)
 
-        system = System(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
+        system = Model(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
         cluster = Cluster(system)
         compatible_system_name = 'set_1/T2SS'
         cluster._compatible_systems.append(compatible_system_name)
@@ -69,7 +69,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_state(self):
         self.load_env("env_001", log_out=False)
 
-        system = System(self.macsy_test_env.cfg, 'foo', 4)
+        system = Model(self.macsy_test_env.cfg, 'foo', 4)
         cluster = Cluster(system)
         state = cluster.state
         self.assertEqual(state, '')
@@ -80,7 +80,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_007", log_out=False)
 
         h1, h2, h3 = self.macsy_test_env.all_hits[:3]
-        cluster = Cluster([self.macsy_test_env.system])
+        cluster = Cluster([self.macsy_test_env.model])
         cluster.add(h1)
         self.assertEqual(cluster.begin, 505)
         self.assertEqual(cluster.end, 505)
@@ -125,32 +125,13 @@ class Test(MacsyTest, MacsyEnvManager):
             return all_hits
 
         self.load_env("env_008", log_out=False)
-
-        parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
-
+        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank)
         parser.parse(['set_1/T9SS'])
-        system_1 = system_bank['set_1/T9SS']
-
+        system_1 = model_bank['set_1/T9SS']
         all_hits_1 = get_hits(system_1)
 
-        # debug
-        # print [h.gene.name for h in all_hits_1]
-
-        # debug
-        # print cluster.systems
-        # print cluster._putative_system
-        # print cluster._compatible_systems
-        # print cluster._state
-
-        # debug
-        # fqn = 'set_1/T4P'
-        # fqn = 'set_1/CONJ'
-        # fqn = 'set_1/Tad'
-        # fqn = 'set_1/Flagellum'
-        # fqn = 'set_1/T2SS'
 
         # test case 1
-
         cluster = Cluster([system_1])
         for h in all_hits_1:
             cluster.add(h)
@@ -161,7 +142,6 @@ class Test(MacsyTest, MacsyEnvManager):
         self.assertEqual(cluster._state, 'clear')
 
         # test case 2
-
         cluster = Cluster([system_1])
         cluster.add(all_hits_1[0])
         cluster.hits[0].gene._loner = False
@@ -172,10 +152,9 @@ class Test(MacsyTest, MacsyEnvManager):
         self.assertEqual(cluster._state, 'ineligible')
 
         # test case 3
-
         fqn = 'set_1/T3SS'
         parser.parse([fqn])
-        system_2 = system_bank[fqn]
+        system_2 = model_bank[fqn]
         all_hits_2 = get_hits(system_2)
         cluster = Cluster([system_1, system_2])
         for h in all_hits_1 + all_hits_2:
@@ -189,19 +168,13 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_008")
 
         # test case 4
-
         self.load_env("env_006", log_out=False)
-
-        parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
-
+        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank)
         fqn_1 = 'set_1/T2SS'
         fqn_2 = 'set_1/T4P'
-
         parser.parse([fqn_1, fqn_2])
-
-        system_1 = system_bank[fqn_1]
-        system_2 = system_bank[fqn_2]
-
+        system_1 = model_bank[fqn_1]
+        system_2 = model_bank[fqn_2]
         all_hits_1 = get_hits(system_1)
         all_hits_2 = get_hits(system_2)
 
@@ -212,10 +185,8 @@ class Test(MacsyTest, MacsyEnvManager):
                     hits[h.id] = h
 
         cluster = Cluster([system_1, system_2])
-
         for h in hits.values():
             cluster.add(h)
-
         cluster.save()
 
         self.unload_env("env_006")

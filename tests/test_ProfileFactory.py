@@ -12,16 +12,14 @@
 ################################################################################
 
 
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.gene import profile_factory
 from macsypy.gene import Profile
 from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from macsypy.error import MacsypyError
@@ -53,7 +51,7 @@ class Test(MacsyTest):
 
 
     def test_get_profile(self):
-        system_foo = System(self.cfg, "foo", 10)
+        system_foo = Model(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.cfg, gene_name, system_foo, self.models_location)
         profile = profile_factory.get_profile(gene, self.cfg, self.models_location)
@@ -62,7 +60,7 @@ class Test(MacsyTest):
 
 
     def test_get_uniq_object(self):
-        system_foo = System(self.cfg, "foo", 10)
+        system_foo = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         profile1 = profile_factory.get_profile(gene, self.cfg, self.models_location)
         profile2 = profile_factory.get_profile(gene, self.cfg, self.models_location)
@@ -70,7 +68,7 @@ class Test(MacsyTest):
 
 
     def test_unknow_profile(self):
-        system_foo = System(self.cfg, "foo", 10)
+        system_foo = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
         gene.name = "foo"
         self.assertRaises(MacsypyError, profile_factory.get_profile, gene, self.cfg, self.models_location)

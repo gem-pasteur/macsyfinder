@@ -15,11 +15,10 @@
 import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.gene import Gene
 from macsypy.gene import Homolog
 from macsypy.gene import Analog
@@ -37,7 +36,7 @@ class Test(MacsyTest):
         self.args.res_search_dir = tempfile.gettempdir()
         self.args.log_level = 30
         self.args.out_dir = os.path.join(self.args.res_search_dir,
-                                    'test_macsyfinder_System')
+                                    'test_macsyfinder_Model')
         if os.path.exists(self.args.out_dir):
             shutil.rmtree(self.args.out_dir)
         os.mkdir(self.args.out_dir)
@@ -58,7 +57,7 @@ class Test(MacsyTest):
 
     def test_name(self):
         name = 'foo'
-        system = System(self.cfg, name, 10)
+        system = Model(self.cfg, name, 10)
         self.assertEqual(system.name, name)
 
 
@@ -66,7 +65,7 @@ class Test(MacsyTest):
         system_fqn = 'foo/bar'
         inter_gene_max_space_xml = 40
         # test inter_gene_max_space from xml
-        system = System(self.cfg, system_fqn, inter_gene_max_space_xml)
+        system = Model(self.cfg, system_fqn, inter_gene_max_space_xml)
         self.assertEqual(system.inter_gene_max_space, inter_gene_max_space_xml)
 
         self.clean_working_dir()
@@ -76,18 +75,18 @@ class Test(MacsyTest):
 
         self.args.inter_gene_max_space = inter_gene_max_space_cfg
         cfg = Config(MacsyDefaults(), self.args)
-        system = System(cfg, system_fqn, inter_gene_max_space_xml)
+        system = Model(cfg, system_fqn, inter_gene_max_space_xml)
         self.assertEqual(system.inter_gene_max_space, int(inter_gene_max_space_cfg[0][1]))
 
     def test_min_genes_required(self):
         system_fqn = 'foo/bar'
         min_genes_required_xml = 40
-        system = System(self.cfg, system_fqn, 10, min_genes_required=min_genes_required_xml)
+        system = Model(self.cfg, system_fqn, 10, min_genes_required=min_genes_required_xml)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.min_genes_required, min_genes_required_xml)
         # see https://projets.pasteur.fr/issues/1850
-        system = System(self.cfg, system_fqn, 10)
+        system = Model(self.cfg, system_fqn, 10)
         self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
 
         self.clean_working_dir()
@@ -97,19 +96,19 @@ class Test(MacsyTest):
 
         self.args.min_genes_required = min_genes_required_cfg
         cfg = Config(MacsyDefaults(), self.args)
-        system = System(cfg, system_fqn, min_genes_required_xml)
+        system = Model(cfg, system_fqn, min_genes_required_xml)
         self.assertEqual(system.min_genes_required, int(min_genes_required_cfg[0][1]))
 
 
     def test_min_mandatory_genes_required(self):
         system_fqn = 'foo/bar'
         min_mandatory_genes_required_xml = 40
-        system = System(self.cfg, system_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
+        system = Model(self.cfg, system_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required_xml)
         # see https://projets.pasteur.fr/issues/1850
-        system = System(self.cfg, system_fqn, 10)
+        system = Model(self.cfg, system_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
 
         self.clean_working_dir()
@@ -119,16 +118,16 @@ class Test(MacsyTest):
 
         self.args.min_mandatory_genes_required = min_mandatory_genes_required_cfg
         cfg = Config(MacsyDefaults(), self.args)
-        system = System(cfg, system_fqn, 10)
+        system = Model(cfg, system_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, int(min_mandatory_genes_required_cfg[0][1]))
 
     def test_max_nb_genes(self):
         system_fqn = 'foo/bar'
         inter_gene_max_space = 40
         max_nb_genes_xml = 10
-        system = System(self.cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
+        system = Model(self.cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
         self.assertEqual(system.max_nb_genes, max_nb_genes_xml)
-        system = System(self.cfg, system_fqn, inter_gene_max_space)
+        system = Model(self.cfg, system_fqn, inter_gene_max_space)
         self.assertIsNone(system.max_nb_genes)
 
         self.clean_working_dir()
@@ -138,18 +137,18 @@ class Test(MacsyTest):
 
         self.args.max_nb_genes = max_nb_genes_cfg
         cfg = Config(MacsyDefaults(), self.args)
-        system = System(cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
+        system = Model(cfg, system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
         self.assertEqual(system.max_nb_genes, int(max_nb_genes_cfg[0][1]))
 
 
     def test_multi_loci(self):
         system_fqn = 'foo/True'
         inter_gene_max_space = 40
-        system = System(self.cfg, system_fqn, inter_gene_max_space, multi_loci=True)
+        system = Model(self.cfg, system_fqn, inter_gene_max_space, multi_loci=True)
         self.assertTrue(system.multi_loci)
         system_fqn = 'foo/False'
         inter_gene_max_space = 40
-        system = System(self.cfg, system_fqn, inter_gene_max_space)
+        system = Model(self.cfg, system_fqn, inter_gene_max_space)
         self.assertFalse(system.multi_loci)
 
         self.clean_working_dir()
@@ -159,12 +158,12 @@ class Test(MacsyTest):
 
         system_fqn = 'foo/False'
         inter_gene_max_space = 40
-        system = System(cfg, system_fqn, inter_gene_max_space, multi_loci=False)
+        system = Model(cfg, system_fqn, inter_gene_max_space, multi_loci=False)
         self.assertTrue(system.multi_loci)
 
 
     def test_add_mandatory_gene(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system._mandatory_genes, [gene])
@@ -173,7 +172,7 @@ class Test(MacsyTest):
 
 
     def test_add_accessory_gene(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_accessory_gene(gene)
         self.assertEqual(system._accessory_genes, [gene])
@@ -182,7 +181,7 @@ class Test(MacsyTest):
 
 
     def test_add_forbidden_gene(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_forbidden_gene(gene)
         self.assertEqual(system._forbidden_genes, [gene])
@@ -190,28 +189,28 @@ class Test(MacsyTest):
         self.assertEqual(system._mandatory_genes, [])
 
     def test_mandatory_genes(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.mandatory_genes, [gene])
 
 
     def test_accessory_genes(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_accessory_gene(gene)
         self.assertEqual(system.accessory_genes, [gene])
 
 
     def test_forbidden_genes(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_forbidden_gene(gene)
         self.assertEqual(system.forbidden_genes, [gene])
 
 
     def test_get_gene(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
@@ -246,7 +245,7 @@ class Test(MacsyTest):
             self.assertEqual(analog, system.get_gene(analog_name))
 
     def test_get_gene_ref(self):
-        system = System(self.cfg, "foo", 10)
+        system = Model(self.cfg, "foo", 10)
         gene_name = 'sctJ_FLG'
         gene_ref = Gene(self.cfg, gene_name, system, self.models_location)
         homolog_name = 'sctJ'
@@ -266,7 +265,7 @@ class Test(MacsyTest):
 
     def test_str(self):
         system_fqn = "foo/bar"
-        system = System(self.cfg, system_fqn, 10)
+        system = Model(self.cfg, system_fqn, 10)
         mandatory_gene = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(mandatory_gene)
         homolog_name = 'sctJ'
@@ -297,18 +296,18 @@ sctC
         self.assertEqual(str(system), exp_str)
 
     def test_eq(self):
-        aa1 = System(self.cfg, "aaa", 10)
-        aa2 = System(self.cfg, "aaa", 10)
+        aa1 = Model(self.cfg, "aaa", 10)
+        aa2 = Model(self.cfg, "aaa", 10)
         self.assertEqual(aa1, aa2)
 
     def test_lt(self):
-        aaa = System(self.cfg, "aaa", 10)
-        zzz = System(self.cfg, "zzz", 10)
+        aaa = Model(self.cfg, "aaa", 10)
+        zzz = Model(self.cfg, "zzz", 10)
         self.assertLess(aaa, zzz)
 
     def test_gt(self):
-        aaa = System(self.cfg, "aaa", 10)
-        zzz = System(self.cfg, "zzz", 10)
+        aaa = Model(self.cfg, "aaa", 10)
+        zzz = Model(self.cfg, "zzz", 10)
         self.assertGreater(zzz, aaa)
 
 

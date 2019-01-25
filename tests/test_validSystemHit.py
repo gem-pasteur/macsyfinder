@@ -28,23 +28,23 @@ class Test(MacsyTest, MacsyEnvManager):
 
     def test_str(self):
         hit = self.macsy_test_env.all_hits[0]
-        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.model, "mandatory")
         self.assertEqual(str(valid_system_hit), self.output_control_str('001'))
 
     def test_output_system(self):
         hit = self.macsy_test_env.all_hits[0]
-        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.model, "mandatory")
         report_str = valid_system_hit.output_system("foo132", "all_clear")
         self.assertEqual(str(report_str), self.output_control_str('001'))
 
     def test_getattr(self):
         hit = self.macsy_test_env.all_hits[0]
-        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.model, "mandatory")
         i_eval = valid_system_hit.i_eval
         self.assertEqual(i_eval, 7.5e-103)
 
     def test_output_system_header(self):
         hit = self.macsy_test_env.all_hits[0]
-        valid_system_hit = validSystemHit(hit, self.macsy_test_env.system, "mandatory")
+        valid_system_hit = validSystemHit(hit, self.macsy_test_env.model, "mandatory")
         header_str = valid_system_hit.output_system_header()
         self.assertEqual(header_str, self.output_control_str('001'))

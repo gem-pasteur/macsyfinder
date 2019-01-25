@@ -24,7 +24,7 @@ import functools
 
 from .error import MacsypyError, SystemDetectionError
 from .database import RepliconDB
-from .system import system_bank
+from .model import model_bank
 
 _log = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ class ClustersHandler(object):
         and that might be part of a system overlapping the two "ends" of the replicon
         :type end_hits: a list of :class:`macsypy.report.Hit`
         :param systems_to_detect: the set of systems to detect in this run
-        :type systems_to_detect: a list of :class:`macsypy.system.System
+        :type systems_to_detect: a list of :class:`macsypy.model.Model
         """
         # We assume this function is called when appropriate (i.e. for circular replicons)
 
@@ -190,7 +190,7 @@ class Cluster(object):
     def __init__(self, systems_to_detect):
         """
         :param systems_to_detect: the list of systems to be detected in this run
-        :type systems_to_detect: a list of :class:`macsypy.system.System`
+        :type systems_to_detect: a list of :class:`macsypy.model.Model`
         """
         self.hits = []
         self.systems_to_detect = systems_to_detect # NEW
@@ -373,10 +373,10 @@ class Cluster(object):
                         #print systems
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
-                            #if h.gene.is_authorized(system_bank[putative_system], False): # tmp before nope
-                            if h.gene.is_authorized(system_bank[putative_system], True): # No! forbidden genes that are defined in system have to be considered!
+                            #if h.gene.is_authorized(model_bank[putative_system], False): # tmp before nope
+                            if h.gene.is_authorized(model_bank[putative_system], True): # No! forbidden genes that are defined in system have to be considered!
                                 auth += 1
-                            #if h.gene.is_forbidden(system_bank[putative_system]):
+                            #if h.gene.is_forbidden(model_bank[putative_system]):
                             #    forbid +=1
                                                     
                             if auth == len(hits):
@@ -475,7 +475,7 @@ class SystemOccurence(object):
     def __init__(self, system):
         """
         :param system: the system to \"fill\" with hits.
-        :type system: :class:`macsypy.system.System` 
+        :type system: :class:`macsypy.model.Model`
         """
         self.system = system
         self.system_name = system.name
@@ -1593,9 +1593,9 @@ def get_compatible_systems(systems_list1, systems_list2):
     Returns the intersection of the two input systems lists.
 
     :param systems_list1, systems_list2: two lists of systems 
-    :type systems_list1, systems_list2: two lists of :class:`macsypy.system.System`
+    :type systems_list1, systems_list2: two lists of :class:`macsypy.model.Model`
     :return: a list of systems, or an empty list if no common system
-    :rtype: a list of :class:`macsypy.system.System`
+    :rtype: a list of :class:`macsypy.model.Model`
 
     """
     inter = []
@@ -1753,7 +1753,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     :param clusters: the set of clusters to analyze
     :type clusters: :class:`macsypy.search_systems.ClustersHandler` 
     :param systems: the set of systems to detect
-    :type systems: a list of :class:`macsypy.system.System`
+    :type systems: a list of :class:`macsypy.model.Model`
     :param multi_systems_genes: a dictionary with genes that could belong to multiple systems (keys are system names)
     :return: a set of systems occurrence filled with hits found in clusters
     :rtype: a list of :class:`macsypy.search_systems.SystemOccurence` 
@@ -1774,7 +1774,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
         _log.info("\n{0}".format(clust))
         #if clust.state == "clear":
         # Get the intersection of compatible systems and systems to detect
-        systems_to_consider = get_compatible_systems([system_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
+        systems_to_consider = get_compatible_systems([model_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
         # For code refactoring: maybe the two conditions below are redundant?
         if clust.state == "clear" and len(systems_to_consider) > 0:
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
@@ -1870,7 +1870,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
     :param hits: a list of Hmmer hits to analyze 
     :type hits: a list of :class:`macsypy.report.Hit`
     :param systems_to_detect: the list of systems to detect 
-    :type systems_to_detect: a list of :class:`macsypy.system.System`
+    :type systems_to_detect: a list of :class:`macsypy.model.Model`
     :param cfg: the configuration object built from default and user parameters.
     :type cfg: :class:`macsypy.config.Config`
     :param rep_info: an entry extracted from the :class:`macsypy.database.RepliconDB`
@@ -2078,7 +2078,7 @@ def search_systems(hits, systems, cfg):
     :param hits: the list of hits for input systems components
     :type hits: list of :class:`macsypy.report.Hit`
     :param systems: the list of systems asked for detection
-    :type systems: list of :class:`macsypy.system.System`
+    :type systems: list of :class:`macsypy.model.Model`
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config`
     """

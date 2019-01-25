@@ -119,7 +119,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_circularize(self):
         self.load_env("env_004", log_out=False)
 
-        system = self.macsy_test_env.system
+        system = self.macsy_test_env.model
         cfg = self.macsy_test_env.cfg
         models_location = self.macsy_test_env.models_location
         ch = ClustersHandler()
