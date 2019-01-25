@@ -6,10 +6,12 @@ __version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
 __MACSY_CONF__ = '$MACSYCONF'
 __MACSY_DATA__ = '$MACSYDATA'
 
+
 def init_logger(log_file=None, out=True):
     import colorlog
     logger = colorlog.getLogger('macsypy')
     logging = colorlog.logging.logging
+    handlers = []
     if out:
         stdout_handler = colorlog.StreamHandler(sys.stdout)
         stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
@@ -27,15 +29,19 @@ def init_logger(log_file=None, out=True):
                                                      )
         stdout_handler.setFormatter(stdout_formatter)
         logger.addHandler(stdout_handler)
+        handlers.append(stdout_handler)
     else:
         null_handler = logging.NullHandler()
         logger.addHandler(null_handler)
+        handlers.append(null_handler)
     if log_file:
         file_handler = logging.FileHandler(log_file)
         file_formatter = logging.Formatter("%(levelname)-8s : %(message)s")
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
+        handlers.append(file_handler)
     logger.setLevel(logging.WARNING)
+    return handlers
 
 
 def logger_set_level(level='INFO'):
