@@ -103,7 +103,7 @@ class Gene(object):
         :param name: the name of the Gene.
         :type name: string.
         :param system: the system that owns this Gene
-        :type system: :class:`macsypy.system.System` object.
+        :type system: :class:`macsypy.model.Model` object.
         :param model_loc: where all the paths profiles and definitions are register for a kind of model.
         :type model_loc: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
@@ -158,7 +158,7 @@ class Gene(object):
     def system(self):
         """
         :return: the System that owns this Gene
-        :rtype: :class:`macsypy.system.System` object
+        :rtype: :class:`macsypy.model.Model` object
         """
         return self._system
 
@@ -294,7 +294,7 @@ class Gene(object):
         """
         :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :type system: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
         if self in system.mandatory_genes:
@@ -307,7 +307,7 @@ class Gene(object):
         """
         :return: True if the gene is within the *accessory* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :type system: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
         if self in system.accessory_genes:
@@ -320,7 +320,7 @@ class Gene(object):
         """
         :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
         :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :type system: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
         if self in system.forbidden_genes:
@@ -333,7 +333,7 @@ class Gene(object):
         """
         :return: True if the genes are found in the System definition file (.xml), False otherwise.
         :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :type system: :class:`macsypy.model.Model` object.
         :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
         :type include_forbidden: boolean
         :rtype: boolean.
@@ -363,7 +363,7 @@ class Gene(object):
         :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
         :type include_forbidden: boolean
         :return: the list of compatible systems
-        :rtype: list of :class:`macsypy.system.System` objects, or void list if none compatible
+        :rtype: list of :class:`macsypy.model.Model` objects, or void list if none compatible
         """
         compatibles = [s for s in system_list if self.is_authorized(s, include_forbidden)]
         return compatibles

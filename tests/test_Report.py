@@ -15,15 +15,13 @@
 import os
 import shutil
 import tempfile
-import platform
-import logging
 from io import StringIO
 from itertools import groupby
 import argparse
 
 from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, GeneralHMMReport, Hit
 from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, RepliconDB
 from macsypy.registries import ModelRegistry
@@ -70,7 +68,7 @@ class TestReport(MacsyTest):
 class TestHMMReport(TestReport):
 
     def test_HMMReport(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -79,7 +77,7 @@ class TestHMMReport(TestReport):
         self.assertRaises(TypeError, HMMReport, gene, report_path, self.cfg)
 
     def test_str(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -113,7 +111,7 @@ class TestHMMReport(TestReport):
         self.assertMultiLineEqual(str(report), s)
 
     def test_save_extract(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -157,7 +155,7 @@ class TestHMMReport(TestReport):
         self.assertFileEqual(extract_path, expected_extract_path)
 
     def test_best_hit(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -173,7 +171,7 @@ class TestHMMReport(TestReport):
 
 
     def test_hit_start(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -186,7 +184,7 @@ class TestHMMReport(TestReport):
 
 
     def test_build_my_db(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
@@ -205,7 +203,7 @@ class TestHMMReport(TestReport):
                                   'PSAE001c01_006940': None})
 
     def test_fill_my_db(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
@@ -227,7 +225,7 @@ class TestHMMReport(TestReport):
 
 
     def test_parse_hmm_header(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
@@ -245,7 +243,7 @@ class TestHMMReport(TestReport):
             body = next(hmm_hits)
             return body
 
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
@@ -305,7 +303,7 @@ class TestHMMReport(TestReport):
 class TestGembaseHMMReport(TestReport):
 
     def test_extract(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -337,7 +335,7 @@ class TestGembaseHMMReport(TestReport):
 
 
     def test_extract_concurent(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -386,7 +384,7 @@ class TestGembaseHMMReport(TestReport):
 class TestOrderedHMMReport(TestReport):
 
     def test_extract(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -418,7 +416,7 @@ class TestOrderedHMMReport(TestReport):
 
 
     def test_extract_concurent(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -467,7 +465,7 @@ class TestOrderedHMMReport(TestReport):
 class TestGeneralHMMReport(TestReport):
 
     def test_extract(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),
@@ -499,7 +497,7 @@ class TestGeneralHMMReport(TestReport):
 
 
     def test_extract_concurent(self):
-        system = System(self.cfg, "T2SS", 10)
+        system = Model(self.cfg, "T2SS", 10)
         gene_name = "gspD"
         gene = Gene(self.cfg, gene_name, system, self.models_location)
         shutil.copy(self.find_data("hmm", gene_name + self.cfg.res_search_suffix()),

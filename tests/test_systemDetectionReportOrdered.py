@@ -41,7 +41,7 @@ class Test(MacsyTest, MacsyEnvManager):
         system_occurences_states = ['single_locus', 'multi_loci']
         so = self.macsy_test_env.system_occurence
         sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
-        out = sdro.tabulated_output_header(system_occurences_states, [self.macsy_test_env.system.name])
+        out = sdro.tabulated_output_header(system_occurences_states, [self.macsy_test_env.model.name])
         expected_output = '#Replicon\tT9SS_single_locus\tT9SS_multi_loci\n'
         self.assertEqual(out, expected_output)
 
@@ -59,7 +59,7 @@ class Test(MacsyTest, MacsyEnvManager):
         system_occurences_states = ['single_locus', 'multi_loci']
         so = self.macsy_test_env.system_occurence
         sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
-        sdro.tabulated_output(system_occurences_states, [self.macsy_test_env.system.name], test_file)
+        sdro.tabulated_output(system_occurences_states, [self.macsy_test_env.model.name], test_file)
         self.assertFileEqual(test_file, self.output_control_file('001'))
 
     def test_report_output(self):

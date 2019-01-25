@@ -16,13 +16,12 @@ import os
 import unittest
 import shutil
 import tempfile
-import logging
 import sysconfig
 import argparse
 
 from macsypy.gene import Profile
 from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from macsypy.utils import which
@@ -57,7 +56,7 @@ class TestProfile(MacsyTest):
 
 
     def test_len(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -65,7 +64,7 @@ class TestProfile(MacsyTest):
 
 
     def test_str(self):
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -77,7 +76,7 @@ class TestProfile(MacsyTest):
     def test_execute(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
-            system = System(self.cfg, "foo/T2SS", 10)
+            system = Model(self.cfg, "foo/T2SS", 10)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             profile_path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, profile_path)
@@ -99,7 +98,7 @@ class TestProfile(MacsyTest):
 
     def test_execute_unknown_binary(self):
         self.cfg._options['hmmer'] = "Nimportnaoik"
-        system = System(self.cfg, "foo/T2SS", 10)
+        system = Model(self.cfg, "foo/T2SS", 10)
         gene = Gene(self.cfg, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -118,7 +117,7 @@ sys.exit(127)
         try:
             os.chmod(hmmer.name, 0o755)
             self.cfg._options['hmmer'] = hmmer.name
-            system = System(self.cfg, "foo/T2SS", 10)
+            system = Model(self.cfg, "foo/T2SS", 10)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, path)

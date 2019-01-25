@@ -15,18 +15,17 @@
 import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import MacsyDefaults, Config
-from macsypy.system import System
+from macsypy.model import Model
 from macsypy.search_systems import SystemOccurence, systemDetectionReport
 from macsypy.registries import ModelRegistry
 from macsypy.database import RepliconDB, Indexes
 from tests import MacsyTest
 
 
-class TestSystemDetectionReport(MacsyTest):
+class TestModelDetectionReport(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -68,7 +67,7 @@ class TestSystemDetectionReport(MacsyTest):
 
 
     def test_init(self):
-        system = System(self.cfg, 'foo', 10)
+        system = Model(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         os.environ['MACSY_DEBUG'] = '1'
         sdr = systemDetectionReport([system_occurence], self.cfg)
@@ -77,14 +76,14 @@ class TestSystemDetectionReport(MacsyTest):
 
 
     def test_report_output(self):
-        system = System(self.cfg, 'foo', 10)
+        system = Model(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         sdr = systemDetectionReport([system_occurence], self.cfg)
         sdr.report_output('foo')
 
 
     def test_json_output(self):
-        system = System(self.cfg, 'foo', 10)
+        system = Model(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         sdr = systemDetectionReport([system_occurence], self.cfg)
         db = RepliconDB(self.cfg)
@@ -92,7 +91,7 @@ class TestSystemDetectionReport(MacsyTest):
 
 
     def test_summary_output(self):
-        system = System(self.cfg, 'foo', 10)
+        system = Model(self.cfg, 'foo', 10)
         system_occurence = SystemOccurence(system)
         sdr = systemDetectionReport([system_occurence], self.cfg)
         db = RepliconDB(self.cfg)
