@@ -31,23 +31,12 @@ from tests import MacsyTest
 class Test(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-        
-        # add only one handler to the macsypy logger
-        from macsypy.report import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = log_file
         self.cfg = Config(MacsyDefaults(), args)
 
         models_registry = ModelRegistry(self.cfg)
@@ -63,11 +52,6 @@ class Test(MacsyTest):
 
   
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
@@ -87,7 +71,7 @@ class Test(MacsyTest):
         self.assertGreater(h1, h0)
         self.assertLess(h0, h1)
         # compare hit with different same id (comparison based on score)
-        # score = 779.2
+        score = 779.2
         h0 = Hit(gene, system, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
                  float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         # score = 255.8
@@ -97,10 +81,12 @@ class Test(MacsyTest):
         self.assertLess(h1, h0)
         # compare non homolgous genes
         gene_non_h = Gene(self.cfg, "abc", system, self.models_location)
+
         h2 = Hit(gene_non_h, system, "PSAE001c01_006940", 759, "PSAE001c01", 4146, float(3.7e-76),
                  float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
-        self.assertGreater(h0, h2)
-        self.assertLess(h2, h0)
+        with self.catch_log():
+            self.assertGreater(h0, h2)
+            self.assertLess(h2, h0)
 
     def test_eq(self):
         system = System(self.cfg, "foo/T2SS", 10)

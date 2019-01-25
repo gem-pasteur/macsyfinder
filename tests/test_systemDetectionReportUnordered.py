@@ -23,7 +23,7 @@ from tests.macsy_test_env import MacsyEnvManager
 class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
-        self.load_env("env_002")
+        self.load_env("env_002", log_out=False)
         self.test_dir = tempfile.mkdtemp()
 
     def tearDown(self):

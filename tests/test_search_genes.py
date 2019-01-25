@@ -35,23 +35,12 @@ from tests import MacsyTest
 class TestSearchGenes(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = log_file
         args.out_dir = os.path.join(args.res_search_dir,
                                     'test_macsyfinder_search_genes')
         if os.path.exists(args.out_dir):
@@ -69,11 +58,6 @@ class TestSearchGenes(MacsyTest):
         macsypy.gene.profile_factory._profiles = {}
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir())
             pass

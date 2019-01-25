@@ -26,7 +26,7 @@ from .error import MacsypyError, SystemDetectionError
 from .database import RepliconDB
 from .system import system_bank
 
-_log = logging.getLogger('macsypy.' + __name__)
+_log = logging.getLogger(__name__)
 
 
 class ClustersHandler(object):
@@ -1624,6 +1624,7 @@ def disambiguate_cluster(cluster):
     res_clusters = []
     # This object counts how many different genes were found for each "compatible" system
     counter_genes_compat_systems = {}
+
     _log.info("Disambiguation step:")
 
     cur_cluster = Cluster(cluster.systems_to_detect) # New

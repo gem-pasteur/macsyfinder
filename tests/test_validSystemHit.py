@@ -20,7 +20,7 @@ from tests.macsy_test_env import MacsyEnvManager
 class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
-        self.load_env("env_003")
+        self.load_env("env_003", log_out=False,)
 
     def tearDown(self):
         self.unload_env("env_003")

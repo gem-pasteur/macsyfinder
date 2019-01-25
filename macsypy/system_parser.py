@@ -15,7 +15,7 @@
 import os
 import xml.etree.ElementTree as Et
 import logging
-_log = logging.getLogger('macsyfinder')
+_log = logging.getLogger(__name__)
 
 from .system import System
 from .gene import Gene

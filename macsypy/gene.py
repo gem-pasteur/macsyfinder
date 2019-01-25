@@ -14,7 +14,7 @@
 
 import os
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 
 from subprocess import Popen
 from threading import Lock

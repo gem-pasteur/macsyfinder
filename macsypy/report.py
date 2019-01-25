@@ -15,7 +15,7 @@
 
 import os
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 
 import abc
 from threading import Lock

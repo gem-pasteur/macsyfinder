@@ -5,7 +5,7 @@ from configparser import ConfigParser, ParsingError, NoSectionError
 
 from macsypy import __MACSY_CONF__, __MACSY_DATA__
 
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 
 
 class MacsyDefaults(dict):

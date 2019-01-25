@@ -29,22 +29,11 @@ from tests import MacsyTest
 class TestSystemDetectionReport(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.report import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         args = argparse.Namespace()
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = log_file
         args.out_dir = os.path.join(args.res_search_dir,
                                     'test_macsyfinder_systemDetectionReport')
         if os.path.exists(args.out_dir):
@@ -56,7 +45,6 @@ class TestSystemDetectionReport(MacsyTest):
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
         self.cfg = Config(MacsyDefaults(), args)
 
-        #os.mkdir(os.path.join(self.cfg.out_dir(), self.cfg.hmmer_dir()))
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
 
@@ -71,9 +59,6 @@ class TestSystemDetectionReport(MacsyTest):
 
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        # MacsyTest.close_loggers_filehandles()
         try:
             shutil.rmtree(self.cfg.working_dir())
         except:
