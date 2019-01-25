@@ -84,16 +84,6 @@ class RegitriesUtilsTest(MacsyTest):
 class ModelLocationTest(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         self.tmp_dir = tempfile.mkdtemp()
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
         os.mkdir(self.root_models_dir)
@@ -126,11 +116,6 @@ class ModelLocationTest(MacsyTest):
 
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.tmp_dir)
         except Exception as err:
@@ -344,18 +329,6 @@ class ModelLocationTest(MacsyTest):
 class DefinitionLocationTest(MacsyTest):
 
 
-    def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
-
     def test_DefinitionLocationn(self):
         model_name = 'foo'
         model_path = '/path/to/model.xml'
@@ -411,15 +384,6 @@ class ModelRegistryTest(MacsyTest):
 
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
         self.tmp_dir = tempfile.mkdtemp()
         registries._prefix_data = self.tmp_dir
         self.root_models_dir = os.path.join(self.tmp_dir, 'macsyfinder', 'models')
@@ -456,11 +420,6 @@ class ModelRegistryTest(MacsyTest):
 
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
@@ -472,22 +431,8 @@ class ModelRegistryTest(MacsyTest):
 
 
     def test_ModelRegistry(self):
-
-        # new way models organization
         sr = ModelRegistry(self.cfg)
         self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
-
-        # old way models organization
-        #profile_dir = os.path.join(self.simple_dir, 'profiles')
-        #def_dir = os.path.join(self.simple_dir, 'definitions')
-
-        #cfg_old = copy.copy(self.cfg)
-        #cfg_old.old_data_organization = lambda : True
-        #cfg_old.options['profile_dir'] = profile_dir
-        #cfg_old.options['def_dir'] = def_dir
-
-        #sr = ModelRegistry(cfg_old)
-        #self.assertListEqual(list(sr._registry.keys()), ['definitions'])
 
     def test_models(self):
         md = ModelRegistry(self.cfg)

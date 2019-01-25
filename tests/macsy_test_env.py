@@ -134,25 +134,15 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.cluster = None
         self.system_occurence = None
         self.defaults = MacsyDefaults()
+        self.handlers = []
 
-    def load(self, env_id, **cfg_args):
+    def load(self, env_id, log_out=True, log_level=logging.INFO, **cfg_args):
         self.out_dir = MacsyTest.get_tmp_dir_name()
 
         MacsyTest.rmtree(self.out_dir)
 
-        macsypy.init_logger(out=True)
-        macsypy.logger_set_level(level=logging.INFO)
-        #l = logging.getLogger()
-        #logging._handlers.clear()
-        #logging.shutdown(logging._handlerList[:])
-        #del logging._handlerList[:]
-        #l.manager.loggerDict.clear()
-
-        # add only one handler to the macsypy logger
-        #from macsypy.report import _log
-        #macsy_log = _log.parent
-        #log_handler = logging.FileHandler(os.devnull)
-        #macsy_log.addHandler(log_handler)
+        self.handlers = macsypy.init_logger(out=log_out)
+        macsypy.logger_set_level(level=log_level)
 
         if env_id == "env_001":
             cfg_args.update({'models_dir': MacsyTest.find_data('models')})
@@ -194,7 +184,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                               models_dir="tests/data/data_set_3/models",
                               **cfg_args)
         elif env_id == "env_007":
-            self.build_hits(previous_run="tests/data/data_set_1",
+            self.build_hits(previous_run="tests/data/data_set_1/complete_run_results",
                             **cfg_args)
         elif env_id == "env_008":
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
@@ -235,10 +225,12 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             raise Exception('Test environment not found ({})'.format(env_id))
 
     def unload(self, env_id):
+        # multiple call to init_logger will add handlers
+        # so we need to clean handlers added
+        logger = logging.getLogger('macsypy')
+        for h in self.handlers:
+            logger.removeHandler(h)
 
-        # close loggers filehandles, so they don't block file deletion
-        # in rmtree calls in Windows
-        # MacsyTest.close_loggers_filehandles()
         MacsyTest.rmtree(self.cfg.working_dir)
 
         # reset global vars

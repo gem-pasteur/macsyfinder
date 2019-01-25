@@ -19,7 +19,7 @@ from collections import namedtuple
 from glob import glob
 import os.path
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 from subprocess import Popen
 from .error import MacsypyError
 

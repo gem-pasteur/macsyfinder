@@ -13,7 +13,7 @@
 
 
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 from .error import SystemInconsistencyError
 from .registries import split_def_name
 

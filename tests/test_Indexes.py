@@ -39,16 +39,6 @@ class Test(MacsyTest, MacsyEnvManager):
         self.real_init = Indexes.__init__
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-        
-        # add only one handler to the macsypy logger
-        from macsypy.database import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         args = argparse.Namespace()
 
         args.db_type = 'gembase'
@@ -57,7 +47,6 @@ class Test(MacsyTest, MacsyEnvManager):
         args.models_dir = self.find_data('models')
         args.res_search_suffix = ''
         args.log_level = 30
-        args.log_file = log_file
 
         args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         if os.path.exists(args.out_dir):
@@ -71,13 +60,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.cfg = Config(MacsyDefaults(), args)
 
 
-
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir())
         except:
@@ -120,12 +103,18 @@ class Test(MacsyTest, MacsyEnvManager):
         idx = Indexes(self.cfg)
         idx_dir = os.path.join(os.path.dirname(self.cfg.sequence_db()))
         os.chmod(idx_dir, 0000)
-        self.assertRaises(IOError, idx.build)
-        os.chmod(idx_dir, 0o777)
+        try:
+            with self.assertRaises(IOError) as ctx:
+                with self.catch_log():
+                    idx.build()
+            self.assertRegex(str(ctx.exception),
+                             "cannot build indexes, \(.+/test_macsyfinder_indexes\) is not writable")
+        finally:
+            os.chmod(idx_dir, 0o777)
 
 
     def test_build_my_indexes(self):
-        self.load_env("env_010")
+        self.load_env("env_010", log_out=False)
         idx = Indexes(self.macsy_test_env.cfg)
         with self.assertRaises(IndexError) as e:
             idx._build_my_indexes()

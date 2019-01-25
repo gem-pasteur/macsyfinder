@@ -30,23 +30,12 @@ from tests import MacsyTest
 class Test(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-        
-        #add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         self.args = argparse.Namespace()
         self.args.sequence_db = self.find_data("base", "test_base.fa")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
         self.args.res_search_dir = tempfile.gettempdir()
         self.args.log_level = 30
-        self.args.log_file = log_file
         self.args.out_dir = os.path.join(self.args.res_search_dir,
                                     'test_macsyfinder_System')
         if os.path.exists(self.args.out_dir):
@@ -59,11 +48,6 @@ class Test(MacsyTest):
         self.models_location = models_registry[self.model_name]
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         self.clean_working_dir()
 
     def clean_working_dir(self):

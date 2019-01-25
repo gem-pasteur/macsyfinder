@@ -35,7 +35,7 @@ from tests.macsy_test_env import MacsyEnvManager
 class Test(MacsyTest, MacsyEnvManager):
 
     def setUp(self):
-        self.load_env('env_001')
+        self.load_env('env_001', log_out=False)
 
 
     def tearDown(self):
@@ -50,7 +50,6 @@ class Test(MacsyTest, MacsyEnvManager):
 
 
     def test_decision_rule(self):
-
         # test 'empty' state
         system = System(self.macsy_test_env.cfg, 'foo', 10, min_mandatory_genes_required=20, min_genes_required=40)
         system_occurence = SystemOccurence(system)
@@ -253,7 +252,6 @@ class Test(MacsyTest, MacsyEnvManager):
         args.log_level = 30
         args.previous_run = None
         args.models_dir = MacsyTest.find_data("data_set_3", "models")
-        args.log_file = os.devnull
 
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
         args.topology_file = args.sequence_db + ".topo"
@@ -402,7 +400,6 @@ class Test(MacsyTest, MacsyEnvManager):
         args.log_level = 30
         args.previous_run = None
         args.models_dir = MacsyTest.find_data("data_set_3", "models")
-        args.log_file = os.devnull
 
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_ori))
         args.topology_file = args.sequence_db + ".topo"
@@ -452,7 +449,6 @@ class Test(MacsyTest, MacsyEnvManager):
 
 
     def test_fill_with_cluster(self):
-
         # for this test, we use a specific configuration with a dedicated
         # working directory (i.e. we don't use the generic configuration
         # defined in setUp() method).
@@ -464,7 +460,6 @@ class Test(MacsyTest, MacsyEnvManager):
         args.previous_run = self.find_data(os.path.join('data_set_1', 'complete_run_results'))
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = os.devnull
         args.out_dir = out_dir
         config = Config(MacsyDefaults(), args)
 
@@ -479,9 +474,7 @@ class Test(MacsyTest, MacsyEnvManager):
             parser.parse(['set_1/T9SS'])
 
             system = system_bank['set_1/T9SS']
-
             genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
-
             ex_genes = []
             for g in genes:
                 if g.exchangeable:
@@ -490,19 +483,12 @@ class Test(MacsyTest, MacsyEnvManager):
                     a_s = g.get_analogs()
                     ex_genes += a_s
             all_genes = (genes + ex_genes)
-
             all_reports = search_genes(all_genes, config)
-
             all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
-
             all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
             all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
 
-            # debug
-            # print [h.gene.name for h in all_hits]
-
             db = RepliconDB(config)
-
             rep_info = db['AESU001c01a']
             with self.catch_log():
                 clusters, multi_syst_genes = build_clusters(all_hits, [system], rep_info)
@@ -594,7 +580,6 @@ class Test(MacsyTest, MacsyEnvManager):
         args.previous_run = self.find_data(os.path.join('data_set_1', 'complete_run_results'))
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = os.devnull
         args.out_dir = out_dir
         config = Config(MacsyDefaults(), args)
 
@@ -605,14 +590,10 @@ class Test(MacsyTest, MacsyEnvManager):
         try:
             idx = Indexes(config)
             idx._build_my_indexes()
-
             parser = SystemParser(config, system_bank, gene_bank)
             parser.parse(['set_1/T9SS'])
-
             system = system_bank['set_1/T9SS']
-
             genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
-
             ex_genes = []
             for g in genes:
                 if g.exchangeable:
@@ -621,16 +602,10 @@ class Test(MacsyTest, MacsyEnvManager):
                     a_s = g.get_analogs()
                     ex_genes += a_s
             all_genes = (genes + ex_genes)
-
             all_reports = search_genes(all_genes, config)
-
             all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
-
             all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
             all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
-
-            # debug
-            # print [h.gene.name for h in all_hits]
 
             # case 1
             system_occurence = SystemOccurence(system)

@@ -33,7 +33,7 @@ class Test(MacsyTest, MacsyEnvManager):
         pass
 
     def test_len(self):
-        self.load_env("env_001")
+        self.load_env("env_001", log_out=False)
 
         system = System(self.macsy_test_env.cfg, 'foo', 10)
         cluster = Cluster(system)
@@ -45,7 +45,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_001")
 
     def test_putative_system(self):
-        self.load_env("env_001")
+        self.load_env("env_001", log_out=False)
 
         system_name = 'set_1/T9SS'
         system = System(self.macsy_test_env.cfg, system_name, 10)
@@ -56,7 +56,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_001")
 
     def test_compatible_systems(self):
-        self.load_env("env_001")
+        self.load_env("env_001", log_out=False)
 
         system = System(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
         cluster = Cluster(system)
@@ -67,7 +67,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_001")
 
     def test_state(self):
-        self.load_env("env_001")
+        self.load_env("env_001", log_out=False)
 
         system = System(self.macsy_test_env.cfg, 'foo', 4)
         cluster = Cluster(system)
@@ -77,15 +77,10 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_001")
 
     def test_add(self):
-        self.load_env("env_007")
-
-        # debug
-        # print [h.gene.name for h in all_hits]
+        self.load_env("env_007", log_out=False)
 
         h1, h2, h3 = self.macsy_test_env.all_hits[:3]
-
         cluster = Cluster([self.macsy_test_env.system])
-
         cluster.add(h1)
         self.assertEqual(cluster.begin, 505)
         self.assertEqual(cluster.end, 505)
@@ -129,7 +124,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
             return all_hits
 
-        self.load_env("env_008")
+        self.load_env("env_008", log_out=False)
 
         parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
 
@@ -195,7 +190,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
         # test case 4
 
-        self.load_env("env_006")
+        self.load_env("env_006", log_out=False)
 
         parser = SystemParser(self.macsy_test_env.cfg, system_bank, gene_bank)
 
@@ -226,7 +221,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.unload_env("env_006")
 
     def test_str(self):
-        self.load_env("env_002")
+        self.load_env("env_002", log_out=False)
         buffer_ = str(self.macsy_test_env.cluster)
         self.assertEqual(str(buffer_), self.output_control_str('001'))
         self.unload_env("env_002")

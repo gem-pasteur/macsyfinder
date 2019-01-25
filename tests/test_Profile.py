@@ -32,23 +32,12 @@ from tests import MacsyTest
 class TestProfile(MacsyTest):
 
     def setUp(self):
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
-        
-        # add only one handler to the macsypy logger
-        from macsypy.gene import _log
-        macsy_log = _log.parent
-        log_file = os.devnull
-        log_handler = logging.FileHandler(log_file)
-        macsy_log.addHandler(log_handler)
-
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
         args.log_level = 30
-        args.log_file = log_file
         self.cfg = Config(MacsyDefaults(), args)
 
         if os.path.exists(self.cfg.working_dir()):
@@ -61,11 +50,6 @@ class TestProfile(MacsyTest):
 
 
     def tearDown(self):
-        # close loggers filehandles, so they don't block file deletion
-        # in shutil.rmtree calls in Windows
-        logging.shutdown()
-        l = logging.getLogger()
-        l.manager.loggerDict.clear()
         try:
             shutil.rmtree(self.cfg.working_dir())
         except:
@@ -119,7 +103,9 @@ class TestProfile(MacsyTest):
         gene = Gene(self.cfg, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
-        self.assertRaises(RuntimeError, profile.execute)
+        with self.catch_log():
+            with self.assertRaises(RuntimeError):
+                profile.execute()
 
 
     def test_execute_hmmer_failed(self):
@@ -136,9 +122,11 @@ sys.exit(127)
             gene = Gene(self.cfg, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, path)
-            with self.assertRaisesRegex(RuntimeError,
-                                         "an error occurred during Hmmer execution: command = .* : return code = 127 .*") as ctx:
-                profile.execute()
+            with self.catch_log():
+                with self.assertRaisesRegex(RuntimeError,
+                                         "an error occurred during Hmmer "
+                                         "execution: command = .* : return code = 127 .*") as ctx:
+                    profile.execute()
         finally:
             try:
                 os.unlink(fake_hmmer)
