@@ -467,8 +467,6 @@ class Hit(object):
         else:
             return self.id > other.id
 
-
-
  
     def __eq__(self, other):
         """
