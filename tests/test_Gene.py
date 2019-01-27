@@ -120,7 +120,7 @@ class Test(MacsyTest):
 
     def test_system(self):
         """
-        test getter/setter for system property
+        test getter/setter for model property
         """
         model_foo = Model(self.cfg, "foo", 10)
         gene = Gene(self.cfg, 'sctJ_FLG', model_foo, self.models_location)
