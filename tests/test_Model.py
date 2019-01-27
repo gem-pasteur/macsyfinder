@@ -291,7 +291,7 @@ sctJ_FLG
 sctN_FLG
 ==== forbidden genes ====
 sctC
-============== end pprint system ================
+============== end pprint model ================
 """
         self.assertEqual(str(system), exp_str)
 
