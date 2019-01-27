@@ -300,8 +300,8 @@ class Cluster(object):
             # Version with hits "reference" systems
             # Two below "for" now useless?
             for h in self.hits:
-                syst_fqn = h.system.fqn
-                systems[syst_fqn] = systems.get(syst_fqn, 0) + 1
+                model_fqn = h.model.fqn
+                systems[model_fqn] = systems.get(model_fqn, 0) + 1
                 if genes.count(h.gene.name) == 0:
                     genes.append(h.gene.name)
 
@@ -1079,7 +1079,7 @@ class validSystemHit(object):
         """
         self._hit = hit
         self.predicted_system = detected_system
-        self.reference_system = hit.system.name
+        self.reference_system = hit.model.name
         self.gene_status = gene_status
 
     def __getattr__(self, attr_name):
@@ -1910,18 +1910,18 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 positions.append(prev.position)
                 # New : Storage of multi_system genes:
                 if prev.gene.multi_system:
-                    if prev.system.fqn not in multi_system_genes_system_wise:
-                        multi_system_genes_system_wise[prev.system.fqn] = []
-                    multi_system_genes_system_wise[prev.system.fqn].append(prev)
+                    if prev.model.fqn not in multi_system_genes_system_wise:
+                        multi_system_genes_system_wise[prev.model.fqn] = []
+                    multi_system_genes_system_wise[prev.model.fqn].append(prev)
             if positions.count(cur.position) == 0:
                 # print "deux - ADD cur in cur_cluster"
                 cur_cluster.add(cur)
                 positions.append(cur.position)
                 # New : Storage of multi_system genes:
                 if cur.gene.multi_system:
-                    if cur.system.fqn not in multi_system_genes_system_wise:
-                        multi_system_genes_system_wise[cur.system.fqn] = []
-                    multi_system_genes_system_wise[cur.system.fqn].append(cur)
+                    if cur.model.fqn not in multi_system_genes_system_wise:
+                        multi_system_genes_system_wise[cur.model.fqn] = []
+                    multi_system_genes_system_wise[cur.model.fqn].append(cur)
 
             if prev.gene.loner:
                 # print "trois - loner_state"
@@ -1961,9 +1961,9 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
                     # New : Storage of multi_system genes:
                     if prev.gene.multi_system:
-                        if prev.system.fqn not in multi_system_genes_system_wise:
-                            multi_system_genes_system_wise[prev.system.fqn] = []
-                        multi_system_genes_system_wise[prev.system.fqn].append(prev)
+                        if prev.model.fqn not in multi_system_genes_system_wise:
+                            multi_system_genes_system_wise[prev.model.fqn] = []
+                        multi_system_genes_system_wise[prev.model.fqn].append(prev)
                     positions.append(prev.position)
                     loner_state = False
 
@@ -1986,9 +1986,9 @@ def build_clusters(hits, systems_to_detect, rep_info):
         clusters.add(cur_cluster)
         # New : Storage of multi_system genes:
         if prev.gene.multi_system:
-            if prev.system.fqn not in multi_system_genes_system_wise:
-                multi_system_genes_system_wise[prev.system.fqn] = []
-                multi_system_genes_system_wise[prev.system.fqn].append(prev)
+            if prev.model.fqn not in multi_system_genes_system_wise:
+                multi_system_genes_system_wise[prev.model.fqn] = []
+                multi_system_genes_system_wise[prev.model.fqn].append(prev)
 
     if rep_info.topology == "circular":
         # Need to take into account the possibility of a single gene at both extremity, 
@@ -2186,8 +2186,8 @@ def search_systems(hits, systems, cfg):
         # Hits with best score are first selected. 
         hits = get_best_hits(hits, True)
         # Then system-wise treatment:
-        hits = sorted(hits, key=operator.attrgetter('system'))
-        for k, g in itertools.groupby(hits, operator.attrgetter('system')):
+        hits = sorted(hits, key=operator.attrgetter('model'))
+        for k, g in itertools.groupby(hits, operator.attrgetter('model')):
             # SO new : if we want to include forbidden genes, 
             # we have to get the corresponding list of hits at this point, 
             # even if this is not their original system... 

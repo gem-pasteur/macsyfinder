@@ -312,7 +312,7 @@ class TestGembaseHMMReport(TestReport):
         report = GembaseHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 6)
-        #           gene, system,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
+        #           gene, model,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
         #           score,       profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
@@ -360,7 +360,7 @@ class TestGembaseHMMReport(TestReport):
                 continue
         t.join()
 
-        #          gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
+        #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
@@ -393,7 +393,7 @@ class TestOrderedHMMReport(TestReport):
         report = OrderedHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 6)
-        #           gene, system,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
+        #           gene, model,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
         #           score,       profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
@@ -441,7 +441,7 @@ class TestOrderedHMMReport(TestReport):
                 continue
         t.join()
 
-        #          gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
+        #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, RepliconDB.ordered_replicon_name, 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
@@ -474,7 +474,7 @@ class TestGeneralHMMReport(TestReport):
         report = GeneralHMMReport(gene, report_path, self.cfg)
         report.extract()
         self.assertEqual(len(report.hits), 6)
-        #           gene, system,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
+        #           gene, model,     hit_id,         hit_seq_ length   replicon_name, pos_hit, i_eval,
         #           score,       profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, "Unordered", 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741),
@@ -522,7 +522,7 @@ class TestGeneralHMMReport(TestReport):
                 continue
         t.join()
 
-        #          gene, system,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
+        #          gene, model,     hit_id,        hit_seq_length replicon_name, pos_hit, i_eval,  score,
         #          profile_coverage, sequence_coverage, begin_match, end_match
         hits = [Hit(gene, system, "NC_xxxxx_xx_056141", 803, "Unordered", 141, float(2e-236), float(779.2),
                     float(1.000000), (741.0 - 104.0 + 1)/803, 104, 741),
