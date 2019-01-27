@@ -144,7 +144,7 @@ class Model(object):
         s += "==== forbidden genes ====\n"
         for g in self._forbidden_genes:
             s += "{}\n".format(g.name)
-        s += "============== end pprint system ================\n"
+        s += "============== end pprint model ================\n"
         return s
 
 
