@@ -72,16 +72,16 @@ class ModelBank(object):
         return len(self._model_bank)
     
     
-    def add_model(self, system):
+    def add_model(self, model):
         """
-        :param system: the system to add
-        :type system: :class:`macsypy.model.Model` object
+        :param model: the model to add
+        :type model: :class:`macsypy.model.Model` object
         :raise: KeyError if a system with the same name is already registered.
         """
-        if system.fqn in self._model_bank:
-            raise KeyError("a model named {0} is already registered in the models' bank".format(system.name))
+        if model.fqn in self._model_bank:
+            raise KeyError("a model named {0} is already registered in the models' bank".format(model.name))
         else:
-            self._model_bank[system.fqn] = system
+            self._model_bank[model.fqn] = model
 
 
 model_bank = ModelBank()
