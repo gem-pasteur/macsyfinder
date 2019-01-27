@@ -91,7 +91,7 @@ class Model(object):
     """
     Handles a macromolecular model.
 
-    Contains all its pre-defined characteristics expected to be fulfilled to predict a complete system:
+    Contains all its pre-defined characteristics expected to be fulfilled to predict a complete model:
         - component list (genes that are required, accessory, forbidden)
         - quorum (number of genes)
         - genetic architecture
@@ -212,7 +212,7 @@ class Model(object):
     @property
     def min_genes_required(self):
         """
-        :return: get the minimum number of genes to assess for the system presence.
+        :return: get the minimum number of genes to assess for the model presence.
         :rtype: integer
         """
         cfg_min_genes_required = self.cfg.min_genes_required(self.fqn)
@@ -226,7 +226,7 @@ class Model(object):
     @property
     def max_nb_genes(self):
         """
-        :return: the maximum number of genes to assess the system presence.
+        :return: the maximum number of genes to assess the model presence.
         :rtype: int (or None)
         """
         cfg_max_nb_genes = self.cfg.max_nb_genes(self.fqn)

@@ -286,7 +286,7 @@ class TestModelParser(MacsyTest):
             with self.catch_log():
                 # error raised by System initialization
                 # which occur before check_consistency
-                # the last test : not(system.min_mandatory_genes_required <= system.min_genes_required)
+                # the last test : not(model.min_mandatory_genes_required <= model.min_genes_required)
                 # seems to be useless
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),

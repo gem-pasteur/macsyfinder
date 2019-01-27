@@ -176,7 +176,7 @@ def parse_args(args):
                                 help="Co-localization criterion: maximum number of components non-matched by a\
                                      profile allowed between two matched components for them to be considered contiguous.\
                                      Option only meaningful for 'ordered' datasets.\
-                                     The first value must match to a system, the second to a number of components.\
+                                     The first value must match to a model, the second to a number of components.\
                                      This option can be repeated several times:\
                                      \n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
                                 )
@@ -184,8 +184,8 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of mandatory genes required for system assessment.\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                help="The minimal number of mandatory genes required for model assessment.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\n\
                                      \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                                 )
@@ -193,9 +193,9 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of genes required for system assessment\
+                                help="The minimal number of genes required for model assessment\
                                      (includes both 'mandatory' and 'accessory' components).\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\
                                      \n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                                 )
@@ -203,8 +203,8 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The maximal number of genes required for system assessment.\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                help="The maximal number of genes required for model assessment.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\
                                      \n \"--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
                                 )
@@ -230,14 +230,14 @@ def parse_args(args):
                                action='store',
                                type=float,
                                default=None,
-                               help='Maximal independent e-value for Hmmer hits to be selected for system detection.\
+                               help='Maximal independent e-value for Hmmer hits to be selected for model detection.\
                                      (default = 0.001)')
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
                                help='Minimal profile coverage required in the hit alignment to allow\
-                                    the hit selection for system detection. (default = 0.5)')
+                                    the hit selection for model detection. (default = 0.5)')
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
@@ -245,10 +245,10 @@ def parse_args(args):
                              default=None,
                              help='specify the path to the models if the models are not installed in the canonical place.\
                               It gather definitions (xml files) and hmm profiles in a specific\
-                              structure. A directory with the name of the system with at least two directories\
+                              structure. A directory with the name of the model with at least two directories\
                               "profiles" which contains all hmm profile for gene describe in definitions and\
                               "models" which contains either xml file of definitions or subdirectories\
-                              to organize the system in subsystems.')
+                              to organize the model in subsystems.')
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
                              default=None,
@@ -347,7 +347,7 @@ def main_search_systems(config, logger):
     parser.parse(models_name_to_detect)
 
     logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
-    logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db()))
+    logger.info("Analysis launched on {0} for model(s):".format(config.sequence_db()))
 
     for s in models_name_to_detect:
         logger.info("\t- {}".format(s))

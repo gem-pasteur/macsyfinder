@@ -165,7 +165,7 @@ class DefinitionParser(object):
     def _create_genes(self, model, def_node):
         """
         Create genes belonging to the models. Be careful, the returned genes have not their homologs/analogs set yet.
-        all genes belonging to an other system (model_ref) are ignored
+        all genes belonging to an other model (model_ref) are ignored
 
         :param model: the Model currently parsing
         :type model: :class:`macsypy.model.Model` object

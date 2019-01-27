@@ -57,12 +57,12 @@ class ModelLocation(object):
         """
         :param cfg: the macsyfinder configuration
         :type cfg: :class:`macsypy.config.Config` object
-        :param path: if it's an installed system: path is the absolute path to a system family.
+        :param path: if it's an installed model, path is the absolute path to a model family.
                      otherwise path is None, and profile_dir and def_dir must be specified.
         :type path: string
         :param profile_dir: the absolute path to the directory which contains the hmm profiles files.
         :type profile_dir: string
-        :param def_dir: the absolute path to the directory which contains the systems definitions (xml files) or submodels.
+        :param def_dir: the absolute path to the directory which contains the models definitions (xml files) or submodels.
         :type def_dir: string
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
@@ -113,7 +113,7 @@ class ModelLocation(object):
 
     def _scan_definitions(self, model_def=None, def_path=None):
         """
-        Scan recursively the definitions tree on the file system and store
+        Scan recursively the definitions tree on the file model and store
         them.
 
         :param model_def: the current model definition to add new submodel location
@@ -145,7 +145,7 @@ class ModelLocation(object):
 
     def _scan_profiles(self, path):
         """
-        Store all hmm profiles associated to the system
+        Store all hmm profiles associated to the model
         """
         all_profiles = {}
         for profile in os.listdir(path):
@@ -171,10 +171,10 @@ class ModelLocation(object):
         :param fqn: the fully qualified name of the definition to retrieve.
                      it's complete path without extension.
                      for instance for a file with path like this:
-                     systems/TXSS/defintions/T3SS.xml
+                     models/TXSS/defintions/T3SS.xml
                      the name is: TXSS/T3SS
                      for
-                     systems/CRISPR-Cas/definitions/typing/CAS.xml:
+                     models/CRISPR-Cas/definitions/typing/CAS.xml:
                      the name is CRISPR-Cas/typing/CAS
         :type fqn: string.
         :returns: the definition corresponding to the given name.
@@ -245,7 +245,7 @@ class ModelLocation(object):
 
 class DefinitionLocation(dict):
     """
-    Manage were definitions are stored. a Model is a xml definition of a system.
+    Manage were definitions are stored. a Model is a xml definition and associated profiles.
     It has 3 attributes
 
     name: the fully qualified definitions name like TXSS/T3SS or CRISPR-cas/Typing/Cas

@@ -102,14 +102,14 @@ class Gene(object):
         :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the Gene.
         :type name: string.
-        :param model: the system that owns this Gene
+        :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
         :param model_loc: where all the paths profiles and definitions are register for a kind of model.
         :type model_loc: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
-          without any effects on the system assessment, False otherwise.
+          without any effects on the model assessment, False otherwise.
         :type exchangeable: boolean.
         :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
@@ -175,7 +175,7 @@ class Gene(object):
     @property
     def exchangeable(self):
         """
-        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the system, False otherwise.
+        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the model, False otherwise.
         :rtype: boolean.
         """
         return self._exchangeable
