@@ -320,7 +320,7 @@ class Cluster(object):
             systems_compat = {} # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
             for h in self.hits:
                 # Now exclude forbidden genes from those that define the list of compatible systems
-                syst_list = h.gene.get_compatible_systems(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
+                syst_list = h.gene.get_compatible_models(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
                 for syst in syst_list:
                     syst_fqn = syst.fqn
                     systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
@@ -1630,13 +1630,13 @@ def disambiguate_cluster(cluster):
     cur_cluster = Cluster(cluster.systems_to_detect) # New
     cur_cluster.add(cluster.hits[0])
     # Now more complex, deals with compatible systems also for disambiguation.
-    cur_compatible = cluster.hits[0].gene.get_compatible_systems(cluster.systems_to_detect)
+    cur_compatible = cluster.hits[0].gene.get_compatible_models(cluster.systems_to_detect)
 
     #print cluster.hits[0]
     #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
-        #compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
-        compatible_systems = h.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
+        #compatible_systems = h.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
+        compatible_systems = h.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
         #print h
         #print "Hit's:"
@@ -1669,8 +1669,8 @@ def disambiguate_cluster(cluster):
                 #print "\nnope to store: "
                 #print cur_cluster
                 for h_clust in cur_cluster.hits:
-                    #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
-                    h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
+                    #h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
+                    h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
                     for syst in h_compat:
                         if syst.fqn not in counter_genes_compat_systems:
                             counter_genes_compat_systems[syst.fqn] = 1
@@ -1698,8 +1698,8 @@ def disambiguate_cluster(cluster):
         #print "\nnope to store: "
         #print cur_cluster
         for h_clust in cur_cluster.hits:
-            #h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect) # tmp before yep
-            h_compat = h_clust.gene.get_compatible_systems(cluster.systems_to_detect, False) # tmp before nope
+            #h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
+            h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
             for syst in h_compat:
                 #print syst.name
                 if syst.fqn not in counter_genes_compat_systems:
