@@ -370,7 +370,7 @@ class Hit(object):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`macsypy.gene.Gene` object
-        :param model: the system to which this gene belongs
+        :param model: the model to which this gene belongs
         :type model: :class:`macsypy.model.Model` object
         :param hit_id: the identifier of the hit
         :type hit_id: string
