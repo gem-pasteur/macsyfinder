@@ -290,82 +290,77 @@ class Gene(object):
         return False
 
 
-    def is_mandatory(self, system):
+    def is_mandatory(self, model):
         """
-        :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.model.Model` object.
+        :return: True if the gene is within the *mandatory* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.mandatory_genes:
+        if self in model.mandatory_genes:
             return True
         else:
             return False
 
 
-    def is_accessory(self, system):
+    def is_accessory(self, model):
         """
-        :return: True if the gene is within the *accessory* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.model.Model` object.
+        :return: True if the gene is within the *accessory* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.accessory_genes:
+        if self in model.accessory_genes:
             return True
         else:
             return False
 
 
-    def is_forbidden(self, system):
+    def is_forbidden(self, model):
         """
-        :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.model.Model` object.
+        :return: True if the gene is within the *forbidden* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.forbidden_genes:
+        if self in model.forbidden_genes:
             return True
         else:
             return False
 
 
-    def is_authorized(self, system, include_forbidden=True):
+    def is_authorized(self, model, include_forbidden=True):
         """
-        :return: True if the genes are found in the System definition file (.xml), False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.model.Model` object.
+        :return: True if this gene is found in the Model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
         :type include_forbidden: boolean
         :rtype: boolean.
         """
-        
+        genes = model.mandatory_genes + model.accessory_genes
         if include_forbidden:
-            for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
-                if self == m:
-                    return True
-                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    return True
-        else:
-            for m in (system.mandatory_genes+system.accessory_genes):
-                if self == m:
-                    return True
-                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    return True 
+            genes = genes + model.forbidden_genes
+        for g in genes:
+            if self == g:
+                return True
+            if g.exchangeable and (g.is_homolog(self) or g.is_analog(self)):
+                return True
         return False
 
 
-    def get_compatible_systems(self, system_list, include_forbidden=True):
+    def get_compatible_models(self, model_list, include_forbidden=True):
         """
-        Test every system in system_list for compatibility with the gene using the is_authorized function.
+        Test every model in model_list for compatibility with the gene using the is_authorized function.
 
-        :param system_list: a list of system names to test
-        :type system_list: list of strings        
-        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
+        :param model_list: a list of model names to test
+        :type model_list: list of strings
+        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible models or not
         :type include_forbidden: boolean
-        :return: the list of compatible systems
+        :return: the list of compatible models
         :rtype: list of :class:`macsypy.model.Model` objects, or void list if none compatible
         """
-        compatibles = [s for s in system_list if self.is_authorized(s, include_forbidden)]
+        compatibles = [model for model in model_list if self.is_authorized(model, include_forbidden=include_forbidden)]
         return compatibles
 
 
