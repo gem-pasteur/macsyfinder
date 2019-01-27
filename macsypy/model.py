@@ -22,9 +22,9 @@ from .registries import split_def_name
 class ModelBank(object):
     """
     Build and store all Models objects. Systems must not be instantiated directly.
-    This system factory must be used. It ensures there is a unique instance
-    of a system for a given system name.
-    To get a model, use the method __getitem__ via the "[]". If the System is already cached in the ModelBank,
+    This model factory must be used. It ensures there is a unique instance
+    of a model for a given model name.
+    To get a model, use the method __getitem__ via the "[]". If the Model is already cached in the ModelBank,
     it is returned. Otherwise a new model is built, stored and then returned.
     """
 
@@ -33,10 +33,10 @@ class ModelBank(object):
 
     def __getitem__(self, name):
         """
-        :param name: the name of the system
+        :param name: the name of the model
         :type name: string
-        :return: the system corresponding to the name.
-         If the system already exists, return it, otherwise build it and return it.
+        :return: the model corresponding to the name.
+         If the model already exists, return it, otherwise build it and return it.
         :rtype: :class:`macsypy.model.Model` object
         """
         if name in self._model_bank:
@@ -51,7 +51,7 @@ class ModelBank(object):
         
         :param model: the model to test
         :type model: :class:`macsypy.model.Model` object
-        :return: True if the model is in the System factory, False otherwise
+        :return: True if the model is in the Model factory, False otherwise
         :rtype: boolean
         """
         return model in self._model_bank.values()
@@ -59,14 +59,14 @@ class ModelBank(object):
 
     def __iter__(self):
         """
-        Return an iterator object on the systems contained in the bank
+        Return an iterator object on the models contained in the bank
         """
         return iter(self._model_bank.values())
 
 
     def __len__(self):
         """
-        :return: the number of systems stored in the bank
+        :return: the number of models stored in the bank
         :rtype: integer
         """
         return len(self._model_bank)
@@ -76,7 +76,7 @@ class ModelBank(object):
         """
         :param model: the model to add
         :type model: :class:`macsypy.model.Model` object
-        :raise: KeyError if a system with the same name is already registered.
+        :raise: KeyError if a model with the same name is already registered.
         """
         if model.fqn in self._model_bank:
             raise KeyError("a model named {0} is already registered in the models' bank".format(model.name))
@@ -103,13 +103,13 @@ class Model(object):
         """
         :param cfg: the configuration object
         :type cfg: :class:`macsypy.config.Config` object
-        :param fqn: the fully qualified name of the system CRISPR-Cas/sub-typing/CAS-TypeIE
+        :param fqn: the fully qualified name of the model CRISPR-Cas/sub-typing/CAS-TypeIE
         :type fqn: string
         :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
         :type inter_gene_max_space: integer
-        :param min_mandatory_genes_required: the quorum of mandatory genes to define this system
+        :param min_mandatory_genes_required: the quorum of mandatory genes to define this model
         :type min_mandatory_genes_required: integer
-        :param min_genes_required: the quorum of genes to define this system
+        :param min_genes_required: the quorum of genes to define this model
         :type min_genes_required: integer
         :param max_nb_genes: 
         :type max_nb_genes: integer
@@ -154,7 +154,7 @@ class Model(object):
 
     def __lt__(self, other):
         """
-        :param other: the other system to compare
+        :param other: the other model to compare
         :return: True if this fully qualified name is lesser than to other fully qualified name.
                  False otherwise.
         :rtype: boolean
@@ -164,7 +164,7 @@ class Model(object):
 
     def __gt__(self, other):
         """
-        :param other: the other system to compare
+        :param other: the other model to compare
         :return: True if this fully qualified name is greater than to other fully qualified name.
                  False otherwise.
         :rtype: boolean
@@ -174,7 +174,7 @@ class Model(object):
 
     def __eq__(self, other):
         """
-        :param other: the other system to compare
+        :param other: the other model to compare
         :return: True if this fully qualified name is equal to other fully qualified name.
                  False otherwise.
         :rtype: boolean
@@ -185,7 +185,7 @@ class Model(object):
     @property
     def inter_gene_max_space(self):
         """
-        :return: set the maximum distance allowed between 2 genes for this system
+        :return: set the maximum distance allowed between 2 genes for this model
         :rtype: integer
         """
         cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(self.fqn)
@@ -197,7 +197,7 @@ class Model(object):
     @property
     def min_mandatory_genes_required(self):
         """
-        :return: get the quorum of mandatory genes required for this system
+        :return: get the quorum of mandatory genes required for this model
         :rtype: integer
         """
         cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(self.fqn)
@@ -238,7 +238,7 @@ class Model(object):
     @property
     def multi_loci(self):
         """
-        :return: True if the system is authorized to be inferred from multiple loci, False otherwise
+        :return: True if the model is authorized to be inferred from multiple loci, False otherwise
         :rtype: boolean
         """
         cfg_multi_loci = self.cfg.multi_loci(self.fqn)
@@ -252,7 +252,7 @@ class Model(object):
         """
         Add a gene to the list of mandatory genes
 
-        :param gene: gene that is mandatory for this system
+        :param gene: gene that is mandatory for this model
         :type gene: :class:`macsypy.gene.Gene` object
         """
         self._mandatory_genes.append(gene)
@@ -262,7 +262,7 @@ class Model(object):
         """
         Add a gene to the list of accessory genes
 
-        :param gene: gene that is allowed to be present in this system
+        :param gene: gene that is allowed to be present in this model
         :type gene: :class:`macsypy.gene.Gene` object
         """
         self._accessory_genes.append(gene)
@@ -272,7 +272,7 @@ class Model(object):
         """
         Add a gene to the list of forbidden genes
 
-        :param gene: gene that must not be found in this system
+        :param gene: gene that must not be found in this model
         :type gene: :class:`macsypy.genen.Gene` object
         """
         self._forbidden_genes.append(gene)
@@ -281,7 +281,7 @@ class Model(object):
     @property
     def mandatory_genes(self):
         """
-        :return: the list of genes that are mandatory in this macromolecular system
+        :return: the list of genes that are mandatory in this macromolecular model
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._mandatory_genes
@@ -290,7 +290,7 @@ class Model(object):
     @property
     def accessory_genes(self):
         """
-        :return: the list of genes that are allowed in this macromolecular system
+        :return: the list of genes that are allowed in this macromolecular model
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._accessory_genes
@@ -299,7 +299,7 @@ class Model(object):
     @property
     def forbidden_genes(self):
         """
-        :return: the list of genes that are forbidden in this macromolecular system
+        :return: the list of genes that are forbidden in this macromolecular model
         :rtype: list of :class:`macsypy.gene.Gene` objects
         """
         return self._forbidden_genes
@@ -311,7 +311,7 @@ class Model(object):
         :type gene_name: string
         :return: the gene corresponding to gene_name.
         :rtype: a :class:`macsypy.gene.Gene` object.
-        :raise: KeyError the system does not contain any gene with name gene_name.
+        :raise: KeyError the model does not contain any gene with name gene_name.
         """
         all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
         for g_list in all_genes:
@@ -324,7 +324,7 @@ class Model(object):
                     for ex in homolgs + analogs:
                         if ex.name == gene_name:
                             return ex
-        raise KeyError("System {0} does not contain gene {1}".format(self.name, gene_name))
+        raise KeyError("Model {} does not contain gene {}".format(self.name, gene_name))
 
 
     def get_gene_ref(self, gene):
@@ -333,7 +333,7 @@ class Model(object):
         :type gene: a :class:`macsypy.gene.Gene` or macsypy.gene.Homolog` or macsypy.gene.Analog` object.
         :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
         :rtype: :class:`macsypy.gene.Gene` object or None
-        :raise: KeyError if gene is not in the system
+        :raise: KeyError if gene is not in the model
         """
         g = self.get_gene(gene.name)
         try:
