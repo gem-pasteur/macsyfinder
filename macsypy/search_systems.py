@@ -64,7 +64,7 @@ class ClustersHandler(object):
             s += str(cluster)
         return s
 
-    def circularize(self, rep_info, end_hits, systems_to_detect):
+    def circularize(self, rep_info, end_hits, models_to_detect):
         """
         This function takes into account the circularity of the replicon by merging clusters when appropriate
         (typically at replicon's ends).
@@ -75,8 +75,8 @@ class ClustersHandler(object):
         :param end_hits: a set of hits at ends of the replicon that were not introduced in clusters,
         and that might be part of a system overlapping the two "ends" of the replicon
         :type end_hits: a list of :class:`macsypy.report.Hit`
-        :param systems_to_detect: the set of systems to detect in this run
-        :type systems_to_detect: a list of :class:`macsypy.model.Model
+        :param models_to_detect: the set of systems to detect in this run
+        :type models_to_detect: a list of :class:`macsypy.model.Model
         """
         # We assume this function is called when appropriate (i.e. for circular replicons)
 
@@ -107,7 +107,7 @@ class ClustersHandler(object):
 
                     msg += "--- Two hits at both ends of the replicon form a new cluster.\n"
 
-                    new_clust = Cluster(systems_to_detect)
+                    new_clust = Cluster(models_to_detect)
                     new_clust.add(second)
                     new_clust.add(first)
                     new_clust.save()
@@ -122,13 +122,15 @@ class ClustersHandler(object):
                         # Try to cluster it with the 1st stored cluster.
                         # print "The end hit is at the TERMINAL end of the replicon. Test if it must be clustered with the 1st stored cluster."
                         dist_end_hit = clust_first.begin - pos_min + pos_max - h.position # OK?
-                        if(dist_end_hit <= max(clust_first.hits[0].gene.inter_gene_max_space, h.gene.inter_gene_max_space)):
+                        if(dist_end_hit <= max(clust_first.hits[0].gene.inter_gene_max_space,
+                                               h.gene.inter_gene_max_space)):
                             check_clust = False
                             #print "Cluster them !"
 
-                            msg += "--- A hit is at the TERMINAL end of the replicon, and must be clustered with the 1st stored cluster.\n"
+                            msg += "--- A hit is at the TERMINAL end of the replicon," \
+                                   " and must be clustered with the 1st stored cluster.\n"
 
-                            new_clust = Cluster(systems_to_detect)
+                            new_clust = Cluster(models_to_detect)
                             new_clust.add(h)
                             for hit_clust in clust_first.hits:
                                 new_clust.add(hit_clust)
@@ -141,11 +143,13 @@ class ClustersHandler(object):
                         # Try to cluster it with the last stored cluster.
                         # print "The end hit is at the INITIAL end of the replicon. Test if it must be clustered with the last stored cluster."
                         dist_end_hit = h.position - pos_min + pos_max - clust_last.end 
-                        if dist_end_hit <= max(clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space, h.gene.inter_gene_max_space):
+                        if dist_end_hit <= max(clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space,
+                                               h.gene.inter_gene_max_space):
                             check_clust = False
                             # print "Cluster them !"
 
-                            msg += "--- A hit is at the INITIAL end of the replicon, and must be clustered with the last stored cluster.\n"
+                            msg += "--- A hit is at the INITIAL end of the replicon, " \
+                                   "and must be clustered with the last stored cluster.\n"
 
                             clust_last.add(h)
                             clust_last.save(True) # Force to re-save the updated cluster
@@ -158,7 +162,8 @@ class ClustersHandler(object):
             # now remain cases where clusters are at both ends, and might be fused.
             dist_clust = clust_first.begin - pos_min + pos_max - clust_last.end
 
-            if dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space, clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space):
+            if dist_clust <= max(clust_first.hits[0].gene.inter_gene_max_space,
+                                 clust_last.hits[len(clust_last.hits) - 1].gene.inter_gene_max_space):
                 # Need to circularize !
                 #print "A cluster needs to be \"circularized\" ! "
                 msg = "--- Two clusters should be merged into a new cluster \"circularized\" !\n"
