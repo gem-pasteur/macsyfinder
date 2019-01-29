@@ -187,13 +187,13 @@ class Cluster(object):
 
     """
 
-    def __init__(self, systems_to_detect):
+    def __init__(self, models_to_detect):
         """
-        :param systems_to_detect: the list of systems to be detected in this run
-        :type systems_to_detect: a list of :class:`macsypy.model.Model`
+        :param models_to_detect: the list of systems to be detected in this run
+        :type models_to_detect: a list of :class:`macsypy.model.Model`
         """
         self.hits = []
-        self.systems_to_detect = systems_to_detect # NEW
+        self.models_to_detect = models_to_detect # NEW
         self.systems = {}
         self.replicon_name = ""
         self.begin = 0
@@ -201,6 +201,7 @@ class Cluster(object):
         self._state = ""
         self._putative_system = ""
         self._compatible_systems = [] # NEW!
+
 
     def __len__(self):
         """
@@ -320,7 +321,7 @@ class Cluster(object):
             systems_compat = {} # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
             for h in self.hits:
                 # Now exclude forbidden genes from those that define the list of compatible systems
-                syst_list = h.gene.get_compatible_models(self.systems_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
+                syst_list = h.gene.get_compatible_models(self.models_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
                 for syst in syst_list:
                     syst_fqn = syst.fqn
                     systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
@@ -1627,16 +1628,16 @@ def disambiguate_cluster(cluster):
 
     _log.info("Disambiguation step:")
 
-    cur_cluster = Cluster(cluster.systems_to_detect) # New
+    cur_cluster = Cluster(cluster.models_to_detect) # New
     cur_cluster.add(cluster.hits[0])
     # Now more complex, deals with compatible systems also for disambiguation.
-    cur_compatible = cluster.hits[0].gene.get_compatible_models(cluster.systems_to_detect)
+    cur_compatible = cluster.hits[0].gene.get_compatible_models(cluster.models_to_detect)
 
     #print cluster.hits[0]
     #print [syst.name for syst in cur_compatible]
     for h in cluster.hits[1:]:
         #compatible_systems = h.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
-        compatible_systems = h.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
+        compatible_systems = h.gene.get_compatible_models(cluster.models_to_detect, False) # tmp before nope
         compat_list = get_compatible_systems(cur_compatible, compatible_systems) # intersection for the two genes to agglomerate
         #print h
         #print "Hit's:"
@@ -1670,7 +1671,7 @@ def disambiguate_cluster(cluster):
                 #print cur_cluster
                 for h_clust in cur_cluster.hits:
                     #h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
-                    h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
+                    h_compat = h_clust.gene.get_compatible_models(cluster.models_to_detect, False) # tmp before nope
                     for syst in h_compat:
                         if syst.fqn not in counter_genes_compat_systems:
                             counter_genes_compat_systems[syst.fqn] = 1
@@ -1678,7 +1679,7 @@ def disambiguate_cluster(cluster):
                             counter_genes_compat_systems[syst.fqn] += 1
             cur_compatible = compatible_systems
             #print [syst.name for syst in cur_compatible]            
-            cur_cluster = Cluster(cluster.systems_to_detect) # NEW
+            cur_cluster = Cluster(cluster.models_to_detect) # NEW
             cur_cluster.add(h)
 
     cur_cluster.save()         
@@ -1699,7 +1700,7 @@ def disambiguate_cluster(cluster):
         #print cur_cluster
         for h_clust in cur_cluster.hits:
             #h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect) # tmp before yep
-            h_compat = h_clust.gene.get_compatible_models(cluster.systems_to_detect, False) # tmp before nope
+            h_compat = h_clust.gene.get_compatible_models(cluster.models_to_detect, False) # tmp before nope
             for syst in h_compat:
                 #print syst.name
                 if syst.fqn not in counter_genes_compat_systems:
@@ -1774,7 +1775,8 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
         _log.info("\n{0}".format(clust))
         #if clust.state == "clear":
         # Get the intersection of compatible systems and systems to detect
-        systems_to_consider = get_compatible_systems([model_bank[s] for s in clust.compatible_systems], clust.systems_to_detect)
+        systems_to_consider = get_compatible_systems([model_bank[s] for s in clust.compatible_systems],
+                                                     clust.models_to_detect)
         # For code refactoring: maybe the two conditions below are redundant?
         if clust.state == "clear" and len(systems_to_consider) > 0:
             # New! different compatible systems are tested: then update cluster._putative_system w the good one?
@@ -1869,7 +1871,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
 
     :param hits: a list of Hmmer hits to analyze 
     :type hits: a list of :class:`macsypy.report.Hit`
-    :param systems_to_detect: the list of systems to detect 
+    :param systems_to_detect: the list of systems to detect
     :type systems_to_detect: a list of :class:`macsypy.model.Model`
     :param cfg: the configuration object built from default and user parameters.
     :type cfg: :class:`macsypy.config.Config`
