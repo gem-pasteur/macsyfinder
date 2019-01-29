@@ -199,7 +199,7 @@ class Cluster(object):
         """
         self.hits = []
         self.models_to_detect = models_to_detect # NEW
-        self.systems = {}
+        self.systems_count = {}
         self.replicon_name = ""
         self.begin = 0
         self.end = 0
@@ -300,44 +300,40 @@ class Cluster(object):
         """
         if not self.putative_system or force:
             # First compute the "Majoritary" system
-            systems = {} # Counter of occurrences of systems in the cluster (keys are systems' names)
+            # Counter of occurrences of systems in the cluster (keys are systems' fqn)
+            systems_counter = {}
             genes = []
 
             # Version with hits "reference" systems
             # Two below "for" now useless?
             for h in self.hits:
                 model_fqn = h.model.fqn
-                systems[model_fqn] = systems.get(model_fqn, 0) + 1
+                systems_counter[model_fqn] = systems_counter.get(model_fqn, 0) + 1
                 if genes.count(h.gene.name) == 0:
                     genes.append(h.gene.name)
 
-            self.systems = systems
+            self.systems_count = systems_counter
 
             # Useless ?! Or change? 
-            max_syst = 0
-            tmp_syst_fqn = ""
-            for x, y in systems.items():
-                if y >= max_syst:
-                    tmp_syst_fqn = x
-                    max_fqn = y
-            self._putative_system = tmp_syst_fqn # Remove cause useless?
-            
+            max_model_fqn, nb = max(systems_counter.items(), key=lambda x: x[1])
+            self._putative_system = max_model_fqn
+
             # NEW Version with hits all "compatible" systems
-            systems_compat = {} # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster. Keys are systems' names
+            # Counter of occurrences of COMPATIBLE (-extended- list of) systems in the cluster.
+            # Keys are systems' fqn
+            systems_compat = {}
             for h in self.hits:
                 # Now exclude forbidden genes from those that define the list of compatible systems
-                syst_list = h.gene.get_compatible_models(self.models_to_detect, False) # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
-                for syst in syst_list:
-                    syst_fqn = syst.fqn
-                    systems_compat[syst_fqn] = systems_compat.get(syst_fqn, 0) + 1
-                    if genes.count(h.gene.name) == 0:
+                # Need the list of systems (obj!) to be detected... in the cfg? # tmp before nope
+                compatible_models = h.gene.get_compatible_models(self.models_to_detect, include_forbidden=False)
+                for model in compatible_models:
+                    model_fqn = model.fqn
+                    systems_compat[model_fqn] = systems_compat.get(model_fqn, 0) + 1
+                    if h.gene.name not in genes:
                         genes.append(h.gene.name)
 
-            #print systems_compat
             # We sort the list of compatible systems per decreasing nb of systems occurrences
             systems_compat = OrderedDict(sorted(systems_compat.items(), reverse=True, key=lambda t: t[1]))
-            #print systems_compat
-            #print self
 
             if len(genes) == 1 and self.hits[0].gene.loner is False:
                 self._state = "ineligible"
@@ -348,17 +344,16 @@ class Cluster(object):
                 # Maybe just not add the system to the list if exchangeable?
                 if len(systems_compat.keys()) == 1:
                     self._state = "clear"
-                    syst = list(systems_compat.keys())[0]
-                    #print syst
-                    self._putative_system = syst
+                    syst_fqn = list(systems_compat.keys())[0]
+                    self._putative_system = syst_fqn
                     # Store only compatible systems that are searched for !!
-                    self._compatible_systems.append(syst)
+                    self._compatible_systems.append(syst_fqn)
                 else:
                     # Check for foreign "accessory" genes regarding the majoritary system...
                     # They might increase nb of systems predicted in the cluster artificially,
                     # even if they are tolerated in the cluster.
                     # For that need to scan again all hits and ask whether they are accessory foreign genes.
-                    def try_system(hits, putative_system, counter_systems_in_clust):
+                    def try_system(hits, putative_system):
                         """
                         Test if the putative_system is compatible with the systems of hits (counter_systems_in_clust)
 
@@ -366,51 +361,37 @@ class Cluster(object):
                         :type hits: a list of :class:`macsypy.report.Hit`
                         :param putative_system: the name of a putative system to consider
                         :type putative_system: string
-                        :param counter_systems_in_clust: a dictionary with systems occurrences when exploring the hits
-                        :type counter_systems_in_clust: a dictionary with systems' names as keys, and counts as values
                         :return: the "state" of the set of hits regarding the putative system
                         :rtype: string
 
                         """
-                        #foreign_accessory = 0
-                        auth = 0 # counts nb of hits that are authorized in the putative system
-                        #forbid = 0
-                        #print "Unclear state with multiple systems to deal with..."
-                        #print systems
+                        # counts nb of hits that are authorized in the putative system
+                        auth = 0
                         for h in hits:
                             # Exclude the consideration of "forbidden" genes !
-                            #if h.gene.is_authorized(model_bank[putative_system], False): # tmp before nope
-                            if h.gene.is_authorized(model_bank[putative_system], True): # No! forbidden genes that are defined in system have to be considered!
+                            # if h.gene.is_authorized(model_bank[putative_system], False): # tmp before nope
+                            # No! forbidden genes that are defined in system have to be considered!
+                            if h.gene.is_authorized(model_bank[putative_system], True):
                                 auth += 1
-                            #if h.gene.is_forbidden(model_bank[putative_system]):
-                            #    forbid +=1
-                                                    
                             if auth == len(hits):
                                 state = "clear"
-                                #print "clear {0}".format(putative_system)
                             else:
                                 state = "ambiguous"
-                                #print "ambiguous {0}".format(putative_system)
-
                         return state
 
                     # Sort systems to consider by decreasing counts.
                     cluster_compatible_systems = []
                     for putative_system in systems_compat.keys():
-                        # Add that it has to be done first from the most rep systems by decreasing order of systems.values.
-                        state = try_system(self.hits, putative_system, systems_compat)
+                        # Add that it has to be done first from the most rep systems
+                        # by decreasing order of systems.values.
+                        state = try_system(self.hits, putative_system)
                         if state == "clear":
-                            #print "BUENO SYSTEMO {0}".format(putative_system)
-                            #self._state="clear" 
-                            #self._putative_system=putative_system 
-                            #break
                             cluster_compatible_systems.append(putative_system)
                         #else:
                         #    self._state="ambiguous" # tmp before nope
                         #    # Aoutch in this case no putative_system?!
                         #    print "YAPABON...{0}".format(putative_system)
                     if len(cluster_compatible_systems) >= 1:
-                        #print cluster_compatible_systems
                         self._state = "clear"
                         self._putative_system = cluster_compatible_systems[0]
                         self._compatible_systems = cluster_compatible_systems
