@@ -130,13 +130,12 @@ class Test(MacsyTest, MacsyEnvManager):
         system_1 = model_bank['set_1/T9SS']
         all_hits_1 = get_hits(system_1)
 
-
         # test case 1
         cluster = Cluster([system_1])
         for h in all_hits_1:
             cluster.add(h)
         cluster.save()
-        self.assertEqual(cluster.systems, {'set_1/T9SS': 17})
+        self.assertEqual(cluster.systems_count, {'set_1/T9SS': 17})
         self.assertEqual(cluster._putative_system, 'set_1/T9SS')
         self.assertEqual(cluster._compatible_systems, ['set_1/T9SS'])
         self.assertEqual(cluster._state, 'clear')
@@ -146,7 +145,7 @@ class Test(MacsyTest, MacsyEnvManager):
         cluster.add(all_hits_1[0])
         cluster.hits[0].gene._loner = False
         cluster.save()
-        self.assertEqual(cluster.systems, {'set_1/T9SS': 1})
+        self.assertEqual(cluster.systems_count, {'set_1/T9SS': 1})
         self.assertEqual(cluster._putative_system, 'set_1/T9SS')
         self.assertEqual(cluster._compatible_systems, [])
         self.assertEqual(cluster._state, 'ineligible')
@@ -160,7 +159,7 @@ class Test(MacsyTest, MacsyEnvManager):
         for h in all_hits_1 + all_hits_2:
             cluster.add(h)
         cluster.save()
-        self.assertEqual(cluster.systems, {'set_1/T9SS': 17, 'set_1/T3SS': 2})
+        self.assertEqual(cluster.systems_count, {'set_1/T9SS': 17, 'set_1/T3SS': 2})
         self.assertEqual(cluster._putative_system, 'set_1/T3SS')
         self.assertEqual(cluster._compatible_systems, [])
         self.assertEqual(cluster._state, 'ambiguous')
