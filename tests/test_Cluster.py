@@ -160,7 +160,7 @@ class Test(MacsyTest, MacsyEnvManager):
             cluster.add(h)
         cluster.save()
         self.assertEqual(cluster.systems_count, {'set_1/T9SS': 17, 'set_1/T3SS': 2})
-        self.assertEqual(cluster._putative_system, 'set_1/T3SS')
+        self.assertEqual(cluster._putative_system, 'set_1/T9SS')
         self.assertEqual(cluster._compatible_systems, [])
         self.assertEqual(cluster._state, 'ambiguous')
 
