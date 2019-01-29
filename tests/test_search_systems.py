@@ -123,9 +123,9 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
             rep_db = RepliconDB(self.macsy_test_env.cfg)
             rep_info = rep_db['AESU001c01a']
             clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
-                                                           [self.macsy_test_env.model], rep_info)
+                                                        [self.macsy_test_env.model], rep_info)
             cluster = clusters.clusters[1]
-            cluster.systems_to_detect = []
+            cluster.models_to_detect = []
             with self.catch_log() as log:
                 dc_clusters = disambiguate_cluster(cluster)
                 catch_msg = log.get_value().strip()
@@ -281,8 +281,8 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         # case 1
         self.load_env("env_003", log_out=False)
         try:
-            clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits, 
-                                                        [self.macsy_test_env.model], 
+            clusters, multi_syst_genes = build_clusters(self.macsy_test_env.all_hits,
+                                                        [self.macsy_test_env.model],
                                                         self.macsy_test_env.rep_info)
             multi_syst_genes['set_1/T9SS'] = self.macsy_test_env.all_hits[:4]
             systems_occurences_list = analyze_clusters_replicon(clusters,
