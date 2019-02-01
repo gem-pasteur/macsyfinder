@@ -80,94 +80,94 @@ class Test(MacsyTest, MacsyEnvManager):
 
     def test_add(self):
         self.load_env("env_002", log_out=False)
+        try:
+            ch = ClustersHandler()
+            cluster = self.macsy_test_env.cluster
 
-        ch = ClustersHandler()
-        cluster = self.macsy_test_env.cluster
-
-        ch.replicon_name = None
-        cluster.replicon_name = 'foo'
-        ch.add(cluster)
-        self.assertEqual(ch.replicon_name, 'foo')
-        self.assertEqual(len(ch.clusters), 1)
-
-        ch.replicon_name = 'foo'
-        cluster.replicon_name = 'foo'
-        ch.add(cluster)
-        self.assertEqual(len(ch.clusters), 2)
-
-        ch.replicon_name = 'foo'
-        cluster.replicon_name = 'bla'
-        with self.assertRaises(SystemDetectionError):
+            ch.replicon_name = None
+            cluster.replicon_name = 'foo'
             ch.add(cluster)
+            self.assertEqual(ch.replicon_name, 'foo')
+            self.assertEqual(len(ch.clusters), 1)
 
-        self.unload_env("env_002")
+            ch.replicon_name = 'foo'
+            cluster.replicon_name = 'foo'
+            ch.add(cluster)
+            self.assertEqual(len(ch.clusters), 2)
+
+            ch.replicon_name = 'foo'
+            cluster.replicon_name = 'bla'
+            with self.assertRaises(SystemDetectionError):
+                ch.add(cluster)
+        finally:
+            self.unload_env("env_002")
 
 
     def test_str(self):
         self.load_env("env_002", log_out=False)
-
-        ch = ClustersHandler()
-        cluster = self.macsy_test_env.cluster
-        ch.add(cluster)
-        ch.add(cluster)
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('001'))
-
-        self.unload_env("env_002")
+        try:
+            ch = ClustersHandler()
+            cluster = self.macsy_test_env.cluster
+            ch.add(cluster)
+            ch.add(cluster)
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('001'))
+        finally:
+            self.unload_env("env_002")
 
 
     def test_circularize(self):
         self.load_env("env_004", log_out=False)
+        try:
+            t9ss_model = self.macsy_test_env.models[0]
+            cfg = self.macsy_test_env.cfg
+            models_location = self.macsy_test_env.models_location
+            ch = ClustersHandler()
+            tcd = TestCircularizeData(cfg, models_location, t9ss_model)
 
-        system = self.macsy_test_env.model
-        cfg = self.macsy_test_env.cfg
-        models_location = self.macsy_test_env.models_location
-        ch = ClustersHandler()
-        tcd = TestCircularizeData(cfg, models_location, system)
+            # case 1
+            tcd.set_hits_group(1, 3, 6, 3, 15, 3)
+            ch.clusters = tcd.build_clusters_group()
+            end_hits = tcd.get_end_hits(11, 3, 6, 3)
+            rep_info = RepliconInfo('circular', 200, 400, [])
+            ch.circularize(rep_info, end_hits, [t9ss_model])
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('001'))
 
-        # case 1
-        tcd.set_hits_group(1, 3, 6, 3, 15, 3)
-        ch.clusters = tcd.build_clusters_group()
-        end_hits = tcd.get_end_hits(11, 3, 6, 3)
-        rep_info = RepliconInfo('circular', 200, 400, [])
-        ch.circularize(rep_info, end_hits, [system])
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('001'))
+            # case 2
+            tcd.set_hits_group(1, 3, 6, 3, 15, 3)
+            ch.clusters = tcd.build_clusters_group()
+            end_hits = tcd.get_end_hits(11, 50, 6, 50)
+            rep_info = RepliconInfo('circular', 200, 220, [])
+            ch.circularize(rep_info, end_hits, [t9ss_model])
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('002'))
 
-        # case 2
-        tcd.set_hits_group(1, 3, 6, 3, 15, 3)
-        ch.clusters = tcd.build_clusters_group()
-        end_hits = tcd.get_end_hits(11, 50, 6, 50)
-        rep_info = RepliconInfo('circular', 200, 220, [])
-        ch.circularize(rep_info, end_hits, [system])
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('002'))
+            # case 3
+            tcd.set_hits_group(1, 350, 6, 30, 15, 30)
+            ch.clusters = tcd.build_clusters_group()
+            end_hits = tcd.get_end_hits(11, 30, 6, 30)
+            rep_info = RepliconInfo('circular', 200, 400, [])
+            ch.circularize(rep_info, end_hits, [t9ss_model])
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('003'))
 
-        # case 3
-        tcd.set_hits_group(1, 350, 6, 30, 15, 30)
-        ch.clusters = tcd.build_clusters_group()
-        end_hits = tcd.get_end_hits(11, 30, 6, 30)
-        rep_info = RepliconInfo('circular', 200, 400, [])
-        ch.circularize(rep_info, end_hits, [system])
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('003'))
+            # case 4
+            tcd.set_hits_group(30, 3, 6, 3, 15, 3)
+            ch.clusters = tcd.build_clusters_group()
+            end_hits = tcd.get_end_hits(11, 195, 6, 128)
+            rep_info = RepliconInfo('circular', 200, 400, [])
+            ch.circularize(rep_info, end_hits, [t9ss_model])
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('004'))
 
-        # case 4
-        tcd.set_hits_group(30, 3, 6, 3, 15, 3)
-        ch.clusters = tcd.build_clusters_group()
-        end_hits = tcd.get_end_hits(11, 195, 6, 128)
-        rep_info = RepliconInfo('circular', 200, 400, [])
-        ch.circularize(rep_info, end_hits, [system])
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('004'))
-
-        # case 5
-        tcd.set_hits_group(1, 3, 6, 3, 15, 400)
-        ch.clusters = tcd.build_clusters_group()
-        end_hits = tcd.get_end_hits(11, 3, 6, 3)
-        rep_info = RepliconInfo('circular', 200, 400, [])
-        ch.circularize(rep_info, end_hits, [system])
-        str_ = str(ch)
-        self.assertEqual(str(str_), self.output_control_str('005'))
-
-        self.unload_env("env_004")
+            # case 5
+            tcd.set_hits_group(1, 3, 6, 3, 15, 400)
+            ch.clusters = tcd.build_clusters_group()
+            end_hits = tcd.get_end_hits(11, 3, 6, 3)
+            rep_info = RepliconInfo('circular', 200, 400, [])
+            ch.circularize(rep_info, end_hits, [t9ss_model])
+            str_ = str(ch)
+            self.assertEqual(str(str_), self.output_control_str('005'))
+        finally:
+            self.unload_env("env_004")
