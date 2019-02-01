@@ -48,19 +48,19 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_putative_system(self):
         self.load_env("env_001", log_out=False)
 
-        system_name = 'set_1/T9SS'
-        system = model.Model(self.macsy_test_env.cfg, system_name, 10)
-        cluster = Cluster(system)
-        cluster._putative_system = system_name
-        self.assertEqual(cluster.putative_system, system_name)
+        model_name = 'set_1/T9SS'
+        t9ss_model = model.Model(self.macsy_test_env.cfg, model_name, 10)
+        cluster = Cluster(t9ss_model)
+        cluster._putative_system = model_name
+        self.assertEqual(cluster.putative_system, model_name)
 
         self.unload_env("env_001")
 
     def test_compatible_systems(self):
         self.load_env("env_001", log_out=False)
 
-        system = model.Model(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
-        cluster = Cluster(system)
+        t9ss_model = model.Model(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
+        cluster = Cluster(t9ss_model)
         compatible_system_name = 'set_1/T2SS'
         cluster._compatible_systems.append(compatible_system_name)
         self.assertListEqual(cluster.compatible_systems, [compatible_system_name])
@@ -81,7 +81,8 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_007", log_out=False)
 
         h1, h2, h3 = self.macsy_test_env.all_hits[:3]
-        cluster = Cluster([self.macsy_test_env.model])
+        t9ss_model = self.macsy_test_env.models[0]
+        cluster = Cluster([t9ss_model])
         cluster.add(h1)
         self.assertEqual(cluster.begin, 505)
         self.assertEqual(cluster.end, 505)
