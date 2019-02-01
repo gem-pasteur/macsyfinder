@@ -439,9 +439,9 @@ class DefinitionParser(object):
                 raise MacsypyError("{}: No such model definitions".format(path))
             tree = Et.parse(path)
             model_node = tree.getroot()
-            sys = self._create_model(def_fqn, model_node)  # one opening&closing file /definition
-            self.model_bank.add_model(sys)
-            genes = self._create_genes(sys, model_node)
+            model = self._create_model(def_fqn, model_node)  # one opening&closing file /definition
+            self.model_bank.add_model(model)
+            genes = self._create_genes(model, model_node)
             for g in genes:
                 self.gene_bank.add_gene(g)
 
@@ -459,4 +459,5 @@ class DefinitionParser(object):
             self._fill(model, def_node)
         model_2_check = {self.model_bank[s] for s in models_2_detect}
         self.check_consistency(model_2_check)
+
 

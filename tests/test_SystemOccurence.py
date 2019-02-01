@@ -19,8 +19,8 @@ import argparse
 from operator import attrgetter
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.model import Model, model_bank
-from macsypy.gene import Gene, Analog, gene_bank
+from macsypy.model import Model
+from macsypy.gene import Gene, Analog
 from macsypy.report import Hit
 from macsypy.search_systems import SystemOccurence, build_clusters
 from macsypy.database import RepliconDB, Indexes
@@ -472,6 +472,8 @@ class Test(MacsyTest, MacsyEnvManager):
             idx = Indexes(config)
             idx._build_my_indexes()
 
+            model_bank = self.macsy_test_env.model_bank
+            gene_bank = self.macsy_test_env.gene_bank
             parser = DefinitionParser(config, model_bank, gene_bank)
             parser.parse(['set_1/T9SS'])
 
@@ -592,6 +594,8 @@ class Test(MacsyTest, MacsyEnvManager):
         try:
             idx = Indexes(config)
             idx._build_my_indexes()
+            model_bank = self.macsy_test_env.model_bank
+            gene_bank = self.macsy_test_env.gene_bank
             parser = DefinitionParser(config, model_bank, gene_bank)
             parser.parse(['set_1/T9SS'])
             system = model_bank['set_1/T9SS']
