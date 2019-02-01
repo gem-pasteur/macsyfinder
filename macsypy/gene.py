@@ -26,7 +26,9 @@ class GeneBank(object):
     """
     Store all Gene objects. Ensure that genes are instanciated only once.
     """
-    _genes_bank = {}
+
+    def __init__(self):
+        self._genes_bank = {}
 
     def __getitem__(self, key):
         """
