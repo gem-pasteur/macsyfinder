@@ -28,7 +28,8 @@ class ModelBank(object):
     it is returned. Otherwise a new model is built, stored and then returned.
     """
 
-    _model_bank = {}
+    def __init__(self):
+        self._model_bank = {}
 
 
     def __getitem__(self, name):
