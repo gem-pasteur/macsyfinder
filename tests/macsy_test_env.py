@@ -163,6 +163,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.models_location = models_registry[self.model_name]
 
         elif env_id == "env_002":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
                             **cfg_args)
             rep_db = RepliconDB(self.cfg)
@@ -179,6 +180,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
         elif env_id == "env_004":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
                             **cfg_args)
             models_registry = ModelRegistry(self.cfg)
@@ -195,9 +197,11 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                               model_fqn=["set_1/T9SS"],
                               **cfg_args)
         elif env_id == "env_007":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run="tests/data/data_set_1/complete_run_results",
                             **cfg_args)
         elif env_id == "env_008":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
                               models_dir="tests/data/data_set_1/models",
                               **cfg_args)
