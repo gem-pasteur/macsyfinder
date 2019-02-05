@@ -174,6 +174,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
                             models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
                             **cfg_args)
@@ -187,6 +188,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_005":
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run="tests/data/data_set_2/results",
                             models_dir="tests/data/data_set_2/models",
                             models_2_parse=["set_1/T9SS"],
@@ -225,16 +227,28 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             args.models_dir = MacsyTest.find_data('models')
             self.cfg = Config(self.defaults, args)
         elif env_id == "env_011":
+            # db contains AESU + AETU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS
             self.build_hits(previous_run="tests/data/data_set_4/results",
                             models_dir="tests/data/data_set_4/models",
                             models_2_parse=["set_1/T9SS"],
                             **cfg_args)
         elif env_id == "env_012":
+            # db contains AESU + AETU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run="tests/data/data_set_5/results",
                             models_dir="tests/data/data_set_5/models",
                             models_2_parse=["set_1/T9SS"],
                             **cfg_args)
         elif env_id == "env_013":
+            # db contains AESU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS in conf
             self.build_hits(previous_run="tests/data/data_set_6/results",
                             models_dir="tests/data/data_set_6/models",
                             models_2_parse=["set_1/T9SS"],
