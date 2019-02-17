@@ -253,6 +253,106 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                             models_dir="tests/data/data_set_6/models",
                             models_2_parse=["set_1/T9SS"],
                             **cfg_args)
+
+        # -- ENV USED BY 4X4 TEST MATRIX - BEGIN -- #
+        elif env_id == "env_017":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_018":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_019":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_020":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_021":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_022":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_023":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_024":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_025":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_026":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_027":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_028":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_029":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_030":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_031":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_032":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        # -- ENV USED BY 4X4 TEST MATRIX - END -- #
+
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -271,34 +371,10 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         search_systems.system_name_generator = search_systems.SystemNameGenerator()
 
         # environment specific cleanup
-        if env_id == "env_001":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_002":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_003":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_004":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_005":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_006":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_007":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_008":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_009":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_010":
+        if env_id == "env_010":
             pass
-        elif env_id == "env_011":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_012":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_013":
-            MacsyTest.rmtree(self.out_dir)
         else:
-            raise Exception('Test environment not found ({})'.format(env_id))
+            MacsyTest.rmtree(self.out_dir)
 
 
 class MacsyEnvManager(object):

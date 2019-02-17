@@ -460,3 +460,176 @@ class TestSearchSystem(MacsyTest, MacsyEnvManager):
         finally:
             # self.unload_env("env_012")
             pass
+
+
+class TestSearchSystem4x4(MacsyTest, MacsyEnvManager):
+    """SearchSystem systematic test (4x4 matrix based).
+    
+    4x4 test matrix is made of tests environment from env_017 to env_032.
+    """
+
+    def exec_wrapper(self):
+        """Helper func."""
+        json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
+        search_systems(self.macsy_test_env.all_hits,
+                       [self.macsy_test_env.system],
+                       self.macsy_test_env.cfg)
+        return json_result
+
+    def test_env_017(self):
+        self.load_env("env_017", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_017")
+
+    def test_env_018(self):
+        self.load_env("env_018", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_018")
+
+    def test_env_019(self):
+        self.load_env("env_019", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_019")
+
+    def test_env_020(self):
+        self.load_env("env_020", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_020")
+
+    def test_env_021(self):
+        self.load_env("env_021", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_021")
+
+    def test_env_022(self):
+        self.load_env("env_022", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_022")
+
+    def test_env_023(self):
+        self.load_env("env_023", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_023")
+
+    def test_env_024(self):
+        self.load_env("env_024", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_024")
+
+    def test_env_025(self):
+        self.load_env("env_025", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_025")
+
+    def test_env_026(self):
+        self.load_env("env_026", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_026")
+
+    def test_env_027(self):
+        self.load_env("env_027", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_027")
+
+    def test_env_028(self):
+        self.load_env("env_028", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_028")
+
+    def test_env_029(self):
+        self.load_env("env_029", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_029")
+
+    def test_env_030(self):
+        self.load_env("env_030", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_030")
+
+    def test_env_031(self):
+        self.load_env("env_031", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_031")
+
+    def test_env_032(self):
+        self.load_env("env_032", log_out=False)
+        try:
+            json_expected = self.output_control_file('results.macsyfinder.json')
+            json_result = self.exec_wrapper()
+            self.assertJsonEqual(json_expected, json_result)
+        finally:
+            self.unload_env("env_032")
+
+    """
+    def test_all_4x4_env(self):
+        for i in xrange(17,33):
+            env_id = 'env_{0:03d}'.format(i)
+
+            self.load_env(env_id, log_out=False)
+            try:
+                json_expected = self.output_control_file('results.macsyfinder.json')
+                json_result = self.exec_wrapper()
+                self.assertJsonEqual(json_expected, json_result)
+            finally:
+                self.unload_env(env_id)
+    """
