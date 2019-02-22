@@ -472,7 +472,7 @@ class TestSearchSystem4x4(MacsyTest, MacsyEnvManager):
         """Helper func."""
         json_result = os.path.join(self.macsy_test_env.cfg.working_dir(), "results.macsyfinder.json")
         search_systems(self.macsy_test_env.all_hits,
-                       [self.macsy_test_env.system],
+                       self.macsy_test_env.models,
                        self.macsy_test_env.cfg)
         return json_result
 
