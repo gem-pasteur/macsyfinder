@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T3SS_sctR.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T3SS_sctR.search_hmm.out
+# query HMM file:                  tests/data/data_set_7/models/set_1/profiles/T3SS_sctR.hmm
+# target sequence database:        tests/data/data_set_7/base/gembase.fa
+# output directed to file:         tests/data/data_set_7/results/hmmer_results/T3SS_sctR.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,27 +16,47 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
   ------ inclusion threshold ------
-      0.014   12.8   0.2      0.066   10.6   0.0    2.2  2  AESU001c01a_020750  
+      0.027   12.8   0.2       0.13   10.6   0.0    2.2  2  AESU001c01a_020750  
+      0.027   12.8   0.2       0.13   10.6   0.0    2.2  2  AETU001c01a_020750  
 
 
 Domain annotation for each sequence (and alignments):
 >> AESU001c01a_020750  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 ?   10.6   0.0   2.1e-05     0.066      88     151 ..     113     181 ..      75     186 .. 0.73
-   2 ?   -1.7   0.0      0.12   3.7e+02     184     199 .]     255     270 ..     254     270 .. 0.91
+   1 ?   10.6   0.0   4.2e-05      0.13      88     151 ..     113     181 ..      75     186 .. 0.73
+   2 ?   -1.7   0.0      0.24   7.4e+02     184     199 .]     255     270 ..     254     270 .. 0.91
 
   Alignments for each domain:
-  == domain 1  score: 10.6 bits;  conditional E-value: 2.1e-05
+  == domain 1  score: 10.6 bits;  conditional E-value: 4.2e-05
                 sctR  88 eflkkntdeeeaafflkstkklwpeelaaqlk...dddlliliPafvlselkeafeiG..fllylpfiv 151
                          +fl+k  +e  +     s+ +l++e ++++l      dl ++i  + +  l+++f+i   +l ylpf++
   AESU001c01a_020750 113 HFLRKAREEAIKDNKPVSEANLFSEITKRELAsilRCDLSLIISEYEMELLQNTFKISseILYYLPFLI 181
                          56666666666666556666666665555544111679*******************755899****96 PP
 
-  == domain 2  score: -1.7 bits;  conditional E-value: 0.12
+  == domain 2  score: -1.7 bits;  conditional E-value: 0.24
                 sctR 184 lvdGWslllegLvesy 199
                          +++GW+  +e+L+++y
   AESU001c01a_020750 255 IIKGWAESIESLMKTY 270
+                         689**********998 PP
+
+>> AETU001c01a_020750  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.6   0.0   4.2e-05      0.13      88     151 ..     113     181 ..      75     186 .. 0.73
+   2 ?   -1.7   0.0      0.24   7.4e+02     184     199 .]     255     270 ..     254     270 .. 0.91
+
+  Alignments for each domain:
+  == domain 1  score: 10.6 bits;  conditional E-value: 4.2e-05
+                sctR  88 eflkkntdeeeaafflkstkklwpeelaaqlk...dddlliliPafvlselkeafeiG..fllylpfiv 151
+                         +fl+k  +e  +     s+ +l++e ++++l      dl ++i  + +  l+++f+i   +l ylpf++
+  AETU001c01a_020750 113 HFLRKAREEAIKDNKPVSEANLFSEITKRELAsilRCDLSLIISEYEMELLQNTFKISseILYYLPFLI 181
+                         56666666666666556666666665555544111679*******************755899****96 PP
+
+  == domain 2  score: -1.7 bits;  conditional E-value: 0.24
+                sctR 184 lvdGWslllegLvesy 199
+                         +++GW+  +e+L+++y
+  AETU001c01a_020750 255 IIKGWAESIESLMKTY 270
                          689**********998 PP
 
 
@@ -44,14 +64,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                              1  (199 nodes)
-Target sequences:                         3140  (1041665 residues searched)
-Passed MSV filter:                       190  (0.0605096); expected 62.8 (0.02)
-Passed bias filter:                      107  (0.0340764); expected 62.8 (0.02)
-Passed Vit filter:                        13  (0.00414013); expected 3.1 (0.001)
-Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
-Initial search space (Z):               3140  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
-# Mc/sec: 6909.71
+Target sequences:                         6280  (2083330 residues searched)
+Passed MSV filter:                       380  (0.0605096); expected 125.6 (0.02)
+Passed bias filter:                      214  (0.0340764); expected 125.6 (0.02)
+Passed Vit filter:                        26  (0.00414013); expected 6.3 (0.001)
+Passed Fwd filter:                         2  (0.000318471); expected 0.1 (1e-05)
+Initial search space (Z):               6280  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
+# Mc/sec: 8291.65
 //
 [ok]

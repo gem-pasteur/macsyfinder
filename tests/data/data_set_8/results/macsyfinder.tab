@@ -1,2 +1,2 @@
-#Replicon	T3SS_single_locus	T3SS_multi_loci	T4SS_typeI_single_locus	T4SS_typeI_multi_loci	T9SS_single_locus	T9SS_multi_loci
-AESU001c01a	0	0	0	0	0	1
+#Replicon	T3SS_single_locus	T4SS_typeI_single_locus	T9SS_single_locus
+UserReplicon	0	0	0

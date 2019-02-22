@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_I_traE.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_I_traE.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T4SS_I_traE.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T4SS_I_traE.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,11 +16,11 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
   ------ inclusion threshold ------
-      0.014   12.2   0.0      0.018   11.9   0.0    1.1  1  AESU001c01a_009130  
+      0.014   12.2   0.0      0.018   11.9   0.0    1.1  1  AETU001c01a_009130  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_009130  
+>> AETU001c01a_009130  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 ?   11.9   0.0   5.7e-06     0.018      83     146 ..      66     128 ..      42     132 .. 0.79
@@ -29,7 +29,7 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 11.9 bits;  conditional E-value: 5.7e-06
               I_traE  83 grllsrieyimlshdinatllatllspwnirsavirdparladylsadalealaecfnlnpdwl 146
                              s iey m  h + + +la+ +s w+ +     +p+ +   ls + l++ ae f ++ + l
-  AESU001c01a_009130  66 AGETSPIEYYMELHKMDVGILASYVSFWQWKVKRHFKPSVF-KKLSDKSLNKYAEAFDVSVEEL 128
+  AETU001c01a_009130  66 AGETSPIEYYMELHKMDVGILASYVSFWQWKVKRHFKPSVF-KKLSDKSLNKYAEAFDVSVEEL 128
                          334689***********************999988889765.6799999********9987765 PP
 
 

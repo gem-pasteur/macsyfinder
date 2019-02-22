@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T9SS_gldN_TIGR03523.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T9SS_gldN_TIGR03523.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T9SS_gldN_TIGR03523.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T9SS_gldN_TIGR03523.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,11 +15,11 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
-    8.4e-80  265.5   1.3    9.8e-80  265.3   1.3    1.0  1  AESU001c01a_007860  
+    8.4e-80  265.5   1.3    9.8e-80  265.3   1.3    1.0  1  AETU001c01a_007860  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_007860  
+>> AETU001c01a_007860  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !  265.3   1.3   3.1e-83   9.8e-80       2     280 .]       4     299 .]       3     299 .] 0.92
@@ -28,22 +28,22 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 265.3 bits;  conditional E-value: 3.1e-83
   fa_alignment_TIGR03523   2 kklivlllaaavvisslaqva..rileeseasgvseetktsdddkpfevrairerDimwskvvwreidLrekiNlplyyptddv... 83 
                              k++++ ++ +++++s+ aqv+  ++++ + +++ +ee++  d+d p++++++++rD++w k+ w+ idL e++N+plyyp+d+    
-      AESU001c01a_007860   4 KNVVLCIFGLVIAASATAQVNilNAKNPEDIGKITEEQIAYDNDGPLPYGYTDKRDVLWAKTTWEIIDLDERVNFPLYYPIDTNnig 90 
+      AETU001c01a_007860   4 KNVVLCIFGLVIAASATAQVNilNAKNPEDIGKITEEQIAYDNDGPLPYGYTDKRDVLWAKTTWEIIDLDERVNFPLYYPIDTNnig 90 
                              789999****7777776666422666666777777***********************************************99898 PP
 
   fa_alignment_TIGR03523  84 skrrsLfkvildaieegsilevYaldef............evftdtekvtlqefqdelvayyeesdrligssitsadvkeyeikeew 158
                               +rrsL++v+++ i++g+i +vY +++f             v  dt  + +++++ e v+  +   ++  +s++  d+   +i++ w
-      AESU001c01a_007860  91 PDRRSLYDVLVKNIKNGKIESVYVDSYFtekrtlkdietsLVYSDTTDLGIEQYNAEGVVDPQ---YVRRFSLDAGDIESWRIRGYW 174
+      AETU001c01a_007860  91 PDRRSLYDVLVKNIKNGKIESVYVDSYFtekrtlkdietsLVYSDTTDLGIEQYNAEGVVDPQ---YVRRFSLDAGDIESWRIRGYW 174
                              9***************************88888888887777788888888888888888777...49******************* PP
 
   fa_alignment_TIGR03523 159 yFdkqqsemkfrilalaPimtdsd..gqeksgaevkyplfwvkyedarpvlaeakvinnlNsakslslddlfelrlfksvivkteNv 243
                              y dk+q+e+k+r+l+++P+  ++   + + s+ + k++lfwv++  ar+vl++ak +n +N ++++s+d+l+++r+f +vi+k+eNv
-      AESU001c01a_007860 175 YIDKRQGELKYRLLGICPVANEARskAFSDSDIDSKVELFWVWFPGARDVLHNAKAFNRKNTSQPISYDHLLNSRRFGAVIYKEENV 261
+      AETU001c01a_007860 175 YIDKRQGELKYRLLGICPVANEARskAFSDSDIDSKVELFWVWFPGARDVLHNAKAFNRKNTSQPISYDHLLNSRRFGAVIYKEENV 261
                              *******************99888667788888899*************************************************** PP
 
   fa_alignment_TIGR03523 244 y.dralsdyitgddllqlleskrikeellefekdlwey 280
                              + dr ++dyi++++l+qlles+rike++++ e dlw+y
-      AESU001c01a_007860 262 QgDRDVKDYINDNALMQLLESERIKEKIRNIEIDLWNY 299
+      AETU001c01a_007860 262 QgDRDVKDYINDNALMQLLESERIKEKIRNIEIDLWNY 299
                              *************************************9 PP
 
 
@@ -58,7 +58,7 @@ Passed Vit filter:                        10  (0.00318471); expected 3.1 (0.001)
 Passed Fwd filter:                         1  (0.000318471); expected 0.0 (1e-05)
 Initial search space (Z):               3140  [actual number of targets]
 Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.03
 # Mc/sec: 9722.21
 //
 [ok]
