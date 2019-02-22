@@ -1,4 +1,4 @@
-# gene: T4SS_I_traU extract from tests/data/data_set_2/results/hmmer_results/T4SS_I_traU.search_hmm.out hmm output
+# gene: T4SS_I_traU extract from tests/data/data_set_10/results/hmmer_results/T4SS_I_traU.search_hmm.out hmm output
 # profile length= 1008
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500

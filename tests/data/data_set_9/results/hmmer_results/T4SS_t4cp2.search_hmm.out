@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_t4cp2.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_t4cp2.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T4SS_t4cp2.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T4SS_t4cp2.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,11 +15,11 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
-     0.0013   15.6   1.2     0.0033   14.2   0.0    2.2  2  AESU001c01a_005760  
+     0.0013   15.6   1.2     0.0033   14.2   0.0    2.2  2  AETU001c01a_005760  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_005760  
+>> AETU001c01a_005760  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !   14.2   0.0   1.1e-06    0.0033      20     117 ..     222     328 ..     184     335 .. 0.80
@@ -29,18 +29,18 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 14.2 bits;  conditional E-value: 1.1e-06
                t4cp2  20 atsksdfdlkdvik..kpvalyivlpa.edlaslrplaslfisqlinalaklapekkkklkrpvlfllDEf......gnlgkiegleeala 101
                          ++ + +fd +d+ +  ++++ yi +    d  +   l s f+ +l+ +++   pe++ + ++++++++DE+      ++ + ++++e ++ 
-  AESU001c01a_005760 222 FFGEKSFDPQDLLRinENGMGYINILRlTDIQDRPKLFSTFMLSLLAEIYATFPEQGDSGRPELVIFVDEAhlifneASSALLNQIESIVK 312
+  AETU001c01a_005760 222 FFGEKSFDPQDLLRinENGMGYINILRlTDIQDRPKLFSTFMLSLLAEIYATFPEQGDSGRPELVIFVDEAhlifneASSALLNQIESIVK 312
                          44568899999988887788888777767777788999999999999999999998888888888888887333333344599******** PP
 
                t4cp2 102 vargrgirfiliiQsl 117
                           +r++g+ +++++Q+ 
-  AESU001c01a_005760 313 LIRSKGVGLYFVTQNP 328
+  AETU001c01a_005760 313 LIRSKGVGLYFVTQNP 328
                          **************96 PP
 
   == domain 2  score: -2.0 bits;  conditional E-value: 0.098
                t4cp2 155 kllGektvkvkssssssglgersgtsrtese 185
                          k++  kt++                 r++s 
-  AESU001c01a_005760 465 KEAARKTTSS----------------RSSSS 479
+  AETU001c01a_005760 465 KEAARKTTSS----------------RSSSS 479
                          1111111111................22111 PP
 
 

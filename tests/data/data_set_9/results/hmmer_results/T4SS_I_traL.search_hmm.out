@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_I_traL.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_I_traL.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T4SS_I_traL.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T4SS_I_traL.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,11 +16,11 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
   ------ inclusion threshold ------
-      0.016   12.6   0.1       0.02   12.3   0.1    1.1  1  AESU001c01a_008510  
+      0.016   12.6   0.1       0.02   12.3   0.1    1.1  1  AETU001c01a_008510  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_008510  
+>> AETU001c01a_008510  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 ?   12.3   0.1   6.5e-06      0.02       3      39 ..       2      39 ..       1      42 [. 0.84
@@ -29,7 +29,7 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 12.3 bits;  conditional E-value: 6.5e-06
               I_traL  3 klkklLlavl.slilvssvaaaatCragsaAkaGsqaa 39
                         k+k lL +vl  +i++++ a+ a Cra    + G qaa
-  AESU001c01a_008510  2 KIKILLTIVLlLIIVIPAEAQCAMCRAVLESEEGGQAA 39
+  AETU001c01a_008510  2 KIKILLTIVLlLIIVIPAEAQCAMCRAVLESEEGGQAA 39
                         6666777777689999***********99999999987 PP
 
 

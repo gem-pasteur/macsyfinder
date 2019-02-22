@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_MOBT.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_MOBT.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T4SS_MOBT.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T4SS_MOBT.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,11 +15,11 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
-     0.0032   13.7   0.0     0.0036   13.6   0.0    1.0  1  AESU001c01a_000240  
+     0.0032   13.7   0.0     0.0036   13.6   0.0    1.0  1  AETU001c01a_000240  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_000240  
+>> AETU001c01a_000240  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !   13.6   0.0   1.1e-06    0.0036       1      41 [.      14      54 ..      14      62 .. 0.88
@@ -28,7 +28,7 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 13.6 bits;  conditional E-value: 1.1e-06
                 MOBT  1 lsqkelakalgisrellskiesgkkklseelkekllealek 41
                         l+q+ela+++g+sr+++++ie+++  +s+ l  kl + ++k
-  AESU001c01a_000240 14 LTQDELAQKIGVSRQTINSIETNRYVPSTLLALKLSKLFDK 54
+  AETU001c01a_000240 14 LTQDELAQKIGVSRQTINSIETNRYVPSTLLALKLSKLFDK 54
                         58**********************99999998888887765 PP
 
 

@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_I_traU.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_I_traU.search_hmm.out
+# query HMM file:                  tests/data/data_set_10/models/set_1/profiles/T4SS_I_traU.hmm
+# target sequence database:        tests/data/data_set_10/base/unordered.fa
+# output directed to file:         tests/data/data_set_10/results/hmmer_results/T4SS_I_traU.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -27,14 +27,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                              1  (1008 nodes)
-Target sequences:                         3140  (1041665 residues searched)
-Passed MSV filter:                       161  (0.0512739); expected 62.8 (0.02)
-Passed bias filter:                       95  (0.0302548); expected 62.8 (0.02)
-Passed Vit filter:                        19  (0.00605096); expected 3.1 (0.001)
-Passed Fwd filter:                         0  (0); expected 0.0 (1e-05)
-Initial search space (Z):               3140  [actual number of targets]
+Target sequences:                         6280  (2083330 residues searched)
+Passed MSV filter:                       322  (0.0512739); expected 125.6 (0.02)
+Passed bias filter:                      190  (0.0302548); expected 125.6 (0.02)
+Passed Vit filter:                        38  (0.00605096); expected 6.3 (0.001)
+Passed Fwd filter:                         0  (0); expected 0.1 (1e-05)
+Initial search space (Z):               6280  [actual number of targets]
 Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.09u 0.00s 00:00:00.09 Elapsed: 00:00:00.09
-# Mc/sec: 11666.65
+# CPU time: 0.19u 0.00s 00:00:00.19 Elapsed: 00:00:00.20
+# Mc/sec: 10499.98
 //
 [ok]

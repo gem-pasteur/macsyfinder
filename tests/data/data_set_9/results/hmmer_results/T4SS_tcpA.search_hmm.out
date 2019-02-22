@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_tcpA.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_tcpA.search_hmm.out
+# query HMM file:                  tests/data/data_set_9/models/set_1/profiles/T4SS_tcpA.hmm
+# target sequence database:        tests/data/data_set_9/base/unordered_replicon.fa
+# output directed to file:         tests/data/data_set_9/results/hmmer_results/T4SS_tcpA.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -15,11 +15,11 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
     ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
-    1.6e-11   41.5   0.1    1.9e-10   38.0   0.1    2.4  1  AESU001c01a_030110  
+    1.6e-11   41.5   0.1    1.9e-10   38.0   0.1    2.4  1  AETU001c01a_030110  
 
 
 Domain annotation for each sequence (and alignments):
->> AESU001c01a_030110  
+>> AETU001c01a_030110  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !   38.0   0.1   5.9e-14   1.9e-10     218     394 ..     428     627 ..     414     645 .. 0.69
@@ -28,17 +28,17 @@ Domain annotation for each sequence (and alignments):
   == domain 1  score: 38.0 bits;  conditional E-value: 5.9e-14
                 tcpA 218 vvweydklphmliaggtgggktyfiltlieallr....tdavlyvldpknadladletv...........manvyykkedllacidrfyee 293
                           v +  k+phml+ag tg gk+  + +++ +ll     ++ ++ ++dpk  +l+ ++ +            + +    +++++ ++++  e
-  AESU001c01a_030110 428 FVVDLAKMPHMLMAGATGQGKSVGLNAVLTSLLYkkhpAEVKFVLVDPKKVELTLFNKIerhylaklpdtEEAIITDTNKVINTLNSLCIE 518
+  AETU001c01a_030110 428 FVVDLAKMPHMLMAGATGQGKSVGLNAVLTSLLYkkhpAEVKFVLVDPKKVELTLFNKIerhylaklpdtEEAIITDTNKVINTLNSLCIE 518
                          5567889**********************99996222234566778***999865554411111110000334555566677777777667 PP
 
                 tcpA 294 mlkrseemk.....kmenykt.......genyaylglpanflifdeyvaflemlgtkesvavlsklkqivmlgrqagfflilacqrpdaky 372
                          m +r + +k     + ++y+t         n  +  lp  +l++de+  ++ m + ke  + +++l q   l r  g  li+a qrp    
-  AESU001c01a_030110 519 MDARYDLLKdamvrNIKEYNTkfknrklNPNEGHRFLPYIILVIDEFADLI-MTAGKEVETPIARLAQ---LARAIGIHLIVATQRPSVNV 605
+  AETU001c01a_030110 519 MDARYDLLKdamvrNIKEYNTkfknrklNPNEGHRFLPYIILVIDEFADLI-MTAGKEVETPIARLAQ---LARAIGIHLIVATQRPSVNV 605
                          766654433111113344544111111156777888999*******98776.5566887777777766...89****************** PP
 
                 tcpA 373 lgdgirdqfnfrvalgrlselg 394
                          ++  i+ +f  r+a+   s++ 
-  AESU001c01a_030110 606 ITGIIKANFPARIAFRVTSKID 627
+  AETU001c01a_030110 606 ITGIIKANFPARIAFRVTSKID 627
                          *************998777765 PP
 
 

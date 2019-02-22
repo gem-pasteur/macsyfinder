@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data/data_set_2/models/set_1/profiles/T4SS_t4cp2.hmm
-# target sequence database:        tests/data/data_set_2/base/test.fa
-# output directed to file:         tests/data/data_set_2/results/hmmer_results/T4SS_t4cp2.search_hmm.out
+# query HMM file:                  tests/data/data_set_8/models/set_1/profiles/T4SS_t4cp2.hmm
+# target sequence database:        tests/data/data_set_8/base/ordered_replicon.fa
+# output directed to file:         tests/data/data_set_8/results/hmmer_results/T4SS_t4cp2.search_hmm.out
 # sequence reporting threshold:    E-value <= 1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
