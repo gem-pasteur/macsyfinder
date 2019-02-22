@@ -2,15 +2,12 @@
 
 ## Base
 
-* gembase.fa
 * ordered_replicon.fa
-* unordered.fa
-* unordered_replicon.fa
 
 ## Model
 
-'multi-loci' flag has been set to TRUE for T9SS model 
-and set to FALSE for T3SS and T4SS_typeI models.
+'multi-loci' flag has been set to FALSE for T9SS, T3SS
+and T4SS_typeI models.
 
 ## Directory tree description
 

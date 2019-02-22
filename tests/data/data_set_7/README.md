@@ -2,10 +2,7 @@
 
 ## Base
 
-* gembase.fa
-* ordered_replicon.fa
-* unordered.fa
-* unordered_replicon.fa
+gembase.fa
 
 ## Model
 
