@@ -29,7 +29,7 @@ data_set_9
                          --out-dir=tests/data/data_set_9/results \
                          --relative-path \
                          --sequence-db=tests/data/data_set_9/base/unordered_replicon.fa \
-                         --db-type=gembase \
+                         --db-type=unordered_replicon \
                          --models-dir=tests/data/data_set_9/models \
                          --models set_1 T9SS T3SS T4SS_typeI
 ```

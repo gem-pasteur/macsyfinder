@@ -29,7 +29,7 @@ data_set_10
                          --out-dir=tests/data/data_set_10/results \
                          --relative-path \
                          --sequence-db=tests/data/data_set_10/base/unordered.fa \
-                         --db-type=gembase \
+                         --db-type=unordered \
                          --models-dir=tests/data/data_set_10/models \
                          --models set_1 T9SS T3SS T4SS_typeI
 ```
