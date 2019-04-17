@@ -12,15 +12,13 @@
 ################################################################################
 
 
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
-from macsypy.gene import gene_bank
-from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.gene import GeneBank
+from macsypy.gene import Gene, ProfileFactory
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -40,10 +38,10 @@ class Test(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
 
     def tearDown(self):
-        gene_bank._genes_bank = {}
         try:
             shutil.rmtree(self.cfg.working_dir)
         except:
@@ -51,44 +49,44 @@ class Test(MacsyTest):
 
     def test_add_get_gene(self):
         gene_name = 'sctJ_FLG'
-        self.assertRaises(KeyError, gene_bank.__getitem__, gene_name)
-        system_foo = System(self.cfg, "foo/bar", 10)
-        gene = Gene(self.cfg, gene_name, system_foo, self.models_location)
-        gene_bank.add_gene(gene)
-        gene_from_bank = gene_bank[(self.model_name, gene_name)]
+        self.assertRaises(KeyError, self.gene_bank.__getitem__, gene_name)
+        system_foo = Model(self.cfg, "foo/bar", 10)
+        gene = Gene(self.cfg, self.profile_factory, gene_name, system_foo, self.models_location)
+        self.gene_bank.add_gene(gene)
+        gene_from_bank = self.gene_bank[(self.model_name, gene_name)]
         self.assertTrue(isinstance(gene_from_bank, Gene))
         self.assertEqual(gene_from_bank, gene)
         with self.assertRaises(KeyError) as ctx:
-            gene_bank.add_gene(gene)
+            self.gene_bank.add_gene(gene)
         self.assertEqual(str(ctx.exception),
                          '"a gene named \'{0}/{1}\' is already registered"'.format("foo", gene.name))
 
     def test_contains(self):
-        system_foo = System(self.cfg, "foo/bar", 10)
-        gene_in = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
-        gene_bank.add_gene(gene_in)
-        self.assertIn(gene_in, gene_bank)
-        gene_out = Gene(self.cfg, 'abc', system_foo, self.models_location)
-        self.assertNotIn(gene_out, gene_bank)
+        system_foo = Model(self.cfg, "foo/bar", 10)
+        gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        self.gene_bank.add_gene(gene_in)
+        self.assertIn(gene_in, self.gene_bank)
+        gene_out = Gene(self.cfg, self.profile_factory, 'abc', system_foo, self.models_location)
+        self.assertNotIn(gene_out, self.gene_bank)
 
     def test_iter(self):
-        system_foo = System(self.cfg, "foo/bar", 10)
-        genes = [Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location),
-                 Gene(self.cfg, 'abc', system_foo, self.models_location)]
+        system_foo = Model(self.cfg, "foo/bar", 10)
+        genes = [Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location),
+                 Gene(self.cfg, self.profile_factory, 'abc', system_foo, self.models_location)]
         for g in genes:
-            gene_bank.add_gene(g)
+            self.gene_bank.add_gene(g)
         i = 0
-        for g in gene_bank:
+        for g in self.gene_bank:
             self.assertIn(g, genes)
             i += 1
         self.assertEqual(i, len(genes))
 
 
     def test_get_uniq_object(self):
-        system_foo = System(self.cfg, "foo", 10)
-        gene_in = Gene(self.cfg, 'sctJ_FLG', system_foo, self.models_location)
-        gene_bank.add_gene(gene_in)
-        gene1 = gene_bank[(self.model_name, 'sctJ_FLG')]
-        gene2 = gene_bank[(self.model_name, 'sctJ_FLG')]
+        system_foo = Model(self.cfg, "foo", 10)
+        gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        self.gene_bank.add_gene(gene_in)
+        gene1 = self.gene_bank[(self.model_name, 'sctJ_FLG')]
+        gene2 = self.gene_bank[(self.model_name, 'sctJ_FLG')]
         self.assertEqual(gene1, gene2)
         self.assertIs(gene1, gene2)

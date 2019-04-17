@@ -1,0 +1,17 @@
+#Hit_Id	Replicon_name	Position	Sequence_length	Gene	Reference_system	Predicted_system	System_Id	System_status	Gene_status	i-evalue	Score	Profile_coverage	Sequence_coverage	Begin_match	End_match
+AETU001c01a_004200	Unordered	411	575	T3SS_sctN	T3SS	T3SS        	T3SS_putative	no_decision	mandatory	1.800e-25	87.100	0.560	0.419        	313	553
+AETU001c01a_011540	Unordered	1137	526	T3SS_sctN	T3SS	T3SS        	T3SS_putative	no_decision	mandatory	3.400e-41	138.900	0.657	0.549        	21	309
+AETU001c01a_025650	Unordered	2532	520	T4SS_I_traP	T4SS_typeI	T4SS_typeI        	T4SS_typeI_putative	no_decision	accessory	8.700e-04	16.500	0.544	0.242        	6	131
+AETU001c01a_005140	Unordered	505	235	T9SS_sprT	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	7.500e-103	340.400	1.000	0.996        	1	234
+AETU001c01a_007860	Unordered	773	299	T9SS_gldN_TIGR03523	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	9.800e-80	265.300	0.996	0.990        	4	299
+AETU001c01a_007870	Unordered	774	527	T9SS_gldM_TIGR03517	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	2.400e-130	433.200	0.998	0.991        	1	522
+AETU001c01a_007880	Unordered	775	216	T9SS_gldL_TIGR03513	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	1.800e-66	222.000	1.000	0.949        	8	212
+AETU001c01a_007890	Unordered	776	457	T9SS_gldK_TIGR03525	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	3.700e-254	840.900	0.998	0.978        	1	447
+AETU001c01a_008700	Unordered	857	2410	T9SS_sprA-3_TIGR04189	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	0.000e+00	2859.200	1.000	0.982        	43	2409
+AETU001c01a_011620	Unordered	1145	847	T9SS_sprE	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	2.600e-239	794.000	0.997	0.838        	12	721
+AETU001c01a_015840	Unordered	1562	552	T9SS_gldJ_TIGR03524	T9SS	T9SS        	T9SS_putative	no_decision	accessory	6.300e-260	861.100	0.980	0.993        	5	552
+AETU001c01a_016920	Unordered	1667	557	T9SS_gldJ_TIGR03524	T9SS	T9SS        	T9SS_putative	no_decision	accessory	9.400e-287	949.600	0.996	0.995        	4	557
+AETU001c01a_016930	Unordered	1668	1282	T9SS_porU	T9SS	T9SS        	T9SS_putative	no_decision	accessory	0.000e+00	1396.400	1.000	0.876        	159	1281
+AETU001c01a_016940	Unordered	1669	392	T9SS_porV	T9SS	T9SS        	T9SS_putative	no_decision	mandatory	1.800e-162	538.200	1.000	0.985        	1	386
+AETU001c01a_022180	Unordered	2186	361	T9SS_porQ	T9SS	T9SS        	T9SS_putative	no_decision	accessory	3.400e-23	79.600	0.985	0.950        	12	354
+AETU001c01a_025840	Unordered	2551	339	T9SS_porQ	T9SS	T9SS        	T9SS_putative	no_decision	accessory	1.500e-136	452.300	0.997	0.982        	6	338

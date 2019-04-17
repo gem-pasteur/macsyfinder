@@ -1,6 +1,5 @@
 import os
 import shutil
-import tempfile
 import logging
 from operator import attrgetter
 import argparse
@@ -8,12 +7,13 @@ import argparse
 from macsypy.database import Indexes, RepliconDB
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
-from macsypy.gene import gene_bank
-from macsypy.system import system_bank
-from macsypy.search_systems import system_name_generator, build_clusters, analyze_clusters_replicon
+from macsypy import gene
+from macsypy import model
+from macsypy.search_systems import build_clusters, analyze_clusters_replicon
+from macsypy import search_systems
 from macsypy.search_genes import search_genes
-from macsypy.system_parser import SystemParser
-
+from macsypy.definition_parser import DefinitionParser
+from macsypy.utils import get_models_name_to_detect
 from tests import MacsyTest
 import macsypy
 
@@ -23,8 +23,16 @@ class MacsyTestEnvSnippet(object):
     def __init__(self):
         self.out_dir = None
         self.cfg = None
-        self.system = None
+        self.models = []
         self.all_hits = []
+        self.gene_bank = gene.GeneBank()
+        gene.gene_bank = self.gene_bank
+
+        self.model_bank = model.ModelBank()
+        model.model_bank = self.model_bank
+        search_systems.model_bank = self.model_bank
+
+        self.profile_factory = gene.ProfileFactory()
 
     def build_config(self, **config_opts):
         assert self.out_dir is not None
@@ -51,27 +59,28 @@ class MacsyTestEnvSnippet(object):
         self.cfg = Config(defaults, args)
         idx = Indexes(self.cfg)
         idx.build()
+        self.registry = ModelRegistry(self.cfg)
 
-
-    def build_hits(self, model_fqn="set_1/T9SS", **config_opts):
+    def build_hits(self, models_2_parse=None, **config_opts):
         default_opts = {'previous_run': "tests/data/data_set_1/complete_run_results",
                         'models_dir': "tests/data/data_set_1/models"
                         }
         default_opts.update(config_opts)
         self.build_config(**default_opts)
-        parser = SystemParser(self.cfg, system_bank, gene_bank)
-        parser.parse([model_fqn])
-        self.system = system_bank[model_fqn]
-        genes = self.system.mandatory_genes + self.system.accessory_genes + self.system.forbidden_genes
-
+        parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        if models_2_parse is None:
+            models_2_parse = get_models_name_to_detect(self.cfg.models(), self.registry)
+        parser.parse(models_2_parse)
+        self.models = [self.model_bank[model_fqn] for model_fqn in models_2_parse]
+        genes = []
+        for model in self.models:
+            genes += model.mandatory_genes + model.accessory_genes + model.forbidden_genes
+        genes = list(set(genes))
         ex_genes = []
         for g in genes:
             if g.exchangeable:
-                h_s = g.get_homologs()
-                ex_genes += h_s
-                a_s = g.get_analogs()
-                ex_genes += a_s
-        all_genes = (genes + ex_genes)
+                ex_genes += g.get_homologs() + g.get_analogs()
+        all_genes = genes + ex_genes
         all_reports = search_genes(all_genes, self.cfg)
         all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
@@ -136,7 +145,8 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.defaults = MacsyDefaults()
         self.handlers = []
 
-    def load(self, env_id, log_out=True, log_level=logging.INFO, **cfg_args):
+
+    def load(self, env_id, log_out=True, log_level=logging.ERROR, **cfg_args):
         self.out_dir = MacsyTest.get_tmp_dir_name()
 
         MacsyTest.rmtree(self.out_dir)
@@ -155,45 +165,54 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             self.models_location = models_registry[self.model_name]
 
         elif env_id == "env_002":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
                             **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
-            clusters, multi_syst_genes = build_clusters(self.all_hits, [self.system], self.rep_info)
+            clusters, multi_syst_genes = build_clusters(self.all_hits, self.models, self.rep_info, self.model_bank)
             self.cluster = clusters.clusters[0]
-            systems_occurences_list = analyze_clusters_replicon(clusters, [self.system], multi_syst_genes)
+            systems_occurences_list = analyze_clusters_replicon(clusters, self.models, multi_syst_genes, self.model_bank)
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
                             **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
         elif env_id == "env_004":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run='tests/data/data_set_1/complete_run_results',
                             **cfg_args)
             models_registry = ModelRegistry(self.cfg)
             self.model_name = 'set_1'
             self.models_location = models_registry[self.model_name]
         elif env_id == "env_005":
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run="tests/data/data_set_2/results",
                             models_dir="tests/data/data_set_2/models",
+                            models_2_parse=["set_1/T9SS"],
                             **cfg_args)
         elif env_id == "env_006":
             self.build_config(previous_run="tests/data/data_set_3/results",
                               models_dir="tests/data/data_set_3/models",
+                              model_fqn=["set_1/T9SS"],
                               **cfg_args)
         elif env_id == "env_007":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_hits(previous_run="tests/data/data_set_1/complete_run_results",
                             **cfg_args)
         elif env_id == "env_008":
+            # model_fqn=["set_1/T9SS"] in conf
             self.build_config(previous_run="tests/data/data_set_1/complete_run_results",
                               models_dir="tests/data/data_set_1/models",
                               **cfg_args)
         elif env_id == "env_009":
             self.build_hits(previous_run="tests/data/data_set_3/results",
                             models_dir="tests/data/data_set_3/models",
-                            model_fqn="set_1/T4P",
+                            models_2_parse=["set_1/T4P"],
                             i_evalue_sel=0.5,
                             **cfg_args)
 
@@ -210,17 +229,132 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
             args.models_dir = MacsyTest.find_data('models')
             self.cfg = Config(self.defaults, args)
         elif env_id == "env_011":
+            # db contains AESU + AETU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS
             self.build_hits(previous_run="tests/data/data_set_4/results",
                             models_dir="tests/data/data_set_4/models",
+                            models_2_parse=["set_1/T9SS"],
                             **cfg_args)
         elif env_id == "env_012":
+            # db contains AESU + AETU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS, set1/T3SS, set1/T4SS_typeI in conf
             self.build_hits(previous_run="tests/data/data_set_5/results",
                             models_dir="tests/data/data_set_5/models",
+                            models_2_parse=["set_1/T9SS"],
                             **cfg_args)
         elif env_id == "env_013":
+            # db contains AESU
+            # circular
+            # unordered_replicon
+            # model_fqn set_1/T9SS in conf
             self.build_hits(previous_run="tests/data/data_set_6/results",
                             models_dir="tests/data/data_set_6/models",
+                            models_2_parse=["set_1/T9SS"],
                             **cfg_args)
+
+        # -- ENV USED BY 4X4 TEST MATRIX - BEGIN -- #
+        elif env_id == "env_017":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_018":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'gembase', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_019":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'gembase'})
+            self.build_hits(previous_run="tests/data/data_set_9/results",
+                            models_dir="tests/data/data_set_9/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_020":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'gembase', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_10/results",
+                            models_dir="tests/data/data_set_10/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_021":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_022":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'ordered_replicon', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_023":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'ordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_9/results",
+                            models_dir="tests/data/data_set_9/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_024":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'ordered_replicon', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_10/results",
+                            models_dir="tests/data/data_set_10/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_025":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_026":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered_replicon', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_027":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered_replicon'})
+            self.build_hits(previous_run="tests/data/data_set_9/results",
+                            models_dir="tests/data/data_set_9/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_028":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered_replicon', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_10/results",
+                            models_dir="tests/data/data_set_10/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_029":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_7/results",
+                            models_dir="tests/data/data_set_7/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_030":
+            cfg_args.update({'replicon_topology':'circular', 'db_type':'unordered', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_8/results",
+                            models_dir="tests/data/data_set_8/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_031":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered'})
+            self.build_hits(previous_run="tests/data/data_set_9/results",
+                            models_dir="tests/data/data_set_9/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        elif env_id == "env_032":
+            cfg_args.update({'replicon_topology':'linear', 'db_type':'unordered', 'multi_loci':'T9SS'})
+            self.build_hits(previous_run="tests/data/data_set_10/results",
+                            models_dir="tests/data/data_set_10/models",
+                            models_2_parse=["set_1/T3SS", "set_1/T4SS_typeI", "set_1/T9SS"],
+                            **cfg_args)
+        # -- ENV USED BY 4X4 TEST MATRIX - END -- #
+
         else:
             raise Exception('Test environment not found ({})'.format(env_id))
 
@@ -231,42 +365,18 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         for h in self.handlers:
             logger.removeHandler(h)
 
-        MacsyTest.rmtree(self.cfg.working_dir)
+        MacsyTest.rmtree(self.cfg.working_dir())
 
         # reset global vars
-        system_bank._system_bank = {}
-        gene_bank._genes_bank = {}
-        system_name_generator.name_bank = {}
+        model.model_bank = model.ModelBank()
+        gene.gene_bank = gene.GeneBank()
+        search_systems.system_name_generator = search_systems.SystemNameGenerator()
 
         # environment specific cleanup
-        if env_id == "env_001":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_002":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_003":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_004":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_005":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_006":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_007":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_008":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_009":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_010":
+        if env_id == "env_010":
             pass
-        elif env_id == "env_011":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_012":
-            MacsyTest.rmtree(self.out_dir)
-        elif env_id == "env_013":
-            MacsyTest.rmtree(self.out_dir)
         else:
-            raise Exception('Test environment not found ({})'.format(env_id))
+            MacsyTest.rmtree(self.out_dir)
 
 
 class MacsyEnvManager(object):

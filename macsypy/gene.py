@@ -26,7 +26,9 @@ class GeneBank(object):
     """
     Store all Gene objects. Ensure that genes are instanciated only once.
     """
-    _genes_bank = {}
+
+    def __init__(self):
+        self._genes_bank = {}
 
     def __getitem__(self, key):
         """
@@ -71,7 +73,7 @@ class GeneBank(object):
         :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
-        model_name = registries.split_def_name(gene.system.fqn)[0]
+        model_name = registries.split_def_name(gene.model.fqn)[0]
         key = (model_name, gene.name)
         if key in self._genes_bank:
             raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
@@ -79,7 +81,7 @@ class GeneBank(object):
             self._genes_bank[key] = gene
 
 
-gene_bank = GeneBank()
+#gene_bank = GeneBank()
 
 
 class Gene(object):
@@ -88,8 +90,10 @@ class Gene(object):
 
     """
 
-    def __init__(self, cfg, name,
-                 system,
+    def __init__(self, cfg,
+                 profile_factory,
+                 name,
+                 model,
                  model_location,
                  loner=False,
                  exchangeable=False,
@@ -102,14 +106,14 @@ class Gene(object):
         :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the Gene.
         :type name: string.
-        :param system: the system that owns this Gene
-        :type system: :class:`macsypy.system.System` object.
+        :param model: the model that owns this Gene
+        :type model: :class:`macsypy.model.Model` object.
         :param model_loc: where all the paths profiles and definitions are register for a kind of model.
         :type model_loc: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
-          without any effects on the system assessment, False otherwise.
+          without any effects on the model assessment, False otherwise.
         :type exchangeable: boolean.
         :param multi_system: True if this Gene can belong to different occurrences of this System. 
         :type multi_system: boolean.
@@ -122,7 +126,7 @@ class Gene(object):
 
         self.homologs = []
         self.analogs = []
-        self._system = system
+        self._model = model
         self._loner = loner
         self._exchangeable = exchangeable
         self._multi_system = multi_system
@@ -155,12 +159,12 @@ class Gene(object):
 
 
     @property
-    def system(self):
+    def model(self):
         """
-        :return: the System that owns this Gene
-        :rtype: :class:`macsypy.system.System` object
+        :return: the Model that owns this Gene
+        :rtype: :class:`macsypy.model.Model` object
         """
-        return self._system
+        return self._model
 
 
     @property
@@ -175,7 +179,7 @@ class Gene(object):
     @property
     def exchangeable(self):
         """
-        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the system, False otherwise.
+        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the model, False otherwise.
         :rtype: boolean.
         """
         return self._exchangeable
@@ -200,7 +204,7 @@ class Gene(object):
         if self._inter_gene_max_space is not None:
             return self._inter_gene_max_space
         else:
-            return self._system.inter_gene_max_space
+            return self._model.inter_gene_max_space
 
 
     def add_homolog(self, homolog):
@@ -290,82 +294,77 @@ class Gene(object):
         return False
 
 
-    def is_mandatory(self, system):
+    def is_mandatory(self, model):
         """
-        :return: True if the gene is within the *mandatory* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :return: True if the gene is within the *mandatory* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.mandatory_genes:
+        if self in model.mandatory_genes:
             return True
         else:
             return False
 
 
-    def is_accessory(self, system):
+    def is_accessory(self, model):
         """
-        :return: True if the gene is within the *accessory* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :return: True if the gene is within the *accessory* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.accessory_genes:
+        if self in model.accessory_genes:
             return True
         else:
             return False
 
 
-    def is_forbidden(self, system):
+    def is_forbidden(self, model):
         """
-        :return: True if the gene is within the *forbidden* genes of the system, False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :return: True if the gene is within the *forbidden* genes of the model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in system.forbidden_genes:
+        if self in model.forbidden_genes:
             return True
         else:
             return False
 
 
-    def is_authorized(self, system, include_forbidden=True):
+    def is_authorized(self, model, include_forbidden=True):
         """
-        :return: True if the genes are found in the System definition file (.xml), False otherwise.
-        :param system: the query of the test
-        :type system: :class:`macsypy.system.System` object.
+        :return: True if this gene is found in the Model, False otherwise.
+        :param model: the query of the test
+        :type model: :class:`macsypy.model.Model` object.
         :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
         :type include_forbidden: boolean
         :rtype: boolean.
         """
-        
+        genes = model.mandatory_genes + model.accessory_genes
         if include_forbidden:
-            for m in (system.mandatory_genes+system.accessory_genes+system.forbidden_genes):
-                if self == m:
-                    return True
-                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    return True
-        else:
-            for m in (system.mandatory_genes+system.accessory_genes):
-                if self == m:
-                    return True
-                if (m.exchangeable and m.is_homolog(self)) or (m.exchangeable and m.is_analog(self)):
-                    return True 
+            genes = genes + model.forbidden_genes
+        for g in genes:
+            if self == g:
+                return True
+            if g.exchangeable and (g.is_homolog(self) or g.is_analog(self)):
+                return True
         return False
 
 
-    def get_compatible_systems(self, system_list, include_forbidden=True):
+    def get_compatible_models(self, model_list, include_forbidden=True):
         """
-        Test every system in system_list for compatibility with the gene using the is_authorized function.
+        Test every model in model_list for compatibility with the gene using the is_authorized function.
 
-        :param system_list: a list of system names to test
-        :type system_list: list of strings        
-        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible systems or not
+        :param model_list: a list of model names to test
+        :type model_list: list of strings
+        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible models or not
         :type include_forbidden: boolean
-        :return: the list of compatible systems
-        :rtype: list of :class:`macsypy.system.System` objects, or void list if none compatible
+        :return: the list of compatible models
+        :rtype: list of :class:`macsypy.model.Model` objects, or void list if none compatible
         """
-        compatibles = [s for s in system_list if self.is_authorized(s, include_forbidden)]
+        compatibles = [model for model in model_list if self.is_authorized(model, include_forbidden=include_forbidden)]
         return compatibles
 
 
@@ -451,7 +450,9 @@ class ProfileFactory(object):
     Otherwise a new profile is built, stored in the profile_factory and then returned.
 
     """
-    _profiles = {}
+
+    def __init__(self):
+        self._profiles = {}
 
     def get_profile(self, gene, cfg, model_location):
         """
@@ -477,7 +478,7 @@ class ProfileFactory(object):
         return profile
 
 
-profile_factory = ProfileFactory()
+#profile_factory = ProfileFactory()
 
 
 class Profile(object):
@@ -495,7 +496,7 @@ class Profile(object):
         :param path: the path to the hmm profile.
         :type path: string
         """
-        self.gene = gene 
+        self.gene = gene
         self.path = path
         self.len = self._len()
         self.cfg = cfg 

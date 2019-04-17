@@ -1,0 +1,15 @@
+#Hit_Id	Replicon_name	Position	Sequence_length	Gene	Reference_system	Predicted_system	System_Id	System_status	Gene_status	i-evalue	Score	Profile_coverage	Sequence_coverage	Begin_match	End_match
+ACAV001.B.00001.C001_00845	UserReplicon	2	453	T2SS_gspE	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.500e-181	596.200	1.000	0.830        	5	380
+ACAV001.B.00001.C001_00846	UserReplicon	3	807	T2SS_gspD	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.400e-196	647.300	0.998	0.827        	50	716
+ACAV001.B.00001.C001_00847	UserReplicon	4	270	T2SS_gspN	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	accessory	2.700e-42	138.300	0.991	0.859        	28	259
+ACAV001.B.00001.C001_00848	UserReplicon	5	218	T2SS_gspM	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.700e-13	44.100	0.993	0.592        	23	151
+ACAV001.B.00001.C001_00849	UserReplicon	6	416	T2SS_gspL	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	accessory	1.900e-18	60.200	0.996	0.635        	54	317
+ACAV001.B.00001.C001_00850	UserReplicon	7	343	T2SS_gspK	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	6.700e-45	146.800	0.996	0.778        	5	271
+ACAV001.B.00001.C001_00851	UserReplicon	8	229	T2SS_gspJ	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	5.000e-17	55.700	0.805	0.380        	9	95
+ACAV001.B.00001.C001_00852	UserReplicon	9	131	T2SS_gspI	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.600e-22	73.000	0.881	0.733        	19	114
+ACAV001.B.00001.C001_03560	UserReplicon	99	578	T2SS_gspE	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	4.000e-122	400.600	0.984	0.645        	97	469
+ACAV001.B.00001.C001_03561	UserReplicon	100	405	T2SS_gspF	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.800e-112	369.200	0.992	0.948        	20	403
+ACAV001.B.00001.C001_03562	UserReplicon	101	295	T4P_pilD	T4P	T2SS        	UserReplicon_T2SS_1	multi_loci	accessory	6.300e-86	280.800	1.000	0.902        	14	279
+ACAV001.B.00001.C001_00853	UserReplicon	114	166	T2SS_gspH	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	1.400e-19	63.200	0.529	0.488        	21	101
+ACAV001.B.00001.C001_00854	UserReplicon	115	162	T2SS_gspG	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	mandatory	3.500e-58	188.400	1.000	0.796        	33	161
+ACAV001.B.00001.C001_00855	UserReplicon	116	158	T2SS_gspC	T2SS	T2SS        	UserReplicon_T2SS_1	multi_loci	accessory	1.200e-08	27.800	0.816	0.399        	67	129

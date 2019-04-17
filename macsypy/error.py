@@ -24,9 +24,9 @@ class OptionError(MacsypyError):
     """
     pass
 
-class SystemInconsistencyError(MacsypyError):
+class ModelInconsistencyError(MacsypyError):
     """
-    Raised when a secretion system is not consistent.
+    Raised when a secretion model is not consistent.
     """
     pass
 

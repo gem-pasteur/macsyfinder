@@ -1,0 +1,82 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_7/models/set_1/profiles/T4SS_tcpA.hmm
+# target sequence database:        tests/data/data_set_7/base/gembase.fa
+# output directed to file:         tests/data/data_set_7/results/hmmer_results/T4SS_tcpA.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       tcpA  [M=464]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+    3.1e-11   41.5   0.1    3.7e-10   38.0   0.1    2.4  1  AESU001c01a_030110  
+    3.1e-11   41.5   0.1    3.7e-10   38.0   0.1    2.4  1  AETU001c01a_030110  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_030110  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   38.0   0.1   1.2e-13   3.7e-10     218     394 ..     428     627 ..     414     645 .. 0.69
+
+  Alignments for each domain:
+  == domain 1  score: 38.0 bits;  conditional E-value: 1.2e-13
+                tcpA 218 vvweydklphmliaggtgggktyfiltlieallr....tdavlyvldpknadladletv...........manvyykkedllacidrfyee 293
+                          v +  k+phml+ag tg gk+  + +++ +ll     ++ ++ ++dpk  +l+ ++ +            + +    +++++ ++++  e
+  AESU001c01a_030110 428 FVVDLAKMPHMLMAGATGQGKSVGLNAVLTSLLYkkhpAEVKFVLVDPKKVELTLFNKIerhylaklpdtEEAIITDTNKVINTLNSLCIE 518
+                         5567889**********************99996222234566778***999865554411111110000334555566677777777667 PP
+
+                tcpA 294 mlkrseemk.....kmenykt.......genyaylglpanflifdeyvaflemlgtkesvavlsklkqivmlgrqagfflilacqrpdaky 372
+                         m +r + +k     + ++y+t         n  +  lp  +l++de+  ++ m + ke  + +++l q   l r  g  li+a qrp    
+  AESU001c01a_030110 519 MDARYDLLKdamvrNIKEYNTkfknrklNPNEGHRFLPYIILVIDEFADLI-MTAGKEVETPIARLAQ---LARAIGIHLIVATQRPSVNV 605
+                         766654433111113344544111111156777888999*******98776.5566887777777766...89****************** PP
+
+                tcpA 373 lgdgirdqfnfrvalgrlselg 394
+                         ++  i+ +f  r+a+   s++ 
+  AESU001c01a_030110 606 ITGIIKANFPARIAFRVTSKID 627
+                         *************998777765 PP
+
+>> AETU001c01a_030110  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   38.0   0.1   1.2e-13   3.7e-10     218     394 ..     428     627 ..     414     645 .. 0.69
+
+  Alignments for each domain:
+  == domain 1  score: 38.0 bits;  conditional E-value: 1.2e-13
+                tcpA 218 vvweydklphmliaggtgggktyfiltlieallr....tdavlyvldpknadladletv...........manvyykkedllacidrfyee 293
+                          v +  k+phml+ag tg gk+  + +++ +ll     ++ ++ ++dpk  +l+ ++ +            + +    +++++ ++++  e
+  AETU001c01a_030110 428 FVVDLAKMPHMLMAGATGQGKSVGLNAVLTSLLYkkhpAEVKFVLVDPKKVELTLFNKIerhylaklpdtEEAIITDTNKVINTLNSLCIE 518
+                         5567889**********************99996222234566778***999865554411111110000334555566677777777667 PP
+
+                tcpA 294 mlkrseemk.....kmenykt.......genyaylglpanflifdeyvaflemlgtkesvavlsklkqivmlgrqagfflilacqrpdaky 372
+                         m +r + +k     + ++y+t         n  +  lp  +l++de+  ++ m + ke  + +++l q   l r  g  li+a qrp    
+  AETU001c01a_030110 519 MDARYDLLKdamvrNIKEYNTkfknrklNPNEGHRFLPYIILVIDEFADLI-MTAGKEVETPIARLAQ---LARAIGIHLIVATQRPSVNV 605
+                         766654433111113344544111111156777888999*******98776.5566887777777766...89****************** PP
+
+                tcpA 373 lgdgirdqfnfrvalgrlselg 394
+                         ++  i+ +f  r+a+   s++ 
+  AETU001c01a_030110 606 ITGIIKANFPARIAFRVTSKID 627
+                         *************998777765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (464 nodes)
+Target sequences:                         6280  (2083330 residues searched)
+Passed MSV filter:                       386  (0.061465); expected 125.6 (0.02)
+Passed bias filter:                      148  (0.0235669); expected 125.6 (0.02)
+Passed Vit filter:                        18  (0.00286624); expected 6.3 (0.001)
+Passed Fwd filter:                         2  (0.000318471); expected 0.1 (1e-05)
+Initial search space (Z):               6280  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.11
+# Mc/sec: 8787.86
+//
+[ok]

@@ -1,0 +1,159 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/functional_tests/models/TXSS_ori/profiles/T2SS_gspI.hmm
+# target sequence database:        acav001_T2SS-Ori_T4P-multi.fasta
+# output directed to file:         ordered_linear/hmmer_results/T2SS_gspI.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspI_tcoffee_aln  [M=109]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.3e-22   73.3   0.1    1.6e-22   73.0   0.1    1.0  1  ACAV001.B.00001.C001_00852  
+    1.9e-07   24.6   3.6    3.1e-07   23.8   3.6    1.5  1  ACAV001.B.00001.C001_00851  
+      4e-06   20.3   0.2    5.6e-06   19.8   0.2    1.2  1  ACAV001.B.00001.C001_00853  
+    1.7e-05   18.2   0.2    2.6e-05   17.7   0.2    1.4  1  ACAV001.B.00001.C001_03425  
+    5.1e-05   16.7   1.3    9.2e-05   15.9   1.3    1.4  1  ACAV001.B.00001.C001_03429  
+    7.3e-05   16.2   0.2    0.00011   15.6   0.2    1.5  1  ACAV001.B.00001.C001_00854  
+    0.00015   15.2   0.1    0.00023   14.6   0.1    1.3  1  ACAV001.B.00001.C001_03427  
+     0.0047   10.4   4.5     0.0036   10.8   1.3    2.4  3  ACAV001.B.00001.C001_03428  
+
+
+Domain annotation for each sequence (and alignments):
+>> ACAV001.B.00001.C001_00852  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   73.0   0.1   1.1e-23   1.6e-22       1      96 [.      19     114 ..      19     121 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 73.0 bits;  conditional E-value: 1.1e-23
+            gspI_tcoffee_aln   1 GfTLlEvLvAlaIfalavlavlsavgeslraaerledktlAlwvaenqlaelrlaqaapeagrssgeeevagrewlwrttvss 83 
+                                 GfTL+EvLvAlaI+a+a++a  +a +  +r+a r  d +lA + aen+l + rla ++p+ g s+   e ag +++    v +
+  ACAV001.B.00001.C001_00852  19 GFTLVEVLVALAIVAIALTAGTQATSALARNAARQADVMLAHICAENELVKVRLARQMPSIGDSTVPCEQAGLRYDVAVGVRP 101
+                                 9******************************************************************99************** PP
+
+            gspI_tcoffee_aln  84 tkdpvlrrveiaV 96 
+                                 t++p++rrv+ +V
+  ACAV001.B.00001.C001_00852 102 TPNPQFRRVDAQV 114
+                                 *********9988 PP
+
+>> ACAV001.B.00001.C001_00851  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   23.8   3.6   2.2e-08   3.1e-07       1      79 [.       9      87 ..       9     116 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 23.8 bits;  conditional E-value: 2.2e-08
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaIfalavlavlsavgeslraaerledktlAlwvaenqlaelrlaqaapeagrssgeeevagrewlwrt 79
+                                GfTL+E+LvA+aI++l +l + +   +++ra+e+ +++   l+v e +la+     +a +a  ++   +  g+    ++
+  ACAV001.B.00001.C001_00851  9 GFTLVELLVAIAIMSLLALMSWRGLDGMARAQEQTRARGDELLVVEAALAQWTADLDALQAMDQTTPIDWDGQVLRLTR 87
+                                9**************9999999999***********9998888888888887766666666666555555555555555 PP
+
+>> ACAV001.B.00001.C001_00853  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   19.8   0.2   3.8e-07   5.6e-06       1      52 [.      32      83 ..      32     101 .. 0.87
+
+  Alignments for each domain:
+  == domain 1  score: 19.8 bits;  conditional E-value: 3.8e-07
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaIfalavlavlsavgeslraaerledktlAlwvaenqlael 52
+                                GfTLlE+Lv ++ +a+a ++v  a     ++a + e + lA+++   ++++ 
+  ACAV001.B.00001.C001_00853 32 GFTLLELLVVISLIAIATAGVGFALRDDGQTALQREGERLAALLEAGRAQSR 83
+                                9********************9999999999999999999999877777665 PP
+
+>> ACAV001.B.00001.C001_03425  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   17.7   0.2   1.8e-06   2.6e-05       1      47 [.       9      56 ..       9      82 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 17.7 bits;  conditional E-value: 1.8e-06
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaIfalavlavlsavgeslraaerledkt.lAlwvaen 47
+                                Gf+LlE+++ +aI+++ ++ +  a + s     r +++t lA+++ ++
+  ACAV001.B.00001.C001_03425  9 GFSLLELMIVVAIVGILAAVAYPAYNDSVLKGRRAQARTaLAELMQQQ 56
+                                9**************999988888888888888888775477776554 PP
+
+>> ACAV001.B.00001.C001_03429  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.9   1.3   6.3e-06   9.2e-05       1      53 [.      27      79 ..      27      92 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 15.9 bits;  conditional E-value: 6.3e-06
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaIfalavlavlsavgeslraaerledktlAlwvaenqlaelr 53
+                                GfTL+EvLv + +++  +l+++ + + +l+     + ++ A+ +a+++++ +r
+  ACAV001.B.00001.C001_03429 27 GFTLIEVLVSIVVLSFGILGLVGVQAFALQSTREARLQAQAANLAREMAEMMR 79
+                                9*********************9999999998888888888888888877665 PP
+
+>> ACAV001.B.00001.C001_00854  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.6   0.2   7.7e-06   0.00011       1      21 [.      31      51 ..      31      99 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 15.6 bits;  conditional E-value: 7.7e-06
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaIfalavlav 21
+                                GfTL+E++v l I+++ ++ +
+  ACAV001.B.00001.C001_00854 31 GFTLIELMVVLVIIGVLAALI 51
+                                9*************9765543 PP
+
+>> ACAV001.B.00001.C001_03427  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.6   0.1   1.6e-05   0.00023       2      55 ..       1      54 [.       1      78 [. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 14.6 bits;  conditional E-value: 1.6e-05
+            gspI_tcoffee_aln  2 fTLlEvLvAlaIfalavlavlsavgeslraaerledktlAlwvaenqlaelrla 55
+                                ++L+ vL+ l ++++  +a ++++    r    ++dk +A  +ae +l++++l 
+  ACAV001.B.00001.C001_03427  1 MSLIVVLLILVVVSILGVAGIQISMMGERSTRNDRDKQVAWQSAEAALIDAELD 54
+                                78999*******************9999********************999886 PP
+
+>> ACAV001.B.00001.C001_03428  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   10.8   1.3   0.00025    0.0036       1      25 [.      16      41 ..      16      72 .. 0.66
+   2 ?   -1.8   0.1       1.9        28      79      97 ..     240     258 ..     231     269 .. 0.82
+   3 ?   -1.9   0.0       2.1        31      81     103 ..     323     346 ..     299     348 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 10.8 bits;  conditional E-value: 0.00025
+            gspI_tcoffee_aln  1 GfTLlEvLvAlaI.falavlavlsav 25
+                                G+TL+E++vA+ I + ++++a++s+v
+  ACAV001.B.00001.C001_03428 16 GLTLVELMVAMVIsLLIVLAAAVSLV 41
+                                99*********984233444444443 PP
+
+  == domain 2  score: -1.8 bits;  conditional E-value: 1.9
+            gspI_tcoffee_aln  79 ttvsstkdpvlrrveiaVs 97 
+                                 +tv+s +d  lr+ +i+Vs
+  ACAV001.B.00001.C001_03428 240 STVDSVQDRFLRADQITVS 258
+                                 7899999999999999997 PP
+
+  == domain 3  score: -1.9 bits;  conditional E-value: 2.1
+            gspI_tcoffee_aln  81 vsstkdpvlrr.veiaVslkegra 103
+                                  ++++d+ lr+ v+ +V+l ++++
+  ACAV001.B.00001.C001_03428 323 FTPAADGRLRQvVTFTVHLRNNQR 346
+                                 567788888873578888887776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (109 nodes)
+Target sequences:                          116  (38011 residues searched)
+Passed MSV filter:                        15  (0.12931); expected 2.3 (0.02)
+Passed bias filter:                       13  (0.112069); expected 2.3 (0.02)
+Passed Vit filter:                         9  (0.0775862); expected 0.1 (0.001)
+Passed Fwd filter:                         8  (0.0689655); expected 0.0 (1e-05)
+Initial search space (Z):                116  [actual number of targets]
+Domain search space  (domZ):               8  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

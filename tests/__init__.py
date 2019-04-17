@@ -161,12 +161,13 @@ class MacsyTest(unittest.TestCase):
                 self.assertListEqual(hmm1_fields, hmm2_fields)
 
 
-    def assertJsonEqual(self, json_file_1, json_file_2):
+    def assertJsonEqual(self, json_file_1, json_file_2, max_diff=640):
         with open(json_file_1) as f1:
             j1 = json.load(f1)
         with open(json_file_2) as f2:
             j2 = json.load(f2)
-        self.maxDiff = None
+
+        self.maxDiff = max_diff
         self.assertListEqual(j1, j2)
 
 
@@ -190,12 +191,6 @@ class MacsyTest(unittest.TestCase):
             shutil.rmtree(path)
         except:
             pass
-
-    # @staticmethod
-    # def close_loggers_filehandles():
-    #     logging.shutdown()
-    #     l = logging.getLogger()
-    #     l.manager.loggerDict.clear()
 
     @staticmethod
     def md5sum(file_=None, str_=None):
