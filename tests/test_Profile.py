@@ -20,7 +20,7 @@ import sysconfig
 import argparse
 
 from macsypy.gene import Profile
-from macsypy.gene import Gene
+from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
@@ -46,7 +46,7 @@ class TestProfile(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-
+        self.profile_factory = ProfileFactory()
 
     def tearDown(self):
         try:
@@ -57,7 +57,7 @@ class TestProfile(MacsyTest):
 
     def test_len(self):
         system = Model(self.cfg, "foo/T2SS", 10)
-        gene = Gene(self.cfg, "abc", system, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         self.assertEqual(len(profile), 501)
@@ -65,7 +65,7 @@ class TestProfile(MacsyTest):
 
     def test_str(self):
         system = Model(self.cfg, "foo/T2SS", 10)
-        gene = Gene(self.cfg, "abc", system, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         s = "{0} : {1}".format(gene.name, path)
@@ -77,7 +77,7 @@ class TestProfile(MacsyTest):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
             system = Model(self.cfg, "foo/T2SS", 10)
-            gene = Gene(self.cfg, "abc", system, self.models_location)
+            gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
             profile_path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, profile_path)
             report = profile.execute()
@@ -99,7 +99,7 @@ class TestProfile(MacsyTest):
     def test_execute_unknown_binary(self):
         self.cfg._options['hmmer'] = "Nimportnaoik"
         system = Model(self.cfg, "foo/T2SS", 10)
-        gene = Gene(self.cfg, "abc", system, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         with self.catch_log():
@@ -118,7 +118,7 @@ sys.exit(127)
             os.chmod(hmmer.name, 0o755)
             self.cfg._options['hmmer'] = hmmer.name
             system = Model(self.cfg, "foo/T2SS", 10)
-            gene = Gene(self.cfg, "abc", system, self.models_location)
+            gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, path)
             with self.catch_log():

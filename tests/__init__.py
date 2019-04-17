@@ -166,6 +166,7 @@ class MacsyTest(unittest.TestCase):
             j1 = json.load(f1)
         with open(json_file_2) as f2:
             j2 = json.load(f2)
+
         self.maxDiff = max_diff
         self.assertListEqual(j1, j2)
 

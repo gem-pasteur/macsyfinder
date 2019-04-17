@@ -310,9 +310,9 @@ class ModelRegistry(object):
         :type cfg: :class:`macsypy.config.Config` object
         """
         self._registry = {}
-        models_def_root = cfg.models_dir()
-        for models_type in os.listdir(models_def_root):
-            model_path = os.path.join(models_def_root, models_type)
+        models_root = cfg.models_dir()
+        for models_type in os.listdir(models_root):
+            model_path = os.path.join(models_root, models_type)
             if os.path.isdir(model_path):
                 new_model = ModelLocation(cfg, path=model_path)
                 self._registry[new_model.name] = new_model

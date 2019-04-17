@@ -21,14 +21,15 @@ from tests import MacsyTest
 from tests.macsy_test_env import MacsyEnvManager
 
 
-class TestCircularizeData(object):
+class CircularizeData(object):
     """Helper class used in test_circularize() method."""
 
-    def __init__(self, cfg, models_location, system):
+    def __init__(self, cfg, models_location, system, model_bank, profile_factory):
         self.cfg = cfg
         self.system = system
         self.models_location = models_location
-
+        self.model_bank = model_bank
+        self.profile_factory = profile_factory
         self._hits_group = (None, None, None, None, None, None)
 
     def build_clusters_group(self):
@@ -40,7 +41,8 @@ class TestCircularizeData(object):
 
     def build_hit(self, pos, max_space):
         gene_name = 'T9SS_gldJ_TIGR03524'
-        gene = Gene(self.cfg, gene_name, self.system, self.models_location, inter_gene_max_space=max_space)
+        gene = Gene(self.cfg, self.profile_factory, gene_name, self.system, self.models_location,
+                    inter_gene_max_space=max_space)
         hit = Hit(gene, self.system, None, None, '', pos, None, None, None, None, None, None)
 
         return hit
@@ -58,7 +60,7 @@ class TestCircularizeData(object):
         return [h1, h2, h3]
 
     def build_cluster(self, begin, end):
-        c = Cluster([self.system])
+        c = Cluster([self.system], self.model_bank)
         c.end = end
         c.begin = begin
         c.hits = self.get_hits_group()
@@ -81,7 +83,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_add(self):
         self.load_env("env_002", log_out=False)
         try:
-            ch = ClustersHandler()
+            ch = ClustersHandler(self.macsy_test_env.model_bank)
             cluster = self.macsy_test_env.cluster
 
             ch.replicon_name = None
@@ -106,7 +108,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_str(self):
         self.load_env("env_002", log_out=False)
         try:
-            ch = ClustersHandler()
+            ch = ClustersHandler(self.macsy_test_env.model_bank)
             cluster = self.macsy_test_env.cluster
             ch.add(cluster)
             ch.add(cluster)
@@ -122,8 +124,10 @@ class Test(MacsyTest, MacsyEnvManager):
             t9ss_model = self.macsy_test_env.models[0]
             cfg = self.macsy_test_env.cfg
             models_location = self.macsy_test_env.models_location
-            ch = ClustersHandler()
-            tcd = TestCircularizeData(cfg, models_location, t9ss_model)
+            ch = ClustersHandler(self.macsy_test_env.model_bank)
+            tcd = CircularizeData(cfg, models_location, t9ss_model,
+                                  self.macsy_test_env.model_bank,
+                                  self.macsy_test_env.profile_factory)
 
             # case 1
             tcd.set_hits_group(1, 3, 6, 3, 15, 3)

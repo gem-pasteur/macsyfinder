@@ -32,6 +32,8 @@ class MacsyTestEnvSnippet(object):
         model.model_bank = self.model_bank
         search_systems.model_bank = self.model_bank
 
+        self.profile_factory = gene.ProfileFactory()
+
     def build_config(self, **config_opts):
         assert self.out_dir is not None
 
@@ -65,7 +67,7 @@ class MacsyTestEnvSnippet(object):
                         }
         default_opts.update(config_opts)
         self.build_config(**default_opts)
-        parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank)
+        parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
         if models_2_parse is None:
             models_2_parse = get_models_name_to_detect(self.cfg.models(), self.registry)
         parser.parse(models_2_parse)
@@ -144,7 +146,7 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
         self.handlers = []
 
 
-    def load(self, env_id, log_out=True, log_level=logging.INFO, **cfg_args):
+    def load(self, env_id, log_out=True, log_level=logging.ERROR, **cfg_args):
         self.out_dir = MacsyTest.get_tmp_dir_name()
 
         MacsyTest.rmtree(self.out_dir)
@@ -168,9 +170,9 @@ class MacsyTestEnv(MacsyTestEnvSnippet):
                             **cfg_args)
             rep_db = RepliconDB(self.cfg)
             self.rep_info = rep_db['AESU001c01a']
-            clusters, multi_syst_genes = build_clusters(self.all_hits, self.models, self.rep_info)
+            clusters, multi_syst_genes = build_clusters(self.all_hits, self.models, self.rep_info, self.model_bank)
             self.cluster = clusters.clusters[0]
-            systems_occurences_list = analyze_clusters_replicon(clusters, self.models, multi_syst_genes)
+            systems_occurences_list = analyze_clusters_replicon(clusters, self.models, multi_syst_genes, self.model_bank)
             self.system_occurence = systems_occurences_list[0]
 
         elif env_id == "env_003":

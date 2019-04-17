@@ -14,11 +14,9 @@
 
 from operator import attrgetter
 from macsypy import model
-from macsypy.gene import gene_bank
 from macsypy.report import Hit
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_systems import Cluster
-from macsypy import search_systems
 from macsypy.search_genes import search_genes
 from macsypy.error import SystemDetectionError
 from tests import MacsyTest
@@ -37,7 +35,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_001", log_out=False)
 
         system = model.Model(self.macsy_test_env.cfg, 'foo', 10)
-        cluster = Cluster(system)
+        cluster = Cluster(system, self.macsy_test_env.model_bank)
         li = [None] * 12
         hit = Hit(*li)
         cluster.hits = [hit]
@@ -50,7 +48,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
         model_name = 'set_1/T9SS'
         t9ss_model = model.Model(self.macsy_test_env.cfg, model_name, 10)
-        cluster = Cluster(t9ss_model)
+        cluster = Cluster(t9ss_model, self.macsy_test_env.model_bank)
         cluster._putative_system = model_name
         self.assertEqual(cluster.putative_system, model_name)
 
@@ -60,7 +58,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_001", log_out=False)
 
         t9ss_model = model.Model(self.macsy_test_env.cfg, 'set_1/T9SS', 10)
-        cluster = Cluster(t9ss_model)
+        cluster = Cluster(t9ss_model, self.macsy_test_env.model_bank)
         compatible_system_name = 'set_1/T2SS'
         cluster._compatible_systems.append(compatible_system_name)
         self.assertListEqual(cluster.compatible_systems, [compatible_system_name])
@@ -71,7 +69,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_001", log_out=False)
 
         system = model.Model(self.macsy_test_env.cfg, 'foo', 4)
-        cluster = Cluster(system)
+        cluster = Cluster(system, self.macsy_test_env.model_bank)
         state = cluster.state
         self.assertEqual(state, '')
 
@@ -82,7 +80,7 @@ class Test(MacsyTest, MacsyEnvManager):
 
         h1, h2, h3 = self.macsy_test_env.all_hits[:3]
         t9ss_model = self.macsy_test_env.models[0]
-        cluster = Cluster([t9ss_model])
+        cluster = Cluster([t9ss_model], self.macsy_test_env.model_bank)
         cluster.add(h1)
         self.assertEqual(cluster.begin, 505)
         self.assertEqual(cluster.end, 505)
@@ -123,13 +121,14 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_008", log_out=False)
         model_bank = self.macsy_test_env.model_bank
         gene_bank = self.macsy_test_env.gene_bank
-        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank)
+        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank,
+                                  self.macsy_test_env.profile_factory)
         parser.parse(['set_1/T9SS'])
         model_1 = model_bank['set_1/T9SS']
         all_hits_1 = get_hits(model_1)
 
         # test case 1
-        cluster = Cluster([model_1])
+        cluster = Cluster([model_1], model_bank)
         for h in all_hits_1:
             cluster.add(h)
         cluster.save()
@@ -139,7 +138,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.assertEqual(cluster._state, 'clear')
 
         # test case 2
-        cluster = Cluster([model_1])
+        cluster = Cluster([model_1], self.macsy_test_env.model_bank)
         cluster.add(all_hits_1[0])
         cluster.hits[0].gene._loner = False
         cluster.save()
@@ -153,7 +152,7 @@ class Test(MacsyTest, MacsyEnvManager):
         parser.parse([fqn])
         model_2 = model_bank[fqn]
         all_hits_2 = get_hits(model_2)
-        cluster = Cluster([model_1, model_2])
+        cluster = Cluster([model_1, model_2], self.macsy_test_env.model_bank)
         for h in all_hits_1 + all_hits_2:
             cluster.add(h)
         cluster.save()
@@ -168,7 +167,7 @@ class Test(MacsyTest, MacsyEnvManager):
         self.load_env("env_006", log_out=False)
         model_bank = self.macsy_test_env.model_bank
         gene_bank = self.macsy_test_env.gene_bank
-        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank)
+        parser = DefinitionParser(self.macsy_test_env.cfg, model_bank, gene_bank, self.macsy_test_env.profile_factory)
         fqn_1 = 'set_1/T2SS'
         fqn_2 = 'set_1/T4P'
         parser.parse([fqn_1, fqn_2])
@@ -183,7 +182,7 @@ class Test(MacsyTest, MacsyEnvManager):
                 if h.id not in hits:
                     hits[h.id] = h
 
-        cluster = Cluster([model_1, model_2])
+        cluster = Cluster([model_1, model_2], self.macsy_test_env.model_bank)
         for h in hits.values():
             cluster.add(h)
         cluster.save()
