@@ -20,6 +20,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import Gene, Homolog, Analog, ProfileFactory
+from macsypy.report import Hit
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
@@ -309,4 +310,37 @@ sctC
         zzz = Model(self.cfg, "zzz", 10)
         self.assertGreater(zzz, aaa)
 
+    def test_filter(self):
+        model_fqn = "foo/bar"
+        model = Model(self.cfg, model_fqn, 10)
+        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(sctJ_FLG)
+        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
+        homolog = Homolog(sctJ, sctJ_FLG)
+        sctJ_FLG.add_homolog(homolog)
 
+        sctN_FLG = Gene(self.cfg, self.profile_factory, 'sctN_FLG', model, self.models_location)
+        model.add_accessory_gene(sctN_FLG)
+        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model, self.models_location)
+        analog = Analog(sctN, sctN_FLG)
+        sctN_FLG.add_analog(analog)
+        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model, self.models_location)
+        model.add_forbidden_gene(sctC)
+
+        hit_to_keep = []
+        for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC):
+            hit_to_keep.append(Hit(gene, model,
+                                   "PSAE001c01_{}".format(gene.name),
+                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                               )
+        hit_to_filter_out = []
+        other_model = Model(self.cfg, "foo/T2SS", 10)
+        gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        hit_to_filter_out.append(Hit(gene, other_model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+                                     float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+                                 )
+        hit_to_filter_out.append(Hit(gene, other_model, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
+                                     float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+                                 )
+        filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
+        self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
