@@ -81,7 +81,7 @@ class GeneBank(object):
             self._genes_bank[key] = gene
 
 
-gene_bank = GeneBank()
+#gene_bank = GeneBank()
 
 
 class Gene(object):
@@ -90,7 +90,9 @@ class Gene(object):
 
     """
 
-    def __init__(self, cfg, name,
+    def __init__(self, cfg,
+                 profile_factory,
+                 name,
                  model,
                  model_location,
                  loner=False,
@@ -448,7 +450,9 @@ class ProfileFactory(object):
     Otherwise a new profile is built, stored in the profile_factory and then returned.
 
     """
-    _profiles = {}
+
+    def __init__(self):
+        self._profiles = {}
 
     def get_profile(self, gene, cfg, model_location):
         """
@@ -474,7 +478,7 @@ class ProfileFactory(object):
         return profile
 
 
-profile_factory = ProfileFactory()
+#profile_factory = ProfileFactory()
 
 
 class Profile(object):
@@ -492,7 +496,7 @@ class Profile(object):
         :param path: the path to the hmm profile.
         :type path: string
         """
-        self.gene = gene 
+        self.gene = gene
         self.path = path
         self.len = self._len()
         self.cfg = cfg 

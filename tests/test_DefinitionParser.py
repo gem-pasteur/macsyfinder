@@ -19,7 +19,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
-from macsypy.gene import GeneBank
+from macsypy.gene import GeneBank, ProfileFactory
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
 from tests import MacsyTest
@@ -37,10 +37,9 @@ class TestModelParser(MacsyTest):
 
         self.cfg = Config(defaults, args)
         self.model_bank = ModelBank()
-        self.model_bank._model_bank = {}
         self.gene_bank = GeneBank()
-        self.gene_bank._genes_bank = {}
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank)
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
         
         
     def tearDown(self):

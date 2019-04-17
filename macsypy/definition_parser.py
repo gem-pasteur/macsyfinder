@@ -28,7 +28,7 @@ class DefinitionParser(object):
     Build a Model instance from the corresponding model definition described in the XML file.
     """
 
-    def __init__(self, cfg, model_bank, gene_bank):
+    def __init__(self, cfg, model_bank, gene_bank, profile_factory):
         """
         :param cfg: the configuration object of this run
         :type cfg: :class:`macsypy.config.Config` object
@@ -40,6 +40,7 @@ class DefinitionParser(object):
         self.cfg = cfg
         self.model_bank = model_bank
         self.gene_bank = gene_bank
+        self.profile_factory = profile_factory
         self.model_registry = ModelRegistry(cfg)
 
 
@@ -209,7 +210,7 @@ class DefinitionParser(object):
                 attrs['inter_gene_max_space'] = inter_gene_max_space
             model_name = split_def_name(model.fqn)[0]
             model_location = self.model_registry[model_name]
-            new_gene = Gene(self.cfg, name, model, model_location, **attrs)
+            new_gene = Gene(self.cfg, self.profile_factory, name, model, model_location, **attrs)
             genes.append(new_gene)
             created_genes.add(new_gene.name)
         return genes
@@ -443,8 +444,12 @@ class DefinitionParser(object):
             self.model_bank.add_model(model)
             genes = self._create_genes(model, model_node)
             for g in genes:
-                self.gene_bank.add_gene(g)
-
+                try:
+                    self.gene_bank.add_gene(g)
+                except KeyError as err:
+                    msg = "gene '{}' define in '{}' model is already defined in an another model".format(g.name, def_fqn)
+                    _log.error(msg)
+                    raise MacsypyError(msg)
 
         # Now, all model definition related (e.g. via system_ref) to the one to detect are filled appropriately.
         for def_fqn in defs_2_parse:

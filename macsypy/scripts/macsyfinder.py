@@ -29,8 +29,8 @@ from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes
 from macsypy.search_systems import search_systems
-from macsypy.model import model_bank
-from macsypy.gene import gene_bank
+#from macsypy.model import model_bank
+#from macsypy.gene import gene_bank, profile_factory
 from macsypy.error import OptionError
 from macsypy.utils import get_models_name_to_detect
 
@@ -290,11 +290,11 @@ def parse_args(args):
     # by developers to generate portable data set, as for example test
     # data set, which are used on many different machines (using previous-run option).
 
-    parsed_args = parser.parse_args()
+    parsed_args = parser.parse_args(args)
     return parsed_args
 
 
-def main_search_systems(config, logger):
+def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
 
     :param parsed_args: the command line arguments
@@ -304,14 +304,13 @@ def main_search_systems(config, logger):
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
-
     registry = ModelRegistry(config)
     # build indexes
     idx = Indexes(config)
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank)
+    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory)
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
     except KeyError as err:
@@ -358,12 +357,12 @@ def main_search_systems(config, logger):
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
-        search_systems(all_hits, models_to_detect, config)
+        search_systems(all_hits, models_to_detect, config, model_bank)
     else:
         logger.info("No hits found in this dataset.")
 
 
-def main(args=None, loglevel=None):
+def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
     """
     main entry point to integron_finder
 
@@ -380,7 +379,6 @@ def main(args=None, loglevel=None):
     ###########################
     # creation of working dir
     ###########################
-
     working_dir = config.working_dir()
     if not os.path.exists(working_dir):
         os.makedirs(working_dir)
@@ -405,7 +403,6 @@ def main(args=None, loglevel=None):
 
     logger = logging.getLogger('macsypy.macsyfinder')
 
-
     if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stdout)
         sys.exit(0)
@@ -416,12 +413,18 @@ def main(args=None, loglevel=None):
             raise OptionError("argument --sequence-db is required.")
         if not parsed_args.previous_run and not parsed_args.db_type:
             raise OptionError("argument --db-type is required.")
-
-        main_search_systems(config, logger)
+        _log.info("command used: {}".format(' '.join(sys.argv)))
+        if models is None:
+            models = macsypy.model.ModelBank()
+        if genes is None:
+            genes = macsypy.gene.GeneBank()
+        if profiles is None:
+            profiles = macsypy.gene.ProfileFactory()
+        main_search_systems(config, models, genes, profiles, logger)
     logger.debug("END")
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     main()
 
 

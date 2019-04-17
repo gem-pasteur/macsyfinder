@@ -23,7 +23,7 @@ import functools
 
 from .error import MacsypyError, SystemDetectionError
 from .database import RepliconDB
-from .model import model_bank
+#from .model import model_bank
 
 _log = logging.getLogger(__name__)
 
@@ -33,13 +33,14 @@ class ClustersHandler(object):
     Deals with sets of clusters found in a dataset. Conceived to store only clusters from a same replicon.
     """
 
-    def __init__(self):
+    def __init__(self, model_bank):
         """
         :param cfg: The configuration object built from default and user parameters.
         :type cfg: :class:`macsypy.config.Config` 
         """
         self.clusters = []
         self.replicon_name = ""
+        self.model_bank = model_bank
 
     def add(self, cluster):
         if not self.replicon_name:
@@ -106,7 +107,7 @@ class ClustersHandler(object):
 
                     msg += "--- Two hits at both ends of the replicon form a new cluster.\n"
 
-                    new_clust = Cluster(models_to_detect)
+                    new_clust = Cluster(models_to_detect, self.model_bank)
                     new_clust.add(second)
                     new_clust.add(first)
                     new_clust.save()
@@ -130,7 +131,7 @@ class ClustersHandler(object):
                             msg += "--- A hit is at the TERMINAL end of the replicon," \
                                    " and must be clustered with the 1st stored cluster.\n"
 
-                            new_clust = Cluster(models_to_detect)
+                            new_clust = Cluster(models_to_detect, self.model_bank)
                             new_clust.add(h)
                             for hit_clust in clust_first.hits:
                                 new_clust.add(hit_clust)
@@ -180,7 +181,6 @@ class ClustersHandler(object):
         _log.info(msg)
 
 
-
 class Cluster(object):
     """
     Stores a set of contiguous hits. The Cluster object can have different states regarding 
@@ -192,7 +192,7 @@ class Cluster(object):
 
     """
 
-    def __init__(self, models_to_detect):
+    def __init__(self, models_to_detect, model_bank):
         """
         :param models_to_detect: the list of systems to be detected in this run
         :type models_to_detect: a list of :class:`macsypy.model.Model`
@@ -206,6 +206,7 @@ class Cluster(object):
         self._state = ""
         self._putative_system = ""
         self._compatible_systems = []  # NEW!
+        self.model_bank = model_bank
 
 
     def __len__(self):
@@ -371,7 +372,7 @@ class Cluster(object):
                             # Exclude the consideration of "forbidden" genes !
                             # if h.gene.is_authorized(model_bank[putative_system], False): # tmp before nope
                             # No! forbidden genes that are defined in system have to be considered!
-                            if h.gene.is_authorized(model_bank[putative_system], True):
+                            if h.gene.is_authorized(self.model_bank[putative_system], True):
                                 auth += 1
                             if auth == len(hits):
                                 state = "clear"
@@ -1122,7 +1123,7 @@ class validSystemHit(object):
 
 class systemDetectionReport(object, metaclass=abc.ABCMeta):
 
-    def __init__(self, systems_occurrences_list, cfg):
+    def __init__(self, systems_occurrences_list, cfg, model_bank):
         self._systems_occurrences_list = systems_occurrences_list
         self.cfg = cfg
         if 'MACSY_DEBUG' in os.environ and os.environ['MACSY_DEBUG']:
@@ -1130,6 +1131,7 @@ class systemDetectionReport(object, metaclass=abc.ABCMeta):
         else:
             self._indent = None  # improve performance of txssview
         self.json_file_name = 'results.macsyfinder.json'
+        self.model_bank = model_bank
 
 
     @abc.abstractmethod
@@ -1186,14 +1188,14 @@ class systemDetectionReportOrdered(systemDetectionReport):
     """
 
 
-    def __init__(self, replicon_name, systems_occurrences_list, cfg):
+    def __init__(self, replicon_name, systems_occurrences_list, cfg, model_bank):
         """
         :param replicon_name: the name of the replicon
         :type replicon_name: string
         :param systems_occurrences_list: the list of system's occurrences to consider
         :type systems_occurrences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
-        super(systemDetectionReportOrdered, self).__init__(systems_occurrences_list, cfg)
+        super(systemDetectionReportOrdered, self).__init__(systems_occurrences_list, cfg, model_bank)
         self.replicon_name = replicon_name
 
 
@@ -1433,12 +1435,12 @@ class systemDetectionReportUnordered(systemDetectionReport):
 
     """
 
-    def __init__(self, systems_occurrences_list, cfg):
+    def __init__(self, systems_occurrences_list, cfg, model_bank):
         """
         :param systems_occurrences_list: the list of system's occurrences to consider
         :type systems_occurrences_list: list of :class:`macsypy.search_systems.SystemOccurence`
         """
-        super(systemDetectionReportUnordered, self).__init__(systems_occurrences_list, cfg)
+        super(systemDetectionReportUnordered, self).__init__(systems_occurrences_list, cfg, model_bank)
 
 
 
@@ -1593,7 +1595,7 @@ def get_compatible_systems(systems_list1, systems_list2):
     return inter
 
 
-def disambiguate_cluster(cluster):
+def disambiguate_cluster(cluster, model_bank):
     """
     This disambiguation step is used on clusters with hits for multiple systems
     (when cluster.state is set to "ambiguous"). It returns a "cleansed" list of clusters,
@@ -1614,7 +1616,7 @@ def disambiguate_cluster(cluster):
 
     _log.info("Disambiguation step:")
 
-    cur_cluster = Cluster(cluster.models_to_detect) # New
+    cur_cluster = Cluster(cluster.models_to_detect, model_bank) # New
     cur_cluster.add(cluster.hits[0])
     # Now more complex, deals with compatible systems also for disambiguation.
     cur_compatible = cluster.hits[0].gene.get_compatible_models(cluster.models_to_detect, include_forbidden=True)
@@ -1658,7 +1660,7 @@ def disambiguate_cluster(cluster):
                             counter_genes_compat_systems[syst.fqn] += 1
             cur_compatible = compatible_systems
             #print [syst.name for syst in cur_compatible]            
-            cur_cluster = Cluster(cluster.models_to_detect) # NEW
+            cur_cluster = Cluster(cluster.models_to_detect, model_bank) # NEW
             cur_cluster.add(h)
 
     cur_cluster.save()         
@@ -1717,7 +1719,7 @@ def disambiguate_cluster(cluster):
     return real_res
 
 
-def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
+def analyze_clusters_replicon(clusters, systems, multi_systems_genes, model_bank):
     """
     Analyzes sets of contiguous hits (clusters) stored in a ClustersHandler for system detection:
 
@@ -1806,7 +1808,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
             # - split the cluster in two if it seems that two systems are nearby
             # - remove single hits that are not forbidden for the "main" system and that are at one end of the current cluster
             # in this case, check that they are not "loners", cause "loners" can be stored.
-            disamb_clusters = disambiguate_cluster(clust)
+            disamb_clusters = disambiguate_cluster(clust, model_bank)
             # Add those new clusters to the set of clusters to fill system_occurrences?
             for c in disamb_clusters:
                 clusters.add(c)
@@ -1838,7 +1840,7 @@ def analyze_clusters_replicon(clusters, systems, multi_systems_genes):
     return systems_occurences_list
 
 
-def build_clusters(hits, systems_to_detect, rep_info):
+def build_clusters(hits, systems_to_detect, rep_info, model_bank):
     """
     Gets sets of contiguous hits according to the minimal inter_gene_max_space between two genes. Only for \"ordered\" datasets.
 
@@ -1857,9 +1859,9 @@ def build_clusters(hits, systems_to_detect, rep_info):
     _log.debug("Starting cluster detection with build_clusters... ")
 
     # Deals with different dataset types using Pipeline ??
-    clusters = ClustersHandler()
+    clusters = ClustersHandler(model_bank)
     prev = hits[0]
-    cur_cluster = Cluster(systems_to_detect)
+    cur_cluster = Cluster(systems_to_detect, model_bank)
     positions = []
     loner_state = False
 
@@ -1910,7 +1912,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 # This calls the save() function of the Cluster()
                 clusters.add(cur_cluster) # Add an in-depth copy of the object?
 
-                cur_cluster = Cluster(systems_to_detect)
+                cur_cluster = Cluster(systems_to_detect, model_bank)
                 loner_state = False
 
             elif len(cur_cluster) == 1 and loner_state is True: # WTF?
@@ -1920,7 +1922,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                 #print "PREVLONER {0} {1}".format(prev.id, prev.gene.name)
                 clusters.add(cur_cluster) # Add an in-depth copy of the object?
 
-                cur_cluster = Cluster(systems_to_detect)
+                cur_cluster = Cluster(systems_to_detect, model_bank)
                 loner_state = False
 
             if prev.gene.loner:
@@ -1942,7 +1944,7 @@ def build_clusters(hits, systems_to_detect, rep_info):
                     positions.append(prev.position)
                     loner_state = False
 
-            cur_cluster = Cluster(systems_to_detect)
+            cur_cluster = Cluster(systems_to_detect, model_bank)
 
         prev = cur
         #print "Now prev is {0}".format(prev.gene.name)
@@ -2034,7 +2036,7 @@ def get_best_hits(hits, tosort=False, criterion="score"):
     return best_hits
 
 
-def search_systems(hits, systems, cfg):
+def search_systems(hits, systems, cfg, model_bank):
     """
     Runs search of systems from a set of hits. Criteria for system assessment will depend on the kind of input dataset provided: 
 
@@ -2085,15 +2087,15 @@ def search_systems(hits, systems, cfg):
             sub_hits = list(g)
             rep_info = rep_db[k]
             # The following applies to any "replicon"
-            clusters, multi_syst_genes = build_clusters(sub_hits, systems, rep_info)
+            clusters, multi_syst_genes = build_clusters(sub_hits, systems, rep_info, model_bank)
             _log.info("\n************************************\n Analyzing clusters for {0} \n************************************".format(k))
             # Make analyze_clusters_replicon return an object systemOccurenceReport?
             # Note: at this stage, ther is no control of which systems are looked for... But systemsOccurrence do not have to be created for systems not searched. 
             # 
-            systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)
+            systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes, model_bank)
             _log.info("******************************************")
             _log.info("Building reports for {0}: \n".format(k))
-            report = systemDetectionReportOrdered(k, systems_occurences_list, cfg)
+            report = systemDetectionReportOrdered(k, systems_occurences_list, cfg, model_bank)
 
             # TO DO: Add replicons with no hits in tabulated_output!!! But where?! No trace of these replicons as replicons are taken from hits. 
             report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
@@ -2124,17 +2126,17 @@ def search_systems(hits, systems, cfg):
         rep_info = rep_db[RepliconDB.ordered_replicon_name]
 
         #(clusters, multi_syst_genes) = build_clusters(hits, rep_info)
-        (clusters, multi_syst_genes) = build_clusters(hits, systems, rep_info)
+        (clusters, multi_syst_genes) = build_clusters(hits, systems, rep_info, model_bank)
         #for syst in multi_syst_genes:
         #    for g in multi_syst_genes[syst]:
         #        print g
         _log.info("\n************************************\n Analyzing clusters \n************************************\n")
         #systems_occurences_list = analyze_clusters_replicon(clusters, systems)
-        systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes)
+        systems_occurences_list = analyze_clusters_replicon(clusters, systems, multi_syst_genes, model_bank)
         _log.info("******************************************")
         #print "Reporting detected systems : \n"
         _log.info("Building reports of detected systems\n ")
-        report = systemDetectionReportOrdered(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg)
+        report = systemDetectionReportOrdered(RepliconDB.ordered_replicon_name, systems_occurences_list, cfg, model_bank)
         report.tabulated_output(system_occurences_states, system_names, tabfilename, header_print)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, rep_info, header_print)
@@ -2179,7 +2181,7 @@ def search_systems(hits, systems, cfg):
         _log.info("******************************************")
         _log.info("Building reports of detected systems ")
         #report = systemDetectionReportUnordered(systems_occurences_list, systems)
-        report = systemDetectionReportUnordered(systems_occurences_list, cfg)
+        report = systemDetectionReportUnordered(systems_occurences_list, cfg,  model_bank)
         report.report_output(reportfilename, header_print)
         report.summary_output(summaryfilename, header_print)
         json_path = os.path.join(cfg.working_dir(), report.json_file_name)

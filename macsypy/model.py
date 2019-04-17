@@ -85,7 +85,7 @@ class ModelBank(object):
             self._model_bank[model.fqn] = model
 
 
-model_bank = ModelBank()
+#model_bank = ModelBank()
 
 
 class Model(object):
