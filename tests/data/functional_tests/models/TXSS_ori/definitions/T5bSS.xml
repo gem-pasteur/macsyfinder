@@ -1,0 +1,3 @@
+<system inter_gene_max_space="1">
+    <gene name="T5bSS_translocator" presence="mandatory" loner="1"/>
+</system>

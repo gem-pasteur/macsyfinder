@@ -1,0 +1,15 @@
+<system inter_gene_max_space="20" min_mandatory_genes_required="8" min_genes_required="8" multi_loci="1">
+<gene name="T6SSiii_tssB" presence="mandatory" />
+<gene name="T6SSiii_tssC" presence="mandatory" />
+<gene name="T6SSiii_tssD" presence="mandatory" loner="1"/>
+<gene name="T6SSiii_tssE" presence="mandatory" />
+<gene name="T6SSiii_tssF" presence="mandatory" />
+<gene name="T6SSiii_tssG" presence="mandatory" />
+<gene name="T6SSiii_tssH" presence="mandatory" />
+<gene name="T6SSiii_tssI" presence="mandatory" loner="1"/>
+<gene name="T6SSiii_tssK" presence="mandatory" />
+<gene name="T6SSiii_tssN" presence="mandatory" />
+<gene name="T6SSiii_tssP" presence="mandatory" />
+<gene name="T6SSiii_tssQ" presence="mandatory" />
+
+</system>

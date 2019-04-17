@@ -1,0 +1,85 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/functional_tests/models/TXSS_modified/profiles/T4P_pilI_pilV.hmm
+# target sequence database:        acav001_T2SS-Ori_T4P-multi.fasta
+# output directed to file:         T4P_ordered_linear_multi_loci/hmmer_results/T4P_pilI_pilV.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilI_pilV.tab.seqid  [M=171]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.8e-28   92.7   0.4    2.2e-28   92.4   0.4    1.1  1  ACAV001.B.00001.C001_03429  
+      6e-05   16.1   0.1    9.2e-05   15.5   0.1    1.4  1  ACAV001.B.00001.C001_03428  
+    0.00023   14.2   3.4    0.00032   13.7   3.4    1.5  1  ACAV001.B.00001.C001_00852  
+
+
+Domain annotation for each sequence (and alignments):
+>> ACAV001.B.00001.C001_03429  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   92.4   0.4   5.7e-30   2.2e-28       1     162 [.      27     194 ..      27     204 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 92.4 bits;  conditional E-value: 5.7e-30
+         pilI_pilV.tab.seqid   1 GltliEvLvavlilaigvLgllslllksvqstreaeerakasllaqnllerlranp.....sdsakaaYavktga....atts 74 
+                                 G+tliEvLv++++l+ g+Lgl+++++ + qstrea  +a+a+ la +++e +r n+     sd + + Y ++ +     at s
+  ACAV001.B.00001.C001_03429  27 GFTLIEVLVSIVVLSFGILGLVGVQAFALQSTREARLQAQAANLAREMAEMMRGNNqigikSDASLNPYLINLQSplspATPS 109
+                                 9******************************************************9999999999999*99999977766666 PP
+
+         pilI_pilV.tab.seqid  75 ttlsaggtdfpdasaacaaknalveadLkewseelknalpgaagvivsdyavcrsssgfssncd.nka..ndilevkvaWvgl 154
+                                   l+  +++   + +++a    +++a+L+ w + l +alpga+ vi+ d a + s+    +nc  ++a  +++ ++k++W   
+  ACAV001.B.00001.C001_03429 110 YCLGVASSSA--CADGTA----VARAELTDWLTRLDAALPGARVVICFDKAPYDSNGMPQWNCTaGTAgvDEVAVIKIGWTRK 186
+                                 6666555555..555555....99*******************************99889***735666678999*****997 PP
+
+         pilI_pilV.tab.seqid 155 skadsgas 162
+                                 s    +a+
+  ACAV001.B.00001.C001_03429 187 STLRASAT 194
+                                 76555544 PP
+
+>> ACAV001.B.00001.C001_03428  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.5   0.1   2.4e-06   9.2e-05       1      66 [.      16      86 ..      16     160 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 15.5 bits;  conditional E-value: 2.4e-06
+         pilI_pilV.tab.seqid  1 GltliEvLvavlilaigvLgll.sll.lk.svqstreaeerakasllaqnllerlranp..sdsakaaYav 66
+                                Gltl+E +va++i +  vL+++ sl+ ++   + +  a++    +   +++++rl +     d+  aaY+ 
+  ACAV001.B.00001.C001_03428 16 GLTLVELMVAMVISLLIVLAAAvSLVvARqGFNNVDAASQLRDNARFVEDMVQRLGVQAgyRDLFHAAYDE 86
+                                9************88888876525441331455666777778889999*******9998445666777764 PP
+
+>> ACAV001.B.00001.C001_00852  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   13.7   3.4   8.2e-06   0.00032       1      26 [.      19      42 ..      19     118 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 13.7 bits;  conditional E-value: 8.2e-06
+         pilI_pilV.tab.seqid  1 GltliEvLvavlilaigvLgllslll 26
+                                G+tl+EvLva+ i+ai++ +  + ++
+  ACAV001.B.00001.C001_00852 19 GFTLVEVLVALAIVAIALTA--GTQA 42
+                                9***************9865..3333 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (171 nodes)
+Target sequences:                          116  (38011 residues searched)
+Passed MSV filter:                        12  (0.103448); expected 2.3 (0.02)
+Passed bias filter:                       11  (0.0948276); expected 2.3 (0.02)
+Passed Vit filter:                         8  (0.0689655); expected 0.1 (0.001)
+Passed Fwd filter:                         3  (0.0258621); expected 0.0 (1e-05)
+Initial search space (Z):                116  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

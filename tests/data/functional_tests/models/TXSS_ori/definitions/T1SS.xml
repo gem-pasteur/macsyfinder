@@ -1,0 +1,5 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="3" min_genes_required="3">
+    <gene name="T1SS_abc" presence="mandatory"/>
+    <gene name="T1SS_mfp" presence="mandatory"/>
+    <gene name="T1SS_omf" presence="mandatory" loner="1" multi_system="1"/>
+</system>
