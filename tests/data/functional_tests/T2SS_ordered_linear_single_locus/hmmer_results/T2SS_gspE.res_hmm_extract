@@ -1,0 +1,8 @@
+# gene: T2SS_gspE extract from ordered_linear_single_locus/hmmer_results/T2SS_gspE.search_hmm.out hmm output
+# profile length= 378
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+ACAV001.B.00001.C001_00589	UserReplicon	22	347	T2SS_gspE	T2SS-single-locus	7.500e-47	152.800	0.709	0.772	3	270
+ACAV001.B.00001.C001_00845	UserReplicon	2	453	T2SS_gspE	T2SS-single-locus	1.500e-181	596.200	1.000	0.830	5	380
+ACAV001.B.00001.C001_03560	UserReplicon	99	578	T2SS_gspE	T2SS-single-locus	4.000e-122	400.600	0.984	0.645	97	469

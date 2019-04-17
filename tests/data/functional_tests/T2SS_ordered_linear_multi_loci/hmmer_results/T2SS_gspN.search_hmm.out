@@ -1,0 +1,79 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/functional_tests/models/TXSS_modified/profiles/T2SS_gspN.hmm
+# target sequence database:        acav001_T2SS-Ori_T4P-multi.fasta
+# output directed to file:         T2SS_ordered_linear_multi_loci/hmmer_results/T2SS_gspN.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  [M=217]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    2.2e-42  138.6  21.0    2.7e-42  138.3  21.0    1.0  1  ACAV001.B.00001.C001_00847  
+
+
+Domain annotation for each sequence (and alignments):
+>> ACAV001.B.00001.C001_00847  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  138.3  21.0   2.4e-44   2.7e-42       3     217 .]      28     259 ..      25     259 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 138.3 bits;  conditional E-value: 2.4e-44
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1   3 lllavflvallallParlvlqwl....pggvslqgvsGtl 38 
+                                                                                                                     ll+a  l +l++++Pa+++ + +    +g+v l++++Gt+
+                                                                                      ACAV001.B.00001.C001_00847  28 LLGA--LPTLVLFAPAAWLASGVerasGGQVLLAQARGTV 65 
+                                                                                                                     3444..59*********999988777666*********** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  39 WqGsarlvlaggaplg.........rvhWrlsplsLllgr 69 
+                                                                                                                     W Gsa+lvl+gg+  g         ++hW+l+p   ++  
+                                                                                      ACAV001.B.00001.C001_00847  66 WTGSAQLVLTGGQ--GsadraalpgQLHWTLRP---TWTG 100
+                                                                                                                     *************..6667**************...8889 PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1  70 lrldlrlgsasaegvalrgk.........ledvtlrlpas 100
+                                                                                                                     lr+++r+++++a++ a r+          ++d++ ++pa+
+                                                                                      ACAV001.B.00001.C001_00847 101 LRAEMRADCCTAAPIAARVAlrwggvhvaVADGQSQWPAA 140
+                                                                                                                     **********77777777777777**************** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 101 llagl..p.ntvpvqasGqvrlslaell.eswap....aG 132
+                                                                                                                      l gl  p nt  +q++G++ l++++l+ +s+a     aG
+                                                                                      ACAV001.B.00001.C001_00847 141 VLSGLgtPfNT--LQPQGRLALRTQGLAmDSAAGrvviAG 178
+                                                                                                                     ****878****..**************8765555899966 PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 133 k..lawrdasvsglsgllplgsyrleldlacedggqltla 170
+                                                                                                                     +  l+++++s s+ls+l+p+gsyrl+l++    g+  tl+
+                                                                                      ACAV001.B.00001.C001_00847 179 QaqLDALGMS-SRLSTLRPMGSYRLTLQG----GEVTTLS 213
+                                                                                                                     6447777788.88****************....8899*** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 171 lstksgplqlsgqgtlrvdgrlrfegtakptaeappalrq 210
+                                                                                                                     l t +g+l l+g+g++  ++rlrfeg+a  ++e+++ l++
+                                                                                      ACAV001.B.00001.C001_00847 214 LATLDGALRLTGSGRW-IGQRLRFEGEATAAPEREALLSN 252
+                                                                                                                     ****************.999*********9999999**** PP
+
+  gspN_fam06.fasta-mafft.mafft-bmge-bls30_fasttree_selphylo_0.05.fasta-mafft-bmge-bls30-fasttree-sel-brlen_inf_1 211 lLallGr 217
+                                                                                                                     lL+++Gr
+                                                                                      ACAV001.B.00001.C001_00847 253 LLNIIGR 259
+                                                                                                                     ******7 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (217 nodes)
+Target sequences:                          116  (38011 residues searched)
+Passed MSV filter:                        11  (0.0948276); expected 2.3 (0.02)
+Passed bias filter:                        2  (0.0172414); expected 2.3 (0.02)
+Passed Vit filter:                         2  (0.0172414); expected 0.1 (0.001)
+Passed Fwd filter:                         1  (0.00862069); expected 0.0 (1e-05)
+Initial search space (Z):                116  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

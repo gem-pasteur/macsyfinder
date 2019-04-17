@@ -1,0 +1,3 @@
+<system inter_gene_max_space="1">
+    <gene name="T5aSS_PF03797" presence="mandatory" loner="1"/>
+</system>
