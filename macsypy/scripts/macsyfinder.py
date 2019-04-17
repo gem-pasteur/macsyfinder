@@ -25,41 +25,14 @@ _log = colorlog.getLogger('macsypy')
 import macsypy
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
-from macsypy.system_parser import SystemParser
+from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes
 from macsypy.search_systems import search_systems
-from macsypy.system import system_bank
-from macsypy.gene import gene_bank
+#from macsypy.model import model_bank
+#from macsypy.gene import gene_bank, profile_factory
 from macsypy.error import OptionError
-
-
-
-def get_models_name_to_detect(models, model_registry):
-    """
-    :param models: the list of models to detect as returned by config.models.
-    :type models: list of tuple with the following structure:
-                  [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
-    :param model_registry: the models registry for this run.
-    :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
-    :return: the models fully qualified name to launch a detection on.
-    :rtype: list of string ['model_1/def1', 'model_1/def2', ..., 'model_2/def1', ...]
-    :raise ValueError: if a model name provided in models is not in model_registry.
-    """
-    models_name_to_detect = []
-    for group_of_defs in models:
-        root = group_of_defs[0]
-        definitions = group_of_defs[1]
-        model_loc = model_registry[root.split('/')[0]]
-        if 'all' in [d.lower() for d in definitions]:
-            if root == model_loc.name:
-                root = None
-            def_loc = model_loc.get_all_definitions(root_def_name=root)
-            models_name_to_detect.extend([d.fqn for d in def_loc])
-        else:
-            models_name_to_detect.extend([model_loc.get_definition('{}/{}'.format(root, one_def)).fqn
-                                          for one_def in definitions])
-    return models_name_to_detect
+from macsypy.utils import get_models_name_to_detect
 
 
 def get_version_message():
@@ -176,7 +149,7 @@ def parse_args(args):
                                 help="Co-localization criterion: maximum number of components non-matched by a\
                                      profile allowed between two matched components for them to be considered contiguous.\
                                      Option only meaningful for 'ordered' datasets.\
-                                     The first value must match to a system, the second to a number of components.\
+                                     The first value must match to a model, the second to a number of components.\
                                      This option can be repeated several times:\
                                      \n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
                                 )
@@ -184,8 +157,8 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of mandatory genes required for system assessment.\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                help="The minimal number of mandatory genes required for model assessment.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\n\
                                      \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
                                 )
@@ -193,9 +166,9 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of genes required for system assessment\
+                                help="The minimal number of genes required for model assessment\
                                      (includes both 'mandatory' and 'accessory' components).\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\
                                      \n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
                                 )
@@ -203,8 +176,8 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The maximal number of genes required for system assessment.\
-                                     The first value must correspond to a system name, the second value to an integer.\
+                                help="The maximal number of genes required for model assessment.\
+                                     The first value must correspond to a model name, the second value to an integer.\
                                      This option can be repeated several times:\
                                      \n \"--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
                                 )
@@ -230,14 +203,14 @@ def parse_args(args):
                                action='store',
                                type=float,
                                default=None,
-                               help='Maximal independent e-value for Hmmer hits to be selected for system detection.\
+                               help='Maximal independent e-value for Hmmer hits to be selected for model detection.\
                                      (default = 0.001)')
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
                                help='Minimal profile coverage required in the hit alignment to allow\
-                                    the hit selection for system detection. (default = 0.5)')
+                                    the hit selection for model detection. (default = 0.5)')
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
@@ -245,10 +218,10 @@ def parse_args(args):
                              default=None,
                              help='specify the path to the models if the models are not installed in the canonical place.\
                               It gather definitions (xml files) and hmm profiles in a specific\
-                              structure. A directory with the name of the system with at least two directories\
+                              structure. A directory with the name of the model with at least two directories\
                               "profiles" which contains all hmm profile for gene describe in definitions and\
                               "models" which contains either xml file of definitions or subdirectories\
-                              to organize the system in subsystems.')
+                              to organize the model in subsystems.')
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
                              default=None,
@@ -317,11 +290,11 @@ def parse_args(args):
     # by developers to generate portable data set, as for example test
     # data set, which are used on many different machines (using previous-run option).
 
-    parsed_args = parser.parse_args()
+    parsed_args = parser.parse_args(args)
     return parsed_args
 
 
-def main_search_systems(config, logger):
+def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
 
     :param parsed_args: the command line arguments
@@ -331,14 +304,13 @@ def main_search_systems(config, logger):
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
-
     registry = ModelRegistry(config)
     # build indexes
     idx = Indexes(config)
     idx.build(force=config.idx)
 
     # create models
-    parser = SystemParser(config, system_bank, gene_bank)
+    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory)
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
     except KeyError as err:
@@ -347,12 +319,12 @@ def main_search_systems(config, logger):
     parser.parse(models_name_to_detect)
 
     logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
-    logger.info("Analysis launched on {0} for system(s):".format(config.sequence_db()))
+    logger.info("Analysis launched on {0} for model(s):".format(config.sequence_db()))
 
     for s in models_name_to_detect:
         logger.info("\t- {}".format(s))
 
-    models_to_detect = [system_bank[model_fqn] for model_fqn in models_name_to_detect]
+    models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
     all_genes = []
     for system in models_to_detect:
         genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
@@ -385,12 +357,12 @@ def main_search_systems(config, logger):
         all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
         all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
-        search_systems(all_hits, models_to_detect, config)
+        search_systems(all_hits, models_to_detect, config, model_bank)
     else:
         logger.info("No hits found in this dataset.")
 
 
-def main(args=None, loglevel=None):
+def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
     """
     main entry point to integron_finder
 
@@ -407,7 +379,6 @@ def main(args=None, loglevel=None):
     ###########################
     # creation of working dir
     ###########################
-
     working_dir = config.working_dir()
     if not os.path.exists(working_dir):
         os.makedirs(working_dir)
@@ -432,7 +403,6 @@ def main(args=None, loglevel=None):
 
     logger = logging.getLogger('macsypy.macsyfinder')
 
-
     if parsed_args.list_models:
         print(list_models(parsed_args), file=sys.stdout)
         sys.exit(0)
@@ -443,12 +413,18 @@ def main(args=None, loglevel=None):
             raise OptionError("argument --sequence-db is required.")
         if not parsed_args.previous_run and not parsed_args.db_type:
             raise OptionError("argument --db-type is required.")
-
-        main_search_systems(config, logger)
+        _log.info("command used: {}".format(' '.join(sys.argv)))
+        if models is None:
+            models = macsypy.model.ModelBank()
+        if genes is None:
+            genes = macsypy.gene.GeneBank()
+        if profiles is None:
+            profiles = macsypy.gene.ProfileFactory()
+        main_search_systems(config, models, genes, profiles, logger)
     logger.debug("END")
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     main()
 
 

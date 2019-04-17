@@ -1,0 +1,21 @@
+<system inter_gene_max_space="30" min_mandatory_genes_required="1" min_genes_required="6">
+	<gene name="T4SS_virb4" presence="mandatory" system_ref="CONJ"/>
+    <gene name="T4SS_t4cp1" presence="accessory" system_ref="CONJ"/>
+    <gene name="T4SS_MOBB" presence="forbidden" system_ref="CONJ"/>
+
+    <gene name="T4SS_I_traE" presence="accessory"/>
+    <gene name="T4SS_I_traI" presence="accessory"/>
+    <gene name="T4SS_I_traK" presence="accessory"/>
+    <gene name="T4SS_I_traL" presence="accessory"/>
+    <gene name="T4SS_I_traM" presence="accessory"/>
+    <gene name="T4SS_I_traN" presence="accessory"/>
+    <gene name="T4SS_I_traO" presence="accessory"/>
+    <gene name="T4SS_I_traP" presence="accessory"/>
+    <gene name="T4SS_I_traQ" presence="accessory"/>
+    <gene name="T4SS_I_traR" presence="accessory"/>
+    <gene name="T4SS_I_traT" presence="accessory"/>
+    <gene name="T4SS_I_traW" presence="accessory"/>
+    <gene name="T4SS_I_traY" presence="accessory"/>
+    <gene name="T4SS_I_trbA" presence="accessory"/>
+    <gene name="T4SS_I_trbB" presence="accessory"/>
+</system>

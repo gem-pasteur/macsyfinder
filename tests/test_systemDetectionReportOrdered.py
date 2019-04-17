@@ -33,22 +33,23 @@ class Test(MacsyTest, MacsyEnvManager):
 
     def test_counter_output(self):
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         c = sdro.counter_output()
         self.assertEqual(c['T9SS_multi_loci'], 1)
 
     def test_tabulated_output_header(self):
         system_occurences_states = ['single_locus', 'multi_loci']
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
-        out = sdro.tabulated_output_header(system_occurences_states, [self.macsy_test_env.system.name])
+        t9ss_model = self.macsy_test_env.models[0]
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
+        out = sdro.tabulated_output_header(system_occurences_states, [t9ss_model.name])
         expected_output = '#Replicon\tT9SS_single_locus\tT9SS_multi_loci\n'
         self.assertEqual(out, expected_output)
 
     def test_summary_output(self):
         test_file = os.path.join(self.test_dir, 'test.txt')
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         db = RepliconDB(self.macsy_test_env.cfg)
         rep_info = db['AESU001c01a']
         sdro.summary_output(test_file, rep_info)
@@ -58,21 +59,22 @@ class Test(MacsyTest, MacsyEnvManager):
         test_file = os.path.join(self.test_dir, 'test.txt')
         system_occurences_states = ['single_locus', 'multi_loci']
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
-        sdro.tabulated_output(system_occurences_states, [self.macsy_test_env.system.name], test_file)
+        t9ss_model = self.macsy_test_env.models[0]
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
+        sdro.tabulated_output(system_occurences_states, [t9ss_model.name], test_file)
         self.assertFileEqual(test_file, self.output_control_file('001'))
 
     def test_report_output(self):
         test_file = os.path.join(self.test_dir, 'test_foo.txt')
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         sdro.report_output(test_file)
         self.assertFileEqual(test_file, self.output_control_file('001'))
 
     def test_system_2_json(self):
         so = self.macsy_test_env.system_occurence
         so.get_system_unique_name('mew')
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         rep_db = RepliconDB(self.macsy_test_env.cfg)
         out = sdro.system_2_json(rep_db)
         self.assertEqual(str(out), self.output_control_str('001'))
@@ -80,7 +82,7 @@ class Test(MacsyTest, MacsyEnvManager):
     def test_match2json(self):
         so = self.macsy_test_env.system_occurence
         valid_hit = so.valid_hits[0]
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         gene = sdro._match2json(valid_hit, so)
         self.assertEqual(str(gene), self.output_control_str('001'))
 
@@ -88,7 +90,7 @@ class Test(MacsyTest, MacsyEnvManager):
         test_file = os.path.join(self.test_dir, 'test_foo.txt')
         so = self.macsy_test_env.system_occurence
         so.get_system_unique_name('mew')
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         rep_db = RepliconDB(self.macsy_test_env.cfg)
         json_all_systems = sdro.system_2_json(rep_db)
         sdro.json_output(test_file, json_all_systems)
@@ -96,6 +98,6 @@ class Test(MacsyTest, MacsyEnvManager):
 
     def test_gene2json(self):
         so = self.macsy_test_env.system_occurence
-        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg)
+        sdro = systemDetectionReportOrdered('bar', [so], self.macsy_test_env.cfg, self.macsy_test_env.model_bank)
         gene = sdro._gene2json('foobar', 44, 72)
         self.assertEqual(str(gene), self.output_control_str('001'))

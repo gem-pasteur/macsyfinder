@@ -1,0 +1,7 @@
+# gene: T9SS_gldK_TIGR03525 extract from tests/data/data_set_7/results/hmmer_results/T9SS_gldK_TIGR03525.search_hmm.out hmm output
+# profile length= 449
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+AESU001c01a_007890	AESU001c01a	776	457	T9SS_gldK_TIGR03525	T9SS	7.400e-254	840.900	0.998	0.978	1	447
+AETU001c01a_007890	AETU001c01a	3916	457	T9SS_gldK_TIGR03525	T9SS	7.400e-254	840.900	0.998	0.978	1	447

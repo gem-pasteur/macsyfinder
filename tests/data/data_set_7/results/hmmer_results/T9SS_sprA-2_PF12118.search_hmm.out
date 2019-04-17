@@ -1,0 +1,42 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_7/models/set_1/profiles/T9SS_sprA-2_PF12118.hmm
+# target sequence database:        tests/data/data_set_7/base/gembase.fa
+# output directed to file:         tests/data/data_set_7/results/hmmer_results/T9SS_sprA-2_PF12118.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       SprA-related  [M=295]
+Accession:   PF12118.3
+Description: SprA-related family
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+
+   [No hits detected that satisfy reporting thresholds]
+
+
+Domain annotation for each sequence (and alignments):
+
+   [No targets detected that satisfy reporting thresholds]
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (295 nodes)
+Target sequences:                         6280  (2083330 residues searched)
+Passed MSV filter:                       350  (0.0557325); expected 125.6 (0.02)
+Passed bias filter:                      176  (0.0280255); expected 125.6 (0.02)
+Passed Vit filter:                        36  (0.00573248); expected 6.3 (0.001)
+Passed Fwd filter:                         6  (0.000955414); expected 0.1 (1e-05)
+Initial search space (Z):               6280  [actual number of targets]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
+# CPU time: 0.13u 0.00s 00:00:00.13 Elapsed: 00:00:00.13
+# Mc/sec: 4727.56
+//
+[ok]

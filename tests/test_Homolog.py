@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-# MacSyFinder - Detection of macromolecular systems in protein datasets        #
-#               using systems modelling and similarity search.                 #
+# MacSyFinder - Detection of macromolecular models in protein datasets        #
+#               using models modelling and similarity search.                 #
 # Authors: Sophie Abby, Bertrand Néron                                         #
 # Copyright © 2014  Institut Pasteur, Paris.                                   #
 # See the COPYRIGHT file for details                                           #
@@ -12,15 +12,13 @@
 ################################################################################
 
 
-import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.gene import Homolog
-from macsypy.gene import Gene
-from macsypy.system import System
+from macsypy.gene import Gene, ProfileFactory
+from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -40,7 +38,7 @@ class Test(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-
+        self.profile_factory = ProfileFactory()
 
     def tearDown(self):
         try:
@@ -49,25 +47,25 @@ class Test(MacsyTest):
             pass
 
     def test_gene_ref(self):
-        system = System(self.cfg, "T2SS", 10)
-        gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        model = Model(self.cfg, "T2SS", 10)
+        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog_1 = Homolog(gene, gene_ref)
         self.assertEqual(homolog_1.gene_ref, gene_ref)
  
     def test_is_aligned(self):
-        system = System(self.cfg, "T2SS", 10)
-        gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        model = Model(self.cfg, "T2SS", 10)
+        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)
         self.assertFalse(homolog.is_aligned())
         homolog = Homolog(gene, gene_ref, aligned=True)
         self.assertTrue(homolog.is_aligned())
 
     def test_delegation(self):
-        system = System(self.cfg, "T2SS", 10)
-        gene_ref = Gene(self.cfg, 'sctJ_FLG', system, self.models_location)
-        gene = Gene(self.cfg, 'sctJ', system, self.models_location)
+        model = Model(self.cfg, "T2SS", 10)
+        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)
-        self.assertEqual(homolog.system, system)
+        self.assertEqual(homolog.model, model)
 

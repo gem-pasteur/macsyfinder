@@ -15,25 +15,33 @@
 import shutil
 import tempfile
 import os
-from subprocess import Popen
-import json
+import inspect
 import unittest
+import json
 
 from tests import MacsyTest
 from macsypy.utils import which
+from macsypy.scripts import macsyfinder
+import macsypy
+from macsypy import model
+from macsypy import search_systems
 
 
 class Test(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
-
+        self.gene_bank = macsypy.gene.GeneBank()
+        self.model_bank = model.ModelBank()
+        self.profile_factory = macsypy.gene.ProfileFactory()
+        search_systems.system_name_generator = search_systems.SystemNameGenerator()
 
     def tearDown(self):
         try:
             shutil.rmtree(self.out_dir)
         except:
             pass
+
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_basic_run(self):
@@ -45,43 +53,16 @@ class Test(MacsyTest):
         """
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_basic_run')
         os.makedirs(self.out_dir)
-        macsy_bin = 'macsyfinder'
-        command = "{bin} --out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
-                  " --models {models}".format(bin=macsy_bin,
-                                              out_dir=self.out_dir,
+        args = "--out-dir={out_dir} --sequence-db={seq_db} --db-type=gembase --models-dir={models_dir}" \
+                  " --models {models}".format(out_dir=self.out_dir,
                                               models_dir=os.path.join(self._data_dir, 'data_set_1', 'models'),
                                               seq_db=os.path.join(self._data_dir, 'base', 'test_aesu.fa'),
                                               models="set_1 T9SS T3SS T4SS_typeI",
                                               )
 
-        # I need to prepend the command by setsid because macsyfinder use killpg with group_id to terminated all
-        # threads and subprocess when an error occurred in one hmmsearch. It's work fine but when
-        # macsyfinder is launched by the tests.py script the kill group kill also the tests.py script
-        # so we must run macsyfinder in a new process group
-        # but setsid cmd does not exists on darwin so we provide one in utils
-        setsid = self.setsid()
-        try:
-            macsy_process = Popen("{setsid} {cmd}".format(setsid=setsid,
-                                                          cmd=command),
-                                  shell=True,
-                                  stdin=None,
-                                  stdout=open(os.devnull, 'w'),
-                                  stderr=open(os.devnull, 'w'),
-                                  close_fds=False
-                                  )
-        except Exception as err:
-            msg = "macsyfinder execution failed: command = {0} : {1}".format(command, err)
-            print(msg)
-            raise err
+        macsyfinder.main(args=args.split(), loglevel='ERROR')
 
-        macsy_process.wait()
-        self.assertEqual(macsy_process.returncode, 0,
-                         "macsyfinder finished with non zero exit code: {0} command launched=\n{1}".format(
-                          macsy_process.returncode,
-                          command))
-
-        expected_result_path = os.path.join(self._data_dir, 'data_set_1', 'basic_run_results',
-                                            'results.macsyfinder.json')
+        expected_result_path = self.find_data('data_set_1', 'basic_run_results', 'results.macsyfinder.json')
         with open(expected_result_path) as expected_result_file:
             expected_result_json = json.load(expected_result_file)
 
@@ -91,42 +72,145 @@ class Test(MacsyTest):
 
         # it should have only one occurrence of T9SS
         self.assertEqual(len(test_result_json), 1,
-                         "different type of systems expected: 1  retrieved: {0}".format(len(test_result_json)))
+                         "different type of systems expected: 1  retrieved: {}".format(len(test_result_json)))
         expected_result_json = expected_result_json[0]
         test_result_json = test_result_json[0]
         self.assertEqual(expected_result_json['name'],
                          test_result_json['name'],
-                         "type of system name expected: {0}   retrieved: {1}".format(expected_result_json['name'],
-                                                                                     test_result_json['name']))
+                         "type of system name expected: {} retrieved: {}".format(expected_result_json['name'],
+                                                                                 test_result_json['name']))
         self.assertEqual(expected_result_json['occurrence_number'],
                          test_result_json['occurrence_number'],
-                         "occurrence number expected {0}   retrieved: {1}".format(expected_result_json['occurrence_number'],
-                                                                                  test_result_json['occurrence_number']))
+                         "occurrence number expected {} retrieved: {}".format(expected_result_json['occurrence_number'],
+                                                                              test_result_json['occurrence_number']))
         self.assertDictEqual(expected_result_json['replicon'],
                              test_result_json['replicon'],
-                             "replicon expected {0}   retrieved: {1}".format(expected_result_json['occurrence_number'],
-                                                                             test_result_json['occurrence_number']))
+                             "replicon expected {} retrieved: {}".format(expected_result_json['occurrence_number'],
+                                                                         test_result_json['occurrence_number']))
         self.assertEqual(expected_result_json['id'],
                          test_result_json['id'],
-                         "system occurrence id expected {0}    retrieved: {1}".format(expected_result_json['id'],
-                                                                                      test_result_json['id']))
+                         "system occurrence id expected {} retrieved: {}".format(expected_result_json['id'],
+                                                                                 test_result_json['id']))
         self.assertDictEqual(expected_result_json['summary']['mandatory'],
                              test_result_json['summary']['mandatory'],
-                             "\nmandatory genes expected:  {0}"
-                             "\nmandatory genes retrieved: {1}".format(expected_result_json['summary']['mandatory'],
-                                                                       test_result_json['summary']['mandatory']))
+                             "\nmandatory genes expected: {}"
+                             "\nmandatory genes retrieved: {}".format(expected_result_json['summary']['mandatory'],
+                                                                      test_result_json['summary']['mandatory']))
         self.assertDictEqual(expected_result_json['summary']['accessory'],
                              test_result_json['summary']['accessory'],
-                             "\naccessory genes expected:  {0}"
-                             "\naccessory genes retrieved: {1}".format(expected_result_json['summary']['accessory'],
-                                                                       test_result_json['summary']['accessory']))
+                             "\naccessory genes expected: {}"
+                             "\naccessory genes retrieved: {}".format(expected_result_json['summary']['accessory'],
+                                                                      test_result_json['summary']['accessory']))
         self.assertDictEqual(expected_result_json['summary']['forbidden'],
                              test_result_json['summary']['forbidden'],
-                             "\nforbidden genes expected:  {0}"
-                             "\nforbidden genes retrieved: {1}".format(expected_result_json['summary']['forbidden'],
-                                                                       test_result_json['summary']['forbidden']))
+                             "\nforbidden genes expected: {}"
+                             "\nforbidden genes retrieved: {}".format(expected_result_json['summary']['forbidden'],
+                                                                      test_result_json['summary']['forbidden']))
         self.assertListEqual(expected_result_json['genes'], test_result_json['genes'],
-                             "\ngenes expected:  {0}"
-                             "\ngenes retrieved: {1}".format(expected_result_json['genes'], test_result_json['genes']))
+                             "\ngenes expected: {}"
+                             "\ngenes retrieved: {}".format(expected_result_json['genes'], test_result_json['genes']))
 
 
+    def test_T2SS_ordered_circular(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}}".format(
+                                                   models_dir=self.find_data('functional_tests', 'models'),
+                                                   seq_db=self.find_data('functional_tests',
+                                                                       'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                   models="TXSS_ori T2SS",
+                                                   topology="circular"
+                                                   )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T2SS_ordered_circular_single_locus(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
+                                                   seq_db=self.find_data('functional_tests',
+                                                                         'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                   models="TXSS_modified T2SS-single-locus",
+                                                   topology="circular"
+                                                   )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T2SS_ordered_linear(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
+                                                   seq_db=self.find_data('functional_tests',
+                                                                         'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                   models="TXSS_ori T2SS",
+                                                   topology="linear"
+                                                   )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T2SS_ordered_linear_multi_loci(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}} " \
+               "--multi-loci TXSS_modified/T2SS-single-locus".format(
+                                                 models_dir=self.find_data('functional_tests', 'models'),
+                                                 seq_db=self.find_data('functional_tests',
+                                                                       'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                 models="TXSS_modified T2SS-single-locus",
+                                                 topology="linear"
+                                                 )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T2SS_ordered_linear_single_locus(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
+                                                   seq_db=self.find_data('functional_tests',
+                                                                         'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                   models="TXSS_modified T2SS-single-locus",
+                                                   topology="linear"
+                                                   )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T4P_ordered_linear(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
+                                                   seq_db=self.find_data('functional_tests',
+                                                                         'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                   models="TXSS_modified T4P-single-locus",
+                                                   topology="linear"
+                                                   )
+        self._test_macsyfinder_run(args)
+
+
+    def test_T4P_ordered_linear_multi_loci(self):
+        args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
+               "--models-dir {models_dir} " \
+               "-m {models} -o {{out_dir}} " \
+               "--multi-loci TXSS_modified/T4P-single-locus".format(
+                                                 models_dir=self.find_data('functional_tests', 'models'),
+                                                 seq_db=self.find_data('functional_tests',
+                                                                       'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                 models="TXSS_modified T4P-single-locus",
+                                                 topology="linear"
+                                                 )
+        self._test_macsyfinder_run(args)
+
+    def _test_macsyfinder_run(self, args_tpl):
+        # get the name of the calling function
+        test_name = inspect.stack()[1].function
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_{}'.format(test_name))
+        os.makedirs(self.out_dir)
+        args = args_tpl.format(out_dir=self.out_dir)
+        macsyfinder.main(args=args.split(),
+                         loglevel='ERROR',
+                         models=self.model_bank,
+                         genes=self.gene_bank,
+                         profiles=self.profile_factory)
+
+        expected_result_path = self.find_data('functional_tests', test_name[5:], 'results.macsyfinder.json')
+        get_results = os.path.join(self.out_dir, 'results.macsyfinder.json')
+        self.assertJsonEqual(expected_result_path, get_results)

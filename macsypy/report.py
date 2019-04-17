@@ -210,7 +210,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
                                 hits.append(Hit(self.gene,
-                                                self.gene.system,
+                                                self.gene.model,
                                                 hit_id,
                                                 seq_lg,
                                                 replicon_name,
@@ -365,13 +365,13 @@ class Hit(object):
     Handle the hits filtered from the Hmmer search. The hits are instanciated by :py:meth:`HMMReport.extract` method
     """
 
-    def __init__(self, gene, system, hit_id, hit_seq_length, replicon_name,
+    def __init__(self, gene, model, hit_id, hit_seq_length, replicon_name,
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`macsypy.gene.Gene` object
-        :param system: the system to which this gene belongs
-        :type system: :class:`macsypy.system.System` object
+        :param model: the model to which this gene belongs
+        :type model: :class:`macsypy.model.Model` object
         :param hit_id: the identifier of the hit
         :type hit_id: string
         :param hit_seq_length: the length of the hit sequence
@@ -394,7 +394,7 @@ class Hit(object):
         :type end_match: integer
         """
         self.gene = gene
-        self.system = system
+        self.model = model
         self.id = hit_id
         self.seq_length = hit_seq_length
         self.replicon_name = replicon_name
@@ -410,19 +410,19 @@ class Hit(object):
         """
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
-        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{system_name}\t{i_evalue:.3e}\t{score:.3f}\
+        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{model_name}\t{i_evalue:.3e}\t{score:.3f}\
 \t{profil_cov:.3f}\t{seq_cov:.3f}\t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
-                                                                             replicon_name=self.replicon_name,
-                                                                             position=self.position,
-                                                                             seq_len=self.seq_length,
-                                                                             gene_name=self.gene.name,
-                                                                             system_name=self.system.name,
-                                                                             i_evalue=self.i_eval,
-                                                                             score=self.score,
-                                                                             profil_cov=self.profile_coverage,
-                                                                             seq_cov=self.sequence_coverage,
-                                                                             begin_match=self.begin_match,
-                                                                             end_match=self.end_match)
+                                                                            replicon_name=self.replicon_name,
+                                                                            position=self.position,
+                                                                            seq_len=self.seq_length,
+                                                                            gene_name=self.gene.name,
+                                                                            model_name=self.model.name,
+                                                                            i_evalue=self.i_eval,
+                                                                            score=self.score,
+                                                                            profil_cov=self.profile_coverage,
+                                                                            seq_cov=self.sequence_coverage,
+                                                                            begin_match=self.begin_match,
+                                                                            end_match=self.end_match)
 
     def __lt__(self, other):
         """
@@ -435,12 +435,12 @@ class Hit(object):
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene): 
-                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(\
-                    g_name=self.gene.name,
-                    sys_name=self.system.name,
-                    other_g_name=other.gene.name,
-                    other_sys_name=other.system.name,
-                    id=self.id))
+                _log.warning("Non homologs match: {g_name} ({model_name}) {other_g_name} "
+                             "({other_mod_name}) for {id}".format(g_name=self.gene.name,
+                                                                  model_name=self.model.name,
+                                                                  other_g_name=other.gene.name,
+                                                                  other_mod_name=other.model.name,
+                                                                  id=self.id))
             return self.score < other.score
         else:
             return self.id < other.id
@@ -457,17 +457,15 @@ class Hit(object):
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene):
-                _log.warning("Non homologs match: {g_name} ({sys_name}) {other_g_name} ({other_sys_name}) for {id}".format(\
-                    g_name=self.gene.name,
-                    sys_name=self.system.name,
-                    other_g_name=other.gene.name,
-                    other_sys_name=other.system.name,
-                    id=self.id))
+                _log.warning("Non homologs match: {g_name} ({model_name}) {other_g_name} "
+                             "({other_mod_name}) for {id}".format(g_name=self.gene.name,
+                                                                  model_name=self.model.name,
+                                                                  other_g_name=other.gene.name,
+                                                                  other_mod_name=other.model.name,
+                                                                  id=self.id))
             return self.score > other.score
         else:
             return self.id > other.id
-
-
 
  
     def __eq__(self, other):
@@ -481,7 +479,7 @@ class Hit(object):
         """
         epsilon = 0.001
         return (self.gene.name == other.gene.name and
-                self.system.name == other.system.name and
+                self.model.name == other.model.name and
                 self.id == other.id and
                 self.seq_length == other.seq_length and
                 self.replicon_name == other.replicon_name and
@@ -491,7 +489,7 @@ class Hit(object):
                 abs(self.profile_coverage - other.profile_coverage) <= epsilon and
                 abs(self.sequence_coverage - other.sequence_coverage) <= epsilon and
                 self.begin_match == other.begin_match and
-                self.end_match == other.end_match 
+                self.end_match == other.end_match
                 )
 
 
@@ -507,4 +505,4 @@ class Hit(object):
         :returns: the 'inter_gene_max_space' parameter defined for the gene of the hit
         :rtype: integer
         """
-        return self.gene.system.inter_gene_max_space
+        return self.gene.model.inter_gene_max_space

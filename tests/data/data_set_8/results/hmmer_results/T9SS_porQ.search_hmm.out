@@ -1,0 +1,192 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set_8/models/set_1/profiles/T9SS_porQ.hmm
+# target sequence database:        tests/data/data_set_8/base/ordered_replicon.fa
+# output directed to file:         tests/data/data_set_8/results/hmmer_results/T9SS_porQ.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  [M=332]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence           Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------           -----------
+   1.3e-136  452.5   3.9   1.5e-136  452.3   3.9    1.0  1  AESU001c01a_025840  
+    2.7e-23   79.9   1.7    3.4e-23   79.6   1.7    1.1  1  AESU001c01a_022180  
+    4.7e-13   46.3   1.1    2.9e-11   40.4   0.0    2.1  2  AESU001c01a_016940  
+
+
+Domain annotation for each sequence (and alignments):
+>> AESU001c01a_025840  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  452.3   3.9  1.4e-139  1.5e-136       2     332 .]       6     338 ..       5     338 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 452.3 bits;  conditional E-value: 1.4e-139
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30   2 llllllllalslfaqiggqsvyqFLnlptsaraaalGGkn 41 
+                                                                                            +l++ lll+  l aqigg+++yqFLnl++s+r+aalGGk+
+                                                                     AESU001c01a_025840   6 FLVVSLLLSQLLLAQIGGRTTYQFLNLVNSPRMAALGGKV 45 
+                                                                                            56666666667***************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  42 itlvddDvnlalsNPAllnsemdnqlslnylnyladvnyg 81 
+                                                                                            +t++d+D+++ l NPA +n+emdnqlslny+ny++dvnyg
+                                                                     AESU001c01a_025840  46 VTNYDYDPTQGLFNPASINPEMDNQLSLNYTNYIGDVNYG 85 
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  82 tasYakklk.ekgtlavgiqylnYGkfkgtdelgnatgeF 120
+                                                                                            ta+Ya+ ++ ++++l++g++y+nYGkf+g+delgn t++F
+                                                                     AESU001c01a_025840  86 TAAYAYLWDrRTQVLHMGATYVNYGKFDGYDELGNPTSSF 125
+                                                                                            *********999**************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 121 sasdialslgyayels.enltvGanlklitSklesYsslg 159
+                                                                                            s+ ++a+s+g+a++++ +n++vG+n+kli+S+le+Yss+g
+                                                                     AESU001c01a_025840 126 SGGEVAISFGHARNIAfTNFHVGVNVKLISSTLENYSSFG 165
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 160 lavdlGlsYkdeekdlsvglvakNlGtqlkaYeeereklp 199
+                                                                                             a+d+Gl+Y +e++dl+++ va+N+Gtq++ Y+ee+e+lp
+                                                                     AESU001c01a_025840 166 GALDIGLMYVYEDWDLQITGVARNIGTQFTPYHEEYEPLP 205
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 200 fdlqlGvskklknaPlrfsltlenLqkwniayedpnreet 239
+                                                                                            f++ +G+s++l+n+P+r+++tlen+q+wnia+++p+r++t
+                                                                     AESU001c01a_025840 206 FEMIFGISQTLENIPIRWHFTLENMQQWNIAFANPARADT 245
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 240 dlegnkteekvsfvdkllrHlilgaellpsenfnlrlGYn 279
+                                                                                            +leg++t+ek++fvd+++rH+i g+el+p++ fn+rlGYn
+                                                                     AESU001c01a_025840 246 NLEGETTQEKITFVDQTFRHMIAGIELFPESGFNIRLGYN 285
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 280 frrakelkieeqrslaGlsaGaglklkkfrldyayakyha 319
+                                                                                            frr++el+i ++r++aG+saG+++kl+k+rl+y+y+ky++
+                                                                     AESU001c01a_025840 286 FRRGEELRIVDRRTFAGISAGFAIKLNKLRLSYSYSKYSS 325
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 320 aansslfglsinL 332
+                                                                                            aa+ss+fgl+i+L
+                                                                     AESU001c01a_025840 326 AATSSFFGLNIDL 338
+                                                                                            ***********97 PP
+
+>> AESU001c01a_022180  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   79.6   1.7   3.3e-26   3.4e-23       3     329 ..      12     354 ..      10     357 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 79.6 bits;  conditional E-value: 3.3e-26
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30   3 lllllllalslfaqiggqsvyqFLnlptsaraaalGGkni 42 
+                                                                                            llll+ll+ +l+aq+  +++ +F+n+ + a a ++ ++++
+                                                                     AESU001c01a_022180  12 LLLLILLTATLSAQTVRKYSNEFMNIGVDAAAFGM-SNAV 50 
+                                                                                            56666777779***9999****************9.9*** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  43 tlvddDvnlalsNPAllnsemdnqlslnylnyladv.nyg 81 
+                                                                                            t+ + Dvn   +NPA l +  d+q+sl +++y+a++ ny 
+                                                                     AESU001c01a_022180  51 TASSGDVNSGYWNPAGLVNLEDKQISLMHASYFANIaNYD 90 
+                                                                                            *********************************9974788 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  82 tasYakklkekgtlavgiqylnYG......kfkgtdelgn 115
+                                                                                             a++a  l++k +  vg++ +++G      + + +d+ gn
+                                                                     AESU001c01a_022180  91 YAAFAMPLDDKSA--VGLSVIRFGvddilnTTQLIDDEGN 128
+                                                                                            999*****98765..6666777875544434555677777 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 116 at....geFsasdialslgyayels.enltvGanlklitS 150
+                                                                                                  ++Fs +d+  ++ ya++l+ + l++G+n+k+i  
+                                                                     AESU001c01a_022180 129 IRydriSKFSTADYGFTFSYARKLPlDGLNYGVNAKVIRR 168
+                                                                                            54222379******************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 151 klesY.sslglavdlGlsYkdeekdlsvglvakNlGtqlk 189
+                                                                                             ++++ ss+g+++d+++ ++ e+  + +g++a+ + t ++
+                                                                     AESU001c01a_022180 169 VIGDFaSSWGFGLDAAVQFRTEK--WMFGVMARDITTTFN 206
+                                                                                            ****95679**********9865..789************ PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 190 aYeeereklpfdlqlGvskklknaPlrfsltlenLq.... 225
+                                                                                            a++  ++k+  ++q  v  + +++P   ++t+ +Lq    
+                                                                     AESU001c01a_022180 207 AWSIDEKKF-AEIQGAVDGENQELPETTEITIPKLQlgma 245
+                                                                                            **8777776.69***********************99998 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 226 .kwniayedpnreetdlegnkteekvsfvdkllrHl.ilg 263
+                                                                                             k+ ++y+ + ++e dl+   +e +  +   ++  + +lg
+                                                                     AESU001c01a_022180 246 rKFVYHYDFTLLAEVDLNFRFAETNDVISTSFASITpSLG 285
+                                                                                            88999999999999999876666665555555554338** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 264 aellpsenfnlrlGY.nfrrakelkieeqrslaGl..saG 300
+                                                                                            +e+   + +++r G  nf+  ++l   ++    G+   +G
+                                                                     AESU001c01a_022180 286 LEFAYIDMVYVRGGVgNFQNIRQLDGSDS---VGFqpNIG 322
+                                                                                            *************9758888777765555...5553369* PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 301 aglklkkfrldyayaky...haaansslfgls 329
+                                                                                            +g++ k +++dya +     +aa  s++f+l+
+                                                                     AESU001c01a_022180 323 VGFRYKGIQVDYALTDIgdqSAALYSNVFSLK 354
+                                                                                            *************9865221455566777776 PP
+
+>> AESU001c01a_016940  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   40.4   0.0   2.8e-14   2.9e-11      25     205 ..      43     242 ..      38     249 .. 0.82
+   2 !    4.9   0.2    0.0018       1.8     261     320 ..     314     369 ..     282     385 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 40.4 bits;  conditional E-value: 2.8e-14
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  25 FLnlptsaraaalGGknitlvddDvnlalsNPAllnsemd 64 
+                                                                                            F+ + + +r+ ++G +   ++++D     +NPA +    +
+                                                                     AESU001c01a_016940  43 FMLIGADPRSGGMG-DIGVVTSADAFSQQWNPAKYAFALS 81 
+                                                                                            66777788888995.55557799999********998765 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30  65 nq.lslnylnyl....advnygtasYakklkekgtlavgi 99 
+                                                                                            +q ++ +y++yl    +d+ +g+++Y ++l+e+ ++a+++
+                                                                     AESU001c01a_016940  82 KQgVGATYTPYLnklvNDIFLGNLTYYNRLNEQSAVAASF 121
+                                                                                            54399*****9833335899******************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 100 qylnYGkfkgtdelgnatgeFsasdialslgyayelsenl 139
+                                                                                            +y++ G+++  +         +++++   + ya +lse++
+                                                                     AESU001c01a_016940 122 RYFSQGEIELRERPDDIPVIVKPNELLFDVSYALRLSERF 161
+                                                                                            **************************************** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 140 tvGanlklitSklesYssl.......glavdlGlsYkde. 171
+                                                                                            ++ ++ ++i S l+  +s+        +avd++  Y++e 
+                                                                     AESU001c01a_016940 162 SMAVAGRYIRSDLKLQTSVedanaasSVAVDVAGYYQSEe 201
+                                                                                            *********9998655543222222289*****9988662 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 172 ......ekdlsvglvakNlGtqlkaY..eeereklpfdlq 203
+                                                                                                  + ++ +g+ + N+G +lk Y   +++ +lp++l 
+                                                                     AESU001c01a_016940 202 ipyddfDGRWRLGFNISNIGPKLK-YdeVGSESNLPTNLA 240
+                                                                                            2222225799*************9.624456999****** PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 204 lG 205
+                                                                                            lG
+                                                                     AESU001c01a_016940 241 LG 242
+                                                                                            99 PP
+
+  == domain 2  score: 4.9 bits;  conditional E-value: 0.0018
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 261 ilgaellpsenfnlrlGYnfrrakelkieeqrslaGlsaG 300
+                                                                                            +lgae   ++ f lr GY     +e  +++ r++a + aG
+                                                                     AESU001c01a_016940 314 ALGAEYWYQDVFALRGGY----FNESDVKGGRKFATIGAG 349
+                                                                                            589***************....48999********87777 PP
+
+  PorQ-pogi2-bacteroidetes.blast.res_match_e-20.extract.fasta-mafft_auto-profile_bmge30 301 aglklkkfrldyayakyhaa 320
+                                                                                            +  ++  ++l+y  ++ ++a
+                                                                     AESU001c01a_016940 350 FRYTFIGIDLSYLFSTSKLA 369
+                                                                                            77777777766655555444 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (332 nodes)
+Target sequences:                         3140  (1041665 residues searched)
+Passed MSV filter:                       118  (0.0375796); expected 62.8 (0.02)
+Passed bias filter:                       49  (0.0156051); expected 62.8 (0.02)
+Passed Vit filter:                         6  (0.00191083); expected 3.1 (0.001)
+Passed Fwd filter:                         3  (0.000955414); expected 0.0 (1e-05)
+Initial search space (Z):               3140  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# Mc/sec: 11527.76
+//
+[ok]

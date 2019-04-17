@@ -1,0 +1,6 @@
+# gene: T4SS_I_traP extract from tests/data/data_set_8/results/hmmer_results/T4SS_I_traP.search_hmm.out hmm output
+# profile length= 239
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+AESU001c01a_025650	UserReplicon	2532	520	T4SS_I_traP	T4SS_typeI	8.700e-04	16.500	0.544	0.242	6	131

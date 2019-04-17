@@ -1,3 +1,5 @@
+.eggs
+
 ######################
 # Logs and databases #
 ######################
@@ -75,4 +77,4 @@ uninstall_files
 *\.psd
 *\.psi
 *\.psq
-
+*\formatdb\.err

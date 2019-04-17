@@ -1,0 +1,19 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="10" min_genes_required="10">
+<gene name="T6SSii_dotU" presence="mandatory"/>
+<gene name="T6SSii_iglA" presence="mandatory"/>
+<gene name="T6SSii_iglB" presence="mandatory"/>
+<gene name="T6SSii_iglC" presence="mandatory"/>
+<gene name="T6SSii_iglD" presence="mandatory"/>
+<gene name="T6SSii_iglE" presence="mandatory"/>
+<gene name="T6SSii_iglF" presence="mandatory"/>
+<gene name="T6SSii_iglG" presence="mandatory"/>
+<gene name="T6SSii_iglH" presence="mandatory"/>
+<gene name="T6SSii_iglI" presence="mandatory"/>
+<gene name="T6SSii_iglJ" presence="mandatory"/>
+<gene name="T6SSii_pdpA" presence="mandatory"/>
+<gene name="T6SSii_pdpB" presence="mandatory"/>
+<gene name="T6SSii_pdpC" presence="mandatory"/>
+<gene name="T6SSii_pdpD" presence="mandatory"/>
+<gene name="T6SSii_pdpE" presence="mandatory"/>
+<gene name="T6SSii_vgrG" presence="mandatory"/>
+</system>
