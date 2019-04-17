@@ -14,6 +14,7 @@
 
 import logging
 _log = logging.getLogger(__name__)
+from itertools import chain
 
 from .error import ModelInconsistencyError
 from .registries import split_def_name
@@ -84,8 +85,6 @@ class ModelBank(object):
         else:
             self._model_bank[model.fqn] = model
 
-
-#model_bank = ModelBank()
 
 
 class Model(object):
@@ -341,3 +340,21 @@ class Model(object):
             return g.gene_ref
         except AttributeError:
             return None
+
+
+    def filter(self, hits):
+        """
+        filter the hits according to this model. The hits must be link to a gene, belonging to the model
+        as mandatory, accessory or forbidden, or be an analog or homologs of one these genes
+
+        :param hits: list of hits to filter
+        :type hits: list of :class:`macsypy.report.Hit` object
+        :return: list of hits
+        :rtype: list of :class:`macsypy.report.Hit` object
+        """
+        primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes, self._forbidden_genes)]
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())]
+        all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
+
+        compatible_hits = [h for h in hits if h.gene.name in all_genes]
+        return compatible_hits
