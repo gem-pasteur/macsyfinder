@@ -16,7 +16,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import Gene
 import macsypy.gene

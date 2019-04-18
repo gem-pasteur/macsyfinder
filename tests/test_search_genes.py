@@ -22,7 +22,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import Gene
 import macsypy.gene
 from macsypy.model import Model
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.registries import ModelRegistry
 from macsypy.database import Indexes
 from macsypy.utils import which

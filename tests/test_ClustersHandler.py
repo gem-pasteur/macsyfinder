@@ -13,7 +13,7 @@
 
 
 from macsypy.database import RepliconInfo
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.gene import Gene
 from macsypy.search_systems import ClustersHandler, Cluster
 from macsypy.error import SystemDetectionError

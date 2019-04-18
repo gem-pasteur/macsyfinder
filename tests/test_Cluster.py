@@ -14,7 +14,7 @@
 
 from operator import attrgetter
 from macsypy import model
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_systems import Cluster
 from macsypy.search_genes import search_genes
