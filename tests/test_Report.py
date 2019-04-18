@@ -19,7 +19,8 @@ from io import StringIO
 from itertools import groupby
 import argparse
 
-from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, GeneralHMMReport, Hit
+from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, GeneralHMMReport
+from macsypy.hit import Hit
 from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults

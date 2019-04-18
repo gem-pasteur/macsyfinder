@@ -21,7 +21,7 @@ from operator import attrgetter
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import Gene, Analog
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.search_systems import SystemOccurence, build_clusters
 from macsypy.database import RepliconDB, Indexes
 from macsypy.search_genes import search_genes

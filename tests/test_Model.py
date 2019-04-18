@@ -20,7 +20,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import Gene, Homolog, Analog, ProfileFactory
-from macsypy.report import Hit
+from macsypy.hit import Hit
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
