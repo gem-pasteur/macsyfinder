@@ -57,26 +57,26 @@ class Test(MacsyTest):
 
     def test_name(self):
         name = 'foo'
-        system = Model(self.cfg, name, 10)
-        self.assertEqual(system.name, name)
+        model = Model(self.cfg, name, 10)
+        self.assertEqual(model.name, name)
 
 
     def test_inter_gene_max_space(self):
-        system_fqn = 'foo/bar'
+        model_fqn = 'foo/bar'
         inter_gene_max_space_xml = 40
         # test inter_gene_max_space from xml
-        system = Model(self.cfg, system_fqn, inter_gene_max_space_xml)
-        self.assertEqual(system.inter_gene_max_space, inter_gene_max_space_xml)
+        model = Model(self.cfg, model_fqn, inter_gene_max_space_xml)
+        self.assertEqual(model.inter_gene_max_space, inter_gene_max_space_xml)
 
         self.clean_working_dir()
 
         # test inter_gene_max_space overloaded by the config
-        inter_gene_max_space_cfg = [[system_fqn, '22']]
+        inter_gene_max_space_cfg = [[model_fqn, '22']]
 
         self.args.inter_gene_max_space = inter_gene_max_space_cfg
         cfg = Config(MacsyDefaults(), self.args)
-        system = Model(cfg, system_fqn, inter_gene_max_space_xml)
-        self.assertEqual(system.inter_gene_max_space, int(inter_gene_max_space_cfg[0][1]))
+        model = Model(cfg, model_fqn, inter_gene_max_space_xml)
+        self.assertEqual(model.inter_gene_max_space, int(inter_gene_max_space_cfg[0][1]))
 
     def test_min_genes_required(self):
         system_fqn = 'foo/bar'
