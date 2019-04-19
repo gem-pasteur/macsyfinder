@@ -29,8 +29,6 @@ from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes
 from macsypy.search_systems import search_systems
-#from macsypy.model import model_bank
-#from macsypy.gene import gene_bank, profile_factory
 from macsypy.error import OptionError
 from macsypy.utils import get_models_name_to_detect
 
