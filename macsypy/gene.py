@@ -188,7 +188,8 @@ class Gene(object):
     @property
     def multi_system(self):
         """
-        :return: True if this Gene can belong to different occurrences of **this System** (and can be used for multiple System assessments), False otherwise.
+        :return: True if this Gene can belong to different occurrences of **the model**
+        (and can be used for multiple System assessments), False otherwise.
         :rtype: boolean.
         """
         return self._multi_system
