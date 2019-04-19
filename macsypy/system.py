@@ -17,17 +17,30 @@ def match(cluster, model):
     accessory_counter = {g.name: 0 for g in model.accessory_genes}
     exchangeable_accessory = create_exchangeable_map(model.forbidden_genes)
 
-    forbiden_counter = {g.name: 0 for g in model.forbidden_genes}
-    exchangeable_forbiden = create_exchangeable_map(model.forbidden_genes)
+    forbidden_counter = {g.name: 0 for g in model.forbidden_genes}
+    exchangeable_forbidden = create_exchangeable_map(model.forbidden_genes)
 
     # Forbidden genes do not play a role in the system, thus they do not have the multi_system feature
     multi_syst_genes = {g.name: 0 for g in chain(model.mandatory_genes, model.forbidden_genes) if g.multi_system}
 
     genes_occ = Counter([h.gene for h in cluster.hits])
 
-    # pour chaque gene de genes_occ
-    # cherche dans mandatory_counter, accessory_counter, forbiden_counter
-    # met a jour le nombre d'occurence
+    for gene, occ in genes_occ.items():
+        if gene.name in mandatory_counter :
+            mandatory_counter[gene.name] += occ
+        elif gene.name in exchangeable_mandatory:
+            gene_ref = exchangeable_mandatory[gene.name]
+            mandatory_counter[gene_ref] += occ
+        elif gene.name in accessory_counter or gene.name in :
+            accessory_counter[gene.name] += occ
+        elif gene.name in exchangeable_accessory:
+            gene_ref = exchangeable_accessory[gene.name]
+            accessory_counter[gene_ref] += occ
+        elif gene.name in forbidden_counter:
+            forbidden_counter[gene.name] += occ
+        elif gene.name in exchangeable_forbidden:
+            gene_ref = exchangeable_forbidden[gene.name]
+            forbidden_counter[gene_ref] += occ
 
     # a la fin
     # nombre de gene_mandatory > min_mandatory_gene_required?
@@ -35,6 +48,8 @@ def match(cluster, model):
     # nombre de gene accessory > min_gene_required ?
     # min_gene_required c'est accessory ou accessory + mandatory ?
     # nombre de gene forbiden
+    # si satifait contraintes, instancie un putative system
+    # sinon cree un RejectedCluster
 
 
 
