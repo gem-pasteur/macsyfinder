@@ -151,3 +151,22 @@ class Hit(object):
         :rtype: integer
         """
         return self.gene.model.inter_gene_max_space
+
+
+class HitRegistry:
+
+    def __init__(self):
+        self._DB = {}
+
+    def __contains__(self, hit):
+        return hit in self._DB
+
+    def __getitem__(self, hit):
+        return self._DB[hit]
+
+    def __setitem__(self, hit, system):
+        if hit in self._DB:
+            self._DB[hit].append(system)
+        else:
+            self._DB[hit] = [system]
+
