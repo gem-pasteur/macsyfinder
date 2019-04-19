@@ -254,7 +254,7 @@ class DefinitionLocation(dict):
     """
 
     def __init__(self, name=None, subdefinitions=None, path=None):
-        super(DefinitionLocation, self).__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
+        super().__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
         self.__dict__ = self  # allow to use dot notation to access to property here name or subdefinitions ...
 
 
