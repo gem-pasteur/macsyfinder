@@ -130,7 +130,8 @@ class Indexes(object):
             raise err
 
 
-"""handle name, topology type, and min/max positions in the sequence dataset for a replicon"""
+"""handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
+each genes is representing by a tuple (seq_id, length)"""
 RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
 
 
