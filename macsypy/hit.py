@@ -1,6 +1,7 @@
 import logging
 _log = logging.getLogger(__name__)
 
+
 class Hit(object):
     """
     Handle the hits filtered from the Hmmer search. The hits are instanciated by :py:meth:`HMMReport.extract` method
