@@ -24,7 +24,7 @@ def build_clusters(hits, rep_info, model):
     :return: list of clusters
     :rtype: List of :class:`Cluster` objects
     """
-    def is_in_cluster(h1, h2):
+    def collocates(h1, h2):
         dist = h2.get_position() - h1.get_position() - 1
         inter_gene_max_space = max(h1.gene.inter_gene_max_space, h2.gene.inter_gene_max_space)
         if 0 < dist <= inter_gene_max_space:
@@ -46,7 +46,7 @@ def build_clusters(hits, rep_info, model):
     cluster_scaffold.append(hits[0])
     previous_hit = hits[0]
     for hit in hits[1:]:
-        if is_in_cluster(previous_hit, hit):
+        if collocates(previous_hit, hit):
             cluster_scaffold.append(hit)
         else:
             if len(cluster_scaffold) > 1:
@@ -57,12 +57,12 @@ def build_clusters(hits, rep_info, model):
 
     if len(cluster_scaffold) > 1:
         new_cluster = Cluster(cluster_scaffold, model)
-        if is_in_cluster(new_cluster.hits[-1], clusters[0].hits[0]):
+        if collocates(new_cluster.hits[-1], clusters[0].hits[0]):
             clusters[0].merge(new_cluster, before=True)
         else:
             clusters.append(new_cluster)
     else:
-        if is_in_cluster(previous_hit, clusters[0].hits[0]):
+        if collocates(previous_hit, clusters[0].hits[0]):
             clusters[0].merge(Cluster([previous_hit], model), before=True)
 
     return clusters
