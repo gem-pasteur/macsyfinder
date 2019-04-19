@@ -26,12 +26,13 @@ def build_clusters(hits, rep_info, model):
     """
     def is_in_cluster(h1, h2):
         dist = h2.get_position() - h1.get_position() - 1
-        if 0 < dist <= model.inter_gene_max_space:
+        inter_gene_max_space = max(h1.gene.inter_gene_max_space, h2.gene.inter_gene_max_space)
+        if 0 < dist <= inter_gene_max_space:
             return True
         elif dist < 0 and rep_info.topology == 'circular':
             # h1 and h2 overlap the ori
             dist = rep_info.max - h1.get_position() + h2.get_position() - rep_info.min
-            return dist <= model.inter_gene_max_space
+            return dist <= inter_gene_max_space
         return False
 
     clusters = []
