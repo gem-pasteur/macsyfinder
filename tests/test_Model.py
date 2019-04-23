@@ -327,6 +327,28 @@ sctC
         sctC = Gene(self.cfg, self.profile_factory, 'sctC', model, self.models_location)
         model.add_forbidden_gene(sctC)
 
+        # without exhangeable attribute on any genes
+        hit_to_keep = []
+        for gene in (sctJ_FLG, sctN_FLG, sctC):
+            hit_to_keep.append(Hit(gene, model,
+                                   "PSAE001c01_{}".format(gene.name),
+                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                               )
+        hit_to_filter_out = []
+        for gene in (sctJ, sctN):
+            hit_to_filter_out.append(Hit(gene, model,
+                                   "PSAE001c01_{}".format(gene.name),
+                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                               )
+
+        filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
+        self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
+
+        # with exhangeable attribute on gene sctJ_FLG, sctJ, sctN, sctN_FLG
+        # so we should take in count the homologs and analogs
+        for g in (sctJ_FLG, sctJ, sctN_FLG, sctN):
+            g._exchangeable = True
+
         hit_to_keep = []
         for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC):
             hit_to_keep.append(Hit(gene, model,
