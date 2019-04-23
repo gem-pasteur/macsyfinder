@@ -86,7 +86,6 @@ class ModelBank(object):
             self._model_bank[model.fqn] = model
 
 
-
 class Model(object):
     """
     Handles a macromolecular model.
@@ -353,7 +352,7 @@ class Model(object):
         :rtype: list of :class:`macsypy.report.Hit` object
         """
         primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes, self._forbidden_genes)]
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())]
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())if g.exchangeable]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
 
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
