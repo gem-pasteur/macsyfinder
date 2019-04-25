@@ -16,7 +16,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.gene import Gene, Homolog, Analog
+from macsypy.gene import Gene, Homolog, Analog, GeneStatus
 from macsypy.gene import ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
@@ -24,7 +24,7 @@ from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestGene(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -393,3 +393,9 @@ exchangeable"""
         comp_4 = sctC.get_compatible_models([model_foo, model_bar], include_forbidden=False)
         self.assertListEqual([], comp_3)
         self.assertListEqual([], comp_4)
+
+
+class TestGeneStatus(MacsyTest):
+
+    def test_str(self):
+        self.assertEqual(str(GeneStatus.MANDATORY), 'mandatory')
