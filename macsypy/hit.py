@@ -49,6 +49,10 @@ class Hit(object):
         self.begin_match = begin_match
         self.end_match = end_match
 
+    def __hash__(self):
+        """To be hashable, it's needed to be put in a set or used as dict key"""
+        return id(self)
+
 
     def __str__(self):
         """
@@ -154,9 +158,45 @@ class Hit(object):
         return self.gene.model.inter_gene_max_space
 
 
+class ValidHit:
+    """
+    Encapsulates a :class:`macsypy.report.Hit`
+    This class stores a Hit that has been attributed to a putative system.
+    Thus, it also stores:
+
+    - the system,
+    - the status of the gene in this system, ('mandatory', 'accessory', ...
+    - the gene in the model it is an occurrence
+    """
+
+    def __init__(self, hit, gene_ref, gene_status):
+        """
+        :param hit:
+        :type hit: :class:`macsypy.hit.Hit` object
+        :param gene_ref:
+        :type gene_ref: :class:`macsypy.gene.Gene` object
+        :param gene_status:
+        :type gene_status: :class:`macsypy.gene.GeneStatus` object
+        """
+        self.hit = hit
+        self.gene_ref = gene_ref
+        self.status = gene_status
+
+
+    def __getattr__(self, item):
+        print("\n####################")
+        print(dir(self))
+        return getattr(self.hit, item)
+
+
 class HitRegistry:
+    """
+    Track for each hit in which system it is implied
+    This is used at the end to choose among PutativeSystems
+    """
 
     def __init__(self):
+        # the keys will be a hit, values a list of PutativeSystems in which it is implied
         self._DB = {}
 
     def __contains__(self, hit):
