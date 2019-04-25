@@ -12,14 +12,13 @@
 ################################################################################
 
 
-import shutil
-import tempfile
 import argparse
 
-from macsypy.hit import Hit, HitRegistry
+from macsypy.hit import Hit, HitRegistry, ValidHit
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import Gene, ProfileFactory
+from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
+from macsypy.cluster import Cluster
 from macsypy.system import PutativeSystem
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
@@ -27,13 +26,11 @@ from tests import MacsyTest
 
 class HitTest(MacsyTest):
 
-    def setUp(self):
+    def setUp(self) -> None:
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
-        args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
 
         models_registry = ModelRegistry(self.cfg)
@@ -45,13 +42,6 @@ class HitTest(MacsyTest):
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
         self.profile_factory = ProfileFactory()
-
-  
-    def tearDown(self):
-        try:
-            shutil.rmtree(self.cfg.working_dir)
-        except:
-            pass
 
 
     def test_cmp(self):
@@ -126,6 +116,43 @@ class HitTest(MacsyTest):
         self.assertEqual(h0.get_syst_inter_gene_max_space(), 10)
 
 
+class ValidHitTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        models_registry = ModelRegistry(cfg)
+        model_name = 'foo'
+        models_location = models_registry[model_name]
+
+        self.registry = HitRegistry()
+        model = Model(cfg, "foo/T2SS", 10)
+        profile_factory = ProfileFactory()
+        self.gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
+        model.add_mandatory_gene(self.gene_gspd)
+        self.gene_sctj = Gene(cfg, profile_factory, "sctJ", model, models_location)
+        model.add_accessory_gene(self.gene_sctj)
+
+        self.hit_1 = Hit(self.gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_2 = Hit(self.gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+
+    def test_init(self):
+        v_hit_1 = ValidHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        self.assertEqual(v_hit_1.gene_ref, self.gene_gspd)
+        self.assertEqual(v_hit_1.status, GeneStatus.MANDATORY)
+        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
+        self.assertEqual(v_hit_2.gene_ref, self.gene_gspd)
+        self.assertEqual(v_hit_2.status, GeneStatus.ACCESSORY)
+
+    def test_hash(self):
+        self.assertEqual(hash(self.hit_1), id(self.hit_1))
+
+
 class HitRegistryTest(MacsyTest):
 
     def setUp(self) -> None:
@@ -140,12 +167,19 @@ class HitRegistryTest(MacsyTest):
         models_location = models_registry[model_name]
 
         self.registry = HitRegistry()
-        self.model = Model(cfg, "foo/T2SS", 10)
+        model = Model(cfg, "foo/T2SS", 10)
         profile_factory = ProfileFactory()
+        gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(cfg, profile_factory, "sctJ", model, models_location)
+        model.add_accessory_gene(gene_sctj)
 
-        gene = Gene(cfg, profile_factory, "gspD", self.model, models_location)
-        self.hit_1 = Hit(gene, self.model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.system_1 = PutativeSystem(self.model, [self.hit_1])
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        self.system_1 = PutativeSystem(model, [Cluster([self.hit_1, self.hit_2], model)])
+        self.system_2 = PutativeSystem(model, [Cluster([self.hit_1, self.hit_2], model)])
 
     def test_contains(self):
         self.assertFalse(self.hit_1 in self.registry)
@@ -155,4 +189,9 @@ class HitRegistryTest(MacsyTest):
     def test_set_get_item(self):
         self.registry[self.hit_1] = self.system_1
         self.assertListEqual(self.registry[self.hit_1], [self.system_1])
+        self.registry[self.hit_2] = self.system_1
+        self.assertListEqual(self.registry[self.hit_2], [self.system_1])
+        # add new system for same hit append the system
+        self.registry[self.hit_1] = self.system_2
+        self.assertListEqual(self.registry[self.hit_1], [self.system_1, self.system_2])
 
