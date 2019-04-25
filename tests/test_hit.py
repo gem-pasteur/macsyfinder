@@ -16,16 +16,16 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.hit import Hit
+from macsypy.hit import Hit, HitRegistry
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import Gene
-import macsypy.gene
+from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
+from macsypy.system import PutativeSystem
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class HitTest(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -44,7 +44,7 @@ class Test(MacsyTest):
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        self.profile_factory = macsypy.gene.ProfileFactory()
+        self.profile_factory = ProfileFactory()
 
   
     def tearDown(self):
@@ -124,3 +124,35 @@ class Test(MacsyTest):
         h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         self.assertEqual(h0.get_syst_inter_gene_max_space(), 10)
+
+
+class HitRegistryTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        models_registry = ModelRegistry(cfg)
+        model_name = 'foo'
+        models_location = models_registry[model_name]
+
+        self.registry = HitRegistry()
+        self.model = Model(cfg, "foo/T2SS", 10)
+        profile_factory = ProfileFactory()
+
+        gene = Gene(cfg, profile_factory, "gspD", self.model, models_location)
+        self.hit_1 = Hit(gene, self.model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.system_1 = PutativeSystem(self.model, [self.hit_1])
+
+    def test_contains(self):
+        self.assertFalse(self.hit_1 in self.registry)
+        self.registry[self.hit_1] = self.system_1
+        self.assertTrue(self.hit_1 in self.registry)
+
+    def test_set_get_item(self):
+        self.registry[self.hit_1] = self.system_1
+        self.assertListEqual(self.registry[self.hit_1], [self.system_1])
+
