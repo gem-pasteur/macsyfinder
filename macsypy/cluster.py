@@ -11,9 +11,11 @@ def build_clusters(hits, rep_info, model):
     From a list of filtered hits, and replicon information (topology, length),
     build all lists of hits that satisfied the constraints:
         * max_gene_inter_space
-        * lonner
+        * loner
         * multi_system
-    if Yes create a cluster
+    If Yes create a cluster
+    A cluster contains at least to hits separated by less or equal than max_gene_inter_space
+    Except for loner genes which are allowed to be alone in a cluster
 
     :param hits: list of filtered hits
     :type hits: list of :class:`macsypy.report.Hit` objects
@@ -73,17 +75,26 @@ class Cluster:
     def __init__(self, hits, model):
         self.hits = hits
         self.model = model
+        self._check_replicon_consistency()
+
+    def _check_replicon_consistency(self):
+        rep_name = self.hits[0].replicon_name
+        if not all([h.replicon_name == rep_name for h in self.hits]):
+            msg = "Cannot build a cluster from hits coming from different replicons"
+            _log.error(msg)
+            raise MacsypyError(msg)
+
 
     def merge(self, cluster, before=False):
         """
-        merge the cluster in this one.
+        merge the cluster in this one. (do it in place)
 
         :param cluster:
-        :type cluster:
-        :param bool before: If True the hits of the cluster will be add at the end of this one,
-                            Otherwise the cluster hits be insert before the hits of this one
+        :type cluster: :class:`macsypy.cluster.Cluster` object
+        :param bool before: If False the hits of the cluster will be add at the end of this one,
+                            Otherwise the cluster hits will be inserted before the hits of this one.
         :return: None
-        :raise MasypyError: if the two cluster have not the same model
+        :raise MasypyError: if the two clusters have not the same model
         """
         if cluster.model != self.model:
             raise MacsypyError("Try to merge Clusters from different model")
@@ -103,8 +114,23 @@ class Cluster:
         return s
 
 
-class RejectedCluster:
+class RejectedClusters:
+    """
+    Handle a set of clusters which has rejected during the :func:`macsypy.system.match`  step
+    This clusters (can be one) does not fill the requirements or contains forbidden genes.
+    """
 
-    def __init__(self, cluster, reason):
-        self.cluster = cluster
+    def __init__(self, model, clusters, reason):
+        """
+        :param model:
+        :type model: :class:`macsypy.model.Model` object
+        :param clusters:
+        :type clusters: list of :class:`macsypy.cluster.Cluster` objects
+        :param str reason: the reason why these clusters have been rejected
+        """
+        self.model = model
+        if isinstance(clusters, Cluster):
+            self.clusters = [clusters]
+        else:
+            self.clusters = clusters
         self.reason = reason
