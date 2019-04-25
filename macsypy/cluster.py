@@ -51,7 +51,8 @@ def build_clusters(hits, rep_info, model):
         if collocates(previous_hit, hit):
             cluster_scaffold.append(hit)
         else:
-            if len(cluster_scaffold) > 1:
+            # by definition a loner gene can be alone in a cluster
+            if len(cluster_scaffold) > 1 or cluster_scaffold[0].gene.loner:
                 cluster = Cluster(cluster_scaffold, model)
                 clusters.append(cluster)
             cluster_scaffold = [hit]
@@ -66,7 +67,11 @@ def build_clusters(hits, rep_info, model):
     else:
         if collocates(previous_hit, clusters[0].hits[0]):
             clusters[0].merge(Cluster([previous_hit], model), before=True)
-
+        elif previous_hit.gene.loner:
+            # this hit is far from other clusters
+            # but by definition a loner gene can be alone in a cluster
+            cluster = Cluster(cluster_scaffold, model)
+            clusters.append(cluster)
     return clusters
 
 
