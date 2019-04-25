@@ -18,9 +18,12 @@ _log = logging.getLogger(__name__)
 
 from subprocess import Popen
 from threading import Lock
+from enum import Enum
+
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .error import MacsypyError
 from . import registries
+
 
 class GeneBank(object):
     """
@@ -79,9 +82,6 @@ class GeneBank(object):
             raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
         else:
             self._genes_bank[key] = gene
-
-
-#gene_bank = GeneBank()
 
 
 class Gene(object):
@@ -601,4 +601,13 @@ class Profile(object):
             self._report = report
             return report
 
+
+class GeneStatus(Enum):
+
+    MANDATORY = 1
+    ACCESSORY = 2
+    FORBIDDEN = 3
+
+    def __str__(self):
+        return self.name.lower()
 
