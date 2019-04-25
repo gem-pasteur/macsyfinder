@@ -109,6 +109,10 @@ class Cluster:
             else:
                 self.hits.extend(cluster.hits)
 
+    @property
+    def replicon_name(self):
+        return self.hits[0].replicon_name
+
 
     def __str__(self):
         s = """Cluster:
