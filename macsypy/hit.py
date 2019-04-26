@@ -184,8 +184,6 @@ class ValidHit:
 
 
     def __getattr__(self, item):
-        print("\n####################")
-        print(dir(self))
         return getattr(self.hit, item)
 
 
