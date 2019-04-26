@@ -19,7 +19,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
 from macsypy.cluster import Cluster
-from macsypy.system import PutativeSystem
+from macsypy.system import System
 from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
@@ -178,8 +178,8 @@ class HitRegistryTest(MacsyTest):
         self.hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        self.system_1 = PutativeSystem(model, [Cluster([self.hit_1, self.hit_2], model)])
-        self.system_2 = PutativeSystem(model, [Cluster([self.hit_1, self.hit_2], model)])
+        self.system_1 = System(model, [Cluster([self.hit_1, self.hit_2], model)])
+        self.system_2 = System(model, [Cluster([self.hit_1, self.hit_2], model)])
 
     def test_contains(self):
         self.assertFalse(self.hit_1 in self.registry)
