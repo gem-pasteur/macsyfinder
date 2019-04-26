@@ -1,5 +1,5 @@
-import abc
 import itertools
+import json
 
 from.gene import GeneStatus
 from .cluster import Cluster, RejectedClusters
@@ -30,8 +30,8 @@ def match(clusters, model, hit_registry):
     :param model:  The model to consider
     :type model: :class:`macsypy.model.Model` object
     :param hit_registry: The registry where all hits => System are registered
-    :return: either a PutativeSystem or a RejectedClusters
-    :rtype: :class:`macsypy.system.PutativeSystem` or :class:`macsypy.cluster.RejectedClusters` object
+    :return: either a System or a RejectedClusters
+    :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
     """
     def create_exchangeable_map(genes):
         """
@@ -117,7 +117,7 @@ def match(clusters, model, hit_registry):
 
     multi_syst_genes = []
     if is_a_system:
-        res = PutativeSystem(model, valid_clusters)
+        res = System(model, valid_clusters)
         for hit in valid_hits:
             hit_registry[hit] = res
             if hit.gene.multi_system:  # gene or gene_ref ?
@@ -129,7 +129,7 @@ def match(clusters, model, hit_registry):
     return res, multi_syst_genes
 
 
-class System(metaclass=abc.ABCMeta):
+class System:
 
     _id = itertools.count(1)
 
@@ -141,8 +141,8 @@ class System(metaclass=abc.ABCMeta):
         :param clusters: The list of cluster that form this system
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         """
-        replicon_name = clusters[0].replicon_name
-        self.id = "{}_{}_{}".format(replicon_name, model.name, next(self._id))
+        self._replicon_name = clusters[0].replicon_name
+        self.id = "{}_{}_{}".format(self._replicon_name, model.name, next(self._id))
         self.model = model
         self.clusters = clusters
         self._mandatory_occ = None
@@ -163,49 +163,59 @@ class System(metaclass=abc.ABCMeta):
         hits = [h for cluster in self.clusters for h in cluster.hits]
         return hits
 
-    @abc.abstractmethod
-    def __str__(self):
-        """
 
-        :return:
-        """
-        return ""
+    @property
+    def multi_loci(self):
+        return len(self.clusters) > 1
 
-    @abc.abstractmethod
-    def to_json(self):
-        """
-
-        :return:
-        """
-        return {}
-
-
-class PutativeSystem(System):
 
     def __str__(self):
 
-        s = "{rep_name} {sys_id} {model}\n"
+        s = """system id = {sys_id}
+model = {model} 
+loci nb = {loci}
+replicon = {rep_name}
+clusters = {clst}
+""".format(sys_id=self.id,
+           model=self.model.fqn,
+           loci=len(self.clusters),
+           rep_name=self._replicon_name,
+           clst=", ".join(["[" + ", ".join([v_h.gene.name for v_h in cluster.hits]) + "]" for cluster in self.clusters])
+           )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
-            s += "{} genes:".format(title)
-            for g_name, hits in self._mandatory_occ:
+            s += "\n{} genes:\n".format(title)
+            for g_name, hits in genes.items():
                 s += "\t- {g_ref}: {occ} ({hits})\n".format(g_ref=g_name,
                                                             occ=len(hits),
                                                             hits=', '.join([h.gene.name for h in hits])
                                                             )
         return s
 
-
     def to_json(self):
-        raise NotImplementedError
-
-
-class ConfirmedSystem(System):
-    pass
-
-
-class AmbiguousSystem(System):
-    pass
-
-
-class RejectedSystem(System):
-    pass
+        """
+        :return: a serialisation of this system in json format
+                 The json have the following structure
+                 {'id': str system_id
+                  'model': str model fully qualified name
+                  'loci_nb': int number of loci
+                  'replicon_name': str the replicon name
+                  'clusters': [[ str hit gene name, ...], [...]]
+                  'gene_composition': {
+                        'mandatory': {str gene_ref name: [ str hit gene name, ... ]},
+                        'accessory': {str gene_ref name: [ str hit gene name, ... ]}
+                        }
+                 }
+        """
+        system = {'id': self.id,
+                  'model': self.model.fqn,
+                  'loci_nb': len(self.clusters),
+                  'replicon_name': self._replicon_name,
+                  'clusters': [[v_h.gene.name for v_h in cluster.hits]for cluster in self.clusters],
+                  'gene_composition':
+                      {'mandatory': {gene_ref: [hit.gene.name for hit in hits]
+                                     for gene_ref, hits in self._mandatory_occ.items()},
+                       'accessory': {gene_ref: [hit.gene.name for hit in hits]
+                                     for gene_ref, hits in self._accessory_occ.items()}
+                      }
+                  }
+        return json.dumps(system)
