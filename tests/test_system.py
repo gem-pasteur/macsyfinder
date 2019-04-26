@@ -13,6 +13,7 @@
 
 
 import argparse
+import json
 
 from macsypy.hit import Hit, HitRegistry, ValidHit
 from macsypy.config import Config, MacsyDefaults
@@ -20,7 +21,7 @@ from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
 from macsypy.model import Model
 from macsypy.registries import ModelRegistry
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.system import PutativeSystem, match
+from macsypy.system import System, match
 
 from tests import MacsyTest
 
@@ -57,10 +58,10 @@ class SystemTest(MacsyTest):
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        system_1 = PutativeSystem(model, [Cluster([v_hit_1, v_hit_2], model)])
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
         self.assertTrue(system_1.id.startswith('replicon_id_T2SS_'))
 
-        system_2 = PutativeSystem(model, [Cluster([v_hit_1, v_hit_2], model)])
+        system_2 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
         self.assertEqual(int(system_2.id.split('_')[-1]), int(system_1.id.split('_')[-1]) + 1)
 
     def test_hits(self):
@@ -78,10 +79,100 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        system_1 = PutativeSystem(model, [Cluster([v_hit_1, v_hit_2], model),
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
                                                Cluster([v_hit_3], model)])
 
         self.assertEqual(system_1.hits, [v_hit_1, v_hit_2, v_hit_3])
+
+
+    def test_multi_loci(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c2 = Cluster([v_hit_3], model)
+        sys_single_locus = System(model, [c1])
+        self.assertFalse(sys_single_locus.multi_loci)
+        sys_multi_loci = System(model, [c1, c2])
+        self.assertTrue(sys_multi_loci.multi_loci)
+
+
+    def test_to_json(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c2 = Cluster([v_hit_3], model)
+        sys_multi_loci = System(model, [c1, c2])
+
+        rec_json = sys_multi_loci.to_json()
+        exp_json = {'id': sys_multi_loci.id,
+                    'model': 'foo/T2SS',
+                    'loci_nb': 2,
+                    'replicon_name': 'replicon_id',
+                    'clusters': [['gspD', 'sctJ'], ['sctN']],
+                    'gene_composition':
+                        {'mandatory': {'gspD': ['gspD']},
+                         'accessory': {'sctJ': ['sctJ'], 'sctN': ['sctN']}
+                         }
+                    }
+        self.assertDictEqual(json.loads(rec_json), exp_json)
+
+
+    def test_str(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c2 = Cluster([v_hit_3], model)
+        sys_multi_loci = System(model, [c1, c2])
+        sys_str = """system id = {}
+model = foo/T2SS 
+loci nb = 2
+replicon = replicon_id
+clusters = [gspD, sctJ], [sctN]
+
+mandatory genes:
+\t- gspD: 1 (gspD)
+
+accessory genes:
+\t- sctJ: 1 (sctJ)
+\t- sctN: 1 (sctN)
+""".format(sys_multi_loci.id)
+        self.assertEqual(sys_str, str(sys_multi_loci))
 
 
     def test_match(self):
@@ -143,21 +234,21 @@ class SystemTest(MacsyTest):
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
-        self.assertIsInstance(res, PutativeSystem)
+        self.assertIsInstance(res, System)
 
         # with one mandatory analog
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj_flg, h_sctn, h_gspd], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
-        self.assertIsInstance(res, PutativeSystem)
+        self.assertIsInstance(res, System)
 
         # with one accessory analog
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd_an], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
-        self.assertIsInstance(res, PutativeSystem)
+        self.assertIsInstance(res, System)
 
         # the min_gene_required quorum is not reached
         model._min_mandatory_genes_required = 2
@@ -192,7 +283,7 @@ class SystemTest(MacsyTest):
         c1 = Cluster([h_sctj, h_sctn], model)
         c2 = Cluster([h_gspd], model)
         res, multi_system_genes = match([c1, c2], model, self.hit_registry)
-        self.assertIsInstance(res, PutativeSystem)
+        self.assertIsInstance(res, System)
 
         # with one analog an one homolog
         model._min_mandatory_genes_required = 2
@@ -200,7 +291,7 @@ class SystemTest(MacsyTest):
         c1 = Cluster([h_sctj_flg, h_sctn_flg], model)
         c2 = Cluster([h_gspd], model)
         res, multi_system_genes = match([c1, c2], model, self.hit_registry)
-        self.assertIsInstance(res, PutativeSystem)
+        self.assertIsInstance(res, System)
 
         # with one analog an one homolog and one forbidden in 3 clusters
         model._min_mandatory_genes_required = 2
