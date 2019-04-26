@@ -86,21 +86,30 @@ class SystemTest(MacsyTest):
 
     def test_match(self):
         model = Model(self.cfg, "foo/T2SS", 10)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, exchangeable=True)
         gene_sctn_flg = Homolog(
             Gene(self.cfg, self.profile_factory, "sctN_FLG", model, self.models_location),
             gene_sctn
         )
         gene_sctn.add_homolog(gene_sctn_flg)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
         gene_sctj_flg = Analog(
             Gene(self.cfg, self.profile_factory, "sctJ_FLG", model, self.models_location),
             gene_sctj
         )
         gene_sctj.add_analog(gene_sctj_flg)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location)
-
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location, exchangeable=True)
+        gene_gspd_an = Analog(
+            Gene(self.cfg, self.profile_factory, "flgB", model, self.models_location),
+            gene_gspd
+        )
+        gene_gspd.add_analog(gene_gspd_an)
+        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, exchangeable=True)
+        gene_abc_ho = Homolog(
+            Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location),
+            gene_abc
+        )
+        gene_abc.add_homolog(gene_abc_ho)
         model.add_mandatory_gene(gene_sctn)
         model.add_mandatory_gene(gene_sctj)
         model.add_accessory_gene(gene_gspd)
@@ -111,15 +120,17 @@ class SystemTest(MacsyTest):
         h_sctn = Hit(gene_sctn, model, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_sctn_flg = Hit(gene_sctn_flg, model, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_gspd = Hit(gene_gspd, model, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_abc = Hit(gene_gspd, model, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd_an = Hit(gene_gspd_an, model, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc = Hit(gene_abc, model, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc_ho = Hit(gene_abc_ho, model, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         #####################
         # test single locus #
         #####################
-        model._min_mandatory_genes_required = 2
-        model._min_genes_required = 2
 
         # it lack one mandatory gene
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 2
         c1 = Cluster([h_sctj, h_gspd], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, RejectedClusters)
@@ -127,8 +138,75 @@ class SystemTest(MacsyTest):
                          "The quorum of mandatory genes required (2) is not reached: 1\n"
                          "The quorum of genes required (2) is not reached: 1")
 
+        # all quorum are reached
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, PutativeSystem)
+
+        # with one mandatory analog
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj_flg, h_sctn, h_gspd], model)
+        res, multi_system_genes = match([c1], model, self.hit_registry)
+        self.assertIsInstance(res, PutativeSystem)
+
+        # with one accessory analog
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj, h_sctn, h_gspd_an], model)
+        res, multi_system_genes = match([c1], model, self.hit_registry)
+        self.assertIsInstance(res, PutativeSystem)
+
+        # the min_gene_required quorum is not reached
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 2
+        c1 = Cluster([h_sctj, h_sctn_flg, h_gspd], model)
+        res, multi_system_genes = match([c1], model, self.hit_registry)
+        self.assertIsInstance(res, RejectedClusters)
+        self.assertEqual(res.reason,
+                         "The quorum of genes required (2) is not reached: 1")
+
+        # the cluster contain a forbidden gene
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj, h_sctn, h_gspd, h_abc], model)
+        res, multi_system_genes = match([c1], model, self.hit_registry)
+        self.assertIsInstance(res, RejectedClusters)
+        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
+
+        # the cluster contain a forbidden gene homolog
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj, h_sctn, h_gspd, h_abc_ho], model)
+        res, multi_system_genes = match([c1], model, self.hit_registry)
+        self.assertIsInstance(res, RejectedClusters)
+        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): tadZ")
+
+        #####################
+        # test multi loci   #
+        #####################
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj, h_sctn], model)
+        c2 = Cluster([h_gspd], model)
+        res, multi_system_genes = match([c1, c2], model, self.hit_registry)
+        self.assertIsInstance(res, PutativeSystem)
+
+        # with one analog an one homolog
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj_flg, h_sctn_flg], model)
+        c2 = Cluster([h_gspd], model)
+        res, multi_system_genes = match([c1, c2], model, self.hit_registry)
+        self.assertIsInstance(res, PutativeSystem)
+
+        # with one analog an one homolog and one forbidden in 3 clusters
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+        c1 = Cluster([h_sctj_flg, h_sctn_flg], model)
+        c2 = Cluster([h_gspd], model)
+        c3 = Cluster([h_abc], model)
+        res, multi_system_genes = match([c1, c2, c3], model, self.hit_registry)
+        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
