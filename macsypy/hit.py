@@ -166,7 +166,7 @@ class ValidHit:
 
     - the system,
     - the status of the gene in this system, ('mandatory', 'accessory', ...
-    - the gene in the model it is an occurrence
+    - the gene in the model for which it's an occurrence
     """
 
     def __init__(self, hit, gene_ref, gene_status):
