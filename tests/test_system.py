@@ -221,49 +221,49 @@ accessory genes:
 
         # it lack one mandatory gene
         model._min_mandatory_genes_required = 2
-        model._min_genes_required = 2
+        model._min_genes_required = 3
         c1 = Cluster([h_sctj, h_gspd], model)
         res, multi_system_genes = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, RejectedClusters)
         self.assertEqual(res.reason,
                          "The quorum of mandatory genes required (2) is not reached: 1\n"
-                         "The quorum of genes required (2) is not reached: 1")
+                         "The quorum of genes required (3) is not reached: 2")
 
         # all quorum are reached
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, System)
 
         # with one mandatory analog
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj_flg, h_sctn, h_gspd], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, System)
 
         # with one accessory analog
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd_an], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, System)
 
         # the min_gene_required quorum is not reached
         model._min_mandatory_genes_required = 2
-        model._min_genes_required = 2
+        model._min_genes_required = 4
         c1 = Cluster([h_sctj, h_sctn_flg, h_gspd], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, RejectedClusters)
         self.assertEqual(res.reason,
-                         "The quorum of genes required (2) is not reached: 1")
+                         "The quorum of genes required (4) is not reached: 3")
 
         # the cluster contain a forbidden gene
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd, h_abc], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, RejectedClusters)
         self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
 
@@ -271,7 +271,7 @@ accessory genes:
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn, h_gspd, h_abc_ho], model)
-        res, multi_system_genes = match([c1], model, self.hit_registry)
+        res, _ = match([c1], model, self.hit_registry)
         self.assertIsInstance(res, RejectedClusters)
         self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): tadZ")
 
@@ -282,7 +282,7 @@ accessory genes:
         model._min_genes_required = 1
         c1 = Cluster([h_sctj, h_sctn], model)
         c2 = Cluster([h_gspd], model)
-        res, multi_system_genes = match([c1, c2], model, self.hit_registry)
+        res, _ = match([c1, c2], model, self.hit_registry)
         self.assertIsInstance(res, System)
 
         # with one analog an one homolog
@@ -290,7 +290,7 @@ accessory genes:
         model._min_genes_required = 1
         c1 = Cluster([h_sctj_flg, h_sctn_flg], model)
         c2 = Cluster([h_gspd], model)
-        res, multi_system_genes = match([c1, c2], model, self.hit_registry)
+        res, _ = match([c1, c2], model, self.hit_registry)
         self.assertIsInstance(res, System)
 
         # with one analog an one homolog and one forbidden in 3 clusters
@@ -299,5 +299,5 @@ accessory genes:
         c1 = Cluster([h_sctj_flg, h_sctn_flg], model)
         c2 = Cluster([h_gspd], model)
         c3 = Cluster([h_abc], model)
-        res, multi_system_genes = match([c1, c2, c3], model, self.hit_registry)
+        res, _ = match([c1, c2, c3], model, self.hit_registry)
         self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
