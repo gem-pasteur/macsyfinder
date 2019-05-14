@@ -17,8 +17,11 @@ import sys
 import os
 import argparse
 import logging
+import itertools
+
 from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
+
 import colorlog
 _log = colorlog.getLogger('macsypy')
 
@@ -27,9 +30,12 @@ from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
-from macsypy.database import Indexes
-from macsypy.search_systems import search_systems
+from macsypy.database import Indexes, RepliconDB
+#from macsypy.search_systems import search_systems
 from macsypy.error import OptionError
+from macsypy import cluster
+from macsypy.hit import HitRegistry
+from macsypy.system import match, System
 from macsypy.utils import get_models_name_to_detect
 
 
@@ -349,13 +355,67 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
     if len(all_hits) > 0:
-        # It's important to keep this sorting to have in last  all_hits version
+        # It's important to keep this sorting to have in last all_hits version
         # the hits with the same replicon_name and position sorted by score
         # the best score in first
-        all_hits = sorted(all_hits, key=attrgetter('score'), reverse=True)
-        all_hits = sorted(all_hits, key=attrgetter('replicon_name', 'position'))
+        hits_by_replicon = {}
+        for hit in all_hits:
+            if hit.replicon_name in hits_by_replicon:
+                hits_by_replicon[hit.replicon_name].append(hit)
+            else:
+                hits_by_replicon[hit.replicon_name] = [hit]
+
+        for rep_name in hits_by_replicon:
+            hits_by_replicon[rep_name].sort(key=attrgetter('score'), reverse=True)
+            hits_by_replicon[rep_name].sort(key=attrgetter('position'))
+
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
-        search_systems(all_hits, models_to_detect, config, model_bank)
+        rep_db = RepliconDB(config)
+        hit_registry = HitRegistry()
+        systems = []
+        rejected_clusters = []
+        for rep_name in hits_by_replicon:
+            logger.info("Analyse hits for replicon {}".format(rep_name))
+            rep_info = rep_db[rep_name]
+            for model in models_to_detect:
+                logger.info("check model {}".format(model.fqn))
+                hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+                print("##################################### hits related to {} ############################".format(model.name))
+                print("".join([str(h) for h in hits_related_one_model]))
+                print("###############################################################################")
+                logger.info("building clusters")
+                clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
+                print("###################################### CLUSTERS ###################################################")
+                print("\n".join([str(c) for c in clusters]))
+                print("#####################################################################################")
+                if model.multi_loci:
+                    clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+                else:
+                    clusters_combination = [clusters]
+                logger.info("Check systems")
+                for one_combination_set in clusters_combination:
+                    for one_clust_combination in one_combination_set:
+                        print("############# macsyfinder L397 one_clust_combination", one_clust_combination)
+                        res, _ = match(one_clust_combination, model, hit_registry)
+                        print("############ macsyfinder L399 res", res, type(res))
+                        if isinstance(res, System):
+                            systems.append(res)
+                        else:
+                            rejected_clusters.append(res)
+        print("#################################################################################################")
+        print("*****************")
+        print("* Systems found *")
+        print("*****************")
+        for system in systems:
+            print(system)
+            print("==============================================")
+
+        print("*********************")
+        print("* rejected Clusters *")
+        print("*********************")
+        for rej_clst in rejected_clusters:
+            print(rej_clst)
+            print("==============================================")
     else:
         logger.info("No hits found in this dataset.")
 
