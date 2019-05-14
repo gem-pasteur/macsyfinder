@@ -27,11 +27,12 @@ def build_clusters(hits, rep_info, model):
     :rtype: List of :class:`Cluster` objects
     """
     def collocates(h1, h2):
+        # compute the number of genes between h1 and h2
         dist = h2.get_position() - h1.get_position() - 1
         inter_gene_max_space = max(h1.gene.inter_gene_max_space, h2.gene.inter_gene_max_space)
-        if 0 < dist <= inter_gene_max_space:
+        if 0 <= dist <= inter_gene_max_space:
             return True
-        elif dist < 0 and rep_info.topology == 'circular':
+        elif dist <= 0 and rep_info.topology == 'circular':
             # h1 and h2 overlap the ori
             dist = rep_info.max - h1.get_position() + h2.get_position() - rep_info.min
             return dist <= inter_gene_max_space
@@ -58,13 +59,14 @@ def build_clusters(hits, rep_info, model):
             cluster_scaffold = [hit]
         previous_hit = hit
 
+    # close the current cluster
     if len(cluster_scaffold) > 1:
         new_cluster = Cluster(cluster_scaffold, model)
         if collocates(new_cluster.hits[-1], clusters[0].hits[0]):
             clusters[0].merge(new_cluster, before=True)
         else:
             clusters.append(new_cluster)
-    else:
+    elif clusters:
         if collocates(previous_hit, clusters[0].hits[0]):
             clusters[0].merge(Cluster([previous_hit], model), before=True)
         elif previous_hit.gene.loner:
