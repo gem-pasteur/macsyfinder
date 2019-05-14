@@ -128,7 +128,7 @@ def match(clusters, model, hit_registry):
     if len(accessory_genes) + len(mandatory_genes) < model.min_genes_required:
         is_a_system = False
         reasons.append('The quorum of genes required ({}) is not reached: {}'.format(
-            model.min_genes_required, len(accessory_genes)
+            model.min_genes_required, len(accessory_genes) + len(mandatory_genes)
         ))
 
     if is_a_system:
