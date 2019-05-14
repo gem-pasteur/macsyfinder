@@ -20,11 +20,11 @@ from macsypy.gene import Gene, ProfileFactory
 from macsypy.hit import Hit
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters
+from macsypy.cluster import Cluster, build_clusters, RejectedClusters
 from tests import MacsyTest
 
 
-class TestCluster(MacsyTest):
+class TestBuildCluster(MacsyTest):
 
     def setUp(self) -> None:
         self.args = argparse.Namespace()
@@ -39,12 +39,11 @@ class TestCluster(MacsyTest):
         self.models_location = models_registry[self.model_name]
         self.profile_factory = ProfileFactory()
 
-
     def test_build_clusters(self):
         model = Model(self.cfg, "foo/T2SS", 11)
         # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
         # each genes is representing by a tuple (seq_id, length)"""
-        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i*10) for i in range(1, 7)])
+        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
 
         gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
@@ -121,6 +120,36 @@ class TestCluster(MacsyTest):
         self.assertListEqual(clusters[0].hits, [h11, h21, h31])
         self.assertListEqual(clusters[1].hits, [h51, h61])
 
+        # case replicon is linear, 2 clusters, the hits 11,21,31 and 51,61 are contiguous
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        h11 = Hit(gene_3, model, "h11", 10, "replicon_1", 11, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        h12 = Hit(gene_2, model, "h12", 10, "replicon_1", 12, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_3, model, "h50", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        h51 = Hit(gene_4, model, "h51", 10, "replicon_1", 51, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        hits = [h10, h11, h12, h50, h51]
+        random.shuffle(hits)
+        clusters = build_clusters(hits, rep_info, model)
+        self.assertEqual(len(clusters), 2)
+        self.assertListEqual(clusters[0].hits, [h10, h11, h12])
+        self.assertListEqual(clusters[1].hits, [h50, h51])
+
+
+class TestCluster(MacsyTest):
+
+    def setUp(self) -> None:
+        self.args = argparse.Namespace()
+        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.db_type = 'gembase'
+        self.args.models_dir = self.find_data('models')
+        self.args.res_search_dir = "blabla"
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        models_registry = ModelRegistry(self.cfg)
+        self.model_name = 'foo'
+        self.models_location = models_registry[self.model_name]
+        self.profile_factory = ProfileFactory()
+
+
     def test_init(self):
         model_1 = Model(self.cfg, "foo/T2SS", 11)
         model_2 = Model(self.cfg, "foo/T3SS", 11)
@@ -194,3 +223,45 @@ class TestCluster(MacsyTest):
     - model: T2SS
     - hits: (h10, gspD), (h20, sctC)"""
         self.assertEqual(str(c1), s)
+
+
+class TestRejectedCluster(MacsyTest):
+
+    def setUp(self) -> None:
+        self.args = argparse.Namespace()
+        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.db_type = 'gembase'
+        self.args.models_dir = self.find_data('models')
+        self.args.res_search_dir = "blabla"
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        models_registry = ModelRegistry(self.cfg)
+        self.model_name = 'foo'
+        self.models_location = models_registry[self.model_name]
+        self.profile_factory = ProfileFactory()
+
+
+    def test_str(self):
+        model = Model(self.cfg, "foo/T2SS", 11)
+
+        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h40 = Hit(gene_1, model, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_2, model, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        c1 = Cluster([h10, h20], model)
+        c2 = Cluster([h40, h50], model)
+        r_c = RejectedClusters(model, [c1, c2], "bla")
+
+        expected_str = """Cluster:
+    - model: T2SS
+    - hits: (h10, gspD), (h20, sctC)
+Cluster:
+    - model: T2SS
+    - hits: (h10, gspD), (h20, sctC)
+These clusters has been rejected because: bla"""
+        self.assertEqual(expected_str, str(r_c))
