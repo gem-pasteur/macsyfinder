@@ -143,3 +143,11 @@ class RejectedClusters:
         else:
             self.clusters = clusters
         self.reason = reason
+
+    def __str__(self):
+        s = ''
+        for c in self.clusters:
+            s += str(c)
+            s += '\n'
+        s += 'These clusters has been rejected because: {}'.format(self.reason)
+        return s
