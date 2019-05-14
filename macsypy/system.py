@@ -165,8 +165,15 @@ class System:
         self._count()
 
     def _count(self):
+        """
+        fill 2 structures one for mandatory the other for accessory
+        each structure count how many hit for each gene
+        :return: None
+        """
         self._mandatory_occ = {g.name: [] for g in self.model.mandatory_genes}
         self._accessory_occ = {g.name: [] for g in self.model.accessory_genes}
+
+        # all the hits are ValidHit
         for hit in self.hits:
             if hit.status == GeneStatus.MANDATORY:
                 self._mandatory_occ[hit.gene_ref.name].append(hit)
