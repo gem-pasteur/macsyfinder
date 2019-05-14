@@ -33,6 +33,8 @@ def match(clusters, model, hit_registry):
     :return: either a System or a RejectedClusters
     :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
     """
+    print("################################################# DEBUT MATCH ###########################################")
+    print("########### system match L36 clusters", clusters)
     def create_exchangeable_map(genes):
         """
         create a map between an exchangeable (homolog or analog) gene name and it's gene ref
@@ -45,7 +47,7 @@ def match(clusters, model, hit_registry):
         for gene in genes:
             if gene.exchangeable:
                 for ex_gene in itertools.chain(gene.get_homologs(), gene.get_analogs()):
-                    map[ex_gene.name] = gene.name
+                    map[ex_gene.name] = gene
         return map
 
     # init my structures to count gene occurrences
@@ -62,33 +64,43 @@ def match(clusters, model, hit_registry):
     # and track for each hit for which gene it counts for
     valid_clusters = []
     forbidden_hits = []
+    print("############# ENTER LOOP on CLUSTER ################################")
     for cluster in clusters:
+        print("========================")
+        print("cluster", cluster)
         valid_hits = []
         for hit in cluster.hits:
+            print("----------------------)")
+            print("hit", hit)
             gene_name = hit.gene.name
             if gene_name in mandatory_counter:
                 mandatory_counter[hit.gene.name] += 1
                 valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.MANDATORY))
             elif gene_name in exchangeable_mandatory:
-                gene_ref_name = exchangeable_mandatory[gene_name]
-                mandatory_counter[gene_ref_name] += 1
-                valid_hits.append(ValidHit(hit, hit.gene.ref, GeneStatus.MANDATORY))
+                gene_ref = exchangeable_mandatory[gene_name]
+                mandatory_counter[gene_ref.name] += 1
+                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.MANDATORY))
             elif gene_name in accessory_counter:
                 accessory_counter[gene_name] += 1
                 valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.ACCESSORY))
             elif gene_name in exchangeable_accessory:
-                gene_ref_name = exchangeable_accessory[gene_name]
-                accessory_counter[gene_ref_name] += 1
-                valid_hits.append(ValidHit(hit, hit.gene.ref, GeneStatus.ACCESSORY))
+                gene_ref = exchangeable_accessory[gene_name]
+                accessory_counter[gene_ref.name] += 1
+                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.ACCESSORY))
             elif gene_name in forbidden_counter:
                 forbidden_counter[gene_name] += 1
                 # valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.FORBIDDEN))
                 forbidden_hits.append(hit)
             elif gene_name in exchangeable_forbidden:
-                gene_ref_name = exchangeable_forbidden[gene_name]
-                forbidden_counter[gene_ref_name] += 1
+                gene_ref = exchangeable_forbidden[gene_name]
+                forbidden_counter[gene_ref.name] += 1
                 # valid_hits.append(ValidHit(hit, hit.gene.ref, GeneStatus.FORBIDDEN))
                 forbidden_hits.append(hit)
+        print("######### =============================")
+        print("mandatory_counter", mandatory_counter)
+        print("accessory_counter", accessory_counter)
+        print("forbidden_counter", forbidden_counter)
+        print("######### =============================")
         if valid_hits:
             valid_clusters.append(Cluster(valid_hits, model))
     # the count is finished
@@ -97,7 +109,11 @@ def match(clusters, model, hit_registry):
     mandatory_genes = [g for g, occ in mandatory_counter.items() if occ > 0]
     accessory_genes = [g for g, occ in accessory_counter.items() if occ > 0]
     forbidden_genes = [g for g, occ in forbidden_counter.items() if occ > 0]
-
+    print("######### =============================")
+    print("mandatory_genes", mandatory_genes)
+    print("accessory_genes", accessory_genes)
+    print("forbidden_genes", forbidden_genes)
+    print("######### =============================")
     reasons = []
     is_a_system = True
     if forbidden_genes:
@@ -109,24 +125,23 @@ def match(clusters, model, hit_registry):
         is_a_system = False
         reasons.append('The quorum of mandatory genes required ({}) is not reached: {}'.format(
             model.min_mandatory_genes_required, len(mandatory_genes)))
-    if len(accessory_genes) < model.min_genes_required:
+    if len(accessory_genes) + len(mandatory_genes) < model.min_genes_required:
         is_a_system = False
         reasons.append('The quorum of genes required ({}) is not reached: {}'.format(
             model.min_genes_required, len(accessory_genes)
         ))
 
-    multi_syst_genes = []
     if is_a_system:
         res = System(model, valid_clusters)
         for hit in valid_hits:
-            hit_registry[hit] = res
             if hit.gene.multi_system:  # gene or gene_ref ?
-                multi_syst_genes.append(hit)
+                hit_registry[hit] = res
     else:
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
-
-    return res, multi_syst_genes
+    print("############## system match L130 res \n", res, type(res))
+    print("##################################### FIN system match ########################################################")
+    return res, hit_registry
 
 
 class System:
@@ -216,6 +231,6 @@ clusters = {clst}
                                      for gene_ref, hits in self._mandatory_occ.items()},
                        'accessory': {gene_ref: [hit.gene.name for hit in hits]
                                      for gene_ref, hits in self._accessory_occ.items()}
-                      }
+                       }
                   }
         return json.dumps(system)
