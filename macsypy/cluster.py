@@ -151,5 +151,5 @@ class RejectedClusters:
         for c in self.clusters:
             s += str(c)
             s += '\n'
-        s += 'These clusters has been rejected because: {}'.format(self.reason)
+        s += 'These clusters has been rejected because:\n{}'.format(self.reason)
         return s
