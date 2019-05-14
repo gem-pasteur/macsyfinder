@@ -189,8 +189,7 @@ class ValidHit:
 
 class HitRegistry:
     """
-    Track for each hit in which system it is implied
-    This is used at the end to choose among PutativeSystems
+    Track hit corresponding to a multi system gene in which system it is implied
     """
 
     def __init__(self):
