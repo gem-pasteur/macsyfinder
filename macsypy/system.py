@@ -213,6 +213,7 @@ clusters = {clst}
                                                             )
         return s
 
+
     def to_json(self):
         """
         :return: a serialisation of this system in json format
