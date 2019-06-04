@@ -1,5 +1,6 @@
 import itertools
 import json
+import statistics
 import logging
 _log = logging.getLogger(__name__)
 
@@ -174,6 +175,19 @@ class System:
             elif hit.status == GeneStatus.ACCESSORY:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
 
+
+    def occurence(self):
+        """
+        sometimes several systems collocates so they form only one cluster
+        so macsyfinder build only one system
+        the occurrence is an indicator of how many systems are
+        it's based on the number of occurrence of each mandatory genes
+
+        :return: the potential number of biologic systems
+        """
+        occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
+        return round(statistics.mean(occ_per_gene))
+
     @property
     def hits(self):
         hits = [h for cluster in self.clusters for h in cluster.hits]
@@ -192,11 +206,13 @@ model = {model}
 loci nb = {loci}
 replicon = {rep_name}
 clusters = {clst}
+occ = {occ}
 """.format(sys_id=self.id,
            model=self.model.fqn,
            loci=len(self.clusters),
            rep_name=self._replicon_name,
-           clst=", ".join(["[" + ", ".join([v_h.gene.name for v_h in cluster.hits]) + "]" for cluster in self.clusters])
+           clst=", ".join(["[" + ", ".join([v_h.gene.name for v_h in cluster.hits]) + "]" for cluster in self.clusters]),
+           occ=self.occurence()
            )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
             s += "\n{} genes:\n".format(title)
