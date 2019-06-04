@@ -375,15 +375,15 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
         systems = []
         rejected_clusters = []
         for rep_name in hits_by_replicon:
-            logger.info("Analyse hits for replicon {}".format(rep_name))
+            logger.info("Hits analysis for replicon {}".format(rep_name))
             rep_info = rep_db[rep_name]
             for model in models_to_detect:
-                logger.info("check model {}".format(model.fqn))
+                logger.info("Check model {}".format(model.fqn))
                 hits_related_one_model = model.filter(hits_by_replicon[rep_name])
                 print("##################################### hits related to {} ############################".format(model.name))
                 print("".join([str(h) for h in hits_related_one_model]))
                 print("###############################################################################")
-                logger.info("building clusters")
+                logger.info("Building clusters")
                 clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
                 print("###################################### CLUSTERS ###################################################")
                 print("\n".join([str(c) for c in clusters]))
@@ -392,7 +392,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                     clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
                 else:
                     clusters_combination = [clusters]
-                logger.info("Check systems")
+                logger.info("Searching systems")
                 for one_combination_set in clusters_combination:
                     for one_clust_combination in one_combination_set:
                         print("############# macsyfinder L397 one_clust_combination", one_clust_combination)
