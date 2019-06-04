@@ -1,5 +1,7 @@
 import itertools
 import json
+import logging
+_log = logging.getLogger(__name__)
 
 from.gene import GeneStatus
 from .cluster import Cluster, RejectedClusters
@@ -33,8 +35,6 @@ def match(clusters, model, hit_registry):
     :return: either a System or a RejectedClusters
     :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
     """
-    print("################################################# DEBUT MATCH ###########################################")
-    print("########### system match L36 clusters", clusters)
     def create_exchangeable_map(genes):
         """
         create a map between an exchangeable (homolog or analog) gene name and it's gene ref
@@ -64,14 +64,9 @@ def match(clusters, model, hit_registry):
     # and track for each hit for which gene it counts for
     valid_clusters = []
     forbidden_hits = []
-    print("############# ENTER LOOP on CLUSTER ################################")
     for cluster in clusters:
-        print("========================")
-        print("cluster", cluster)
         valid_hits = []
         for hit in cluster.hits:
-            print("----------------------)")
-            print("hit", hit)
             gene_name = hit.gene.name
             if gene_name in mandatory_counter:
                 mandatory_counter[hit.gene.name] += 1
@@ -96,11 +91,6 @@ def match(clusters, model, hit_registry):
                 forbidden_counter[gene_ref.name] += 1
                 # valid_hits.append(ValidHit(hit, hit.gene.ref, GeneStatus.FORBIDDEN))
                 forbidden_hits.append(hit)
-        print("######### =============================")
-        print("mandatory_counter", mandatory_counter)
-        print("accessory_counter", accessory_counter)
-        print("forbidden_counter", forbidden_counter)
-        print("######### =============================")
         if valid_hits:
             valid_clusters.append(Cluster(valid_hits, model))
     # the count is finished
@@ -109,27 +99,33 @@ def match(clusters, model, hit_registry):
     mandatory_genes = [g for g, occ in mandatory_counter.items() if occ > 0]
     accessory_genes = [g for g, occ in accessory_counter.items() if occ > 0]
     forbidden_genes = [g for g, occ in forbidden_counter.items() if occ > 0]
-    print("######### =============================")
-    print("mandatory_genes", mandatory_genes)
-    print("accessory_genes", accessory_genes)
-    print("forbidden_genes", forbidden_genes)
-    print("######### =============================")
+    _log.debug("#" * 50)
+    _log.debug("mandatory_genes", mandatory_genes)
+    _log.debug("accessory_genes", accessory_genes)
+    _log.debug("forbidden_genes", forbidden_genes)
+    _log.debug("#" * 50)
     reasons = []
     is_a_system = True
     if forbidden_genes:
         is_a_system = False
-        reasons.append('There is {} forbidden genes occurrence(s): {}'.format(
+        msg = 'There is {} forbidden genes occurrence(s): {}'.format(
             len(forbidden_hits), ', '.join(h.gene.name for h in forbidden_hits)
-        ))
+        )
+        reasons.append(msg)
+        _log.debug(msg)
     if len(mandatory_genes) < model.min_mandatory_genes_required:
         is_a_system = False
-        reasons.append('The quorum of mandatory genes required ({}) is not reached: {}'.format(
-            model.min_mandatory_genes_required, len(mandatory_genes)))
+        msg = 'The quorum of mandatory genes required ({}) is not reached: {}'.format(
+            model.min_mandatory_genes_required, len(mandatory_genes))
+        reasons.append(msg)
+        _log.debug(msg)
     if len(accessory_genes) + len(mandatory_genes) < model.min_genes_required:
         is_a_system = False
-        reasons.append('The quorum of genes required ({}) is not reached: {}'.format(
+        msg = 'The quorum of genes required ({}) is not reached: {}'.format(
             model.min_genes_required, len(accessory_genes) + len(mandatory_genes)
-        ))
+        )
+        reasons.append(msg)
+        _log.debug(msg)
 
     if is_a_system:
         res = System(model, valid_clusters)
@@ -139,8 +135,6 @@ def match(clusters, model, hit_registry):
     else:
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
-    print("############## system match L130 res \n", res, type(res))
-    print("##################################### FIN system match ########################################################")
     return res, hit_registry
 
 

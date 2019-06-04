@@ -380,14 +380,14 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
             for model in models_to_detect:
                 logger.info("Check model {}".format(model.fqn))
                 hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-                print("##################################### hits related to {} ############################".format(model.name))
-                print("".join([str(h) for h in hits_related_one_model]))
-                print("###############################################################################")
+                logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+                logger.debug("".join([str(h) for h in hits_related_one_model]))
+                logger.debug("#" * 80)
                 logger.info("Building clusters")
                 clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
-                print("###################################### CLUSTERS ###################################################")
-                print("\n".join([str(c) for c in clusters]))
-                print("#####################################################################################")
+                logger.debug("{:#^80}".format("CLUSTERS"))
+                logger.debug("\n".join([str(c) for c in clusters]))
+                logger.debug("#" * 80)
                 if model.multi_loci:
                     clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
                 else:
@@ -395,27 +395,23 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                 logger.info("Searching systems")
                 for one_combination_set in clusters_combination:
                     for one_clust_combination in one_combination_set:
-                        print("############# macsyfinder L397 one_clust_combination", one_clust_combination)
                         res, _ = match(one_clust_combination, model, hit_registry)
-                        print("############ macsyfinder L399 res", res, type(res))
                         if isinstance(res, System):
                             systems.append(res)
                         else:
                             rejected_clusters.append(res)
-        print("#################################################################################################")
-        print("*****************")
-        print("* Systems found *")
-        print("*****************")
-        for system in systems:
-            print(system)
-            print("==============================================")
 
-        print("*********************")
-        print("* rejected Clusters *")
-        print("*********************")
-        for rej_clst in rejected_clusters:
-            print(rej_clst)
-            print("==============================================")
+        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        with open(system_filename, "w") as sys_file:
+            for system in systems:
+                print(system, file=sys_file)
+                print("=" * 40, file=sys_file)
+
+        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
+        with open(cluster_filename, "w") as clst_file:
+            for rej_clst in rejected_clusters:
+                print(rej_clst, file=clst_file)
+                print("=" * 40, file=clst_file)
     else:
         logger.info("No hits found in this dataset.")
 
