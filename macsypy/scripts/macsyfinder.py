@@ -402,18 +402,49 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             rejected_clusters.append(res)
 
         system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-        with open(system_filename, "w") as sys_file:
-            for system in systems:
-                print(system, file=sys_file)
-                print("=" * 40, file=sys_file)
+        systems_to_file(systems, system_filename)
 
         cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
-        with open(cluster_filename, "w") as clst_file:
-            for rej_clst in rejected_clusters:
-                print(rej_clst, file=clst_file)
-                print("=" * 40, file=clst_file)
+        rejected_clst_to_file(rejected_clusters, cluster_filename)
     else:
         logger.info("No hits found in this dataset.")
+
+
+def systems_to_file(systems, system_filename):
+    """
+    print systems occurrences in a file
+
+    :param systems: list of systems found
+    :type systems: list of :class:`macsypy.system.System` objects
+    :param str system_filename: The path of systems result file
+    :return: None
+    """
+    with open(system_filename, "w") as sys_file:
+        print("# macsyfinder {}".format(macsypy.__version__), file=sys_file)
+        print("# {}".format(' '.join(sys.argv)), file=sys_file)
+        print("# Systems found:\n", file=sys_file)
+        for system in systems:
+            print(system, file=sys_file)
+            print("=" * 60, file=sys_file)
+
+
+def rejected_clst_to_file(rejected_clusters, cluster_filename):
+    """
+    print rejected clusters in a file
+    
+    :param rejected_clusters: list of clusters which does not contitute a system
+    :type rejected_clusters: list of :class:`macsypy.cluster.RejectedClusters` objects
+    :param str cluster_filename: The path of rejected clusters result file
+    :return: None
+    """
+    with open(cluster_filename, "w") as clst_file:
+        print("# macsyfinder {}".format(macsypy.__version__), file=clst_file)
+        print("# {}".format(' '.join(sys.argv)), file=clst_file)
+        print("# Rejected clusters:\n", file=clst_file)
+
+        for rej_clst in rejected_clusters:
+            print(rej_clst, file=clst_file)
+            print("=" * 60, file=clst_file)
 
 
 def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
