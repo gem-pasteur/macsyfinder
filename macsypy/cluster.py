@@ -119,7 +119,7 @@ class Cluster:
     def __str__(self):
         s = """Cluster:
     - model: {}
-    - hits: {}""".format(self.model.name, ', '.join(["({}, {})".format(h.id,
+    - hits: {}""".format(self.model.name, ', '.join(["({}, {}, {})".format(h.id,
                                                                        h.gene.name,
                                                                        h.position) for h in self.hits]))
         return s
