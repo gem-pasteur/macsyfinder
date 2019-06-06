@@ -185,8 +185,11 @@ class System:
 
         :return: the potential number of biologic systems
         """
+        # compute the number of occurrence of each mandatory genes
+        # of the model
         occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
         return round(statistics.mean(occ_per_gene))
+
 
     @property
     def hits(self):
@@ -211,7 +214,8 @@ occ = {occ}
            model=self.model.fqn,
            loci=len(self.clusters),
            rep_name=self._replicon_name,
-           clst=", ".join(["[" + ", ".join([v_h.gene.name for v_h in cluster.hits]) + "]" for cluster in self.clusters]),
+           clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
+                                                                               for cluster in self.clusters]),
            occ=self.occurence()
            )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
