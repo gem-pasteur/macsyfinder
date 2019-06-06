@@ -31,7 +31,6 @@ from macsypy.registries import ModelRegistry
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-#from macsypy.search_systems import search_systems
 from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import HitRegistry
@@ -402,7 +401,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             rejected_clusters.append(res)
 
         system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-        systems_to_file(systems, system_filename)
+        with open(system_filename, "w") as sys_file:
+            systems_to_file(systems, sys_file)
 
         cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
         rejected_clst_to_file(rejected_clusters, cluster_filename)
@@ -410,41 +410,41 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
         logger.info("No hits found in this dataset.")
 
 
-def systems_to_file(systems, system_filename):
+def systems_to_file(systems, sys_file):
     """
     print systems occurrences in a file
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
-    :param str system_filename: The path of systems result file
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
     :return: None
     """
-    with open(system_filename, "w") as sys_file:
-        print("# macsyfinder {}".format(macsypy.__version__), file=sys_file)
-        print("# {}".format(' '.join(sys.argv)), file=sys_file)
-        print("# Systems found:\n", file=sys_file)
-        for system in systems:
-            print(system, file=sys_file)
-            print("=" * 60, file=sys_file)
+    print("# macsyfinder {}".format(macsypy.__version__), file=sys_file)
+    print("# {}".format(' '.join(sys.argv)), file=sys_file)
+    print("# Systems found:\n", file=sys_file)
+    for system in systems:
+        print(system, file=sys_file)
+        print("=" * 60, file=sys_file)
 
 
-def rejected_clst_to_file(rejected_clusters, cluster_filename):
+def rejected_clst_to_file(rejected_clusters, clst_file):
     """
     print rejected clusters in a file
-    
+
     :param rejected_clusters: list of clusters which does not contitute a system
     :type rejected_clusters: list of :class:`macsypy.cluster.RejectedClusters` objects
-    :param str cluster_filename: The path of rejected clusters result file
+    :param clst_file: The file where to write down the rejected clusters
+    :type clst_file: file object
     :return: None
     """
-    with open(cluster_filename, "w") as clst_file:
-        print("# macsyfinder {}".format(macsypy.__version__), file=clst_file)
-        print("# {}".format(' '.join(sys.argv)), file=clst_file)
-        print("# Rejected clusters:\n", file=clst_file)
+    print("# macsyfinder {}".format(macsypy.__version__), file=clst_file)
+    print("# {}".format(' '.join(sys.argv)), file=clst_file)
+    print("# Rejected clusters:\n", file=clst_file)
 
-        for rej_clst in rejected_clusters:
-            print(rej_clst, file=clst_file)
-            print("=" * 60, file=clst_file)
+    for rej_clst in rejected_clusters:
+        print(rej_clst, file=clst_file)
+        print("=" * 60, file=clst_file)
 
 
 def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
