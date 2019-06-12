@@ -68,7 +68,6 @@ MacSyFinder API documentation
    profile
    HMMReport
    search_genes
-   search_systems
    macsypy_error
 
 Indices and tables
