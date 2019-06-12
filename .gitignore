@@ -60,7 +60,7 @@ macsyfinder.egg-info/
 ####################
 data/macsyfinder/models/TXSS/*
 data/base/*
-
+sandbox/
 
 ##############################
 # MacsyFinder generated file #
