@@ -20,10 +20,10 @@ from io import StringIO
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.registries import ModelRegistry
-from macsypy.hit import HitRegistry, Hit, ValidHit
+from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.system import System
-from macsypy.cluster import Cluster
+from macsypy.cluster import Cluster, RejectedClusters
 from macsypy.scripts.macsyfinder import get_models_name_to_detect, systems_to_file, rejected_clst_to_file
 import macsypy
 from tests import MacsyTest
@@ -139,7 +139,53 @@ accessory genes:
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
     def test_rejected_clst_to_file(self):
-        pass
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = "blabla"
+
+        cfg = Config(MacsyDefaults(), args)
+        models_registry = ModelRegistry(cfg)
+        model_name = 'foo'
+        models_location = models_registry[model_name]
+        profile_factory = ProfileFactory()
+
+        model = Model(cfg, "foo/T2SS", 11)
+
+        gene_1 = Gene(cfg, profile_factory, "gspD", model, models_location)
+        gene_2 = Gene(cfg, profile_factory, "sctC", model, models_location)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h40 = Hit(gene_1, model, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_2, model, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        c1 = Cluster([h10, h20], model)
+        c2 = Cluster([h40, h50], model)
+        r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
+
+        rej_clst_str = """# macsyfinder {}
+# tests/run_tests.py -vv tests/test_macsyfinder.py
+# Rejected clusters:
+
+Cluster:
+    - model: T2SS
+    - hits: (h10, gspD, 10), (h20, sctC, 20)
+Cluster:
+    - model: T2SS
+    - hits: (h10, gspD, 40), (h20, sctC, 50)
+These clusters has been rejected because:
+The reasons to reject this clusters
+============================================================
+""".format(macsypy.__version__)
+
+        f_out = StringIO()
+        rejected_clst_to_file([r_c], f_out)
+        self.maxDiff = None
+        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+
 
     def parse_args(self):
         pass
