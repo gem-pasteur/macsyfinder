@@ -90,24 +90,23 @@ set_2
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        self.cfg = Config(MacsyDefaults(), args)
+        cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
-        self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        models_registry = ModelRegistry(cfg)
+        model_name = 'foo'
+        models_location = models_registry[model_name]
 
         # we need to reset the ProfileFactory
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        self.profile_factory = ProfileFactory()
-        self.hit_registry = HitRegistry()
+        profile_factory = ProfileFactory()
 
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model(cfg, "foo/T2SS", 10)
         # test if id is well incremented
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(cfg, profile_factory, "sctJ", model, models_location)
         model.add_accessory_gene(gene_sctj)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
