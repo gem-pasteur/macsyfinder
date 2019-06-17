@@ -101,10 +101,10 @@ def match(clusters, model, hit_registry):
     accessory_genes = [g for g, occ in accessory_counter.items() if occ > 0]
     forbidden_genes = [g for g, occ in forbidden_counter.items() if occ > 0]
     _log.debug("#" * 50)
-    _log.debug("mandatory_genes", mandatory_genes)
-    _log.debug("accessory_genes", accessory_genes)
-    _log.debug("forbidden_genes", forbidden_genes)
-    _log.debug("#" * 50)
+    _log.debug("mandatory_genes: {}".format(mandatory_genes))
+    _log.debug("accessory_genes: {}".format(accessory_genes))
+    _log.debug("forbidden_genes: {}".format(forbidden_genes))
+
     reasons = []
     is_a_system = True
     if forbidden_genes:
@@ -133,9 +133,11 @@ def match(clusters, model, hit_registry):
         for hit in valid_hits:
             if hit.gene.multi_system:  # gene or gene_ref ?
                 hit_registry[hit] = res
+        _log.debug("is a putative system")
     else:
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
+    _log.debug("#" * 50)
     return res, hit_registry
 
 
@@ -188,7 +190,7 @@ class System:
         # compute the number of occurrence of each mandatory genes
         # of the model
         occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
-        return round(statistics.mean(occ_per_gene))
+        return round(statistics.median(occ_per_gene))
 
 
     @property
