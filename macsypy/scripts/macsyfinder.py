@@ -385,13 +385,25 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                 logger.info("Building clusters")
                 clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
                 logger.debug("{:#^80}".format("CLUSTERS"))
-                logger.debug("\n".join([str(c) for c in clusters]))
+                logger.debug("\n" + "\n".join([str(c) for c in clusters]))
                 logger.debug("#" * 80)
+                logger.info("Searching systems")
                 if model.multi_loci:
+                    # The loners are already in clusters lists with their context
+                    # so they are take in account
                     clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
                 else:
-                    clusters_combination = [clusters]
-                logger.info("Searching systems")
+                    # we must add loners manually
+                    # but only if the cluster does not already contains them
+                    loners = cluster.get_loners(hits_related_one_model, model)
+                    clusters_combination = []
+                    for one_cluster in clusters:
+                        one_clust_combination = []
+                        one_clust_combination.append(one_cluster)
+                        filtered_loners = cluster.filter_loners(one_cluster, loners)
+                        one_clust_combination.extend(filtered_loners)
+                        clusters_combination.append([one_clust_combination])
+
                 for one_combination_set in clusters_combination:
                     for one_clust_combination in one_combination_set:
                         res, _ = match(one_clust_combination, model, hit_registry)
@@ -405,7 +417,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
             systems_to_file(systems, sys_file)
 
         cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
-        rejected_clst_to_file(rejected_clusters, cluster_filename)
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clst_to_file(rejected_clusters, clst_file)
     else:
         logger.info("No hits found in this dataset.")
 
