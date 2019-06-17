@@ -39,6 +39,7 @@ def build_clusters(hits, rep_info, model):
         return False
 
     clusters = []
+    loners = []
     cluster_scaffold = []
     # sort hits by increasing position and then descending score
     hits.sort(key=lambda h: (h.position, - h.score))
@@ -77,6 +78,12 @@ def build_clusters(hits, rep_info, model):
     return clusters
 
 
+def get_loners(hits, model):
+    loners = [hit for hit in hits if hit.gene.loner]
+    loners = [Cluster([hit], model) for hit in loners]
+    return loners
+
+
 class Cluster:
 
     def __init__(self, hits, model):
@@ -91,6 +98,8 @@ class Cluster:
             _log.error(msg)
             raise MacsypyError(msg)
 
+    def __contains__(self, hit):
+        return hit in self.hits
 
     def merge(self, cluster, before=False):
         """
