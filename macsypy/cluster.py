@@ -80,14 +80,49 @@ def build_clusters(hits, rep_info, model):
 
 
 def get_loners(hits, model):
+    """
+    :param hits: The list of hits to filter
+    :param model: the model which will used to build the clusters
+    :type model: :class:`macsypy.model.Model' object
+    :return: The list of cluster which each element is build with one loner
+    :rtype: [Cluster, ...]
+    """
     loners = [hit for hit in hits if hit.gene.loner]
     loners = [Cluster([hit], model) for hit in loners]
     return loners
 
 
+def filter_loners(cluster, loners):
+    """
+    filter loners to remove those which are already in the cluster
+    :param cluster: The cluster
+    :type cluster: :class:`macsypy.cluster.Cluster' object
+    :param loners: the clusters constituted by one loner to filter
+    :type loners: list of cluster [Cluster, ...]
+    :return: list of loners which are not already in the cluster
+    :rtype: [Clsuter, ...]
+    """
+    cluster_hit_name = {hit.gene.name for hit in cluster.hits}
+    filtered_loners = []
+    for loner in loners:
+        if loner.hits[0].gene.name not in cluster_hit_name:
+            filtered_loners.append(loner)
+    return filtered_loners
+
+
 class Cluster:
+    """
+    Handle hits relative to a model which collocates
+    """
 
     def __init__(self, hits, model):
+        """
+
+        :param hits: the hits constituting this cluster
+        :type hits: [ :class:`macsypy.hit.Hit` , ... ]
+        :param model: the model associated to this cluster
+        :type model: :class:`macsypy.model.Model`
+        """
         self.hits = hits
         self.model = model
         self._check_replicon_consistency()
@@ -100,6 +135,11 @@ class Cluster:
             raise MacsypyError(msg)
 
     def __contains__(self, hit):
+        """
+        :param hit: The hit to test
+        :type hit: :class:`macsypy.hit.Hit` object
+        :return: True if the hit is in the cluster hits, False otherwise
+        """
         return hit in self.hits
 
     def merge(self, cluster, before=False):
