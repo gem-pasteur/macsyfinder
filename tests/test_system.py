@@ -150,11 +150,11 @@ class SystemTest(MacsyTest):
         gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
-        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         c1 = Cluster([v_hit_1, v_hit_2], model)
         c2 = Cluster([v_hit_3], model)
@@ -163,7 +163,8 @@ class SystemTest(MacsyTest):
 model = foo/T2SS 
 loci nb = 2
 replicon = replicon_id
-clusters = [gspD, sctJ], [sctN]
+clusters = [('gspD', 10), ('sctJ', 20)], [('sctN', 30)]
+occ = 1
 
 mandatory genes:
 \t- gspD: 1 (gspD)
