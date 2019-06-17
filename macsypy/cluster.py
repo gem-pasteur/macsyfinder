@@ -63,7 +63,8 @@ def build_clusters(hits, rep_info, model):
     # close the current cluster
     if len(cluster_scaffold) > 1:
         new_cluster = Cluster(cluster_scaffold, model)
-        if collocates(new_cluster.hits[-1], clusters[0].hits[0]):
+        if clusters and collocates(new_cluster.hits[-1], clusters[0].hits[0]):
+            # handle circular replicon
             clusters[0].merge(new_cluster, before=True)
         else:
             clusters.append(new_cluster)

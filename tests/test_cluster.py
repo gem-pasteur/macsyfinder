@@ -93,6 +93,13 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[1].hits, [h51, h61])
         self.assertListEqual(clusters[2].hits, [h80])
 
+        # replicon is circular contains only one cluster
+        rep_info = RepliconInfo('circular', 1, 60, [("g_{}".format(i), i*10) for i in range(1, 7)])
+        hits = [h10, h20, h30]
+        clusters = build_clusters(hits, rep_info, model)
+        self.assertEqual(len(clusters), 1)
+        self.assertListEqual(clusters[0].hits, [h10, h20, h30])
+
         # replicon is circular the last cluster is merge  with the first So we have only one cluster
         rep_info = RepliconInfo('circular', 1, 60, [("g_{}".format(i), i*10) for i in range(1, 7)])
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61]
