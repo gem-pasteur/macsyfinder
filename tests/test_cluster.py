@@ -221,7 +221,7 @@ class TestCluster(MacsyTest):
         c1 = Cluster([h10, h20], model)
         s ="""Cluster:
     - model: T2SS
-    - hits: (h10, gspD), (h20, sctC)"""
+    - hits: (h10, gspD, 10), (h20, sctC, 20)"""
         self.assertEqual(str(c1), s)
 
 
@@ -259,9 +259,10 @@ class TestRejectedCluster(MacsyTest):
 
         expected_str = """Cluster:
     - model: T2SS
-    - hits: (h10, gspD), (h20, sctC)
+    - hits: (h10, gspD, 10), (h20, sctC, 20)
 Cluster:
     - model: T2SS
-    - hits: (h10, gspD), (h20, sctC)
-These clusters has been rejected because: bla"""
+    - hits: (h10, gspD, 40), (h20, sctC, 50)
+These clusters has been rejected because:
+bla"""
         self.assertEqual(expected_str, str(r_c))
