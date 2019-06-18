@@ -1,4 +1,7 @@
+from operator import attrgetter
 import logging
+from macsypy.error import MacsypyError
+
 _log = logging.getLogger(__name__)
 
 
@@ -208,3 +211,39 @@ class HitRegistry:
         else:
             self._DB[hit] = [system]
 
+
+def get_best_hits(hits, key='score'):
+    """
+    If several hits match the same protein, keep only the best match based either on
+
+        - score
+        - i_evalue
+        _ profile_coverage
+
+    :param hits: the hits to filter
+    :type hits: [ :class:`macsypy.hit.Hit` object, ...]
+    :param str key: The criterion used to select the best hit 'score', i_evalue', 'profile_coverage'
+    :return: the list of the best hits
+    :rtype: [ :class:`macsypy.hit.Hit` object, ...]
+    """
+    hits_register = {}
+    for hit in hits:
+        register_key = hit.replicon_name, hit.position
+        if register_key in hits_register:
+            hits_register[register_key].append(hit)
+        else:
+            hits_register[register_key] = [hit]
+
+    best_hits = []
+    for hits_on_same_prot in hits_register.values():
+        if key == 'score':
+            hits_on_same_prot.sort(key=attrgetter(key), reverse=True)
+        elif key == 'i_eval':
+            hits_on_same_prot.sort(key=attrgetter(key))
+        elif key == 'profile_coverage':
+            hits_on_same_prot.sort(key=attrgetter(key), reverse=True)
+        else:
+            raise MacsypyError('The criterion for Hits comparison {} does not exist or is not available.\n'
+                               'It must be either "score", "i_eval" or "profile_coverage".'.format(key))
+        best_hits.append(hits_on_same_prot[0])
+    return best_hits
