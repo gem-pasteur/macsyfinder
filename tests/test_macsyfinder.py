@@ -12,6 +12,7 @@
 ################################################################################
 
 import os
+import sys
 import shutil
 import tempfile
 import argparse
@@ -116,10 +117,10 @@ set_2
         system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
 
         system_str = """# macsyfinder {}
-# tests/run_tests.py -vv tests/test_macsyfinder.py
+# {}
 # Systems found:
 
-system id = replicon_id_T2SS_1
+system id = replicon_id_T2SS_{}
 model = foo/T2SS 
 loci nb = 1
 replicon = replicon_id
@@ -133,7 +134,8 @@ accessory genes:
 \t- sctJ: 1 (sctJ)
 
 ============================================================
-""".format(macsypy.__version__)
+""".format(macsypy.__version__, ' '.join(sys.argv), next(System._id) - 1)
+
         f_out = StringIO()
         systems_to_file([system_1], f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
@@ -167,7 +169,7 @@ accessory genes:
         r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
 
         rej_clst_str = """# macsyfinder {}
-# tests/run_tests.py -vv tests/test_macsyfinder.py
+# {}
 # Rejected clusters:
 
 Cluster:
@@ -179,7 +181,7 @@ Cluster:
 These clusters has been rejected because:
 The reasons to reject this clusters
 ============================================================
-""".format(macsypy.__version__)
+""".format(macsypy.__version__, ' '.join(sys.argv))
 
         f_out = StringIO()
         rejected_clst_to_file([r_c], f_out)
