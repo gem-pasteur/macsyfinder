@@ -12,16 +12,12 @@
 ################################################################################
 
 
-
-
 from itertools import groupby
 from collections import namedtuple
-from glob import glob
 import os.path
 import logging
+from macsypy.error import MacsypyError
 _log = logging.getLogger(__name__)
-from subprocess import Popen
-from .error import MacsypyError
 
 
 def fasta_iter(fasta_file):
@@ -127,7 +123,7 @@ class Indexes(object):
         except Exception as err:
             msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db(), err)
             _log.critical(msg, exc_info=True)
-            raise err
+            raise MacsypyError(msg)
 
 
 """handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
