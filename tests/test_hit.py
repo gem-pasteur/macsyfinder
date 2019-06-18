@@ -14,13 +14,14 @@
 
 import argparse
 
-from macsypy.hit import Hit, HitRegistry, ValidHit
+from macsypy.hit import Hit, HitRegistry, ValidHit, get_best_hits
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
 from macsypy.cluster import Cluster
 from macsypy.system import System
 from macsypy.registries import ModelRegistry
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
@@ -195,3 +196,68 @@ class HitRegistryTest(MacsyTest):
         self.registry[self.hit_1] = self.system_2
         self.assertListEqual(self.registry[self.hit_1], [self.system_1, self.system_2])
 
+
+class GetBestHitTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        self.cfg = Config(MacsyDefaults(), args)
+
+        models_registry = ModelRegistry(self.cfg)
+        self.model_name = 'foo'
+        self.models_location = models_registry[self.model_name]
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        self.profile_factory = ProfileFactory()
+
+    def test_get_best_hits(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+
+
+        #        gene, model, id,            hit_seq_len, replicon_name, position, i_eval,
+        #        score,      profil_coverage,      sequence_coverage,     begin,end
+        ######################
+        # based on the score #
+        ######################
+        h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+                 10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = Hit(gene, model, "PSAE001c01_013980", 759, "PSAE001c01", 3450, float(3.7e-76),
+                 11, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+
+        h = get_best_hits([h0, h1])
+        self.assertEqual(h[0], h1)
+
+        #######################
+        # based on the i_eval #
+        #######################
+        h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
+                 10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = Hit(gene, model, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 11,
+                 10, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+
+        h = get_best_hits([h0, h1], key='i_eval')
+        self.assertEqual(h[0], h0)
+
+        #################################
+        # based on the profile_coverage #
+        #################################
+        h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
+                 10, 10, (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = Hit(gene, model, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 10,
+                 10, 11, (736.0 - 105.0 + 1) / 759, 105, 736)
+
+        h = get_best_hits([h0, h1], key='profile_coverage')
+        self.assertEqual(h[0], h1)
+
+        # bad criterion
+        with self.assertRaises(MacsypyError) as ctx:
+            get_best_hits([h0, h1], key='nimportnaoik')
+        self.assertEqual('The criterion for Hits comparison nimportnaoik does not exist or is not available.\n'
+                         'It must be either "score", "i_eval" or "profile_coverage".', str(ctx.exception))
