@@ -17,26 +17,16 @@ import platform
 import unittest
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes
+from macsypy.error import MacsypyError
 from tests import MacsyTest
-from tests.macsy_test_env import MacsyEnvManager
 
 
-class Test(MacsyTest, MacsyEnvManager):
+class Test(MacsyTest):
 
-    def __init__(self, methodName = 'runTest'):
-        super(Test, self).__init__(methodName)
-
-        def fake_init(obj, cfg):
-            obj.cfg = cfg
-            obj._fasta_path = cfg.sequence_db
-            obj.name = os.path.basename(cfg.sequence_db)
-        self.fake_init = fake_init
-        self.real_init = Indexes.__init__
 
     def setUp(self):
         args = argparse.Namespace()
@@ -114,9 +104,26 @@ class Test(MacsyTest, MacsyEnvManager):
 
 
     def test_build_my_indexes(self):
-        self.load_env("env_010", log_out=False)
-        idx = Indexes(self.macsy_test_env.cfg)
-        with self.assertRaises(IndexError) as e:
-            idx._build_my_indexes()
-        self.assertEqual(str(e.exception), "list index out of range")
-        self.unload_env("env_010")
+        args = argparse.Namespace()
+
+        args.db_type = 'gembase'
+        args.e_value_res = 1
+        args.i_evalue_sel = 0.5
+        args.models_dir = self.find_data('models')
+        args.res_search_suffix = ''
+        args.log_level = 30
+
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        if os.path.exists(args.out_dir):
+            shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
+        os.makedirs(args.out_dir)
+        seq_db = self.find_data("base", "test_base_with_errors.fa")
+        shutil.copy(seq_db, args.out_dir)
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
+        cfg = Config(MacsyDefaults(), args)
+
+        idx = Indexes(cfg)
+        with self.assertRaises(MacsypyError) as e:
+            with self.catch_log():
+                idx._build_my_indexes()
+        self.assertTrue(str(e.exception).startswith("unable to index the sequence dataset:"))
