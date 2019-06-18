@@ -39,7 +39,6 @@ def build_clusters(hits, rep_info, model):
         return False
 
     clusters = []
-    loners = []
     cluster_scaffold = []
     # sort hits by increasing position and then descending score
     hits.sort(key=lambda h: (h.position, - h.score))
@@ -170,8 +169,8 @@ class Cluster:
         s = """Cluster:
     - model: {}
     - hits: {}""".format(self.model.name, ', '.join(["({}, {}, {})".format(h.id,
-                                                                       h.gene.name,
-                                                                       h.position) for h in self.hits]))
+                                                                           h.gene.name,
+                                                                           h.position) for h in self.hits]))
         return s
 
 

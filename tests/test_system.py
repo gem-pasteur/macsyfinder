@@ -80,7 +80,7 @@ class SystemTest(MacsyTest):
         hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
-                                               Cluster([v_hit_3], model)])
+                                  Cluster([v_hit_3], model)])
 
         self.assertEqual(system_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
