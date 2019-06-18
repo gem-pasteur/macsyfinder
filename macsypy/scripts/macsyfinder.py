@@ -33,7 +33,7 @@ from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
-from macsypy.hit import HitRegistry
+from macsypy.hit import HitRegistry, get_best_hits
 from macsypy.system import match, System
 from macsypy.utils import get_models_name_to_detect
 
@@ -365,7 +365,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                 hits_by_replicon[hit.replicon_name] = [hit]
 
         for rep_name in hits_by_replicon:
-            hits_by_replicon[rep_name].sort(key=attrgetter('score'), reverse=True)
+            hits_by_replicon[rep_name] = get_best_hits(hits_by_replicon[rep_name], key='score')
             hits_by_replicon[rep_name].sort(key=attrgetter('position'))
 
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
