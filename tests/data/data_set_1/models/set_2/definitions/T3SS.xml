@@ -1,0 +1,52 @@
+<system inter_gene_max_space="10" min_mandatory_genes_required="7" min_genes_required="7" multi_loci="1">
+    <gene name="T3SS_sctC" presence="mandatory" exchangeable="1" multi_system="true">
+        <homologs>
+    	    <gene name="T2SS_gspD" system_ref="T2SS" multi_system="true"/>
+    	    <gene name="T4P_pilQ" system_ref="T4P" multi_system="true"/>
+    	    <gene name="Tad_rcpA" system_ref="Tad" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="T3SS_sctJ" presence="mandatory" multi_system="true">
+        <homologs>
+    	    <gene name="Flg_sctJ_FLG" system_ref="Flagellum" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="T3SS_sctN" presence="mandatory" multi_system="true">
+    	<homologs>
+    	    <gene name="Flg_sctN_FLG" system_ref="Flagellum" multi_system="true"/>
+    	</homologs>
+    </gene>
+    <gene name="T3SS_sctQ" presence="mandatory" multi_system="true">
+        <homologs>
+    	    <gene name="Flg_sctQ_FLG" system_ref="Flagellum" multi_system="true"/>
+    	</homologs>
+    </gene>
+    <gene name="T3SS_sctR" presence="mandatory" multi_system="true">
+    	<homologs>
+            <gene name="Flg_sctR_FLG" system_ref="Flagellum" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="T3SS_sctS" presence="mandatory" multi_system="true">
+    	<homologs>
+            <gene name="Flg_sctS_FLG" system_ref="Flagellum" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="T3SS_sctT" presence="mandatory" multi_system="true">
+        <homologs>
+    	    <gene name="Flg_sctT_FLG" system_ref="Flagellum" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="T3SS_sctU" presence="mandatory" multi_system="true">
+        <homologs>
+            <gene name="Flg_sctU_FLG" system_ref="Flagellum" multi_system="true"/>
+    	</homologs>
+    </gene>
+    <gene name="T3SS_sctV" presence="mandatory" multi_system="true">
+    	<homologs>
+            <gene name="Flg_sctV_FLG" system_ref="Flagellum" multi_system="true"/>
+        </homologs>
+    </gene>
+    <gene name="Flg_fliE" presence="forbidden" system_ref="Flagellum" multi_system="true"/>
+    <gene name="Flg_flgB" presence="forbidden" system_ref="Flagellum" multi_system="true"/>
+    <gene name="Flg_flgC" presence="forbidden" system_ref="Flagellum" multi_system="true"/>
+</system>
