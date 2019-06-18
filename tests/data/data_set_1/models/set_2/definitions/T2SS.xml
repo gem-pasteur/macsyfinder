@@ -1,0 +1,50 @@
+<system inter_gene_max_space="5" min_mandatory_genes_required="6" min_genes_required="9" multi_loci="1">
+    <gene name="T2SS_gspD" presence="mandatory">
+    	<homologs>
+    	    <gene name="T4P_pilQ" system_ref="T4P" aligned="1"/>
+    	    <gene name="Tad_rcpA" system_ref="Tad"/>
+    	    <gene name="T3SS_sctC" system_ref="T3SS"/>
+    	</homologs>    
+    </gene>
+    <gene name="T2SS_gspE" presence="mandatory">
+    	<homologs>
+    	    <gene name="T4P_pilB" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="T2SS_gspF" presence="mandatory">
+    	<homologs>
+            <gene name="T4P_pilC" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="T2SS_gspM" presence="mandatory">
+    	<homologs>
+            <gene name="T4P_pilO" system_ref="T4P" aligned="1"/>
+    	</homologs>
+    </gene>
+    <gene name="T2SS_gspG" presence="mandatory">
+        <homologs>
+    	    <gene name="T4P_pilAE" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="T2SS_gspH" presence="mandatory">
+        <homologs>
+    	    <gene name="T2SS_gspI"/>
+    	    <gene name="T2SS_gspJ"/>
+    	    <gene name="T2SS_gspK"/>
+    	    <gene name="T4P_pilI_pilV" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="T2SS_gspI" presence="mandatory"/>
+    <gene name="T2SS_gspJ" presence="mandatory"/>
+    <gene name="T2SS_gspK" presence="mandatory"/>
+    <gene name="T2SS_gspC" presence="accessory"/>
+    <gene name="T2SS_gspN" presence="accessory"/>
+    <gene name="T2SS_gspL" presence="accessory"/>
+    <gene name="T2SS_gspO" presence="accessory" exchangeable="1">
+    	<homologs>
+    	    <gene name="T4P_pilD" system_ref="T4P"/>
+        </homologs>
+    </gene>
+    <gene name="T4P_pilM" presence="forbidden" system_ref="T4P"/>
+    <gene name="Tad_tadZ" presence="forbidden" system_ref="Tad"/>
+</system>
