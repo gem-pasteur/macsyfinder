@@ -220,7 +220,7 @@ def get_best_hits(hits, key='score'):
         - i_evalue
         _ profile_coverage
 
-    :param hits: the hits to filter
+    :param hits: the hits to filter, all hits must match the same protein.
     :type hits: [ :class:`macsypy.hit.Hit` object, ...]
     :param str key: The criterion used to select the best hit 'score', i_evalue', 'profile_coverage'
     :return: the list of the best hits
