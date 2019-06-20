@@ -14,6 +14,7 @@
 import itertools
 import json
 import statistics
+from itertools import chain
 import logging
 _log = logging.getLogger(__name__)
 
@@ -190,6 +191,25 @@ class System:
             elif hit.status == GeneStatus.ACCESSORY:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
 
+    @property
+    def score(self):
+        """
+
+        :return:
+        """
+        # model completude
+        score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
+                (len(self._mandatory_occ) + len(self._accessory_occ))
+
+        return score
+
+    @property
+    def score_bis(self):
+        score_mandatory = sum([1/len(hits) for hits in self._mandatory_occ.values() if hits])
+        score_accessory = sum([0.5/len(hits) for hits in self._mandatory_occ.values() if hits])
+        score = (score_mandatory + score_accessory) / len(self.clusters)
+        return score
+
 
     def occurence(self):
         """
@@ -225,13 +245,17 @@ loci nb = {loci}
 replicon = {rep_name}
 clusters = {clst}
 occ = {occ}
+score = {score:.3f}
+score bis = {score_bis:.3f}
 """.format(sys_id=self.id,
            model=self.model.fqn,
            loci=len(self.clusters),
            rep_name=self._replicon_name,
            clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                                                                                for cluster in self.clusters]),
-           occ=self.occurence()
+           occ=self.occurence(),
+           score=self.score,
+           score_bis=self.score_bis
            )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
             s += "\n{} genes:\n".format(title)
