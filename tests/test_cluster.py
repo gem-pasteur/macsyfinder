@@ -218,6 +218,23 @@ class TestCluster(MacsyTest):
         msg = "Cannot build a cluster from hits coming from different replicons"
         self.assertEqual(str(ctx.exception), msg)
 
+    def test_len(self):
+        model = Model(self.cfg, "foo/T2SS", 11)
+
+        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = Hit(gene_3, model, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_3, model, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        c1 = Cluster([h10, h20], model)
+        self.assertEqual(len(c1), 2)
+        
+
     def test_contains(self):
         model = Model(self.cfg, "foo/T2SS", 11)
 
