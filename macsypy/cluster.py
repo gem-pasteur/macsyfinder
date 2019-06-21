@@ -139,6 +139,9 @@ class Cluster:
         self.model = model
         self._check_replicon_consistency()
 
+    def __len__(self):
+        return len(self.hits)
+
     def _check_replicon_consistency(self):
         rep_name = self.hits[0].replicon_name
         if not all([h.replicon_name == rep_name for h in self.hits]):
