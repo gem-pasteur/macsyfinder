@@ -122,10 +122,12 @@ set_2
 
 system id = replicon_id_T2SS_{}
 model = foo/T2SS 
-loci nb = 1
 replicon = replicon_id
 clusters = [('gspD', 1), ('sctJ', 1)]
 occ = 1
+wholeness = 1.000
+loci nb = 1
+score = 1.500
 
 mandatory genes:
 \t- gspD: 1 (gspD)
