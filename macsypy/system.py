@@ -192,7 +192,7 @@ class System:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
 
     @property
-    def score(self):
+    def wholeness(self):
         """
 
         :return:
@@ -204,10 +204,27 @@ class System:
         return score
 
     @property
-    def score_bis(self):
-        score_mandatory = sum([1/len(hits) for hits in self._mandatory_occ.values() if hits])
-        score_accessory = sum([0.5/len(hits) for hits in self._mandatory_occ.values() if hits])
-        score = (score_mandatory + score_accessory) / len(self.clusters)
+    def score(self):
+        """
+        :return: a score that increase with the wholeness of the systems according to the mandatory and accessory genes,
+                 defined in the model. Decrease if some genes are represented several times and take also in account
+                 the number of loci.
+        :rtype: float
+        """
+        score = 0
+        for gene_occ, weight in ((self._mandatory_occ, 1), (self._accessory_occ, 0.5)):
+            gene_cat_nb = len(gene_occ)
+            for gene_name, hits in gene_occ.items():
+                hits_nb = len(hits)
+                if hits_nb == 1:
+                    gene_score = weight / gene_cat_nb
+                elif hits_nb > 1:
+                    gene_score = - weight / 2 * hits_nb / gene_cat_nb
+                else:
+                    continue
+                score += gene_score
+
+        score /= self.loci
         return score
 
 
@@ -218,44 +235,64 @@ class System:
         the occurrence is an indicator of how many systems are
         it's based on the number of occurrence of each mandatory genes
 
-        :return: the potential number of biologic systems
+        :return: a predict number of biologic systems
         """
-        # compute the number of occurrence of each mandatory genes
-        # of the model
         occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
-        return round(statistics.median(occ_per_gene))
+        # if a systems contains 5 gene whit occ of 1 and 5 gene with 0 occ
+        # the median is 0.5
+        # round(0.5) = 0
+        # so I fix a floor value at 1
+        return max(1, round(statistics.median(occ_per_gene)))
 
 
     @property
     def hits(self):
+        """
+        :return: The list of all hits that compose this system
+        :rtype: [:class:`macsypy.hit.ValidHits` , ... ]
+        """
         hits = [h for cluster in self.clusters for h in cluster.hits]
         return hits
+
+    @property
+    def loci(self):
+        """
+        :return: The number of loci of this system
+        :rtype: int > 0
+        """
+        # we do not take loners in account
+        loci = sum([1 for c in self.clusters if len(c) > 1])
+        return loci
 
 
     @property
     def multi_loci(self):
-        return len(self.clusters) > 1
+        """
+        :return: True if the systems is multi_loci. False otherwise
+        :rtype: bool
+        """
+        return self.loci > 1
 
 
     def __str__(self):
 
         s = """system id = {sys_id}
 model = {model} 
-loci nb = {loci}
 replicon = {rep_name}
 clusters = {clst}
 occ = {occ}
+wholeness = {wholeness:.3f}
+loci nb = {loci}
 score = {score:.3f}
-score bis = {score_bis:.3f}
 """.format(sys_id=self.id,
            model=self.model.fqn,
-           loci=len(self.clusters),
+           loci=self.loci,
            rep_name=self._replicon_name,
            clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                                                                                for cluster in self.clusters]),
            occ=self.occurence(),
-           score=self.score,
-           score_bis=self.score_bis
+           wholeness=self.wholeness,
+           score=self.score
            )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
             s += "\n{} genes:\n".format(title)
