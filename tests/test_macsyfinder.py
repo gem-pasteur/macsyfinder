@@ -25,7 +25,7 @@ from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.system import System
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.scripts.macsyfinder import get_models_name_to_detect, systems_to_file, rejected_clst_to_file
+from macsypy.scripts.macsyfinder import get_models_name_to_detect, systems_to_file, rejected_clst_to_file, parse_args
 import macsypy
 from tests import MacsyTest
 
@@ -189,6 +189,39 @@ The reasons to reject this clusters
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
 
-    def parse_args(self):
-        pass
+    def test_parse_args(self):
+        command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt --db-type=gembase --models-dir data/models/ " \
+                       "--models TFF-SF_final all -w 4 --out VICH001-all"
+        args = parse_args(command_line.split()[1:])
+        self.assertIsNone(args.cfg_file)
+        self.assertIsNone(args.coverage_profile)
+        self.assertIsNone(args.hmmer)
+        self.assertIsNone(args.i_evalue_sel)
+        self.assertIsNone(args.inter_gene_max_space)
+        self.assertIsNone(args.max_nb_genes)
+        self.assertIsNone(args.min_genes_required)
+        self.assertIsNone(args.min_mandatory_genes_required)
+        self.assertIsNone(args.multi_loci)
+        self.assertIsNone(args.previous_run)
+        self.assertIsNone(args.profile_suffix)
+        self.assertIsNone(args.replicon_topology)
+        self.assertIsNone(args.res_extract_suffix)
+        self.assertIsNone(args.res_search_suffix)
+        self.assertIsNone(args.topology_file)
+        self.assertFalse(args.idx)
+        self.assertFalse(args.list_models)
+        self.assertFalse(args.mute)
+        self.assertFalse(args.relative_path)
+        self.assertEqual(args.db_type, 'gembase')
+        self.assertEqual(args.models_dir, 'data/models/')
+        self.assertEqual(args.out_dir, 'VICH001-all')
+        self.assertEqual(args.sequence_db, 'VICH001.B.00001.C001.prt')
+        self.assertEqual(args.verbosity, 0)
+        self.assertEqual(args.worker, 4)
 
+        self.assertListEqual(args.models, [['TFF-SF_final', 'all']])
+
+        command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt " \
+                       "--db-type=nimportnaoik --models-dir data/models/ " \
+                       "--models TFF-SF_final all -w 4 --out VICH001-all"
+        
