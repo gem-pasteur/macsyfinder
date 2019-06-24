@@ -71,8 +71,10 @@ def list_models(args):
 def parse_args(args):
     """
 
-    :param args:
-    :return:
+    :param args: The argumnet proviide on the command line
+    :type args: List of strings [without the program name]
+    :return: The arguments parsed
+    :rtype: :class:`aprgparse.Nampsace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -463,7 +465,8 @@ def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
     """
     main entry point to integron_finder
 
-    :param str args: the arguments passed on the command line
+    :param args: the arguments passed on the command line
+    :type args: List of string
     :param loglevel: the output verbosity
     :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
