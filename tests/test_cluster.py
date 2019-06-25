@@ -141,7 +141,11 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[0].hits, [h10, h11, h12])
         self.assertListEqual(clusters[1].hits, [h50, h51])
 
+        # case replicon is linear, no hits
+        clusters = build_clusters([], rep_info, model)
+        self.assertListEqual(clusters, [])
 
+        
 class TestHitFunc(MacsyTest):
 
     def setUp(self) -> None:
