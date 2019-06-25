@@ -71,8 +71,10 @@ def list_models(args):
 def parse_args(args):
     """
 
-    :param args:
-    :return:
+    :param args: The argumnet proviide on the command line
+    :type args: List of strings [without the program name]
+    :return: The arguments parsed
+    :rtype: :class:`aprgparse.Nampsace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -116,31 +118,34 @@ def parse_args(args):
     genome_options.add_argument("--db-type",
                                 choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                                 default=None,
-                                help="The type of dataset to deal with. \"unordered_replicon\" corresponds\
-                                     to a non-assembled genome,\"unordered\" to a metagenomic dataset,\
-                                      \"ordered_replicon\" to an assembled genome, \
-                                     and \"gembase\" to a set of replicons where sequence identifiers\
-                                      follow this convention: \">RepliconName SequenceID\".")
+                                help='The type of dataset to deal with. "unordered_replicon" corresponds '
+                                     'to a non-assembled genome,"unordered" to a metagenomic dataset, '
+                                     '"ordered_replicon" to an assembled genome, '
+                                     'and "gembase" to a set of replicons where sequence identifiers '
+                                     'follow this convention: ">RepliconName SequenceID".')
 
     genome_options.add_argument("--replicon-topology",
                                 choices=['linear', 'circular'],
                                 default=None,
-                                help="The topology of the replicons \
-                                (this option is meaningful only if the db_type is 'ordered_replicon' or 'gembase'. ")
+                                help="The topology of the replicons "
+                                     "(this option is meaningful only if the db_type is "
+                                     "'ordered_replicon' or 'gembase'. ")
 
     genome_options.add_argument("--topology-file",
                                 default=None,
-                                help="Topology file path. The topology file allows to specify a topology \
-                                     (linear or circular) for each replicon (this option is meaningful only if\
-                                     the db_type is 'ordered_replicon' or 'gembase'.\
-                                     A topology file is a tabular file with two columns: the 1st is the replicon name,\
-                                     and the 2nd the corresponding topology:\n\"RepliconA\tlinear\" ")
+                                help="Topology file path. The topology file allows to specify a topology "
+                                     "(linear or circular) for each replicon (this option is meaningful only if "
+                                     "the db_type is 'ordered_replicon' or 'gembase'. "
+                                     "A topology file is a tabular file with two columns: "
+                                     "the 1st is the replicon name, and the 2nd the corresponding topology:\n"
+                                     "\"RepliconA\tlinear\"")
 
     genome_options.add_argument("--idx",
                                 action='store_true',
                                 default=False,
-                                help="Forces to build the indexes for the sequence dataset even \
-                                     if they were previously computed and present at the dataset location (default = False)"
+                                help="Forces to build the indexes for the sequence dataset even "
+                                     "if they were previously computed and present at the dataset location "
+                                     "(default = False)"
                                 )
 
     system_options = parser.add_argument_group(title="Systems detection options")
@@ -148,47 +153,48 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="Co-localization criterion: maximum number of components non-matched by a\
-                                     profile allowed between two matched components for them to be considered contiguous.\
-                                     Option only meaningful for 'ordered' datasets.\
-                                     The first value must match to a model, the second to a number of components.\
-                                     This option can be repeated several times:\
-                                     \n \"--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20\""
+                                help="Co-localization criterion: maximum number of components non-matched by a"
+                                     "profile allowed between two matched components "
+                                     "for them to be considered contiguous. "
+                                     "Option only meaningful for 'ordered' datasets. "
+                                     "The first value must match to a model, the second to a number of components. "
+                                     "This option can be repeated several times:\n"
+                                     "--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20"
                                 )
     system_options.add_argument("--min-mandatory-genes-required",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of mandatory genes required for model assessment.\
-                                     The first value must correspond to a model name, the second value to an integer.\
-                                     This option can be repeated several times:\n\
-                                     \"--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10\""
+                                help="The minimal number of mandatory genes required for model assessment. "
+                                     "The first value must correspond to a model name, the second value to an integer. "
+                                     "This option can be repeated several times:\n"
+                                     "--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
                                 )
     system_options.add_argument("--min-genes-required",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of genes required for model assessment\
-                                     (includes both 'mandatory' and 'accessory' components).\
-                                     The first value must correspond to a model name, the second value to an integer.\
-                                     This option can be repeated several times:\
-                                     \n \"--min-genes-required T2SS 15 --min-genes-required Flagellum 10\""
+                                help="The minimal number of genes required for model assessment "
+                                     "(includes both 'mandatory' and 'accessory' components). "
+                                     "The first value must correspond to a model name, the second value to an integer. "
+                                     "This option can be repeated several times:\n"
+                                     "--min-genes-required TXSScanT2SS 15 --min-genes-required TXSScan/Flagellum 10"
                                 )
     system_options.add_argument("--max-nb-genes",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The maximal number of genes required for model assessment.\
-                                     The first value must correspond to a model name, the second value to an integer.\
-                                     This option can be repeated several times:\
-                                     \n \"--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
+                                help="The maximal number of genes required for model assessment. "
+                                     "The first value must correspond to a model name, the second value to an integer. "
+                                     "This option can be repeated several times:\n"
+                                     "--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
                                 )
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
-                                help="Allow the storage of multi-loci systems for the specified systems.\
-                                The systems are specified as a comma separated list \
-                                (--multi-loci sys1,sys2) default is False"
+                                help="Allow the storage of multi-loci systems for the specified systems. "
+                                     "The systems are specified as a comma separated list "
+                                     "(--multi-loci sys1,sys2) default is False"
                                 )
 
     hmmer_options = parser.add_argument_group(title="Options for Hmmer execution and hits filtering")
@@ -205,65 +211,68 @@ def parse_args(args):
                                action='store',
                                type=float,
                                default=None,
-                               help='Maximal independent e-value for Hmmer hits to be selected for model detection.\
-                                     (default = 0.001)')
+                               help="Maximal independent e-value for Hmmer hits to be selected for model detection. "
+                                     "(default = 0.001)")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
-                               help='Minimal profile coverage required in the hit alignment to allow\
-                                    the hit selection for model detection. (default = 0.5)')
+                               help="Minimal profile coverage required in the hit alignment to allow "
+                                    "the hit selection for model detection. (default = 0.5)")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
                              default=None,
-                             help='specify the path to the models if the models are not installed in the canonical place.\
-                              It gather definitions (xml files) and hmm profiles in a specific\
-                              structure. A directory with the name of the model with at least two directories\
-                              "profiles" which contains all hmm profile for gene describe in definitions and\
-                              "models" which contains either xml file of definitions or subdirectories\
-                              to organize the model in subsystems.')
+                             help="""specify the path to the models if the models are not installed in the canonical place.
+                                     It gather definitions (xml files) and hmm profiles in a specific
+                                     structure. A directory with the name of the model with at least two directories
+                                     "profiles" which contains all hmm profile for gene describe in definitions and
+                                     "models" which contains either xml file of definitions or subdirectories
+                                     to organize the model in subsystems.""")
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
                              default=None,
-                             help='Path to the directory where to store results.\
-                             if out-dir is specified res-search-dir will be ignored.')
+                             help="""Path to the directory where to store results.
+                                     if out-dir is specified res-search-dir will be ignored.""")
     dir_options.add_argument('--res-search-suffix',
                              action='store',
                              default=None,
-                             help='The suffix to give to Hmmer raw output files.')
+                             help="The suffix to give to Hmmer raw output files.")
     dir_options.add_argument('--res-extract-suffix',
                              action='store',
                              default=None,
-                             help='The suffix to give to filtered hits output files.')
+                             help="The suffix to give to filtered hits output files.")
     dir_options.add_argument('--profile-suffix',
                              action='store',
                              default=None,
-                             help="The suffix of profile files. For each 'Gene' element, the corresponding profile is \
-                                  searched in the 'profile_dir', in a file which name is based on the \
-                                  Gene name + the profile suffix.\
-                                  For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',\
-                                  then the profile should be placed at the specified location and be named 'gspG.hmm3'")
+                             help="""The suffix of profile files. For each 'Gene' element, the corresponding profile is
+                                     searched in the 'profile_dir', in a file which name is based on the
+                                     Gene name + the profile suffix.
+                                     For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
+                                     then the profile should be placed at the specified location 
+                                     and be named 'gspG.hmm3'"""
+                             )
 
     general_options = parser.add_argument_group(title="General options", description=None)
     general_options.add_argument("-w", "--worker",
                                  action='store',
                                  type=int,
                                  default=None,
-                                 help="Number of workers to be used by MacSyFinder.\
-                                      In the case the user wants to run MacSyFinder in a multi-thread mode.\
-                                      (0 mean all cores will be used, default 1)")
+                                 help="""Number of workers to be used by MacSyFinder.
+                                         In the case the user wants to run MacSyFinder in a multi-thread mode.
+                                         (0 mean all cores will be used, default 1)"""
+                                 )
     general_options.add_argument("-v", "--verbosity",
                                  action="count",
                                  default=0,
-                                 help="Increases the verbosity level. There are 4 levels:\
-                                       Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)")
+                                 help="""Increases the verbosity level. There are 4 levels:
+                                         Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     general_options.add_argument("--mute",
                                  action="store_true",
                                  default=False,
-                                 help="mute the log on stdout."
-                                      " (continue to log on macsyfinder.log)")
+                                 help="mute the log on stdout. "
+                                      "(continue to log on macsyfinder.log)")
     general_options.add_argument("--version",
                                  action="version",
                                  version=get_version_message()),
@@ -298,11 +307,26 @@ def parse_args(args):
 
 def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
+    Do the job, this function is the orchestrator of all the macsyfinder mechanics
+    at the end several files are produced containing the results
 
-    :param parsed_args: the command line arguments
-    :type parsed_args: a :class:`argparse.Namespace` object
-    :param logger:
-    :return:
+      - macsyfinder.conf: The set of variables used to runt this job
+      - macsyfinder.systems: The list of the potential systems
+      - macsyfinder.rejected_cluster: The list of all clusters and clustrs combination
+                                      which has been rejected and the reason
+      - macsyfinder.log: the copy of the standard output
+
+    :param config: The MacSyFinder Configuration
+    :type config: :class:`macsypy.config.Config` object
+    :param model_bank: The bank populated with the available models
+    :type model_bank: :class:`macsypy.model.ModelBank` object
+    :param gene_bank: the bank containing all genes
+    :type gene_bank: :class:`macsypy.gene.GeneBank` object
+    :param profile_factory: The profile factory
+    :type profile_factory: :class:`macsypy.gene.ProfileFactory`
+    :param logger: The logger use to display information to the user.
+                   It must be initialized. see :func:`macsypy.init_logger`
+    :type logger: :class:`colorlog.Logger` object
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
@@ -462,9 +486,11 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
 
 def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
     """
-    main entry point to integron_finder
+    main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
+    the real function that perfom a search
 
-    :param str args: the arguments passed on the command line
+    :param args: the arguments passed on the command line without the program name
+    :type args: List of string
     :param loglevel: the output verbosity
     :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
