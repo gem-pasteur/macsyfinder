@@ -59,35 +59,36 @@ def build_clusters(hits, rep_info, model):
     # keep the first one, this with the best score
     # position == sequence rank in replicon
     hits = ([next(group) for pos, group in itertools.groupby(hits, lambda h: h.position)])
-    cluster_scaffold.append(hits[0])
-    previous_hit = hits[0]
-    for hit in hits[1:]:
-        if collocates(previous_hit, hit):
-            cluster_scaffold.append(hit)
-        else:
-            # by definition a loner gene can be alone in a cluster
-            if len(cluster_scaffold) > 1 or cluster_scaffold[0].gene.loner:
+    if hits:
+        cluster_scaffold.append(hits[0])
+        previous_hit = hits[0]
+        for hit in hits[1:]:
+            if collocates(previous_hit, hit):
+                cluster_scaffold.append(hit)
+            else:
+                # by definition a loner gene can be alone in a cluster
+                if len(cluster_scaffold) > 1 or cluster_scaffold[0].gene.loner:
+                    cluster = Cluster(cluster_scaffold, model)
+                    clusters.append(cluster)
+                cluster_scaffold = [hit]
+            previous_hit = hit
+
+        # close the current cluster
+        if len(cluster_scaffold) > 1:
+            new_cluster = Cluster(cluster_scaffold, model)
+            if clusters and collocates(new_cluster.hits[-1], clusters[0].hits[0]):
+                # handle circular replicon
+                clusters[0].merge(new_cluster, before=True)
+            else:
+                clusters.append(new_cluster)
+        elif clusters:
+            if collocates(previous_hit, clusters[0].hits[0]):
+                clusters[0].merge(Cluster([previous_hit], model), before=True)
+            elif previous_hit.gene.loner:
+                # this hit is far from other clusters
+                # but by definition a loner gene can be alone in a cluster
                 cluster = Cluster(cluster_scaffold, model)
                 clusters.append(cluster)
-            cluster_scaffold = [hit]
-        previous_hit = hit
-
-    # close the current cluster
-    if len(cluster_scaffold) > 1:
-        new_cluster = Cluster(cluster_scaffold, model)
-        if clusters and collocates(new_cluster.hits[-1], clusters[0].hits[0]):
-            # handle circular replicon
-            clusters[0].merge(new_cluster, before=True)
-        else:
-            clusters.append(new_cluster)
-    elif clusters:
-        if collocates(previous_hit, clusters[0].hits[0]):
-            clusters[0].merge(Cluster([previous_hit], model), before=True)
-        elif previous_hit.gene.loner:
-            # this hit is far from other clusters
-            # but by definition a loner gene can be alone in a cluster
-            cluster = Cluster(cluster_scaffold, model)
-            clusters.append(cluster)
     return clusters
 
 
