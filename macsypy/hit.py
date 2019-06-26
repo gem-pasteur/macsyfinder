@@ -64,7 +64,6 @@ class Hit(object):
         self.sequence_coverage = sequence_coverage
         self.begin_match = begin_match
         self.end_match = end_match
-        self._systems = set()
 
     def __hash__(self):
         """To be hashable, it's needed to be put in a set or used as dict key"""
@@ -173,22 +172,6 @@ class Hit(object):
         :rtype: integer
         """
         return self.gene.model.inter_gene_max_space
-
-    def add_system(self, system):
-        """
-
-        :param system:
-        :return:
-        """
-        self._systems.add(system)
-
-
-    def used_in_systems(self):
-        """
-
-        :return:
-        """
-        return self._systems
 
 
 class ValidHit:
