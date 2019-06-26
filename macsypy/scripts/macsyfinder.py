@@ -436,7 +436,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             rejected_clusters.append(res)
 
         system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-        systems.sort(key=lambda _sys: (_sys.model.fqn, - _sys.score))
+        systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
         with open(system_filename, "w") as sys_file:
             systems_to_file(systems, sys_file)
 
