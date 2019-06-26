@@ -145,7 +145,7 @@ class TestBuildCluster(MacsyTest):
         clusters = build_clusters([], rep_info, model)
         self.assertListEqual(clusters, [])
 
-        
+
 class TestHitFunc(MacsyTest):
 
     def setUp(self) -> None:

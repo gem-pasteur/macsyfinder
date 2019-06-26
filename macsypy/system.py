@@ -213,18 +213,30 @@ class System:
         """
         score = 0
         for gene_occ, weight in ((self._mandatory_occ, 1), (self._accessory_occ, 0.5)):
-            gene_cat_nb = len(gene_occ)
-            for gene_name, hits in gene_occ.items():
-                hits_nb = len(hits)
+
+            for gene_name, v_hits in gene_occ.items():
+                hits_nb = len(v_hits)
                 if hits_nb == 1:
-                    gene_score = weight / gene_cat_nb
+                    if v_hits[0].hit.gene.name == gene_name:
+                        gene_score = weight
+                    else:
+                        # the hit match an homolog or analog
+                        gene_score = weight * 0.75
                 elif hits_nb > 1:
-                    gene_score = - weight / 2 * hits_nb / gene_cat_nb
+                    gene_score = 0
+                    for v_hit in v_hits:
+                        # there are several hits for the same gene
+                        if v_hit.hit.gene.name == gene_name:
+                            gene_score += - weight * 0.5
+                        else:
+                            # the hit match an homolog or analog
+                            # So this hit is at least duplicated and homolog the penalty is higher
+                            gene_score += - weight * 0.75
                 else:
                     continue
                 score += gene_score
 
-        score /= self.loci
+        # score /= self.loci
         return score
 
 
