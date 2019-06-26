@@ -155,31 +155,6 @@ def match(clusters, model, hit_registry):
     return res, hit_registry
 
 
-def track_multi_systems(systems):
-    multi_sys_tracker = {}
-    model_2_system = {}
-
-    for system in systems:
-        v_hits = system.hits
-
-        model_fqn = system.model.fqn
-        if model_fqn not in model_2_system:
-            model_2_system[model_fqn] = set()
-        model_2_system[model_fqn].add(system)
-
-        for v_hit in v_hits:
-            hit = v_hit.hit
-
-            if hit not in multi_sys_tracker:
-                multi_sys_tracker[hit] = set()
-            multi_sys_tracker[hit].add(v_hit.gene_ref.model.fqn)
-
-    for hit, models_fqn in multi_sys_tracker.items():
-        for model_fqn in models_fqn:
-            for system in model_2_system[model_fqn]:
-                hit.add_system(system)
-
-
 class System:
 
     _id = itertools.count(1)
@@ -334,18 +309,10 @@ score = {score:.3f}
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
             s += "\n{} genes:\n".format(title)
             for g_name, hits in genes.items():
-                s += "\t- {g_ref}: {occ} ".format(g_ref=g_name,
-                                                  occ=len(hits))
-                all_hits_str = []
-                for h in hits:
-                    used_in_systems = [s.id for s in h.used_in_systems() if s.model.fqn != self.model.fqn]
-                    if used_in_systems:
-                        hit_str = "{} [{}]".format(h.gene.name, ', '.join(used_in_systems))
-                    else:
-                        hit_str = "{}".format(h.gene.name)
-                    all_hits_str.append(hit_str)
-                s += " ({})\n".format(", ".join(all_hits_str))
-
+                s += "\t- {g_ref}: {occ} ({hits})\n".format(g_ref=g_name,
+                                                            occ=len(hits),
+                                                            hits=', '.join([h.gene.name for h in hits])
+                                                            )
         return s
 
 
