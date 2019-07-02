@@ -24,8 +24,7 @@ from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry
-from macsypy.utils import which
-from tests import MacsyTest
+from tests import MacsyTest, which
 
 
 class TestProfile(MacsyTest):

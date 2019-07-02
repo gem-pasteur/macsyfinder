@@ -19,8 +19,7 @@ import inspect
 import unittest
 import json
 
-from tests import MacsyTest
-from macsypy.utils import which
+from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 import macsypy
 from macsypy import model
