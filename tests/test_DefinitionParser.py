@@ -195,15 +195,6 @@ class TestModelParser(MacsyTest):
         self.assertEqual(str(context.exception),
                          "Invalid model definition 'gene_no_name': gene without a name")
 
-    def test_invalid_aligned(self):
-        model_2_detect = ['foo/invalid_aligned']
-        with self.assertRaises(SyntaxError) as context:
-            with self.catch_log():
-                self.parser.parse(model_2_detect)
-        self.assertEqual(str(context.exception),
-                         'Invalid model definition \'invalid_aligned\': invalid value for an attribute of gene '
-                         '\'foo_bar\': \'totote\' allowed values are "1", "true", "True", "0", "false", "False"')
-
     def test_invalid_homolog(self):
         model_2_detect = ['foo/invalid_homolog']
         with self.assertRaises(ModelInconsistencyError) as context:
@@ -289,7 +280,8 @@ class TestModelParser(MacsyTest):
                 # seems to be useless
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "min_genes_required must be greater or equal than min_mandatory_genes_required")
+                         "foo/bad_min_mandatory_genes_required_2: min_genes_required '6' must be greater or equal"
+                         " than min_mandatory_genes_required '8'")
 
     def test_bad_min_mandatory_genes_required_4(self):
         model_2_detect = ['foo/bad_min_mandatory_genes_required_4']
@@ -306,7 +298,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "model 'bad_min_mandatory_genes_required_3' is not consistent:"
-                         " \"min_mandatory_genes_required\": 6 must be lesser or equal than the number of \"mandatory\" "
+                         " 'min_mandatory_genes_required': 6 must be lesser or equal than the number of 'mandatory' "
                          "components in the model: 5")
 
 
@@ -378,3 +370,12 @@ class TestModelParser(MacsyTest):
 
         self.assertEqual(str(ctx.exception), "Invalid model definition 'bad_inter_gene_max_space_2': "
                                              "inter_gene_max_space must be an integer: 2.5")
+
+
+    def test_parse_2genes_defines_in_2models(self):
+        models_2_detect = ['foo/model_2', 'foo/model_6']
+        with self.assertRaises(MacsypyError) as ctx:
+            with self.catch_log():
+                self.parser.parse(models_2_detect)
+        self.assertRegex(str(ctx.exception),
+                         "gene 'sctJ' define in 'foo/model_[26]' model is already defined in an another model")
