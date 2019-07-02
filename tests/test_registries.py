@@ -379,6 +379,37 @@ class DefinitionLocationTest(MacsyTest):
         mdfl.add_subdefinition(submodel2)
         self.assertListEqual(sorted(mdfl.all()), sorted([submodel1, submodel2]))
 
+    def test_eq(self):
+        model_name = 'foo'
+        model_path = '/path/to/systems/Foo_system/models/foo'
+        mdfl_1 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        mdfl_2 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        self.assertEqual(mdfl_1, mdfl_2)
+
+    def test_lesser(self):
+        model_name = 'aaa'
+        model_path = '/path/to/systems/Foo_system/models/aaa'
+        mdfl_1 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        model_name = 'zzz'
+        model_path = '/path/to/systems/Foo_system/models/zzz'
+        mdfl_2 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        self.assertLess(mdfl_1, mdfl_2)
+
+    def test_greater(self):
+        model_name = 'aaa'
+        model_path = '/path/to/systems/Foo_system/models/aaa'
+        mdfl_1 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        model_name = 'zzz'
+        model_path = '/path/to/systems/Foo_system/models/zzz'
+        mdfl_2 = DefinitionLocation(name=model_name,
+                                    path=model_path)
+        self.assertGreater(mdfl_2, mdfl_1)
+
 
 class ModelRegistryTest(MacsyTest):
 

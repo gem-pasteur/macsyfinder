@@ -118,7 +118,18 @@ class TestGene(MacsyTest):
         self.assertFalse(gene.is_analog(sctJ))
 
 
-    def test_system(self):
+    def test_gene_ref(self):
+        model_foo = Model(self.cfg, "foo", 10)
+        model_bar = Model(self.cfg, "bar", 10)
+        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        analog = Analog(sctJ_FLG, gene)
+        gene.add_analog(analog)
+        self.assertEqual(analog.gene_ref, gene)
+
+
+    def test_model(self):
         """
         test getter/setter for model property
         """
@@ -136,6 +147,45 @@ class TestGene(MacsyTest):
         self.assertFalse(gene.loner)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location, loner=True)
         self.assertTrue(gene.loner)
+
+
+    def test_is_mandatory(self):
+        """
+        test if gene belong to model mandatory genes
+        """
+        model_foo = Model(self.cfg, "foo", 10)
+        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        model_foo.add_mandatory_gene(sctJ_FLG)
+        self.assertTrue(sctJ_FLG.is_mandatory(model_foo))
+        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        model_foo.add_accessory_gene(sctJ)
+        self.assertFalse(sctJ.is_mandatory(model_foo))
+
+
+    def test_is_accessory(self):
+        """
+        test if gene belong to model mandatory genes
+        """
+        model_foo = Model(self.cfg, "foo", 10)
+        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        model_foo.add_mandatory_gene(sctJ_FLG)
+        self.assertFalse(sctJ_FLG.is_accessory(model_foo))
+        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        model_foo.add_accessory_gene(sctJ)
+        self.assertTrue(sctJ.is_accessory(model_foo))
+
+
+    def test_is_Forbidden(self):
+        """
+        test if gene belong to model mandatory genes
+        """
+        model_foo = Model(self.cfg, "foo", 10)
+        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        model_foo.add_mandatory_gene(sctJ_FLG)
+        self.assertFalse(sctJ_FLG.is_forbidden(model_foo))
+        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        model_foo.add_forbidden_gene(sctJ)
+        self.assertTrue(sctJ.is_forbidden(model_foo))
 
 
     def test_exchangeable(self):
