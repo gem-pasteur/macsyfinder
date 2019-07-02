@@ -25,10 +25,9 @@ from macsypy.model import Model
 from macsypy.hit import Hit
 from macsypy.registries import ModelRegistry
 from macsypy.database import Indexes
-from macsypy.utils import which
 from macsypy.search_genes import search_genes
 import macsypy.search_genes
-from tests import MacsyTest
+from tests import MacsyTest, which
 
 
 class TestSearchGenes(MacsyTest):
