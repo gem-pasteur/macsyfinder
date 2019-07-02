@@ -133,7 +133,7 @@ class Config:
         if previous_run:
             if 'sequence_db' in args_dict:
                 _log.warning("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
-                    args_dict['sequence_db'], parsed_args.sequence_db))
+                    parsed_args.sequence_db, args_dict['previous_run']))
                 del args_dict['sequence_db']
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
@@ -214,8 +214,8 @@ class Config:
                 opt_type = type(defaults.get(option, None))
                 try:
                     opt_value = parse_meth.get(opt_type, parser.get)(section, option)
-                except ValueError as err:
-                    raise ValueError("Invalid value in config_file for option '{}' :  {} ".format(option, err))
+                except (ValueError, TypeError) as err:
+                    raise ValueError("Invalid value in config_file for option '{}': {}".format(option, err))
                 opts[option] = opt_value
         try:
             opts['models'] = parser.items('models')
@@ -421,7 +421,7 @@ class Config:
 
     def _set_models(self, value):
         """
-        :param value: Te models to search as return by the command line parsing or
+        :param value: The models to search as return by the command line parsing or
                       the configuration files
 
                       if value come from command_line
