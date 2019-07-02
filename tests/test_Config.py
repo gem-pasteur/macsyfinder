@@ -14,7 +14,7 @@
 import os
 import shutil
 from argparse import Namespace
-from configparser import ParsingError
+from configparser import ConfigParser, ParsingError
 import tempfile
 from time import strftime
 
@@ -123,6 +123,28 @@ class TestConfig(MacsyTest):
                     self.assertEqual(getattr(cfg, opt)(model), genes)
             else:
                 self.assertEqual(getattr(cfg, opt)(), val)
+
+
+    def test_Config_file_bad_values(self):
+        ori_conf_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
+        config_parser = ConfigParser()
+        config_parser.read(ori_conf_file)
+        config_parser.add_section('general')
+        config_parser.set('general', 'worker', 'foo')
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            dest_conf_file = os.path.join(tmpdirname, 'macsyfinder.conf')
+            with open(dest_conf_file, 'w') as cfg_file:
+                config_parser.write(cfg_file)
+
+            import macsypy.config
+            macsyconf = macsypy.config.__MACSY_CONF__
+            macsypy.config.__MACSY_CONF__ = tmpdirname
+            with self.assertRaises(ValueError) as ctx:
+                Config(self.defaults, self.parsed_args)
+            self.assertEqual(str(ctx.exception),
+                             "Invalid value in config_file for option 'worker': "
+                             "invalid literal for int() with base 10: 'foo'")
+
 
     def test_Config_default_conf_file(self):
         methods_needing_args = {'inter_gene_max_space': [('Flagellum', 4), ('T2SS', 2)],
@@ -344,3 +366,25 @@ class TestConfig(MacsyTest):
     def test_working_dir(self):
         cfg = Config(self.defaults, self.parsed_args)
         self.assertEqual(cfg.out_dir(), cfg.working_dir())
+
+    def test_previous_n_sequence_db(self):
+        self.parsed_args.previous_run = self.find_data(os.path.join('data_set_2', 'results'))
+        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'test_aesu.fa'))
+        with self.catch_log() as log:
+            cfg = Config(self.defaults, self.parsed_args)
+            catch_msg = log.get_value().strip()
+        self.assertEqual(cfg.sequence_db(), 'tests/data/data_set_2/base/test.fa')
+        self.assertEqual("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
+            self.parsed_args.sequence_db,
+            self.parsed_args.previous_run),
+            catch_msg
+        )
+
+    def test_previous_wo_cfg(self):
+        self.parsed_args.previous_run = self.find_data(os.path.join('data_set_2'))
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "No config file found in dir {}".format(self.parsed_args.previous_run))
+
+

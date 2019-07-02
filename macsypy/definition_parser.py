@@ -272,16 +272,6 @@ class DefinitionParser(object):
             msg = "Invalid model definition: gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
-        aligned = node.get("aligned")
-        if aligned in ("1", "true", "True"):
-            aligned = True
-        elif aligned in (None, "0", "false", "False"):
-            aligned = False
-        else:
-            msg = 'Invalid model definition \'{}\': invalid value for an attribute of gene\
- \'{}\': \'{}\' allowed values are "1", "true", "True", "0", "false", "False"'.format(curr_model.name, aligned, name)
-            _log.error(msg)
-            raise SyntaxError(msg)
         try:
             model_name = split_def_name(curr_model.fqn)[0]
             key = (model_name, name)
@@ -299,7 +289,7 @@ class DefinitionParser(object):
  with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name, model_ref, gene.model.name)
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
-        homolog = Homolog(gene, gene_ref, aligned)
+        homolog = Homolog(gene, gene_ref)
         for homolog_node in node.findall("homologs/gene"):
             h2 = self._parse_homolog(homolog_node, gene, curr_model)
             homolog.add_homolog(h2)
@@ -398,17 +388,14 @@ class DefinitionParser(object):
                 raise ModelInconsistencyError(msg)
 
             if not (model.min_mandatory_genes_required <= len_mandatory_genes):
-                msg = "model '{}' is not consistent: \"min_mandatory_genes_required\": {:d}\
- must be lesser or equal than the number of \"mandatory\" components\
- in the model: {:d}".format(model.name, model.min_mandatory_genes_required, len_mandatory_genes)
+                msg = "model '{}' is not consistent: 'min_mandatory_genes_required': {:d} " \
+                      "must be lesser or equal than the number of 'mandatory' components " \
+                      "in the model: {:d}".format(model.name, model.min_mandatory_genes_required, len_mandatory_genes)
                 _log.critical(msg)
                 raise ModelInconsistencyError(msg)
-            if not(model.min_mandatory_genes_required <= model.min_genes_required):
-                msg = "model '{}' is not consistent: min_mandatory_genes_required {:d}\
- must be lesser or equal than min_genes_required {2:d}".format(model.name, model.min_mandatory_genes_required,
-                                                               model.min_genes_required)
-                _log.critical(msg)
-                raise ModelInconsistencyError(msg)
+            # the following test
+            # model.min_mandatory_genes_required <= model.min_genes_required
+            # is done during the model.__init__
 
 
     def parse(self, models_2_detect):
