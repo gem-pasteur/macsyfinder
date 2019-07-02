@@ -123,7 +123,12 @@ class Model(object):
         self._min_genes_required = min_genes_required
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
-                raise ModelInconsistencyError("min_genes_required must be greater or equal than min_mandatory_genes_required")
+                raise ModelInconsistencyError("{}: min_genes_required '{}' must be greater or equal"
+                                              " than min_mandatory_genes_required '{}'".format(
+                                                 self.fqn,
+                                                 self.min_genes_required,
+                                                 self.min_mandatory_genes_required)
+                                              )
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
         self._mandatory_genes = []
