@@ -344,7 +344,7 @@ score = {score:.3f}
                     else:
                         hit_str = "{}".format(h.gene.name)
                     all_hits_str.append(hit_str)
-                s += " ({})\n".format(", ".join(all_hits_str))
+                s += "({})\n".format(", ".join(all_hits_str))
 
         return s
 
