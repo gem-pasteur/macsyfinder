@@ -71,7 +71,7 @@ def list_models(args):
 def parse_args(args):
     """
 
-    :param args: The argumnet proviide on the command line
+    :param args: The arguments provided on the command line
     :type args: List of strings [without the program name]
     :return: The arguments parsed
     :rtype: :class:`aprgparse.Nampsace` object.
