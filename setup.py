@@ -269,6 +269,7 @@ setup(name='macsyfinder',
       entry_points={
           'console_scripts': [
               'macsyfinder=macsypy.scripts.macsyfinder:main',
+              'macsydata=macsypy.scripts.macsydata:main'
           ]
       },
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
