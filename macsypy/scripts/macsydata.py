@@ -1,11 +1,10 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 ################################################################################
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
-# Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur, Paris.                                   #
+# Authors: Sophie Abby, Bertrand Neron                                         #
+# Copyright (c) 2014-2019  Institut Pasteur (Paris) and CNRS.                  #
 # See the COPYRIGHT file for details                                           #
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
@@ -18,6 +17,12 @@ import os
 import argparse
 import logging
 from textwrap import dedent
+
+import colorlog
+_log = colorlog.getLogger('macsypy')
+
+import macsypy
+from macsypy.config import MacsyDefaults, Config
 
 
 def do_download(args):
@@ -97,21 +102,38 @@ def do_cite(args):
     raise Exception('Not implemented')
 
 
-def do_help(args):
+def do_check(args):
     """
-    Positional help command (alias for '--help' option).
 
-    :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
+    :param args:
+    :return:
     """
-    if args.topic is None:
-        parser.print_help()
-    else:
-        if args.topic in subparsers.choices:
-            subparsers.choices[args.topic].print_help()
-        else:
-            print('Help topic not found (%s)'%args.topic, file=sys.stderr)
+    # si git status  != 0
+    # git add + commit
+    # presence d'un fichier metadata
+    # presence d'un repertoire definitions
+    # presence d'un repertoire profiles
+
+    # si rien => ce n'est pas un package
+    # si def + profile
+    # creation d'un metadata skeleton en interactif
+    # si non => erreur est ce bien un package?
+    # si oui verification des info
+    # demander les infos manquantes
+    #   - maintainer
+    #      - name
+    #      - email
+    #   - short description
+    #   - vers
+    #   - cite
+    #   - doc
+    # verifications de definitions et profiles
+    # parse de toutes les def => check consistense
+
+    # si aucune erreur
+    # print de la demarche a suivre
+    # git tag vers
+    # git push --tags remote
 
 
 def build_arg_parser():
@@ -120,7 +142,6 @@ def build_arg_parser():
 
     :rtype: :class:`argparse.ArgumentParser` object
     """
-    global parser, subparsers # to be accessible from 'do_help' func
 
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -148,99 +169,97 @@ def build_arg_parser():
 
     # -- general options -- #
 
-    parser.add_argument('-q','--quiet', action='store_true', help='Give less output.')
-    parser.add_argument("-v", "--verbosity", action="count", dest="verbosity", default=0, help="Give more output.")
-    parser.add_argument('-V', '--version', action='version', version='%(prog)s 0.1')
+    parser.add_argument('-q', '--quiet',
+                        action='store_true',
+                        help='Give less output.')
+    parser.add_argument("-v", "--verbosity",
+                        action="count",
+                        default=0,
+                        help="Give more output.")
+    parser.add_argument('-V', '--version',
+                        action='version',
+                        version='%(prog)s 0.1')
 
     # -- subparser options -- #
 
     subparsers = parser.add_subparsers(help=None)
 
-    subparser = subparsers.add_parser('download', help='Download packages.')
-    subparser.set_defaults(func=do_download)
-    subparser.add_argument('-d', '--dest', help='Download packages into <dir>.')
-    subparser.add_argument('-i', '--index-url', help='Base URL of macsyfinder package index (default https://github.com/gem/macsyfinder).')
-    subparser.add_argument('package', help='Package name.')
+    download_subparser = subparsers.add_parser('download',
+                                               help='Download packages.')
+    download_subparser.set_defaults(func=do_download)
+    download_subparser.add_argument('-d', '--dest',
+                                    help='Download packages into <dir>.')
+    download_subparser.add_argument('-i', '--index-url',
+                                    help='Base URL of macsyfinder package index '
+                                         '(default https://github.com/gem/macsyfinder).')
+    download_subparser.add_argument('package', help='Package name.')
 
-    subparser = subparsers.add_parser('install', help='Install packages.')
-    subparser.set_defaults(func=do_install)
-    subparser.add_argument('-f', '--force-reinstall', help='Reinstall package even if it is already up-to-date.')
-    subparser.add_argument('-i', '--index-url', help='')
-    subparser.add_argument('-I', '--ignore-installed', help='Ignore the installed packages (reinstalling instead).')
-    subparser.add_argument('-t', '--target', help='Install packages into <dir>.')
-    subparser.add_argument('-u', '--user', help='Install to the Python user install directory for your platform. Typically ~/.local/.')
-    subparser.add_argument('-U', '--upgrade', help='Upgrade specified package to the newest available version.')
-    subparser.add_argument('package', help='Package name.')
+    install_subparser = subparsers.add_parser('install', help='Install packages.')
+    install_subparser.set_defaults(func=do_install)
+    install_subparser.add_argument('-f', '--force-reinstall',
+                                   help='Reinstall package even if it is already up-to-date.')
+    install_subparser.add_argument('-i', '--index-url',
+                                   help='')
+    install_subparser.add_argument('-I', '--ignore-installed',
+                                   help='Ignore the installed packages (reinstalling instead).')
+    install_subparser.add_argument('-t', '--target',
+                                   help='Install packages into <dir>.')
+    install_subparser.add_argument('-u', '--user',
+                                   help='Install to the Python user install directory for your platform. '
+                                        'Typically ~/.local/.')
+    install_subparser.add_argument('-U', '--upgrade',
+                                   help='Upgrade specified package to the newest available version.')
+    install_subparser.add_argument('package',
+                                   help='Package name.')
 
-    subparser = subparsers.add_parser('uninstall', help='Uninstall packages.')
-    subparser.set_defaults(func=do_uninstall)
-    subparser.add_argument('-y', '--yes', help="Don't ask for confirmation of uninstall deletions.")
-    subparser.add_argument('package', help='Package name.')
+    uninstall_subparser = subparsers.add_parser('uninstall',
+                                                help='Uninstall packages.')
+    uninstall_subparser.set_defaults(func=do_uninstall)
+    uninstall_subparser.add_argument('-y', '--yes',
+                                     help="Don't ask for confirmation of uninstall deletions.")
+    uninstall_subparser.add_argument('package',
+                                     help='Package name.')
 
-    subparser = subparsers.add_parser('search', help='Discover new packages.')
-    subparser.set_defaults(func=do_search)
-    subparser.add_argument('-i', '--index-url', help='')
-    subparser.add_argument('pattern', help='Searches for packages matching the pattern.')
+    search_subparser = subparsers.add_parser('search',
+                                             help='Discover new packages.')
+    search_subparser.set_defaults(func=do_search)
+    search_subparser.add_argument('-i', '--index-url',
+                                  help='')
+    search_subparser.add_argument('pattern',
+                                  help='Searches for packages matching the pattern.')
 
-    subparser = subparsers.add_parser('show', help='Show information about packages.')
-    subparser.set_defaults(func=do_show)
-    subparser.add_argument('-f', '--files', help='Show the full list of installed files for each package.')
-    subparser.add_argument('-i', '--index-url', help='')
-    subparser.add_argument('package', help='Package name.')
+    show_subparser = subparsers.add_parser('show',
+                                           help='Show information about packages.')
+    show_subparser.set_defaults(func=do_show)
+    show_subparser.add_argument('-f', '--files',
+                                help='Show the full list of installed files for each package.')
+    show_subparser.add_argument('-i', '--index-url',
+                                help='')
+    show_subparser.add_argument('package',
+                                help='Package name.')
 
-    subparser = subparsers.add_parser('list', help='List installed packages.')
-    subparser.set_defaults(func=do_list)
-    subparser.add_argument('-o', '--outdated', help='List outdated packages.')
-    subparser.add_argument('-u', '--uptodate', help='List uptodate packages')
+    list_subparser = subparsers.add_parser('list',
+                                           help='List installed packages.')
+    list_subparser.set_defaults(func=do_list)
+    list_subparser.add_argument('-o', '--outdated',
+                                help='List outdated packages.')
+    list_subparser.add_argument('-u', '--uptodate',
+                                help='List uptodate packages')
 
-    subparser = subparsers.add_parser('cite', help='How to cite a package.')
-    subparser.set_defaults(func=do_cite)
-    subparser.add_argument('package', help='Package name.')
+    cite_subparser = subparsers.add_parser('cite',
+                                           help='How to cite a package.')
+    cite_subparser.set_defaults(func=do_cite)
+    cite_subparser.add_argument('package',
+                                help='Package name.')
 
-    subparser = subparsers.add_parser('help', help='Show help.')
-    subparser.set_defaults(func=do_help)
-    subparser.add_argument('topic', nargs='?')
-
+    check_subparser = subparsers.add_parser('check',
+                                            help='check if the directory is ready to be publish as data package')
+    check_subparser.set_defaults(func=do_check)
+    check_subparser.add_argument('dir',
+                                 nargs='?',
+                                 default=os.getcwd(),
+                                 help='the directory to check')
     return parser
-
-
-def log_init(args):
-    """
-    Log initialization.
-
-    :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
-    """
-    global logger # to be accessible from anywhere in the script
-
-    FORMAT_SH = '%(message)s (L %(lineno)d)'
-    FORMAT_FH = '%(asctime)-15s : %(levelname)-8s : L %(lineno)d : %(message)s'
-
-    if args.verbosity == 0:
-        log_level = logging.ERROR
-    elif args.verbosity == 1:
-        log_level = logging.WARNING
-    elif args.verbosity == 2:
-        log_level = logging.INFO
-    elif args.verbosity == 3:
-        log_level = logging.DEBUG
-    else:
-        log_level = logging.NOTSET
-
-    logger = logging.getLogger()
-    logger.setLevel(log_level)
-
-    sh = logging.StreamHandler(sys.stderr)
-    sh.setLevel(log_level)
-    sh.setFormatter(logging.Formatter(FORMAT_SH))
-
-    fh = logging.FileHandler('macsydata.log')
-    fh.setLevel(log_level)
-    fh.setFormatter(logging.Formatter(FORMAT_FH))
-
-    logger.addHandler(fh)
-    logger.addHandler(sh)
 
 
 def cmd_name(args):
@@ -256,11 +275,11 @@ def cmd_name(args):
     :rtype: str
     """
     assert 'func' in args
-    func_name = args.func.__name__.replace('do_','')
+    func_name = args.func.__name__.replace('do_', '')
     return "macsydata {}".format(func_name)
 
 
-def main(args=None):
+def main(args=None, loglevel=None):
     """
     Main entry point.
 
@@ -269,26 +288,29 @@ def main(args=None):
     :rtype: int
     """
 
-    try:
-        args = sys.argv[1:] if args is None else args
-        parser = build_arg_parser()
-        parsed_args = parser.parse_args(args)
+    args = sys.argv[1:] if args is None else args
+    parser = build_arg_parser()
+    parsed_args = parser.parse_args(args)
 
-        log_init(parsed_args)
+    defaults = MacsyDefaults()
+    config = Config(defaults, argparse.Namespace())
 
-        if 'func' in parsed_args:
-            parsed_args.func(parsed_args)
-            logger.debug("'{}' command completed successsfully.".format(cmd_name(parsed_args)))
-        else:
-            parser.print_help()
+    macsypy.init_logger()
+    if not loglevel:
+        # logs are specify from args options
+        macsypy.logger_set_level(level=config.log_level())
+    else:
+        # used by unit tests to mute or unmute logs
+        macsypy.logger_set_level(level=loglevel)
 
-        return 0
-    except Exception as e:
-        if 'logger' in globals():
-            logger.error("'{}' command failed.".format(cmd_name(parsed_args)))
-            logger.error("{}".format(str(e)))
-        return 1
+    logger = logging.getLogger('macsypy.macsydata')
+
+    if 'func' in parsed_args:
+        parsed_args.func(parsed_args)
+        logger.debug("'{}' command completed successfully.".format(cmd_name(parsed_args)))
+    else:
+        parser.print_help()
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
