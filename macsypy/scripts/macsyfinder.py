@@ -486,7 +486,7 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
 def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
     """
     main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
-    the real function that perfom a search
+    the real function that perform a search
 
     :param args: the arguments passed on the command line without the program name
     :type args: List of string
