@@ -21,6 +21,12 @@ __MACSY_DATA__ = '$MACSYDATA'
 
 
 def init_logger(log_file=None, out=True):
+    """
+
+    :param str log_file: The path toward a file log
+    :param out:
+    :return:
+    """
     import colorlog
     logger = colorlog.getLogger('macsypy')
     logging = colorlog.logging.logging
@@ -100,8 +106,9 @@ def logger_set_level(level='INFO'):
         stdout_handler.setFormatter(stdout_formatter)
 
         logging = colorlog.logging.logging
-        file_formatter = logging.Formatter("%(levelname)-8s : %(module)s: L %(lineno)d : %(message)s")
-        file_handler = logger.handlers[1]
-        file_handler.setFormatter(file_formatter)
+        if len(logger.handlers) > 1:
+            file_formatter = logging.Formatter("%(levelname)-8s : %(module)s: L %(lineno)d : %(message)s")
+            file_handler = logger.handlers[1]
+            file_handler.setFormatter(file_formatter)
 
     logger.setLevel(level)
