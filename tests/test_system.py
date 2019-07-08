@@ -91,7 +91,7 @@ class SystemTest(MacsyTest):
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -101,11 +101,109 @@ class SystemTest(MacsyTest):
         hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_3], model)
+        c2 = Cluster([v_hit_1, v_hit_3], model)
         sys_single_locus = System(model, [c1])
         self.assertFalse(sys_single_locus.multi_loci)
         sys_multi_loci = System(model, [c1, c2])
         self.assertTrue(sys_multi_loci.multi_loci)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c3 = Cluster([v_hit_3], model)
+        sys_single_locus_plus_loner = System(model, [c1, c3])
+        self.assertFalse(sys_single_locus_plus_loner.multi_loci)
+
+    def test_loci(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c2 = Cluster([v_hit_1, v_hit_3], model)
+        sys_single_locus = System(model, [c1])
+        self.assertEqual(sys_single_locus.loci, 1)
+        sys_multi_loci = System(model, [c1, c2])
+        self.assertEqual(sys_multi_loci.loci, 2)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c3 = Cluster([v_hit_3], model)
+        sys_single_locus_plus_loner = System(model, [c1, c3])
+        self.assertEqual(sys_single_locus_plus_loner.loci, 1)
+
+    def test_wholeness(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model)
+        c2 = Cluster([v_hit_1, v_hit_3], model)
+        s = System(model, [c1])
+        self.assertEqual(s.wholeness, 2 / 3)
+        s = System(model, [c1, c2])
+        self.assertEqual(s.wholeness, 3 / 3)
+
+
+    def test_score(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location)
+        model.add_mandatory_gene(gene_tadZ)
+
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
+        gene_sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        analog = Analog(gene_sctJ_FLG, gene_sctj)
+        gene_sctj.add_analog(analog)
+        model.add_accessory_gene(gene_sctj)
+
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_tadZ, model, "hit_2", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_tadZ, GeneStatus.MANDATORY)
+
+        hit_3 = Hit(gene_sctj, model, "hit_3", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3_bis = Hit(gene_sctJ_FLG, model, "hit_3_bis", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3_bis = ValidHit(hit_3_bis, gene_sctj, GeneStatus.ACCESSORY)
+
+        hit_4 = Hit(gene_sctn, model, "hit_4", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_sctn, GeneStatus.ACCESSORY)
+        # system with 1 cluster 2 mandatory, 1 accessory
+        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4], model)])
+        self.assertEqual(s.score, 3)
+        # system with 2 clusters 2 mandatory, 2 accessory
+        s = System(model, [Cluster([v_hit_1, v_hit_2], model),
+                           Cluster([v_hit_3, v_hit_4], model)])
+        self.assertEqual(s.score, 3)
+        # system with 2 mandatory, 1 accessory , 1 accessory present 3 times
+        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4, v_hit_1, v_hit_4], model)])
+        self.assertEqual(s.score, 0)
+        # system with 1 cluster 1 mandatory 1 accessory
+        s = System(model, [Cluster([v_hit_1, v_hit_3], model)])
+        self.assertEqual(s.score, 1.5)
+        # system with 1 cluster with 2 mandatory 1 accessory 1 accessory analog
+        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3_bis, v_hit_4], model)])
+        self.assertEqual(s.score, 2.875)
 
 
     def test_to_json(self):
@@ -161,10 +259,12 @@ class SystemTest(MacsyTest):
         sys_multi_loci = System(model, [c1, c2])
         sys_str = """system id = {}
 model = foo/T2SS 
-loci nb = 2
 replicon = replicon_id
 clusters = [('gspD', 10), ('sctJ', 20)], [('sctN', 30)]
 occ = 1
+wholeness = 1.000
+loci nb = 1
+score = 2.000
 
 mandatory genes:
 \t- gspD: 1 (gspD)
