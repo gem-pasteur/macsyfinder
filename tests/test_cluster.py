@@ -141,8 +141,12 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[0].hits, [h10, h11, h12])
         self.assertListEqual(clusters[1].hits, [h50, h51])
 
+        # case replicon is linear, no hits
+        clusters = build_clusters([], rep_info, model)
+        self.assertListEqual(clusters, [])
 
-class TestGetFilterLoners(MacsyTest):
+
+class TestHitFunc(MacsyTest):
 
     def setUp(self) -> None:
         self.args = argparse.Namespace()
@@ -205,6 +209,40 @@ class TestGetFilterLoners(MacsyTest):
         self.assertListEqual(filtered_loners, [l30, l50])
 
 
+    def test_filter_loners(self):
+        model = Model(self.cfg, "foo/T2SS", 11)
+        # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
+        # each genes is representing by a tuple (seq_id, length)"""
+        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
+
+        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, loner=True)
+        gene_4 = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_5 = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, loner=True)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = Hit(gene_3, model, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h40 = Hit(gene_4, model, "h40", 10, "replicon_1", 40, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_5, model, "h50", 10, "replicon_1", 50, 1.0, 80.0, 1.0, 1.0, 10, 20)
+
+        c1 = Cluster([h10, h20, h30, h40, h50], model)
+        filtered_loners = filter_loners(c1, [Cluster([h30], model),
+                                             Cluster([h40], model),
+                                             Cluster([h50], model)]
+                                        )
+        self.assertListEqual(filtered_loners, [])
+        c1 = Cluster([h10, h20, h40], model)
+        c30 = Cluster([h30], model)
+        c40 = Cluster([h40], model)
+        c50 = Cluster([h50], model)
+        filtered_loners = filter_loners(c1, [c30, c40, c50])
+        self.assertListEqual(filtered_loners, [c30, c50])
+
+
 class TestCluster(MacsyTest):
 
     def setUp(self) -> None:
@@ -239,6 +277,23 @@ class TestCluster(MacsyTest):
                 Cluster([h10, h20, h30, h50], model_1)
         msg = "Cannot build a cluster from hits coming from different replicons"
         self.assertEqual(str(ctx.exception), msg)
+
+    def test_len(self):
+        model = Model(self.cfg, "foo/T2SS", 11)
+
+        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = Hit(gene_3, model, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(gene_3, model, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        c1 = Cluster([h10, h20], model)
+        self.assertEqual(len(c1), 2)
+        
 
     def test_contains(self):
         model = Model(self.cfg, "foo/T2SS", 11)

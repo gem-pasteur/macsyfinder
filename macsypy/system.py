@@ -14,6 +14,7 @@
 import itertools
 import json
 import statistics
+from itertools import chain
 import logging
 _log = logging.getLogger(__name__)
 
@@ -154,6 +155,31 @@ def match(clusters, model, hit_registry):
     return res, hit_registry
 
 
+def track_multi_systems(systems):
+    multi_sys_tracker = {}
+    model_2_system = {}
+
+    for system in systems:
+        v_hits = system.hits
+
+        model_fqn = system.model.fqn
+        if model_fqn not in model_2_system:
+            model_2_system[model_fqn] = set()
+        model_2_system[model_fqn].add(system)
+
+        for v_hit in v_hits:
+            hit = v_hit.hit
+
+            if hit not in multi_sys_tracker:
+                multi_sys_tracker[hit] = set()
+            multi_sys_tracker[hit].add(v_hit.gene_ref.model.fqn)
+
+    for hit, models_fqn in multi_sys_tracker.items():
+        for model_fqn in models_fqn:
+            for system in model_2_system[model_fqn]:
+                hit.add_system(system)
+
+
 class System:
 
     _id = itertools.count(1)
@@ -190,6 +216,54 @@ class System:
             elif hit.status == GeneStatus.ACCESSORY:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
 
+    @property
+    def wholeness(self):
+        """
+
+        :return:
+        """
+        # model completude
+        score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
+                (len(self._mandatory_occ) + len(self._accessory_occ))
+
+        return score
+
+    @property
+    def score(self):
+        """
+        :return: a score that increase with the wholeness of the systems according to the mandatory and accessory genes,
+                 defined in the model. Decrease if some genes are represented several times and take also in account
+                 the number of loci.
+        :rtype: float
+        """
+        score = 0
+        for gene_occ, weight in ((self._mandatory_occ, 1), (self._accessory_occ, 0.5)):
+
+            for gene_name, v_hits in gene_occ.items():
+                hits_nb = len(v_hits)
+                if hits_nb == 1:
+                    if v_hits[0].hit.gene.name == gene_name:
+                        gene_score = weight
+                    else:
+                        # the hit match an homolog or analog
+                        gene_score = weight * 0.75
+                elif hits_nb > 1:
+                    gene_score = 0
+                    for v_hit in v_hits:
+                        # there are several hits for the same gene
+                        if v_hit.hit.gene.name == gene_name:
+                            gene_score += - weight * 0.5
+                        else:
+                            # the hit match an homolog or analog
+                            # So this hit is at least duplicated and homolog the penalty is higher
+                            gene_score += - weight * 0.75
+                else:
+                    continue
+                score += gene_score
+
+        # score /= self.loci
+        return score
+
 
     def occurence(self):
         """
@@ -198,48 +272,80 @@ class System:
         the occurrence is an indicator of how many systems are
         it's based on the number of occurrence of each mandatory genes
 
-        :return: the potential number of biologic systems
+        :return: a predict number of biologic systems
         """
-        # compute the number of occurrence of each mandatory genes
-        # of the model
         occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
-        return round(statistics.median(occ_per_gene))
+        # if a systems contains 5 gene whit occ of 1 and 5 gene with 0 occ
+        # the median is 0.5
+        # round(0.5) = 0
+        # so I fix a floor value at 1
+        return max(1, round(statistics.median(occ_per_gene)))
 
 
     @property
     def hits(self):
+        """
+        :return: The list of all hits that compose this system
+        :rtype: [:class:`macsypy.hit.ValidHits` , ... ]
+        """
         hits = [h for cluster in self.clusters for h in cluster.hits]
         return hits
+
+    @property
+    def loci(self):
+        """
+        :return: The number of loci of this system
+        :rtype: int > 0
+        """
+        # we do not take loners in account
+        loci = sum([1 for c in self.clusters if len(c) > 1])
+        return loci
 
 
     @property
     def multi_loci(self):
-        return len(self.clusters) > 1
+        """
+        :return: True if the systems is multi_loci. False otherwise
+        :rtype: bool
+        """
+        return self.loci > 1
 
 
     def __str__(self):
 
         s = """system id = {sys_id}
 model = {model} 
-loci nb = {loci}
 replicon = {rep_name}
 clusters = {clst}
 occ = {occ}
+wholeness = {wholeness:.3f}
+loci nb = {loci}
+score = {score:.3f}
 """.format(sys_id=self.id,
            model=self.model.fqn,
-           loci=len(self.clusters),
+           loci=self.loci,
            rep_name=self._replicon_name,
            clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                                                                                for cluster in self.clusters]),
-           occ=self.occurence()
+           occ=self.occurence(),
+           wholeness=self.wholeness,
+           score=self.score
            )
         for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
             s += "\n{} genes:\n".format(title)
             for g_name, hits in genes.items():
-                s += "\t- {g_ref}: {occ} ({hits})\n".format(g_ref=g_name,
-                                                            occ=len(hits),
-                                                            hits=', '.join([h.gene.name for h in hits])
-                                                            )
+                s += "\t- {g_ref}: {occ} ".format(g_ref=g_name,
+                                                  occ=len(hits))
+                all_hits_str = []
+                for h in hits:
+                    used_in_systems = [s.id for s in h.used_in_systems() if s.model.fqn != self.model.fqn]
+                    if used_in_systems:
+                        hit_str = "{} [{}]".format(h.gene.name, ', '.join(used_in_systems))
+                    else:
+                        hit_str = "{}".format(h.gene.name)
+                    all_hits_str.append(hit_str)
+                s += "({})\n".format(", ".join(all_hits_str))
+
         return s
 
 
