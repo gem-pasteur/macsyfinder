@@ -188,22 +188,39 @@ class SystemTest(MacsyTest):
 
         hit_4 = Hit(gene_sctn, model, "hit_4", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_4 = ValidHit(hit_4, gene_sctn, GeneStatus.ACCESSORY)
-        # system with 1 cluster 2 mandatory, 1 accessory
+
+        # system with
+        # 1 cluster
+        # 2 mandatory, 1 accessory no analog/homolog
         s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4], model)])
         self.assertEqual(s.score, 3)
-        # system with 2 clusters 2 mandatory, 2 accessory
+
+        # system with
+        # 2 clusters
+        # 2 mandatory, 2 accessory no analog/homolog no duplicates
         s = System(model, [Cluster([v_hit_1, v_hit_2], model),
                            Cluster([v_hit_3, v_hit_4], model)])
         self.assertEqual(s.score, 3)
-        # system with 2 mandatory, 1 accessory , 1 accessory present 3 times
+
+        # system with
+        # 1 cluster
+        # 1 mandatory + 1 mandatory duplicated 1 time
+        # 1 accessory + 1 accessory duplicated 1 times
+        # no analog/homolog
         s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4, v_hit_1, v_hit_4], model)])
-        self.assertEqual(s.score, 0)
-        # system with 1 cluster 1 mandatory 1 accessory
-        s = System(model, [Cluster([v_hit_1, v_hit_3], model)])
-        self.assertEqual(s.score, 1.5)
-        # system with 1 cluster with 2 mandatory 1 accessory 1 accessory analog
+        self.assertEqual(s.score, 3)
+
+        # system with 2 clusters
+        # 1rst cluster 1 mandatory 1 accessory
+        # 2nd cluster 1 mandatory, 1 accessory already in first cluster
+        s = System(model, [Cluster([v_hit_1, v_hit_3], model), Cluster([v_hit_2, v_hit_3], model)])
+        self.assertEqual(s.score, 2.25)
+
+        # # system with 1 cluster
+        # # 2 mandatory
+        # # 1 accessory + 1 accessory analog
         s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3_bis, v_hit_4], model)])
-        self.assertEqual(s.score, 2.875)
+        self.assertEqual(s.score, 3.25)
 
 
     def test_to_json(self):
@@ -258,7 +275,7 @@ class SystemTest(MacsyTest):
         c2 = Cluster([v_hit_3], model)
         sys_multi_loci = System(model, [c1, c2])
         sys_str = """system id = {}
-model = foo/T2SS 
+model = foo/T2SS
 replicon = replicon_id
 clusters = [('gspD', 10), ('sctJ', 20)], [('sctN', 30)]
 occ = 1
