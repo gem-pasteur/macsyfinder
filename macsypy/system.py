@@ -327,7 +327,7 @@ class System:
     def __str__(self):
 
         s = """system id = {sys_id}
-model = {model} 
+model = {model}
 replicon = {rep_name}
 clusters = {clst}
 occ = {occ}
