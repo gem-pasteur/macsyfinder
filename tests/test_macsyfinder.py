@@ -108,7 +108,7 @@ set_2
 # Systems found:
 
 system id = replicon_id_T2SS_{}
-model = foo/T2SS 
+model = foo/T2SS
 replicon = replicon_id
 clusters = [('gspD', 1), ('sctJ', 1)]
 occ = 1
