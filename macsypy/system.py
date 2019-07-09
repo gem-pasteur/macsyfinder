@@ -231,37 +231,50 @@ class System:
     @property
     def score(self):
         """
-        :return: a score that increase with the wholeness of the systems according to the mandatory and accessory genes,
-                 defined in the model. Decrease if some genes are represented several times and take also in account
-                 the number of loci.
+        :return: a score take in account
+            * if a hit match for the gene or is an homolog or analog
+            * if a hit is duplicated and already present in the system or the cluster
+            * if a hit match for mandatory/accessory gene of the model
         :rtype: float
         """
+        weights = {'analog': 0.75,
+                   'homolog': 0.75,
+                   'in_clst': 0,
+                   'in_syst': -0.5,
+                   'mandatory': 1,
+                   'accessory': 0.5,
+                   }
         score = 0
-        for gene_occ, weight in ((self._mandatory_occ, 1), (self._accessory_occ, 0.5)):
+        seen_in_system = set()
+        clusters = sorted(self.clusters, key=len, reverse=True)
+        for clst in clusters:
+            seen_in_clst = set()
+            for v_hit in clst.hits:
+                # attribute a score for this hit according to mandatory/accessory
+                if v_hit.gene == v_hit.gene_ref:
+                    if v_hit.status == GeneStatus.MANDATORY:
+                        hit_score = weights['mandatory']
+                    elif v_hit.status == GeneStatus.ACCESSORY:
+                        hit_score = weights['accessory']
+                # weighted the hit score according to the hit match the gene or is an analog/homolog
+                if v_hit.gene == v_hit.gene_ref:
+                    pass
+                elif v_hit.gene_ref.is_analog(v_hit.gene):
+                    hit_score *= weights['analog']
+                elif v_hit.gene_ref.is_homolog(v_hit.gene):
+                    hit_score *= weights['homolog']
 
-            for gene_name, v_hits in gene_occ.items():
-                hits_nb = len(v_hits)
-                if hits_nb == 1:
-                    if v_hits[0].hit.gene.name == gene_name:
-                        gene_score = weight
-                    else:
-                        # the hit match an homolog or analog
-                        gene_score = weight * 0.75
-                elif hits_nb > 1:
-                    gene_score = 0
-                    for v_hit in v_hits:
-                        # there are several hits for the same gene
-                        if v_hit.hit.gene.name == gene_name:
-                            gene_score += - weight * 0.5
-                        else:
-                            # the hit match an homolog or analog
-                            # So this hit is at least duplicated and homolog the penalty is higher
-                            gene_score += - weight * 0.75
+                # compute the global score by weighting the hit_score according if this gene is already present
+                # in this cluster or the system
+                if v_hit.gene_ref in seen_in_system:
+                    hit_score *= weights['in_syst']
+                elif v_hit.gene_ref in seen_in_clst:
+                    hit_score *= weights['in_clst']
                 else:
-                    continue
-                score += gene_score
-
-        # score /= self.loci
+                    pass
+                score += hit_score
+                seen_in_clst.add(v_hit.gene_ref)
+            seen_in_system.update(seen_in_clst)
         return score
 
 
