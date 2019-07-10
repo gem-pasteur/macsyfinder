@@ -32,7 +32,7 @@ from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
-from macsypy.hit import HitRegistry, get_best_hits
+from macsypy.hit import get_best_hits
 from macsypy.system import match, System, track_multi_systems
 from macsypy.utils import get_models_name_to_detect
 
@@ -393,7 +393,6 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         rep_db = RepliconDB(config)
-        hit_registry = HitRegistry()
         systems = []
         rejected_clusters = []
         for rep_name in hits_by_replicon:
@@ -429,7 +428,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
                 for one_combination_set in clusters_combination:
                     for one_clust_combination in one_combination_set:
-                        res, _ = match(one_clust_combination, model, hit_registry)
+                        res = match(one_clust_combination, model)
                         if isinstance(res, System):
                             systems.append(res)
                         else:
