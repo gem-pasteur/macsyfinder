@@ -220,28 +220,6 @@ class ValidHit:
         return getattr(self.hit, item)
 
 
-class HitRegistry:
-    """
-    Track hit corresponding to a multi system gene in which system it is implied
-    """
-
-    def __init__(self):
-        # the keys will be a hit, values a list of PutativeSystems in which it is implied
-        self._DB = {}
-
-    def __contains__(self, hit):
-        return hit in self._DB
-
-    def __getitem__(self, hit):
-        return self._DB[hit]
-
-    def __setitem__(self, hit, system):
-        if hit in self._DB:
-            self._DB[hit].append(system)
-        else:
-            self._DB[hit] = [system]
-
-
 def get_best_hits(hits, key='score'):
     """
     If several hits match the same protein, keep only the best match based either on

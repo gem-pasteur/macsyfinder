@@ -36,7 +36,7 @@ from .hit import ValidHit
 # combinations('ABCD', len("ABCD")) => inutile mais generique => recheche parmis tous les clusters
 
 
-def match(clusters, model, hit_registry):
+def match(clusters, model):
     """
     Check a set of clusters fill model constraints.
     If yes create a :class:`macsypy.system.PutativeSystem` otherwise create
@@ -46,7 +46,6 @@ def match(clusters, model, hit_registry):
     :type clusters: list of :class:`macsypy.cluster.Cluster` objects
     :param model:  The model to consider
     :type model: :class:`macsypy.model.Model` object
-    :param hit_registry: The registry where all hits => System are registered
     :return: either a System or a RejectedClusters
     :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
     """
@@ -152,7 +151,7 @@ def match(clusters, model, hit_registry):
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
     _log.debug("#" * 50)
-    return res, hit_registry
+    return res
 
 
 def track_multi_systems(systems):
