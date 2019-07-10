@@ -144,10 +144,7 @@ def match(clusters, model, hit_registry):
 
     if is_a_system:
         res = System(model, valid_clusters)
-        for hit in valid_hits:
-            if hit.gene.multi_system:  # gene or gene_ref ?
-                hit_registry[hit] = res
-        _log.debug("is a putative system")
+        _log.debug("is a system")
     else:
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
@@ -155,29 +152,28 @@ def match(clusters, model, hit_registry):
     return res, hit_registry
 
 
-def track_multi_systems(systems):
+def track_multi_systems_hit(systems):
+    """
+    For each hits of all systems, track in which system it is implied
+    and add this information in the hit itself, and can be retrieve with the
+    :meth:`macsypy.hit.Hit.used_in_systems` method
+
+    :param systems: the systems to check
+    :type systems: [ :class:`macsypy.system.System` object, ...]
+    :return: None
+    """
     multi_sys_tracker = {}
-    model_2_system = {}
 
     for system in systems:
         v_hits = system.hits
 
-        model_fqn = system.model.fqn
-        if model_fqn not in model_2_system:
-            model_2_system[model_fqn] = set()
-        model_2_system[model_fqn].add(system)
-
         for v_hit in v_hits:
             hit = v_hit.hit
-
             if hit not in multi_sys_tracker:
                 multi_sys_tracker[hit] = set()
-            multi_sys_tracker[hit].add(v_hit.gene_ref.model.fqn)
-
-    for hit, models_fqn in multi_sys_tracker.items():
-        for model_fqn in models_fqn:
-            for system in model_2_system[model_fqn]:
-                hit.add_system(system)
+            multi_sys_tracker[hit].add(system)
+    for hit, systems in multi_sys_tracker.items():
+        hit.add_system(*systems)
 
 
 class System:
