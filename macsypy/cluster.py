@@ -131,8 +131,8 @@ class Cluster:
     def __init__(self, hits, model):
         """
 
-        :param hits: the hits constituting this cluster
-        :type hits: [ :class:`macsypy.hit.Hit` , ... ]
+        :param hits: the valid hits constituting this cluster
+        :type hits: [ :class:`macsypy.hit.ValidHit` , ... ]
         :param model: the model associated to this cluster
         :type model: :class:`macsypy.model.Model`
         """
