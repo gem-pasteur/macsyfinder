@@ -21,7 +21,7 @@ from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
 from macsypy.model import Model
 from macsypy.registries import ModelRegistry
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.system import System, match, track_multi_systems_hit
+from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker, SystemSerializer
 
 from tests import MacsyTest
 
@@ -173,32 +173,37 @@ class SystemTest(MacsyTest):
         model.add_accessory_gene(gene_sctj)
 
         gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn_FLG = Gene(self.cfg, self.profile_factory, 'sctN_FLG', model, self.models_location)
+        homolog = Homolog(gene_sctn_FLG, gene_sctj)
+        gene_sctn.add_homolog(homolog)
         model.add_accessory_gene(gene_sctn)
 
-        hit_1 = Hit(gene_gspd, model, "hit_1", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_tadZ, model, "hit_2", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_tadZ, GeneStatus.MANDATORY)
+        h_gspd = Hit(gene_gspd, model, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+        h_tadz = Hit(gene_tadZ, model, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_tadz = ValidHit(h_tadz, gene_tadZ, GeneStatus.MANDATORY)
 
-        hit_3 = Hit(gene_sctj, model, "hit_3", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3_bis = Hit(gene_sctJ_FLG, model, "hit_3_bis", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3_bis = ValidHit(hit_3_bis, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj = Hit(gene_sctj, model, "h_sctj", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj_an = Hit(gene_sctJ_FLG, model, "h_sctj_an", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctj_an = ValidHit(h_sctj_an, gene_sctj, GeneStatus.ACCESSORY)
 
-        hit_4 = Hit(gene_sctn, model, "hit_4", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_sctn, GeneStatus.ACCESSORY)
+        h_sctn = Hit(gene_sctn, model, "sctn", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
+        h_sctn_hom = Hit(gene_sctn_FLG, model, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctn_hom = ValidHit(h_sctn_hom, gene_sctn, GeneStatus.ACCESSORY)
 
         # system with
         # 1 cluster
         # 2 mandatory, 1 accessory no analog/homolog
-        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4], model)])
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model)])
         self.assertEqual(s.score, 3)
 
         # system with
         # 2 clusters
         # 2 mandatory, 2 accessory no analog/homolog no duplicates
-        s = System(model, [Cluster([v_hit_1, v_hit_2], model),
-                           Cluster([v_hit_3, v_hit_4], model)])
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz], model),
+                           Cluster([v_h_sctj, v_h_sctn], model)])
         self.assertEqual(s.score, 3)
 
         # system with
@@ -228,7 +233,7 @@ class SystemTest(MacsyTest):
         self.assertEqual(s.score, 2.875)
 
 
-    def test_to_json(self):
+    def test_SystemSerializer_to_json(self):
         model = Model(self.cfg, "foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
@@ -237,17 +242,19 @@ class SystemTest(MacsyTest):
         gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
-        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_3], model)
+        h_gspd = Hit(gene_gspd, model, "h_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+        h_tadz = Hit(gene_sctj, model, "h_tadz", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_tadz = ValidHit(h_tadz, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj = Hit(gene_sctn, model, "h_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctj = ValidHit(h_sctj, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_h_gspd, v_h_tadz], model)
+        c2 = Cluster([v_h_sctj], model)
         sys_multi_loci = System(model, [c1, c2])
+        hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
 
-        rec_json = sys_multi_loci.to_json()
+        system_serializer = SystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+        rec_json = system_serializer.to_json()
         exp_json = {'id': sys_multi_loci.id,
                     'model': 'foo/T2SS',
                     'loci_nb': 2,
@@ -261,7 +268,7 @@ class SystemTest(MacsyTest):
         self.assertDictEqual(json.loads(rec_json), exp_json)
 
 
-    def test_str(self):
+    def test_SystemSerializer_str(self):
         model = Model(self.cfg, "foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
@@ -270,15 +277,18 @@ class SystemTest(MacsyTest):
         gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
-        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_3], model)
+        h_gspd = Hit(gene_gspd, model, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+        h_tadz = Hit(gene_sctj, model, "h_tadz", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_tadz = ValidHit(h_tadz, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj = Hit(gene_sctn, model, "h_sctj", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_sctj = ValidHit(h_sctj, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_h_gspd, v_h_tadz], model)
+        c2 = Cluster([v_h_sctj], model)
         sys_multi_loci = System(model, [c1, c2])
+        hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
+        system_serializer = SystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+
         sys_str = """system id = {}
 model = foo/T2SS
 replicon = replicon_id
@@ -295,7 +305,7 @@ accessory genes:
 \t- sctJ: 1 (sctJ)
 \t- sctN: 1 (sctN)
 """.format(sys_multi_loci.id)
-        self.assertEqual(sys_str, str(sys_multi_loci))
+        self.assertEqual(sys_str, str(system_serializer))
 
 
     def test_match(self):
@@ -425,7 +435,7 @@ accessory genes:
         res = match([c1, c2, c3], model)
         self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
 
-    def test_track_systems(self):
+    def test_HitSystemTracker(self):
         model_1 = Model(self.cfg, "foo/T2SS", 10)
         model_2 = Model(self.cfg, "foo/T3SS", 10)
 
@@ -464,7 +474,6 @@ accessory genes:
         h_sctn = Hit(gene_sctn, model_1, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_gspd = Hit(gene_gspd, model_1, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-        h_sctn_flg = Hit(gene_sctn_flg, model_2, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_sctj_flg = Hit(gene_sctj_flg, model_2, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_flgB = Hit(gene_flgB, model_2, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_tadZ = Hit(gene_tadZ, model_2, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -492,8 +501,80 @@ accessory genes:
         s2 = System(model_1, [c1, c2])
         s3 = System(model_2, [c3])
 
-        track_multi_systems_hit([s1, s2, s3])
-        self.assertSetEqual({s1, s2}, h_sctj.used_in_systems())
-        self.assertSetEqual({s1, s2}, h_gspd.used_in_systems())
-        self.assertSetEqual({s3}, h_tadZ.used_in_systems())
-        self.assertSetEqual({s2, s3}, h_flgB.used_in_systems())
+        track_multi_systems_hit = HitSystemTracker([s1, s2, s3])
+        self.assertSetEqual({s1, s2}, track_multi_systems_hit[h_sctj])
+        self.assertSetEqual({s1, s2}, track_multi_systems_hit[h_gspd])
+        self.assertSetEqual({s3}, track_multi_systems_hit[h_tadZ])
+        self.assertSetEqual({s2, s3}, track_multi_systems_hit[h_flgB])
+
+
+    def test_ClusteSystemTracker(self):
+        model_1 = Model(self.cfg, "foo/T2SS", 10)
+        model_2 = Model(self.cfg, "foo/T3SS", 10)
+
+        gene_sctn_flg = Gene(self.cfg, self.profile_factory, "sctN_FLG", model_2, self.models_location)
+        gene_sctj_flg = Gene(self.cfg, self.profile_factory, "sctJ_FLG", model_2, self.models_location)
+        gene_flgB = Gene(self.cfg, self.profile_factory, "flgB", model_2, self.models_location)
+        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model_2, self.models_location)
+
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model_1, self.models_location, exchangeable=True)
+        gene_sctn_hom = Homolog(gene_sctn_flg, gene_sctn)
+        gene_sctn.add_homolog(gene_sctn_hom)
+
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model_1, self.models_location, exchangeable=True)
+        gene_sctj_an = Analog(gene_sctj_flg, gene_sctj)
+        gene_sctj.add_analog(gene_sctj_an)
+
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model_1, self.models_location, exchangeable=True)
+        gene_gspd_an = Analog(gene_flgB, gene_gspd)
+        gene_gspd.add_analog(gene_gspd_an)
+
+        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model_1, self.models_location, exchangeable=True)
+        gene_abc_ho = Homolog(gene_tadZ, gene_abc)
+        gene_abc.add_homolog(gene_abc_ho)
+
+        model_1.add_mandatory_gene(gene_sctn)
+        model_1.add_mandatory_gene(gene_sctj)
+        model_1.add_accessory_gene(gene_gspd)
+        model_1.add_forbidden_gene(gene_abc)
+
+        model_2.add_mandatory_gene(gene_sctn_flg)
+        model_2.add_mandatory_gene(gene_sctj_flg)
+        model_2.add_accessory_gene(gene_flgB)
+        model_2.add_accessory_gene(gene_tadZ)
+
+        h_sctj = Hit(gene_sctj, model_1, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = Hit(gene_sctn, model_1, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = Hit(gene_gspd, model_1, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_sctj_flg = Hit(gene_sctj_flg, model_2, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = Hit(gene_flgB, model_2, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = Hit(gene_tadZ, model_2, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        model_1._min_mandatory_genes_required = 2
+        model_1._min_genes_required = 2
+        c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+                      ],
+                     model_1)
+
+        c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      ValidHit(h_flgB, gene_gspd, GeneStatus.ACCESSORY)],
+                     model_1)
+
+        model_2._min_mandatory_genes_required = 1
+        model_2._min_genes_required = 2
+        c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
+                     model_2)
+        s1 = System(model_1, [c1])
+        s2 = System(model_1, [c1, c2])
+        s3 = System(model_2, [c3])
+
+        track_multi_systems_cluster = ClusterSystemTracker([s1, s2, s3])
+        self.assertSetEqual({s1, s2}, track_multi_systems_cluster[c1])
+        self.assertSetEqual({s2}, track_multi_systems_cluster[c2])
+        self.assertSetEqual({s3}, track_multi_systems_cluster[c3])
