@@ -33,7 +33,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
-from macsypy.system import match, System, track_multi_systems_hit
+from macsypy.system import match, System, HitSystemTracker, SystemSerializer
 from macsypy.utils import get_models_name_to_detect
 
 
@@ -435,11 +435,11 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             rejected_clusters.append(res)
 
         system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-        track_multi_systems_hit(systems)
+        track_multi_systems_hit = HitSystemTracker(systems)
 
         systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
         with open(system_filename, "w") as sys_file:
-            systems_to_file(systems, sys_file)
+            systems_to_file(systems, track_multi_systems_hit, sys_file)
 
         cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
         with open(cluster_filename, "w") as clst_file:
@@ -448,7 +448,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
         logger.info("No hits found in this dataset.")
 
 
-def systems_to_file(systems, sys_file):
+def systems_to_file(systems, hit_system_tracker, sys_file):
     """
     print systems occurrences in a file
 
@@ -462,7 +462,8 @@ def systems_to_file(systems, sys_file):
     print("# {}".format(' '.join(sys.argv)), file=sys_file)
     print("# Systems found:\n", file=sys_file)
     for system in systems:
-        print(system, file=sys_file)
+        sys_serializer = SystemSerializer(system, hit_system_tracker)
+        print(sys_serializer, file=sys_file)
         print("=" * 60, file=sys_file)
 
 
