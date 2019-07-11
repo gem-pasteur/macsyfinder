@@ -206,20 +206,26 @@ class SystemTest(MacsyTest):
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
-        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3, v_hit_4, v_hit_1, v_hit_4], model)])
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model)])
         self.assertEqual(s.score, 3)
 
         # system with 2 clusters
         # 1rst cluster 1 mandatory 1 accessory
         # 2nd cluster 1 mandatory, 1 accessory already in first cluster
-        s = System(model, [Cluster([v_hit_1, v_hit_3], model), Cluster([v_hit_2, v_hit_3], model)])
+        s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj], model)])
         self.assertEqual(s.score, 2.25)
 
-        # # system with 1 cluster
-        # # 2 mandatory
-        # # 1 accessory + 1 accessory analog
-        s = System(model, [Cluster([v_hit_1, v_hit_2, v_hit_3_bis, v_hit_4], model)])
-        self.assertEqual(s.score, 3.25)
+        # system with 1 cluster
+        # 2 mandatory
+        # 1 accessory + 1 accessory analog
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj_an, v_h_sctn], model)])
+        self.assertEqual(s.score, 2.875)
+
+        # system with 1 cluster
+        # 2 mandatory
+        # 1 accessory + 1 accessory homolog
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model)])
+        self.assertEqual(s.score, 2.875)
 
 
     def test_to_json(self):

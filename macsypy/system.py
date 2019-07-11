@@ -220,7 +220,6 @@ class System:
         # model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
                 (len(self._mandatory_occ) + len(self._accessory_occ))
-
         return score
 
     @property
@@ -246,11 +245,11 @@ class System:
             seen_in_clst = set()
             for v_hit in clst.hits:
                 # attribute a score for this hit according to mandatory/accessory
-                if v_hit.gene == v_hit.gene_ref:
-                    if v_hit.status == GeneStatus.MANDATORY:
-                        hit_score = weights['mandatory']
-                    elif v_hit.status == GeneStatus.ACCESSORY:
-                        hit_score = weights['accessory']
+                if v_hit.status == GeneStatus.MANDATORY:
+                    hit_score = weights['mandatory']
+                elif v_hit.status == GeneStatus.ACCESSORY:
+                    hit_score = weights['accessory']
+
                 # weighted the hit score according to the hit match the gene or is an analog/homolog
                 if v_hit.gene == v_hit.gene_ref:
                     pass
