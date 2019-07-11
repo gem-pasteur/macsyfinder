@@ -128,6 +128,7 @@ class Cluster:
     Handle hits relative to a model which collocates
     """
 
+
     def __init__(self, hits, model):
         """
 
