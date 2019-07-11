@@ -174,23 +174,6 @@ class Hit(object):
         """
         return self.gene.model.inter_gene_max_space
 
-    def add_system(self, *systems):
-        """
-
-        :param system: a system in which the hit is implied
-        :type system: :class:`macsypy.system.System` object
-        """
-        self._systems.update(systems)
-
-
-    def used_in_systems(self):
-        """
-
-        :return: the list of systems in which this hit is implied
-        :rtype: [ :class:`macsypy.system.System` object, ...]
-        """
-        return self._systems
-
 
 class ValidHit:
     """
