@@ -11,11 +11,10 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
-import os
-import platform
+from typing import List
 
 
-def get_models_name_to_detect(models, model_registry):
+def get_models_name_to_detect(models, model_registry) -> List[str]:
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
