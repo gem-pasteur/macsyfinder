@@ -538,3 +538,65 @@ class Config:
         level = min(50, max(10, level))
         return level
 
+
+
+class ConfigData:
+
+    def __init__(self, defaults, parsed_args):
+        self.cfg_name = "macsyfinder.conf"
+        self._defaults = defaults
+
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            self._prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        else:
+            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
+
+        if __MACSY_CONF__ == '$' + 'MACSYCONF':
+            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'etc'))
+        else:
+            self._conf_dir = __MACSY_CONF__
+        previous_run = False
+        if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
+            prev_config = os.path.normpath(os.path.join(parsed_args.previous_run, self.cfg_name))
+            previous_run = True
+            if not os.path.exists(prev_config):
+                raise ValueError("No config file found in dir {}".format(parsed_args.previous_run))
+            config_files = [prev_config]
+        elif hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
+            config_files = [parsed_args.cfg_file]
+        else:
+            config_files = [os.path.join(self._conf_dir, self.cfg_name),
+                            os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name),
+                            'macsyfinder.conf']
+
+        config_files_values = self._config_file_2_dict(defaults, config_files, previous_run=previous_run)
+        args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
+        if previous_run:
+            if 'sequence_db' in args_dict:
+                _log.warning("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
+                    parsed_args.sequence_db, args_dict['previous_run']))
+                del args_dict['sequence_db']
+        # the special methods are not used to fill with defaults values
+        self._options = {k: v for k, v in defaults.items()}
+
+        for bag_of_opts in config_files_values, args_dict:
+            for opt, val in bag_of_opts.items():
+                if val is not None:
+                    met_name = '_set_{}'.format(opt)
+                    if hasattr(self, met_name):
+                        # config has a specific method to parse and store the value
+                        # for this option
+                        getattr(self, met_name)(val)
+                    else:
+                        # config has no method defined to set this option
+                        self._options[opt] = val
+
+
+    def models_dir(self):
+        pass
+
+    def profile_suffix(self):
+        pass
+
+    def relative_path(self):
+        pass
