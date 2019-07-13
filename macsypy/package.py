@@ -14,16 +14,19 @@
 
 import os
 import tempfile
-import urllib
+import urllib.request
 import json
+import yaml
 import shutil
 import tarfile
 import glob
 import sys
-from typing import List, Dict
+from typing import List, Dict, Any
 
 import logging
 _log = logging.getLogger(__name__)
+
+from macsypy.utils import get_models_name_to_detect
 
 
 class Remote:
@@ -36,8 +39,9 @@ class Remote:
         self.org_name = org
         self.base_url = "https://api.github.com"
         self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+        self.remote_exists()
 
-    def _url_json(self, url) -> Dict:
+    def _url_json(self, url: str) -> Dict:
         """
         Get the url, deserialize the data as json
 
@@ -49,7 +53,26 @@ class Remote:
         j = json.loads(r.decode('utf-8'))
         return j
 
-    def list_packages(self) -> List:
+
+    def remote_exists(self) -> bool:
+        """
+        check if the remote exists and is an organization
+        :return:
+        """
+        try:
+            url = f"{self.base_url}/orgs/{self.org_name}"
+            _log.debug(f"get {url}")
+            remote = self._url_json(url)
+            return remote["type"] == 'Organization'
+        except urllib.error.HTTPError as err:
+            if 400 <= err.code < 500:
+                return False
+            elif err.code >= 500:
+                raise err from None
+            else:
+                raise err from None
+
+    def list_packages(self) -> List[str]:
         """
         list all model packages availables on a model repos
         :return: The list of package names.
@@ -60,7 +83,7 @@ class Remote:
         return [p['name'] for p in packages]
 
 
-    def list_package_vers(self, pack_name) -> List:
+    def list_package_vers(self, pack_name: str) -> List:
         """
         List all available versions from github model repos for a given package
 
@@ -69,11 +92,17 @@ class Remote:
         """
         url = f"{self.base_url}/repos/{self.org_name}/{pack_name}/tags"
         _log.debug(f"get {url}")
-        tags = self._url_json(url)
+        try:
+            tags = self._url_json(url)
+        except urllib.error.HTTPError as err:
+            if 400 <= err.code < 500:
+                raise RuntimeError(f"package '{pack_name}'' does not exists on repos '{self.org_name}'") from None
+            else:
+                raise err from None
         return [v['name'] for v in tags]
 
 
-    def package_download(self, pack_name, vers) -> str:
+    def package_download(self, pack_name: str, vers: str) -> str:
         """
         Download a package from a github repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz
@@ -87,15 +116,21 @@ class Remote:
         if not os.path.exists(package_cache):
             os.makedirs(package_cache)
         elif os.path.isfile(package_cache):
-            raise RuntimeError(f"The tmp cache {package_cache} exist and is a file")
+            raise RuntimeError(f"The tmp cache {package_cache} exists and is a file")
         tmp_archive_path = os.path.join(package_cache, f"{pack_name}-{vers}.tar.gz")
-
-        with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
+        try:
+            with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
+                shutil.copyfileobj(response, out_file)
+        except urllib.error.HTTPError as err:
+            if 400 <= err.code < 500:
+                raise RuntimeError(f"package '{pack_name}-{vers}' does not exists on repos '{self.org_name}'") \
+                    from None
+            else:
+                raise err from None
         return tmp_archive_path
 
 
-    def unarchive_package(self, path) -> str:
+    def unarchive_package(self, path: str) -> str:
         """
         Unarchive and uncompress a package under
         <remote cache>/<organization name>/<package name>/<vers>/<package name>
@@ -125,47 +160,62 @@ class Remote:
 
 class Package:
 
-    def __init__(self, path):
+    def __init__(self, path: str):
         """
 
         :param str path: The of the package root directory
         """
         self.path = os.path.realpath(path)
-        self.metadata = self.path.join(self.path, 'metadata')
-
-    def check(path):
-        if not os.path.exists(path):
-            raise RuntimeError()
-        elif not os.path.isdir(path):
-            raise RuntimeError()
-        elif not os.path.exists(os.path.join(path, 'metadata.yml')):
-            raise RuntimeError()
-        elif not os.path.exists(os.path.join(path, 'definitions')):
-            raise RuntimeError()
-        elif not os.path.isdir(os.path.join(path, 'definitions')):
-            raise RuntimeError()
-        elif not os.path.exists(os.path.join(path, 'profiles')):
-            raise RuntimeError()
-        elif not os.path.isdir(os.path.join(path, 'profiles')):
-            raise RuntimeError()
-        elif not os.path.exists(os.path.join(path, 'LICENCE')):
-            _log.warning("The package {} have not LICENCE file. May be you have not right to use it.")
-
-    # faire la liste de tous les models
-    # instancier tous les models
+        self.metadata = os.path.join(self.path, 'metadata.yml')
+        self.name = os.path.basename(self.path)
+        self.readme = self._find_readme()
+        self.check(self.path)
 
 
-    def help(self, output=sys.stderr) -> None:
+    def _find_readme(self) -> Any:
         """
-        Write the contnet of the README file
+        find the README file
 
-        :param output: wher to write the help (default on stderr)
-        :type output: file like object
+        :return: The path to the README file or None if there is no file.
         """
-        readme_path = os.path.join(self.path, 'README')
-        with open(readme_path, 'w') as readme:
-            for line in readme:
-                print(line, file=output)
+        for ext in ('', '.md', '.rst'):
+            path = os.path.join(self.path, f"README{ext}")
+            if os.path.exists(path) and os.path.isfile(path):
+                return path
+        return None
+
+
+    def check(self) -> None:
+        """
+        Check the QA of this package
+        """
+        if not os.path.exists(self.path):
+            raise RuntimeError()
+        elif not os.path.isdir(self.path):
+            raise RuntimeError()
+        elif not os.path.exists(os.path.join(self.path, 'metadata.yml')):
+            raise RuntimeError(f"The package '{self.name}' have no 'metadata.yml'.")
+        elif not os.path.exists(os.path.join(self.path, 'definitions')):
+            raise RuntimeError(f"The package '{self.name}' have no 'definitions' directory.")
+        elif not os.path.isdir(os.path.join(self.path, 'definitions')):
+            raise RuntimeError(f"'definitions' is not a directory.")
+        elif not os.path.exists(os.path.join(self.path, 'profiles')):
+            raise RuntimeError(f"The package '{self.name}' have no 'profiles' directory.")
+        elif not os.path.isdir(os.path.join(self.path, 'profiles')):
+            raise RuntimeError(f"'profiles' is not a directory.")
+        elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
+            _log.warning(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
+        elif not self.readme:
+            _log.warning(f"The package '{self.name}' have not any README file.")
+
+        # faire la liste de tous les models
+        config = Config(defaults, parsed_args)
+        registry = ModelRegistry(config)
+        all_models = get_models_name_to_detect('all')
+        for model in all_models:
+            # instancier tous les models
+            pass
+
 
     def _load_metadata(self) -> Dict:
         """
@@ -173,23 +223,42 @@ class Package:
         :return:
         """
         with open(self.metadata) as raw_metadata:
-            metadata = json.loads(raw_metadata.decode('utf-8'))
+            metadata = yaml.load(raw_metadata)
         return metadata
+
+
+    def help(self, output=sys.stderr) -> None:
+        """
+        Write the content of the README file
+
+        :param output: wher to write the help (default on stderr)
+        :type output: file like object
+        """
+        with open(self.readme) as readme:
+            for line in readme:
+                print(line, file=output, end='')
+
 
     def info(self) -> str:
         """
-        :return: some informations about the package
+        :return: some information about the package
         """
         metadata = self._load_metadata()
-        pack_name = os.path.dirname(self.path)
+        pack_name = self.name
         cite = '\n'.join([f"\t- {c}" for c in metadata['cite']])
-        info = f"""{pack_name} {metadata['vers']}
+        info = f"""
+{pack_name} {metadata['vers']}
+
 author: {metadata['author']['name']} <{metadata['author']['email']}>
+
 {metadata['short_desc']}
+
 how to cite:
 {cite}
+
 documentation
-{metadata['doc']}      
+\t{metadata['doc']}      
+
 This data are realeased under {metadata['licence']}
 copyright: {metadata['copyrights']}
 """
