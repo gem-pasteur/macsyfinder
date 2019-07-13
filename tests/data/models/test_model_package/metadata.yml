@@ -1,0 +1,17 @@
+---
+author:
+  name: first_name last_name
+  email: login@my_domain.fr
+short_desc: this is a short description of the repos
+vers: 1.0b2
+cite:
+  - "1rst citation"
+  - "2nd citation"
+  - |
+    multiligne
+    citation
+    with author link and so on
+doc: http://link/to/the/documentation
+licence: CC-BY-NC-SA 4.0
+copyrights: 2019, Institut Pasteur, CNRS
+
