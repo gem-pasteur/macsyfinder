@@ -26,8 +26,11 @@ from typing import List, Dict, Any
 import logging
 _log = logging.getLogger(__name__)
 
-from macsypy.utils import get_models_name_to_detect
-
+from .config import NoneConfig
+from .registries import ModelLocation
+from .definition_parser import DefinitionParser
+from .model import ModelBank
+from .gene import GeneBank, ProfileFactory
 
 class Remote:
 
@@ -169,7 +172,7 @@ class Package:
         self.metadata = os.path.join(self.path, 'metadata.yml')
         self.name = os.path.basename(self.path)
         self.readme = self._find_readme()
-        self.check(self.path)
+        self.check()
 
 
     def _find_readme(self) -> Any:
@@ -183,6 +186,16 @@ class Package:
             if os.path.exists(path) and os.path.isfile(path):
                 return path
         return None
+
+
+    def _load_metadata(self) -> Dict:
+        """
+        Open the metadata file and de-serialize it's content
+        :return:
+        """
+        with open(self.metadata) as raw_metadata:
+            metadata = yaml.load(raw_metadata)
+        return metadata
 
 
     def check(self) -> None:
@@ -207,24 +220,17 @@ class Package:
             _log.warning(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
         elif not self.readme:
             _log.warning(f"The package '{self.name}' have not any README file.")
-
-        # faire la liste de tous les models
-        config = Config(defaults, parsed_args)
-        registry = ModelRegistry(config)
-        all_models = get_models_name_to_detect('all')
-        for model in all_models:
-            # instancier tous les models
-            pass
-
-
-    def _load_metadata(self) -> Dict:
-        """
-        Open the metadata file and de-serialize it's content
-        :return:
-        """
-        with open(self.metadata) as raw_metadata:
-            metadata = yaml.load(raw_metadata)
-        return metadata
+        _log.info("The structure of the Package '' seems good")
+        _log.info("Checking Model definitions")
+        config = NoneConfig()
+        model_loc = ModelLocation(config, path=self.path)
+        all_def = model_loc.get_all_definitions()
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory()
+        parser = DefinitionParser(config, model_bank, gene_bank, profile_factory)
+        parser.parse([def_loc.fqn for def_loc in all_def])
+        _log.info("Definitions are consistent")
 
 
     def help(self, output=sys.stderr) -> None:
@@ -264,3 +270,15 @@ copyright: {metadata['copyrights']}
 """
         return info
 
+
+    def move(self, dest: str) -> None:
+        """
+        Move package from to new location *dest*
+        If the destination is an existing directory,
+        then the package is moved inside that directory.
+
+        :param dest:
+                    - if dest exists and is a dir, move the package to this new location
+                    - if dest does not exists rename
+        """
+        pass
