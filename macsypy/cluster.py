@@ -15,6 +15,8 @@ import itertools
 import logging
 
 from .error import MacsypyError
+from .hit import hit_weight
+from .gene import GeneStatus
 
 _log = logging.getLogger(__name__)
 
@@ -140,6 +142,8 @@ class Cluster:
         self.hits = hits
         self.model = model
         self._check_replicon_consistency()
+        self._score = None
+        self._genes_ref = None
 
     def __len__(self):
         return len(self.hits)
@@ -151,13 +155,25 @@ class Cluster:
             _log.error(msg)
             raise MacsypyError(msg)
 
-    def __contains__(self, hit):
+    def __contains__(self, v_hit):
         """
-        :param hit: The hit to test
-        :type hit: :class:`macsypy.hit.Hit` object
+        :param v_hit: The hit to test
+        :type v_hit: :class:`macsypy.hit.ValidHit` object
         :return: True if the hit is in the cluster hits, False otherwise
         """
-        return hit in self.hits
+        return v_hit in self.hits
+
+    def has(self, v_hit):
+        """
+
+        :param v_hit: The hit to test.
+        :type v_hit: :class:`macsypy.hit.ValidHit` object
+        :return: True if the cluster contains one hit gene_ref corresponding to the hit.gene_ref
+        """
+        if self._genes_ref is None:
+            self._genes_ref = {h.gene_ref for h in self.hits}
+        return v_hit.gene_ref in self._genes_ref
+
 
     def merge(self, cluster, before=False):
         """
@@ -182,6 +198,39 @@ class Cluster:
     def replicon_name(self):
         return self.hits[0].replicon_name
 
+    @property
+    def score(self):
+        if self._score is not None:
+            return self._score
+        else:
+            seen_hits = set()
+            score = 0
+            for v_hit in self.hits:
+                if v_hit.gene_ref in seen_hits:
+                    # count only one occurrence of each hit per cluster
+                    continue
+
+                # attribute a score for this hit
+                # according to status of the gene_ref in the model: mandatory/accessory
+                if v_hit.status == GeneStatus.MANDATORY:
+                    hit_score = hit_weight.mandatory
+                elif v_hit.status == GeneStatus.ACCESSORY:
+                    hit_score = hit_weight.accessory
+                else:
+                    raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
+                # weighted the hit score according to the hit match the gene or
+                # is an analog/homolog
+                if v_hit.gene_ref == v_hit.gene:
+                    hit_score *= hit_weight.hitself
+                elif v_hit.gene_ref.is_analog(v_hit.gene):
+                    hit_score *= hit_weight.analog
+                elif v_hit.gene_ref.is_homolog(v_hit.gene):
+                    hit_score *= hit_weight.homolog
+                score += hit_score
+                seen_hits.add(v_hit.gene_ref)
+        self._score = score
+        return score
+
 
     def __str__(self):
         s = """Cluster:
@@ -194,7 +243,7 @@ class Cluster:
 
 class RejectedClusters:
     """
-    Handle a set of clusters which has rejected during the :func:`macsypy.system.match`  step
+    Handle a set of clusters which has been rejected during the :func:`macsypy.system.match`  step
     This clusters (can be one) does not fill the requirements or contains forbidden genes.
     """
 
