@@ -195,7 +195,7 @@ class SystemTest(MacsyTest):
 
         # system with
         # 1 cluster
-        # 2 mandatory, 1 accessory no analog/homolog
+        # 2 mandatory, 2 accessory no analog/homolog
         s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model)])
         self.assertEqual(s.score, 3)
 
@@ -218,7 +218,7 @@ class SystemTest(MacsyTest):
         # 1rst cluster 1 mandatory 1 accessory
         # 2nd cluster 1 mandatory, 1 accessory already in first cluster
         s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj], model)])
-        self.assertEqual(s.score, 2.25)
+        self.assertEqual(s.score, 0)
 
         # system with 1 cluster
         # 2 mandatory
