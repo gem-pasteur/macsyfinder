@@ -13,6 +13,8 @@
 
 from operator import attrgetter
 import logging
+from enum import Enum
+
 from macsypy.error import MacsypyError
 
 _log = logging.getLogger(__name__)
@@ -202,6 +204,39 @@ class ValidHit:
 
     def __getattr__(self, item):
         return getattr(self.hit, item)
+
+
+class HitWeight:
+
+    def __init__(self):
+        self._hitself = 1
+        self._homolog = 0.75
+        self._analog = 0.75
+        self._mandatory = 1
+        self._accessory = 0.5
+
+    @property
+    def hitself(self):
+        return self._hitself
+
+    @property
+    def homolog(self):
+        return self._homolog
+
+    @property
+    def analog(self):
+        return self._analog
+
+    @property
+    def mandatory(self):
+        return self._mandatory
+
+    @property
+    def accessory(self):
+        return self._accessory
+
+hit_weight = HitWeight()
+
 
 
 def get_best_hits(hits, key='score'):

@@ -14,7 +14,7 @@
 
 import argparse
 
-from macsypy.hit import Hit, ValidHit, get_best_hits
+from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
@@ -215,3 +215,13 @@ class GetBestHitTest(MacsyTest):
             get_best_hits([h0, h1], key='nimportnaoik')
         self.assertEqual('The criterion for Hits comparison nimportnaoik does not exist or is not available.\n'
                          'It must be either "score", "i_eval" or "profile_coverage".', str(ctx.exception))
+
+
+class HitWeightTest(MacsyTest):
+
+    def test_hit_weight(self):
+        self.assertEqual(hit_weight.mandatory, 1)
+        self.assertEqual(hit_weight.accessory, 0.5)
+        self.assertEqual(hit_weight.hitself, 1)
+        self.assertEqual(hit_weight.homolog, 0.75)
+        self.assertEqual(hit_weight.analog, 0.75)
