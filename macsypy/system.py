@@ -244,44 +244,13 @@ class System:
             * if a hit match for mandatory/accessory gene of the model
         :rtype: float
         """
-        weights = {'analog': 0.75,
-                   'homolog': 0.75,
-                   'in_clst': 0,
-                   'in_syst': -0.5,
-                   'mandatory': 1,
-                   'accessory': 0.5,
-                   }
-        score = 0
-        seen_in_system = set()
-        clusters = sorted(self.clusters, key=len, reverse=True)
-        for clst in clusters:
-            seen_in_clst = set()
-            for v_hit in clst.hits:
-                # attribute a score for this hit according to mandatory/accessory
-                if v_hit.status == GeneStatus.MANDATORY:
-                    hit_score = weights['mandatory']
-                elif v_hit.status == GeneStatus.ACCESSORY:
-                    hit_score = weights['accessory']
-
-                # weighted the hit score according to the hit match the gene or is an analog/homolog
-                if v_hit.gene == v_hit.gene_ref:
-                    pass
-                elif v_hit.gene_ref.is_analog(v_hit.gene):
-                    hit_score *= weights['analog']
-                elif v_hit.gene_ref.is_homolog(v_hit.gene):
-                    hit_score *= weights['homolog']
-
-                # compute the global score by weighting the hit_score according if this gene is already present
-                # in this cluster or the system
-                if v_hit.gene_ref in seen_in_system:
-                    hit_score *= weights['in_syst']
-                elif v_hit.gene_ref in seen_in_clst:
-                    hit_score *= weights['in_clst']
-                else:
-                    pass
-                score += hit_score
-                seen_in_clst.add(v_hit.gene_ref)
-            seen_in_system.update(seen_in_clst)
+        score = sum([clst.score for clst in self.clusters])
+        for v_hit in self.hits:
+            # clst.has(v_hit) search if v_hit belong to yhe cluster or an analog/homolog exchangeable
+            # so if the function fulfill by the hit already exists in other clusters
+            clst_having_hit = sum([1 for clst in self.clusters if clst.has(v_hit)])
+            clst_penalty = (clst_having_hit - 1) * 1.5
+            score -= clst_penalty
         return score
 
 
