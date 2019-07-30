@@ -158,6 +158,34 @@ class SystemTest(MacsyTest):
         s = System(model, [c1, c2])
         self.assertEqual(s.wholeness, 3 / 3)
 
+    def test_occurrence(self):
+        model = Model(self.cfg, "foo/T2SS", 10)
+        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(gene_sctn, model, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
+        s = System(model, [c])
+        self.assertEqual(s.occurrence(), 1)
+        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
+        c2 = Cluster([v_hit_2, v_hit_3], model)
+        s = System(model, [c1, c2])
+        # The estimation of occurrence number is based on mandatory only
+        self.assertEqual(s.occurrence(), 1)
+        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
+        c2 = Cluster([v_hit_1, v_hit_3], model)
+        s = System(model, [c1, c2])
+        self.assertEqual(s.occurrence(), 2)
+
 
     def test_score(self):
         model = Model(self.cfg, "foo/T2SS", 10)
