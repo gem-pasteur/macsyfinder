@@ -254,7 +254,7 @@ class System:
         return score
 
 
-    def occurence(self):
+    def occurrence(self):
         """
         sometimes several systems collocates so they form only one cluster
         so macsyfinder build only one system
@@ -322,7 +322,7 @@ score = {score:.3f}
            rep_name=self.system.replicon_name,
            clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                                                                                for cluster in self.system.clusters]),
-           occ=self.system.occurence(),
+           occ=self.system.occurrence(),
            wholeness=self.system.wholeness,
            score=self.system.score
            )
