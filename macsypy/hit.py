@@ -13,7 +13,7 @@
 
 from operator import attrgetter
 import logging
-from enum import Enum
+from dataclasses import dataclass
 
 from macsypy.error import MacsypyError
 
@@ -206,37 +206,17 @@ class ValidHit:
         return getattr(self.hit, item)
 
 
+@dataclass(frozen=True)
 class HitWeight:
 
-    def __init__(self):
-        self._hitself = 1
-        self._homolog = 0.75
-        self._analog = 0.75
-        self._mandatory = 1
-        self._accessory = 0.5
+    hitself: float = 1
+    homolog: float = 0.75
+    analog: float = 0.75
+    mandatory: float = 1
+    accessory: float = 0.5
 
-    @property
-    def hitself(self):
-        return self._hitself
-
-    @property
-    def homolog(self):
-        return self._homolog
-
-    @property
-    def analog(self):
-        return self._analog
-
-    @property
-    def mandatory(self):
-        return self._mandatory
-
-    @property
-    def accessory(self):
-        return self._accessory
 
 hit_weight = HitWeight()
-
 
 
 def get_best_hits(hits, key='score'):
