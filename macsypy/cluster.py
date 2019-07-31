@@ -163,16 +163,16 @@ class Cluster:
         """
         return v_hit in self.hits
 
-    def has(self, v_hit):
+    def fulfilled_function(self, gene):
         """
 
-        :param v_hit: The hit to test.
-        :type v_hit: :class:`macsypy.hit.ValidHit` object
-        :return: True if the cluster contains one hit gene_ref corresponding to the hit.gene_ref
+        :param gene: The gene which must be tested.
+        :type gene: :class:`macsypy.gene.Gene` object
+        :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
         """
         if self._genes_ref is None:
             self._genes_ref = {h.gene_ref for h in self.hits}
-        return v_hit.gene_ref in self._genes_ref
+        return gene in self._genes_ref
 
 
     def merge(self, cluster, before=False):

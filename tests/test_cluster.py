@@ -327,7 +327,7 @@ class TestCluster(MacsyTest):
         self.assertFalse(v_h30 in c1)
 
 
-    def test_has(self):
+    def test_fulfilled_function(self):
         model = Model(self.cfg, "foo/T2SS", 11)
 
         gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
@@ -340,15 +340,18 @@ class TestCluster(MacsyTest):
         v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
         h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
-        h30 = Hit(gene_3, model, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
+
+        c = Cluster([v_h10, v_h20], model)
+
+        self.assertTrue(c.fulfilled_function(gene_1))
+        self.assertFalse(c.fulfilled_function(gene_3))
+
         h50 = Hit(gene_3, model, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20], model)
 
-        self.assertTrue(c1.has(v_h10))
-        self.assertFalse(c1.has(v_h30))
-        self.assertTrue(c1.has(v_h50))
+        c = Cluster([v_h10, v_h50], model)
+        self.assertTrue(c.fulfilled_function(gene_2))
+
 
     def test_score(self):
         model = Model(self.cfg, "foo/T2SS", 10)
