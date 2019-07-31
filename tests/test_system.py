@@ -243,10 +243,13 @@ class SystemTest(MacsyTest):
         self.assertEqual(s.score, 3)
 
         # system with 2 clusters
-        # 1rst cluster 1 mandatory 1 accessory
-        # 2nd cluster 1 mandatory, 1 accessory already in first cluster
+        # 1rst cluster 1 mandatory + 1 accessory
+        #                  1       +   0.5
+        # 2nd cluster 1 mandatory + 1 accessory already in first cluster
+        #                  1      +    0.5
+        # 3 - (2 - 1) * 1.5 = 1.5
         s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj], model)])
-        self.assertEqual(s.score, 0)
+        self.assertEqual(s.score, 1.5)
 
         # system with 1 cluster
         # 2 mandatory
