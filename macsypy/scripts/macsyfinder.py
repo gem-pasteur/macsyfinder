@@ -33,7 +33,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import HitRegistry, get_best_hits
-from macsypy.system import match, System
+from macsypy.system import match, System, track_multi_systems
 from macsypy.utils import get_models_name_to_detect
 
 
@@ -436,6 +436,9 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             rejected_clusters.append(res)
 
         system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        track_multi_systems(systems)
+
+        systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
         with open(system_filename, "w") as sys_file:
             systems_to_file(systems, sys_file)
 
