@@ -245,13 +245,11 @@ class System:
         :rtype: float
         """
         score = sum([clst.score for clst in self.clusters])
-        for v_hit in self.hits:
-            # clst.has(v_hit) search if v_hit or an analog/homolog exchangeable
-            # belong to one of the clusters constituent this system
-            # so if the function fulfill by the hit already exists in other clusters
-            clst_having_hit = sum([1 for clst in self.clusters if clst.has(v_hit)])
-            clst_penalty = (clst_having_hit - 1) * 1.5
-            score -= clst_penalty
+        for gene in self.model.mandatory_genes + self.model.accessory_genes:
+            clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
+            if clst_having_hit:
+                clst_penalty = (clst_having_hit - 1) * 1.5
+                score -= clst_penalty
         return score
 
 
