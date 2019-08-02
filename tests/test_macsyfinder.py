@@ -88,13 +88,13 @@ set_2
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        profile_factory = ProfileFactory()
+        profile_factory = ProfileFactory(cfg)
 
         model = Model("foo/T2SS", 10)
         # test if id is well incremented
-        gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
+        gene_gspd = Gene(profile_factory, "gspD", model, models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(cfg, profile_factory, "sctJ", model, models_location)
+        gene_sctj = Gene(profile_factory, "sctJ", model, models_location)
         model.add_accessory_gene(gene_sctj)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -141,12 +141,12 @@ accessory genes:
         models_registry = ModelRegistry(cfg)
         model_name = 'foo'
         models_location = models_registry[model_name]
-        profile_factory = ProfileFactory()
+        profile_factory = ProfileFactory(cfg)
 
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(cfg, profile_factory, "gspD", model, models_location)
-        gene_2 = Gene(cfg, profile_factory, "sctC", model, models_location)
+        gene_1 = Gene(profile_factory, "gspD", model, models_location)
+        gene_2 = Gene(profile_factory, "sctC", model, models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match

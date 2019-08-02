@@ -43,14 +43,14 @@ class SystemTest(MacsyTest):
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def test_init(self):
         model = Model("foo/T2SS", 10)
         # test if id is well incremented
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -65,11 +65,11 @@ class SystemTest(MacsyTest):
 
     def test_hits(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -86,11 +86,11 @@ class SystemTest(MacsyTest):
 
     def test_multi_loci(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -112,11 +112,11 @@ class SystemTest(MacsyTest):
 
     def test_loci(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -138,11 +138,11 @@ class SystemTest(MacsyTest):
 
     def test_wholeness(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -160,11 +160,11 @@ class SystemTest(MacsyTest):
 
     def test_occurrence(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
         model.add_accessory_gene(gene_sctn)
 
         hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -189,19 +189,19 @@ class SystemTest(MacsyTest):
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location)
+        gene_tadZ = Gene(self.profile_factory, "tadZ", model, self.models_location)
         model.add_mandatory_gene(gene_tadZ)
 
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
-        gene_sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
+        gene_sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
         analog = Analog(gene_sctJ_FLG, gene_sctj)
         gene_sctj.add_analog(analog)
         model.add_accessory_gene(gene_sctj)
 
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
-        gene_sctn_FLG = Gene(self.cfg, self.profile_factory, 'sctN_FLG', model, self.models_location)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn_FLG = Gene(self.profile_factory, 'sctN_FLG', model, self.models_location)
         homolog = Homolog(gene_sctn_FLG, gene_sctj)
         gene_sctn.add_homolog(homolog)
         model.add_accessory_gene(gene_sctn)
@@ -266,11 +266,11 @@ class SystemTest(MacsyTest):
 
     def test_SystemSerializer_to_json(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
         h_gspd = Hit(gene_gspd, model, "h_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -301,11 +301,11 @@ class SystemTest(MacsyTest):
 
     def test_SystemSerializer_str(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
         model.add_accessory_gene(gene_sctj)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location)
         model.add_accessory_gene(gene_sctn)
 
         h_gspd = Hit(gene_gspd, model, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -341,27 +341,27 @@ accessory genes:
 
     def test_match(self):
         model = Model("foo/T2SS", 10)
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, exchangeable=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, exchangeable=True)
         gene_sctn_flg = Homolog(
-            Gene(self.cfg, self.profile_factory, "sctN_FLG", model, self.models_location),
+            Gene(self.profile_factory, "sctN_FLG", model, self.models_location),
             gene_sctn
         )
         gene_sctn.add_homolog(gene_sctn_flg)
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
         gene_sctj_flg = Analog(
-            Gene(self.cfg, self.profile_factory, "sctJ_FLG", model, self.models_location),
+            Gene(self.profile_factory, "sctJ_FLG", model, self.models_location),
             gene_sctj
         )
         gene_sctj.add_analog(gene_sctj_flg)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location, exchangeable=True)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location, exchangeable=True)
         gene_gspd_an = Analog(
-            Gene(self.cfg, self.profile_factory, "flgB", model, self.models_location),
+            Gene(self.profile_factory, "flgB", model, self.models_location),
             gene_gspd
         )
         gene_gspd.add_analog(gene_gspd_an)
-        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, exchangeable=True)
+        gene_abc = Gene(self.profile_factory, "abc", model, self.models_location, exchangeable=True)
         gene_abc_ho = Homolog(
-            Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location),
+            Gene(self.profile_factory, "tadZ", model, self.models_location),
             gene_abc
         )
         gene_abc.add_homolog(gene_abc_ho)
@@ -470,24 +470,24 @@ accessory genes:
         model_1 = Model("foo/T2SS", 10)
         model_2 = Model("foo/T3SS", 10)
 
-        gene_sctn_flg = Gene(self.cfg, self.profile_factory, "sctN_FLG", model_2, self.models_location)
-        gene_sctj_flg = Gene(self.cfg, self.profile_factory, "sctJ_FLG", model_2, self.models_location)
-        gene_flgB = Gene(self.cfg, self.profile_factory, "flgB", model_2, self.models_location)
-        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model_2, self.models_location)
+        gene_sctn_flg = Gene(self.profile_factory, "sctN_FLG", model_2, self.models_location)
+        gene_sctj_flg = Gene(self.profile_factory, "sctJ_FLG", model_2, self.models_location)
+        gene_flgB = Gene(self.profile_factory, "flgB", model_2, self.models_location)
+        gene_tadZ = Gene(self.profile_factory, "tadZ", model_2, self.models_location)
 
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model_1, self.models_location, exchangeable=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model_1, self.models_location, exchangeable=True)
         gene_sctn_hom = Homolog(gene_sctn_flg, gene_sctn)
         gene_sctn.add_homolog(gene_sctn_hom)
 
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model_1, self.models_location, exchangeable=True)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model_1, self.models_location, exchangeable=True)
         gene_sctj_an = Analog(gene_sctj_flg, gene_sctj)
         gene_sctj.add_analog(gene_sctj_an)
 
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model_1, self.models_location, exchangeable=True)
+        gene_gspd = Gene(self.profile_factory, "gspD", model_1, self.models_location, exchangeable=True)
         gene_gspd_an = Analog(gene_flgB, gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model_1, self.models_location, exchangeable=True)
+        gene_abc = Gene(self.profile_factory, "abc", model_1, self.models_location, exchangeable=True)
         gene_abc_ho = Homolog(gene_tadZ, gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
 
@@ -543,24 +543,24 @@ accessory genes:
         model_1 = Model("foo/T2SS", 10)
         model_2 = Model("foo/T3SS", 10)
 
-        gene_sctn_flg = Gene(self.cfg, self.profile_factory, "sctN_FLG", model_2, self.models_location)
-        gene_sctj_flg = Gene(self.cfg, self.profile_factory, "sctJ_FLG", model_2, self.models_location)
-        gene_flgB = Gene(self.cfg, self.profile_factory, "flgB", model_2, self.models_location)
-        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model_2, self.models_location)
+        gene_sctn_flg = Gene(self.profile_factory, "sctN_FLG", model_2, self.models_location)
+        gene_sctj_flg = Gene(self.profile_factory, "sctJ_FLG", model_2, self.models_location)
+        gene_flgB = Gene(self.profile_factory, "flgB", model_2, self.models_location)
+        gene_tadZ = Gene(self.profile_factory, "tadZ", model_2, self.models_location)
 
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model_1, self.models_location, exchangeable=True)
+        gene_sctn = Gene(self.profile_factory, "sctN", model_1, self.models_location, exchangeable=True)
         gene_sctn_hom = Homolog(gene_sctn_flg, gene_sctn)
         gene_sctn.add_homolog(gene_sctn_hom)
 
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model_1, self.models_location, exchangeable=True)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model_1, self.models_location, exchangeable=True)
         gene_sctj_an = Analog(gene_sctj_flg, gene_sctj)
         gene_sctj.add_analog(gene_sctj_an)
 
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model_1, self.models_location, exchangeable=True)
+        gene_gspd = Gene(self.profile_factory, "gspD", model_1, self.models_location, exchangeable=True)
         gene_gspd_an = Analog(gene_flgB, gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model_1, self.models_location, exchangeable=True)
+        gene_abc = Gene(self.profile_factory, "abc", model_1, self.models_location, exchangeable=True)
         gene_abc_ho = Homolog(gene_tadZ, gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
 

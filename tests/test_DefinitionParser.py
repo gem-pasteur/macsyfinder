@@ -38,7 +38,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(defaults, self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
         
         
@@ -92,37 +92,41 @@ class TestModelParser(MacsyTest):
         self.parser.parse(models_2_detect)
         self.assertEqual(len(self.model_bank), 2)
 
-        s2 = self.model_bank['foo/model_2']
-        self.assertEqual(s2.name, 'model_2')
-        self.assertEqual(s2.fqn, 'foo/model_2')
+        m2 = self.model_bank['foo/model_2']
+        self.assertEqual(m2.name, 'model_2')
+        self.assertEqual(m2.fqn, 'foo/model_2')
 
-        s1 = self.model_bank['foo/model_1']
-        self.assertEqual(s1.name, 'model_1')
-        self.assertEqual(s1.fqn, 'foo/model_1')
-        self.assertEqual(s1.inter_gene_max_space, 20)
-        self.assertEqual(s1.min_mandatory_genes_required, 4)
-        self.assertEqual(s1.min_genes_required, 6)
-        self.assertTrue(s1.multi_loci)
-        self.assertFalse(s2.multi_loci)
-        self.assertIsNone(s1.max_nb_genes)
-        self.assertEqual(s2.max_nb_genes, 1)
-        self.assertEqual(len(s1.mandatory_genes), 5)
-        mandatory_genes_name = [g.name for g in s1.mandatory_genes]
+        m1 = self.model_bank['foo/model_1']
+        self.assertEqual(m1.name, 'model_1')
+        self.assertEqual(m1.fqn, 'foo/model_1')
+        self.assertEqual(m1.inter_gene_max_space, 20)
+        self.assertEqual(m1.min_mandatory_genes_required, 4)
+        self.assertEqual(m1.min_genes_required, 6)
+        self.assertTrue(m1.multi_loci)
+        self.assertFalse(m2.multi_loci)
+        self.assertIsNone(m1.max_nb_genes)
+        self.assertEqual(m2.max_nb_genes, 1)
+        self.assertEqual(len(m1.mandatory_genes), 5)
+        mandatory_genes_name = [g.name for g in m1.mandatory_genes]
         mandatory_genes_name.sort()
         theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
         theoric_list.sort()
         self.assertListEqual(mandatory_genes_name, theoric_list)
-        sctJ_FLG = [g for g in s1.mandatory_genes if g.name == 'sctJ_FLG'][0]
+        sctJ_FLG = [g for g in m1.mandatory_genes if g.name == 'sctJ_FLG'][0]
         sctJ_FLG_homologs = sctJ_FLG.get_homologs()
         self.assertEqual(len(sctJ_FLG_homologs), 1)
         self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
+        sctJ = m2.get_gene('sctJ')
+        self.assertTrue(sctJ.exchangeable)
+        tadZ = m2.get_gene('tadZ')
+        self.assertFalse(tadZ.exchangeable)
         self.assertEqual(sctJ_FLG_homologs[0].model, self.model_bank['foo/model_2'])
-        self.assertEqual(len(s1.accessory_genes), 1)
-        self.assertEqual(s1.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(s1.accessory_genes[0].model, self.model_bank['foo/model_2'])
-        self.assertEqual(len(s1.forbidden_genes), 1)
-        self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(s1.forbidden_genes[0].model, self.model_bank['foo/model_2'])
+        self.assertEqual(len(m1.accessory_genes), 1)
+        self.assertEqual(m1.accessory_genes[0].name, 'tadZ')
+        self.assertEqual(m1.accessory_genes[0].model, self.model_bank['foo/model_2'])
+        self.assertEqual(len(m1.forbidden_genes), 1)
+        self.assertEqual(m1.forbidden_genes[0].name, 'sctC')
+        self.assertEqual(m1.forbidden_genes[0].model, self.model_bank['foo/model_2'])
 
 
     def test_parse_with_analogs(self):
@@ -134,39 +138,39 @@ class TestModelParser(MacsyTest):
 
         self.assertEqual(len(self.model_bank), 2)
 
-        s2 = self.model_bank['foo/model_4']
-        self.assertEqual(s2.name, 'model_4')
-        self.assertEqual(s2.fqn, 'foo/model_4')
+        m4 = self.model_bank['foo/model_4']
+        self.assertEqual(m4.name, 'model_4')
+        self.assertEqual(m4.fqn, 'foo/model_4')
 
-        s1 = self.model_bank['foo/model_3']
-        self.assertEqual(s1.name, 'model_3')
-        self.assertEqual(s1.fqn, 'foo/model_3')
-        self.assertEqual(s1.inter_gene_max_space, 20)
-        self.assertEqual(s1.min_mandatory_genes_required, 4)
-        self.assertEqual(s1.min_genes_required, 6)
-        self.assertTrue(s1.multi_loci)
-        self.assertFalse(s2.multi_loci)
-        self.assertIsNone(s1.max_nb_genes)
-        self.assertEqual(s2.max_nb_genes, 1)
-        self.assertEqual(len(s1.mandatory_genes), 5)
-        mandatory_genes_name = [g.name for g in s1.mandatory_genes]
+        m3 = self.model_bank['foo/model_3']
+        self.assertEqual(m3.name, 'model_3')
+        self.assertEqual(m3.fqn, 'foo/model_3')
+        self.assertEqual(m3.inter_gene_max_space, 20)
+        self.assertEqual(m3.min_mandatory_genes_required, 4)
+        self.assertEqual(m3.min_genes_required, 6)
+        self.assertTrue(m3.multi_loci)
+        self.assertFalse(m4.multi_loci)
+        self.assertIsNone(m3.max_nb_genes)
+        self.assertEqual(m4.max_nb_genes, 1)
+        self.assertEqual(len(m3.mandatory_genes), 5)
+        mandatory_genes_name = [g.name for g in m3.mandatory_genes]
         mandatory_genes_name.sort()
         theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
         theoric_list.sort()
         self.assertListEqual(mandatory_genes_name, theoric_list)
-        sctJ_FLG = [g for g in s1.mandatory_genes if g.name == 'sctJ_FLG'][0]
+        sctJ_FLG = [g for g in m3.mandatory_genes if g.name == 'sctJ_FLG'][0]
         sctJ_FLG_homologs = sctJ_FLG.get_homologs()
         self.assertListEqual(sctJ_FLG_homologs, [])
         sctJ_FLG_analogs = sctJ_FLG.get_analogs()
         self.assertEqual(len(sctJ_FLG_analogs), 1)
         self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
         self.assertEqual(sctJ_FLG_analogs[0].model, self.model_bank['foo/model_4'])
-        self.assertEqual(len(s1.accessory_genes), 1)
-        self.assertEqual(s1.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(s1.accessory_genes[0].model, self.model_bank['foo/model_4'])
-        self.assertEqual(len(s1.forbidden_genes), 1)
-        self.assertEqual(s1.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(s1.forbidden_genes[0].model, self.model_bank['foo/model_4'])
+        self.assertEqual(len(m3.accessory_genes), 1)
+        self.assertEqual(m3.accessory_genes[0].name, 'tadZ')
+        self.assertEqual(m3.accessory_genes[0].model, self.model_bank['foo/model_4'])
+        self.assertEqual(len(m3.forbidden_genes), 1)
+        self.assertEqual(m3.forbidden_genes[0].name, 'sctC')
+        self.assertEqual(m3.forbidden_genes[0].model, self.model_bank['foo/model_4'])
 
 
     def test_wo_presence(self):
@@ -339,6 +343,37 @@ class TestModelParser(MacsyTest):
                          )
                          )
 
+
+    def test_loner(self):
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+
+        m = self.model_bank[model_fqn]
+        flgC = m.get_gene('flgC')
+        self.assertFalse(flgC.loner)
+        tadZ = m.get_gene('tadZ')
+        self.assertTrue(tadZ.loner)
+
+
+    def test_multi_system(self):
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+
+        m = self.model_bank[model_fqn]
+        flgC = m.get_gene('flgC')
+        self.assertFalse(flgC.multi_system)
+        fliE = m.get_gene('fliE')
+        self.assertTrue(fliE.multi_system)
+
+
     def test_gene_inter_gene_max_space(self):
         def_2_parse = set()
         model_fqn = 'foo/model_5'
@@ -378,7 +413,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
@@ -401,7 +436,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
@@ -424,7 +459,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
@@ -447,7 +482,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
@@ -469,7 +504,7 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)

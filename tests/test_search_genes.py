@@ -52,7 +52,7 @@ class TestSearchGenes(MacsyTest):
         self.models_location = models_registry[self.model_name]
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
-        self.profile_factory = macsypy.gene.ProfileFactory()
+        self.profile_factory = macsypy.gene.ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -64,7 +64,7 @@ class TestSearchGenes(MacsyTest):
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
         model = Model("foo/T2SS", 10)
-        gene_abc = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location)
+        gene_abc = Gene(self.profile_factory, "abc", model, self.models_location)
         report = search_genes([gene_abc], self.cfg)
         expected_hit = [Hit(gene_abc, model, "ESCO030p01_000260", 706, "ESCO030p01",
                             26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663

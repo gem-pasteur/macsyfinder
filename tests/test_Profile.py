@@ -45,7 +45,7 @@ class TestProfile(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -56,16 +56,16 @@ class TestProfile(MacsyTest):
 
     def test_len(self):
         system = Model("foo/T2SS", 10)
-        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
-        path = self.models_location.get_profile("abc")
+        gene = Gene(self.profile_factory, "abc", system, self.models_location)
+        path = self.models_location.get_profile("abc", )
         profile = Profile(gene, self.cfg, path)
         self.assertEqual(len(profile), 501)
 
 
     def test_str(self):
         system = Model("foo/T2SS", 10)
-        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
-        path = self.models_location.get_profile("abc")
+        gene = Gene(self.profile_factory, "abc", system, self.models_location)
+        path = self.models_location.get_profile("abc", )
         profile = Profile(gene, self.cfg, path)
         s = "{0} : {1}".format(gene.name, path)
         self.assertEqual(str(profile), s)
@@ -76,8 +76,8 @@ class TestProfile(MacsyTest):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
             system = Model("foo/T2SS", 10)
-            gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
-            profile_path = self.models_location.get_profile("abc")
+            gene = Gene(self.profile_factory, "abc", system, self.models_location)
+            profile_path = self.models_location.get_profile("abc", )
             profile = Profile(gene, self.cfg, profile_path)
             report = profile.execute()
             hmmer_raw_out = profile.hmm_raw_output
@@ -98,8 +98,8 @@ class TestProfile(MacsyTest):
     def test_execute_unknown_binary(self):
         self.cfg._options['hmmer'] = "Nimportnaoik"
         system = Model("foo/T2SS", 10)
-        gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
-        path = self.models_location.get_profile("abc")
+        gene = Gene(self.profile_factory, "abc", system, self.models_location)
+        path = self.models_location.get_profile("abc", )
         profile = Profile(gene, self.cfg, path)
         with self.catch_log():
             with self.assertRaises(RuntimeError):
@@ -117,8 +117,8 @@ sys.exit(127)
             os.chmod(hmmer.name, 0o755)
             self.cfg._options['hmmer'] = hmmer.name
             system = Model("foo/T2SS", 10)
-            gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
-            path = self.models_location.get_profile("abc")
+            gene = Gene(self.profile_factory, "abc", system, self.models_location)
+            path = self.models_location.get_profile("abc", )
             profile = Profile(gene, self.cfg, path)
             with self.catch_log():
                 with self.assertRaisesRegex(RuntimeError,

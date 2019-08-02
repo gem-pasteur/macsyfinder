@@ -232,7 +232,7 @@ class DefinitionParser(object):
                 attrs['inter_gene_max_space'] = inter_gene_max_space
             model_name = split_def_name(model.fqn)[0]
             model_location = self.model_registry[model_name]
-            new_gene = Gene(self.cfg, self.profile_factory, name, model, model_location, **attrs)
+            new_gene = Gene(self.profile_factory, name, model, model_location, **attrs)
             genes.append(new_gene)
             created_genes.add(new_gene.name)
         return genes

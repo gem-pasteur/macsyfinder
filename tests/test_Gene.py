@@ -37,7 +37,7 @@ class TestGene(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -49,8 +49,8 @@ class TestGene(MacsyTest):
     def test_add_homolog(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene_ref = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         homolog = Homolog(self.cfg, gene, gene_ref)
         gene.add_homolog(homolog)
         self.assertEqual(len(gene.homologs), 1)
@@ -60,9 +60,9 @@ class TestGene(MacsyTest):
     def test_get_homologs(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, gene)
         gene.add_homolog(homolog_1)
         homolog_2 = Homolog(sctJ, gene)
@@ -73,9 +73,9 @@ class TestGene(MacsyTest):
     def test_is_homolog(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         homolog = Homolog(sctJ_FLG, gene)
         gene.add_homolog(homolog)
         self.assertTrue(gene.is_homolog(gene))
@@ -85,7 +85,7 @@ class TestGene(MacsyTest):
 
     def test_add_analog(self):
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         analog = Analog(self.cfg, gene)
         gene.add_analog(analog)
         self.assertEqual(len(gene.analogs), 1)
@@ -95,9 +95,9 @@ class TestGene(MacsyTest):
     def test_get_analogs(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         analog_1 = Analog(sctJ_FLG, gene)
         gene.add_analog(analog_1)
         analog_2 = Analog(sctJ, gene)
@@ -108,9 +108,9 @@ class TestGene(MacsyTest):
     def test_is_analog(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         analog = Analog(sctJ_FLG, gene)
         gene.add_analog(analog)
         self.assertTrue(gene.is_analog(gene))
@@ -121,9 +121,9 @@ class TestGene(MacsyTest):
     def test_gene_ref(self):
         model_foo = Model("foo", 10)
         model_bar = Model("bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         analog = Analog(sctJ_FLG, gene)
         gene.add_analog(analog)
         self.assertEqual(analog.gene_ref, gene)
@@ -134,7 +134,7 @@ class TestGene(MacsyTest):
         test getter/setter for model property
         """
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         self.assertEqual(gene.model, model_foo)
 
 
@@ -143,9 +143,9 @@ class TestGene(MacsyTest):
         test getter for loner property
         """
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         self.assertFalse(gene.loner)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location, loner=True)
+        gene = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location, loner=True)
         self.assertTrue(gene.loner)
 
 
@@ -154,10 +154,10 @@ class TestGene(MacsyTest):
         test if gene belong to model mandatory genes
         """
         model_foo = Model("foo", 10)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         model_foo.add_mandatory_gene(sctJ_FLG)
         self.assertTrue(sctJ_FLG.is_mandatory(model_foo))
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
         model_foo.add_accessory_gene(sctJ)
         self.assertFalse(sctJ.is_mandatory(model_foo))
 
@@ -167,10 +167,10 @@ class TestGene(MacsyTest):
         test if gene belong to model mandatory genes
         """
         model_foo = Model("foo", 10)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         model_foo.add_mandatory_gene(sctJ_FLG)
         self.assertFalse(sctJ_FLG.is_accessory(model_foo))
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
         model_foo.add_accessory_gene(sctJ)
         self.assertTrue(sctJ.is_accessory(model_foo))
 
@@ -180,10 +180,10 @@ class TestGene(MacsyTest):
         test if gene belong to model mandatory genes
         """
         model_foo = Model("foo", 10)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         model_foo.add_mandatory_gene(sctJ_FLG)
         self.assertFalse(sctJ_FLG.is_forbidden(model_foo))
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
         model_foo.add_forbidden_gene(sctJ)
         self.assertTrue(sctJ.is_forbidden(model_foo))
 
@@ -193,9 +193,9 @@ class TestGene(MacsyTest):
         test getter for exchangeable property
         """
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         self.assertFalse(gene.exchangeable)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location, exchangeable=True)
+        gene = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location, exchangeable=True)
         self.assertTrue(gene.exchangeable)
 
 
@@ -204,9 +204,9 @@ class TestGene(MacsyTest):
         test getter for multi_system property
         """
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         self.assertFalse(gene.multi_system)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location, multi_system=True)
+        gene = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location, multi_system=True)
         self.assertTrue(gene.multi_system)
 
 
@@ -217,9 +217,10 @@ class TestGene(MacsyTest):
         system_inter_gene_max_space = 40
         gene_inter_gene_max_space = 50
         model_foo = Model("foo", system_inter_gene_max_space)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         self.assertEqual(gene.inter_gene_max_space, system_inter_gene_max_space)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location, inter_gene_max_space=gene_inter_gene_max_space)
+        gene = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location,
+                    inter_gene_max_space=gene_inter_gene_max_space)
         self.assertEqual(gene.inter_gene_max_space, gene_inter_gene_max_space)
 
 
@@ -227,12 +228,12 @@ class TestGene(MacsyTest):
         """
         """
         model_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         model_bar = Model("bar", 20)
-        gene_homolog = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
+        gene_homolog = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
         homolog = Homolog(gene_homolog, gene, self.cfg)
         gene.add_homolog(homolog)
-        analog = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
+        analog = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
         gene.add_analog(analog)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
@@ -240,8 +241,8 @@ inter_gene_max_space: 10
     analogs: sctN"""
         self.assertEqual(str(gene), s)
 
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location,
-                    loner=True, exchangeable=True, multi_system=True, inter_gene_max_space=10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location, loner=True, exchangeable=True,
+                    multi_system=True, inter_gene_max_space=10)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
 loner
@@ -251,10 +252,10 @@ exchangeable"""
 
     def test_is_authorized(self):
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -266,10 +267,10 @@ exchangeable"""
         self.assertFalse(sctC.is_authorized(model_foo))
 
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -281,10 +282,10 @@ exchangeable"""
         self.assertFalse(sctC.is_authorized(model_foo))
 
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -296,10 +297,10 @@ exchangeable"""
         self.assertFalse(sctC.is_authorized(model_foo))
 
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -311,10 +312,10 @@ exchangeable"""
         self.assertFalse(sctC.is_authorized(model_foo))
 
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -326,10 +327,10 @@ exchangeable"""
         self.assertFalse(sctC.is_authorized(model_foo, include_forbidden=False))
 
         model_foo = Model("foo", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_foo, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_foo, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         analog_1 = Analog(sctJ, sctN)
@@ -348,8 +349,8 @@ exchangeable"""
         # but sctN is not exchangeable
         ###################################
         model_foo = Model("true", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         model_foo.add_mandatory_gene(sctN)
@@ -360,8 +361,8 @@ exchangeable"""
         # but sctJ is not exchangeable
         ###################################
         model_bar = Model("false", 10)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_bar, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_bar, self.models_location)
         analog_1 = Analog(sctC, sctJ)
         sctJ.add_analog(analog_1)
         model_bar.add_mandatory_gene(sctJ)
@@ -382,8 +383,8 @@ exchangeable"""
         # and sctN is exchangeable
         ###################################
         model_foo = Model("true", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location,  exchangeable=True)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location, exchangeable=True)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         model_foo.add_accessory_gene(sctN)
@@ -394,8 +395,8 @@ exchangeable"""
         # and sctJ is exchangeable
         ###################################
         model_bar = Model("false", 10)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location,  exchangeable=True)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_bar, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location, exchangeable=True)
+        sctC = Gene(self.profile_factory, 'sctC', model_bar, self.models_location)
         analog_1 = Analog(sctC, sctJ)
         sctJ.add_analog(analog_1)
         model_bar.add_accessory_gene(sctJ)
@@ -416,8 +417,8 @@ exchangeable"""
         # but sctN is not exchangeable
         ###################################
         model_foo = Model("true", 10)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model_foo, self.models_location)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model_foo, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model_foo, self.models_location)
         homolog_1 = Homolog(sctJ_FLG, sctN)
         sctN.add_homolog(homolog_1)
         model_foo.add_forbidden_gene(sctN)
@@ -428,8 +429,8 @@ exchangeable"""
         # but sctJ is not exchangeable
         ###################################
         model_bar = Model("false", 10)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model_bar, self.models_location)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model_bar, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model_bar, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model_bar, self.models_location)
         analog_1 = Analog(sctC, sctJ)
         sctJ.add_analog(analog_1)
         model_bar.add_forbidden_gene(sctJ)
