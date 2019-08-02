@@ -9,7 +9,7 @@
 #                                                                              #
 # MacsyFinder is distributed under the terms of the GNU General Public License #
 # (GPLv3). See the COPYING file for details.                                   #
-######################################################################################################################################
+################################################################################
 
 
 from itertools import groupby
@@ -83,7 +83,7 @@ class Indexes(object):
             # formatdb create indexes in the same directory as the sequence_db
             # so it must be writable
             # if the directory is not writable, formatdb do a Segmentation fault
-            if not os.access(index_dir, os.R_OK|os.W_OK):
+            if not os.access(index_dir, os.R_OK | os.W_OK):
                 msg = "cannot build indexes, ({0}) is not writable".format(index_dir)
                 _log.critical(msg)
                 raise IOError(msg)
@@ -117,9 +117,9 @@ class Indexes(object):
                 with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx"), 'w') as my_base:
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
-                    for seqid, comment, length in f_iter:
+                    for seq_id, comment, length in f_iter:
                         seq_nb += 1
-                        my_base.write("{seq_id};{length:d};{seq_nb:d}\n".format(seq_id=seqid, length=length, seq_nb=seq_nb))
+                        my_base.write(f"{seq_id};{length:d};{seq_nb:d}\n")
         except Exception as err:
             msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db(), err)
             _log.critical(msg, exc_info=True)

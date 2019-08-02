@@ -39,4 +39,3 @@ def get_models_name_to_detect(models, model_registry) -> List[str]:
             models_name_to_detect.extend([model_loc.get_definition('{}/{}'.format(root, one_def)).fqn
                                           for one_def in definitions])
     return models_name_to_detect
-

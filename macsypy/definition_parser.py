@@ -66,9 +66,9 @@ class DefinitionParser(object):
                 try:
                     model_location = self.model_registry[model_name]
                     definition_location = model_location.get_definition(def_fqn)
-                except KeyError as err:
+                except KeyError:
                     raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir()))
-                except ValueError as err:
+                except ValueError:
                     raise MacsypyError("{}: No such definition".format(def_fqn))
 
                 path = definition_location.path
@@ -347,9 +347,8 @@ class DefinitionParser(object):
             raise ModelInconsistencyError(msg)
         model_ref = node.get("system_ref")
         if model_ref is not None and model_ref != gene.model.name:
-            msg = "Inconsistency in models definitions: the gene '{}' described as analog of\
- '{}' with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name,
-                                                                      model_ref, gene.model.name)
+            msg = f"Inconsistency in models definitions: the gene '{name}' described as analog of\
+ '{gene_ref.name}' with system_ref '{model_ref}' has an other model in bank ({gene.model.name})"
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         analog = Analog(gene, gene_ref)
@@ -455,8 +454,8 @@ class DefinitionParser(object):
             for g in genes:
                 try:
                     self.gene_bank.add_gene(g)
-                except KeyError as err:
-                    msg = "gene '{}' define in '{}' model is already defined in an another model".format(g.name, def_fqn)
+                except KeyError:
+                    msg = f"gene '{g.name}' define in '{def_fqn}' model is already defined in an another model"
                     _log.error(msg)
                     raise MacsypyError(msg)
 

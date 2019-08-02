@@ -100,8 +100,6 @@ class Model(object):
     def __init__(self, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
         """
-        :param cfg: the configuration object
-        :type cfg: :class:`macsypy.config.Config` object
         :param fqn: the fully qualified name of the model CRISPR-Cas/sub-typing/CAS-TypeIE
         :type fqn: string
         :param inter_gene_max_space: the maximum distance between two genes (**co-localization** parameter)
@@ -319,7 +317,8 @@ class Model(object):
         """
         :param gene: the gene to get the gene reference.
         :type gene: a :class:`macsypy.gene.Gene` or macsypy.gene.Homolog` or macsypy.gene.Analog` object.
-        :return: the gene reference of the gene if exists (if the gene is an Homolog or an Analog), otherwise return None.
+        :return: The gene reference of the gene if exists (if the gene is an Homolog or an Analog),
+                 otherwise return None.
         :rtype: :class:`macsypy.gene.Gene` object or None
         :raise: KeyError if gene is not in the model
         """

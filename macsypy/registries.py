@@ -39,7 +39,7 @@ def split_def_name(fqn):
 def join_def_path(*args):
     """
     join different elements of the definition path
-    :param path: the elements of the definition path, each elements must be a string
+    :param str args: the elements of the definition path, each elements must be a string
     :return: The return value is the concatenation of different elements of args with one
     separator
     :rtype: string
@@ -59,14 +59,16 @@ class ModelLocation(object):
         :param str path: if it's an installed model, path is the absolute path to a model family.
                      otherwise path is None, and profile_dir and def_dir must be specified.
         :param str profile_dir: the absolute path to the directory which contains the hmm profiles files.
-        :param str def_dir: the absolute path to the directory which contains the models definitions (xml files) or submodels.
+        :param str def_dir: The absolute path to the directory which contains the models definitions (xml files)
+                            or submodels.
         :param str profile_suffix: the suffix of hmm files
         :param bool relative_path: True if you want to waork with relative path, False to work with absolute path.
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
         if path and any((profile_dir, def_dir)):
-            raise MacsypyError("'path' and '{}' are incompatible arguments".format('profile_dir' if profile_dir else 'def_dir'))
+            raise MacsypyError("'path' and '{}' are incompatible arguments".format(
+                'profile_dir' if profile_dir else 'def_dir'))
         elif not path and not all((profile_dir, def_dir)):
             raise MacsypyError("if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
         self.path = path
@@ -162,7 +164,8 @@ class ModelLocation(object):
         return self.name > other.name
 
     def __eq__(self, other):
-        return self.name == other.name
+        return self.path, self.name, self._profiles, self._definitions == \
+               other.path, other.name, other._profiles, other._definitions
 
 
     def get_definition(self, fqn):
@@ -237,10 +240,6 @@ class ModelLocation(object):
     def __str__(self):
         return self.name
 
-    def __eq__(self, other):
-        return self.path, self.name, self._profiles, self._definitions == \
-               other.path, other.name, other._profiles, other._definitions
-
 
 class DefinitionLocation(dict):
     """
@@ -266,9 +265,7 @@ class DefinitionLocation(dict):
         """
         if self.subdefinitions is None:
             self.subdefinitions = {}
-        subdefinition.fqn = "{}{}{}".format(self.name,
-                                            _separator,
-                                            subdefinition.fqn)
+        subdefinition.fqn = f"{self.name}{_separator}{subdefinition.fqn}"
         self.subdefinitions[subdefinition.name] = subdefinition
 
 
