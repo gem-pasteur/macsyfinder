@@ -32,6 +32,7 @@ from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank, ProfileFactory
 
+
 class Remote:
 
     def __init__(self, org="macsy-models"):
@@ -43,6 +44,7 @@ class Remote:
         self.base_url = "https://api.github.com"
         self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
         self.remote_exists()
+
 
     def _url_json(self, url: str) -> Dict:
         """
@@ -74,6 +76,7 @@ class Remote:
                 raise err from None
             else:
                 raise err from None
+
 
     def list_packages(self) -> List[str]:
         """
@@ -223,7 +226,7 @@ class Package:
         _log.info("The structure of the Package '' seems good")
         _log.info("Checking Model definitions")
         config = NoneConfig()
-        model_loc = ModelLocation(config, path=self.path)
+        model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
         model_bank = ModelBank()
         gene_bank = GeneBank()

@@ -39,7 +39,7 @@ class Test(MacsyTest):
     def test_add_get_system(self):
         model_name = 'foo'
         self.assertRaises(KeyError,  self.system_bank.__getitem__, model_name)
-        system_foo = Model(self.cfg, model_name, 10)
+        system_foo = Model(model_name, 10)
         self.system_bank.add_model(system_foo)
         self.assertTrue(isinstance(system_foo, Model))
         self.assertEqual(system_foo,  self.system_bank[model_name])
@@ -49,14 +49,14 @@ class Test(MacsyTest):
                          '"a model named {0} is already registered in the models\' bank"'.format(model_name))
 
     def test_contains(self):
-        system_in = Model(self.cfg, "foo", 10)
+        system_in = Model("foo", 10)
         self.system_bank.add_model(system_in)
         self.assertIn(system_in,  self.system_bank)
-        system_out = Model(self.cfg, "bar", 10)
+        system_out = Model("bar", 10)
         self.assertNotIn(system_out,  self.system_bank)
 
     def test_iter(self):
-        systems = [Model(self.cfg, 'foo', 10), Model(self.cfg, 'bar', 10)]
+        systems = [Model('foo', 10), Model('bar', 10)]
         for s in systems:
             self.system_bank.add_model(s)
         i = 0
@@ -66,7 +66,7 @@ class Test(MacsyTest):
         self.assertEqual(i, len(systems))
 
     def test_get_uniq_object(self):
-        system_foo = Model(self.cfg, "foo", 10)
+        system_foo = Model("foo", 10)
         self.system_bank.add_model(system_foo)
         system_1 = self.system_bank[system_foo.name]
         system_2 = self.system_bank[system_foo.name]

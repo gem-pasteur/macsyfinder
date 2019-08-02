@@ -55,7 +55,7 @@ class TestProfile(MacsyTest):
 
 
     def test_len(self):
-        system = Model(self.cfg, "foo/T2SS", 10)
+        system = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -63,7 +63,7 @@ class TestProfile(MacsyTest):
 
 
     def test_str(self):
-        system = Model(self.cfg, "foo/T2SS", 10)
+        system = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -75,7 +75,7 @@ class TestProfile(MacsyTest):
     def test_execute(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
-            system = Model(self.cfg, "foo/T2SS", 10)
+            system = Model("foo/T2SS", 10)
             gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
             profile_path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, profile_path)
@@ -97,7 +97,7 @@ class TestProfile(MacsyTest):
 
     def test_execute_unknown_binary(self):
         self.cfg._options['hmmer'] = "Nimportnaoik"
-        system = Model(self.cfg, "foo/T2SS", 10)
+        system = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
         path = self.models_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
@@ -116,7 +116,7 @@ sys.exit(127)
         try:
             os.chmod(hmmer.name, 0o755)
             self.cfg._options['hmmer'] = hmmer.name
-            system = Model(self.cfg, "foo/T2SS", 10)
+            system = Model("foo/T2SS", 10)
             gene = Gene(self.cfg, self.profile_factory, "abc", system, self.models_location)
             path = self.models_location.get_profile("abc")
             profile = Profile(gene, self.cfg, path)

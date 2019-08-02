@@ -63,7 +63,7 @@ class TestSearchGenes(MacsyTest):
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_abc = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location)
         report = search_genes([gene_abc], self.cfg)
         expected_hit = [Hit(gene_abc, model, "ESCO030p01_000260", 706, "ESCO030p01",

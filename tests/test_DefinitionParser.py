@@ -29,13 +29,13 @@ class TestModelParser(MacsyTest):
 
     def setUp(self):
         defaults = MacsyDefaults()
-        args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
-        args.db_type = 'gembase'
-        args.models_dir = self.find_data('models')
-        args.res_search_dir = tempfile.gettempdir()
+        self.args = argparse.Namespace()
+        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.db_type = 'gembase'
+        self.args.models_dir = self.find_data('models')
+        self.args.res_search_dir = tempfile.gettempdir()
 
-        self.cfg = Config(defaults, args)
+        self.cfg = Config(defaults, self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory()
@@ -341,26 +341,142 @@ class TestModelParser(MacsyTest):
 
     def test_gene_inter_gene_max_space(self):
         def_2_parse = set()
-        def_2_parse.add('foo/model_5')
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
         parsed = set()
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
 
-        s1 = self.model_bank['foo/model_5']
-        self.assertEqual(s1.name, 'model_5')
-        self.assertEqual(s1.fqn, 'foo/model_5')
-        self.assertEqual(s1.inter_gene_max_space, 20)
-        self.assertEqual(s1.min_mandatory_genes_required, 2)
-        self.assertEqual(s1.min_genes_required, 3)
-        self.assertFalse(s1.multi_loci)
-        self.assertEqual(len(s1.mandatory_genes), 3)
-        mandatory_genes_name = [g.name for g in s1.mandatory_genes]
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.name, 'model_5')
+        self.assertEqual(m.fqn, model_fqn)
+        self.assertEqual(m.inter_gene_max_space, 20)
+        self.assertEqual(m.min_mandatory_genes_required, 2)
+        self.assertEqual(m.min_genes_required, 3)
+        self.assertFalse(m.multi_loci)
+        self.assertEqual(len(m.mandatory_genes), 3)
+        mandatory_genes_name = [g.name for g in m.mandatory_genes]
         mandatory_genes_name.sort()
         theoric_list = ["flgB", "flgC", "fliE"]
         theoric_list.sort()
         self.assertListEqual(mandatory_genes_name, theoric_list)
-        flgC = s1.get_gene('flgC')
+        flgC = m.get_gene('flgC')
         self.assertEqual(flgC.inter_gene_max_space, 2)
+
+
+    def test_inter_gene_max_space_cfg(self):
+        # test inter_gene_max_space is specified from configuration
+        # so this value must overload the value read from xml
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+
+        inter_gene_max_space_cfg = [[model_fqn, '222']]
+        self.args.inter_gene_max_space = inter_gene_max_space_cfg
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.model_bank = ModelBank()
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.inter_gene_max_space, 222)
+
+
+    def test_min_mandatory_genes_required_cfg(self):
+        # test min_mandatory_genes_required is specified from configuration
+        # so this value must overload the value read from xml
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+
+        min_mandatory_genes_required = [[model_fqn, '3']]
+        self.args.min_mandatory_genes_required = min_mandatory_genes_required
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.model_bank = ModelBank()
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.min_mandatory_genes_required, 3)
+
+
+    def test_min_genes_required_cfg(self):
+        # test min_genes_required is specified from configuration
+        # so this value must overload the value read from xml
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+
+        min_genes_required = [[model_fqn, '4']]
+        self.args.min_genes_required = min_genes_required
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.model_bank = ModelBank()
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.min_genes_required, 4)
+
+
+    def test_max_nb_genes_cfg(self):
+        # test max_nb_genes is specified from configuration
+        # so this value must overload the value read from xml
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+
+        max_nb_genes = [[model_fqn, '4']]
+        self.args.max_nb_genes = max_nb_genes
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.model_bank = ModelBank()
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.max_nb_genes, 4)
+
+
+    def test_multi_loci_cfg(self):
+        # test multi_loci is specified from configuration
+        # so this value must overload the value read from xml
+        def_2_parse = set()
+        model_fqn = 'foo/model_5'
+        def_2_parse.add(model_fqn)
+        parsed = set()
+
+        self.args.multi_loci = model_fqn
+
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.model_bank = ModelBank()
+        self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory()
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertTrue(m.multi_loci)
+
 
     def test_bad_gene_inter_gene_max_space_2(self):
         models_2_detect = ['foo/bad_inter_gene_max_space_2']
