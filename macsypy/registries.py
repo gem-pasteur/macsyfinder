@@ -47,7 +47,7 @@ def join_def_path(*args):
     return _separator.join(args)
 
 
-class ModelLocation(object):
+class ModelLocation:
     """
     Handle where are store Models. Models are organized in families and sub families.
     each family match to a ModelLocation. a ModelLocation contains the path toward the definitions
@@ -293,7 +293,7 @@ class DefinitionLocation(dict):
         return self.fqn > other.fqn
 
 
-class ModelRegistry(object):
+class ModelRegistry:
     """
     scan canonical directories to register the different models available in global macsyfinder
     share data location (depending installation /usr/share/data/models) or can be

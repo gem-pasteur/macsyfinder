@@ -43,7 +43,7 @@ def fasta_iter(fasta_file):
         yield _id, comment, length
 
 
-class Indexes(object):
+class Indexes:
     """
     Handle the indexes for macsyfinder:
 
@@ -131,7 +131,7 @@ each genes is representing by a tuple (seq_id, length)"""
 RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
 
 
-class RepliconDB(object):
+class RepliconDB:
     """
     Stores information (topology, min, max, [genes]) for all replicons in the sequence_db
     the Replicon object must be instantiated only for sequence_db of type 'gembase' or 'ordered_replicon'

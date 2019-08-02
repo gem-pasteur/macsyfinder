@@ -20,7 +20,7 @@ from .error import ModelInconsistencyError
 from .registries import split_def_name
 
 
-class ModelBank(object):
+class ModelBank:
     """
     Build and store all Models objects. Systems must not be instantiated directly.
     This model factory must be used. It ensures there is a unique instance
@@ -86,7 +86,7 @@ class ModelBank(object):
             self._model_bank[model.fqn] = model
 
 
-class Model(object):
+class Model:
     """
     Handles a macromolecular model.
 

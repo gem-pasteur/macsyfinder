@@ -20,7 +20,7 @@ from macsypy.error import MacsypyError
 _log = logging.getLogger(__name__)
 
 
-class Hit(object):
+class Hit:
     """
     Handle the hits filtered from the Hmmer search. The hits are instanciated by :py:meth:`HMMReport.extract` method
     """
