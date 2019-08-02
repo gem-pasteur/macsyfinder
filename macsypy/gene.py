@@ -25,7 +25,7 @@ from .error import MacsypyError
 from . import registries
 
 
-class GeneBank(object):
+class GeneBank:
     """
     Store all Gene objects. Ensure that genes are instanciated only once.
     """
@@ -85,7 +85,7 @@ class GeneBank(object):
             self._genes_bank[key] = gene
 
 
-class Gene(object):
+class Gene:
     """
     Handle Gene of a (secretion) System
 
@@ -362,7 +362,7 @@ class Gene(object):
         return compatibles
 
 
-class Homolog(object):
+class Homolog:
     """
     Handle homologs, encapsulate a Gene
     """
@@ -404,7 +404,7 @@ class Homolog(object):
         return self.ref
 
 
-class Analog(object):
+class Analog:
     """
     Handle analogs, encapsulate a Gene
     """
@@ -435,7 +435,7 @@ class Analog(object):
         return self.ref
 
 
-class ProfileFactory(object):
+class ProfileFactory:
     """
     Build and store all Profile objects. Profiles must not be instanciated directly.
     The profile_factory must be used. The profile_factory ensures there is only one instance
@@ -472,7 +472,7 @@ class ProfileFactory(object):
         return profile
 
 
-class Profile(object):
+class Profile:
     """
     Handle a HMM protein profile
     """

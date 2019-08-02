@@ -23,7 +23,7 @@ from .registries import ModelRegistry, split_def_name, join_def_path
 from .error import MacsypyError, ModelInconsistencyError
 
 
-class DefinitionParser(object):
+class DefinitionParser:
     """
     Build a Model instance from the corresponding model definition described in the XML file.
     """
