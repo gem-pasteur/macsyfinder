@@ -87,8 +87,6 @@ class ModelLocationTest(MacsyTest):
         self.tmp_dir = tempfile.mkdtemp()
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
         os.mkdir(self.root_models_dir)
-        self.cfg = Config(MacsyDefaults(models_dir=self.root_models_dir),
-                          argparse.Namespace())
 
         self.simple_models = {'name': 'simple',
                               'profiles': ('prof_1.hmm', 'prof_2.hmm'),
@@ -124,28 +122,28 @@ class ModelLocationTest(MacsyTest):
 
     def test_ModelLocation(self):
         with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(self.cfg, path='foo', profile_dir='bar')
+            ModelLocation(path='foo', profile_dir='bar')
         self.assertEqual(str(cm.exception),
                          "'path' and 'profile_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(self.cfg, path='foo', def_dir='bar')
+            ModelLocation(path='foo', def_dir='bar')
         self.assertEqual(str(cm.exception),
                          "'path' and 'def_dir' are incompatible arguments")
 
         with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(self.cfg, def_dir='foo')
+            ModelLocation(def_dir='foo')
         self.assertEqual(str(cm.exception),
                          "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(self.cfg, profile_dir='foo')
+            ModelLocation(profile_dir='foo')
         self.assertEqual(str(cm.exception),
                          "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
         # test new way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc = ModelLocation(path=simple_dir)
         self.assertEqual(model_loc.name, self.simple_models['name'])
         self.assertEqual(model_loc.path, simple_dir)
         self.assertDictEqual(model_loc._profiles,
@@ -156,7 +154,7 @@ class ModelLocationTest(MacsyTest):
                             {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
 
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
-        model_loc = ModelLocation(self.cfg, path=complex_dir)
+        model_loc = ModelLocation(path=complex_dir)
         self.assertEqual(model_loc.name, self.complex_models['name'])
         self.assertEqual(model_loc.path, complex_dir)
         self.assertDictEqual(model_loc._profiles,
@@ -179,8 +177,7 @@ class ModelLocationTest(MacsyTest):
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
         # test old way to specify profiles and definitions
-        model_loc = ModelLocation(self.cfg,
-                                  profile_dir=os.path.join(simple_dir, 'profiles'),
+        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
         self.assertDictEqual(model_loc._profiles,
@@ -194,7 +191,7 @@ class ModelLocationTest(MacsyTest):
     def test_get_definition(self):
         # test new way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc = ModelLocation(path=simple_dir)
 
         def_fqn = '{}{}{}'.format(model_loc.name,
                                   registries._separator,
@@ -210,7 +207,7 @@ class ModelLocationTest(MacsyTest):
         self.assertEqual(defloc_expected, defloc_received)
 
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
-        model_loc = ModelLocation(self.cfg, path=complex_dir)
+        model_loc = ModelLocation(path=complex_dir)
 
         subdef_name = 'subdef_1'
         def_name = 'def_1_1'
@@ -227,8 +224,7 @@ class ModelLocationTest(MacsyTest):
         self.assertEqual(defloc_expected, defloc_received)
 
         # test old way to specify profiles and defitions
-        model_loc = ModelLocation(self.cfg,
-                                  profile_dir=os.path.join(simple_dir, 'profiles'),
+        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
 
         def_fqn = "definitions/{0}".format(os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
@@ -241,7 +237,7 @@ class ModelLocationTest(MacsyTest):
 
     def test_get_all_definitions(self):
         complex_dir = _create_fake_models_tree(self.root_models_dir, self.complex_models)
-        model_loc = ModelLocation(self.cfg, path=complex_dir)
+        model_loc = ModelLocation(path=complex_dir)
 
         defs_expected = []
         for def_name in self.complex_models['definitions']:
@@ -278,8 +274,7 @@ class ModelLocationTest(MacsyTest):
 
         # test old way to specify profiles and defitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg,
-                                  profile_dir=os.path.join(simple_dir, 'profiles'),
+        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
         defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
                                             path=os.path.join(simple_dir, 'definitions', d))
@@ -295,13 +290,12 @@ class ModelLocationTest(MacsyTest):
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc = ModelLocation(path=simple_dir)
 
         self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
                          os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
 
-        model_loc = ModelLocation(self.cfg,
-                                  profile_dir=os.path.join(simple_dir, 'profiles'),
+        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
         self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
                          os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
@@ -309,13 +303,13 @@ class ModelLocationTest(MacsyTest):
 
     def test_str(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc = ModelLocation(path=simple_dir)
         model_loc.name = 'foo20'
         self.assertEqual('foo20', str(model_loc))
 
     def test_get_definitions(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(self.cfg, path=simple_dir)
+        model_loc = ModelLocation(path=simple_dir)
 
         model_loc._definitions = None
         defs = model_loc.get_definitions()
@@ -327,7 +321,6 @@ class ModelLocationTest(MacsyTest):
 
 
 class DefinitionLocationTest(MacsyTest):
-
 
     def test_DefinitionLocationn(self):
         model_name = 'foo'
@@ -413,7 +406,6 @@ class DefinitionLocationTest(MacsyTest):
 
 class ModelRegistryTest(MacsyTest):
 
-
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
         registries._prefix_data = self.tmp_dir
@@ -467,8 +459,8 @@ class ModelRegistryTest(MacsyTest):
 
     def test_models(self):
         md = ModelRegistry(self.cfg)
-        model_complex_expected = ModelLocation(self.cfg, path=self.complex_dir)
-        model_simple_expected = ModelLocation(self.cfg, path=self.simple_dir)
+        model_complex_expected = ModelLocation(path=self.complex_dir)
+        model_simple_expected = ModelLocation(path=self.simple_dir)
         models_received = md.models()
         self.assertEqual(len(models_received), 2)
         self.assertIn(model_simple_expected, models_received)
