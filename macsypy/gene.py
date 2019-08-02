@@ -37,8 +37,9 @@ class GeneBank(object):
         """
         :param key: The key to retrieve a gene.
         The key is composed of the name of models family and the gene name.
-        for instance CRISPR-Cas/cas9_TypeIIB or TXSS/T6SS_tssH
-        :type name: tuple (string, string)
+        for instance CRISPR-Cas/cas9_TypeIIB ('CRISPR-Cas' , 'cas9_TypeIIB') or
+        TXSS/T6SS_tssH ('TXSS', 'T6SS_tssH')
+        :type key: tuple (string, string)
         :return: return the Gene corresponding to the key.
         :rtype: :class:`macsypy.gene.Gene` object
         :raise KeyError: if the key does not exist in GeneBank.
@@ -99,8 +100,8 @@ class Gene(object):
         :type name: string.
         :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
-        :param model_loc: where all the paths profiles and definitions are register for a kind of model.
-        :type model_loc: :class:`macsypy.registries.ModelLocation` object.
+        :param model_location: where all the paths profiles and definitions are register for a kind of model.
+        :type model_location: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
@@ -452,9 +453,8 @@ class ProfileFactory(object):
         """
         :param gene: the gene associated to this profile
         :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
-        :param profiles_registry: the registry where are stored the path of the profiles
-        :type profiles_registry: the registry of profiles
-        :param profiles_registry: :class:`macsypy.registries.ProfilesRegistry` instance.
+        :param model_location: The where to get the profile
+        :type model_location: :class:`macsypy.registries.ModelLocation` object.
         :return: the profile corresponding to the name.
                  If the profile already exists, return it. Otherwise build it, store it and return it.
         :rtype: :class:`macsypy.gene.Profile` object
@@ -481,7 +481,7 @@ class Profile(object):
         """
 
         :param gene: the gene corresponding to this profile
-        :type gene_name: :class:`macsypy.secretion.Gene` object
+        :type gene: :class:`macsypy.secretion.Gene` object
         :param cfg: the configuration 
         :type cfg: :class:`macsypy.config.Config` object
         :param path: the path to the hmm profile.
@@ -554,7 +554,8 @@ class Profile(object):
                            "profile": self.path,
                            "sequence_db": self.cfg.sequence_db(),
                            }
-                command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} ".format(**options)
+                command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} "\
+                    .format(**options)
                 _log.debug("{0} Hmmer command line : {1}".format(self.gene.name, command))
                 try:
                     hmmer = Popen(command,
@@ -563,7 +564,7 @@ class Profile(object):
                                   stdin=None,
                                   stderr=err_file,
                                   close_fds=False,
-                                 )
+                                  )
                 except Exception as err:
                     msg = "Hmmer execution failed: command = {0} : {1}".format(command, err)
                     _log.critical(msg, exc_info=True)
@@ -572,11 +573,13 @@ class Profile(object):
 
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
-                    msg = "The Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
+                    msg = "The Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(
+                        command, hmmer.returncode, err_path)
                     _log.critical(msg)
                     return
                 else:
-                    msg = "an error occurred during Hmmer execution: command = {0} : return code = {1:d} check {2}".format(command, hmmer.returncode, err_path)
+                    msg = "an error occurred during Hmmer execution: command = {0} : return code = {1:d} check {2}"\
+                        .format(command, hmmer.returncode, err_path)
                     _log.debug(msg, exc_info=True)
                     _log.critical(msg)
                     raise RuntimeError(msg)
@@ -600,4 +603,3 @@ class GeneStatus(Enum):
 
     def __str__(self):
         return self.name.lower()
-

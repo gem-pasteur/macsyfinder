@@ -63,15 +63,12 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         """
         Print information on filtered hits
         """
-        s = """# gene: {gene_name} extract from {hmmer_out} hmm output
-# profile length= {profile_len:d}
-# i_evalue threshold= {i_evalue:.3f}
-# coverage threshold= {coverage:.3f}
+        s = f"""# gene: {self.gene.name} extract from {self._hmmer_raw_out} hmm output
+# profile length= {len(self.gene.profile):d}
+# i_evalue threshold= {self.cfg.i_evalue_sel():.3f}
+# coverage threshold= {self.cfg.coverage_profile():.3f}
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-""".format(gene_name=self.gene.name, hmmer_out=self._hmmer_raw_out,
-                                     profile_len=len(self.gene.profile),
-                                     i_evalue=self.cfg.i_evalue_sel(),
-                                     coverage=self.cfg.coverage_profile())
+"""
         
         for h in self.hits:
             s += str(h)
@@ -169,7 +166,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :type gene_profile_lg: integer
         :param seq_lg: the length of the sequence
         :type seq_lg: integer
-        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment for hit selection
+        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
+                                   for hit selection.
         :type coverage_threshold: float
         :param replicon_name: the identifier of the replicon
         :type replicon_name: string
@@ -206,7 +204,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                             cov_profile = (float(fields[7]) - float(fields[6]) + 1) / gene_profile_lg
                             begin = int(fields[9])
                             end = int(fields[10])
-                            cov_gene = (float(end) - float(begin) + 1) / seq_lg # To be added in Gene: sequence_length
+                            cov_gene = (float(end) - float(begin) + 1) / seq_lg  # To be added in Gene: sequence_length
                             if cov_profile >= coverage_threshold:
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
@@ -226,7 +224,6 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                         msg = "Invalid line to parse :{0}:{1}".format(line, err)
                         _log.debug(msg)
                         raise ValueError(msg)
-
 
 
 class GeneralHMMReport(HMMReport):

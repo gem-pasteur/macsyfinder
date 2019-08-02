@@ -77,19 +77,20 @@ class Hit(object):
         """
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
-        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{model_name}\t{i_evalue:.3e}\t{score:.3f}\
-\t{profil_cov:.3f}\t{seq_cov:.3f}\t{begin_match:d}\t{end_match:d}\n".format(id=self.id,
-                                                                            replicon_name=self.replicon_name,
-                                                                            position=self.position,
-                                                                            seq_len=self.seq_length,
-                                                                            gene_name=self.gene.name,
-                                                                            model_name=self.model.name,
-                                                                            i_evalue=self.i_eval,
-                                                                            score=self.score,
-                                                                            profil_cov=self.profile_coverage,
-                                                                            seq_cov=self.sequence_coverage,
-                                                                            begin_match=self.begin_match,
-                                                                            end_match=self.end_match)
+        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{model_name}\t{i_evalue:.3e}\t" \
+               "{score:.3f}\t{profil_cov:.3f}\t{seq_cov:.3f}\t" \
+               "{begin_match:d}\t{end_match:d}\n".format(id=self.id,
+                                                         replicon_name=self.replicon_name,
+                                                         position=self.position,
+                                                         seq_len=self.seq_length,
+                                                         gene_name=self.gene.name,
+                                                         model_name=self.model.name,
+                                                         i_evalue=self.i_eval,
+                                                         score=self.score,
+                                                         profil_cov=self.profile_coverage,
+                                                         seq_cov=self.sequence_coverage,
+                                                         begin_match=self.begin_match,
+                                                         end_match=self.end_match)
 
 
     def __lt__(self, other):
