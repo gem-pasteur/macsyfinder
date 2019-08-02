@@ -23,7 +23,7 @@ from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.registries import ModelRegistry
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
-from macsypy.system import System
+from macsypy.system import System, HitSystemTracker
 from macsypy.cluster import Cluster, RejectedClusters
 from macsypy.scripts.macsyfinder import systems_to_file, rejected_clst_to_file, parse_args
 import macsypy
@@ -108,7 +108,7 @@ set_2
 # Systems found:
 
 system id = replicon_id_T2SS_{}
-model = foo/T2SS 
+model = foo/T2SS
 replicon = replicon_id
 clusters = [('gspD', 1), ('sctJ', 1)]
 occ = 1
@@ -126,7 +126,8 @@ accessory genes:
 """.format(macsypy.__version__, ' '.join(sys.argv), next(System._id) - 1)
 
         f_out = StringIO()
-        systems_to_file([system_1], f_out)
+        track_multi_systems_hit = HitSystemTracker([system_1])
+        systems_to_file([system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
     def test_rejected_clst_to_file(self):

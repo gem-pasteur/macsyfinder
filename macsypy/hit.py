@@ -13,6 +13,8 @@
 
 from operator import attrgetter
 import logging
+from dataclasses import dataclass
+
 from macsypy.error import MacsypyError
 
 _log = logging.getLogger(__name__)
@@ -174,22 +176,6 @@ class Hit(object):
         """
         return self.gene.model.inter_gene_max_space
 
-    def add_system(self, system):
-        """
-
-        :param system:
-        :return:
-        """
-        self._systems.add(system)
-
-
-    def used_in_systems(self):
-        """
-
-        :return:
-        """
-        return self._systems
-
 
 class ValidHit:
     """
@@ -220,26 +206,17 @@ class ValidHit:
         return getattr(self.hit, item)
 
 
-class HitRegistry:
-    """
-    Track hit corresponding to a multi system gene in which system it is implied
-    """
+@dataclass(frozen=True)
+class HitWeight:
 
-    def __init__(self):
-        # the keys will be a hit, values a list of PutativeSystems in which it is implied
-        self._DB = {}
+    hitself: float = 1
+    homolog: float = 0.75
+    analog: float = 0.75
+    mandatory: float = 1
+    accessory: float = 0.5
 
-    def __contains__(self, hit):
-        return hit in self._DB
 
-    def __getitem__(self, hit):
-        return self._DB[hit]
-
-    def __setitem__(self, hit, system):
-        if hit in self._DB:
-            self._DB[hit].append(system)
-        else:
-            self._DB[hit] = [system]
+hit_weight = HitWeight()
 
 
 def get_best_hits(hits, key='score'):

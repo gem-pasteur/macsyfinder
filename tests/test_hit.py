@@ -14,12 +14,10 @@
 
 import argparse
 
-from macsypy.hit import Hit, HitRegistry, ValidHit, get_best_hits
+from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
-from macsypy.cluster import Cluster
-from macsypy.system import System
 from macsypy.registries import ModelRegistry
 from macsypy.error import MacsypyError
 from tests import MacsyTest
@@ -130,7 +128,6 @@ class ValidHitTest(MacsyTest):
         model_name = 'foo'
         models_location = models_registry[model_name]
 
-        self.registry = HitRegistry()
         model = Model("foo/T2SS", 10)
         profile_factory = ProfileFactory()
         self.gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
@@ -152,49 +149,6 @@ class ValidHitTest(MacsyTest):
 
     def test_hash(self):
         self.assertEqual(hash(self.hit_1), id(self.hit_1))
-
-
-class HitRegistryTest(MacsyTest):
-
-    def setUp(self) -> None:
-        args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
-        args.db_type = 'gembase'
-        args.models_dir = self.find_data('models')
-        cfg = Config(MacsyDefaults(), args)
-
-        models_registry = ModelRegistry(cfg)
-        model_name = 'foo'
-        models_location = models_registry[model_name]
-
-        self.registry = HitRegistry()
-        model = Model("foo/T2SS", 10)
-        profile_factory = ProfileFactory()
-        gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
-        model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(cfg, profile_factory, "sctJ", model, models_location)
-        model.add_accessory_gene(gene_sctj)
-
-        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        self.system_1 = System(model, [Cluster([self.hit_1, self.hit_2], model)])
-        self.system_2 = System(model, [Cluster([self.hit_1, self.hit_2], model)])
-
-    def test_contains(self):
-        self.assertFalse(self.hit_1 in self.registry)
-        self.registry[self.hit_1] = self.system_1
-        self.assertTrue(self.hit_1 in self.registry)
-
-    def test_set_get_item(self):
-        self.registry[self.hit_1] = self.system_1
-        self.assertListEqual(self.registry[self.hit_1], [self.system_1])
-        self.registry[self.hit_2] = self.system_1
-        self.assertListEqual(self.registry[self.hit_2], [self.system_1])
-        # add new system for same hit append the system
-        self.registry[self.hit_1] = self.system_2
-        self.assertListEqual(self.registry[self.hit_1], [self.system_1, self.system_2])
 
 
 class GetBestHitTest(MacsyTest):
@@ -261,3 +215,13 @@ class GetBestHitTest(MacsyTest):
             get_best_hits([h0, h1], key='nimportnaoik')
         self.assertEqual('The criterion for Hits comparison nimportnaoik does not exist or is not available.\n'
                          'It must be either "score", "i_eval" or "profile_coverage".', str(ctx.exception))
+
+
+class HitWeightTest(MacsyTest):
+
+    def test_hit_weight(self):
+        self.assertEqual(hit_weight.mandatory, 1)
+        self.assertEqual(hit_weight.accessory, 0.5)
+        self.assertEqual(hit_weight.hitself, 1)
+        self.assertEqual(hit_weight.homolog, 0.75)
+        self.assertEqual(hit_weight.analog, 0.75)
