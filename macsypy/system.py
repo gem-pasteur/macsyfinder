@@ -36,7 +36,7 @@ from .hit import ValidHit
 # combinations('ABCD', len("ABCD")) => inutile mais generique => recheche parmis tous les clusters
 
 
-def match(clusters, model, hit_registry):
+def match(clusters, model):
     """
     Check a set of clusters fill model constraints.
     If yes create a :class:`macsypy.system.PutativeSystem` otherwise create
@@ -46,7 +46,6 @@ def match(clusters, model, hit_registry):
     :type clusters: list of :class:`macsypy.cluster.Cluster` objects
     :param model:  The model to consider
     :type model: :class:`macsypy.model.Model` object
-    :param hit_registry: The registry where all hits => System are registered
     :return: either a System or a RejectedClusters
     :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
     """
@@ -144,40 +143,37 @@ def match(clusters, model, hit_registry):
 
     if is_a_system:
         res = System(model, valid_clusters)
-        for hit in valid_hits:
-            if hit.gene.multi_system:  # gene or gene_ref ?
-                hit_registry[hit] = res
-        _log.debug("is a putative system")
+        _log.debug("is a system")
     else:
         reason = '\n'.join(reasons)
         res = RejectedClusters(model, clusters, reason)
     _log.debug("#" * 50)
-    return res, hit_registry
+    return res
 
 
-def track_multi_systems(systems):
-    multi_sys_tracker = {}
-    model_2_system = {}
+class HitSystemTracker(dict):
 
-    for system in systems:
-        v_hits = system.hits
+    def __init__(self, systems):
+        super(HitSystemTracker, self).__init__()
+        for system in systems:
+            v_hits = system.hits
+            for v_hit in v_hits:
+                hit = v_hit.hit
+                if hit not in self:
+                    self[hit] = set()
+                self[hit].add(system)
 
-        model_fqn = system.model.fqn
-        if model_fqn not in model_2_system:
-            model_2_system[model_fqn] = set()
-        model_2_system[model_fqn].add(system)
 
-        for v_hit in v_hits:
-            hit = v_hit.hit
+class ClusterSystemTracker(dict):
 
-            if hit not in multi_sys_tracker:
-                multi_sys_tracker[hit] = set()
-            multi_sys_tracker[hit].add(v_hit.gene_ref.model.fqn)
-
-    for hit, models_fqn in multi_sys_tracker.items():
-        for model_fqn in models_fqn:
-            for system in model_2_system[model_fqn]:
-                hit.add_system(system)
+    def __init__(self, systems):
+        super(ClusterSystemTracker, self).__init__()
+        for system in systems:
+            clusters = system.clusters
+            for clst in clusters:
+                if clst not in self:
+                    self[clst] = set()
+                self[clst].add(system)
 
 
 class System:
@@ -217,6 +213,18 @@ class System:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
 
     @property
+    def replicon_name(self):
+        return self._replicon_name
+
+    @property
+    def mandatory_occ(self):
+        return {k: v for k, v in self._mandatory_occ.items()}
+
+    @property
+    def accessory_occ(self):
+        return {k: v for k, v in self._accessory_occ.items()}
+
+    @property
     def wholeness(self):
         """
 
@@ -225,47 +233,27 @@ class System:
         # model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
                 (len(self._mandatory_occ) + len(self._accessory_occ))
-
         return score
 
     @property
     def score(self):
         """
-        :return: a score that increase with the wholeness of the systems according to the mandatory and accessory genes,
-                 defined in the model. Decrease if some genes are represented several times and take also in account
-                 the number of loci.
+        :return: a score take in account
+            * if a hit match for the gene or is an homolog or analog
+            * if a hit is duplicated and already present in the system or the cluster
+            * if a hit match for mandatory/accessory gene of the model
         :rtype: float
         """
-        score = 0
-        for gene_occ, weight in ((self._mandatory_occ, 1), (self._accessory_occ, 0.5)):
-
-            for gene_name, v_hits in gene_occ.items():
-                hits_nb = len(v_hits)
-                if hits_nb == 1:
-                    if v_hits[0].hit.gene.name == gene_name:
-                        gene_score = weight
-                    else:
-                        # the hit match an homolog or analog
-                        gene_score = weight * 0.75
-                elif hits_nb > 1:
-                    gene_score = 0
-                    for v_hit in v_hits:
-                        # there are several hits for the same gene
-                        if v_hit.hit.gene.name == gene_name:
-                            gene_score += - weight * 0.5
-                        else:
-                            # the hit match an homolog or analog
-                            # So this hit is at least duplicated and homolog the penalty is higher
-                            gene_score += - weight * 0.75
-                else:
-                    continue
-                score += gene_score
-
-        # score /= self.loci
+        score = sum([clst.score for clst in self.clusters])
+        for gene in self.model.mandatory_genes + self.model.accessory_genes:
+            clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
+            if clst_having_hit:
+                clst_penalty = (clst_having_hit - 1) * 1.5
+                score -= clst_penalty
         return score
 
 
-    def occurence(self):
+    def occurrence(self):
         """
         sometimes several systems collocates so they form only one cluster
         so macsyfinder build only one system
@@ -311,34 +299,41 @@ class System:
         return self.loci > 1
 
 
+class SystemSerializer:
+
+    def __init__(self, system, hit_system_tracker):
+        self.system = system
+        self.hit_system_tracker = hit_system_tracker
+
     def __str__(self):
 
         s = """system id = {sys_id}
-model = {model} 
+model = {model}
 replicon = {rep_name}
 clusters = {clst}
 occ = {occ}
 wholeness = {wholeness:.3f}
 loci nb = {loci}
 score = {score:.3f}
-""".format(sys_id=self.id,
-           model=self.model.fqn,
-           loci=self.loci,
-           rep_name=self._replicon_name,
+""".format(sys_id=self.system.id,
+           model=self.system.model.fqn,
+           loci=self.system.loci,
+           rep_name=self.system.replicon_name,
            clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
-                                                                               for cluster in self.clusters]),
-           occ=self.occurence(),
-           wholeness=self.wholeness,
-           score=self.score
+                                                                               for cluster in self.system.clusters]),
+           occ=self.system.occurrence(),
+           wholeness=self.system.wholeness,
+           score=self.system.score
            )
-        for title, genes in (("mandatory", self._mandatory_occ), ("accessory", self._accessory_occ)):
+        for title, genes in (("mandatory", self.system.mandatory_occ), ("accessory", self.system.accessory_occ)):
             s += "\n{} genes:\n".format(title)
             for g_name, hits in genes.items():
                 s += "\t- {g_ref}: {occ} ".format(g_ref=g_name,
                                                   occ=len(hits))
                 all_hits_str = []
                 for h in hits:
-                    used_in_systems = [s.id for s in h.used_in_systems() if s.model.fqn != self.model.fqn]
+                    used_in_systems = [s.id for s in self.hit_system_tracker[h.hit]
+                                       if s.model.fqn != self.system.model.fqn]
                     if used_in_systems:
                         hit_str = "{} [{}]".format(h.gene.name, ', '.join(used_in_systems))
                     else:
@@ -364,16 +359,16 @@ score = {score:.3f}
                         }
                  }
         """
-        system = {'id': self.id,
-                  'model': self.model.fqn,
-                  'loci_nb': len(self.clusters),
-                  'replicon_name': self._replicon_name,
-                  'clusters': [[v_h.gene.name for v_h in cluster.hits]for cluster in self.clusters],
+        system = {'id': self.system.id,
+                  'model': self.system.model.fqn,
+                  'loci_nb': len(self.system.clusters),
+                  'replicon_name': self.system.replicon_name,
+                  'clusters': [[v_h.gene.name for v_h in cluster.hits]for cluster in self.system.clusters],
                   'gene_composition':
                       {'mandatory': {gene_ref: [hit.gene.name for hit in hits]
-                                     for gene_ref, hits in self._mandatory_occ.items()},
+                                     for gene_ref, hits in self.system.mandatory_occ.items()},
                        'accessory': {gene_ref: [hit.gene.name for hit in hits]
-                                     for gene_ref, hits in self._accessory_occ.items()}
+                                     for gene_ref, hits in self.system.accessory_occ.items()}
                        }
                   }
         return json.dumps(system)
