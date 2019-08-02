@@ -47,7 +47,7 @@ class SystemTest(MacsyTest):
         self.hit_registry = HitRegistry()
 
     def test_init(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         # test if id is well incremented
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
@@ -65,7 +65,7 @@ class SystemTest(MacsyTest):
         self.assertEqual(int(system_2.id.split('_')[-1]), int(system_1.id.split('_')[-1]) + 1)
 
     def test_hits(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -86,7 +86,7 @@ class SystemTest(MacsyTest):
 
 
     def test_multi_loci(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -112,7 +112,7 @@ class SystemTest(MacsyTest):
         self.assertFalse(sys_single_locus_plus_loner.multi_loci)
 
     def test_loci(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -138,7 +138,7 @@ class SystemTest(MacsyTest):
         self.assertEqual(sys_single_locus_plus_loner.loci, 1)
 
     def test_wholeness(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -161,7 +161,7 @@ class SystemTest(MacsyTest):
 
 
     def test_score(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location)
@@ -207,7 +207,7 @@ class SystemTest(MacsyTest):
 
 
     def test_to_json(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -240,7 +240,7 @@ class SystemTest(MacsyTest):
 
 
     def test_str(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
         gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
@@ -277,7 +277,7 @@ accessory genes:
 
 
     def test_match(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, exchangeable=True)
         gene_sctn_flg = Homolog(
             Gene(self.cfg, self.profile_factory, "sctN_FLG", model, self.models_location),

@@ -50,7 +50,7 @@ class Test(MacsyTest):
     def test_add_get_gene(self):
         gene_name = 'sctJ_FLG'
         self.assertRaises(KeyError, self.gene_bank.__getitem__, gene_name)
-        system_foo = Model(self.cfg, "foo/bar", 10)
+        system_foo = Model("foo/bar", 10)
         gene = Gene(self.cfg, self.profile_factory, gene_name, system_foo, self.models_location)
         self.gene_bank.add_gene(gene)
         gene_from_bank = self.gene_bank[(self.model_name, gene_name)]
@@ -62,7 +62,7 @@ class Test(MacsyTest):
                          '"a gene named \'{0}/{1}\' is already registered"'.format("foo", gene.name))
 
     def test_contains(self):
-        system_foo = Model(self.cfg, "foo/bar", 10)
+        system_foo = Model("foo/bar", 10)
         gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         self.gene_bank.add_gene(gene_in)
         self.assertIn(gene_in, self.gene_bank)
@@ -70,7 +70,7 @@ class Test(MacsyTest):
         self.assertNotIn(gene_out, self.gene_bank)
 
     def test_iter(self):
-        system_foo = Model(self.cfg, "foo/bar", 10)
+        system_foo = Model("foo/bar", 10)
         genes = [Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location),
                  Gene(self.cfg, self.profile_factory, 'abc', system_foo, self.models_location)]
         for g in genes:
@@ -83,7 +83,7 @@ class Test(MacsyTest):
 
 
     def test_get_uniq_object(self):
-        system_foo = Model(self.cfg, "foo", 10)
+        system_foo = Model("foo", 10)
         gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         self.gene_bank.add_gene(gene_in)
         gene1 = self.gene_bank[(self.model_name, 'sctJ_FLG')]

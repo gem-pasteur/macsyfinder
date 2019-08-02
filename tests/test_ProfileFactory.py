@@ -50,7 +50,7 @@ class Test(MacsyTest):
 
 
     def test_get_profile(self):
-        system_foo = Model(self.cfg, "foo", 10)
+        system_foo = Model("foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.cfg, self.profile_factory, gene_name, system_foo, self.models_location)
         profile = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
@@ -59,7 +59,7 @@ class Test(MacsyTest):
 
 
     def test_get_uniq_object(self):
-        system_foo = Model(self.cfg, "foo", 10)
+        system_foo = Model("foo", 10)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         profile1 = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
         profile2 = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
@@ -67,7 +67,7 @@ class Test(MacsyTest):
 
 
     def test_unknow_profile(self):
-        system_foo = Model(self.cfg, "foo", 10)
+        system_foo = Model("foo", 10)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         gene.name = "foo"
         self.assertRaises(MacsypyError, self.profile_factory.get_profile, gene, self.cfg, self.models_location)

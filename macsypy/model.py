@@ -97,7 +97,7 @@ class Model(object):
 
     """
 
-    def __init__(self, cfg, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
+    def __init__(self, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
         """
         :param cfg: the configuration object
@@ -115,7 +115,6 @@ class Model(object):
         :param multi_loci: 
         :type multi_loci: boolean
         """
-        self.cfg = cfg
         self.name = split_def_name(fqn)[-1]
         self.fqn = fqn
         self._inter_gene_max_space = inter_gene_max_space
@@ -192,9 +191,9 @@ class Model(object):
         :return: set the maximum distance allowed between 2 genes for this model
         :rtype: integer
         """
-        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(self.fqn)
-        if cfg_inter_gene_max_space is not None:
-            return cfg_inter_gene_max_space
+        # self._inter_gene_max_space come from the definition (xml)
+        # cfg_inter_gene_max_space come from the configuration command line option or conf file
+        # so cfg_inter_gene_max_space must superseed self._inter_gene_max_space
         return self._inter_gene_max_space
 
 
@@ -204,13 +203,9 @@ class Model(object):
         :return: get the quorum of mandatory genes required for this model
         :rtype: integer
         """
-        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(self.fqn)
-        if cfg_min_mandatory_genes_required is not None:
-            return cfg_min_mandatory_genes_required
-        elif self._min_mandatory_genes_required is None:
+        if self._min_mandatory_genes_required is None:
             return len(self._mandatory_genes)
-        else:
-            return self._min_mandatory_genes_required
+        return self._min_mandatory_genes_required
 
 
     @property
@@ -219,13 +214,9 @@ class Model(object):
         :return: get the minimum number of genes to assess for the model presence.
         :rtype: integer
         """
-        cfg_min_genes_required = self.cfg.min_genes_required(self.fqn)
-        if cfg_min_genes_required is not None:
-            return cfg_min_genes_required
-        elif self._min_genes_required is None:
+        if self._min_genes_required is None:
             return len(self._mandatory_genes)
-        else:
-            return self._min_genes_required
+        return self._min_genes_required
 
     @property
     def max_nb_genes(self):
@@ -233,11 +224,7 @@ class Model(object):
         :return: the maximum number of genes to assess the model presence.
         :rtype: int (or None)
         """
-        cfg_max_nb_genes = self.cfg.max_nb_genes(self.fqn)
-        if cfg_max_nb_genes:
-            return cfg_max_nb_genes
-        else:
-            return self._max_nb_genes
+        return self._max_nb_genes
 
     @property
     def multi_loci(self):
@@ -245,11 +232,8 @@ class Model(object):
         :return: True if the model is authorized to be inferred from multiple loci, False otherwise
         :rtype: boolean
         """
-        cfg_multi_loci = self.cfg.multi_loci(self.fqn)
-        if cfg_multi_loci:
-            return cfg_multi_loci
-        else:
-            return self._multi_loci
+
+        return self._multi_loci
 
         
     def add_mandatory_gene(self, gene):

@@ -90,7 +90,7 @@ set_2
         # for instance search_genes get profile without hmmer_exe
         profile_factory = ProfileFactory()
 
-        model = Model(cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         # test if id is well incremented
         gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
         model.add_mandatory_gene(gene_gspd)
@@ -142,7 +142,7 @@ accessory genes:
         models_location = models_registry[model_name]
         profile_factory = ProfileFactory()
 
-        model = Model(cfg, "foo/T2SS", 11)
+        model = Model("foo/T2SS", 11)
 
         gene_1 = Gene(cfg, profile_factory, "gspD", model, models_location)
         gene_2 = Gene(cfg, profile_factory, "sctC", model, models_location)

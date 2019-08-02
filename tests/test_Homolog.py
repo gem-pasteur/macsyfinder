@@ -47,14 +47,14 @@ class Test(MacsyTest):
             pass
 
     def test_gene_ref(self):
-        model = Model(self.cfg, "T2SS", 10)
+        model = Model("T2SS", 10)
         gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog_1 = Homolog(gene, gene_ref)
         self.assertEqual(homolog_1.gene_ref, gene_ref)
  
     def test_is_aligned(self):
-        model = Model(self.cfg, "T2SS", 10)
+        model = Model("T2SS", 10)
         gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)
@@ -63,7 +63,7 @@ class Test(MacsyTest):
         self.assertTrue(homolog.is_aligned())
 
     def test_delegation(self):
-        model = Model(self.cfg, "T2SS", 10)
+        model = Model("T2SS", 10)
         gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
         gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)

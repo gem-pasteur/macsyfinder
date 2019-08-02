@@ -46,7 +46,7 @@ class HitTest(MacsyTest):
 
 
     def test_cmp(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         # compare hit with different id (comparison based on seq identifier)
         h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
@@ -74,7 +74,7 @@ class HitTest(MacsyTest):
             self.assertLess(h2, h0)
 
     def test_eq(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -86,7 +86,7 @@ class HitTest(MacsyTest):
         self.assertNotEqual(h0, h2)
         
     def test_str(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         hit_prop = {'id': "PSAE001c01_006940",
                     'hit_seq_len': 803,
@@ -110,7 +110,7 @@ class HitTest(MacsyTest):
         self.assertEqual(s, str(hit))
 
     def test_get_syst_inter_gene_max_space(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
         h0 = Hit(gene, model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -131,7 +131,7 @@ class ValidHitTest(MacsyTest):
         models_location = models_registry[model_name]
 
         self.registry = HitRegistry()
-        model = Model(cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         profile_factory = ProfileFactory()
         self.gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
         model.add_mandatory_gene(self.gene_gspd)
@@ -168,7 +168,7 @@ class HitRegistryTest(MacsyTest):
         models_location = models_registry[model_name]
 
         self.registry = HitRegistry()
-        model = Model(cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         profile_factory = ProfileFactory()
         gene_gspd = Gene(cfg, profile_factory, "gspD", model, models_location)
         model.add_mandatory_gene(gene_gspd)
@@ -217,7 +217,7 @@ class GetBestHitTest(MacsyTest):
         self.profile_factory = ProfileFactory()
 
     def test_get_best_hits(self):
-        model = Model(self.cfg, "foo/T2SS", 10)
+        model = Model("foo/T2SS", 10)
         gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
 
 

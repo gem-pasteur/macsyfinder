@@ -153,8 +153,30 @@ class DefinitionParser(object):
             multi_loci = multi_loci.lower() in ("1", "true")
         else:
             multi_loci = False
-        model = Model(self.cfg,
-                      def_fqn,
+
+        # overload value get from xml
+        # by these read from configuration (file or command line)
+        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(def_fqn)
+        if cfg_inter_gene_max_space is not None:
+            inter_gene_max_space = cfg_inter_gene_max_space
+
+        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(def_fqn)
+        if cfg_min_mandatory_genes_required is not None:
+            min_mandatory_genes_required = cfg_min_mandatory_genes_required
+
+        cfg_min_genes_required = self.cfg.min_genes_required(def_fqn)
+        if cfg_min_genes_required is not None:
+            min_genes_required = cfg_min_genes_required
+
+        cfg_max_nb_genes = self.cfg.max_nb_genes(def_fqn)
+        if cfg_max_nb_genes:
+            max_nb_genes = cfg_max_nb_genes
+
+        cfg_multi_loci = self.cfg.multi_loci(def_fqn)
+        if cfg_multi_loci:
+            multi_loci = cfg_multi_loci
+
+        model = Model(def_fqn,
                       inter_gene_max_space,
                       min_mandatory_genes_required,
                       min_genes_required,
