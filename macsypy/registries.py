@@ -54,17 +54,14 @@ class ModelLocation(object):
     and the paths to corresponding to the profiles.
     """
 
-    def __init__(self, cfg, path=None, profile_dir=None, def_dir=None):
+    def __init__(self, path=None, profile_dir=None, def_dir=None, profile_suffix='.hmm', relative_path=False):
         """
-        :param cfg: the macsyfinder configuration
-        :type cfg: :class:`macsypy.config.Config` object
-        :param path: if it's an installed model, path is the absolute path to a model family.
+        :param str path: if it's an installed model, path is the absolute path to a model family.
                      otherwise path is None, and profile_dir and def_dir must be specified.
-        :type path: string
-        :param profile_dir: the absolute path to the directory which contains the hmm profiles files.
-        :type profile_dir: string
-        :param def_dir: the absolute path to the directory which contains the models definitions (xml files) or submodels.
-        :type def_dir: string
+        :param str profile_dir: the absolute path to the directory which contains the hmm profiles files.
+        :param str def_dir: the absolute path to the directory which contains the models definitions (xml files) or submodels.
+        :param str profile_suffix: the suffix of hmm files
+        :param bool relative_path: True if you want to waork with relative path, False to work with absolute path.
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
@@ -72,7 +69,6 @@ class ModelLocation(object):
             raise MacsypyError("'path' and '{}' are incompatible arguments".format('profile_dir' if profile_dir else 'def_dir'))
         elif not path and not all((profile_dir, def_dir)):
             raise MacsypyError("if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
-        self.cfg = cfg
         self.path = path
         if path is not None:
             self.name = os.path.basename(path)
@@ -80,7 +76,9 @@ class ModelLocation(object):
             self.name = os.path.basename(def_dir)
         if not profile_dir:
             profile_dir = os.path.join(path, 'profiles')
-        self._profiles = self._scan_profiles(profile_dir)
+        self._profiles = self._scan_profiles(profile_dir,
+                                             profile_suffix=profile_suffix,
+                                             relative_path=relative_path)
 
         self._definitions = {}
         if not def_dir:
@@ -104,7 +102,7 @@ class ModelLocation(object):
 
                 model_fqn = os.path.basename(os.path.splitext(model_path)[0])
 
-                if not self.cfg.relative_path():
+                if not relative_path:
                     model_path = os.path.abspath(model_path)
 
                 new_def = DefinitionLocation(name=model_fqn,
@@ -144,7 +142,7 @@ class ModelLocation(object):
             return new_def
 
 
-    def _scan_profiles(self, path):
+    def _scan_profiles(self, path, profile_suffix='.hmm', relative_path=False):
         """
         Store all hmm profiles associated to the model
         """
@@ -153,8 +151,8 @@ class ModelLocation(object):
             profile_path = os.path.join(path, profile)
             if os.path.isfile(profile_path):
                 base, ext = os.path.splitext(profile)
-                if ext == self.cfg.profile_suffix():
-                    all_profiles[base] = profile_path if self.cfg.relative_path() else os.path.abspath(profile_path)
+                if ext == profile_suffix:
+                    all_profiles[base] = profile_path if relative_path else os.path.abspath(profile_path)
         return all_profiles
 
     def __lt__(self, other):
@@ -315,7 +313,9 @@ class ModelRegistry(object):
         for models_type in os.listdir(models_root):
             model_path = os.path.join(models_root, models_type)
             if os.path.isdir(model_path):
-                new_model = ModelLocation(cfg, path=model_path)
+                new_model = ModelLocation(path=model_path,
+                                          profile_suffix=cfg.profile_suffix(),
+                                          relative_path=cfg.relative_path())
                 self._registry[new_model.name] = new_model
 
 
