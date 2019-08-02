@@ -26,7 +26,7 @@ from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestProfileFactory(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -40,7 +40,7 @@ class Test(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -52,22 +52,22 @@ class Test(MacsyTest):
     def test_get_profile(self):
         system_foo = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene = Gene(self.cfg, self.profile_factory, gene_name, system_foo, self.models_location)
-        profile = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
+        gene = Gene(self.profile_factory, gene_name, system_foo, self.models_location)
+        profile = self.profile_factory.get_profile(gene, self.models_location)
         self.assertTrue(isinstance(profile, Profile))
         self.assertEqual(profile.gene.name, gene_name)
 
 
     def test_get_uniq_object(self):
         system_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
-        profile1 = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
-        profile2 = self.profile_factory.get_profile(gene, self.cfg, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        profile1 = self.profile_factory.get_profile(gene, self.models_location)
+        profile2 = self.profile_factory.get_profile(gene, self.models_location)
         self.assertEqual(profile1, profile2)
 
 
     def test_unknow_profile(self):
         system_foo = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         gene.name = "foo"
-        self.assertRaises(MacsypyError, self.profile_factory.get_profile, gene, self.cfg, self.models_location)
+        self.assertRaises(MacsypyError, self.profile_factory.get_profile, gene, self.models_location)

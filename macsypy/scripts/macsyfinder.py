@@ -486,7 +486,7 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
         print("=" * 60, file=clst_file)
 
 
-def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
+def main(args=None, loglevel=None):
     """
     main entry point to MacSyFinder do some check before to launch :func:`main_search_systems` which is
     the real function that perform a search
@@ -540,12 +540,11 @@ def main(args=None, loglevel=None, models=None, genes=None, profiles=None):
         if not parsed_args.previous_run and not parsed_args.db_type:
             raise OptionError("argument --db-type is required.")
         _log.info("command used: {}".format(' '.join(sys.argv)))
-        if models is None:
-            models = macsypy.model.ModelBank()
-        if genes is None:
-            genes = macsypy.gene.GeneBank()
-        if profiles is None:
-            profiles = macsypy.gene.ProfileFactory()
+
+        models = macsypy.model.ModelBank()
+        genes = macsypy.gene.GeneBank()
+        profiles = macsypy.gene.ProfileFactory(config)
+
         main_search_systems(config, models, genes, profiles, logger)
     logger.debug("END")
 

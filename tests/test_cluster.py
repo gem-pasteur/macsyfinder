@@ -38,7 +38,7 @@ class TestBuildCluster(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def test_build_clusters(self):
         model = Model("foo/T2SS", 11)
@@ -46,11 +46,11 @@ class TestBuildCluster(MacsyTest):
         # each genes is representing by a tuple (seq_id, length)"""
         rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
-        gene_4 = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location)
-        gene_5 = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, loner=True)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
+        gene_4 = Gene(self.profile_factory, "sctN", model, self.models_location)
+        gene_5 = Gene(self.profile_factory, "abc", model, self.models_location, loner=True)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -159,7 +159,7 @@ class TestHitFunc(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def test_get_loners(self):
         model = Model("foo/T2SS", 11)
@@ -167,11 +167,11 @@ class TestHitFunc(MacsyTest):
         # each genes is representing by a tuple (seq_id, length)"""
         rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
-        gene_4 = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
-        gene_5 = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, loner=True)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
+        gene_4 = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_5 = Gene(self.profile_factory, "abc", model, self.models_location, loner=True)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -189,9 +189,9 @@ class TestHitFunc(MacsyTest):
     def test_filter_loners(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location, loner=True)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, loner=True)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location, loner=True)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location, loner=True)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -215,11 +215,11 @@ class TestHitFunc(MacsyTest):
         # each genes is representing by a tuple (seq_id, length)"""
         rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, loner=True)
-        gene_4 = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
-        gene_5 = Gene(self.cfg, self.profile_factory, "abc", model, self.models_location, loner=True)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location, loner=True)
+        gene_4 = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_5 = Gene(self.profile_factory, "abc", model, self.models_location, loner=True)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -256,16 +256,16 @@ class TestCluster(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
 
     def test_init(self):
         model_1 = Model("foo/T2SS", 11)
         model_2 = Model("foo/T3SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model_1, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model_1, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model_2, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model_1, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model_1, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model_2, self.models_location)
 
         h10 = Hit(gene_1, model_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
         v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
@@ -285,9 +285,9 @@ class TestCluster(MacsyTest):
     def test_len(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -307,9 +307,9 @@ class TestCluster(MacsyTest):
     def test_contains(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -330,9 +330,9 @@ class TestCluster(MacsyTest):
     def test_fulfilled_function(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -355,19 +355,19 @@ class TestCluster(MacsyTest):
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
-        gene_gspd = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
         model.add_mandatory_gene(gene_gspd)
-        gene_tadZ = Gene(self.cfg, self.profile_factory, "tadZ", model, self.models_location)
+        gene_tadZ = Gene(self.profile_factory, "tadZ", model, self.models_location)
         model.add_mandatory_gene(gene_tadZ)
 
-        gene_sctj = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
-        gene_sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location, exchangeable=True)
+        gene_sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
         analog = Analog(gene_sctJ_FLG, gene_sctj)
         gene_sctj.add_analog(analog)
         model.add_accessory_gene(gene_sctj)
 
-        gene_sctn = Gene(self.cfg, self.profile_factory, "sctN", model, self.models_location, loner=True)
-        gene_sctn_FLG = Gene(self.cfg, self.profile_factory, 'sctN_FLG', model, self.models_location)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, loner=True)
+        gene_sctn_FLG = Gene(self.profile_factory, 'sctN_FLG', model, self.models_location)
         homolog = Homolog(gene_sctn_FLG, gene_sctj)
         gene_sctn.add_homolog(homolog)
         model.add_accessory_gene(gene_sctn)
@@ -426,9 +426,9 @@ class TestCluster(MacsyTest):
     def test_merge(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -457,7 +457,7 @@ class TestCluster(MacsyTest):
         self.assertListEqual(c1.hits, [v_h30, v_h50, v_h10, v_h20])
 
         model_2 = Model("foo/T3SS", 11)
-        gene_3 = Gene(self.cfg, self.profile_factory, "sctJ", model_2, self.models_location)
+        gene_3 = Gene(self.profile_factory, "sctJ", model_2, self.models_location)
         h30 = Hit(gene_3, model_2, "h30", 10, "replicon_2", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
         v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
         h50 = Hit(gene_3, model_2, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
@@ -471,8 +471,8 @@ class TestCluster(MacsyTest):
     def test_str(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -500,14 +500,14 @@ class TestRejectedCluster(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
 
     def test_str(self):
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
-        gene_2 = Gene(self.cfg, self.profile_factory, "sctC", model, self.models_location)
+        gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
+        gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match

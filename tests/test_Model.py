@@ -44,7 +44,7 @@ class TestModel(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         self.clean_working_dir()
@@ -77,7 +77,7 @@ class TestModel(MacsyTest):
         system_fqn = 'foo/bar'
         min_genes_required_xml = 40
         system = Model(system_fqn, 10, min_genes_required=min_genes_required_xml)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.min_genes_required, min_genes_required_xml)
         system = Model(system_fqn, 10)
@@ -90,7 +90,7 @@ class TestModel(MacsyTest):
         system_fqn = 'foo/bar'
         min_mandatory_genes_required_xml = 40
         system = Model(system_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required_xml)
 
@@ -135,7 +135,7 @@ class TestModel(MacsyTest):
 
     def test_add_mandatory_gene(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system._mandatory_genes, [gene])
         self.assertEqual(system._accessory_genes, [])
@@ -144,7 +144,7 @@ class TestModel(MacsyTest):
 
     def test_add_accessory_gene(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_accessory_gene(gene)
         self.assertEqual(system._accessory_genes, [gene])
         self.assertEqual(system._mandatory_genes, [])
@@ -153,7 +153,7 @@ class TestModel(MacsyTest):
 
     def test_add_forbidden_gene(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_forbidden_gene(gene)
         self.assertEqual(system._forbidden_genes, [gene])
         self.assertEqual(system._accessory_genes, [])
@@ -161,21 +161,21 @@ class TestModel(MacsyTest):
 
     def test_mandatory_genes(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(gene)
         self.assertEqual(system.mandatory_genes, [gene])
 
 
     def test_accessory_genes(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_accessory_gene(gene)
         self.assertEqual(system.accessory_genes, [gene])
 
 
     def test_forbidden_genes(self):
         system = Model("foo", 10)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_forbidden_gene(gene)
         self.assertEqual(system.forbidden_genes, [gene])
 
@@ -183,7 +183,7 @@ class TestModel(MacsyTest):
     def test_get_gene(self):
         system = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene = Gene(self.cfg, self.profile_factory, gene_name, system, self.models_location)
+        gene = Gene(self.profile_factory, gene_name, system, self.models_location)
         for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
             system._mandatory_genes = []
             system._accessory_genes = []
@@ -194,7 +194,7 @@ class TestModel(MacsyTest):
         self.assertRaises(KeyError, system.get_gene, 'bar')
 
         homolog_name = 'sctJ'
-        gene_homolog = Gene(self.cfg, self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolog = Gene(self.profile_factory, homolog_name, system, self.models_location)
         homolog = Homolog(gene_homolog, gene)
         gene.add_homolog(homolog)
         for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
@@ -205,7 +205,7 @@ class TestModel(MacsyTest):
             self.assertEqual(homolog, system.get_gene(homolog_name))
 
         analog_name = 'sctC'
-        gene_analog = Gene(self.cfg, self.profile_factory, analog_name, system, self.models_location)
+        gene_analog = Gene(self.profile_factory, analog_name, system, self.models_location)
         analog = Analog(gene_analog, gene)
         gene.add_analog(analog)
         for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
@@ -218,9 +218,9 @@ class TestModel(MacsyTest):
     def test_get_gene_ref(self):
         system = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene_ref = Gene(self.cfg, self.profile_factory, gene_name, system, self.models_location)
+        gene_ref = Gene(self.profile_factory, gene_name, system, self.models_location)
         homolog_name = 'sctJ'
-        gene_homolg = Gene(self.cfg, self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolg = Gene(self.profile_factory, homolog_name, system, self.models_location)
         homolog = Homolog(gene_homolg, gene_ref)
         gene_ref.add_homolog(homolog)
 
@@ -231,27 +231,27 @@ class TestModel(MacsyTest):
             meth(gene_ref)
             self.assertEqual(gene_ref, system.get_gene_ref(homolog))
         self.assertIsNone(system.get_gene_ref(gene_ref))
-        gene_ukn = Gene(self.cfg, self.profile_factory, 'abc', system, self.models_location)
+        gene_ukn = Gene(self.profile_factory, 'abc', system, self.models_location)
         self.assertRaises(KeyError, system.get_gene_ref, gene_ukn)
 
     def test_str(self):
         system_fqn = "foo/bar"
         system = Model(system_fqn, 10)
-        mandatory_gene = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system, self.models_location)
+        mandatory_gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
         system.add_mandatory_gene(mandatory_gene)
         homolog_name = 'sctJ'
-        gene_homolg = Gene(self.cfg, self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolg = Gene(self.profile_factory, homolog_name, system, self.models_location)
         homolog = Homolog(gene_homolg, mandatory_gene)
         mandatory_gene.add_homolog(homolog)
 
-        accessory_gene = Gene(self.cfg, self.profile_factory, 'sctN_FLG', system, self.models_location)
+        accessory_gene = Gene(self.profile_factory, 'sctN_FLG', system, self.models_location)
         system.add_accessory_gene(accessory_gene)
         analog_name = 'sctN'
-        gene_analog = Gene(self.cfg, self.profile_factory, analog_name, system, self.models_location)
+        gene_analog = Gene(self.profile_factory, analog_name, system, self.models_location)
         analog = Analog(gene_analog, accessory_gene)
         accessory_gene.add_analog(analog)
 
-        forbidden_gene = Gene(self.cfg, self.profile_factory, 'sctC', system, self.models_location)
+        forbidden_gene = Gene(self.profile_factory, 'sctC', system, self.models_location)
         system.add_forbidden_gene(forbidden_gene)
 
         exp_str = """name: bar
@@ -284,18 +284,18 @@ sctC
     def test_filter(self):
         model_fqn = "foo/bar"
         model = Model(model_fqn, 10)
-        sctJ_FLG = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        sctJ_FLG = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
         model.add_mandatory_gene(sctJ_FLG)
-        sctJ = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
+        sctJ = Gene(self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(sctJ, sctJ_FLG)
         sctJ_FLG.add_homolog(homolog)
 
-        sctN_FLG = Gene(self.cfg, self.profile_factory, 'sctN_FLG', model, self.models_location)
+        sctN_FLG = Gene(self.profile_factory, 'sctN_FLG', model, self.models_location)
         model.add_accessory_gene(sctN_FLG)
-        sctN = Gene(self.cfg, self.profile_factory, 'sctN', model, self.models_location)
+        sctN = Gene(self.profile_factory, 'sctN', model, self.models_location)
         analog = Analog(sctN, sctN_FLG)
         sctN_FLG.add_analog(analog)
-        sctC = Gene(self.cfg, self.profile_factory, 'sctC', model, self.models_location)
+        sctC = Gene(self.profile_factory, 'sctC', model, self.models_location)
         model.add_forbidden_gene(sctC)
 
         # without exhangeable attribute on any genes
@@ -328,7 +328,7 @@ sctC
                                )
         hit_to_filter_out = []
         other_model = Model("foo/T2SS", 10)
-        gene = Gene(self.cfg, self.profile_factory, "gspD", model, self.models_location)
+        gene = Gene(self.profile_factory, "gspD", model, self.models_location)
         hit_to_filter_out.append(Hit(gene, other_model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
                                      float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
                                  )

@@ -24,7 +24,7 @@ from macsypy.registries import ModelRegistry
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestHomolog(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -38,7 +38,7 @@ class Test(MacsyTest):
         models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -48,15 +48,15 @@ class Test(MacsyTest):
 
     def test_gene_ref(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
+        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
         homolog_1 = Homolog(gene, gene_ref)
         self.assertEqual(homolog_1.gene_ref, gene_ref)
  
     def test_is_aligned(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
+        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)
         self.assertFalse(homolog.is_aligned())
         homolog = Homolog(gene, gene_ref, aligned=True)
@@ -64,8 +64,8 @@ class Test(MacsyTest):
 
     def test_delegation(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.cfg, self.profile_factory, 'sctJ', model, self.models_location)
+        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
         homolog = Homolog(gene, gene_ref)
         self.assertEqual(homolog.model, model)
 

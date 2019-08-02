@@ -39,7 +39,7 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.models_location = models_registry[self.model_name]
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory()
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -51,7 +51,7 @@ class Test(MacsyTest):
         gene_name = 'sctJ_FLG'
         self.assertRaises(KeyError, self.gene_bank.__getitem__, gene_name)
         system_foo = Model("foo/bar", 10)
-        gene = Gene(self.cfg, self.profile_factory, gene_name, system_foo, self.models_location)
+        gene = Gene(self.profile_factory, gene_name, system_foo, self.models_location)
         self.gene_bank.add_gene(gene)
         gene_from_bank = self.gene_bank[(self.model_name, gene_name)]
         self.assertTrue(isinstance(gene_from_bank, Gene))
@@ -63,16 +63,16 @@ class Test(MacsyTest):
 
     def test_contains(self):
         system_foo = Model("foo/bar", 10)
-        gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        gene_in = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         self.gene_bank.add_gene(gene_in)
         self.assertIn(gene_in, self.gene_bank)
-        gene_out = Gene(self.cfg, self.profile_factory, 'abc', system_foo, self.models_location)
+        gene_out = Gene(self.profile_factory, 'abc', system_foo, self.models_location)
         self.assertNotIn(gene_out, self.gene_bank)
 
     def test_iter(self):
         system_foo = Model("foo/bar", 10)
-        genes = [Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location),
-                 Gene(self.cfg, self.profile_factory, 'abc', system_foo, self.models_location)]
+        genes = [Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location),
+                 Gene(self.profile_factory, 'abc', system_foo, self.models_location)]
         for g in genes:
             self.gene_bank.add_gene(g)
         i = 0
@@ -84,7 +84,7 @@ class Test(MacsyTest):
 
     def test_get_uniq_object(self):
         system_foo = Model("foo", 10)
-        gene_in = Gene(self.cfg, self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        gene_in = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
         self.gene_bank.add_gene(gene_in)
         gene1 = self.gene_bank[(self.model_name, 'sctJ_FLG')]
         gene2 = self.gene_bank[(self.model_name, 'sctJ_FLG')]

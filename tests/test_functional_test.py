@@ -21,8 +21,6 @@ import json
 
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
-import macsypy
-from macsypy import model
 
 
 @unittest.skip("skipping until macsyfinder api is not stable")
@@ -30,10 +28,6 @@ class Test(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
-        self.gene_bank = macsypy.gene.GeneBank()
-        self.model_bank = model.ModelBank()
-        self.profile_factory = macsypy.gene.ProfileFactory()
-        search_systems.system_name_generator = search_systems.SystemNameGenerator()
 
     def tearDown(self):
         try:
@@ -205,10 +199,8 @@ class Test(MacsyTest):
         os.makedirs(self.out_dir)
         args = args_tpl.format(out_dir=self.out_dir)
         macsyfinder.main(args=args.split(),
-                         loglevel='ERROR',
-                         models=self.model_bank,
-                         genes=self.gene_bank,
-                         profiles=self.profile_factory)
+                         loglevel='ERROR'
+                         )
 
         expected_result_path = self.find_data('functional_tests', test_name[5:], 'results.macsyfinder.json')
         get_results = os.path.join(self.out_dir, 'results.macsyfinder.json')

@@ -90,20 +90,11 @@ class Gene(object):
 
     """
 
-    def __init__(self, cfg,
-                 profile_factory,
-                 name,
-                 model,
-                 model_location,
-                 loner=False,
-                 exchangeable=False,
-                 multi_system=False,
-                 inter_gene_max_space=None):
+    def __init__(self, profile_factory, name, model, model_location, loner=False, exchangeable=False,
+                 multi_system=False, inter_gene_max_space=None):
         """
         handle gene
 
-        :param cfg: the configuration object. 
-        :type cfg: :class:`macsypy.config.Config` object
         :param name: the name of the Gene.
         :type name: string.
         :param model: the model that owns this Gene
@@ -121,7 +112,7 @@ class Gene(object):
         :type inter_gene_max_space: integer
         """
         self.name = name 
-        self.profile = profile_factory.get_profile(self, cfg, model_location)
+        self.profile = profile_factory.get_profile(self, model_location)
         """:ivar profile: The HMM protein Profile corresponding to this gene :class:`macsypy.gene.Profile` object"""
 
         self.homologs = []
@@ -179,7 +170,8 @@ class Gene(object):
     @property
     def exchangeable(self):
         """
-        :return: True if this gene can be replaced with one of its homologs or analogs whithout any effects on the model, False otherwise.
+        :return: True if this gene can be replaced with one of its homologs or analogs without any effects on the model,
+                 False otherwise.
         :rtype: boolean.
         """
         return self._exchangeable
@@ -452,10 +444,11 @@ class ProfileFactory(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, cfg):
         self._profiles = {}
+        self.cfg = cfg
 
-    def get_profile(self, gene, cfg, model_location):
+    def get_profile(self, gene, model_location):
         """
         :param gene: the gene associated to this profile
         :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
@@ -471,15 +464,12 @@ class ProfileFactory(object):
             profile = self._profiles[key]
         else:
             try:
-                path = model_location.get_profile(gene.name)
+                path = model_location.get_profile(gene.name, )
             except KeyError:
                 raise MacsypyError("{0}: No such profile".format(gene.name))
-            profile = Profile(gene, cfg, path)
+            profile = Profile(gene, self.cfg, path)
             self._profiles[key] = profile
         return profile
-
-
-#profile_factory = ProfileFactory()
 
 
 class Profile(object):
