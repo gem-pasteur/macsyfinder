@@ -43,7 +43,8 @@ class Remote:
         self.org_name = org
         self.base_url = "https://api.github.com"
         self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
-        self.remote_exists()
+        if not self.remote_exists():
+            raise RuntimeError(f"the '{self.org_name}' organization does not exist.")
 
 
     def _url_json(self, url: str) -> Dict:
@@ -62,7 +63,7 @@ class Remote:
     def remote_exists(self) -> bool:
         """
         check if the remote exists and is an organization
-        :return:
+        :return: True if the Remote url point to a github Organization, False otherwise
         """
         try:
             url = f"{self.base_url}/orgs/{self.org_name}"
@@ -102,7 +103,7 @@ class Remote:
             tags = self._url_json(url)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
-                raise RuntimeError(f"package '{pack_name}'' does not exists on repos '{self.org_name}'") from None
+                raise RuntimeError(f"package '{pack_name}' does not exists on repos '{self.org_name}'") from None
             else:
                 raise err from None
         return [v['name'] for v in tags]
