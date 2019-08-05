@@ -54,8 +54,7 @@ class Remote:
         :param str url: the url to dowload
         :return: the json corresponding to the response url
         """
-        req = urllib.request.Request(url)
-        r = urllib.request.urlopen(req).read()
+        r = urllib.request.urlopen(url).read()
         j = json.loads(r.decode('utf-8'))
         return j
 
