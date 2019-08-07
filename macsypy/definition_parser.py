@@ -19,7 +19,7 @@ _log = logging.getLogger(__name__)
 from .model import Model
 from .gene import Gene
 from .gene import Homolog, Analog
-from .registries import ModelRegistry, split_def_name, join_def_path
+from .registries import split_def_name, join_def_path
 from .error import MacsypyError, ModelInconsistencyError
 
 
@@ -28,7 +28,7 @@ class DefinitionParser:
     Build a Model instance from the corresponding model definition described in the XML file.
     """
 
-    def __init__(self, cfg, model_bank, gene_bank, profile_factory):
+    def __init__(self, cfg, model_bank, gene_bank, profile_factory, model_registry):
         """
         :param cfg: the configuration object of this run
         :type cfg: :class:`macsypy.config.Config` object
@@ -41,7 +41,7 @@ class DefinitionParser:
         self.model_bank = model_bank
         self.gene_bank = gene_bank
         self.profile_factory = profile_factory
-        self.model_registry = ModelRegistry(cfg)
+        self.model_registry = model_registry
 
 
     def definition_to_parse(self, def_2_parse, parsed_models):

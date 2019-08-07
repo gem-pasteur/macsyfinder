@@ -336,7 +336,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory)
+    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, registry)
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
     except KeyError as err:
