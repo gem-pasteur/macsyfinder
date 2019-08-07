@@ -20,7 +20,7 @@ from io import StringIO
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.system import System, HitSystemTracker
@@ -47,9 +47,12 @@ class Test(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         cmd_args.list_models = True
-        config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'data_set_1', 'models')),
+        config = Config(MacsyDefaults(),
                         cmd_args)
-        registry = ModelRegistry(config)
+        registry = ModelRegistry()
+        models_location = scan_models_dir(cmd_args.models_dir)
+        for ml in models_location:
+            registry.add(ml)
         list_models = """set_1
       /CONJ
       /Flagellum
@@ -80,9 +83,8 @@ set_2
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(cfg)
         model_name = 'foo'
-        models_location = models_registry[model_name]
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
 
         # we need to reset the ProfileFactory
         # because it's a like a singleton
@@ -138,9 +140,8 @@ accessory genes:
         args.res_search_dir = "blabla"
 
         cfg = Config(MacsyDefaults(), args)
-        models_registry = ModelRegistry(cfg)
         model_name = 'foo'
-        models_location = models_registry[model_name]
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
         profile_factory = ProfileFactory(cfg)
 
         model = Model("foo/T2SS", 11)

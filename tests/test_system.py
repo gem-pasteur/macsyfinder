@@ -11,7 +11,7 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
-
+import os
 import argparse
 import json
 
@@ -19,7 +19,7 @@ from macsypy.hit import Hit, ValidHit
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
 from macsypy.model import Model
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
 from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker, SystemSerializer
 
@@ -35,10 +35,8 @@ class SystemTest(MacsyTest):
         args.models_dir = self.find_data('models')
         self.cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
-
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         # we need to reset the ProfileFactory
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration

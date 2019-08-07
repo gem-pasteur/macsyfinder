@@ -11,12 +11,13 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
+import os
 import argparse
 import random
 
 from macsypy.error import MacsypyError
 from macsypy.config import Config, MacsyDefaults
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
@@ -35,9 +36,8 @@ class TestBuildCluster(MacsyTest):
         self.args.res_search_dir = "blabla"
 
         self.cfg = Config(MacsyDefaults(), self.args)
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
     def test_build_clusters(self):
@@ -156,9 +156,8 @@ class TestHitFunc(MacsyTest):
         self.args.res_search_dir = "blabla"
 
         self.cfg = Config(MacsyDefaults(), self.args)
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
     def test_get_loners(self):
@@ -253,9 +252,8 @@ class TestCluster(MacsyTest):
         self.args.res_search_dir = "blabla"
 
         self.cfg = Config(MacsyDefaults(), self.args)
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
 
@@ -497,9 +495,8 @@ class TestRejectedCluster(MacsyTest):
         self.args.res_search_dir = "blabla"
 
         self.cfg = Config(MacsyDefaults(), self.args)
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
 

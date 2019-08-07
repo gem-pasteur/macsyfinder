@@ -20,7 +20,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank, ProfileFactory
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
 from tests import MacsyTest
@@ -40,7 +40,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
         
@@ -417,7 +420,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
 
@@ -442,7 +448,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
 
@@ -467,7 +476,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
 
@@ -492,7 +504,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
 
@@ -516,7 +531,10 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.model_registry = ModelRegistry(self.cfg)
+        self.model_registry = ModelRegistry()
+        models_location = scan_models_dir(self.args.models_dir)
+        for ml in models_location:
+            self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.profile_factory, self.model_registry)
 

@@ -47,6 +47,88 @@ def join_def_path(*args):
     return _separator.join(args)
 
 
+def scan_models_dir(models_dir, profile_suffix=".hmm", relative_path=False):
+    """
+
+    :param str models_dir: The path to the directory where are stored the models
+    :param profile_suffix: the suffix of the hmm profiles
+    :param relative_path: True if models_dir is relative false otherwise
+    :return: the list of models in models_dir
+    :rtype: [:class:`macsypy.registries.ModelLocation, ...]
+    """
+    models = []
+    for models_type in os.listdir(models_dir):
+        model_path = os.path.join(models_dir, models_type)
+        if os.path.isdir(model_path):
+            new_model = ModelLocation(path=model_path,
+                                      profile_suffix=profile_suffix,
+                                      relative_path=relative_path)
+            models.append(new_model)
+    return models
+
+
+class ModelRegistry:
+    """
+    scan canonical directories to register the different models available in global macsyfinder
+    share data location (depending installation /usr/share/data/models) or can be
+    overload with the location specify in the macsyfinder configuration (either in config file or command line)
+    """
+
+    def __init__(self):
+        self._registry = {}
+
+
+    def add(self, model_loc):
+        """
+        :param model_loc: the model location to ad to the registry
+        :type model_loc: :class:`ModelLocation` object
+        """
+        self._registry[model_loc.name] = model_loc
+
+
+    def models(self):
+        """
+        :returns: the list of models
+        :rtype: list of :class:`ModelLocation` object
+        """
+        return sorted(list(self._registry.values()))  # level 0 like TXSS ou CRISPR_Cas
+
+
+    def __getitem__(self, name):
+        """
+        :param name:
+        :type name: string
+        :returns: the model corresponding to name.
+        :rtype: :class:`ModelLocation` object.
+        :raise KeyError: if name does not match any ModelLocation registered.
+        """
+        if name in self._registry:
+            return self._registry[name]
+        else:
+            raise KeyError(f"No such model definition: '{name}'")
+
+
+    def __str__(self):
+        s = ''
+
+        def model_to_str(model, pad):
+            if model.subdefinitions:
+                model_s = "{}/{}\n".format(' ' * pad, model.name)
+                pad = pad + len(model.name) + 1
+                for submodel in sorted(model.subdefinitions.values()):
+                    model_s += model_to_str(submodel, pad)
+            else:
+                model_s = "{}/{}\n".format(' ' * pad, model.name)
+            return model_s
+
+        for model in sorted(self.models()):
+            s += model.name + '\n'
+            pad = len(model.name) + 1
+            for definition in model.get_definitions():
+                s += model_to_str(definition, pad)
+        return s
+
+
 class ModelLocation:
     """
     Handle where are store Models. Models are organized in families and sub families.
@@ -62,7 +144,7 @@ class ModelLocation:
         :param str def_dir: The absolute path to the directory which contains the models definitions (xml files)
                             or submodels.
         :param str profile_suffix: the suffix of hmm files
-        :param bool relative_path: True if you want to waork with relative path, False to work with absolute path.
+        :param bool relative_path: True if you want to work with relative path, False to work with absolute path.
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
@@ -291,69 +373,3 @@ class DefinitionLocation(dict):
 
     def __gt__(self, other):
         return self.fqn > other.fqn
-
-
-class ModelRegistry:
-    """
-    scan canonical directories to register the different models available in global macsyfinder
-    share data location (depending installation /usr/share/data/models) or can be
-    overload with the location specify in the macsyfinder configuration (either in config file or command line)
-    """
-
-    def __init__(self, cfg):
-        """
-        :param cfg: the macsyfinder configuration
-        :type cfg: :class:`macsypy.config.Config` object
-        """
-        self._registry = {}
-        models_root = cfg.models_dir()
-        for models_type in os.listdir(models_root):
-            model_path = os.path.join(models_root, models_type)
-            if os.path.isdir(model_path):
-                new_model = ModelLocation(path=model_path,
-                                          profile_suffix=cfg.profile_suffix(),
-                                          relative_path=cfg.relative_path())
-                self._registry[new_model.name] = new_model
-
-
-    def models(self):
-        """
-        :returns: the list of models
-        :rtype: list of :class:`ModelLocation` object
-        """
-        return sorted(list(self._registry.values()))  # level 0 like TXSS ou CRISPR_Cas
-
-
-    def __getitem__(self, name):
-        """
-        :param name:
-        :type name: string
-        :returns: the model corresponding to name.
-        :rtype: :class:`ModelLocation` object.
-        :raise KeyError: if name does not match any ModelLocation registered.
-        """
-        if name in self._registry:
-            return self._registry[name]
-        else:
-            raise KeyError("No such model definition: '{}'".format(name))
-
-
-    def __str__(self):
-        s = ''
-
-        def model_to_str(model, pad):
-            if model.subdefinitions:
-                model_s = "{}/{}\n".format(' ' * pad, model.name)
-                pad = pad + len(model.name) + 1
-                for submodel in sorted(model.subdefinitions.values()):
-                    model_s += model_to_str(submodel, pad)
-            else:
-                model_s = "{}/{}\n".format(' ' * pad, model.name)
-            return model_s
-
-        for model in sorted(self.models()):
-            s += model.name + '\n'
-            pad = len(model.name) + 1
-            for definition in model.get_definitions():
-                s += model_to_str(definition, pad)
-        return s

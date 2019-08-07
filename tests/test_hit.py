@@ -11,14 +11,14 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
-
+import os
 import argparse
 
 from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import ProfileFactory, Gene, GeneStatus
 from macsypy.model import Model
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
 from tests import MacsyTest
 
@@ -32,9 +32,8 @@ class HitTest(MacsyTest):
         args.models_dir = self.find_data('models')
         self.cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
         # we need to reset the ProfileFactory
         # because it's a like a singleton
@@ -124,9 +123,8 @@ class ValidHitTest(MacsyTest):
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(cfg)
         model_name = 'foo'
-        models_location = models_registry[model_name]
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
 
         model = Model("foo/T2SS", 10)
         profile_factory = ProfileFactory(cfg)
@@ -160,9 +158,8 @@ class GetBestHitTest(MacsyTest):
         args.models_dir = self.find_data('models')
         self.cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
         # we need to reset the ProfileFactory
         # because it's a like a singleton

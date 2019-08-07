@@ -25,7 +25,7 @@ from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, RepliconDB
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from tests import MacsyTest
 
 
@@ -51,9 +51,8 @@ class TestReport(MacsyTest):
 
         os.mkdir(os.path.join(self.cfg.out_dir(), self.cfg.hmmer_dir()))
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
         idx = Indexes(self.cfg)
