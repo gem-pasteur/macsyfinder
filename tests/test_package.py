@@ -280,22 +280,38 @@ class TestPackage(MacsyTest):
 
     def tearDown(self) -> None:
         try:
-            #shutil.rmtree(self.tmpdir)
-            pass
+            shutil.rmtree(self.tmpdir)
         except:
             pass
 
     def create_fake_package(self, model,
+                            xml=True,
+                            hmm=True,
                             metadata=True,
                             readme=True,
                             licence=True):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
-        for name, ext in (('definitions', 'xml'), ('profiles', 'hmm')):
-            sub_dir_path = os.path.join(pack_path, name)
-            os.mkdir(sub_dir_path)
-            for i in range(2):
-                open(os.path.join(sub_dir_path, f"file_{i}.{ext}"), 'w').close()
+        if xml:
+            def_dir = os.path.join(pack_path, 'definitions')
+            os.mkdir(def_dir)
+            with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
+                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+</system>""")
+            with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
+                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+    <gene name="fliE" presence="mandatory" multi_system="True"/>
+    <gene name="tadZ" presence="accessory" loner="True"/>
+    <gene name="sctC" presence="forbidden"/>
+</system>""")
+
+        if hmm:
+            profile_dir = os.path.join(pack_path, 'profiles')
+            os.mkdir(profile_dir)
+            for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
+                open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
             meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
             meta_dest = os.path.join(pack_path, 'metadata.yml')
@@ -310,6 +326,145 @@ class TestPackage(MacsyTest):
 
 
     def test_init(self):
-        fake_pack = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack)
-        self.assertEqual(pack.path, fake_pack)
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        self.assertEqual(pack.path, fake_pack_path)
+        self.assertEqual(pack.readme, os.path.join(fake_pack_path, 'README'))
+        self.assertEqual(pack.name, 'fake_model')
+        self.assertEqual(pack.metadata, os.path.join(fake_pack_path, 'metadata.yml'))
+
+    def test_find_readme(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        for ext in ('', '.rst', '.md'):
+            readme_path = os.path.join(pack.path, 'README' + ext)
+            os.rename(pack.readme, readme_path)
+            pack.readme = readme_path
+            self.assertEqual(pack._find_readme(), readme_path)
+        readme_path = os.path.join(pack.path, 'README.foo')
+        os.rename(pack.readme, readme_path)
+        self.assertIsNone(pack._find_readme())
+
+
+    def test_check_structure(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_structure_bad_path(self):
+        check = package.Package.check
+        foobar = os.path.join(self.tmpdir,"foobar")
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(foobar)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+        self.assertListEqual(errors, ["The package 'foobar' does not exists."])
+        self.assertListEqual(warnings, [])
+
+        open(foobar, 'w').close()
+        errors, warnings = pack._check_structure()
+        self.assertListEqual(errors, ["'foobar' is not a directory "])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_structure_no_def(self):
+        fake_pack_path = self.create_fake_package('fake_model', xml=False)
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertListEqual(errors, ["The package 'fake_model' have no 'definitions' directory."])
+        self.assertListEqual(warnings, [])
+
+        open(os.path.join(pack.path, 'definitions'), 'w').close()
+        errors, warnings = pack._check_structure()
+        self.assertListEqual(errors, ["'/tmp/macsy_test_package/fake_model/definitions' is not a directory."])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_structure_no_profiles(self):
+        fake_pack_path = self.create_fake_package('fake_model', hmm=False)
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertListEqual(errors, ["The package 'fake_model' have no 'profiles' directory."])
+        self.assertListEqual(warnings, [])
+
+        open(os.path.join(pack.path, 'profiles'), 'w').close()
+        errors, warnings = pack._check_structure()
+        self.assertListEqual(errors, ["'/tmp/macsy_test_package/fake_model/profiles' is not a directory."])
+        self.assertListEqual(warnings, [])
+
+
+    def test_check_structure_no_metadata(self):
+        fake_pack_path = self.create_fake_package('fake_model', metadata=False)
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertListEqual(errors, ["The package 'fake_model' have no 'metadata.yml'."])
+        self.assertListEqual(warnings, [])
+
+    def test_check_structure_no_readme(self):
+        fake_pack_path = self.create_fake_package('fake_model', readme=False)
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, ["The package 'fake_model' have not any README file."])
+
+    def test_check_structure_no_licence(self):
+        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_structure()
+        finally:
+            package.Package.check = check
+
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+                                    "May be you have not right to use it."])
+
+
+    def check_metadata(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        check = package.Package.check
+        try:
+            package.Package.check = lambda x: None
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack._check_metadta()
+        finally:
+            package.Package.check = check
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, [])
