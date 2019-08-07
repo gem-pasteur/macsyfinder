@@ -236,20 +236,21 @@ class Package:
             errors.append(f"The package '{self.name}' does not exists.")
         elif not os.path.isdir(self.path):
             errors.append(f"'{self.name}' is not a directory ")
-        elif not os.path.exists(os.path.join(self.path, 'metadata.yml')):
-            errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
-        elif not os.path.exists(os.path.join(self.path, 'definitions')):
-            errors.append(f"The package '{self.name}' have no 'definitions' directory.")
-        elif not os.path.isdir(os.path.join(self.path, 'definitions')):
-            errors.append(f"'definitions' is not a directory.")
-        elif not os.path.exists(os.path.join(self.path, 'profiles')):
-            errors.append(f"The package '{self.name}' have no 'profiles' directory.")
-        elif not os.path.isdir(os.path.join(self.path, 'profiles')):
-            errors.append(f"'profiles' is not a directory.")
-        elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
-            warnings.append(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
-        elif not self.readme:
-            warnings.append(f"The package '{self.name}' have not any README file.")
+        if not errors:
+            if not os.path.exists(os.path.join(self.path, 'metadata.yml')):
+                errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
+            elif not os.path.exists(os.path.join(self.path, 'definitions')):
+                errors.append(f"The package '{self.name}' have no 'definitions' directory.")
+            elif not os.path.isdir(os.path.join(self.path, 'definitions')):
+                errors.append(f"'{os.path.join(self.path, 'definitions')}' is not a directory.")
+            elif not os.path.exists(os.path.join(self.path, 'profiles')):
+                errors.append(f"The package '{self.name}' have no 'profiles' directory.")
+            elif not os.path.isdir(os.path.join(self.path, 'profiles')):
+                errors.append(f"'{os.path.join(self.path, 'profiles')}' is not a directory.")
+            elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
+                warnings.append(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
+            elif not self.readme:
+                warnings.append(f"The package '{self.name}' have not any README file.")
         return errors, warnings
 
 
