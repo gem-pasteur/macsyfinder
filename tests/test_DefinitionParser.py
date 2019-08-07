@@ -20,6 +20,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank, ProfileFactory
+from macsypy.registries import ModelRegistry
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
 from tests import MacsyTest
@@ -39,7 +40,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
         
         
     def tearDown(self):
@@ -414,7 +417,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
@@ -437,7 +442,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
@@ -460,7 +467,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
@@ -483,7 +492,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
@@ -505,7 +516,9 @@ class TestModelParser(MacsyTest):
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.profile_factory)
+        self.model_registry = ModelRegistry(self.cfg)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.profile_factory, self.model_registry)
 
         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
         self.parser.parse(models_2_detect)
