@@ -12,6 +12,7 @@
 ################################################################################
 
 
+import os
 import shutil
 import tempfile
 import argparse
@@ -20,7 +21,7 @@ from macsypy.gene import GeneBank
 from macsypy.gene import Gene, ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from tests import MacsyTest
 
 
@@ -35,9 +36,8 @@ class Test(MacsyTest):
         args.log_level = 30
         self.cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.gene_bank = GeneBank()
         self.profile_factory = ProfileFactory(self.cfg)
 

@@ -21,7 +21,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import Gene, Homolog, Analog, ProfileFactory
 from macsypy.hit import Hit
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from tests import MacsyTest
 
 
@@ -41,9 +41,8 @@ class TestModel(MacsyTest):
         os.mkdir(self.args.out_dir)
 
         self.cfg = Config(MacsyDefaults(), self.args)
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):

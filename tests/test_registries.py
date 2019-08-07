@@ -15,12 +15,11 @@
 import os
 import shutil
 import tempfile
-import logging
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy import registries
-from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry
+from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry, scan_models_dir
 from macsypy.error import MacsypyError
 from tests import MacsyTest
 
@@ -452,20 +451,56 @@ class ModelRegistryTest(MacsyTest):
         except:
             pass
 
+    def test_scan_models_dir(self):
+        models_location = scan_models_dir(self.cfg.models_dir())
+        models_location_expected = [
+            ModelLocation(path=self.simple_dir,
+                          profile_suffix='.hmm',
+                          relative_path=False),
+            ModelLocation(path=self.complex_dir,
+                          profile_suffix='.hmm',
+                          relative_path=False),
+        ]
+        self.assertListEqual(sorted(models_location_expected),
+                             sorted(models_location))
 
-    def test_ModelRegistry(self):
-        sr = ModelRegistry(self.cfg)
-        self.assertEqual(sorted(sr._registry.keys()), sorted(['simple', 'complex']))
+    def test_add_get(self):
+        mr = ModelRegistry()
+        model_complex_expected = ModelLocation(path=self.complex_dir)
+        with self.assertRaises(KeyError) as ctx:
+            mr[model_complex_expected.name]
+
+        self.assertEqual(str(ctx.exception),
+                         '"No such model definition: \'complex\'"')
+        mr.add(model_complex_expected)
+        self.assertEqual(model_complex_expected, mr[model_complex_expected.name])
 
     def test_models(self):
-        md = ModelRegistry(self.cfg)
+        mr = ModelRegistry()
         model_complex_expected = ModelLocation(path=self.complex_dir)
         model_simple_expected = ModelLocation(path=self.simple_dir)
-        models_received = md.models()
-        self.assertEqual(len(models_received), 2)
-        self.assertIn(model_simple_expected, models_received)
-        self.assertIn(model_complex_expected, models_received)
+        mr.add(model_complex_expected)
+        mr.add(model_simple_expected)
+        models_received = sorted(mr.models())
+        models_expected = sorted([model_complex_expected, model_simple_expected])
+        self.assertListEqual(models_received, models_expected)
+
 
     def test_str(self):
-        sr = ModelRegistry(self.cfg)
-        self.assertEqual(str(sr), self.output_control_str('001'))
+        mr = ModelRegistry()
+        model_complex_expected = ModelLocation(path=self.complex_dir)
+        model_simple_expected = ModelLocation(path=self.simple_dir)
+        mr.add(model_complex_expected)
+        mr.add(model_simple_expected)
+        expected_output = """complex
+        /subdef_1
+                 /def_1_1
+                 /def_1_2
+        /subdef_2
+                 /def_2_1
+                 /def_2_2
+simple
+       /def_1
+       /def_2
+"""
+        self.assertEqual(expected_output, str(mr))

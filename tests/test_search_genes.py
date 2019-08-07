@@ -23,7 +23,7 @@ from macsypy.gene import Gene
 import macsypy.gene
 from macsypy.model import Model
 from macsypy.hit import Hit
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelLocation
 from macsypy.database import Indexes
 from macsypy.search_genes import search_genes
 import macsypy.search_genes
@@ -47,9 +47,9 @@ class TestSearchGenes(MacsyTest):
 
         self.cfg = Config(MacsyDefaults(), args)
 
-        models_registry = ModelRegistry(self.cfg)
         self.model_name = 'foo'
-        self.models_location = models_registry[self.model_name]
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
         self.profile_factory = macsypy.gene.ProfileFactory(self.cfg)
