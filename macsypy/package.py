@@ -261,11 +261,10 @@ class Package:
         gene_bank = GeneBank()
 
         config = NoneConfig()
-        print("\n#########################")
-        print(self.path)
         config.models_dir = lambda: self.path
         profile_factory = ProfileFactory(config)
-        model_registry = ModelRegistry(config)
+        model_registry = ModelRegistry()
+        model_registry.add(model_loc)
         parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
         parser.parse([def_loc.fqn for def_loc in all_def])
         _log.info("Definitions are consistent")
