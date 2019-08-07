@@ -542,6 +542,10 @@ class Config:
 
 class NoneConfig:
 
-    def __getattr__(self, item):
-        return lambda: None
+    def __getattr__(self, property):
+        if property in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
+                        'inter_gene_max_space', 'min_genes_required'):
+            return lambda x: None
+        else:
+            return lambda: None
 
