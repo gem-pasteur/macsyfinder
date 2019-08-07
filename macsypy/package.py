@@ -27,7 +27,7 @@ import logging
 _log = logging.getLogger(__name__)
 
 from .config import NoneConfig
-from .registries import ModelLocation
+from .registries import ModelLocation, ModelRegistry
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank, ProfileFactory
@@ -119,10 +119,10 @@ class Remote:
         """
         url = f"{self.base_url}/repos/{self.org_name}/{pack_name}/tarball/{vers}"
         package_cache = os.path.join(self.cache, self.org_name)
-        if not os.path.exists(package_cache):
+        if os.path.exists(self.cache) and not os.path.isdir(self.cache):
+            raise NotADirectoryError(f"The tmp cache '{self.cache}' already exists")
+        elif not os.path.exists(package_cache):
             os.makedirs(package_cache)
-        elif os.path.isfile(package_cache):
-            raise RuntimeError(f"The tmp cache {package_cache} exists and is a file")
         tmp_archive_path = os.path.join(package_cache, f"{pack_name}-{vers}.tar.gz")
         try:
             with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
@@ -147,7 +147,7 @@ class Remote:
         base = os.path.dirname(path)
         *name, vers = '.'.join(os.path.basename(path).split('.')[:-2]).split('-')
         name = '-'.join(name)
-        dest_dir = os.path.join(base, name, vers)
+        dest_dir = os.path.join(self.cache, self.org_name, name, vers)
         tar = tarfile.open(path, 'r|gz')
         tar.extractall(path=dest_dir)
         src = glob.glob(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
@@ -197,7 +197,7 @@ class Package:
         :return:
         """
         with open(self.metadata) as raw_metadata:
-            metadata = yaml.load(raw_metadata)
+            metadata = yaml.full_load(raw_metadata)
         return metadata
 
 
@@ -205,36 +205,96 @@ class Package:
         """
         Check the QA of this package
         """
+        errors, warnings = self._check_structure()
+        meta_errors, meta_warnings = self._check_metadata()
+        errors.extend(meta_errors)
+        warnings.extend(meta_warnings)
+        if errors:
+            for error in errors:
+                _log.error(error)
+            raise RuntimeError("Please fix issues above, before publishing these models.")
+
+        self._check_model_consistency()
+
+        if warnings:
+            for warning in warnings:
+                _log.warning(warning)
+            warnings("It is better, if you fix warnings above, before to publish these models.")
+
+
+    def _check_structure(self):
+        """
+        Check the QA structure of the package
+
+        :return: errors and warnings
+        :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
+        """
+        _log.info(f"Checking '{self.name}'package structure")
+        errors = []
+        warnings = []
         if not os.path.exists(self.path):
-            raise RuntimeError()
+            errors.append(f"The package '{self.name}' does not exists.")
         elif not os.path.isdir(self.path):
-            raise RuntimeError()
+            errors.append(f"'{self.name}' is not a directory ")
         elif not os.path.exists(os.path.join(self.path, 'metadata.yml')):
-            raise RuntimeError(f"The package '{self.name}' have no 'metadata.yml'.")
+            errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
         elif not os.path.exists(os.path.join(self.path, 'definitions')):
-            raise RuntimeError(f"The package '{self.name}' have no 'definitions' directory.")
+            errors.append(f"The package '{self.name}' have no 'definitions' directory.")
         elif not os.path.isdir(os.path.join(self.path, 'definitions')):
-            raise RuntimeError(f"'definitions' is not a directory.")
+            errors.append(f"'definitions' is not a directory.")
         elif not os.path.exists(os.path.join(self.path, 'profiles')):
-            raise RuntimeError(f"The package '{self.name}' have no 'profiles' directory.")
+            errors.append(f"The package '{self.name}' have no 'profiles' directory.")
         elif not os.path.isdir(os.path.join(self.path, 'profiles')):
-            raise RuntimeError(f"'profiles' is not a directory.")
+            errors.append(f"'profiles' is not a directory.")
         elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
-            _log.warning(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
+            warnings.append(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
         elif not self.readme:
-            _log.warning(f"The package '{self.name}' have not any README file.")
-        _log.info("The structure of the Package '' seems good")
-        _log.info("Checking Model definitions")
+            warnings.append(f"The package '{self.name}' have not any README file.")
+        return errors, warnings
+
+
+    def _check_model_consistency(self):
+        _log.info(f"Checking '{self.name}' Model definitions")
         model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
         model_bank = ModelBank()
         gene_bank = GeneBank()
 
         config = NoneConfig()
+        print("\n#########################")
+        print(self.path)
+        config.models_dir = lambda: self.path
         profile_factory = ProfileFactory(config)
-        parser = DefinitionParser(config, model_bank, gene_bank, profile_factory)
+        model_registry = ModelRegistry(config)
+        parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
         parser.parse([def_loc.fqn for def_loc in all_def])
         _log.info("Definitions are consistent")
+
+
+    def _check_metadata(self):
+        """
+        Check the QA of package metadata
+
+        :return: errors and warnings
+        :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
+        """
+        _log.info(f"Checking '{self.name}' metadata")
+        errors = []
+        warnings = []
+        data = self._load_metadata()
+        must_have = ("author", "short_desc", "vers" )
+        nice_to_have = ("cite", "doc", "licence", "copyright")
+        for item in must_have:
+            if item not in data:
+                warnings.append(f"field '{item}' is mandatory in metadata.")
+        for item in nice_to_have:
+            if item not in data:
+                errors.append(f"It's better if the field '{item}' is setup in metadata file")
+        if "author" in data:
+            for item in ("name", "mail"):
+                if item not in data["author"]:
+                    errors.append(f"field author.'{item}' is mandatory in metadata.")
+        return errors, warnings
 
 
     def help(self, output=sys.stderr) -> None:
@@ -254,6 +314,13 @@ class Package:
         :return: some information about the package
         """
         metadata = self._load_metadata()
+        if 'cite' not in metadata:
+            metadata['cite'] = "No citation available"
+        if 'doc' not in metadata:
+            metadata['doc'] = "No documentation available"
+        if 'licence' not in metadata:
+            metadata['licence'] = "No licence available"
+        copyrights = f"copyright: {metadata['copyrights']}" if 'copyright' in metadata else ''
         pack_name = self.name
         cite = '\n'.join([f"\t- {c}" for c in metadata['cite']])
         info = f"""
@@ -269,8 +336,8 @@ how to cite:
 documentation
 \t{metadata['doc']}      
 
-This data are realeased under {metadata['licence']}
-copyright: {metadata['copyrights']}
+This data are released under {metadata['licence']}
+{copyrights}
 """
         return info
 
