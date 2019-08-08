@@ -76,12 +76,24 @@ def do_uninstall(args):
 
 def do_search(args):
     """
-    Search macsy-models for Model.
+    Search macsy-models for Model in a remote index.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
+    # liste des packages
+    # pour chaque package
+    #    cherchez le motif dans le nom (accept wild card??)
+    #    afficher le package, la version, la description (voir available)
+
+    # si option -S
+    #   pour chaque package
+    #       recuperer metadata
+    #       cherchez le motif dans le nom et la description
+    #       afficher le package, la version, la description (voir plus haut)
+
+    
     raise Exception('Not implemented')
 
 
@@ -124,27 +136,7 @@ def do_check(args):
     :param args:
     :return:
     """
-    # si git status  != 0
-    # git add + commit
-    # presence d'un fichier metadata
-    # presence d'un repertoire definitions
-    # presence d'un repertoire profiles
-
-    # si rien => ce n'est pas un package
-    # si def + profile
-    # creation d'un metadata skeleton en interactif
-    # si non => erreur est ce bien un package?
-    # si oui verification des info
-    # demander les infos manquantes
-    #   - maintainer
-    #      - name
-    #      - email
-    #   - short description
-    #   - vers
-    #   - cite
-    #   - doc
-    # verifications de definitions et profiles
-    # parse de toutes les def => check consistense
+    # fait a l'instanciation d'un Package
 
     # si aucune erreur
     # print de la demarche a suivre
