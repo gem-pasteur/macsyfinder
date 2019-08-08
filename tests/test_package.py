@@ -20,6 +20,7 @@ import io
 import shutil
 import tarfile
 import glob
+import yaml
 from unittest.mock import patch
 
 from macsypy import package
@@ -55,6 +56,7 @@ class TestRemote(MacsyTest):
 
             def __exit__(self, type, value, traceback):
                 return False
+
         if url == 'https://test_url_json/':
             resp = {'fake': ['json', 'response']}
             return MockResponse(json.dumps(resp), 200)
@@ -79,49 +81,51 @@ class TestRemote(MacsyTest):
             raise urllib.error.HTTPError(url, 500, 'Server Error', None, None)
         elif 'https://api.github.com/repos/package_download/fake/tarball/1.0' in url:
             return MockResponse('fake data ' * 2, 200)
-        elif 'https://api.github.com/repos/package_download/bad_pack/tarball/name':
+        elif url == 'https://api.github.com/repos/package_download/bad_pack/tarball/name':
             raise urllib.error.HTTPError(url, 404, 'not found', None, None)
+        elif url == 'https://raw.githubusercontent.com/get_metadata/foo/0.0/metadata.yml':
+            data = yaml.dump({"author": {"name": "moi"}})
+            return MockResponse(data, 200)
         else:
-            raise RuntimeError("test non prevu", args)
-
+            raise RuntimeError("test non prevu", url)
 
     def test_init(self):
-        rem_exists = package.Remote.remote_exists
-        package.Remote.remote_exists = lambda x: True
+        rem_exists = package.RemoteModelIndex.remote_exists
+        package.RemoteModelIndex.remote_exists = lambda x: True
         try:
-            remote = package.Remote()
+            remote = package.RemoteModelIndex()
             remote.cache = self.tmpdir
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
         self.assertEqual(remote.org_name, 'macsy-models')
         self.assertEqual(remote.base_url, 'https://api.github.com')
         self.assertEqual(remote.cache, self.tmpdir)
 
-        package.Remote.remote_exists = lambda x: True
+        package.RemoteModelIndex.remote_exists = lambda x: True
         try:
-            remote = package.Remote(org='foo')
+            remote = package.RemoteModelIndex(org='foo')
             remote.cache = self.tmpdir
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
         self.assertEqual(remote.org_name, 'foo')
 
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_url_json(self, mock_urlopen):
-        rem_exists = package.Remote.remote_exists
-        package.Remote.remote_exists = lambda x: True
-        remote = package.Remote(org="nimportnaoik")
+        rem_exists = package.RemoteModelIndex.remote_exists
+        package.RemoteModelIndex.remote_exists = lambda x: True
+        remote = package.RemoteModelIndex(org="nimportnaoik")
         remote.cache = self.tmpdir
         try:
             j = remote._url_json("https://test_url_json/")
             self.assertDictEqual(j, {'fake': ['json', 'response']})
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
 
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_remote_exists(self, mock_urlopen):
-        remote = package.Remote(org="remote_exists_true")
+        remote = package.RemoteModelIndex(org="remote_exists_true")
         remote.cache = self.tmpdir
         exists = remote.remote_exists()
         self.assertTrue(exists)
@@ -142,28 +146,75 @@ class TestRemote(MacsyTest):
         self.assertEqual(str(ctx.exception),
                          "HTTP Error 204: No Content")
 
+    @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
+    def test_get_metadata(self, mock_urlopen):
+        rem_exists = package.RemoteModelIndex.remote_exists
+        list_package_vers = package.RemoteModelIndex.list_package_vers
+        try:
+            vers = '0.0'
+            pack_name = 'foo'
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            package.RemoteModelIndex.list_package_vers = lambda x, pack_name: [vers]
+            remote = package.RemoteModelIndex(org="get_metadata")
+            remote.cache = self.tmpdir
+            metadata = remote.get_metadata(pack_name)
+            self.assertDictEqual(metadata, {"author": {"name": "moi"}})
+        finally:
+            package.RemoteModelIndex.remote_exists = rem_exists
+            package.RemoteModelIndex.list_package_vers = list_package_vers
+
+        #################################################
+        # The remote package is not versioned (tagged)  #
+        #################################################
+        try:
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            package.RemoteModelIndex.list_package_vers = lambda x, pack_name: []
+            remote = package.RemoteModelIndex(org="get_metadata")
+            with self.assertRaises(RuntimeError) as ctx:
+                remote.get_metadata(pack_name)
+            self.assertEqual(str(ctx.exception),
+                             "No official version available for model 'foo'")
+        finally:
+            package.RemoteModelIndex.remote_exists = rem_exists
+            package.RemoteModelIndex.list_package_vers = list_package_vers
+
+        #####################################
+        # The pack version is not available #
+        #####################################
+        try:
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            package.RemoteModelIndex.list_package_vers = lambda x, pack_name: ["12"]
+            remote = package.RemoteModelIndex(org="get_metadata")
+            with self.assertRaises(RuntimeError) as ctx:
+                remote.get_metadata(pack_name, vers="1.1")
+            self.assertEqual(str(ctx.exception),
+                             "The version '1.1' does not exists for model foo.")
+        finally:
+            package.RemoteModelIndex.remote_exists = rem_exists
+            package.RemoteModelIndex.list_package_vers = list_package_vers
+
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_list_packages(self, mock_urlopen):
-        rem_exists = package.Remote.remote_exists
+        rem_exists = package.RemoteModelIndex.remote_exists
         try:
-            package.Remote.remote_exists = lambda x: True
-            remote = package.Remote(org="list_packages")
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            remote = package.RemoteModelIndex(org="list_packages")
             remote.cache = self.tmpdir
             self.assertListEqual(remote.list_packages(), ['model_1', 'model_2'])
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
 
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_list_package_vers(self, mock_urlopen):
-        rem_exists = package.Remote.remote_exists
+        rem_exists = package.RemoteModelIndex.remote_exists
         try:
-            package.Remote.remote_exists = lambda x: True
-            remote = package.Remote(org="list_package_vers")
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            remote = package.RemoteModelIndex(org="list_package_vers")
             remote.cache = self.tmpdir
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
 
         self.assertListEqual(remote.list_package_vers('model_1'), ['v_1', 'v_2'])
 
@@ -178,10 +229,10 @@ class TestRemote(MacsyTest):
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
     def test_package_download(self, mock_urlopen):
-        rem_exists = package.Remote.remote_exists
+        rem_exists = package.RemoteModelIndex.remote_exists
         try:
-            package.Remote.remote_exists = lambda x: True
-            remote = package.Remote(org="package_download")
+            package.RemoteModelIndex.remote_exists = lambda x: True
+            remote = package.RemoteModelIndex(org="package_download")
             remote.cache = self.tmpdir
             pack_name = "fake"
             pack_vers = "1.0"
@@ -219,7 +270,7 @@ class TestRemote(MacsyTest):
                              "package 'bad_pack-name' does not exists on repos 'package_download'")
 
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
 
 
     def test_unarchive(self):
@@ -242,10 +293,10 @@ class TestRemote(MacsyTest):
         pack_name = 'model-toto'
         pack_vers = '2.0'
 
-        rem_exists = package.Remote.remote_exists
-        package.Remote.remote_exists = lambda x: True
+        rem_exists = package.RemoteModelIndex.remote_exists
+        package.RemoteModelIndex.remote_exists = lambda x: True
         try:
-            remote = package.Remote(org="package_unarchive")
+            remote = package.RemoteModelIndex(org="package_unarchive")
             arch = create_pack(self.tmpdir, remote.org_name, pack_name, pack_vers, 'e020300')
             remote.cache = self.tmpdir
 
@@ -268,7 +319,7 @@ class TestRemote(MacsyTest):
                              f"Too many matching packages. May be you have to clean "
                              f"{os.path.join(self.tmpdir, remote.org_name, pack_name, pack_vers)}")
         finally:
-            package.Remote.remote_exists = rem_exists
+            package.RemoteModelIndex.remote_exists = rem_exists
 
 
 class TestPackage(MacsyTest):
