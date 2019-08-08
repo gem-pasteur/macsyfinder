@@ -286,27 +286,27 @@ class Package:
         nice_to_have = ("cite", "doc", "licence", "copyright")
         for item in must_have:
             if item not in data:
-                warnings.append(f"field '{item}' is mandatory in metadata.")
+                errors.append(f"field '{item}' is mandatory in metadata.")
         for item in nice_to_have:
             if item not in data:
-                errors.append(f"It's better if the field '{item}' is setup in metadata file")
+                warnings.append(f"It's better if the field '{item}' is setup in metadata file")
         if "author" in data:
-            for item in ("name", "mail"):
+            for item in ("name", "email"):
                 if item not in data["author"]:
-                    errors.append(f"field author.'{item}' is mandatory in metadata.")
+                    errors.append(f"field 'author.{item}' is mandatory in metadata.")
         return errors, warnings
 
 
-    def help(self, output=sys.stderr) -> None:
+    def help(self) -> str:
         """
-        Write the content of the README file
-
-        :param output: wher to write the help (default on stderr)
-        :type output: file like object
+        return the content of the README file
         """
-        with open(self.readme) as readme:
-            for line in readme:
-                print(line, file=output, end='')
+        if self.readme:
+            with open(self.readme) as readme:
+                pack_help = ''.join(readme.readlines())
+        else:
+            pack_help = f"No help available for package '{self.name}'."
+        return pack_help
 
 
     def info(self) -> str:
@@ -315,12 +315,12 @@ class Package:
         """
         metadata = self._load_metadata()
         if 'cite' not in metadata:
-            metadata['cite'] = "No citation available"
+            metadata['cite'] = ["No citation available\n"]
         if 'doc' not in metadata:
             metadata['doc'] = "No documentation available"
         if 'licence' not in metadata:
             metadata['licence'] = "No licence available"
-        copyrights = f"copyright: {metadata['copyrights']}" if 'copyright' in metadata else ''
+        copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
         pack_name = self.name
         cite = '\n'.join([f"\t- {c}" for c in metadata['cite']])
         info = f"""
@@ -332,9 +332,8 @@ author: {metadata['author']['name']} <{metadata['author']['email']}>
 
 how to cite:
 {cite}
-
 documentation
-\t{metadata['doc']}      
+\t{metadata['doc']}
 
 This data are released under {metadata['licence']}
 {copyrights}
