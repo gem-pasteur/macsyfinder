@@ -22,7 +22,23 @@ import colorlog
 _log = colorlog.getLogger('macsypy')
 
 import macsypy
+from macsypy.package import RemoteModelIndex
 from macsypy.config import MacsyDefaults, Config
+
+
+def do_available(args) -> None:
+    """
+    List Models available on macsy-models
+    :param args: the arguments passed on the command line
+    :return: None
+    """
+    remote = RemoteModelIndex(org=args.org)
+    packages = remote.list_packages()
+    for pack in packages:
+        last_vers = remote.list_package_vers(pack)[0]
+        metadata = remote.get_metadata(pack, vers=last_vers)
+        pack_vers = f"{pack} ({last_vers})"
+        print(f"{pack_vers:26.25} - {metadata['short_desc']}")
 
 
 def do_download(args):
@@ -60,7 +76,7 @@ def do_uninstall(args):
 
 def do_search(args):
     """
-    Models discovery.
+    Search macsy-models for Model.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
@@ -71,7 +87,7 @@ def do_search(args):
 
 def do_show(args):
     """
-    Show model details.
+    Show information about installed model.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
@@ -93,7 +109,7 @@ def do_list(args):
 
 def do_cite(args):
     """
-    How to cite macsyfinder.
+    How to cite an installed model.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
@@ -148,8 +164,6 @@ def build_arg_parser():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=dedent('''
 
-
-
          *            *               *                   * *       * *      *        *     *
     *           *               *   *   *  *    **                *   * *       *
       **     *    *   *  *     *                    *               *       *
@@ -183,6 +197,15 @@ def build_arg_parser():
     # -- subparser options -- #
 
     subparsers = parser.add_subparsers(help=None)
+
+    available_subparser = subparsers.add_parser('available',
+                                                help='List Models available on macsy-models')
+    available_subparser.add_argument('--org',
+                                     default="macsy-models",
+                                     help="The name of Model orgagnization"
+                                          "(default macsy-models))"
+                                     )
+    available_subparser.set_defaults(func=do_available)
 
     download_subparser = subparsers.add_parser('download',
                                                help='Download packages.')
