@@ -196,7 +196,7 @@ class Package:
         :return:
         """
         with open(self.metadata) as raw_metadata:
-            metadata = yaml.full_load(raw_metadata)
+            metadata = yaml.safe_load(raw_metadata)
         return metadata
 
 
