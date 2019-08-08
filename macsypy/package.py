@@ -77,6 +77,37 @@ class RemoteModelIndex:
             else:
                 raise err from None
 
+    def get_metadata(self, pack_name: str, vers: str='latest') -> Dict:
+        """
+        Fetch the metadata from a remote package
+
+        :param str pack_name: The package name
+        :param str vers: The package version
+        :return: the metadata corresponding to this package/version
+        :rtype: dictionary corresponding of the yaml parsing of the metadata file.
+        """
+        versions = self.list_package_vers(pack_name)
+        if not versions:
+            raise RuntimeError(f"No official version available for model '{pack_name}'")
+        elif vers == 'latest':
+            vers == versions[0]
+        else:
+            if vers not in versions:
+                raise RuntimeError(f"The version '{vers}' does not exists for model {pack_name}.")
+        metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{versions[0]}/metadata.yml"
+        try:
+            with urllib.request.urlopen(metadata_url) as response:
+                metadata = response.read().decode("utf-8")
+        except urllib.error.HTTPError as err:
+            if 400 < err.code < 500:
+                raise RuntimeError(f"cannot fetch '{metadata_url}' check '{pack_name}'")
+            elif err.code >= 500:
+                raise err from None
+            else:
+                raise err from None
+        metadata = yaml.safe_load(metadata)
+        return metadata
+
 
     def list_packages(self) -> List[str]:
         """
