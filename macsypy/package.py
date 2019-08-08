@@ -33,7 +33,7 @@ from .model import ModelBank
 from .gene import GeneBank, ProfileFactory
 
 
-class Remote:
+class RemoteModelIndex:
 
     def __init__(self, org="macsy-models"):
         """
