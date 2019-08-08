@@ -144,7 +144,6 @@ class RemoteModelIndex:
         :param str path:
         :return: The path to the package
         """
-        base = os.path.dirname(path)
         *name, vers = '.'.join(os.path.basename(path).split('.')[:-2]).split('-')
         name = '-'.join(name)
         dest_dir = os.path.join(self.cache, self.org_name, name, vers)
@@ -254,7 +253,7 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_consistency(self):
+    def _check_model_consistency(self) -> None:
         _log.info(f"Checking '{self.name}' Model definitions")
         model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
