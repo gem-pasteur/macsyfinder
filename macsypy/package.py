@@ -138,7 +138,7 @@ class RemoteModelIndex:
         return [v['name'] for v in tags]
 
 
-    def package_download(self, pack_name: str, vers: str) -> str:
+    def download(self, pack_name: str, vers: str) -> str:
         """
         Download a package from a github repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz

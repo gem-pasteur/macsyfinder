@@ -81,7 +81,7 @@ class TestRemote(MacsyTest):
             raise urllib.error.HTTPError(url, 500, 'Server Error', None, None)
         elif 'https://api.github.com/repos/package_download/fake/tarball/1.0' in url:
             return MockResponse('fake data ' * 2, 200)
-        elif url == 'https://api.github.com/repos/package_download/bad_pack/tarball/name':
+        elif url == 'https://api.github.com/repos/package_download/bad_pack/tarball/0.2':
             raise urllib.error.HTTPError(url, 404, 'not found', None, None)
         elif url == 'https://raw.githubusercontent.com/get_metadata/foo/0.0/metadata.yml':
             data = yaml.dump({"author": {"name": "moi"}})
@@ -228,7 +228,7 @@ class TestRemote(MacsyTest):
 
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
-    def test_package_download(self, mock_urlopen):
+    def test_download(self, mock_urlopen):
         rem_exists = package.RemoteModelIndex.remote_exists
         try:
             package.RemoteModelIndex.remote_exists = lambda x: True
@@ -243,14 +243,14 @@ class TestRemote(MacsyTest):
                 elif os.path.isfile(remote.cache) or os.path.islink(remote.cache):
                     os.unlink(remote.cache)
 
-            arch_path = remote.package_download(pack_name, pack_vers)
+            arch_path = remote.download(pack_name, pack_vers)
             self.assertEqual(os.path.join(remote.cache, remote.org_name, f"{pack_name}-{pack_vers}.tar.gz"),
                              arch_path)
             self.assertFileEqual(arch_path, io.StringIO('fake data ' * 2))
 
             # download again with existing remote cache and replace old archive
             os.unlink(arch_path)
-            arch_path = remote.package_download(pack_name, pack_vers)
+            arch_path = remote.download(pack_name, pack_vers)
             self.assertFileEqual(arch_path, io.StringIO('fake data ' * 2))
 
             # remote cache exist and is a file
@@ -258,16 +258,16 @@ class TestRemote(MacsyTest):
             open(remote.cache, 'w').close()
             try:
                 with self.assertRaises(NotADirectoryError) as ctx:
-                    remote.package_download(pack_name, pack_vers)
+                    remote.download(pack_name, pack_vers)
                 self.assertEqual(str(ctx.exception),
                                  f"The tmp cache '{remote.cache}' already exists")
             finally:
                 os.unlink(remote.cache)
 
             with self.assertRaises(RuntimeError) as ctx:
-                _ = remote.package_download("bad_pack", "name")
+                _ = remote.download("bad_pack", "0.2")
             self.assertEqual(str(ctx.exception),
-                             "package 'bad_pack-name' does not exists on repos 'package_download'")
+                             "package 'bad_pack-0.2' does not exists on repos 'package_download'")
 
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
