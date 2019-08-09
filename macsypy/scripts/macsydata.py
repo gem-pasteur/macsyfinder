@@ -35,10 +35,12 @@ def do_available(args) -> None:
     remote = RemoteModelIndex(org=args.org)
     packages = remote.list_packages()
     for pack in packages:
-        last_vers = remote.list_package_vers(pack)[0]
-        metadata = remote.get_metadata(pack, vers=last_vers)
-        pack_vers = f"{pack} ({last_vers})"
-        print(f"{pack_vers:26.25} - {metadata['short_desc']}")
+        all_versions = remote.list_package_vers(pack)
+        if all_versions:
+            last_vers = all_versions[0]
+            metadata = remote.get_metadata(pack, vers=last_vers)
+            pack_vers = f"{pack} ({last_vers})"
+            print(f"{pack_vers:26.25} - {metadata['short_desc']}")
 
 
 def do_download(args):
