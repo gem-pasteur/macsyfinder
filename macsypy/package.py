@@ -34,7 +34,7 @@ from .gene import GeneBank, ProfileFactory
 
 class RemoteModelIndex:
 
-    def __init__(self, org="macsy-models"):
+    def __init__(self, org: str = "macsy-models"):
         """
 
         :param org: The name of the organization on github where are stored the models
@@ -251,7 +251,7 @@ class Package:
             warnings("It is better, if you fix warnings above, before to publish these models.")
 
 
-    def _check_structure(self):
+    def _check_structure(self) -> List[str]:
         """
         Check the QA structure of the package
 
@@ -300,7 +300,7 @@ class Package:
         _log.info("Definitions are consistent")
 
 
-    def _check_metadata(self):
+    def _check_metadata(self) -> List[str]:
         """
         Check the QA of package metadata
 
