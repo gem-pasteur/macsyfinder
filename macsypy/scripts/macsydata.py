@@ -100,7 +100,7 @@ def do_search(args: argparse.Namespace) -> None:
         print(f"{pack_vers:26.25} - {desc}")
 
 
-def _search_in_pack_name(pattern: str, remote, packages, match_case: bool = False) -> List[str]:
+def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[str], match_case: bool = False) -> List[str]:
     """
 
     :param pattern:
@@ -126,7 +126,7 @@ def _search_in_pack_name(pattern: str, remote, packages, match_case: bool = Fals
     return results
 
 
-def _search_in_desc(pattern, remote, packages, match_case=False):
+def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str], match_case: bool = False):
     results = []
     for pack_name in packages:
         all_versions = remote.list_package_vers(pack_name)
