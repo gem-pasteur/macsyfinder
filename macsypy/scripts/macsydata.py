@@ -17,6 +17,7 @@ import os
 import argparse
 import logging
 from textwrap import dedent
+from typing import List, Dict, Any
 
 import colorlog
 _log = colorlog.getLogger('macsypy')
@@ -26,7 +27,7 @@ from macsypy.package import RemoteModelIndex
 from macsypy.config import MacsyDefaults, Config
 
 
-def do_available(args) -> None:
+def do_available(args: argparse.Namespace) -> None:
     """
     List Models available on macsy-models
     :param args: the arguments passed on the command line
@@ -43,7 +44,7 @@ def do_available(args) -> None:
             print(f"{pack_vers:26.25} - {metadata['short_desc']}")
 
 
-def do_download(args):
+def do_download(args: argparse.Namespace) -> None:
     """
     Download tarball from remote models repository.
 
@@ -54,7 +55,7 @@ def do_download(args):
     raise Exception('Not implemented')
 
 
-def do_install(args):
+def do_install(args: argparse.Namespace) -> None:
     """
     Install new models in macsyfinder local models repository.
 
@@ -65,7 +66,7 @@ def do_install(args):
     raise Exception('Not implemented')
 
 
-def do_uninstall(args):
+def do_uninstall(args: argparse.Namespace) -> None:
     """
     Remove models from macsyfinder local models repository.
 
@@ -76,30 +77,76 @@ def do_uninstall(args):
     raise Exception('Not implemented')
 
 
-def do_search(args):
+def do_search(args: argparse.Namespace) -> None:
     """
     Search macsy-models for Model in a remote index.
+    by default search in package name,
+    if option -S is set search also in description
+    by default the search is case insensitive except if
+    option --match-case is set.
 
     :param args: the arguments passed on the command line
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    # liste des packages
-    # pour chaque package
-    #    cherchez le motif dans le nom (accept wild card??)
-    #    afficher le package, la version, la description (voir available)
-
-    # si option -S
-    #   pour chaque package
-    #       recuperer metadata
-    #       cherchez le motif dans le nom et la description
-    #       afficher le package, la version, la description (voir plus haut)
-
-    
-    raise Exception('Not implemented')
+    remote = RemoteModelIndex(org=args.org)
+    packages = remote.list_packages()
+    if args.careful:
+        results = _search_in_desc(args.pattern, remote, packages, match_case=args.match_case)
+    else:
+        results = _search_in_pack_name(args.pattern, remote, packages, match_case=args.match_case)
+    for pack, last_vers, desc in results:
+        pack_vers = f"{pack} ({last_vers})"
+        print(f"{pack_vers:26.25} - {desc}")
 
 
-def do_show(args):
+def _search_in_pack_name(pattern: str, remote, packages, match_case: bool = False) -> List[str]:
+    """
+
+    :param pattern:
+    :param remote:
+    :param packages:
+    :param match_case:
+    :return:
+    """
+    results = []
+    for pack_name in packages:
+        if not match_case:
+            pack = pack_name.lower()
+            pattern = pattern.lower()
+        else:
+            pack = pack_name
+
+        if pattern in pack:
+            all_versions = remote.list_package_vers(pack_name)
+            if all_versions:
+                metadata = remote.get_metadata(pack_name)
+                last_vers = all_versions[0]
+                results.append((pack_name, last_vers, metadata['short_desc']))
+    return results
+
+
+def _search_in_desc(pattern, remote, packages, match_case=False):
+    results = []
+    for pack_name in packages:
+        all_versions = remote.list_package_vers(pack_name)
+        if all_versions:
+            metadata = remote.get_metadata(pack_name)
+            desc = metadata['short_desc']
+            if not match_case:
+                pack = pack_name.lower()
+                desc = desc.lower()
+                pattern = pattern.lower()
+            else:
+                pack = pack_name
+
+            if pattern in pack or pattern in desc:
+                last_vers = all_versions[0]
+                results.append((pack_name, last_vers, metadata['short_desc']))
+    return results
+
+
+def do_show(args: argparse.Namespace) -> None:
     """
     Show information about installed model.
 
@@ -110,7 +157,7 @@ def do_show(args):
     raise Exception('Not implemented')
 
 
-def do_list(args):
+def do_list(args: argparse.Namespace) -> None:
     """
     List installed models.
 
@@ -121,7 +168,7 @@ def do_list(args):
     raise Exception('Not implemented')
 
 
-def do_cite(args):
+def do_cite(args: argparse.Namespace) -> None:
     """
     How to cite an installed model.
 
@@ -132,7 +179,7 @@ def do_cite(args):
     raise Exception('Not implemented')
 
 
-def do_check(args):
+def do_check(args: argparse.Namespace) -> None:
     """
 
     :param args:
@@ -146,7 +193,7 @@ def do_check(args):
     # git push --tags remote
 
 
-def build_arg_parser():
+def build_arg_parser() -> argparse.ArgumentParser:
     """
     Build argument parser.
 
@@ -203,6 +250,7 @@ def build_arg_parser():
 
     download_subparser = subparsers.add_parser('download',
                                                help='Download packages.')
+
     download_subparser.set_defaults(func=do_download)
     download_subparser.add_argument('-d', '--dest',
                                     help='Download packages into <dir>.')
@@ -240,7 +288,18 @@ def build_arg_parser():
     search_subparser = subparsers.add_parser('search',
                                              help='Discover new packages.')
     search_subparser.set_defaults(func=do_search)
-    search_subparser.add_argument('-i', '--index-url',
+    search_subparser.add_argument('--org',
+                                  default="macsy-models",
+                                  help="The name of Model orgagnization"
+                                       "(default macsy-models))"
+                                  )
+    search_subparser.add_argument('-S', '--careful',
+                                  default=False,
+                                  action='store_true',
+                                  help='')
+    search_subparser.add_argument('--match-case',
+                                  default=False,
+                                  action='store_true',
                                   help='')
     search_subparser.add_argument('pattern',
                                   help='Searches for packages matching the pattern.')
@@ -279,7 +338,7 @@ def build_arg_parser():
     return parser
 
 
-def cmd_name(args):
+def cmd_name(args: argparse.Namespace) -> str:
     """
     Return the name of the command being executed
     (scriptname + operation).
@@ -296,7 +355,7 @@ def cmd_name(args):
     return "macsydata {}".format(func_name)
 
 
-def main(args=None, loglevel=None):
+def main(args=None, loglevel=None) -> None:
     """
     Main entry point.
 
