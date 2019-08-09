@@ -21,6 +21,7 @@ from typing import List, Dict, Any
 
 import colorlog
 _log = colorlog.getLogger('macsypy')
+from packaging import requirements
 
 import macsypy
 from macsypy.package import RemoteModelIndex
@@ -52,7 +53,21 @@ def do_download(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    raise Exception('Not implemented')
+    remote = RemoteModelIndex(org=args.org)
+    req = requirements.Requirement(args.package)
+    pack_name = req.name
+    specifier = req.specifier
+    all_versions = remote.list_package_vers(pack_name)
+    if all_versions:
+        compatible_version = list(specifier.filter(all_versions))
+        if compatible_version:
+            vers = compatible_version[0]
+            print(f"Downloading {pack_name} {vers}")
+            arch_path = remote.download(pack_name, vers, dest=args.dest)
+            print(f"Successfully downloaded packaging {pack_name} in {arch_path}")
+        else:
+            raise ValueError(f"No version that satisfy requirements '{specifier}' for '{pack_name}'. "
+                             f"Available versions: {','.join(all_versions)}")
 
 
 def do_install(args: argparse.Namespace) -> None:
@@ -244,7 +259,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     available_subparser.add_argument('--org',
                                      default="macsy-models",
                                      help="The name of Model orgagnization"
-                                          "(default macsy-models))"
+                                          "(default 'macsy-models'))"
                                      )
     available_subparser.set_defaults(func=do_available)
 
@@ -254,9 +269,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     download_subparser.set_defaults(func=do_download)
     download_subparser.add_argument('-d', '--dest',
                                     help='Download packages into <dir>.')
-    download_subparser.add_argument('-i', '--index-url',
-                                    help='Base URL of macsyfinder package index '
-                                         '(default https://github.com/gem/macsyfinder).')
+    download_subparser.add_argument('--org',
+                                    default="macsy-models",
+                                    help="The name of Model orgagnization"
+                                         "(default 'macsy-models'))"
+                                    )
     download_subparser.add_argument('package', help='Package name.')
 
     install_subparser = subparsers.add_parser('install', help='Install packages.')

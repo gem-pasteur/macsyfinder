@@ -138,22 +138,28 @@ class RemoteModelIndex:
         return [v['name'] for v in tags]
 
 
-    def download(self, pack_name: str, vers: str) -> str:
+    def download(self, pack_name: str, vers: str, dest: str = None) -> str:
         """
         Download a package from a github repos and save it as
         <remote cache>/<organization name>/<package name>/<vers>.tar.gz
 
         :param str pack_name: the name of the package to download
         :param str vers: the version of the package to download
+        :param str dest: The path to the directory where save the package
+                         This directory must exists
+                         If dest is None, the macsyfinder cache will be used
         :return: The package archive path.
         """
         url = f"{self.base_url}/repos/{self.org_name}/{pack_name}/tarball/{vers}"
-        package_cache = os.path.join(self.cache, self.org_name)
-        if os.path.exists(self.cache) and not os.path.isdir(self.cache):
-            raise NotADirectoryError(f"The tmp cache '{self.cache}' already exists")
-        elif not os.path.exists(package_cache):
-            os.makedirs(package_cache)
-        tmp_archive_path = os.path.join(package_cache, f"{pack_name}-{vers}.tar.gz")
+        if not dest:
+            package_cache = os.path.join(self.cache, self.org_name)
+            if os.path.exists(self.cache) and not os.path.isdir(self.cache):
+                raise NotADirectoryError(f"The tmp cache '{self.cache}' already exists")
+            elif not os.path.exists(package_cache):
+                os.makedirs(package_cache)
+            tmp_archive_path = os.path.join(package_cache, f"{pack_name}-{vers}.tar.gz")
+        else:
+            tmp_archive_path = os.path.join(dest, f"{pack_name}-{vers}.tar.gz")
         try:
             with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
