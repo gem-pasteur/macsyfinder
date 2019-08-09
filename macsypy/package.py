@@ -20,7 +20,6 @@ import yaml
 import shutil
 import tarfile
 import glob
-import sys
 from typing import List, Dict, Any
 
 import logging
@@ -77,7 +76,7 @@ class RemoteModelIndex:
             else:
                 raise err from None
 
-    def get_metadata(self, pack_name: str, vers: str='latest') -> Dict:
+    def get_metadata(self, pack_name: str, vers: str = 'latest') -> Dict:
         """
         Fetch the metadata from a remote package
 
@@ -120,7 +119,7 @@ class RemoteModelIndex:
         return [p['name'] for p in packages]
 
 
-    def list_package_vers(self, pack_name: str) -> List:
+    def list_package_vers(self, pack_name: str) -> List[str]:
         """
         List all available versions from github model repos for a given package
 
