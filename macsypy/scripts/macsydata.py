@@ -17,7 +17,7 @@ import os
 import argparse
 import logging
 from textwrap import dedent
-from typing import List, Dict, Any
+from typing import List
 
 import colorlog
 _log = colorlog.getLogger('macsypy')
@@ -27,6 +27,10 @@ import macsypy
 from macsypy.package import RemoteModelIndex
 from macsypy.config import MacsyDefaults, Config
 
+
+##################
+# Remote actions #
+##################
 
 def do_available(args: argparse.Namespace) -> None:
     """
@@ -43,53 +47,6 @@ def do_available(args: argparse.Namespace) -> None:
             metadata = remote.get_metadata(pack, vers=last_vers)
             pack_vers = f"{pack} ({last_vers})"
             print(f"{pack_vers:26.25} - {metadata['short_desc']}")
-
-
-def do_download(args: argparse.Namespace) -> None:
-    """
-    Download tarball from remote models repository.
-
-    :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
-    """
-    remote = RemoteModelIndex(org=args.org)
-    req = requirements.Requirement(args.package)
-    pack_name = req.name
-    specifier = req.specifier
-    all_versions = remote.list_package_vers(pack_name)
-    if all_versions:
-        compatible_version = list(specifier.filter(all_versions))
-        if compatible_version:
-            vers = compatible_version[0]
-            print(f"Downloading {pack_name} {vers}")
-            arch_path = remote.download(pack_name, vers, dest=args.dest)
-            print(f"Successfully downloaded packaging {pack_name} in {arch_path}")
-        else:
-            raise ValueError(f"No version that satisfy requirements '{specifier}' for '{pack_name}'. "
-                             f"Available versions: {','.join(all_versions)}")
-
-
-def do_install(args: argparse.Namespace) -> None:
-    """
-    Install new models in macsyfinder local models repository.
-
-    :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
-    """
-    raise Exception('Not implemented')
-
-
-def do_uninstall(args: argparse.Namespace) -> None:
-    """
-    Remove models from macsyfinder local models repository.
-
-    :param args: the arguments passed on the command line
-    :type args: :class:`argparse.Namespace` object
-    :rtype: None
-    """
-    raise Exception('Not implemented')
 
 
 def do_search(args: argparse.Namespace) -> None:
@@ -161,6 +118,78 @@ def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str],
     return results
 
 
+def do_download(args: argparse.Namespace) -> str:
+    """
+    Download tarball from remote models repository.
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    remote = RemoteModelIndex(org=args.org)
+    req = requirements.Requirement(args.package)
+    pack_name = req.name
+    specifier = req.specifier
+    all_versions = remote.list_package_vers(pack_name)
+    if all_versions:
+        compatible_version = list(specifier.filter(all_versions))
+        if compatible_version:
+            vers = compatible_version[0]
+            print(f"Downloading {pack_name} {vers}")
+            arch_path = remote.download(pack_name, vers, dest=args.dest)
+            print(f"Successfully downloaded packaging {pack_name} in {arch_path}")
+            return arch_path
+        else:
+            raise ValueError(f"No version that satisfy requirements '{specifier}' for '{pack_name}'. "
+                             f"Available versions: {','.join(all_versions)}")
+
+
+
+def do_install(args: argparse.Namespace) -> None:
+    """
+    Install new models in macsyfinder local models repository.
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    # regarder si le package est deja installé
+    # scan_models_dir avec plusieurs dir
+    #     config.models_dir system_wide (soit /usr/share, soit virtualenv soit --data-dir)
+    #     .~/.macsyfinder/data
+    # si oui quelle version
+    #   demander de faire upgrade
+    # si non
+    #   si package remote
+    #      download du package
+    #
+    #   desarchiver le package dans le cache
+    #   rename du package installe .old
+    #   determiner la destination du package
+    #      system wide se baser le Config.models_dir()
+    #      --user ~/.macsyfinder/data
+    #      virtualenv gerer par config non?
+    #   mv du nouveau package a la bonne place
+    #   rm du package .old
+    raise Exception('Not implemented')
+
+
+#################
+# Local actions #
+#################
+
+
+def do_uninstall(args: argparse.Namespace) -> None:
+    """
+    Remove models from macsyfinder local models repository.
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    raise Exception('Not implemented')
+
+
 def do_show(args: argparse.Namespace) -> None:
     """
     Show information about installed model.
@@ -204,8 +233,12 @@ def do_check(args: argparse.Namespace) -> None:
 
     # si aucune erreur
     # print de la demarche a suivre
-    # git tag vers
+    # git tag vers (prendre la version dans les metadata)
     # git push --tags remote
+
+##################################
+# parsing command line arguments #
+##################################
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
