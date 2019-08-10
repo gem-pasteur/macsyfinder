@@ -30,7 +30,7 @@ import macsypy
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
+class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
@@ -47,8 +47,6 @@ class Test(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         cmd_args.list_models = True
-        config = Config(MacsyDefaults(),
-                        cmd_args)
         registry = ModelRegistry()
         models_location = scan_models_dir(cmd_args.models_dir)
         for ml in models_location:
