@@ -26,7 +26,7 @@ _log = colorlog.getLogger('macsypy')
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
-from macsypy.registries import ModelRegistry
+from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
@@ -64,7 +64,12 @@ def list_models(args):
     :rtype: str
     """
     config = Config(MacsyDefaults(), args)
-    registry = ModelRegistry(config)
+    registry = ModelRegistry()
+    models_loc_available = scan_models_dir(config.models_dir(),
+                                           profile_suffix=config.profile_suffix(),
+                                           relative_path=config.relative_path())
+    for model_loc in models_loc_available:
+        registry.add(model_loc)
     return str(registry)
 
 
@@ -330,7 +335,12 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
-    registry = ModelRegistry(config)
+    registry = ModelRegistry()
+    models_loc_available = scan_models_dir(config.models_dir(),
+                                       profile_suffix=config.profile_suffix(),
+                                       relative_path=config.relative_path())
+    for model_loc in models_loc_available:
+        registry.add(model_loc)
     # build indexes
     idx = Indexes(config)
     idx.build(force=config.idx)
