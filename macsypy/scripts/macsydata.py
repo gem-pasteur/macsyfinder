@@ -16,16 +16,20 @@ import sys
 import os
 import argparse
 import logging
+import shutil
 from textwrap import dedent
 from typing import List
+import pathlib
 
 import colorlog
 _log = colorlog.getLogger('macsypy')
 from packaging import requirements
+from packaging import specifiers
 
 import macsypy
-from macsypy.package import RemoteModelIndex
 from macsypy.config import MacsyDefaults, Config
+from macsypy.registries import ModelRegistry , scan_models_dir
+from macsypy.package import RemoteModelIndex, Package
 
 
 ##################
@@ -144,6 +148,21 @@ def do_download(args: argparse.Namespace) -> str:
                              f"Available versions: {','.join(all_versions)}")
 
 
+def _find_local_package(pack_name):
+    defaults = MacsyDefaults()
+    config = Config(defaults, argparse.Namespace())
+    system_model_dir = config.models_dir()
+    user_model_dir = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
+    model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
+    registry = ModelRegistry()
+    for model_dir in model_dirs:
+        for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+            registry.add(model_loc)
+    try:
+        return registry[pack_name]
+    except KeyError:
+        return None
+
 
 def do_install(args: argparse.Namespace) -> None:
     """
@@ -153,25 +172,63 @@ def do_install(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    # regarder si le package est deja installé
-    # scan_models_dir avec plusieurs dir
-    #     config.models_dir system_wide (soit /usr/share, soit virtualenv soit --data-dir)
-    #     .~/.macsyfinder/data
-    # si oui quelle version
-    #   demander de faire upgrade
-    # si non
-    #   si package remote
-    #      download du package
-    #
-    #   desarchiver le package dans le cache
-    #   rename du package installe .old
-    #   determiner la destination du package
-    #      system wide se baser le Config.models_dir()
-    #      --user ~/.macsyfinder/data
-    #      virtualenv gerer par config non?
-    #   mv du nouveau package a la bonne place
-    #   rm du package .old
-    raise Exception('Not implemented')
+    req = requirements.Requirement(args.package)
+    pack_name = req.name
+    specifier = req.specifier
+    local_pack = _find_local_package(pack_name)
+
+    if local_pack:
+        pack = Package(local_pack.path, check=False)
+        local_vers = pack.metadata['vers']
+
+    remote = RemoteModelIndex(org=args.org)
+    all_versions = remote.list_package_vers(pack_name)
+    if not specifier and local_pack:
+        specifier = specifiers.SpecifierSet(f">{local_vers}")
+    compatible_version = list(specifier.filter(all_versions))
+    if local_pack and compatible_version and not args.upgrade:
+        print(f"{pack_name} is already installed but {compatible_version[0]} is available.\n"
+              f"To install it please run 'macsydata install --upgrade {pack_name}'")
+        return None
+    elif local_pack and not compatible_version:
+        if args.force:
+            print("#### ", args.force)
+            if local_vers in all_versions:
+                target_vers = local_vers
+            elif all_versions:
+                target_vers = all_versions[0]
+            else:
+                print(f"Cannot find version for models '{pack_name}'.")
+                return None
+        else:
+            print(f"Requirement already satisfied: {pack_name}{specifier} in {pack.path}.\n"
+                  f"To force installation use option -f --force-reinstall.")
+            return None
+    elif not local_pack and not compatible_version:
+        raise RuntimeError(f"Could not find version that satisfied '{pack_name}{specifier}'")
+    else:
+        target_vers = compatible_version[0]
+
+    print(f"Downloading {pack_name} ({target_vers}).")
+    tmp_arch = remote.download(pack_name, target_vers)
+    print(f"Extracting {pack_name} ({target_vers}).")
+    cached_pack = remote.unarchive_package(tmp_arch)
+    if args.user:
+        dest = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
+    else:
+        defaults = MacsyDefaults()
+        config = Config(defaults, argparse.Namespace())
+        dest = config.models_dir()
+    if local_pack:
+        old_pack_path = f"{local_pack.path}.old"
+        shutil.move(local_pack.path, old_pack_path)
+    print(f"Installing {pack_name} ({target_vers}) in {dest}")
+    shutil.move(cached_pack, dest)
+    if local_pack:
+        print("Cleaning.")
+        shutil.rmtree(old_pack_path)
+        shutil.rmtree(pathlib.Path(cached_pack).parent)
+    print(f"The models {pack_name} ({target_vers}) have been installed successfully.")
 
 
 #################
@@ -187,10 +244,18 @@ def do_uninstall(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    raise Exception('Not implemented')
+    pack_name = args.package
+    local_pack = _find_local_package(pack_name)
+
+    if local_pack:
+        pack = Package(local_pack.path, check=False)
+        shutil.rmtree(pack.path)
+        print(f"models '{pack_name}' in {pack.path} uninstalled.")
+    else:
+        print(f"Models '{pack_name}' not found locally.")
 
 
-def do_show(args: argparse.Namespace) -> None:
+def do_info(args: argparse.Namespace) -> None:
     """
     Show information about installed model.
 
@@ -198,7 +263,14 @@ def do_show(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    raise Exception('Not implemented')
+    pack_name = args.package
+    local_pack = _find_local_package(pack_name)
+
+    if local_pack:
+        pack = Package(local_pack.path, check=False)
+        print(pack.info())
+    else:
+        print(f"Models '{pack_name}' not found locally.")
 
 
 def do_list(args: argparse.Namespace) -> None:
@@ -220,7 +292,27 @@ def do_cite(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    raise Exception('Not implemented')
+    pack_name = args.package
+    local_pack = _find_local_package(pack_name)
+    if local_pack:
+        pack = Package(local_pack.path, check=False)
+        pack_citations = pack.metadata['cite']
+        pack_citations = [cite.replace('\n', '\n  ') for cite in pack_citations]
+        pack_citations = '\n- '.join(pack_citations)
+        pack_citations = '_ ' + pack_citations
+        macsy_cite = macsypy.__citation__
+        macsy_cite = macsy_cite.replace('\n', '\n  ')
+        macsy_cite = '- ' + macsy_cite
+        print(f"""To cite {pack_name}:
+
+{pack_citations}
+
+To cite MacSyFinder:
+
+{macsy_cite}
+""")
+    else:
+        print(f"Models '{pack_name}' not found locally.")
 
 
 def do_check(args: argparse.Namespace) -> None:
@@ -233,7 +325,7 @@ def do_check(args: argparse.Namespace) -> None:
 
     # si aucune erreur
     # print de la demarche a suivre
-    # git tag vers (prendre la version dans les metadata)
+    # git tag vers (prendre la version dans les metadata_path)
     # git push --tags remote
 
 ##################################
@@ -308,33 +400,43 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                          "(default 'macsy-models'))"
                                     )
     download_subparser.add_argument('package', help='Package name.')
-
+    ###########
+    # Install #
+    ###########
     install_subparser = subparsers.add_parser('install', help='Install packages.')
     install_subparser.set_defaults(func=do_install)
     install_subparser.add_argument('-f', '--force-reinstall',
                                    help='Reinstall package even if it is already up-to-date.')
-    install_subparser.add_argument('-i', '--index-url',
-                                   help='')
+    install_subparser.add_argument('--org',
+                                   default="macsy-models",
+                                   help="The name of Model orgagnization"
+                                        "(default 'macsy-models'))"
+                                   )
     install_subparser.add_argument('-I', '--ignore-installed',
+                                   action='store_true',
+                                   default=False,
+                                   dest='force',
                                    help='Ignore the installed packages (reinstalling instead).')
-    install_subparser.add_argument('-t', '--target',
-                                   help='Install packages into <dir>.')
     install_subparser.add_argument('-u', '--user',
-                                   help='Install to the Python user install directory for your platform. '
-                                        'Typically ~/.local/.')
+                                   help='Install to the MacSYFinder user install directory for your platform. '
+                                        'Typically ~/.macsyfinder/data')
     install_subparser.add_argument('-U', '--upgrade',
+                                   action='store_true',
+                                   default=False,
                                    help='Upgrade specified package to the newest available version.')
     install_subparser.add_argument('package',
                                    help='Package name.')
-
+    #############
+    # Uninstall #
+    #############
     uninstall_subparser = subparsers.add_parser('uninstall',
                                                 help='Uninstall packages.')
     uninstall_subparser.set_defaults(func=do_uninstall)
-    uninstall_subparser.add_argument('-y', '--yes',
-                                     help="Don't ask for confirmation of uninstall deletions.")
     uninstall_subparser.add_argument('package',
                                      help='Package name.')
-
+    ##########
+    # search #
+    ##########
     search_subparser = subparsers.add_parser('search',
                                              help='Discover new packages.')
     search_subparser.set_defaults(func=do_search)
@@ -353,17 +455,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                   help='')
     search_subparser.add_argument('pattern',
                                   help='Searches for packages matching the pattern.')
-
-    show_subparser = subparsers.add_parser('show',
+    ########
+    # info #
+    ########
+    info_subparser = subparsers.add_parser('info',
                                            help='Show information about packages.')
-    show_subparser.set_defaults(func=do_show)
-    show_subparser.add_argument('-f', '--files',
-                                help='Show the full list of installed files for each package.')
-    show_subparser.add_argument('-i', '--index-url',
-                                help='')
-    show_subparser.add_argument('package',
+    info_subparser.add_argument('package',
                                 help='Package name.')
-
+    info_subparser.set_defaults(func=do_info)
+    ########
+    # list #
+    ########
     list_subparser = subparsers.add_parser('list',
                                            help='List installed packages.')
     list_subparser.set_defaults(func=do_list)
@@ -371,13 +473,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                 help='List outdated packages.')
     list_subparser.add_argument('-u', '--uptodate',
                                 help='List uptodate packages')
-
+    ########
+    # cite #
+    ########
     cite_subparser = subparsers.add_parser('cite',
                                            help='How to cite a package.')
     cite_subparser.set_defaults(func=do_cite)
     cite_subparser.add_argument('package',
                                 help='Package name.')
-
+    #########
+    # check #
+    #########
     check_subparser = subparsers.add_parser('check',
                                             help='check if the directory is ready to be publish as data package')
     check_subparser.set_defaults(func=do_check)
