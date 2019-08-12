@@ -19,7 +19,10 @@ __version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
 __MACSY_CONF__ = '$MACSYCONF'
 __MACSY_DATA__ = '$MACSYDATA'
 
-
+__citation__ = """Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
+MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726
+"""
 def init_logger(log_file=None, out=True):
     """
 
