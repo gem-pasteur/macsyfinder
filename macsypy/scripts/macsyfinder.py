@@ -43,16 +43,15 @@ def get_version_message():
     :rtype: str
     """
     version = macsypy.__version__
-    vers_msg = """Macsyfinder {0}
-Python {1}
+    vers_msg = f"""Macsyfinder {version}
+Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
 See the COPYING file for details.
 
 If you use this software please cite:
-Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
-MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
-PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726""".format(version, sys.version)
+{macsypy.__citation__}
+"""
     return vers_msg
 
 
