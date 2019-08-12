@@ -368,9 +368,9 @@ class Package:
             metadata['licence'] = "No licence available"
         copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
         pack_name = self.name
-        cite = '\n'.join([f"\t- {c}" for c in metadata['cite']])
+        cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']])
         info = f"""
-{pack_name} {metadata['vers']}
+{pack_name} ({metadata['vers']})
 
 author: {metadata['author']['name']} <{metadata['author']['email']}>
 
