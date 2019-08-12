@@ -7,7 +7,7 @@
 .DS_Store
 
 ####################
-# Eclipse metadata #
+# Eclipse metadata_path #
 ####################
 \.project
 \.pydevproject
