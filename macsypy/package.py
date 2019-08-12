@@ -385,16 +385,3 @@ This data are released under {metadata['licence']}
 {copyrights}
 """
         return info
-
-
-    def move(self, dest: str) -> None:
-        """
-        Move package from to new location *dest*
-        If the destination is an existing directory,
-        then the package is moved inside that directory.
-
-        :param dest:
-                    - if dest exists and is a dir, move the package to this new location
-                    - if dest does not exists rename
-        """
-        pass
