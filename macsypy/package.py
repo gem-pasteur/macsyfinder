@@ -20,6 +20,7 @@ import yaml
 import shutil
 import tarfile
 import glob
+import copy
 from typing import List, Dict, Any
 
 import logging
@@ -78,12 +79,12 @@ class RemoteModelIndex:
 
     def get_metadata(self, pack_name: str, vers: str = 'latest') -> Dict:
         """
-        Fetch the metadata from a remote package
+        Fetch the metadata_path from a remote package
 
         :param str pack_name: The package name
         :param str vers: The package version
-        :return: the metadata corresponding to this package/version
-        :rtype: dictionary corresponding of the yaml parsing of the metadata file.
+        :return: the metadata_path corresponding to this package/version
+        :rtype: dictionary corresponding of the yaml parsing of the metadata_path file.
         """
         versions = self.list_package_vers(pack_name)
         if not versions:
@@ -201,16 +202,18 @@ class RemoteModelIndex:
 
 class Package:
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, check: bool = True):
         """
 
         :param str path: The of the package root directory
         """
         self.path = os.path.realpath(path)
-        self.metadata = os.path.join(self.path, 'metadata.yml')
+        self.metadata_path = os.path.join(self.path, 'metadata.yml')
+        self._metadata = None
         self.name = os.path.basename(self.path)
         self.readme = self._find_readme()
-        self.check()
+        if check:
+            self.check()
 
 
     def _find_readme(self) -> Any:
@@ -225,13 +228,20 @@ class Package:
                 return path
         return None
 
+    @property
+    def metadata(self) -> Dict:
+        if not self._metadata:
+            self._metadata = self._load_metadata()
+        # to avoid side effect
+        return copy.deepcopy(self._metadata)
+
 
     def _load_metadata(self) -> Dict:
         """
-        Open the metadata file and de-serialize it's content
+        Open the metadata_path file and de-serialize it's content
         :return:
         """
-        with open(self.metadata) as raw_metadata:
+        with open(self.metadata_path) as raw_metadata:
             metadata = yaml.safe_load(raw_metadata)
         return metadata
 
@@ -283,7 +293,8 @@ class Package:
             elif not os.path.isdir(os.path.join(self.path, 'profiles')):
                 errors.append(f"'{os.path.join(self.path, 'profiles')}' is not a directory.")
             elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
-                warnings.append(f"The package '{self.name}' have not any LICENCE file. May be you have not right to use it.")
+                warnings.append(f"The package '{self.name}' have not any LICENCE file. "
+                                f"May be you have not right to use it.")
             elif not self.readme:
                 warnings.append(f"The package '{self.name}' have not any README file.")
         return errors, warnings
@@ -308,12 +319,12 @@ class Package:
 
     def _check_metadata(self) -> List[str]:
         """
-        Check the QA of package metadata
+        Check the QA of package metadata_path
 
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}' metadata")
+        _log.info(f"Checking '{self.name}' metadata_path")
         errors = []
         warnings = []
         data = self._load_metadata()
@@ -321,14 +332,14 @@ class Package:
         nice_to_have = ("cite", "doc", "licence", "copyright")
         for item in must_have:
             if item not in data:
-                errors.append(f"field '{item}' is mandatory in metadata.")
+                errors.append(f"field '{item}' is mandatory in metadata_path.")
         for item in nice_to_have:
             if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in metadata file")
+                warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
         if "author" in data:
             for item in ("name", "email"):
                 if item not in data["author"]:
-                    errors.append(f"field 'author.{item}' is mandatory in metadata.")
+                    errors.append(f"field 'author.{item}' is mandatory in metadata_path.")
         return errors, warnings
 
 

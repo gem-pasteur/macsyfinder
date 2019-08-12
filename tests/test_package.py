@@ -379,15 +379,16 @@ class TestPackage(MacsyTest):
 
     def test_init(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path)
+        pack = package.Package(fake_pack_path, check=False)
         self.assertEqual(pack.path, fake_pack_path)
         self.assertEqual(pack.readme, os.path.join(fake_pack_path, 'README'))
         self.assertEqual(pack.name, 'fake_model')
-        self.assertEqual(pack.metadata, os.path.join(fake_pack_path, 'metadata.yml'))
+        self.assertEqual(pack.metadata_path, os.path.join(fake_pack_path, 'metadata.yml'))
+
 
     def test_find_readme(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path)
+        pack = package.Package(fake_pack_path, check=False)
         for ext in ('', '.rst', '.md'):
             readme_path = os.path.join(pack.path, 'README' + ext)
             os.rename(pack.readme, readme_path)
@@ -400,27 +401,16 @@ class TestPackage(MacsyTest):
 
     def test_check_structure(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
-
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
         self.assertListEqual(errors, [])
         self.assertListEqual(warnings, [])
 
 
     def test_check_structure_bad_path(self):
-        check = package.Package.check
-        foobar = os.path.join(self.tmpdir,"foobar")
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(foobar)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        foobar = os.path.join(self.tmpdir, "foobar")
+        pack = package.Package(foobar, check=False)
+        errors, warnings = pack._check_structure()
         self.assertListEqual(errors, ["The package 'foobar' does not exists."])
         self.assertListEqual(warnings, [])
 
@@ -432,13 +422,8 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_def(self):
         fake_pack_path = self.create_fake_package('fake_model', xml=False)
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'definitions' directory."])
         self.assertListEqual(warnings, [])
@@ -451,13 +436,8 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_profiles(self):
         fake_pack_path = self.create_fake_package('fake_model', hmm=False)
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'profiles' directory."])
         self.assertListEqual(warnings, [])
@@ -470,13 +450,8 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model', metadata=False)
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'metadata.yml'."])
         self.assertListEqual(warnings, [])
@@ -484,13 +459,8 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_readme(self):
         fake_pack_path = self.create_fake_package('fake_model', readme=False)
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
         self.assertEqual(warnings, ["The package 'fake_model' have not any README file."])
@@ -498,13 +468,8 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_licence(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        check = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_structure()
-        finally:
-            package.Package.check = check
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
         self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
@@ -513,13 +478,8 @@ class TestPackage(MacsyTest):
 
     def test_check_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        check_meth = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-            errors, warnings = pack._check_metadata()
-        finally:
-            package.Package.check = check_meth
+        pack = package.Package(fake_pack_path, check=False)
+        errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
 
@@ -544,13 +504,11 @@ ligne3 et bbbbb"""],
         del no_auth_meta_data['author']
         try:
             package.Package._load_metadata = lambda x: no_auth_meta_data
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
-        self.assertEqual(errors, ["field 'author' is mandatory in metadata."])
+        self.assertEqual(errors, ["field 'author' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
         #################
@@ -560,13 +518,11 @@ ligne3 et bbbbb"""],
         del no_short_desc_metadata['short_desc']
         try:
             package.Package._load_metadata = lambda x: no_short_desc_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
-        self.assertEqual(errors, ["field 'short_desc' is mandatory in metadata."])
+        self.assertEqual(errors, ["field 'short_desc' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -576,13 +532,11 @@ ligne3 et bbbbb"""],
         del no_vers_metadata['vers']
         try:
             package.Package._load_metadata = lambda x: no_vers_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
-        self.assertEqual(errors, ["field 'vers' is mandatory in metadata."])
+        self.assertEqual(errors, ["field 'vers' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -592,14 +546,12 @@ ligne3 et bbbbb"""],
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'cite' is setup in metadata file"])
+        self.assertEqual(warnings, ["It's better if the field 'cite' is setup in metadata_path file"])
 
         ##########
         # No doc #
@@ -608,14 +560,12 @@ ligne3 et bbbbb"""],
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata file"])
+        self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata_path file"])
 
         ##############
         # No licence #
@@ -624,14 +574,12 @@ ligne3 et bbbbb"""],
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'licence' is setup in metadata file"])
+        self.assertEqual(warnings, ["It's better if the field 'licence' is setup in metadata_path file"])
 
         ################
         # No copyright #
@@ -640,14 +588,12 @@ ligne3 et bbbbb"""],
         del no_copyright_metadata['copyright']
         try:
             package.Package._load_metadata = lambda x: no_copyright_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata file"])
+        self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata_path file"])
 
         ##################
         # No author name #
@@ -661,13 +607,11 @@ ligne3 et bbbbb"""],
         del no_auth_name_meta_data['author']['name']
         try:
             package.Package._load_metadata = lambda x: no_auth_name_meta_data
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
-        self.assertEqual(errors, ["field 'author.name' is mandatory in metadata."])
+        self.assertEqual(errors, ["field 'author.name' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
 
@@ -691,34 +635,20 @@ ligne3 et bbbbb"""],
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        check_meth = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-        finally:
-            package.Package.check = check_meth
+        pack = package.Package(fake_pack_path, check=False)
 
         recieve_help = pack.help()
         self.assertEqual(recieve_help, "# This a README\n")
 
         os.unlink(os.path.join(fake_pack_path, 'README'))
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-        finally:
-            package.Package.check = check_meth
+        pack = package.Package(fake_pack_path, check=False)
         recieve_help = pack.help()
         self.assertEqual(recieve_help, "No help available for package 'fake_model'.")
 
 
     def test_info(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        check_meth = package.Package.check
-        try:
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
-        finally:
-            package.Package.check = check_meth
+        pack = package.Package(fake_pack_path, check=False)
 
         info = pack.info()
         expected_info = """
@@ -764,12 +694,10 @@ ligne 3 et bbbbb
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         expected_info = """
 fake_model 0.0b2
 
@@ -795,12 +723,10 @@ copyright: 2019, Institut Pasteur, CNRS
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         expected_info = """
 fake_model 0.0b2
 
@@ -830,12 +756,10 @@ copyright: 2019, Institut Pasteur, CNRS
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
-            package.Package.check = lambda x: None
-            pack = package.Package(fake_pack_path)
+            pack = package.Package(fake_pack_path, check=False)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
-            package.Package.check = check_meth
         expected_info = """
 fake_model 0.0b2
 
