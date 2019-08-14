@@ -51,6 +51,8 @@ See the COPYING file for details.
 
 If you use this software please cite:
 {macsypy.__citation__}
+and don't forget to cite models used:
+macsydata cite <model>
 """
     return vers_msg
 
@@ -279,7 +281,7 @@ def parse_args(args):
                                       "(continue to log on macsyfinder.log)")
     general_options.add_argument("--version",
                                  action="version",
-                                 version=get_version_message()),
+                                 version=get_version_message())
     general_options.add_argument("-l", "--list-models",
                                  action="store_true",
                                  default=False,
