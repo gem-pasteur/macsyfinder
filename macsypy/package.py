@@ -31,6 +31,7 @@ from .registries import ModelLocation, ModelRegistry
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank, ProfileFactory
+from .error import MacsydataError
 
 
 class RemoteModelIndex:
@@ -44,7 +45,7 @@ class RemoteModelIndex:
         self.base_url = "https://api.github.com"
         self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
         if not self.remote_exists():
-            raise RuntimeError(f"the '{self.org_name}' organization does not exist.")
+            raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
 
     def _url_json(self, url: str) -> Dict:
@@ -88,7 +89,7 @@ class RemoteModelIndex:
         """
         versions = self.list_package_vers(pack_name)
         if not versions:
-            raise RuntimeError(f"No official version available for model '{pack_name}'")
+            raise MacsydataError(f"No official version available for model '{pack_name}'")
         elif vers == 'latest':
             vers == versions[0]
         else:
@@ -100,7 +101,7 @@ class RemoteModelIndex:
                 metadata = response.read().decode("utf-8")
         except urllib.error.HTTPError as err:
             if 400 < err.code < 500:
-                raise RuntimeError(f"cannot fetch '{metadata_url}' check '{pack_name}'")
+                raise MacsydataError(f"cannot fetch '{metadata_url}' check '{pack_name}'")
             elif err.code >= 500:
                 raise err from None
             else:
@@ -133,7 +134,7 @@ class RemoteModelIndex:
             tags = self._url_json(url)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
-                raise RuntimeError(f"package '{pack_name}' does not exists on repos '{self.org_name}'") from None
+                raise ValueError(f"package '{pack_name}' does not exists on repos '{self.org_name}'") from None
             else:
                 raise err from None
         return [v['name'] for v in tags]
@@ -166,7 +167,7 @@ class RemoteModelIndex:
                 shutil.copyfileobj(response, out_file)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
-                raise RuntimeError(f"package '{pack_name}-{vers}' does not exists on repos '{self.org_name}'") \
+                raise ValueError(f"package '{pack_name}-{vers}' does not exists on repos '{self.org_name}'") \
                     from None
             else:
                 raise err from None
@@ -190,9 +191,9 @@ class RemoteModelIndex:
         if len(src) == 1:
             src = src[0]
         elif len(src) > 1:
-            raise RuntimeError(f"Too many matching packages. May be you have to clean {dest_dir}")
+            raise MacsydataError(f"Too many matching packages. May be you have to clean {dest_dir}")
         else:
-            raise RuntimeError("An error occurred during archive extraction")
+            raise MacsydataError("An error occurred during archive extraction")
         dest = os.path.join(dest_dir, name)
         if os.path.exists(dest):
             shutil.rmtree(dest)
@@ -202,7 +203,7 @@ class RemoteModelIndex:
 
 class Package:
 
-    def __init__(self, path: str, check: bool = True):
+    def __init__(self, path: str):
         """
 
         :param str path: The of the package root directory
@@ -212,8 +213,6 @@ class Package:
         self._metadata = None
         self.name = os.path.basename(self.path)
         self.readme = self._find_readme()
-        if check:
-            self.check()
 
 
     def _find_readme(self) -> Any:
@@ -246,25 +245,18 @@ class Package:
         return metadata
 
 
-    def check(self) -> None:
+
+    def check(self) -> List:
         """
         Check the QA of this package
         """
-        errors, warnings = self._check_structure()
-        meta_errors, meta_warnings = self._check_metadata()
-        errors.extend(meta_errors)
-        warnings.extend(meta_warnings)
-        if errors:
-            for error in errors:
-                _log.error(error)
-            raise RuntimeError("Please fix issues above, before publishing these models.")
-
-        self._check_model_consistency()
-
-        if warnings:
-            for warning in warnings:
-                _log.warning(warning)
-            warnings("It is better, if you fix warnings above, before to publish these models.")
+        all_warnings = []
+        all_errors = []
+        for meth in self._check_structure, self._check_metadata, self._check_model_consistency:
+            errors, warnings = meth()
+            all_errors.extend(errors)
+            all_warnings.extend(warnings)
+        return all_errors, all_warnings
 
 
     def _check_structure(self) -> List[str]:
@@ -281,10 +273,10 @@ class Package:
             errors.append(f"The package '{self.name}' does not exists.")
         elif not os.path.isdir(self.path):
             errors.append(f"'{self.name}' is not a directory ")
+        elif not os.path.exists(os.path.join(self.path, 'metadata.yml')):
+            errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
         if not errors:
-            if not os.path.exists(os.path.join(self.path, 'metadata.yml')):
-                errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
-            elif not os.path.exists(os.path.join(self.path, 'definitions')):
+            if not os.path.exists(os.path.join(self.path, 'definitions')):
                 errors.append(f"The package '{self.name}' have no 'definitions' directory.")
             elif not os.path.isdir(os.path.join(self.path, 'definitions')):
                 errors.append(f"'{os.path.join(self.path, 'definitions')}' is not a directory.")
@@ -315,6 +307,8 @@ class Package:
         parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
         parser.parse([def_loc.fqn for def_loc in all_def])
         _log.info("Definitions are consistent")
+        # to respect same api as _check_metadata and _check_structure
+        return [], []
 
 
     def _check_metadata(self) -> List[str]:

@@ -18,6 +18,10 @@ class MacsypyError(Exception):
     """
     pass
 
+class MacsydataError(MacsypyError):
+    """
+    Raised when error is encounter during model package handling
+    """
 
 class OptionError(MacsypyError):
     """
