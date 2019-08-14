@@ -63,6 +63,26 @@ def init_logger(level='INFO', out=True):
 
 _log = init_logger()
 
+
+def get_version_message():
+    """
+    :return: the long description of the macsyfinder version
+    :rtype: str
+    """
+    version = macsypy.__version__
+    vers_msg = f"""Macsydata {version}
+Python {sys.version}
+
+MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+See the COPYING file for details.
+
+If you use this software please cite:
+{macsypy.__citation__}
+and don't forget to cite models used:
+macsydata cite <model>
+"""
+    return vers_msg
+
 ##################
 # Remote actions #
 ##################
@@ -454,9 +474,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=dedent('''
 
-         *            *               *                   * *       * *      *        *     *
-    *           *               *   *   *  *    **                *   * *       *
-      **     *    *   *  *     *                    *               *       *
+         *            *               *                   * *       * 
+    *           *               *   *   *  *    **                *  
+      **     *    *   *  *     *                    *               *
         __  __  *         ____ *      ____    ** _  *
        |  \/  | __ _  ___/ ___| _   _|  _ | __ _| |_  __ _     *
        | |\/| |/ _` |/ __|___ \| | | | | ||/ _` |  _|/ _` |
@@ -473,21 +493,19 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     # -- general options -- #
 
-    parser.add_argument('-q', '--quiet',
-                        action='store_true',
-                        help='Give less output.')
     parser.add_argument("-v", "--verbose",
                         action="count",
                         default=0,
                         help="Give more output.")
-    parser.add_argument('-V', '--version',
-                        action='version',
-                        version='%(prog)s 0.1')
-
+    parser.add_argument("--version",
+                        action="version",
+                        version=get_version_message())
     # -- subparser options -- #
 
     subparsers = parser.add_subparsers(help=None)
-
+    #############
+    # available #
+    #############
     available_subparser = subparsers.add_parser('available',
                                                 help='List Models available on macsy-models')
     available_subparser.add_argument('--org',
