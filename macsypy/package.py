@@ -245,7 +245,6 @@ class Package:
         return metadata
 
 
-
     def check(self) -> List:
         """
         Check the QA of this package
