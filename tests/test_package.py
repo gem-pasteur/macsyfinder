@@ -24,6 +24,7 @@ import yaml
 from unittest.mock import patch
 
 from macsypy import package
+from macsypy.error import MacsydataError
 
 from tests import MacsyTest
 
@@ -170,7 +171,7 @@ class TestRemote(MacsyTest):
             package.RemoteModelIndex.remote_exists = lambda x: True
             package.RemoteModelIndex.list_package_vers = lambda x, pack_name: []
             remote = package.RemoteModelIndex(org="get_metadata")
-            with self.assertRaises(RuntimeError) as ctx:
+            with self.assertRaises(MacsydataError) as ctx:
                 remote.get_metadata(pack_name)
             self.assertEqual(str(ctx.exception),
                              "No official version available for model 'foo'")
@@ -218,7 +219,7 @@ class TestRemote(MacsyTest):
 
         self.assertListEqual(remote.list_package_vers('model_1'), ['v_1', 'v_2'])
 
-        with self.assertRaises(RuntimeError) as ctx:
+        with self.assertRaises(ValueError) as ctx:
             _ = remote.list_package_vers('model_2')
         self.assertEqual(str(ctx.exception), "package 'model_2' does not exists on repos 'list_package_vers'")
 
@@ -264,7 +265,7 @@ class TestRemote(MacsyTest):
             finally:
                 os.unlink(remote.cache)
 
-            with self.assertRaises(RuntimeError) as ctx:
+            with self.assertRaises(ValueError) as ctx:
                 _ = remote.download("bad_pack", "0.2")
             self.assertEqual(str(ctx.exception),
                              "package 'bad_pack-0.2' does not exists on repos 'package_download'")
@@ -313,7 +314,7 @@ class TestRemote(MacsyTest):
                                           f"{remote.org_name}-{pack_name}-e022222")
             os.mkdir(pack_collision)
             arch = create_pack(self.tmpdir, remote.org_name, pack_name, pack_vers, 'e0203333')
-            with self.assertRaises(RuntimeError) as ctx:
+            with self.assertRaises(MacsydataError) as ctx:
                 remote.unarchive_package(arch)
             self.assertEqual(str(ctx.exception),
                              f"Too many matching packages. May be you have to clean "
@@ -379,7 +380,7 @@ class TestPackage(MacsyTest):
 
     def test_init(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         self.assertEqual(pack.path, fake_pack_path)
         self.assertEqual(pack.readme, os.path.join(fake_pack_path, 'README'))
         self.assertEqual(pack.name, 'fake_model')
@@ -388,7 +389,7 @@ class TestPackage(MacsyTest):
 
     def test_find_readme(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         for ext in ('', '.rst', '.md'):
             readme_path = os.path.join(pack.path, 'README' + ext)
             os.rename(pack.readme, readme_path)
@@ -401,7 +402,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
         self.assertListEqual(errors, [])
         self.assertListEqual(warnings, [])
@@ -409,7 +410,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_bad_path(self):
         foobar = os.path.join(self.tmpdir, "foobar")
-        pack = package.Package(foobar, check=False)
+        pack = package.Package(foobar)
         errors, warnings = pack._check_structure()
         self.assertListEqual(errors, ["The package 'foobar' does not exists."])
         self.assertListEqual(warnings, [])
@@ -422,7 +423,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_def(self):
         fake_pack_path = self.create_fake_package('fake_model', xml=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'definitions' directory."])
@@ -436,7 +437,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_profiles(self):
         fake_pack_path = self.create_fake_package('fake_model', hmm=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'profiles' directory."])
@@ -450,7 +451,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model', metadata=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertListEqual(errors, ["The package 'fake_model' have no 'metadata.yml'."])
@@ -459,7 +460,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_readme(self):
         fake_pack_path = self.create_fake_package('fake_model', readme=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
@@ -468,7 +469,7 @@ class TestPackage(MacsyTest):
 
     def test_check_structure_no_licence(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
@@ -478,7 +479,7 @@ class TestPackage(MacsyTest):
 
     def test_check_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model')
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_metadata()
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
@@ -504,7 +505,7 @@ ligne3 et bbbbb"""],
         del no_auth_meta_data['author']
         try:
             package.Package._load_metadata = lambda x: no_auth_meta_data
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -518,7 +519,7 @@ ligne3 et bbbbb"""],
         del no_short_desc_metadata['short_desc']
         try:
             package.Package._load_metadata = lambda x: no_short_desc_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -532,7 +533,7 @@ ligne3 et bbbbb"""],
         del no_vers_metadata['vers']
         try:
             package.Package._load_metadata = lambda x: no_vers_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -546,7 +547,7 @@ ligne3 et bbbbb"""],
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -560,7 +561,7 @@ ligne3 et bbbbb"""],
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -574,7 +575,7 @@ ligne3 et bbbbb"""],
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -588,7 +589,7 @@ ligne3 et bbbbb"""],
         del no_copyright_metadata['copyright']
         try:
             package.Package._load_metadata = lambda x: no_copyright_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -607,7 +608,7 @@ ligne3 et bbbbb"""],
         del no_auth_name_meta_data['author']['name']
         try:
             package.Package._load_metadata = lambda x: no_auth_name_meta_data
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
@@ -619,40 +620,42 @@ ligne3 et bbbbb"""],
         fake_pack_path = self.create_fake_package('fake_model')
         load_metadata_meth = package.Package._load_metadata
         bad_meta_data = {"short_desc": "this is a short description of the repos",
-                          "doc": "http://link/to/the/documentation",
-                          "copyright": "2019, Institut Pasteur, CNRS"
-                          }
+                         "doc": "http://link/to/the/documentation",
+                         "copyright": "2019, Institut Pasteur, CNRS"
+                         }
         try:
             package.Package._load_metadata = lambda x: bad_meta_data
-            with self.assertRaises(RuntimeError) as ctx:
-                with self.catch_log() as log:
-                    package.Package(fake_pack_path)
-            self.assertEqual(str(ctx.exception),
-                             'Please fix issues above, before publishing these models.')
+            pack = package.Package(fake_pack_path)
+            errors, warnings = pack.check()
         finally:
             package.Package._load_metadata = load_metadata_meth
-
+        self.assertListEqual(errors,
+                             ["field 'author' is mandatory in metadata_path.",
+                              "field 'vers' is mandatory in metadata_path."])
+        self.assertListEqual(warnings,
+                             ["It's better if the field 'cite' is setup in metadata_path file",
+                              "It's better if the field 'licence' is setup in metadata_path file"])
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
 
-        recieve_help = pack.help()
-        self.assertEqual(recieve_help, "# This a README\n")
+        receive_help = pack.help()
+        self.assertEqual(receive_help, "# This a README\n")
 
         os.unlink(os.path.join(fake_pack_path, 'README'))
-        pack = package.Package(fake_pack_path, check=False)
-        recieve_help = pack.help()
-        self.assertEqual(recieve_help, "No help available for package 'fake_model'.")
+        pack = package.Package(fake_pack_path)
+        receive_help = pack.help()
+        self.assertEqual(receive_help, "No help available for package 'fake_model'.")
 
 
     def test_info(self):
         fake_pack_path = self.create_fake_package('fake_model', licence=False)
-        pack = package.Package(fake_pack_path, check=False)
+        pack = package.Package(fake_pack_path)
 
         info = pack.info()
         expected_info = """
-fake_model 0.0b2
+fake_model (0.0b2)
 
 author: auth_name <auth_name@mondomain.fr>
 
@@ -662,9 +665,9 @@ how to cite:
 \t- bla bla
 \t- link to publication
 \t- ligne 1
-ligne 2
-ligne 3 et bbbbb
-
+\t  ligne 2
+\t  ligne 3 et bbbbb
+\t  
 documentation
 \thttp://link/to/the/documentation
 
@@ -673,19 +676,19 @@ copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
         good_meta_data = {"author": {"name": "auth_name",
-                                 "email": "auth_name@mondomain.fr"},
-                      "short_desc": "this is a short description of the repos",
-                      "vers": "0.0b2",
-                      "cite": ["bla bla",
-                               "link to publication",
-                               """ligne 1
+                                     "email": "auth_name@mondomain.fr"},
+                          "short_desc": "this is a short description of the repos",
+                          "vers": "0.0b2",
+                          "cite": ["bla bla",
+                                   "link to publication",
+                                   """ligne 1
 ligne 2
 ligne 3 et bbbbb
 """],
-                      "doc": "http://link/to/the/documentation",
-                      "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
-                      "copyright": "2019, Institut Pasteur, CNRS"
-                      }
+                          "doc": "http://link/to/the/documentation",
+                          "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
+                          "copyright": "2019, Institut Pasteur, CNRS"
+                          }
         load_metadata_meth = package.Package._load_metadata
         ###########
         # No cite #
@@ -694,12 +697,12 @@ ligne 3 et bbbbb
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
         expected_info = """
-fake_model 0.0b2
+fake_model (0.0b2)
 
 author: auth_name <auth_name@mondomain.fr>
 
@@ -707,7 +710,7 @@ this is a short description of the repos
 
 how to cite:
 \t- No citation available
-
+\t  
 documentation
 \thttp://link/to/the/documentation
 
@@ -723,12 +726,12 @@ copyright: 2019, Institut Pasteur, CNRS
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
         expected_info = """
-fake_model 0.0b2
+fake_model (0.0b2)
 
 author: auth_name <auth_name@mondomain.fr>
 
@@ -738,9 +741,9 @@ how to cite:
 \t- bla bla
 \t- link to publication
 \t- ligne 1
-ligne 2
-ligne 3 et bbbbb
-
+\t  ligne 2
+\t  ligne 3 et bbbbb
+\t  
 documentation
 \tNo documentation available
 
@@ -756,12 +759,12 @@ copyright: 2019, Institut Pasteur, CNRS
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
-            pack = package.Package(fake_pack_path, check=False)
+            pack = package.Package(fake_pack_path)
             info = pack.info()
         finally:
             package.Package._load_metadata = load_metadata_meth
         expected_info = """
-fake_model 0.0b2
+fake_model (0.0b2)
 
 author: auth_name <auth_name@mondomain.fr>
 
@@ -771,9 +774,9 @@ how to cite:
 \t- bla bla
 \t- link to publication
 \t- ligne 1
-ligne 2
-ligne 3 et bbbbb
-
+\t  ligne 2
+\t  ligne 3 et bbbbb
+\t  
 documentation
 \thttp://link/to/the/documentation
 
