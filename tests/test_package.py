@@ -90,6 +90,7 @@ class TestRemote(MacsyTest):
         else:
             raise RuntimeError("test non prevu", url)
 
+
     def test_init(self):
         rem_exists = package.RemoteModelIndex.remote_exists
         package.RemoteModelIndex.remote_exists = lambda x: True
@@ -109,6 +110,14 @@ class TestRemote(MacsyTest):
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
         self.assertEqual(remote.org_name, 'foo')
+
+        package.RemoteModelIndex.remote_exists = lambda x: False
+        try:
+            with self.assertRaises(ValueError) as ctx:
+                package.RemoteModelIndex(org='foo')
+        finally:
+            package.RemoteModelIndex.remote_exists = rem_exists
+        self.assertEqual(str(ctx.exception), "the 'foo' organization does not exist.")
 
 
     @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
@@ -237,7 +246,7 @@ class TestRemote(MacsyTest):
             remote.cache = self.tmpdir
             pack_name = "fake"
             pack_vers = "1.0"
-            # ensure that remote cache does not exists
+            # ensure that remote.cache does not exists
             if os.path.exists(remote.cache):
                 if os.path.isdir(remote.cache):
                     shutil.rmtree(remote.cache)
@@ -249,10 +258,17 @@ class TestRemote(MacsyTest):
                              arch_path)
             self.assertFileEqual(arch_path, io.StringIO('fake data ' * 2))
 
-            # download again with existing remote cache and replace old archive
+            # download again with existing remote.cache and replace old archive
             os.unlink(arch_path)
             arch_path = remote.download(pack_name, pack_vers)
             self.assertFileEqual(arch_path, io.StringIO('fake data ' * 2))
+
+            # download again with existing remote.cache and replace old archive
+            os.unlink(arch_path)
+            dest = os.path.join(self.tmpdir, 'dest')
+            os.makedirs(dest)
+            arch_path = remote.download(pack_name, pack_vers, dest=dest)
+            self.assertEqual(os.path.join(dest, f'{pack_name}-{pack_vers}.tar.gz'), arch_path)
 
             # remote cache exist and is a file
             shutil.rmtree(remote.cache)
@@ -331,6 +347,22 @@ class TestPackage(MacsyTest):
             shutil.rmtree(self.tmpdir)
         os.makedirs(self.tmpdir)
 
+        self.metadata = {"author": {"name": "auth_name",
+                                    "email": "auth_name@mondomain.fr"},
+                         "short_desc": "this is a short description of the repos",
+                         "vers": "0.0b2",
+                         "cite": ["bla bla",
+                                  "link to publication",
+                                  """ligne 1
+ligne 2
+ligne 3 et bbbbb
+"""],
+                         "doc": "http://link/to/the/documentation",
+                         "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
+                         "copyright": "2019, Institut Pasteur, CNRS"
+                          }
+
+
     def tearDown(self) -> None:
         try:
             shutil.rmtree(self.tmpdir)
@@ -386,6 +418,12 @@ class TestPackage(MacsyTest):
         self.assertEqual(pack.name, 'fake_model')
         self.assertEqual(pack.metadata_path, os.path.join(fake_pack_path, 'metadata.yml'))
 
+
+    def test_metadata(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        self.assertDictEqual(pack.metadata, self.metadata)
+        self.assertDictEqual(pack.metadata, self.metadata)
 
     def test_find_readme(self):
         fake_pack_path = self.create_fake_package('fake_model')
@@ -485,23 +523,11 @@ class TestPackage(MacsyTest):
         self.assertEqual(warnings, [])
 
         load_metadata_meth = package.Package._load_metadata
-        good_meta_data = {"author": {"name": "auth_name",
-                                     "email": "auth_name@mondomain.fr"},
-                          "short_desc": "this is a short description of the repos",
-                          "vers": "0.0b2",
-                          "cite": ["bla bla",
-                                   "link to publication",
-                                   """ligne1
-ligne2
-ligne3 et bbbbb"""],
-                          "doc": "http://link/to/the/documentation",
-                          "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
-                          "copyright": "2019, Institut Pasteur, CNRS"
-                          }
+
         #############
         # No author #
         #############
-        no_auth_meta_data = good_meta_data.copy()
+        no_auth_meta_data = self.metadata.copy()
         del no_auth_meta_data['author']
         try:
             package.Package._load_metadata = lambda x: no_auth_meta_data
@@ -515,7 +541,7 @@ ligne3 et bbbbb"""],
         #################
         # No short desc #
         #################
-        no_short_desc_metadata = good_meta_data.copy()
+        no_short_desc_metadata = self.metadata.copy()
         del no_short_desc_metadata['short_desc']
         try:
             package.Package._load_metadata = lambda x: no_short_desc_metadata
@@ -529,7 +555,7 @@ ligne3 et bbbbb"""],
         ###########
         # No vers #
         ###########
-        no_vers_metadata = good_meta_data.copy()
+        no_vers_metadata = self.metadata.copy()
         del no_vers_metadata['vers']
         try:
             package.Package._load_metadata = lambda x: no_vers_metadata
@@ -543,7 +569,7 @@ ligne3 et bbbbb"""],
         ###########
         # No cite #
         ###########
-        no_cite_metadata = good_meta_data.copy()
+        no_cite_metadata = self.metadata.copy()
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
@@ -557,7 +583,7 @@ ligne3 et bbbbb"""],
         ##########
         # No doc #
         ##########
-        no_doc_metadata = good_meta_data.copy()
+        no_doc_metadata = self.metadata.copy()
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
@@ -571,7 +597,7 @@ ligne3 et bbbbb"""],
         ##############
         # No licence #
         ##############
-        no_licence_metadata = good_meta_data.copy()
+        no_licence_metadata = self.metadata.copy()
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
@@ -585,7 +611,7 @@ ligne3 et bbbbb"""],
         ################
         # No copyright #
         ################
-        no_copyright_metadata = good_meta_data.copy()
+        no_copyright_metadata = self.metadata.copy()
         del no_copyright_metadata['copyright']
         try:
             package.Package._load_metadata = lambda x: no_copyright_metadata
@@ -604,7 +630,7 @@ ligne3 et bbbbb"""],
         # the copy is a shallow copy
         # so author value is a reference to the good_metadata[author]
         # side effect
-        no_auth_name_meta_data = good_meta_data.copy()
+        no_auth_name_meta_data = self.metadata.copy()
         del no_auth_name_meta_data['author']['name']
         try:
             package.Package._load_metadata = lambda x: no_auth_name_meta_data
@@ -675,25 +701,12 @@ This data are released under CC BY-NC-SA 4.0 (https://creativecommons.org/licens
 copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
-        good_meta_data = {"author": {"name": "auth_name",
-                                     "email": "auth_name@mondomain.fr"},
-                          "short_desc": "this is a short description of the repos",
-                          "vers": "0.0b2",
-                          "cite": ["bla bla",
-                                   "link to publication",
-                                   """ligne 1
-ligne 2
-ligne 3 et bbbbb
-"""],
-                          "doc": "http://link/to/the/documentation",
-                          "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
-                          "copyright": "2019, Institut Pasteur, CNRS"
-                          }
+
         load_metadata_meth = package.Package._load_metadata
         ###########
         # No cite #
         ###########
-        no_cite_metadata = good_meta_data.copy()
+        no_cite_metadata = self.metadata.copy()
         del no_cite_metadata['cite']
         try:
             package.Package._load_metadata = lambda x: no_cite_metadata
@@ -722,7 +735,7 @@ copyright: 2019, Institut Pasteur, CNRS
         ##########
         # No doc #
         ##########
-        no_doc_metadata = good_meta_data.copy()
+        no_doc_metadata = self.metadata.copy()
         del no_doc_metadata['doc']
         try:
             package.Package._load_metadata = lambda x: no_doc_metadata
@@ -755,7 +768,7 @@ copyright: 2019, Institut Pasteur, CNRS
         ##############
         # No licence #
         ##############
-        no_licence_metadata = good_meta_data.copy()
+        no_licence_metadata = self.metadata.copy()
         del no_licence_metadata['licence']
         try:
             package.Package._load_metadata = lambda x: no_licence_metadata
