@@ -229,8 +229,8 @@ class MacsyTest(unittest.TestCase):
 
 
     @contextmanager
-    def catch_log(self):
-        logger = colorlog.getLogger('macsypy')
+    def catch_log(self, log_name='macsypy'):
+        logger = colorlog.getLogger(log_name)
         handlers_ori = logger.handlers
         fake_handler = colorlog.StreamHandler(StringIO())
         try:
