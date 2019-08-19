@@ -15,10 +15,12 @@ import tempfile
 import shutil
 import os
 import argparse
+import sys
 
-from macsypy.scripts import macsydata
+from macsypy.registries import scan_models_dir, ModelRegistry
 
 from tests import MacsyTest
+from macsypy.scripts import macsydata
 
 
 class TestMacsydata(MacsyTest):
@@ -86,16 +88,17 @@ class TestMacsydata(MacsyTest):
         pack_vers = '1.0'
         pack_meta = {'short_desc': 'desc about fake_model'}
         macsydata.RemoteModelIndex.list_packages = lambda x: [pack_name]
-        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack: pack_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack: [pack_vers]
         macsydata.RemoteModelIndex.get_metadata = lambda x, pack, vers: pack_meta
         self.create_fake_package('fake_model')
         try:
-            with self.catch_io(out=True) as out:
+            with self.catch_io(out=True):
                 macsydata.do_available(self.args)
-                get_pack = out.getValue()
-            expected_pack = f"{pack_vers:26.25} - {pack_meta['short_desc']}"
+                get_pack = sys.stdout.getvalue().strip()
+            pack_name_vers = f"{pack_name} ({pack_vers})"
+            expected_pack = f"{pack_name_vers:26.25} - {pack_meta['short_desc']}"
             self.assertEqual(get_pack, expected_pack)
-        except:
+        finally:
             macsydata.RemoteModelIndex.list_packages = list_pack
             macsydata.RemoteModelIndex.list_package_vers = list_pack_vers
             macsydata.RemoteModelIndex.get_metadata = meta
@@ -114,16 +117,217 @@ class TestMacsydata(MacsyTest):
         pass
 
     def test_info(self):
-        pass
+        pack_name = "nimportnaoik"
+        self.args.package = pack_name
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError):
+                macsydata.do_info(self.args)
+            log_msg = log.get_value()
+        self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
+
+        pack_name = "fake_pack"
+        self.args.package = pack_name
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_local_package
+        macsydata._find_local_package = lambda x: macsydata.Package(fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_info(self.args)
+                msg = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_local_package = find_local_package
+
+        expected_info = """fake_pack (0.0b2)
+
+author: auth_name <auth_name@mondomain.fr>
+
+this is a short description of the repos
+
+how to cite:
+\t- bla bla
+\t- link to publication
+\t- ligne 1
+\t  ligne 2
+\t  ligne 3 et bbbbb
+\t  
+documentation
+\thttp://link/to/the/documentation
+
+This data are released under CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+copyright: 2019, Institut Pasteur, CNRS"""
+        self.assertEqual(expected_info, msg)
+
 
     def test_list(self):
-        pass
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(model_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_packages
+        macsydata._find_all_packages = lambda: registry
+
+        self.args.verbose = 1
+        self.args.outdated = False
+        self.args.uptodate = False
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_packages = find_all_packages
+        self.assertEqual(packs,
+                         "fake_1-0.0b2\nfake_2-0.0b2")
+
+
+    def test_list_outdated(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(model_dir):
+            registry.add(model_loc)
+
+        find_all_packages = macsydata._find_all_packages
+        macsydata._find_all_packages = lambda: registry
+
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        self.args.verbose = 1
+        self.args.outdated = True
+        self.args.uptodate = False
+
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_1-1.0 [0.0b2]')
+
+
+    def test_list_uptodate(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(model_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_packages
+        macsydata._find_all_packages = lambda: registry
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        self.args.verbose = 1
+        self.args.outdated = False
+        self.args.uptodate = True
+
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_2-0.0b2')
+
+
+    def test_list_verbose(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(model_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_packages
+        macsydata._find_all_packages = lambda: registry
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        os.unlink(os.path.join(model_dir, 'fake_1', 'metadata.yml'))
+        self.args.verbose = 2
+        self.args.outdated = False
+        self.args.uptodate = False
+
+        try:
+            with self.catch_io(out=True):
+                with self.catch_log(log_name='macsydata') as log:
+                    macsydata.do_list(self.args)
+                    log_msg = log.get_value().strip()
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_2-0.0b2')
+        self.assertEqual(log_msg, f"[Errno 2] No such file or directory: '{model_dir}/fake_1/metadata.yml'")
+
 
     def test_freeze(self):
-        pass
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(model_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_packages
+        macsydata._find_all_packages = lambda: registry
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_freeze(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_packages = find_all_packages
+        self.assertEqual(packs,
+                         "fake_1==0.0b2\nfake_2==0.0b2")
+
 
     def test_cite(self):
-        pass
+        pack_name = "nimportnaoik"
+        self.args.package = pack_name
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError):
+                macsydata.do_info(self.args)
+            log_msg = log.get_value()
+        self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
+
+        pack_name = "fake_pack"
+        self.args.package = pack_name
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_local_package
+        macsydata._find_local_package = lambda x: macsydata.Package(fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_cite(self.args)
+                citation = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_local_package = find_local_package
+        expected_citation = """To cite fake_pack:
+
+_ bla bla
+- link to publication
+- ligne 1
+  ligne 2
+  ligne 3 et bbbbb
+  
+
+To cite MacSyFinder:
+
+- Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
+  MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+  PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726"""
+
+        self.assertEqual(expected_citation, citation)
+
 
     def test_check(self):
         pass
