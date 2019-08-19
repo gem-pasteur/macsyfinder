@@ -379,6 +379,7 @@ def do_list(args: argparse.Namespace) -> None:
 
 def do_freeze(args: argparse.Namespace) -> None:
     """
+    display all models installed with there respective version, in requirement format.
     """
     registry = _find_all_packages()
     for model_loc in sorted(registry.models(), key=lambda ml: ml.name.lower()):
