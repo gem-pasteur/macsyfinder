@@ -367,7 +367,7 @@ def do_list(args: argparse.Namespace) -> None:
                 specifier = specifiers.SpecifierSet(f">{pack_vers}")
                 update_vers = list(specifier.filter(all_versions))
                 if args.outdated and update_vers:
-                    print(f"{model_loc.name}-{update_vers}) [{pack_vers}]")
+                    print(f"{model_loc.name}-{update_vers[0]} [{pack_vers}]")
                 if args.uptodate and not update_vers:
                     print(f"{model_loc.name}-{pack_vers}")
             else:
