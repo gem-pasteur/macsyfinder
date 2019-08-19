@@ -112,7 +112,7 @@ class RemoteModelIndex:
 
     def list_packages(self) -> List[str]:
         """
-        list all model packages availables on a model repos
+        list all model packages available on a model repos
         :return: The list of package names.
         """
         url = f"{self.base_url}/orgs/{self.org_name}/repos"
