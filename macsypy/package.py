@@ -255,6 +255,8 @@ class Package:
             errors, warnings = meth()
             all_errors.extend(errors)
             all_warnings.extend(warnings)
+            if all_errors:
+                break
         return all_errors, all_warnings
 
 
@@ -275,18 +277,22 @@ class Package:
         elif not os.path.exists(os.path.join(self.path, 'metadata.yml')):
             errors.append(f"The package '{self.name}' have no 'metadata.yml'.")
         if not errors:
+            # check several criteria and don't stop at the first problem.
+            # this is why I use several If and not one set of if/elif
             if not os.path.exists(os.path.join(self.path, 'definitions')):
                 errors.append(f"The package '{self.name}' have no 'definitions' directory.")
             elif not os.path.isdir(os.path.join(self.path, 'definitions')):
                 errors.append(f"'{os.path.join(self.path, 'definitions')}' is not a directory.")
-            elif not os.path.exists(os.path.join(self.path, 'profiles')):
+
+            if not os.path.exists(os.path.join(self.path, 'profiles')):
                 errors.append(f"The package '{self.name}' have no 'profiles' directory.")
             elif not os.path.isdir(os.path.join(self.path, 'profiles')):
                 errors.append(f"'{os.path.join(self.path, 'profiles')}' is not a directory.")
-            elif not os.path.exists(os.path.join(self.path, 'LICENCE')):
+
+            if not os.path.exists(os.path.join(self.path, 'LICENCE')):
                 warnings.append(f"The package '{self.name}' have not any LICENCE file. "
                                 f"May be you have not right to use it.")
-            elif not self.readme:
+            if not self.readme:
                 warnings.append(f"The package '{self.name}' have not any README file.")
         return errors, warnings
 
