@@ -39,15 +39,10 @@ class TestMacsydata(MacsyTest):
         except:
             pass
 
-    def create_fake_package(self, model,
-                            xml=True,
-                            hmm=True,
-                            metadata=True,
-                            readme=True,
-                            licence=True):
+    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
-        if xml:
+        if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
@@ -62,7 +57,7 @@ class TestMacsydata(MacsyTest):
     <gene name="sctC" presence="forbidden"/>
 </system>""")
 
-        if hmm:
+        if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
@@ -330,4 +325,50 @@ To cite MacSyFinder:
 
 
     def test_check(self):
-        pass
+        pack_name = 'fake_1'
+        path = self.create_fake_package(pack_name)
+        self.args.path = path
+        with self.catch_log(log_name='macsydata') as log:
+            macsydata.do_check(self.args)
+            log_msg = log.get_value().strip()
+        expected_msg = f"""If everyone were like you, I'd be out of business
+To push the models in organization:
+\tcd {os.path.join(self.tmpdir, pack_name)}
+Transform the models into a git repository 
+\tgit init .
+\tgit add .
+\tgit commit -m 'initial commit'
+add a remote repository to host the models
+for instance if you want to add the models to 'macsy-models'
+\tgit remote add origin https://github.com/macsy-models/
+\tgit tag 0.0b2
+\tgit push --tags"""
+        self.assertEqual(expected_msg, log_msg)
+
+
+    def test_check_with_warnings(self):
+        pack_name = 'fake_1'
+        path = self.create_fake_package(pack_name, readme=False, licence=False)
+        self.args.path = path
+        with self.catch_log(log_name='macsydata') as log:
+            macsydata.do_check(self.args)
+            log_msg = log.get_value().strip()
+        expected_msg = """The package 'fake_1' have not any LICENCE file. May be you have not right to use it.
+The package 'fake_1' have not any README file.
+It is better, if you fix warnings above, before to publish these models."""
+        self.assertEqual(expected_msg, log_msg)
+
+
+    def test_check_with_errors(self):
+        pack_name = 'fake_1'
+        path = self.create_fake_package(pack_name, profiles=False, definitions=False)
+        self.args.path = path
+
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError):
+                macsydata.do_check(self.args)
+            log_msg = log.get_value().strip()
+        expected_msg = """The package 'fake_1' have no 'definitions' directory.
+The package 'fake_1' have no 'profiles' directory.
+Please fix issues above, before publishing these models."""
+        self.assertEqual(expected_msg, log_msg)
