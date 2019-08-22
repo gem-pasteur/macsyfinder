@@ -369,15 +369,10 @@ ligne 3 et bbbbb
         except:
             pass
 
-    def create_fake_package(self, model,
-                            xml=True,
-                            hmm=True,
-                            metadata=True,
-                            readme=True,
-                            licence=True):
+    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
-        if xml:
+        if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
@@ -392,7 +387,7 @@ ligne 3 et bbbbb
     <gene name="sctC" presence="forbidden"/>
 </system>""")
 
-        if hmm:
+        if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
@@ -460,7 +455,7 @@ ligne 3 et bbbbb
 
 
     def test_check_structure_no_def(self):
-        fake_pack_path = self.create_fake_package('fake_model', xml=False)
+        fake_pack_path = self.create_fake_package('fake_model', definitions=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
@@ -474,7 +469,7 @@ ligne 3 et bbbbb
 
 
     def test_check_structure_no_profiles(self):
-        fake_pack_path = self.create_fake_package('fake_model', hmm=False)
+        fake_pack_path = self.create_fake_package('fake_model', profiles=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
@@ -514,6 +509,15 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
                                     "May be you have not right to use it."])
 
+    def test_check_no_readme_n_no_licence(self):
+        fake_pack_path = self.create_fake_package('fake_model', readme=False, licence=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_structure()
+
+        self.assertEqual(errors, [])
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+                                    "May be you have not right to use it.",
+                                    "The package 'fake_model' have not any README file."])
 
     def test_check_metadata(self):
         fake_pack_path = self.create_fake_package('fake_model')
