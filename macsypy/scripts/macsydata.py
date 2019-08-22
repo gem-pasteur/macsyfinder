@@ -328,6 +328,8 @@ def do_uninstall(args: argparse.Namespace) -> None:
         _log.info(f"models '{pack_name}' in {pack.path} uninstalled.")
     else:
         _log.error(f"Models '{pack_name}' not found locally.")
+        sys.tracebacklimit = 0
+        raise ValueError()
 
 
 def do_info(args: argparse.Namespace) -> None:
@@ -346,6 +348,8 @@ def do_info(args: argparse.Namespace) -> None:
         print(pack.info())
     else:
         _log.error(f"Models '{pack_name}' not found locally.")
+        sys.tracebacklimit = 0
+        raise ValueError()
 
 
 def do_list(args: argparse.Namespace) -> None:
@@ -434,7 +438,8 @@ def do_check(args: argparse.Namespace) -> None:
         for error in errors:
             _log.error(error)
         _log.error("Please fix issues above, before publishing these models.")
-        sys.exit(5)
+        sys.tracebacklimit = 0
+        raise ValueError()
     if warnings:
         for warning in warnings:
             _log.warning(warning)
