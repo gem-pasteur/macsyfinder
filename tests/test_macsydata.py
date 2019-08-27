@@ -38,6 +38,10 @@ class TestMacsydata(MacsyTest):
             shutil.rmtree(self.tmp_dir)
         except:
             pass
+        # some function in macsydata script suppress the traceback
+        # but without traceback it's hard to debug test :-(
+        sys.tracebacklimit = 1000  # the default value
+
 
     def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
         pack_path = os.path.join(self.tmpdir, model)
@@ -372,3 +376,35 @@ It is better, if you fix warnings above, before to publish these models."""
 The package 'fake_1' have no 'profiles' directory.
 Please fix issues above, before publishing these models."""
         self.assertEqual(expected_msg, log_msg)
+
+
+    def test_uninstall(self):
+        pack_name = 'fake_1'
+        path = self.create_fake_package(pack_name)
+        self.args.package = pack_name
+        model_loc = scan_models_dir(self.tmpdir)[0]
+        find_local_package = macsydata._find_local_package
+        macsydata._find_local_package = lambda x: model_loc
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_uninstall(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_local_package = find_local_package
+
+        expected_msg = f"models '{pack_name}' in {path} uninstalled."
+        self.assertEqual(log_msg, expected_msg)
+        self.assertFalse(os.path.exists(path))
+
+        self.args.package = 'foo'
+        find_local_package = macsydata._find_local_package
+        macsydata._find_local_package = lambda x: None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_uninstall(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_local_package = find_local_package
+        expected_msg = f"Models '{self.args.package}' not found locally."
+        self.assertEqual(log_msg, expected_msg)
