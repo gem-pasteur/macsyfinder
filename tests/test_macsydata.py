@@ -408,3 +408,49 @@ Please fix issues above, before publishing these models."""
             macsydata._find_local_package = find_local_package
         expected_msg = f"Models '{self.args.package}' not found locally."
         self.assertEqual(log_msg, expected_msg)
+
+
+    def test_download(self):
+        def fake_download(_, pack_name, vers, dest=None):
+            path = os.path.join(self.tmpdir, f"{pack_name}-{vers}.tar.gz")
+            os.mkdir(path)
+            return path
+
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = fake_download
+        self.args.package = 'fake_1'
+        self.args.dest = None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_download(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+            macsydata.RemoteModelIndex.download = remote_download
+        expected_msg = f"""Downloading {self.args.package} 1.0
+Successfully downloaded packaging fake_1 in {os.path.join(self.tmpdir, 'fake_1-1.0.tar.gz')}"""
+        self.assertEqual(log_msg, expected_msg)
+
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = fake_download
+        self.args.package = 'fake_1>2.0'
+        self.args.dest = None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_download(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+            macsydata.RemoteModelIndex.download = remote_download
+
+        expected_msg = """No version that satisfy requirements '>2.0' for 'fake_1'.
+Available versions: 1.0"""
+        self.assertEqual(log_msg, expected_msg)
+
+
