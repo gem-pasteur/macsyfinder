@@ -35,7 +35,7 @@ class TestMacsydata(MacsyTest):
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
-            shutil.rmtree(self.tmp_dir)
+            shutil.rmtree(self.tmpdir)
         except:
             pass
         # some function in macsydata script suppress the traceback
