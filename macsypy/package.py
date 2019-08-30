@@ -21,8 +21,8 @@ import shutil
 import tarfile
 import glob
 import copy
+import abc
 from typing import List, Dict, Any
-
 import logging
 _log = logging.getLogger(__name__)
 
@@ -34,16 +34,69 @@ from .gene import GeneBank, ProfileFactory
 from .error import MacsydataError
 
 
-class RemoteModelIndex:
+class ModelIndex(metaclass=abc.ABCMeta):
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__bases__ == (object,):
+            raise TypeError(f'{cls.__name__} is abstract cannot be instantiated.')
+        return super(ModelIndex, cls).__new__(cls)
+
+
+    def __init__(self):
+        """
+
+        """
+        self.base_url = "https://api.github.com"
+        self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+
+
+    def unarchive_package(self, path: str) -> str:
+        """
+        Unarchive and uncompress a package under
+        <remote cache>/<organization name>/<package name>/<vers>/<package name>
+
+        :param str path:
+        :return: The path to the package
+        """
+        name, vers = parse_arch_path(path)
+        dest_dir = os.path.join(self.cache, self.org_name, name, vers)
+        print("dest_dir", dest_dir)
+        tar = tarfile.open(path, 'r|gz')
+        tar.extractall(path=dest_dir)
+        print(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
+        unarchive_pack = glob.glob(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
+        print(unarchive_pack)
+        if len(unarchive_pack) == 1:
+            unarchive_pack = unarchive_pack[0]
+        elif len(unarchive_pack) > 1:
+            raise MacsydataError(f"Too many matching packages. May be you have to clean {dest_dir}")
+        else:
+            raise MacsydataError("An error occurred during archive extraction")
+        dest = os.path.join(dest_dir, name)
+        if os.path.exists(dest):
+            shutil.rmtree(dest)
+        os.rename(unarchive_pack, dest)
+        return dest
+
+
+class LocalModelIndex(ModelIndex):
+    def __init__(self):
+        """
+
+        """
+        super().__init__()
+        self.org_name = 'local'
+
+
+class RemoteModelIndex(ModelIndex):
 
     def __init__(self, org: str = "macsy-models"):
         """
 
         :param org: The name of the organization on github where are stored the models
         """
+        super().__init__()
         self.org_name = org
-        self.base_url = "https://api.github.com"
-        self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
@@ -77,6 +130,7 @@ class RemoteModelIndex:
                 raise err from None
             else:
                 raise err from None
+
 
     def get_metadata(self, pack_name: str, vers: str = 'latest') -> Dict:
         """
@@ -172,33 +226,6 @@ class RemoteModelIndex:
             else:
                 raise err from None
         return tmp_archive_path
-
-
-    def unarchive_package(self, path: str) -> str:
-        """
-        Unarchive and uncompress a package under
-        <remote cache>/<organization name>/<package name>/<vers>/<package name>
-
-        :param str path:
-        :return: The path to the package
-        """
-        *name, vers = '.'.join(os.path.basename(path).split('.')[:-2]).split('-')
-        name = '-'.join(name)
-        dest_dir = os.path.join(self.cache, self.org_name, name, vers)
-        tar = tarfile.open(path, 'r|gz')
-        tar.extractall(path=dest_dir)
-        src = glob.glob(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
-        if len(src) == 1:
-            src = src[0]
-        elif len(src) > 1:
-            raise MacsydataError(f"Too many matching packages. May be you have to clean {dest_dir}")
-        else:
-            raise MacsydataError("An error occurred during archive extraction")
-        dest = os.path.join(dest_dir, name)
-        if os.path.exists(dest):
-            shutil.rmtree(dest)
-        os.rename(src, dest)
-        return dest
 
 
 class Package:
@@ -384,3 +411,18 @@ This data are released under {metadata['licence']}
 {copyrights}
 """
         return info
+
+
+def parse_arch_path(path):
+    pack_vers_name = os.path.basename(path)
+    if pack_vers_name.endswith('.tar.gz'):
+        pack_vers_name = pack_vers_name[:-7]
+    elif pack_vers_name.endswith('.tgz'):
+        pack_vers_name = pack_vers_name[:-4]
+    else:
+        raise ValueError(f"{path} does not seem to be a package (tarball)")
+    *pack_name, vers = pack_vers_name.split('-')
+    if not pack_name:
+        raise ValueError(f"{path} seems to not be versioned.")
+    pack_name = '-'.join(pack_name)
+    return pack_name, vers
