@@ -29,7 +29,43 @@ from macsypy.error import MacsydataError
 from tests import MacsyTest
 
 
-class TestRemote(MacsyTest):
+class TestPackageFunc(MacsyTest):
+
+    def test_parse_arch_path(self):
+        self.assertTupleEqual(package.parse_arch_path("pack-3.0.tar.gz"),
+                              ('pack', '3.0'))
+        self.assertTupleEqual(package.parse_arch_path("pack-3.0.tgz"),
+                              ('pack', '3.0'))
+
+        pack = "pack-3.0.foo"
+        with self.assertRaises(ValueError) as ctx:
+            package.parse_arch_path(pack)
+        self.assertEqual(str(ctx.exception),
+                         f"{pack} does not seem to be a package (a tarball).")
+        pack = "pack.tar.gz"
+        with self.assertRaises(ValueError) as ctx:
+            package.parse_arch_path(pack)
+        self.assertEqual(str(ctx.exception),
+                         f"{pack} does not seem to not be versioned.")
+
+
+class TestModelIndex(MacsyTest):
+
+    def test_init(self):
+        with self.assertRaises(TypeError) as ctx:
+            package.AbstractModelIndex()
+
+
+class TestLocalModelIndex(MacsyTest):
+
+    def test_init(self):
+        lmi = package.LocalModelIndex()
+        self.assertEqual(lmi.org_name, 'local')
+        expected_cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+        self.assertEqual(lmi.cache, expected_cache)
+
+
+class TestRemoteModelIndex(MacsyTest):
 
     def setUp(self) -> None:
         self.tmpdir = os.path.join(tempfile.gettempdir(), 'macsy_test_package')
@@ -325,16 +361,12 @@ class TestRemote(MacsyTest):
             self.assertListEqual(sorted(glob.glob(f"{unpacked_path}/*")),
                                  sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
                                  )
-            # create a new archive with old archive not removed
-            pack_collision = os.path.join(self.tmpdir, remote.org_name, pack_name, pack_vers,
-                                          f"{remote.org_name}-{pack_name}-e022222")
-            os.mkdir(pack_collision)
-            arch = create_pack(self.tmpdir, remote.org_name, pack_name, pack_vers, 'e0203333')
-            with self.assertRaises(MacsydataError) as ctx:
-                remote.unarchive_package(arch)
-            self.assertEqual(str(ctx.exception),
-                             f"Too many matching packages. May be you have to clean "
-                             f"{os.path.join(self.tmpdir, remote.org_name, pack_name, pack_vers)}")
+            # test package is remove before to unarchive a new one
+            open(os.path.join(unpacked_path, f"file_must_be_removed"), 'w').close()
+            model_path = remote.unarchive_package(arch)
+            self.assertListEqual(sorted(glob.glob(f"{unpacked_path}/*")),
+                                 sorted([os.path.join(unpacked_path, f"file_{i}") for i in range(3)])
+                                 )
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
 
@@ -697,7 +729,7 @@ how to cite:
 \t- ligne 1
 \t  ligne 2
 \t  ligne 3 et bbbbb
-\t  
+
 documentation
 \thttp://link/to/the/documentation
 
@@ -727,7 +759,7 @@ this is a short description of the repos
 
 how to cite:
 \t- No citation available
-\t  
+
 documentation
 \thttp://link/to/the/documentation
 
@@ -760,7 +792,7 @@ how to cite:
 \t- ligne 1
 \t  ligne 2
 \t  ligne 3 et bbbbb
-\t  
+
 documentation
 \tNo documentation available
 
@@ -793,7 +825,7 @@ how to cite:
 \t- ligne 1
 \t  ligne 2
 \t  ligne 3 et bbbbb
-\t  
+
 documentation
 \thttp://link/to/the/documentation
 
