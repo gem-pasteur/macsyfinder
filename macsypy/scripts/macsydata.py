@@ -211,8 +211,11 @@ def _find_all_installed_packages() -> ModelRegistry:
     model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
     registry = ModelRegistry()
     for model_dir in model_dirs:
-        for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
-            registry.add(model_loc)
+        try:
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+                registry.add(model_loc)
+        except PermissionError as err:
+            _log.warning(f"{model_dir} is not readable: {err} : skip it.")
     return registry
 
 
@@ -245,246 +248,114 @@ def do_install(args: argparse.Namespace) -> None:
         user_req = requirements.Requirement(f"{pack_name}=={inst_vers}")
     else:
         remote = True
-        user_req = _remote_to_requirement(args.package)
+        user_req = requirements.Requirement(args.package)
 
     pack_name = user_req.name
+
     inst_pack_loc = _find_installed_package(pack_name)
 
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
-        local_vers = version.Version(pack.metadata['vers'])
-
+        try:
+            local_vers = version.Version(pack.metadata['vers'])
+        except FileNotFoundError:
+            _log.error(f"{pack_name} locally installed is corrupted.")
+            _log.warning(f"You can fix it by removing '{inst_pack_loc.path}'.")
+            sys.tracebacklimit = 0
+            raise RuntimeError() from None
     user_specifier = user_req.specifier
     if not user_specifier and inst_pack_loc:
         user_specifier = specifiers.SpecifierSet(f">{local_vers}")
 
     if remote:
-        all_available_versions = _get_remote_available_versions(pack_name, org=args.org)
+        try:
+            all_available_versions = _get_remote_available_versions(pack_name, org=args.org)
+        except ValueError as err:
+            _log.error(str(err))
+            sys.tracebacklimit = 0
+            raise ValueError from None
     else:
         all_available_versions = [inst_vers]
 
     compatible_version = list(user_specifier.filter(all_available_versions))
-    if not compatible_version:
+
+    if not compatible_version and local_vers:
+        target_vers = version.Version(all_available_versions[0])
+        if target_vers == local_vers and not args.force:
+            _log.warning(f"Requirement already satisfied: {pack_name}{user_specifier} in {pack.path}.\n"
+                         f"To force installation use option -f --force-reinstall.")
+            return None
+        elif target_vers < local_vers and not args.force:
+            _log.warning(f"{pack_name}-{local_vers} is already installed.\n"
+                         f"To downgrade to {target_vers} use option -f --force-reinstall.")
+            return None
+        else:
+            # target_vers == local_vers and args.force:
+            # target_vers < local_vers and args.force:
+            pass
+    elif not compatible_version:
+        # No compatible version and not local version
         _log.warning(f"Could not find version that satisfied '{pack_name}{user_specifier}'")
         return None
     else:
+        # it exists at least one compatible version
         target_vers = version.Version(compatible_version[0])
         if inst_pack_loc:
             if target_vers > local_vers and not args.upgrade:
-                _log.warning(f"{pack_name} is already installed but {target_vers} is available.\n"
+                _log.warning(f"{pack_name} ({local_vers}) is already installed but {target_vers} version is available.\n"
                              f"To install it please run 'macsydata install --upgrade {pack_name}'")
-                return None
-            elif target_vers == local_vers and not args.force:
-                _log.warning(f"Requirement already satisfied: {pack_name}{user_specifier} in {pack.path}.\n"
-                             f"To force installation use option -f --force-reinstall.")
-                return None
-            elif target_vers < local_vers and not args.force:
-                _log.warning(f"{pack_name}-{local_vers} is already installed.\n"
-                             f"To downgrade to {target_vers} use option -f --force-reinstall.")
                 return None
             else:
                 # target_vers > local_vers and args.upgrade:
-                # target_vers == local_vers and args.force:
-                # target_vers < local_vers and args.force:
                 # I have to install a new package
                 pass
 
-        # if i'm here it's mean that I have to install a new package
-        if remote:
-            _log.info(f"Downloading {pack_name} ({target_vers}).")
-            model_index = RemoteModelIndex(org=args.org)
-            arch_path = model_index.download(pack_name, target_vers)
-        else:
-            model_index = LocalModelIndex()
-            arch_path = args.package
-
-        _log.info(f"Extracting {pack_name} ({target_vers}).")
-        cached_pack = model_index.unarchive_package(arch_path)
-
-        if args.user:
-            dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
-            if os.path.exists(dest) and not os.path.isdir(dest):
-                raise RuntimeError("'{}' already exist and is not a directory.")
-            elif not os.path.exists(dest):
-                os.makedirs(dest)
-        else:
-            defaults = MacsyDefaults()
-            config = Config(defaults, argparse.Namespace())
-            dest = config.models_dir()
-        if inst_pack_loc:
-            old_pack_path = f"{inst_pack_loc.path}.old"
-            shutil.move(inst_pack_loc.path, old_pack_path)
-
-        _log.info(f"Installing {pack_name} ({target_vers}) in {dest}")
-        shutil.move(cached_pack, dest)
-
-        if inst_pack_loc:
-            _log.info("Cleaning.")
-            shutil.rmtree(old_pack_path)
-            shutil.rmtree(pathlib.Path(cached_pack).parent)
-        _log.info(f"The models {pack_name} ({target_vers}) have been installed successfully.")
-
-
-def _path_to_requirement(path: str):
-    pack_name, vers
-    pack_vers_name = os.path.basename(path)
-    if pack_vers_name.endswith('.tar.gz'):
-        pack_vers_name = pack_vers_name[:-7]
-    elif pack_vers_name.endswith('.tgz'):
-        pack_vers_name = pack_vers_name[:-4]
+    # if i'm here it's mean I have to install a new package
+    if remote:
+        _log.info(f"Downloading {pack_name} ({target_vers}).")
+        model_index = RemoteModelIndex(org=args.org, cache=args.cache)
+        arch_path = model_index.download(pack_name, target_vers)
     else:
-        raise ValueError(f"{path} does not seem to be a package (tarball)")
-    *pack_name, vers = pack_vers_name.split('-')
+        model_index = LocalModelIndex(cache=args.cache)
+        arch_path = args.package
 
-    if not pack_name:
-        raise ValueError(f"{path} seems to not be versioned.")
-    pack_name = '-'.join(pack_name)
-    return requirements.Requirement(f"{pack_name}=={vers}"), vers
+    _log.info(f"Extracting {pack_name} ({target_vers}).")
+    cached_pack = model_index.unarchive_package(arch_path)
 
+    if args.user:
+        dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
+        if os.path.exists(dest) and not os.path.isdir(dest):
+            raise RuntimeError("'{}' already exist and is not a directory.")
+        elif not os.path.exists(dest):
+            os.makedirs(dest)
+    else:
+        defaults = MacsyDefaults()
+        config = Config(defaults, argparse.Namespace())
+        dest = config.models_dir()
+    if inst_pack_loc:
+        old_pack_path = f"{inst_pack_loc.path}.old"
+        shutil.move(inst_pack_loc.path, old_pack_path)
 
-def _remote_to_requirement(req: str):
-    return requirements.Requirement(req)
+    _log.info(f"Installing {pack_name} ({target_vers}) in {dest}")
+    try:
+        shutil.move(cached_pack, dest)
+    except PermissionError as err:
+        _log.error(f"{dest} is not writable: {err}")
+        _log.warning(f"Maybe you can use --user option to install in your HOME.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
+    _log.info("Cleaning.")
+    shutil.rmtree(pathlib.Path(cached_pack).parent)
+    if inst_pack_loc:
+        shutil.rmtree(old_pack_path)
+    _log.info(f"The models {pack_name} ({target_vers}) have been installed successfully.")
 
 
 def _get_remote_available_versions(pack_name, org):
     remote = RemoteModelIndex(org=org)
     all_versions = remote.list_package_vers(pack_name)
     return all_versions
-
-
-# def _do_install_local_package(args: argparse.Namespace):
-#     # ya t-il un packet d'installe?
-#     # si oui
-#     #    retrouver sa version
-#     #    parser la version du packet a installer
-#     #    verifier la compatibilité
-#     #    si new > old et pas --upgrade
-#     #        message --upgrade
-#     #    si new > old et --upgrade
-#     #       do install
-#     #    si new <= old et pas --force
-#     #        message --force
-#     #    si new <= old et --force
-#     #       do install
-#
-#
-#     #parser le nom package pour obtenir un requirements
-#     pack_vers_name = os.path.basename(args.package)
-#     if pack_vers_name.endswith('.tar.gz'):
-#         pack_vers_name = pack_vers_name[:-7]
-#     elif pack_vers_name.endswith('.tgz'):
-#         pack_vers_name = pack_vers_name[:-4]
-#     else:
-#         _log.error(f"{args.package} does not seem to be a package (tarball)")
-#         raise ValueError
-#
-#     *pack_name, local_vers = pack_vers_name.split('-')
-#     if not pack_name:
-#         _log.error(f"{args.package} seems to not be versioned.")
-#         raise ValueError()
-#     pack_name = '-'.join(pack_name)
-#     specifier = specifiers.SepcifierSet(f">{local_vers}")
-#
-#     if pack_vers in specifier:
-#         _log.warning(f"{pack_name} is already installed but {compatible_version[0]} is available.\n"
-#                      f"To install it please run 'macsydata install --upgrade {pack_name}'")
-#     else:
-#         if args.force:
-#             pass
-#         else:
-#             _log.warning(f"{pack_name}-{local_vers} is already installed.\n"
-#                          f"To install {} please run 'macsydata install --force {pack_name}'")
-#         return None
-
-
-# def _do_install_remote_package(args: argparse.Namespace):
-#     # recuperer le requirement du user
-#     # y a til un packet d'installe?
-#     # si oui
-#     #   recuperer la version du packet
-#     # recuperer la liste des version disponible
-#     # s'il n'ya pas de specifier et qu'il y a un paquet local
-#     #   specifier = > vers local
-#     # s'il n'ya pas de specifier et pas de paquet local
-#     #   specifier last remote version
-#     # s'il ya un specifier et un paquet local
-#     #   specifier combinaison de specifier user & specifier local
-#     # s'il y a un sepcifier et pas de paquet local
-#     #    specifier = user specifier
-#     # filter la liste des remote version avec le specifier
-#     #
-#     # si version compatible et version local et pas --upgrade
-#     #     messge
-#     # si version compatible et version local et --upgrade
-#     #     download
-#     # si pas version compatible
-#     #     message
-#
-#     req = requirements.Requirement(args.package)
-#     pack_name = req.name
-#     specifier = req.specifier
-#     inst_pack_loc = _find_installed_package(pack_name)
-#     local_spec = False
-#     if inst_pack_loc:
-#         pack = Package(inst_pack_loc.path)
-#         local_vers = pack.metadata['vers']
-#
-#     remote = RemoteModelIndex(org=args.org)
-#     all_versions = remote.list_package_vers(pack_name)
-#     if not specifier and inst_pack_loc:
-#         specifier = specifiers.SpecifierSet(f">{local_vers}")
-#         local_spec = True
-#     compatible_version = list(specifier.filter(all_versions))
-#     if inst_pack_loc and compatible_version and not args.upgrade:
-#         _log.warning(f"{pack_name} is already installed but {compatible_version[0]} is available.\n"
-#                      f"To install it please run 'macsydata install --upgrade {pack_name}'")
-#         return None
-#     elif inst_pack_loc and not compatible_version:
-#         if args.force:
-#             if local_vers in all_versions:
-#                 target_vers = local_vers
-#             elif all_versions:
-#                 target_vers = all_versions[0]
-#             else:
-#                 _log.warning(f"Cannot find version for models '{pack_name}'.")
-#                 return None
-#         elif local_spec:
-#             _log.warning(f"Requirement already satisfied: {pack_name}{specifier} in {pack.path}.\n"
-#                          f"To force installation use option -f --force-reinstall.")
-#             return None
-#         else:
-#             _log.error(f"Could not find version that satisfied '{pack_name}{specifier}'")
-#             return None
-#     elif not inst_pack_loc and not compatible_version:
-#         _log.error(f"Could not find version that satisfied '{pack_name}{specifier}'")
-#         return None
-#     else:
-#         target_vers = compatible_version[0]
-#
-#     _log.info(f"Downloading {pack_name} ({target_vers}).")
-#     tmp_arch = remote.download(pack_name, target_vers)
-#     _log.info(f"Extracting {pack_name} ({target_vers}).")
-#     cached_pack = remote.unarchive_package(tmp_arch)
-#     if args.user:
-#         dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
-#         if os.path.exists(dest) and not os.path.isdir(dest):
-#             raise RuntimeError("'{}' already exist and is not a directory.")
-#         elif not os.path.exists(dest):
-#             os.makedirs(dest)
-#     else:
-#         defaults = MacsyDefaults()
-#         config = Config(defaults, argparse.Namespace())
-#         dest = config.models_dir()
-#     if inst_pack_loc:
-#         old_pack_path = f"{inst_pack_loc.path}.old"
-#         shutil.move(inst_pack_loc.path, old_pack_path)
-#     _log.info(f"Installing {pack_name} ({target_vers}) in {dest}")
-#     shutil.move(cached_pack, dest)
-#     if inst_pack_loc:
-#         _log.info("Cleaning.")
-#         shutil.rmtree(old_pack_path)
-#         shutil.rmtree(pathlib.Path(cached_pack).parent)
-#     _log.info(f"The models {pack_name} ({target_vers}) have been installed successfully.")
 
 #################
 # Local actions #
@@ -590,7 +461,7 @@ def do_cite(args: argparse.Namespace) -> None:
         pack_citations = pack.metadata['cite']
         pack_citations = [cite.replace('\n', '\n  ') for cite in pack_citations]
         pack_citations = '\n- '.join(pack_citations)
-        pack_citations = '_ ' + pack_citations
+        pack_citations = '_ ' + pack_citations.rstrip()
         macsy_cite = macsypy.__citation__
         macsy_cite = macsy_cite.replace('\n', '\n  ')
         macsy_cite = '- ' + macsy_cite
@@ -625,7 +496,7 @@ def do_check(args: argparse.Namespace) -> None:
             _log.warning(warning)
         _log.warning("""macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
-It is better, if you fix warnings above, before to publish these models.""")
+I'll be really happy, if you fix warnings above, before to publish these models.""")
 
     if not warnings:
         _log.info("If everyone were like you, I'd be out of business")
@@ -634,7 +505,7 @@ It is better, if you fix warnings above, before to publish these models.""")
             # I use level 25 just to remove color
             _log.log(25, f"\tcd {pack.path}")
         if not os.path.exists(os.path.join(pack.path, '.git')):
-            _log.info("Transform the models into a git repository ")
+            _log.info("Transform the models into a git repository")
             _log.log(25, "\tgit init .")
             _log.log(25, "\tgit add .")
             _log.log(25, "\tgit commit -m 'initial commit'")
@@ -710,7 +581,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     download_subparser.set_defaults(func=do_download)
     download_subparser.add_argument('-d', '--dest',
+                                    default=os.getcwd(),
                                     help='Download packages into <dir>.')
+    download_subparser.add_argument('--cache',
+                                    help=argparse.SUPPRESS)
     download_subparser.add_argument('--org',
                                     default="macsy-models",
                                     help="The name of Model organization"
@@ -731,11 +605,6 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    help="The name of Model orgagnization"
                                         "(default 'macsy-models'))"
                                    )
-    install_subparser.add_argument('-I', '--ignore-installed',
-                                   action='store_true',
-                                   default=False,
-                                   dest='force',
-                                   help='Ignore the installed packages (reinstalling instead).')
     install_subparser.add_argument('-u', '--user',
                                    action='store_true',
                                    default=False,
@@ -747,6 +616,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    help='Upgrade specified package to the newest available version.')
     install_subparser.add_argument('package',
                                    help='Package name.')
+    install_subparser.add_argument('--cache',
+                                   help=argparse.SUPPRESS)
     #############
     # Uninstall #
     #############
@@ -860,6 +731,7 @@ def main(args=None) -> None:
     parsed_args = parser.parse_args(args)
 
     macsypy.init_logger()
+    macsypy.logger_set_level(level='DEBUG')
 
     if 'func' in parsed_args:
         parsed_args.func(parsed_args)
