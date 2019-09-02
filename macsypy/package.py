@@ -19,10 +19,9 @@ import json
 import yaml
 import shutil
 import tarfile
-import glob
 import copy
 import abc
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple, Optional
 import logging
 _log = logging.getLogger(__name__)
 
@@ -34,20 +33,23 @@ from .gene import GeneBank, ProfileFactory
 from .error import MacsydataError
 
 
-class ModelIndex(metaclass=abc.ABCMeta):
+class AbstractModelIndex(metaclass=abc.ABCMeta):
 
     def __new__(cls, *args, **kwargs):
         if cls.__bases__ == (object,):
             raise TypeError(f'{cls.__name__} is abstract cannot be instantiated.')
-        return super(ModelIndex, cls).__new__(cls)
+        return super(AbstractModelIndex, cls).__new__(cls)
 
 
-    def __init__(self):
+    def __init__(self, cache=''):
         """
 
         """
-        self.base_url = "https://api.github.com"
-        self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
+        self.org_name = None
+        if cache:
+            self.cache = cache
+        else:
+            self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
 
 
     def unarchive_package(self, path: str) -> str:
@@ -60,43 +62,43 @@ class ModelIndex(metaclass=abc.ABCMeta):
         """
         name, vers = parse_arch_path(path)
         dest_dir = os.path.join(self.cache, self.org_name, name, vers)
-        print("dest_dir", dest_dir)
-        tar = tarfile.open(path, 'r|gz')
+        dest_unarchive_path = os.path.join(dest_dir, name)
+        if os.path.exists(dest_unarchive_path):
+            _log.info(f"Removing old models {dest_unarchive_path}")
+            shutil.rmtree(dest_unarchive_path)
+        tar = tarfile.open(path, 'r:gz')
+        tar_dir_name = tar.next().name
         tar.extractall(path=dest_dir)
-        print(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
-        unarchive_pack = glob.glob(os.path.join(dest_dir, f"{self.org_name}-{name}-*"))
-        print(unarchive_pack)
-        if len(unarchive_pack) == 1:
-            unarchive_pack = unarchive_pack[0]
-        elif len(unarchive_pack) > 1:
-            raise MacsydataError(f"Too many matching packages. May be you have to clean {dest_dir}")
-        else:
-            raise MacsydataError("An error occurred during archive extraction")
-        dest = os.path.join(dest_dir, name)
-        if os.path.exists(dest):
-            shutil.rmtree(dest)
-        os.rename(unarchive_pack, dest)
-        return dest
+        # github prefix the archive root directory with the organization name
+        # add suffix with a random suffix
+        # for instance for TXSS models
+        # the unarchive will named macsy-models-TXSS-64889bd
+        unarchive_pack = os.path.join(dest_dir, tar_dir_name)
+        if unarchive_pack != dest_unarchive_path:
+            os.rename(unarchive_pack, dest_unarchive_path)
+        return dest_unarchive_path
 
 
-class LocalModelIndex(ModelIndex):
-    def __init__(self):
+class LocalModelIndex(AbstractModelIndex):
+
+    def __init__(self, cache=None):
         """
 
         """
-        super().__init__()
+        super().__init__(cache=cache)
         self.org_name = 'local'
 
 
-class RemoteModelIndex(ModelIndex):
+class RemoteModelIndex(AbstractModelIndex):
 
-    def __init__(self, org: str = "macsy-models"):
+    def __init__(self, org: str = "macsy-models", cache=None):
         """
 
         :param org: The name of the organization on github where are stored the models
         """
-        super().__init__()
+        super().__init__(cache=cache)
         self.org_name = org
+        self.base_url = "https://api.github.com"
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
@@ -105,7 +107,7 @@ class RemoteModelIndex(ModelIndex):
         """
         Get the url, deserialize the data as json
 
-        :param str url: the url to dowload
+        :param str url: the url to download
         :return: the json corresponding to the response url
         """
         r = urllib.request.urlopen(url).read()
@@ -122,6 +124,7 @@ class RemoteModelIndex(ModelIndex):
             url = f"{self.base_url}/orgs/{self.org_name}"
             _log.debug(f"get {url}")
             remote = self._url_json(url)
+            print(remote)
             return remote["type"] == 'Organization'
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
@@ -145,11 +148,11 @@ class RemoteModelIndex(ModelIndex):
         if not versions:
             raise MacsydataError(f"No official version available for model '{pack_name}'")
         elif vers == 'latest':
-            vers == versions[0]
+            vers = versions[0]
         else:
             if vers not in versions:
                 raise RuntimeError(f"The version '{vers}' does not exists for model {pack_name}.")
-        metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{versions[0]}/metadata.yml"
+        metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{vers}/metadata.yml"
         try:
             with urllib.request.urlopen(metadata_url) as response:
                 metadata = response.read().decode("utf-8")
@@ -242,7 +245,7 @@ class Package:
         self.readme = self._find_readme()
 
 
-    def _find_readme(self) -> Any:
+    def _find_readme(self) -> Optional[str]:
         """
         find the README file
 
@@ -272,7 +275,7 @@ class Package:
         return metadata
 
 
-    def check(self) -> List:
+    def check(self) -> Tuple[List[str], List[str]]:
         """
         Check the QA of this package
         """
@@ -287,7 +290,7 @@ class Package:
         return all_errors, all_warnings
 
 
-    def _check_structure(self) -> List[str]:
+    def _check_structure(self) -> Tuple[List[str], List[str]]:
         """
         Check the QA structure of the package
 
@@ -324,7 +327,11 @@ class Package:
         return errors, warnings
 
 
-    def _check_model_consistency(self) -> None:
+    def _check_model_consistency(self) -> Tuple[List, List]:
+        """
+        check if each xml seems well write, each genes have an associated profile, etc
+        :return:
+        """
         _log.info(f"Checking '{self.name}' Model definitions")
         model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
@@ -333,17 +340,20 @@ class Package:
 
         config = NoneConfig()
         config.models_dir = lambda: self.path
-        profile_factory = ProfileFactory(config)
-        model_registry = ModelRegistry()
-        model_registry.add(model_loc)
-        parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
-        parser.parse([def_loc.fqn for def_loc in all_def])
+        try:
+            profile_factory = ProfileFactory(config)
+            model_registry = ModelRegistry()
+            model_registry.add(model_loc)
+            parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
+            parser.parse([def_loc.fqn for def_loc in all_def])
+        finally:
+            del config.models_dir
         _log.info("Definitions are consistent")
         # to respect same api as _check_metadata and _check_structure
         return [], []
 
 
-    def _check_metadata(self) -> List[str]:
+    def _check_metadata(self) -> Tuple[List[str], List[str]]:
         """
         Check the QA of package metadata_path
 
@@ -394,7 +404,7 @@ class Package:
             metadata['licence'] = "No licence available"
         copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
         pack_name = self.name
-        cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']])
+        cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']]).rstrip()
         info = f"""
 {pack_name} ({metadata['vers']})
 
@@ -404,6 +414,7 @@ author: {metadata['author']['name']} <{metadata['author']['email']}>
 
 how to cite:
 {cite}
+
 documentation
 \t{metadata['doc']}
 
@@ -413,16 +424,24 @@ This data are released under {metadata['licence']}
         return info
 
 
-def parse_arch_path(path):
+def parse_arch_path(path: str) -> Tuple[str, str]:
+    """
+
+    :param str path: the path to the archive
+    :return: the name of the package and it's version
+    :rtype: tuple
+    :raise ValueError: if the extension of the package is neither '.tar.gz' nor '.tgz'
+                       or if the package does not seem to include version 'pack_name-<vers>.ext'
+    """
     pack_vers_name = os.path.basename(path)
     if pack_vers_name.endswith('.tar.gz'):
         pack_vers_name = pack_vers_name[:-7]
     elif pack_vers_name.endswith('.tgz'):
         pack_vers_name = pack_vers_name[:-4]
     else:
-        raise ValueError(f"{path} does not seem to be a package (tarball)")
+        raise ValueError(f"{path} does not seem to be a package (a tarball).")
     *pack_name, vers = pack_vers_name.split('-')
     if not pack_name:
-        raise ValueError(f"{path} seems to not be versioned.")
+        raise ValueError(f"{path} does not seem to not be versioned.")
     pack_name = '-'.join(pack_name)
     return pack_name, vers
