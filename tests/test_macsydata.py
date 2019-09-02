@@ -16,6 +16,7 @@ import shutil
 import os
 import argparse
 import sys
+import tarfile
 
 from macsypy.registries import scan_models_dir, ModelRegistry
 
@@ -27,15 +28,20 @@ class TestMacsydata(MacsyTest):
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
+        self.models_dir = os.path.join(self.tmpdir, 'models')
+        os.mkdir(self.models_dir)
+
         self.args = argparse.Namespace()
         self.args.org = 'foo'
         self._remote_exists = macsydata.RemoteModelIndex.remote_exists
         macsydata.RemoteModelIndex.remote_exists = lambda x: True
 
+
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
             shutil.rmtree(self.tmpdir)
+            pass
         except:
             pass
         # some function in macsydata script suppress the traceback
@@ -43,8 +49,14 @@ class TestMacsydata(MacsyTest):
         sys.tracebacklimit = 1000  # the default value
 
 
-    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
-        pack_path = os.path.join(self.tmpdir, model)
+    def create_fake_package(self, model,
+                            definitions=True,
+                            profiles=True,
+                            metadata=True,
+                            readme=True,
+                            licence=True,
+                            dest=''):
+        pack_path = os.path.join(self.tmpdir, dest, model)
         os.mkdir(pack_path)
         if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
@@ -137,7 +149,7 @@ how to cite:
 \t- ligne 1
 \t  ligne 2
 \t  ligne 3 et bbbbb
-\t  
+
 documentation
 \thttp://link/to/the/documentation
 
@@ -149,10 +161,10 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_list(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name)
+            self.create_fake_package(name, dest=self.models_dir)
         model_dir = self.tmpdir
         registry = ModelRegistry()
-        for model_loc in scan_models_dir(model_dir):
+        for model_loc in scan_models_dir(self.models_dir):
             registry.add(model_loc)
         find_all_packages = macsydata._find_all_installed_packages
         macsydata._find_all_installed_packages = lambda: registry
@@ -173,10 +185,9 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_list_outdated(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name)
-        model_dir = self.tmpdir
+            self.create_fake_package(name, dest=self.models_dir)
         registry = ModelRegistry()
-        for model_loc in scan_models_dir(model_dir):
+        for model_loc in scan_models_dir(self.models_dir):
             registry.add(model_loc)
 
         find_all_packages = macsydata._find_all_installed_packages
@@ -202,10 +213,9 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_list_uptodate(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name)
-        model_dir = self.tmpdir
+            self.create_fake_package(name, dest=self.models_dir)
         registry = ModelRegistry()
-        for model_loc in scan_models_dir(model_dir):
+        for model_loc in scan_models_dir(self.models_dir):
             registry.add(model_loc)
         find_all_packages = macsydata._find_all_installed_packages
         macsydata._find_all_installed_packages = lambda: registry
@@ -229,17 +239,16 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_list_verbose(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name)
-        model_dir = self.tmpdir
+            self.create_fake_package(name, dest=self.models_dir)
         registry = ModelRegistry()
-        for model_loc in scan_models_dir(model_dir):
+        for model_loc in scan_models_dir(self.models_dir):
             registry.add(model_loc)
         find_all_packages = macsydata._find_all_installed_packages
         macsydata._find_all_installed_packages = lambda: registry
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
                                                                         'fake_2': ['0.0b2']}[name]
-        os.unlink(os.path.join(model_dir, 'fake_1', 'metadata.yml'))
+        os.unlink(os.path.join(self.models_dir, 'fake_1', 'metadata.yml'))
         self.args.verbose = 2
         self.args.outdated = False
         self.args.uptodate = False
@@ -254,16 +263,15 @@ copyright: 2019, Institut Pasteur, CNRS"""
             macsydata._find_all_installed_packages = find_all_packages
             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
         self.assertEqual(packs, 'fake_2-0.0b2')
-        self.assertEqual(log_msg, f"[Errno 2] No such file or directory: '{model_dir}/fake_1/metadata.yml'")
+        self.assertEqual(log_msg, f"[Errno 2] No such file or directory: '{self.models_dir}/fake_1/metadata.yml'")
 
 
     def test_freeze(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name)
-        model_dir = self.tmpdir
+            self.create_fake_package(name, dest=self.models_dir)
         registry = ModelRegistry()
-        for model_loc in scan_models_dir(model_dir):
+        for model_loc in scan_models_dir(self.models_dir):
             registry.add(model_loc)
         find_all_packages = macsydata._find_all_installed_packages
         macsydata._find_all_installed_packages = lambda: registry
@@ -305,7 +313,6 @@ _ bla bla
 - ligne 1
   ligne 2
   ligne 3 et bbbbb
-  
 
 To cite MacSyFinder:
 
@@ -326,7 +333,7 @@ To cite MacSyFinder:
         expected_msg = f"""If everyone were like you, I'd be out of business
 To push the models in organization:
 \tcd {os.path.join(self.tmpdir, pack_name)}
-Transform the models into a git repository 
+Transform the models into a git repository
 \tgit init .
 \tgit add .
 \tgit commit -m 'initial commit'
@@ -347,7 +354,9 @@ for instance if you want to add the models to 'macsy-models'
             log_msg = log.get_value().strip()
         expected_msg = """The package 'fake_1' have not any LICENCE file. May be you have not right to use it.
 The package 'fake_1' have not any README file.
-It is better, if you fix warnings above, before to publish these models."""
+macsydata says: You're only giving me a partial QA payment?
+I'll take it this time, but I'm not happy.
+I'll be really happy, if you fix warnings above, before to publish these models."""
         self.assertEqual(expected_msg, log_msg)
 
 
@@ -364,38 +373,6 @@ It is better, if you fix warnings above, before to publish these models."""
 The package 'fake_1' have no 'profiles' directory.
 Please fix issues above, before publishing these models."""
         self.assertEqual(expected_msg, log_msg)
-
-
-    def test_uninstall(self):
-        pack_name = 'fake_1'
-        path = self.create_fake_package(pack_name)
-        self.args.package = pack_name
-        model_loc = scan_models_dir(self.tmpdir)[0]
-        find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: model_loc
-        try:
-            with self.catch_log(log_name='macsydata') as log:
-                macsydata.do_uninstall(self.args)
-                log_msg = log.get_value().strip()
-        finally:
-            macsydata._find_installed_package = find_local_package
-
-        expected_msg = f"models '{pack_name}' in {path} uninstalled."
-        self.assertEqual(log_msg, expected_msg)
-        self.assertFalse(os.path.exists(path))
-
-        self.args.package = 'foo'
-        find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: None
-        try:
-            with self.catch_log(log_name='macsydata') as log:
-                with self.assertRaises(ValueError):
-                    macsydata.do_uninstall(self.args)
-                log_msg = log.get_value().strip()
-        finally:
-            macsydata._find_installed_package = find_local_package
-        expected_msg = f"Models '{self.args.package}' not found locally."
-        self.assertEqual(log_msg, expected_msg)
 
 
     def test_download(self):
@@ -442,8 +419,144 @@ Available versions: 1.0"""
         self.assertEqual(log_msg, expected_msg)
 
 
-    def test_install(self):
-        pass
+    def test_install_local(self):
+        pack_name = 'fake_pack'
+        pack_vers = '3.0'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+            expected_pack_path = os.path.join(self.models_dir, pack_name)
+            self.assertTrue(os.path.exists(expected_pack_path))
+            self.assertTrue(os.path.isdir(expected_pack_path))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'metadata.yml')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'README')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'definitions')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
+        finally:
+            del macsydata.Config.models_dir
+
+
+    def test_install_local_already_installed(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+            with self.catch_log(log_name='macsydata')as log:
+                macsydata.do_install(self.args)
+                msg_log = log.get_value().strip()
+            expected_log = f"""Requirement already satisfied: {pack_name}=={pack_vers} in {os.path.join(self.models_dir, pack_name)}.
+To force installation use option -f --force-reinstall."""
+            self.assertEqual(msg_log, expected_log)
+        finally:
+            del macsydata.Config.models_dir
+
+
+    def test_install_installed_package_corrupted(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        unarch_pack_path = self.create_fake_package(pack_name, metadata=False, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+            with self.catch_log(log_name='macsydata')as log:
+                with self.assertRaises(RuntimeError):
+                    macsydata.do_install(self.args)
+                msg_log = log.get_value().strip()
+            expected_log = f"""{pack_name} locally installed is corrupted.
+You can fix it by removing '{os.path.join(self.models_dir, pack_name)}'."""
+            self.assertEqual(msg_log, expected_log)
+        finally:
+            del macsydata.Config.models_dir
+
+
+    def test_uninstall(self):
+        pack_name = 'fake_1'
+        path = self.create_fake_package(pack_name, dest=self.models_dir)
+        self.args.package = pack_name
+        model_loc = scan_models_dir(self.models_dir)[0]
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x: model_loc
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_uninstall(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        expected_msg = f"models '{pack_name}' in {path} uninstalled."
+        self.assertEqual(log_msg, expected_msg)
+        self.assertFalse(os.path.exists(path))
+
+        self.args.package = 'foo'
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x: None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_uninstall(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+        expected_msg = f"Models '{self.args.package}' not found locally."
+        self.assertEqual(log_msg, expected_msg)
+
 
     def test_search(self):
         pass
