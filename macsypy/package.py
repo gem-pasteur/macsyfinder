@@ -30,7 +30,7 @@ from .registries import ModelLocation, ModelRegistry
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank, ProfileFactory
-from .error import MacsydataError
+from .error import MacsydataError, MacsyDataLimitError
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
@@ -110,7 +110,14 @@ class RemoteModelIndex(AbstractModelIndex):
         :param str url: the url to download
         :return: the json corresponding to the response url
         """
-        r = urllib.request.urlopen(url).read()
+        try:
+            r = urllib.request.urlopen(url).read()
+        except urllib.error.HTTPError as err:
+            if err.code == 403:
+                raise MacsyDataLimitError("You reach the maximum number of request per hour to github.\n"
+                                          "Please wait before to try again.") from None
+            else:
+                raise err
         j = json.loads(r.decode('utf-8'))
         return j
 
@@ -124,7 +131,6 @@ class RemoteModelIndex(AbstractModelIndex):
             url = f"{self.base_url}/orgs/{self.org_name}"
             _log.debug(f"get {url}")
             remote = self._url_json(url)
-            print(remote)
             return remote["type"] == 'Organization'
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
