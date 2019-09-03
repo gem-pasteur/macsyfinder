@@ -24,7 +24,7 @@ import yaml
 from unittest.mock import patch
 
 from macsypy import package
-from macsypy.error import MacsydataError
+from macsypy.error import MacsydataError, MacsyDataLimitError
 
 from tests import MacsyTest
 
@@ -97,6 +97,8 @@ class TestRemoteModelIndex(MacsyTest):
         if url == 'https://test_url_json/':
             resp = {'fake': ['json', 'response']}
             return MockResponse(json.dumps(resp), 200)
+        elif url == 'https://test_url_json/limit':
+            raise urllib.error.HTTPError(url, 403, 'forbidden', None, None)
         elif url == 'https://api.github.com/orgs/remote_exists_true':
             resp = {'type': 'Organization'}
             return MockResponse(json.dumps(resp), 200)
@@ -165,6 +167,22 @@ class TestRemoteModelIndex(MacsyTest):
         try:
             j = remote._url_json("https://test_url_json/")
             self.assertDictEqual(j, {'fake': ['json', 'response']})
+        finally:
+            package.RemoteModelIndex.remote_exists = rem_exists
+
+
+    @patch('urllib.request.urlopen', side_effect=mocked_requests_get)
+    def test_url_json_reach_limit(self, mock_urlopen):
+        rem_exists = package.RemoteModelIndex.remote_exists
+        package.RemoteModelIndex.remote_exists = lambda x: True
+        remote = package.RemoteModelIndex(org="nimportnaoik")
+        remote.cache = self.tmpdir
+        try:
+            with self.assertRaises(MacsyDataLimitError) as ctx:
+                remote._url_json("https://test_url_json/limit")
+            self.assertEqual(str(ctx.exception),
+                             """You reach the maximum number of request per hour to github.
+Please wait before to try again.""")
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
 
