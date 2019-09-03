@@ -19,11 +19,13 @@ import shutil
 from textwrap import dedent
 from typing import List, Tuple, Dict, Optional
 import pathlib
+import logging
 
 import colorlog
 from packaging import requirements, specifiers, version
 
 import macsypy
+from macsypy.error import MacsyDataLimitError
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
 from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
@@ -116,15 +118,18 @@ def do_search(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    remote = RemoteModelIndex(org=args.org)
-    packages = remote.list_packages()
-    if args.careful:
-        results = _search_in_desc(args.pattern, remote, packages, match_case=args.match_case)
-    else:
-        results = _search_in_pack_name(args.pattern, remote, packages, match_case=args.match_case)
-    for pack, last_vers, desc in results:
-        pack_vers = f"{pack} ({last_vers})"
-        print(f"{pack_vers:26.25} - {desc}")
+    try:
+        remote = RemoteModelIndex(org=args.org)
+        packages = remote.list_packages()
+        if args.careful:
+            results = _search_in_desc(args.pattern, remote, packages, match_case=args.match_case)
+        else:
+            results = _search_in_pack_name(args.pattern, remote, packages, match_case=args.match_case)
+        for pack, last_vers, desc in results:
+            pack_vers = f"{pack} ({last_vers})"
+            print(f"{pack_vers:26.25} - {desc}")
+    except MacsyDataLimitError as err:
+        _log.critical(str(err))
 
 
 def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[str],
@@ -182,27 +187,30 @@ def do_download(args: argparse.Namespace) -> str:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    remote = RemoteModelIndex(org=args.org)
-    req = requirements.Requirement(args.package)
-    pack_name = req.name
-    specifier = req.specifier
-    all_versions = remote.list_package_vers(pack_name)
-    if all_versions:
-        compatible_version = list(specifier.filter(all_versions))
-        if compatible_version:
-            vers = compatible_version[0]
-            _log.info(f"Downloading {pack_name} {vers}")
-            arch_path = remote.download(pack_name, vers, dest=args.dest)
-            _log.info(f"Successfully downloaded packaging {pack_name} in {arch_path}")
-            return arch_path
-        else:
-            _log.error(f"No version that satisfy requirements '{specifier}' for '{pack_name}'.")
-            _log.warning(f"Available versions: {','.join(all_versions)}")
+    try:
+        remote = RemoteModelIndex(org=args.org)
+        req = requirements.Requirement(args.package)
+        pack_name = req.name
+        specifier = req.specifier
+        all_versions = remote.list_package_vers(pack_name)
+        if all_versions:
+            compatible_version = list(specifier.filter(all_versions))
+            if compatible_version:
+                vers = compatible_version[0]
+                _log.info(f"Downloading {pack_name} {vers}")
+                arch_path = remote.download(pack_name, vers, dest=args.dest)
+                _log.info(f"Successfully downloaded packaging {pack_name} in {arch_path}")
+                return arch_path
+            else:
+                _log.error(f"No version that satisfy requirements '{specifier}' for '{pack_name}'.")
+                _log.warning(f"Available versions: {','.join(all_versions)}")
+    except MacsyDataLimitError as err:
+        _log.critical(str(err))
 
 
 def _find_all_installed_packages() -> ModelRegistry:
     """
-    :return: all madels installed
+    :return: all models installed
     """
     defaults = MacsyDefaults()
     config = Config(defaults, argparse.Namespace())
@@ -263,14 +271,16 @@ def do_install(args: argparse.Namespace) -> None:
             _log.warning(f"You can fix it by removing '{inst_pack_loc.path}'.")
             sys.tracebacklimit = 0
             raise RuntimeError() from None
+    else:
+        local_vers = None
     user_specifier = user_req.specifier
     if not user_specifier and inst_pack_loc:
         user_specifier = specifiers.SpecifierSet(f">{local_vers}")
 
     if remote:
         try:
-            all_available_versions = _get_remote_available_versions(pack_name, org=args.org)
-        except ValueError as err:
+            all_available_versions = _get_remote_available_versions(pack_name, args.org)
+        except (ValueError, MacsyDataLimitError) as err:
             _log.error(str(err))
             sys.tracebacklimit = 0
             raise ValueError from None
@@ -278,7 +288,6 @@ def do_install(args: argparse.Namespace) -> None:
         all_available_versions = [inst_vers]
 
     compatible_version = list(user_specifier.filter(all_available_versions))
-
     if not compatible_version and local_vers:
         target_vers = version.Version(all_available_versions[0])
         if target_vers == local_vers and not args.force:
@@ -286,7 +295,7 @@ def do_install(args: argparse.Namespace) -> None:
                          f"To force installation use option -f --force-reinstall.")
             return None
         elif target_vers < local_vers and not args.force:
-            _log.warning(f"{pack_name}-{local_vers} is already installed.\n"
+            _log.warning(f"{pack_name} ({local_vers}) is already installed.\n"
                          f"To downgrade to {target_vers} use option -f --force-reinstall.")
             return None
         else:
@@ -304,6 +313,10 @@ def do_install(args: argparse.Namespace) -> None:
             if target_vers > local_vers and not args.upgrade:
                 _log.warning(f"{pack_name} ({local_vers}) is already installed but {target_vers} version is available.\n"
                              f"To install it please run 'macsydata install --upgrade {pack_name}'")
+                return None
+            elif target_vers == local_vers and not args.force:
+                _log.warning(f"Requirement already satisfied: {pack_name}{user_specifier} in {pack.path}.\n"
+                             f"To force installation use option -f --force-reinstall.")
                 return None
             else:
                 # target_vers > local_vers and args.upgrade:
@@ -718,6 +731,11 @@ def cmd_name(args: argparse.Namespace) -> str:
     return "macsydata {}".format(func_name)
 
 
+def verbosity_to_log_level(verbosity: int) -> str:
+    level = logging.INFO - (10 * verbosity)
+    return level
+
+
 def main(args=None) -> None:
     """
     Main entry point.
@@ -731,7 +749,7 @@ def main(args=None) -> None:
     parsed_args = parser.parse_args(args)
 
     macsypy.init_logger()
-    macsypy.logger_set_level(level='DEBUG')
+    macsypy.logger_set_level(level=verbosity_to_log_level(parsed_args.verbose))
 
     if 'func' in parsed_args:
         parsed_args.func(parsed_args)
