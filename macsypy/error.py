@@ -18,10 +18,19 @@ class MacsypyError(Exception):
     """
     pass
 
+
 class MacsydataError(MacsypyError):
     """
     Raised when error is encounter during model package handling
     """
+    pass
+
+
+class MacsyDataLimitError(MacsydataError):
+    """
+    Raised when the maximum number of github api call is reached
+    """
+    pass
 
 class OptionError(MacsypyError):
     """
