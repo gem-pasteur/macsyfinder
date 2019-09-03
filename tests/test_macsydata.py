@@ -40,7 +40,7 @@ class TestMacsydata(MacsyTest):
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
-            shutil.rmtree(self.tmpdir)
+            #shutil.rmtree(self.tmpdir)
             pass
         except:
             pass
@@ -89,6 +89,14 @@ class TestMacsydata(MacsyTest):
             with open(os.path.join(pack_path, "LICENCE"), 'w') as f:
                 f.write("# This the Licence\n")
         return pack_path
+
+    def _fake_download(self, pack_name, vers, dest=None):
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(self.tmpdir, 'tmp', pack_name)}-{vers}.tar.gz"
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+        return arch_path
 
 
     def test_available(self):
@@ -480,7 +488,7 @@ Available versions: 1.0"""
         try:
             with self.catch_log(log_name='macsydata'):
                 macsydata.do_install(self.args)
-            with self.catch_log(log_name='macsydata')as log:
+            with self.catch_log(log_name='macsydata') as log:
                 macsydata.do_install(self.args)
                 msg_log = log.get_value().strip()
             expected_log = f"""Requirement already satisfied: {pack_name}=={pack_vers} in {os.path.join(self.models_dir, pack_name)}.
@@ -489,6 +497,48 @@ To force installation use option -f --force-reinstall."""
         finally:
             del macsydata.Config.models_dir
 
+
+    def test_install_local_already_installed_force(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+
+            self.args.force = True
+            # remove README file to check if reinstall works
+            os.unlink(os.path.join(self.models_dir, pack_name, 'README'))
+
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_install(self.args)
+                msg_log = log.get_value().strip()
+            expected_log = f"""Extracting {pack_name} ({pack_vers}).
+Installing {pack_name} ({pack_vers}) in {self.models_dir}
+Cleaning.
+The models {pack_name} ({pack_vers}) have been installed successfully."""
+            self.assertEqual(msg_log, expected_log)
+            self.assertTrue(os.path.exists(os.path.join(self.models_dir, pack_name, 'README')))
+        finally:
+            del macsydata.Config.models_dir
 
     def test_install_installed_package_corrupted(self):
         pack_name = 'fake_pack'
@@ -526,6 +576,291 @@ You can fix it by removing '{os.path.join(self.models_dir, pack_name)}'."""
             del macsydata.Config.models_dir
 
 
+    def test_install_remote(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.args.package = pack_name
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # functions which do net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+            expected_pack_path = os.path.join(self.models_dir, pack_name)
+            self.assertTrue(os.path.exists(expected_pack_path))
+            self.assertTrue(os.path.isdir(expected_pack_path))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'metadata.yml')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'README')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'definitions')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+    def test_install_remote_spec_not_found(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.args.package = f"{pack_name}>{pack_vers}"
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # functions which do net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_install(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"Could not find version that satisfied '{self.args.package}'")
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+
+    def test_install_remote_already_in_local(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.create_fake_package(pack_name, dest='models')
+
+        self.args.package = f"{pack_name}>{pack_vers}"
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # function which doing net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_install(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"""Requirement already satisfied: {self.args.package} in {os.path.join(self.models_dir, pack_name)}.
+To force installation use option -f --force-reinstall.""")
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+
+    def test_install_remote_already_in_local_force(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.create_fake_package(pack_name, dest='models')
+
+        self.args.package = f"{pack_name}>{pack_vers}"
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = True
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # function which doing net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata'):
+                macsydata.do_install(self.args)
+            expected_pack_path = os.path.join(self.models_dir, pack_name)
+            self.assertTrue(os.path.exists(expected_pack_path))
+            self.assertTrue(os.path.isdir(expected_pack_path))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'metadata.yml')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'README')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'definitions')))
+            self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+
+    def test_install_remote_lower_in_local(self):
+        pack_name = 'fake_pack'
+        pack_vers = '1.0'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.create_fake_package(pack_name, dest='models')
+
+        self.args.package = f"{pack_name}=={pack_vers}"
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # function which doing net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_install(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"""{pack_name} (0.0b2) is already installed but {pack_vers} version is available.
+To install it please run 'macsydata install --upgrade {pack_name}'""")
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+
+    def test_install_remote_upper_in_local(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b1'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        self.create_fake_package(pack_name, dest='models')
+
+        self.args.package = f"{pack_name}>{pack_vers}"
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # function which doing net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_install(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"""{pack_name} (0.0b2) is already installed.
+To downgrade to 0.0b1 use option -f --force-reinstall.""")
+        finally:
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+    def test_install_remote_permision_error(self):
+        pack_name = 'fake_pack'
+        pack_vers = '0.0b2'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+
+        os.chmod(self.models_dir, 0o111)
+
+        self.args.package = pack_name
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+
+        # functions which do net operations
+        # so we need to mock them
+        get_remote_available_versions = macsydata._get_remote_available_versions
+        macsydata._get_remote_available_versions = lambda p_nam, org: [pack_vers]
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = self._fake_download
+        macsydata.Config.models_dir = lambda x: self.models_dir
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_install(self.args)
+                log_msg = log.get_value().strip()
+            self.assertEqual(log_msg,
+                             f"""{self.models_dir} is not readable: [Errno 13] Permission denied: '{self.models_dir}' : skip it.
+Downloading {pack_name} ({pack_vers}).
+Extracting {pack_name} ({pack_vers}).
+Installing {pack_name} ({pack_vers}) in {self.models_dir}
+{self.models_dir} is not writable: [Errno 13] Permission denied: '{os.path.join(self.models_dir, pack_name)}'
+Maybe you can use --user option to install in your HOME.""")
+        finally:
+            os.chmod(self.models_dir, 0o777)
+            del macsydata.Config.models_dir
+            macsydata._get_remote_available_versions = get_remote_available_versions
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.download = remote_download
+
+
     def test_uninstall(self):
         pack_name = 'fake_1'
         path = self.create_fake_package(pack_name, dest=self.models_dir)
@@ -560,3 +895,4 @@ You can fix it by removing '{os.path.join(self.models_dir, pack_name)}'."""
 
     def test_search(self):
         pass
+
