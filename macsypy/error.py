@@ -32,6 +32,7 @@ class MacsyDataLimitError(MacsydataError):
     """
     pass
 
+
 class OptionError(MacsypyError):
     """
     Raised when command line option is not set properly
