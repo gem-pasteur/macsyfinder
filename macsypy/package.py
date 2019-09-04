@@ -21,7 +21,7 @@ import shutil
 import tarfile
 import copy
 import abc
-from typing import List, Dict, Any, Tuple, Optional
+from typing import List, Dict, Tuple, Optional
 import logging
 _log = logging.getLogger(__name__)
 
@@ -41,13 +41,13 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
         return super(AbstractModelIndex, cls).__new__(cls)
 
 
-    def __init__(self, cache=''):
+    def __init__(self, cache: str = ''):
         """
 
         """
-        self.org_name = None
+        self.org_name: str = None
         if cache:
-            self.cache = cache
+            self.cache: str = cache
         else:
             self.cache = os.path.join(tempfile.gettempdir(), 'tmp-macsy-cache')
 
@@ -81,24 +81,24 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
 
 class LocalModelIndex(AbstractModelIndex):
 
-    def __init__(self, cache=None):
+    def __init__(self, cache=None) -> None:
         """
 
         """
         super().__init__(cache=cache)
-        self.org_name = 'local'
+        self.org_name: str = 'local'
 
 
 class RemoteModelIndex(AbstractModelIndex):
 
-    def __init__(self, org: str = "macsy-models", cache=None):
+    def __init__(self, org: str = "macsy-models", cache=None) -> None :
         """
 
         :param org: The name of the organization on github where are stored the models
         """
         super().__init__(cache=cache)
-        self.org_name = org
-        self.base_url = "https://api.github.com"
+        self.org_name: str = org
+        self.base_url: str = "https://api.github.com"
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
@@ -239,16 +239,16 @@ class RemoteModelIndex(AbstractModelIndex):
 
 class Package:
 
-    def __init__(self, path: str):
+    def __init__(self, path: str) -> None:
         """
 
         :param str path: The of the package root directory
         """
-        self.path = os.path.realpath(path)
-        self.metadata_path = os.path.join(self.path, 'metadata.yml')
-        self._metadata = None
-        self.name = os.path.basename(self.path)
-        self.readme = self._find_readme()
+        self.path: str = os.path.realpath(path)
+        self.metadata_path: str = os.path.join(self.path, 'metadata.yml')
+        self._metadata: Dict = None
+        self.name: str = os.path.basename(self.path)
+        self.readme: str = self._find_readme()
 
 
     def _find_readme(self) -> Optional[str]:
