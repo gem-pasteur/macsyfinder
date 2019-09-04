@@ -732,7 +732,7 @@ def cmd_name(args: argparse.Namespace) -> str:
 
 
 def verbosity_to_log_level(verbosity: int) -> str:
-    level = logging.INFO - (10 * verbosity)
+    level = max((logging.INFO - (10 * verbosity), 0))
     return level
 
 
