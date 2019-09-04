@@ -22,6 +22,7 @@ from macsypy.registries import scan_models_dir, ModelRegistry
 
 from tests import MacsyTest
 from macsypy.scripts import macsydata
+from macsypy.error import MacsyDataLimitError
 
 
 class TestMacsydata(MacsyTest):
@@ -424,6 +425,27 @@ Successfully downloaded packaging fake_1 in {os.path.join(self.tmpdir, 'fake_1-1
 
         expected_msg = """No version that satisfy requirements '>2.0' for 'fake_1'.
 Available versions: 1.0"""
+        self.assertEqual(log_msg, expected_msg)
+
+
+        def fake_download_limit(_, pack_name, vers, dest=None):
+            raise MacsyDataLimitError('github limit error')
+
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = fake_download_limit
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        self.args.package = 'fake_1'
+        self.args.dest = None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_download(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+            macsydata.RemoteModelIndex.download = remote_download
+        expected_msg = "Downloading fake_1 1.0\ngithub limit error"
         self.assertEqual(log_msg, expected_msg)
 
 
@@ -893,6 +915,224 @@ Maybe you can use --user option to install in your HOME.""")
         self.assertEqual(log_msg, expected_msg)
 
 
-    def test_search(self):
-        pass
+    def test_search_in_pack_name(self):
+
+        self.args.pattern = 'Foo'
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = False
+        self.args.match_case = False
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: ['0.1']
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'vers': '0.1',
+                                                                      'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout,  'FOO (0.1)                  - this is a foo desc_pattern')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
+
+    def test_search_in_pack_name_match_case(self):
+
+        self.args.pattern = 'Foo'.lower()
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = False
+        self.args.match_case = True
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: ['0.1']
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'vers': '0.1',
+                                                                      'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout,  '')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
+
+    def test_search_in_pack_desc(self):
+
+        self.args.pattern = 'sc_pat'
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = True
+        self.args.match_case = False
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: ['0.1']
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'vers': '0.1',
+                                                                      'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout,  'FOO (0.1)                  - this is a foo desc_pattern')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
+
+    def test_search_in_pack_desc_match_case(self):
+
+        self.args.pattern = 'sc_pat'.upper()
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = True
+        self.args.match_case = True
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: ['0.1']
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'vers': '0.1',
+                                                                      'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout,  '')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
+
+    def test_search_reach_limit(self):
+
+        self.args.pattern = 'sc_pat'.upper()
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = True
+        self.args.match_case = True
+
+        # functions which do net operations
+        # so we need to mock them
+        def fake_remote(self):
+            raise MacsyDataLimitError('bla')
+
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = fake_remote
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: ['0.1']
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'vers': '0.1',
+                                                                      'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                with self.catch_log(log_name='macsydata') as log:
+                    macsydata.do_search(self.args)
+                    log_msg = log.get_value().strip()
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout,  '')
+            self.assertEqual(log_msg, 'bla')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
+
+    def test_build_argparser(self):
+        parser = macsydata.build_arg_parser()
+        cmd = "macsydata install toto>1"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_install')
+        self.assertEqual(args.package, 'toto>1')
+        self.assertEqual(args.org, 'macsy-models')
+        self.assertFalse(args.force)
+        self.assertFalse(args.upgrade)
+        self.assertFalse(args.user)
+
+        cmd = "macsydata install --org foo --user --force toto>1"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_install')
+        self.assertEqual(args.package, 'toto>1')
+        self.assertEqual(args.org, 'foo')
+        self.assertTrue(args.force)
+        self.assertFalse(args.upgrade)
+        self.assertTrue(args.user)
+
+        cmd = "macsydata uninstall toto"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_uninstall')
+        self.assertEqual(args.package, 'toto')
+
+        cmd = "macsydata search TXSS"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_search')
+        self.assertEqual(args.pattern, 'TXSS')
+        self.assertEqual(args.org, 'macsy-models')
+        self.assertFalse(args.careful)
+        self.assertFalse(args.match_case)
+
+        cmd = "macsydata search -S --match-case TXSS"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_search')
+        self.assertEqual(args.pattern, 'TXSS')
+        self.assertEqual(args.org, 'macsy-models')
+        self.assertTrue(args.careful)
+        self.assertTrue(args.match_case)
+
+        cmd = "macsydata download foo"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_download')
+        self.assertEqual(args.package, 'foo')
+        self.assertEqual(args.dest, os.getcwd())
+        self.assertEqual(args.org, 'macsy-models')
+
+        cmd = "macsydata available"
+        args = parser.parse_args(cmd.split()[1:])
+        self.assertEqual(args.func.__name__, 'do_available')
+
+    def test_cmd_name(self):
+        parser = macsydata.build_arg_parser()
+        cmd = "macsydata download foo"
+        args = parser.parse_args(cmd.split()[1:])
+        cmd_name = macsydata.cmd_name(args)
+        self.assertEqual(cmd_name, 'macsydata download')
+
+    def test_verbosity_to_log_level(self):
+        level = macsydata.verbosity_to_log_level(1)
+        self.assertEqual(level, 10)
+        level = macsydata.verbosity_to_log_level(5)
+        self.assertEqual(level, 0)
 
