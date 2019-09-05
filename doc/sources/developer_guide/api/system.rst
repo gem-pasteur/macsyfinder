@@ -19,24 +19,9 @@ It represents a macromolecular system to detect. See :ref:`system-implementation
     a complete description of macromolecular systems modelling is available in the section :ref:`system_definition`
     
 
-SystemBank API reference
-========================
- .. automodule:: macsypy.system
-   :members: SystemBank
-   :private-members:
-   :special-members:
-
- 
-.. note::
-
-   Don't instanciate your own SystemBank use the system_bank at the top level of the module. ::
-     
-     from macsypy.system import system_bank
- 
-System API reference
-====================
-
+model API reference
+===================
 .. automodule:: macsypy.system
-   :members: System
+   :members:
    :private-members:
    :special-members:

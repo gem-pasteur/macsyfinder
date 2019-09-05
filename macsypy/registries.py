@@ -54,7 +54,7 @@ def scan_models_dir(models_dir, profile_suffix=".hmm", relative_path=False):
     :param profile_suffix: the suffix of the hmm profiles
     :param relative_path: True if models_dir is relative false otherwise
     :return: the list of models in models_dir
-    :rtype: [:class:`macsypy.registries.ModelLocation, ...]
+    :rtype: [:class:`macsypy.registries.ModelLocation`, ...]
     """
     models = []
     for models_type in os.listdir(models_dir):

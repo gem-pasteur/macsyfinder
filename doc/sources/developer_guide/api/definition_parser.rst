@@ -6,7 +6,7 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
     
-.. _system_parser:
+.. _definition_parser:
 
 *********************************
 The Parser of Systems definitions
@@ -85,7 +85,7 @@ Contrariwise:
 
 SystemParser API reference
 ==========================
-.. automodule:: macsypy.system_parser
+.. automodule:: macsypy.definition_parser
    :members:
    :private-members:
    :special-members:

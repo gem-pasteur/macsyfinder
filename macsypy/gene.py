@@ -36,9 +36,9 @@ class GeneBank:
     def __getitem__(self, key):
         """
         :param key: The key to retrieve a gene.
-        The key is composed of the name of models family and the gene name.
-        for instance CRISPR-Cas/cas9_TypeIIB ('CRISPR-Cas' , 'cas9_TypeIIB') or
-        TXSS/T6SS_tssH ('TXSS', 'T6SS_tssH')
+                    The key is composed of the name of models family and the gene name.
+                    for instance CRISPR-Cas/cas9_TypeIIB ('CRISPR-Cas' , 'cas9_TypeIIB') or
+                    TXSS/T6SS_tssH ('TXSS', 'T6SS_tssH')
         :type key: tuple (string, string)
         :return: return the Gene corresponding to the key.
         :rtype: :class:`macsypy.gene.Gene` object
@@ -182,7 +182,7 @@ class Gene:
     def multi_system(self):
         """
         :return: True if this Gene can belong to different occurrences of **the model**
-        (and can be used for multiple System assessments), False otherwise.
+                (and can be used for multiple System assessments), False otherwise.
         :rtype: boolean.
         """
         return self._multi_system

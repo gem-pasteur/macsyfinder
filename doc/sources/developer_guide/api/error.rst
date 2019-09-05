@@ -6,7 +6,7 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
     
-.. _macsypy_error:
+.. _error:
 
 ******************
 MacSyFinder errors
@@ -15,7 +15,7 @@ MacSyFinder errors
  
 macsypy_error API reference
 ============================
-.. automodule:: macsypy.macsypy_error
+.. automodule:: macsypy.error
    :members:
    :private-members:
    :special-members:

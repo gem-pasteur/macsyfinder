@@ -11,7 +11,10 @@
 MacSyView: visualizing MacSyFinder's results!
 ===============================================
 
-MacSyView is a standalone web-browser application to visualize MacSyFinder's detected systems. MacSyView relies on JSON files outputted by MacSyFinder to display the list of detected systems, and a detailed view of each system. It allows visualizing the content of systems, their genomic context, and generates SVG files that can be exported for drawing purpose. 
+MacSyView is a standalone web-browser application to visualize MacSyFinder's detected systems.
+MacSyView relies on JSON files outputted by MacSyFinder to display the list of detected systems,
+and a detailed view of each system. It allows visualizing the content of systems, their genomic context,
+and generates SVG files that can be exported for drawing purpose.
 
 ****************
 MacSyView How To
@@ -22,7 +25,7 @@ MacSyView How To
 
  * Either, **run the wrapper `macsyview`** installed with MacSyFinder's binaries (*i.e.*, `macsyfinder` - for Linux). 
  * Or **open with your web-browser the html page**: /usr/share/macsyview/index.html or /share/macsyview/index.html
- (or in the path specified during installation for data associated with MacSyFinder).
+   (or in the path specified during installation for data associated with MacSyFinder).
 
 3. Select the .json output file in the output directory of the run
 4. Choose the system you want to visualize in the list...
@@ -40,7 +43,8 @@ Graphical output description
 The content of the system view depends on the type of the input dataset. 
 
  * upper panel: an overview of the effectives of detected components is displayed **for all types** of datasets,
-   per type of components in the system definition. It is a direct representation of how the definition was fulfilled during detection.
+   per type of components in the system definition.
+   It is a direct representation of how the definition was fulfilled during detection.
  * middle panel: only for **ordered datasets**, the detected system is shown in its genomic context,
    including nearby proteins that were not annotated as system's components.
  * lower panel: for **all datasets**, a table containing information on detected components
@@ -61,7 +65,8 @@ It includes among others:
  * the `Bootstrap library <http://getbootstrap.com/>`_ for HTML design and 
  * the `Mustache library <http://github.com/janl/mustache.js>`_ for HTML templating in Javascript. 
  
- The `JQuery <http://jquery.com/>`_, `JQuery-mousewheel <https://github.com/brandonaaron/jquery-mousewheel>`_ and `Raphael.Export <http://github.com/ElbertF/Raphael.Export>`_ libraries were also used.
+The `JQuery <http://jquery.com/>`_, `JQuery-mousewheel <https://github.com/brandonaaron/jquery-mousewheel>`_ and
+`Raphael.Export <http://github.com/ElbertF/Raphael.Export>`_ libraries were also used.
 It was tested on Chromium and Firefox for Linux, and on Chrome, Firefox and Safari for Mac OS X. 
 
 .. _screenshot:
@@ -72,7 +77,7 @@ Screenshot
 
 Here is a view of one of the three systems detected with the example dataset :ref:`presented here <datatest>`:
 
-    .. image:: images/fig_capture.*
+    .. image:: ../images/fig_capture.*
      :height: 600px
      :width: 700px 
      :align: left

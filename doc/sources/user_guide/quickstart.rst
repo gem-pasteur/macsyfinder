@@ -30,7 +30,8 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 
   "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
-  will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"* definition files placed in the folder *"mydefinitions"*.
+  will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"*
+  definition files placed in the folder *"mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input datasets. 
 
@@ -53,9 +54,12 @@ See :ref:`input-dataset-label` for more on input datasets.
 
 .. note::
 
-    Systems have to be spelled in a case-sensitive way to run their detection from the command-line. The name of the system corresponds to the suffix defined for xml files (.xml by default), for example *"toto"* for a system defined in *"toto.xml"*. 
+    Systems have to be spelled in a case-sensitive way to run their detection from the command-line.
+    The name of the system corresponds to the suffix defined for xml files (.xml by default),
+    for example *"toto"* for a system defined in *"toto.xml"*.
     
-    The *"all"* keyword allows to detect all systems available in the definition folder in a single run. See the :ref:`Command-line options <command-line-label>`.
+    The *"all"* keyword allows to detect all systems available in the definition folder in a single run.
+    See the :ref:`Command-line options <command-line-label>`.
 
 
 .. _datatest:   
@@ -63,16 +67,28 @@ See :ref:`input-dataset-label` for more on input datasets.
 First trial with a test dataset
 *******************************
 
-We included a test dataset in the MacSyFinder package. **By default, it will be installed** in /share/macsyfinder or /usr/share/macsyfinder. But it can be located elsewhere if it was specified during installation.  
+We included a test dataset in the MacSyFinder package.
+**By default, it will be installed** in /share/macsyfinder or /usr/share/macsyfinder.
+But it can be located elsewhere if it was specified during installation.
 
-This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the /share/macsyfinder/DEF folder, using the profiles in the /share/macsyfinder/profiles folder. This classification was previously described in `Makarova et al. 2011 <http://www.ncbi.nlm.nih.gov/pubmed/21552286>`_, and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_ (release 13 of August 15 2012) and some of them were specifically designed for CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_). The definitions are detailed in the MacSyFinder's paper.
+This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the
+/share/macsyfinder/DEF folder, using the profiles in the /share/macsyfinder/profiles folder.
+This classification was previously described in `Makarova et al. 2011 <http://www.ncbi.nlm.nih.gov/pubmed/21552286>`_,
+and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_
+(release 13 of August 15 2012) and some of them were specifically designed for
+CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_).
+The definitions are detailed in the MacSyFinder's paper.
 
 As a sequence dataset, we propose three replicons in /share/macsyfinder/sequence_data/datatest_gembase.fasta: 
-    - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a). Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
-    - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a). Genbank accession number: `NC_006392 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006392>`_.
-    - *Legionella pneumophila* str. Paris, complete genome (LEPN003c01a). Genbank accession number: `NC_006368 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006368>`_.
+    - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a).
+      Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
+    - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a).
+      Genbank accession number: `NC_006392 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006392>`_.
+    - *Legionella pneumophila* str. Paris, complete genome (LEPN003c01a).
+      Genbank accession number: `NC_006368 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006368>`_.
 
-They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`, and thus MacSyfinder will treat the three different replicons separately for systems inference. 
+They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`,
+and thus MacSyfinder will treat the three different replicons separately for systems inference.
 
 To run the detection and classification of all subtypes, type::
 
@@ -84,7 +100,11 @@ To run the detection of the Type-IE subtype only, type::
     "macsyfinder --db-type gembase --sequence-db 
     /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE"
 
-A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology, and follows the convention in :ref:`here <topology-files>`. It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format. Otherwise, by default the topology is set to "circular". It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
+A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology,
+and follows the convention in :ref:`here <topology-files>`.
+It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format.
+Otherwise, by default the topology is set to "circular".
+It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
 
 To run the detection using the topology file, type::
 
@@ -95,7 +115,9 @@ To run the detection using the topology file, type::
 Visualizing expected results with MacSyView
 *******************************************
 
-To have an idea of what should be detected with the above test dataset, run :ref:`MacSyView <macsyview>`, the web-browser application for MacSyFinder's results visualization. To do that, open the expected JSON result file with MacSyView: /share/macsyfinder/sequence_data/results.macsyfinder.json. 
+To have an idea of what should be detected with the above test dataset, run :ref:`MacSyView <macsyview>`,
+the web-browser application for MacSyFinder's results visualization.
+To do that, open the expected JSON result file with MacSyView: /share/macsyfinder/sequence_data/results.macsyfinder.json.
 
 A screenshot of MacSyView is included :ref:`here <screenshot>`.
 

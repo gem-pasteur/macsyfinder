@@ -274,7 +274,7 @@ class RepliconDB:
         :param default: the value to return if the replicon_name is not in the RepliconDB
         :type default: any
         :returns: the RepliconInfo for replicon_name if replicon_name is in the repliconDB, else default.
-        If default is not given, it is set to None, so that this method never raises a KeyError.
+                  If default is not given, it is set to None, so that this method never raises a KeyError.
         :rtype: :class:`RepliconInfo` object
         """
         return self._DB.get(replicon_name, default)
