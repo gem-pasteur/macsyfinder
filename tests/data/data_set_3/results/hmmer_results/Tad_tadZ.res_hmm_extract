@@ -1,7 +1,0 @@
-# gene: Tad_tadZ extract from tests/data/data_set_3/results/hmmer_results/Tad_tadZ.search_hmm.out hmm output
-# profile length= 416
-# i_evalue threshold= 0.001
-# coverage threshold= 0.500
-# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-VICH001.B.00001.C001_01870	VICH001.B.00001.C001	1787	276	Tad_tadZ	Tad	3.900e-15	52.900	0.543	0.830	9	237
-VICH001.B.00001.C001_01973	VICH001.B.00001.C001	1888	313	Tad_tadZ	Tad	1.100e-10	38.300	0.582	0.767	40	279
