@@ -1,1 +1,0 @@
-{'id': 'AESU001c01a_005140', 'position': 505, 'sequence_length': 235, 'system': 'T9SS', 'match': 'T9SS_sprT', 'gene_status': 'mandatory', 'i_eval': 7.5e-103, 'score': 340.4, 'profile_coverage': 1.0, 'sequence_coverage': 0.9957446808510638, 'begin_match': 1, 'end_match': 234}
