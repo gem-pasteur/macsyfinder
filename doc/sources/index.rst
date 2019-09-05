@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
+    Copyright © 2014-2019  Institut Pasteur, Paris.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -30,45 +30,28 @@ Welcome to MacSyFinder's documentation!
 
   If you use MacSyFinder, please cite:   
 
-`Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems. PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726>`_
+`Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014).
+MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
+PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726 <http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726>`_
 
-
-
-Running MacSyFinder    
-===================
+==========
+User Guide
+==========
 .. toctree::
    :maxdepth: 2
 
-   installation 
-   quickstart
-   input 
-   outputs
-   macsyview
-   
-MacSyFinder functioning    
-======================= 
+   user_guide/index
+
+===============
+Developer Guide
+===============
+
 .. toctree::
    :maxdepth: 2
 
-   system_definition
-   implementation 
-   functioning
+   developer_guide/index
 
 
-MacSyFinder API documentation    
-=============================
-.. toctree::
-   :maxdepth: 2
- 
-   config
-   database
-   system
-   system_parser
-   gene
-   profile
-   HMMReport
-   search_genes
-   macsypy_error
 
 Indices and tables
 ==================
