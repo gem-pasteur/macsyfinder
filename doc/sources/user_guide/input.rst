@@ -20,20 +20,31 @@ Input dataset
 
 The input dataset must be a set of protein sequences in **Fasta format** (see http://en.wikipedia.org/wiki/FASTA_format). 
 
-The :ref:`base section<config-base-label>` in the configuration file (see :ref:`config-definition-label`) can be used to specify **the path** and the **type of dataset** to deal with, as well as the `--sequence_db` and `--db_type` parameters respectively, described in the :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`).
+The :ref:`base section<config-base-label>` in the configuration file (see :ref:`config-definition-label`)
+can be used to specify **the path** and the **type of dataset** to deal with,
+as well as the `--sequence_db` and `--db_type` parameters respectively,
+described in the :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`).
  
   Four types of protein datasets are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
-        * *unordered_replicon* : a set of sequences corresponding to a complete genome (*e.g.* an unassembled complete genome)
-        * *ordered_replicon* : a set of sequences corresponding to an ordered complete replicon (*e.g.* an assembled complete genome)
-        * *gembase* : a set of multiple ordered replicons, which format follows the convention described in :ref:`gembase_convention`.
+        * *unordered_replicon* : a set of sequences corresponding to a complete genome
+          (*e.g.* an unassembled complete genome)
+        * *ordered_replicon* : a set of sequences corresponding to an ordered complete replicon
+          (*e.g.* an assembled complete genome)
+        * *gembase* : a set of multiple ordered replicons, which format follows the convention described
+          in :ref:`gembase_convention`.
       
-For "ordered" ("ordered_replicon" or "gembase") datasets only, MacSyFinder can take into account the **shape of the genome**: "linear", or "circular" for detection. The default is set to "circular". 
+For "ordered" ("ordered_replicon" or "gembase") datasets only,
+MacSyFinder can take into account the **shape of the genome**: "linear",
+or "circular" for detection. The default is set to "circular".
   
-  This can be set with the `--replicon_topology` parameter from :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`), or in the configuration in the :ref:`base section<config-base-label>`.
+  This can be set with the `--replicon_topology` parameter from :ref:`command-line-label`
+  (see :ref:`Input options <cmd-input-label>`),
+  or in the configuration in the :ref:`base section<config-base-label>`.
   
-  With the "gembase" format, it is possible to specify a topology per replicon with a topology file (see :ref:`gembase_convention` and :ref:`topology-files`). 
+  With the "gembase" format, it is possible to specify a topology per replicon with a topology file
+  (see :ref:`gembase_convention` and :ref:`topology-files`).
 
 
 
@@ -222,13 +233,12 @@ General options::
 Configuration file
 ==================
 
-Options to run MacSyFinder can be specified in a configuration file. The :ref:`Config <config>` handles all configuration options for MacSyFinder.
+Options to run MacSyFinder can be specified in a configuration file.
+The :ref:`Config <config>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/macsyfinder/macsyfinder.conf
- 
  * $(HOME)/.macsyfinder/macsyfinder.conf
- 
  * ./macsyfinder.conf  
  
 Moreover these three locations options can be passed on the command-line.
@@ -240,7 +250,9 @@ Each file can define options, at the end all options are added. If an option is 
  
     $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < ./macsyfinder.conf < "command-line" options
    
-This means that command-line options will always bypass those from the configuration files. In the same flavor, options altering the definition of systems found in the command-line or the configuration file will always overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.   
+This means that command-line options will always bypass those from the configuration files. In the same flavor,
+options altering the definition of systems found in the command-line or the configuration file will always
+overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
 The Config object provides some default values and performs some validations of the values, for instance:
@@ -256,25 +268,32 @@ In MacSyFinder, five sections are defined:
     * *type* : the type of dataset to handle, four types are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
-        * *unordered_replicon* : a set of sequences corresponding to a complete replicon (*e.g.* an unassembled complete genome)
-        * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered (*e.g.* an assembled complete genome)
+        * *unordered_replicon* : a set of sequences corresponding to a complete replicon
+          (*e.g.* an unassembled complete genome)
+        * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered
+          (*e.g.* an assembled complete genome)
         * *gembase* : a set of multiple ordered replicons.
         
       (*no default value*)
       
-    * *replicon_topology* : the topology of the replicon under study. Two topologies are supported: 'linear' and 'circular' (*default* = 'circular')
+    * *replicon_topology* : the topology of the replicon under study.
+      Two topologies are supported: 'linear' and 'circular' (*default* = 'circular')
       This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
   
   * **system**
   
-    * *inter_gene_max_space* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.  
-    * *min_mandatory_genes_required* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.
-    * *min_genes_required* = list of system name and integer separated by spaces. These values will supersede the values found in the system definition file.
+    * *inter_gene_max_space* = list of system name and integer separated by spaces.
+      These values will supersede the values found in the system definition file.
+    * *min_mandatory_genes_required* = list of system name and integer separated by spaces.
+      These values will supersede the values found in the system definition file.
+    * *min_genes_required* = list of system name and integer separated by spaces.
+      These values will supersede the values found in the system definition file.
     
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
-    * *index_db_exe* the executable to use to build the index for the hmm. The value can be 'makeblastdb' or 'formatdb' or the absolute path toward one of these two binaries (default= *makeblastdb* )
+    * *index_db_exe* the executable to use to build the index for the hmm.
+      The value can be 'makeblastdb' or 'formatdb' or the absolute path toward one of these two binaries (default= *makeblastdb* )
     * *e_value_res* = (default= *1* )
     * *i_evalue_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
@@ -338,7 +357,9 @@ Example of a configuration file::
 
 .. note::
 
-    After a run, the corresponding configuration file ("macsyfinder.conf") is generated as a (re-usable) output file that stores every options used in the run. It is stored in the results' directory (see :ref:`the output section <outputs>`). 
+    After a run, the corresponding configuration file ("macsyfinder.conf") is generated as a (re-usable)
+    output file that stores every options used in the run.
+    It is stored in the results' directory (see :ref:`the output section <outputs>`).
 
 
 In-house input files

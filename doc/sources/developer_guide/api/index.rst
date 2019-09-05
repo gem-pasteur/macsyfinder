@@ -10,14 +10,21 @@
 MacSyFinder API documentation
 =============================
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   config
-   database
-   system
-   system_parser
-   gene
-   profile
-   HMMReport
-   search_genes
-   macsypy_error
+    argparse_utils
+    cluster
+    config
+    database
+    definition_parser
+    error
+    gene
+    profile
+    hit
+    model
+    package
+    registries
+    report
+    search_genes
+    system
+    utils
