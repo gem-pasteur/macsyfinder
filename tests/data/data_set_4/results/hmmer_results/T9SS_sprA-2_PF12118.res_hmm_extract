@@ -1,5 +1,0 @@
-# gene: T9SS_sprA-2_PF12118 extract from /home/bneron/Projects/GEM/macsyfinder-github/src/macsyfinder/macsyfinder-20190116_16-28-21/hmmer_results/T9SS_sprA-2_PF12118.search_hmm.out hmm output
-# profile length= 295
-# i_evalue threshold= 0.001
-# coverage threshold= 0.500
-# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
