@@ -1,6 +1,0 @@
-# gene: T9SS_sprE extract from tests/data/data_set_9/results/hmmer_results/T9SS_sprE.search_hmm.out hmm output
-# profile length= 713
-# i_evalue threshold= 0.001
-# coverage threshold= 0.500
-# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-AETU001c01a_011620	Unordered	1145	847	T9SS_sprE	T9SS	2.600e-239	794.000	0.997	0.838	12	721
