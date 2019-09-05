@@ -40,7 +40,6 @@ class MacsyTest(unittest.TestCase):
 
     _tests_dir = os.path.normpath(os.path.dirname(__file__))
     _data_dir = os.path.join(_tests_dir, "data")
-    _output_control_dir = os.path.join(_data_dir, "outputs_control")
 
     @staticmethod
     def setsid():
@@ -61,39 +60,6 @@ class MacsyTest(unittest.TestCase):
         else:
             raise IOError("data '{}' does not exists".format(data_path))
 
-    @classmethod
-    def _output_control(cls, _id):
-        frame, outer_filename, outer_line_number, outer_function_name, lines, index = inspect.stack()[2]
-
-        # example: tests/unit/test_systemDetectionReportUnordered.py become systemDetectionReportUnordered
-        modulename = path_to_modulename(outer_filename)
-
-        expected_file = os.path.join(cls._output_control_dir, modulename, outer_function_name, _id)
-
-        # example: tests/data/outputs_control/test_systemDetectionReportUnordered/test_json_output/011
-        return expected_file
-
-
-    @classmethod
-    def output_control_file(cls, _id):
-        """
-        This method is trivial, but is needed to keep the a stack number of 2
-        in '_output_control' method (i.e. to be symetric with
-        'output_control_str' method).
-        """
-        return cls._output_control(_id)
-
-
-    @classmethod
-    def output_control_str(cls, _id):
-
-        # retrieve file path where the expected output is stored
-        path = cls._output_control(_id)
-
-        with open(path) as f:
-            str_ = f.read()
-
-        return str_
 
     @contextmanager
     def catch_io(self, out=False, err=False):
