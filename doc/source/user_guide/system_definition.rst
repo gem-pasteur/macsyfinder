@@ -34,7 +34,7 @@ and which corresponds to Gene objects, and the corresponding HMM protein profile
 * **Forbidden** components are components which presence is eliminatory for the System assessment. 
 
 
-    .. image:: images/Figure1_figure_system_no_mb-new3_2col.*
+    .. image:: ../_static/Figure1_figure_system_no_mb-new3_2col.*
      :height: 500px
      :align: left
 

@@ -92,13 +92,11 @@ and thus MacSyfinder will treat the three different replicons separately for sys
 
 To run the detection and classification of all subtypes, type::
 
-    "macsyfinder --db-type gembase --sequence-db 
-    /share/macsyfinder/sequence_data/datatest_gembase.fasta all"
+    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta all
 
 To run the detection of the Type-IE subtype only, type::
 
-    "macsyfinder --db-type gembase --sequence-db 
-    /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE"
+    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE
 
 A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology,
 and follows the convention in :ref:`here <topology-files>`.
@@ -108,9 +106,8 @@ It can also be specified in the commmand-line (see the :ref:`Command-line option
 
 To run the detection using the topology file, type::
 
-    "macsyfinder --db-type gembase --sequence-db 
-    /share/macsyfinder/sequence_data/datatest_gembase.fasta 
-    --topology-file /share/macsyfinder/sequence_data/datatest_gembase.topology all"
+    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta \
+    --topology-file /share/macsyfinder/sequence_data/datatest_gembase.topology all
 
 Visualizing expected results with MacSyView
 *******************************************

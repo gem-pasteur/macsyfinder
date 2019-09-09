@@ -34,6 +34,10 @@ from .error import MacsydataError, MacsyDataLimitError
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
+    """
+    This the base class for ModelIndex.
+    This class cannot be implemented, it must be subclassed
+    """
 
     def __new__(cls, *args, **kwargs):
         if cls.__bases__ == (object,):
@@ -80,6 +84,9 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
 
 
 class LocalModelIndex(AbstractModelIndex):
+    """
+    It allow to manage installation from a local package (tarball)
+    """
 
     def __init__(self, cache=None) -> None:
         """
@@ -90,6 +97,9 @@ class LocalModelIndex(AbstractModelIndex):
 
 
 class RemoteModelIndex(AbstractModelIndex):
+    """
+    This class allow to interact with ModelIndex on github
+    """
 
     def __init__(self, org: str = "macsy-models", cache=None) -> None :
         """
@@ -238,6 +248,18 @@ class RemoteModelIndex(AbstractModelIndex):
 
 
 class Package:
+    """
+    This class Modelize a package of Models
+    a package is a directory with the name of the models family
+    it must contains at least
+    - a subdirectory definitions
+    - a subdirectory profiles
+    - a file metadata.yml
+    it is also recomanded to add a file
+    for licensing and copyright and a README.
+    for further explanation see TODO
+
+    """
 
     def __init__(self, path: str) -> None:
         """
@@ -265,6 +287,10 @@ class Package:
 
     @property
     def metadata(self) -> Dict:
+        """
+
+        :return: The parsed metadata as a dict
+        """
         if not self._metadata:
             self._metadata = self._load_metadata()
         # to avoid side effect

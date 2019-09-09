@@ -77,7 +77,7 @@ Screenshot
 
 Here is a view of one of the three systems detected with the example dataset :ref:`presented here <datatest>`:
 
-    .. image:: ../images/fig_capture.*
+    .. image:: ../_static/fig_capture.*
      :height: 600px
      :width: 700px 
      :align: left
