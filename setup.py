@@ -158,9 +158,12 @@ def subst_vars(src, dst, vars):
         raise DistutilsFileError("could not create '{0}': {1}".format(dst, err))
     with src_file:
         with dest_file:
-            for line in src_file:
-                new_line = distutils_subst_vars(line, vars)
-                dest_file.write(new_line)
+            try:
+                for line in src_file:
+                    new_line = distutils_subst_vars(line, vars)
+                    dest_file.write(new_line)
+            except UnicodeDecodeError as err:
+                raise UnicodeDecodeError(f"{src}: {err}")
 
 
 def expand_data(data_to_expand):
