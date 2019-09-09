@@ -16,7 +16,7 @@ MacSyFinder functioning
 Functioning overview
 ********************
 
-    .. image:: ../images/FigureS2_figure_TXSScan_last-new.*
+    .. image:: ../_static/FigureS2_figure_TXSScan_last-new.*
      :height: 500px
      :align: left
 
