@@ -28,9 +28,10 @@ In order to model macromolecular systems, the user:
     - defines **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
 
 
-.. image:: _static/figure_main-2.*
-    :height: 600px
-    :align: left
+    .. figure:: _static/figure_main-2.*
+        :height: 600px
+        :align: center
+
 
 .. note::
 
