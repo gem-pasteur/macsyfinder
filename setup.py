@@ -159,11 +159,11 @@ def subst_vars(src, dst, vars):
     with src_file:
         with dest_file:
             try:
-                for line in src_file:
+                for l_nb, line in enumerate(src_file):
                     new_line = distutils_subst_vars(line, vars)
                     dest_file.write(new_line)
             except UnicodeDecodeError as err:
-                raise RuntimeError(f"{src}: {err}")
+                raise RuntimeError(f"{src}: {l_nb} :{err}")
 
 
 def expand_data(data_to_expand):
