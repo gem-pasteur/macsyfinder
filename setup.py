@@ -159,11 +159,16 @@ def subst_vars(src, dst, vars):
     with src_file:
         with dest_file:
             try:
+                file = ''
                 for line in src_file:
+                    file += line
                     new_line = distutils_subst_vars(line, vars)
                     dest_file.write(new_line)
             except UnicodeDecodeError as err:
                 import sys
+                print("####################### file raising a error#######################3", file=sys.stderr)
+                print(file, file=sys.stderr)
+                print("###################### end of debug ###############################", file=sys.stderr)
                 raise RuntimeError(f"{src}: {sys.getdefaultencoding()} :{err}")
 
 
