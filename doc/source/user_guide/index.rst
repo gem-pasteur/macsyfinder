@@ -6,6 +6,11 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
 
+.. _user_guide:
+
+==========
+User Guide
+==========
 
 Running MacSyFinder
 ===================
