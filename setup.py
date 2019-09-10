@@ -163,7 +163,8 @@ def subst_vars(src, dst, vars):
                     new_line = distutils_subst_vars(line, vars)
                     dest_file.write(new_line)
             except UnicodeDecodeError as err:
-                raise RuntimeError(f"{src}: {l_nb} :{err}")
+                import sys
+                raise RuntimeError(f"{src}: {l_nb} : {sys.getdefaultencoding()} :{err}")
 
 
 def expand_data(data_to_expand):
