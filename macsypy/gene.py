@@ -422,7 +422,7 @@ class Analog:
         :type gene_ref: :class:`macsypy.gene.Gene` object.
         """
         self._gene = gene
-        self.ref = gene_ref
+        self._ref = gene_ref
 
 
     def __getattr__(self, name):
@@ -443,7 +443,7 @@ class Analog:
         :return: the gene to which this one is analog to (reference gene)
         :rtype: :class:`macsypy.gene.Gene` object
         """
-        return self.ref
+        return self._ref
 
 
 class ProfileFactory:
