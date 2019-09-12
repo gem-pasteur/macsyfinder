@@ -29,7 +29,8 @@ from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry
 from .definition_parser import DefinitionParser
 from .model import ModelBank
-from .gene import GeneBank, ProfileFactory
+from .gene import GeneBank
+from .profile import ProfileFactory
 from .error import MacsydataError, MacsyDataLimitError
 
 

@@ -20,7 +20,7 @@ For instance, the *gspG* gene has the corresponding "gspG.hmm" profile file prov
 
 ProfileFactory
 ==============
- .. automodule:: macsypy.gene
+ .. automodule:: macsypy.profile
    :members: ProfileFactory
    :private-members:
    :special-members:
@@ -31,7 +31,7 @@ ProfileFactory
 Profile
 =======
 
-.. automodule:: macsypy.gene
+.. automodule:: macsypy.profile
    :members: Profile
    :private-members:
    :special-members:

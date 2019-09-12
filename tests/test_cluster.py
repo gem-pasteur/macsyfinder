@@ -18,7 +18,8 @@ import random
 from macsypy.error import MacsypyError
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
-from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
+from macsypy.gene import Gene, Homolog, Analog, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.database import RepliconInfo

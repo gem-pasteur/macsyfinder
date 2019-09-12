@@ -19,8 +19,8 @@ import tempfile
 import sysconfig
 import argparse
 
-from macsypy.gene import Profile
-from macsypy.gene import Gene, ProfileFactory
+from macsypy.profile import ProfileFactory, Profile
+from macsypy.gene import Gene
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation

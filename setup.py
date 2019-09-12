@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# -*- coding: utf-8 -*-
-
 ################################################################################
 # MacSyFinder - Detection of macromolecular systems in protein datasets        #
 #               using systems modelling and similarity search.                 #
@@ -158,9 +154,18 @@ def subst_vars(src, dst, vars):
         raise DistutilsFileError("could not create '{0}': {1}".format(dst, err))
     with src_file:
         with dest_file:
-            for line in src_file:
-                new_line = distutils_subst_vars(line, vars)
-                dest_file.write(new_line)
+            try:
+                file = ''
+                for line in src_file:
+                    file += line
+                    new_line = distutils_subst_vars(line, vars)
+                    dest_file.write(new_line)
+            except UnicodeDecodeError as err:
+                import sys
+                print("####################### file raising a error#######################3", file=sys.stderr)
+                print(file, file=sys.stderr)
+                print("###################### end of debug ###############################", file=sys.stderr)
+                raise RuntimeError(f"{src}: {sys.getdefaultencoding()} :{err}")
 
 
 def expand_data(data_to_expand):

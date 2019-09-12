@@ -19,7 +19,8 @@ import argparse
 from io import StringIO
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import ProfileFactory, Gene, GeneStatus
+from macsypy.gene import Gene, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
