@@ -433,7 +433,7 @@ class Analog:
     def gene(self):
         """
 
-        :return: the gene which encapsulated in this homolog
+        :return: the gene which encapsulated in this Analog
         """
         return self._gene
 
