@@ -52,7 +52,7 @@ class TestSearchGenes(MacsyTest):
 
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
-        self.profile_factory = macsypy.gene.ProfileFactory(self.cfg)
+        self.profile_factory = macsypy.profile.ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:

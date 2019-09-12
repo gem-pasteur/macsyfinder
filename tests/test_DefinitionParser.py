@@ -19,7 +19,8 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
-from macsypy.gene import GeneBank, ProfileFactory
+from macsypy.gene import GeneBank
+from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
