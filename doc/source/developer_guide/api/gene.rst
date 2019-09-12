@@ -1,72 +1,65 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
+    Copyright © 2014-2020  Institut Pasteur (Paris), and CNRS.
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _gene:
 
-********
-Gene API
-********
+****
+gene
+****
 
-The Gene object represents genes encoding the protein components of a System. See :ref:`gene-implementation` for an overview of the implementation. 
+The Gene object represents genes encoding the protein components of a System.
+See :ref:`gene-implementation` for an overview of the implementation.
 
 
 .. warning::
-    To optimize computation and to avoid concurrency problems when we search several systems,
-    each gene must be instanciated only once, and stored in gene_bank.
+    To optimize computation and to avoid concurrency problems when we search several models,
+    each gene must be instantiated only once, and stored in gene_bank.
     gene_bank is a :class:`macsypy.gene.GeneBank` object. 
-    The gene_bank and system_bank (:class:`macsypy.model.ModelBank` object)
-    are filled by a system_parser (:class:`macsypy.defintion_parser.DefinitionParser`)
+    The gene_bank and model_bank (:class:`macsypy.model.ModelBank` object)
+    are instantiated in :func:`macsypy.scripts.macsyfinder.main` function
+    and filled by a definition_parser (:class:`macsypy.defintion_parser.DefinitionParser`)
 
 Example to get a gene object: ::
   
-    from macsypy.system import system_bank
-    from macsypy.config import Config
-    from macsypy.gene import gene_bank
-      
-      
-    #get a system  
-    t2ss =  system_bank["T2SS"]
+    #get a model
+    t2ss =  modelb_ank["T2SS"]
     
     #get of a gene
     pilO = gene_bank["pilO"]
 
- 
-GeneBank API reference
-=========================
+
+
+GeneBank
+========
+
  .. automodule:: macsypy.gene
    :members: GeneBank
    :private-members:
    :special-members:
 
-.. note::
+.. _gene_api:
 
-   Don't instanciate your own GeneFactory use the gene_bank at the top level of the module. ::
-     
-     from macsypy.gene import gene_bank
-
-Gene API reference
-==================
+Gene
+====
 
 .. automodule:: macsypy.gene
    :members: Gene
    :private-members:
    :special-members:
 
-
+.. _homolog_api:
 
 .. note::
 
     All attributes/methods which are not directly implemented in Homolog are redirected to that of the encapsulated Gene.
 
-.. _homolog-API:
-  
-Homolog API reference  
-=====================
+Homolog
+=======
 
 .. automodule:: macsypy.gene
    :members: Homolog
@@ -74,10 +67,14 @@ Homolog API reference
    :special-members:
 
 
-.. _analog-API:   
+.. _analog_api:
 
-Analog API reference  
-====================
+.. note::
+
+    All attributes/methods which are not directly implemented in Analog are redirected to that of the encapsulated Gene.
+
+Analog
+======
 
 .. automodule:: macsypy.gene
    :members: Analog

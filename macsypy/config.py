@@ -73,6 +73,10 @@ class MacsyDefaults(dict):
 
 
 class Config:
+    """
+    Handle configuration values for macsyfinder.
+    This values come from default and ar superseded by the configuration files, then the command line settings.
+    """
 
     cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
                 ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
@@ -167,6 +171,7 @@ class Config:
     def _str_2_tuple(self, value):
         """
         transform a string with syntax  {model_fqn int} n in list of tuple
+
         :param str value: the string to parse
         :return:
         :rtype: [(model_fqn, int), ...]
@@ -270,6 +275,7 @@ class Config:
     def _set_db_type(self, value):
         """
         set value for 'db_type' option
+
         :param str value: the value for db_type, allowed values are :
                           'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
         :raise ValueError: if value is not allowed
@@ -284,6 +290,7 @@ class Config:
     def _set_inter_gene_max_space(self, value):
         """
         set value for 'inter_gene_max_space' option
+
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
@@ -319,6 +326,7 @@ class Config:
     def _set_max_nb_genes(self, value):
         """
         set value for 'max_nb_genes' option
+
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
@@ -354,6 +362,7 @@ class Config:
     def _set_min_genes_required(self, value):
         """
         set value for 'min_genes_required' option
+
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
@@ -388,6 +397,7 @@ class Config:
     def _set_min_mandatory_genes_required(self, value):
         """
         set value for 'min_mandatory_genes_required' option
+
         :param str value: the string parse representing the model fully qualified name
                           and it's associated value and so on
                           the model_fqn is a string, the associated value must be cast in int
@@ -497,6 +507,7 @@ class Config:
     def _set_topology_file(self, path):
         """
         test if the path exists and set it in config
+
         :param str path: the path to the topology file
         """
         if os.path.exists(path) and os.path.isfile(path):
@@ -531,8 +542,14 @@ class Config:
         """
         return model_fqn in self._options['multi_loci']
 
+
     def hmmer_dir(self):
+        """
+
+        :return: The name of the directory containing the hmmsearch results (output, error, parsing)
+        """
         return 'hmmer_results'
+
 
     def log_level(self):
         level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())

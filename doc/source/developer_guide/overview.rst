@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
+    Copyright © 2014-2019  Institut Pasteur, Paris.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -12,48 +12,157 @@ MacSyFinder implementation overview
 ===================================
 
 MacSyFinder is implemented with an object-oriented architecture.
-The objects are described in the current :ref:`API documentation <config>`.
-An overview of the main classes used to model the systems to be detected is provided below.
+Below a short glossary to fix the vocabulary used in MacSyFinder
+
+.. glossary::
+    :sorted:
+
+    Model family
+        A set of models, on the same topic.
+        it is composed of several definitions which can be sorted in hierachical structure
+        and profiles a profile is a hmm profile file.
+
+    Model
+        Is a formal description of a macromolecular system.
+        Is composed of a definition and a list of profiles.
+        at each gene of the Model must correspond a profile
+
+    ModelDefinition
+
+        Is a definition of model, it's serialize as a xml file
+
+    Cluster
+
+        Is a "contiguous" set of hits.
+
+    System
+
+        It's an occurrence of a specific Model on a replicon.
+        Basically, it's a cluster or set of clusters which satisfy the Model quorum.
+
+MacSyFinder project structure
+-----------------------------
+
+A brief overview of the files and directory constituting the MacSyFinder project
+
+.. glossary::
+
+    doc
+        The project is documented using sphinx.
+        All sources files needed to generate this documentation is in the directory *doc*
+
+    etc
+        This directory contains a template to configure macsyfinder.
+        It's allow to set some configuration available for each run and avoid to specify them
+        at each run on the command line.
+        This file is in *ini* format.
+
+    macsypy
+        This the MacSyFinder python library
+        Inside macsypy there is a subdirectory *scripts* which are the entry points for
+        `macsyfinder` and `macsydata`
+
+    tests
+        The code is tested using `unittests`.
+        In *tests* the directory *data* contains all data needed to perform the tests.
+
+    utils
+        Contains a binary `setsid` needed macsyfinder to parallelize some steps.
+        Usually `setsid` is provides by the system, but some macOS version does not provide it.
+
+    CITATION.yml
+        A file indicating how to cite macsyfinder in yaml format.
+
+    CONTRIBUTORS
+        A file containing the list of code contributors.
+
+    CONTRIBUTING
+        A guide on how to contribute to the project.
+
+    COPYRIGHT
+        The macsyfinder copyrights.
+
+    COPYING
+        The licencing.
+        MacSyFinder is released under GPLv3.
+
+    README.md
+        Brief information about the project.
+
+    requirements.txt
+        The list of python dependencies needed by macsyfinder.
+        do not forget to install hmmsearch which is not handle by python packet manager `pip`
+
+    requirements_dev.txt
+        The list of extra dependencies needed if you want to contribute to the code.
+
+    setup.py
+        The installation recipe.
+
+
+MacSyFinder architecture overview
+---------------------------------
+
+An overview of the main classes.
   
-.. digraph:: system_overview
+.. figure:: ../_static/macsyfinder_classes.svg
 
-     "System" -> "Gene" -> "Homolog";
-     "Gene" -> "System";
-     "Homolog" -> "Gene";
-     "Gene" -> "Analog";
-     "Analog" -> "Gene";
-     "Gene" -> "Profile";
-     "Gene" -> "HMMReport" -> "Hit";
-     "Hit" -> "Gene";
-     "Hit" -> "System";
-     "Profile" -> "HMMReport"; 
-     
-The *"System"* class models the systems to detect and contains a list of instances of the *"Gene"* class,
-which models each component of a given System.
-The *"Homolog"* and *"Analog"* classes encapsulate a "Gene" and
-model respectively relationships of homology and analogy between components.
+    The macsyfinder classes diagram.
+    The classes are not details. only the main attributes allowing us to understand the interaction are mentioned.
 
-A *"Gene"* represents a component from the System and refers to an instance of the *"Profile"* object
-that corresponds to an hidden Markov model protein profile (used for sequence similarity search with the Hmmer program).
+    * in green the modules
+    * in orange, the concrete class
+    * in red the abstract classes
+    * in blue the enumeration
+    * in purple the dataclass
 
-The *"Config"* class (see the :ref:`config`) handles the program parameters, including Hmmer search parameters,
-and the set of sequences to query (represented by the "Database" object).
 
-The *"Database"* stores information on the dataset, including necessary information to detect systems in both
- linear and circular chromosomes (see the :ref:`database`).
+MacSyFinder functioning overview
+--------------------------------
+In this section I'll give you an idea of the macsyfinder functioning at very high grain coarse.
 
-A set of parsers and object factories are used to fill the objects from command-line and input files
-(*i.e.* the optional configuration file and the XML files describing the systems), and to ensure their uniqueness and integrity.
+As all program the entrypoint is the main function
+The goal of `macsyfinder.main` is to parse the command line.
+Then to creates a :ref:`config` object and also initialize the logger.
+after that it call main_search_systems which contains the macsyfinder logic
 
-Once these objects are initialized and the detection is launched, Hmmer is executed on the sequences of the database
-(optionally in parallel) with a unique list of profiles corresponding to the systems to detect.
-Subsequently, Hmmer output files are parsed, and selected hits (given the search parameters provided)
-are used to fill *"Hits"* objects, which contain information for the detection of the systems.
+The first main_search_systems task is to create models asked by the user on the commandline.
+So a DefinitionParser is instantiated.
+and the ModelBank and GeneBank are populated
 
-During the treatment of the *"Hits"* for *"Systems"* detection, the occurrences of the systems
-(*"SystemOccurence"* objects) are filled, and the **decision rules** associated with the systems
-(quorum and co-localization in the case of an "ordered" dataset) are applied.
-See the following sections for more details on above objects.
+.. note::
+    More models than those expressly asked by the user are created.
+    macsyfinder parse also models which referred by the asked models trough the analogs, homologs for instance.
+
+Once all models are created, we gather all genes and search them in the replicons.
+This step is done in parallel.
+The search is done by profil object associated to each gene and rely on the external software hmmsearch.
+The parallelization is ensure by search_genes function
+The results of this step is a list of hits.
+
+This list is sorted by position and score.
+this list is filtered to keep only one hit for each position,
+the one with the best score (position is a gene product in a replicon)
+
+For each model asked by the user, we filter the hit list to keep only the hits related to the model.
+Those which are link to mandatory, accessory or forbidden gene included the homologs and analogs.
+
+This hits are clustered based on distance constraints describe in the models:
+
+    * **inter_gene_max_space** : the maximum genes allowed between to genes of a system.
+    * **lonner** : allow a gene to participate to system even if it does not clusterize with some other genes.
+
+Then we check if each cluster satisfy the quorum described in the model.
+
+    * **min_mandatory_genes** : the minimum of mandatory genes requisite to have a system.
+    * **min_genes_required** : the minimum of genes (mandatory + accessory) requisite to have a system.
+    * **forbidden_genes** : no forbidden genes may appear in the cluster.
+
+If the model is multi_loci we generate a combination of the clusters and check the quorum for each combination.
+If the cluster or combination satisfy the quorum a System is created otherwise a RejectedCluster.
+
+The Systems from the same replicon are sort against their score.
+
 
 
 
