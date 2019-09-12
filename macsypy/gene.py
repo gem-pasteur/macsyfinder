@@ -377,14 +377,12 @@ class Homolog:
                         Otherwise, only partial overlapping between the profiles.
         :type aligned: boolean
         """
-        self.gene = gene 
-        """:ivar gene: gene """
-
-        self.ref = gene_ref 
+        self._gene = gene
+        self._ref = gene_ref
         self.aligned = aligned
 
     def __getattr__(self, name):
-        return getattr(self.gene, name)
+        return getattr(self._gene, name)
 
 
     def is_aligned(self):
@@ -394,6 +392,13 @@ class Homolog:
         """
         return self.aligned
 
+    @property
+    def gene(self):
+        """
+
+        :return: the gene which encapsulated in this homolog
+        """
+        return self._gene
 
     @property
     def gene_ref(self):
@@ -401,7 +406,7 @@ class Homolog:
         :return: the gene to which this one is homolog to (reference gene)
         :rtype: :class:`macsypy.gene.Gene` object
         """
-        return self.ref
+        return self._ref
 
 
 class Analog:
@@ -416,15 +421,21 @@ class Analog:
         :param gene_ref: the gene to which the current is analog.
         :type gene_ref: :class:`macsypy.gene.Gene` object.
         """
-        self.gene = gene 
-        """:ivar gene: gene """
-
-        self.ref = gene_ref 
+        self._gene = gene
+        self.ref = gene_ref
 
 
     def __getattr__(self, name):
         return getattr(self.gene, name)
 
+
+    @property
+    def gene(self):
+        """
+
+        :return: the gene which encapsulated in this homolog
+        """
+        return self._gene
 
     @property
     def gene_ref(self):
