@@ -17,8 +17,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.gene import ProfileFactory
-from macsypy.gene import Profile
+from macsypy.profile import ProfileFactory, Profile
 from macsypy.gene import Gene
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults

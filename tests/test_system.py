@@ -17,9 +17,10 @@ import json
 
 from macsypy.hit import Hit, ValidHit
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import Gene, Homolog, Analog, ProfileFactory, GeneStatus
+from macsypy.gene import Gene, Homolog, Analog, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.model import Model
-from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
+from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
 from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker, SystemSerializer
 

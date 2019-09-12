@@ -17,7 +17,7 @@ The :ref:`Profile object <profile-implementation>` is used for the search of the
 
 ProfileFactory API reference
 ============================
- .. automodule:: macsypy.gene
+ .. automodule:: macsypy.profile
    :members: ProfileFactory
    :private-members:
    :special-members:
@@ -26,7 +26,7 @@ ProfileFactory API reference
 Profile API reference
 ======================
 
-.. automodule:: macsypy.gene
+.. automodule:: macsypy.profile
    :members: Profile
    :private-members:
    :special-members:

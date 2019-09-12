@@ -19,7 +19,8 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
-from macsypy.gene import Gene, Homolog, Analog, ProfileFactory
+from macsypy.gene import Gene, Homolog, Analog
+from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit
 from macsypy.registries import ModelLocation
 from tests import MacsyTest
