@@ -21,7 +21,8 @@ import argparse
 
 from macsypy.report import HMMReport, GembaseHMMReport, OrderedHMMReport, GeneralHMMReport
 from macsypy.hit import Hit
-from macsypy.gene import Gene, ProfileFactory
+from macsypy.gene import Gene
+from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, RepliconDB

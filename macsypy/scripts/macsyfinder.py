@@ -35,6 +35,9 @@ from macsypy import cluster
 from macsypy.hit import get_best_hits
 from macsypy.system import match, System, HitSystemTracker, SystemSerializer
 from macsypy.utils import get_models_name_to_detect
+from macsypy.profile import ProfileFactory
+from macsypy.model import ModelBank
+from macsypy.gene import GeneBank
 
 
 def get_version_message():
@@ -338,8 +341,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
     registry = ModelRegistry()
     models_loc_available = scan_models_dir(config.models_dir(),
-                                       profile_suffix=config.profile_suffix(),
-                                       relative_path=config.relative_path())
+                                           profile_suffix=config.profile_suffix(),
+                                           relative_path=config.relative_path())
     for model_loc in models_loc_available:
         registry.add(model_loc)
     # build indexes
@@ -552,9 +555,9 @@ def main(args=None, loglevel=None):
             raise OptionError("argument --db-type is required.")
         _log.info("command used: {}".format(' '.join(sys.argv)))
 
-        models = macsypy.model.ModelBank()
-        genes = macsypy.gene.GeneBank()
-        profiles = macsypy.gene.ProfileFactory(config)
+        models = ModelBank()
+        genes = GeneBank()
+        profiles = ProfileFactory(config)
 
         main_search_systems(config, models, genes, profiles, logger)
     logger.debug("END")

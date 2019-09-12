@@ -16,7 +16,8 @@ import argparse
 
 from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import ProfileFactory, Gene, GeneStatus
+from macsypy.gene import Gene, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
