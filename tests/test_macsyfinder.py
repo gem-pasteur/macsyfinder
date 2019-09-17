@@ -182,7 +182,7 @@ The reasons to reject this clusters
     def test_parse_args(self):
         command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt --db-type=gembase --models-dir data/models/ " \
                        "--models TFF-SF_final all -w 4 --out VICH001-all"
-        args = parse_args(command_line.split()[1:])
+        parser, args = parse_args(command_line.split()[1:])
         self.assertIsNone(args.cfg_file)
         self.assertIsNone(args.coverage_profile)
         self.assertIsNone(args.hmmer)
@@ -215,7 +215,7 @@ The reasons to reject this clusters
                        "--db-type=ordered_replicon --models-dir data/models/ " \
                        "--models TFF-SF_final all -w 4 --out VICH001-all " \
                        "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path"
-        args = parse_args(command_line.split()[1:])
+        parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
         self.assertEqual(args.multi_loci, "TXSscan/T2SS,TXSScan/T3SS")
         self.assertTrue(args.relative_path)
@@ -225,6 +225,6 @@ The reasons to reject this clusters
                        "--db-type=ordered_replicon --models-dir data/models/ " \
                        "--i-evalue-sel=0.5 " \
                        "--min-genes-required TXSScan/T2SS 15 --min-genes-required TXSScan/Flagellum 10"
-        args = parse_args(command_line.split()[1:])
+        parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.i_evalue_sel, 0.5)
         self.assertListEqual(args.min_genes_required, [['TXSScan/T2SS', '15'], ['TXSScan/Flagellum', '10']])

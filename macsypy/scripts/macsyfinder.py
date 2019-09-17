@@ -311,7 +311,7 @@ def parse_args(args):
     # data set, which are used on many different machines (using previous-run option).
 
     parsed_args = parser.parse_args(args)
-    return parsed_args
+    return parser, parsed_args
 
 
 def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
@@ -511,7 +511,7 @@ def main(args=None, loglevel=None):
     :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     args = sys.argv[1:] if args is None else args
-    parsed_args = parse_args(args)
+    parser, parsed_args = parse_args(args)
 
     defaults = MacsyDefaults()
     config = Config(defaults, parsed_args)
@@ -548,11 +548,21 @@ def main(args=None, loglevel=None):
         sys.exit(0)
     else:
         if not parsed_args.previous_run and not parsed_args.models:
-            raise OptionError("argument --models is required.")
-        if not parsed_args.previous_run and not parsed_args.sequence_db:
-            raise OptionError("argument --sequence-db is required.")
-        if not parsed_args.previous_run and not parsed_args.db_type:
-            raise OptionError("argument --db-type is required.")
+            parser.print_help()
+            print()
+            sys.tracebacklimit = 0
+            raise OptionError("argument --models or --previous-run is required.")
+        elif not parsed_args.previous_run and not parsed_args.sequence_db:
+            parser.print_help()
+            print()
+            sys.tracebacklimit = 0
+            raise OptionError("argument --sequence-db or --previous-run is required.")
+        elif not parsed_args.previous_run and not parsed_args.db_type:
+            parser.print_help()
+            print()
+            sys.tracebacklimit = 0
+            raise OptionError("argument --db-type or --previous-run is required.")
+
         _log.info("command used: {}".format(' '.join(sys.argv)))
 
         models = ModelBank()
