@@ -33,6 +33,18 @@ Example to get a gene object: ::
     pilO = gene_bank["pilO"]
 
 
+Homolog/Analog are Composition with Gene.
+Then a gene in some model is seen as a Gene, in some other models as an Homolg or Analog.
+But there only one instance of this gene.::
+
+    sctn = Gene(name="sctN", model_A)
+    sctn_flg = Gene(name="sctN_FLG", model_A)
+    sctn_homolog = Homolg(sctn, sctn_flg)
+    sctn_flg.add_homolg(sctn_homolog)
+
+which means that sctn_flg has an homolog which is sctn
+sctn appear as a gene `sctn` and as homolog `sctn_homolg`
+
 
 GeneBank
 ========
