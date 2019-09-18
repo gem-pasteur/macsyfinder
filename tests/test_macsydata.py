@@ -17,6 +17,7 @@ import os
 import argparse
 import sys
 import tarfile
+import unittest
 
 from macsypy.registries import scan_models_dir, ModelRegistry
 
@@ -837,6 +838,7 @@ To downgrade to 0.0b1 use option -f --force-reinstall.""")
             macsydata.RemoteModelIndex.remote_exists = remote_exists
             macsydata.RemoteModelIndex.download = remote_download
 
+    @unittest.skipIf(os.getuid() == 0, 'Skip test if run as root')
     def test_install_remote_permision_error(self):
         pack_name = 'fake_pack'
         pack_vers = '0.0b2'
