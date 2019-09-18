@@ -50,17 +50,37 @@ def init_logger(level='INFO', out=True):
     return logger
 
 
-def verbosity_to_log_level(verbosity: int) -> str:
+def verbosity_to_log_level(verbosity):
+    """
+    transform the number of -v option in loglevel
+    :param int verbosity: number of -v option on the command line
+    :return: an int corresponding to a logging level
+    """
     level = max((logging.INFO - (10 * verbosity), 0))
     return level
 
 
 def parse_args(args):
-    parser = argparse.ArgumentParser()
+    """
+
+    :param args: The arguments provided on the command line
+    :type args: List of strings [without the program name]
+    :return: The arguments parsed
+    :rtype: :class:`aprgparse.Nampsace` object.
+    """
+    parser = argparse.ArgumentParser(description="""Migrate model definition from macsyfinder 1.x syntax to 2.x
+By default the old xml file is rename as xx.xml.ori.""",
+                                     epilog="For more details, visit the MacSyFinder website and see "
+                                            "the MacSyFinder documentation.")
     parser.add_argument('definitions',
                         nargs='+',
                         help="the definitions path to migrate"
                         )
+    parser.add_argument('--in-place', '-i',
+                        action='store_true',
+                        default=False,
+                        help="modify xml definition in place.")
+
     parser.add_argument('-v',
                         dest='verbosity',
                         action="count",
@@ -72,6 +92,13 @@ def parse_args(args):
 
 
 def _2to3(xml):
+    """
+    Parse the xml and update the syntax
+
+    :param str xml: the path to the xml file
+    :return: the updated tree
+    :rtype: :class:`xml.etree.ElementTree` object
+    """
     tree = Et.parse(xml)
     root = tree.getroot()
     root.tag = 'model'
@@ -83,6 +110,14 @@ def _2to3(xml):
 
 
 def main(args=None, loglevel=None):
+    """
+    loop over xml definitions in args to update the syntax
+
+    :param args: the arguments passed on the command line without the program name
+    :type args: List of string
+    :param loglevel: the output verbosity
+    :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+    """
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)
 
@@ -93,7 +128,8 @@ def main(args=None, loglevel=None):
     for xml in parsed_args.definitions:
         _log.info(f"migrate {xml}")
         tree = _2to3(xml)
-        os.rename(xml, f"{xml}.ori")
+        if not parsed_args.in_place:
+            os.rename(xml, f"{xml}.ori")
         tree.write(xml)
     _log.info("done")
 
