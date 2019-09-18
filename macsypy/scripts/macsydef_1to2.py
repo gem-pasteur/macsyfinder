@@ -127,7 +127,11 @@ def main(args=None, loglevel=None):
 
     for xml in parsed_args.definitions:
         _log.info(f"migrate {xml}")
-        tree = _2to3(xml)
+        try:
+            tree = _2to3(xml)
+        except Et.ParseError as err:
+            _log.error(f"The definition file {xml} cannot be migrate: {err} : skip it.")
+            continue
         if not parsed_args.in_place:
             os.rename(xml, f"{xml}.ori")
         tree.write(xml)
