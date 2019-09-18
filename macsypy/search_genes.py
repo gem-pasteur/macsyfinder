@@ -20,6 +20,7 @@ import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
+import time
 
 def search_genes(genes, cfg):
     """
@@ -36,7 +37,6 @@ def search_genes(genes, cfg):
     if not worker_nb:
         worker_nb = len(genes)
     _log.debug("worker_nb = {0:d}".format(worker_nb))
-    sema = threading.BoundedSemaphore(value=worker_nb)
     all_reports = []
 
     def stop(signum, frame):
@@ -48,7 +48,7 @@ def search_genes(genes, cfg):
 
     signal.signal(signal.SIGTERM, stop)
 
-    def search(gene, all_reports, sema):
+    def search(gene):
         """
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
@@ -59,23 +59,21 @@ def search_genes(genes, cfg):
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore
         """
-        with sema:
-            _log.info("search gene {0}".format(gene.name))
-            profile = gene.profile
-            try:
-                report = profile.execute()
-            except Exception as err:
-                print("\n### ERROR ", err)
-                _log.critical(err)
-                stop(signal.SIGKILL, None)
-            else:
-                if report:
-                    report.extract()
-                    report.save_extract()
-                    all_reports.append(report)
+        _log.info("search gene {0}".format(gene.name))
+        profile = gene.profile
+        try:
+            report = profile.execute()
+        except Exception as err:
+            _log.critical(err)
+            stop(signal.SIGKILL, None)
+        else:
+            if report:
+                report.extract()
+                report.save_extract()
+                return report
 
 
-    def recover(gene, all_reports, cfg, sema):
+    def recover(gene, cfg):
         """
         Recover Hmmer output from a previous run, and produce a report
 
@@ -90,23 +88,23 @@ def search_genes(genes, cfg):
         :return: the list of all HMMReports (derived class depending on the input dataset type)
         :rtype: list of `macsypy.report.HMMReport` object
         """
-        with sema:
-            hmm_old_path = os.path.join(cfg.previous_run(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
-            _log.info("recover hmm {0}".format(hmm_old_path))
-            hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
-            shutil.copy(hmm_old_path, hmm_new_path)
-            gene.profile.hmm_raw_output = hmm_new_path
-            db_type = cfg.db_type()
-            if db_type == 'gembase':
-                report = GembaseHMMReport(gene, hmm_new_path, cfg)
-            elif db_type == 'ordered_replicon':
-                report = OrderedHMMReport(gene, hmm_new_path, cfg)
-            else:
-                report = GeneralHMMReport(gene, hmm_new_path, cfg)
-            if report:
-                report.extract()
-                report.save_extract()
-                all_reports.append(report)
+
+        hmm_old_path = os.path.join(cfg.previous_run(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
+        _log.info("recover hmm {0}".format(hmm_old_path))
+        hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
+        shutil.copy(hmm_old_path, hmm_new_path)
+        gene.profile.hmm_raw_output = hmm_new_path
+        db_type = cfg.db_type()
+        if db_type == 'gembase':
+            report = GembaseHMMReport(gene, hmm_new_path, cfg)
+        elif db_type == 'ordered_replicon':
+            report = OrderedHMMReport(gene, hmm_new_path, cfg)
+        else:
+            report = GeneralHMMReport(gene, hmm_new_path, cfg)
+        if report:
+            report.extract()
+            report.save_extract()
+            return report
 
     # there is only one instance of gene per name but the same instance can be
     # in all genes several times
@@ -120,22 +118,20 @@ def search_genes(genes, cfg):
         # it works because mkdir is an atomic operation
         os.mkdir(hmmer_dir)
 
+    #########################################################################
+    import concurrent.futures
     previous_run = cfg.previous_run()
-    for gene in genes:
-        if previous_run and os.path.exists(os.path.join(previous_run,
-                                                        cfg.hmmer_dir(),
-                                                        gene.name + cfg.res_search_suffix())):
-            t = threading.Thread(target=recover, args=(gene, all_reports, cfg, sema))
-        else:
-            t = threading.Thread(target=search, args=(gene, all_reports, sema))
-        t.start()
-
-    main_thread = threading.currentThread()   
-    while threading.activeCount() > 1:
-        for t in threading.enumerate():
-            if t is main_thread:
-                continue
-            t.join(10)
-
+    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_nb) as executor:
+        future_search = []
+        for gene in genes:
+            if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir(),
+                                                            gene.name + cfg.res_search_suffix())):
+                future_search.append(executor.submit(recover, gene, cfg))
+            else:
+                future_search.append(executor.submit(search, gene))
+        for future in concurrent.futures.as_completed(future_search):
+            report = future.result()
+            if report:
+                all_reports.append(report)
     _log.debug("end searching genes")
     return all_reports
