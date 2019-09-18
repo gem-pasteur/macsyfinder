@@ -12,16 +12,20 @@
 Output format
 *************
 
-MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder, whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46". MacSyFinder outputs are stored in this run-specific folder. 
+MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder,
+whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46".
+MacSyFinder outputs are stored in this run-specific folder.
 
 .. _hmmer-outputs-label:
 
 Hmmer results outputs 
 ---------------------
-Raw Hmmer outputs are provided, as long with processed tabular outputs that includes hits filtered as specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract". 
+Raw Hmmer outputs are provided, as long with processed tabular outputs that includes hits filtered as
+specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
+will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract".
 
-The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for hits filtering and relevant information on the matches, as 
-for instance::
+The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for
+hits filtering and relevant information on the matches, as for instance::
 
   # gene: sctC extract from /Users/bob/macsyfinder_results/
         macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
@@ -49,21 +53,23 @@ Systems detection results
 
 Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
 
-  * macsyfinder.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase"). It provides a summary of the number of each type of systems that have been detected. 
-  
-  * macsyfinder.report - contains all the sequence identifiers of proteins detected as being part of a system, along with statistics on the Hmmer hit, and the status of the component in the system. 
-  
+  * macsyfinder.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase").
+    It provides a summary of the number of each type of systems that have been detected.
+  * macsyfinder.report - contains all the sequence identifiers of proteins detected as being part of a system,
+    along with statistics on the Hmmer hit, and the status of the component in the system.
   * macsyfinder.summary - contains a line of information for each detected system.
 
 
 macsyfinder.tab
 ***************
-For each replicon, a line gives the occurrences of systems that were asked for detection. For example, if the detection was run for the Flagellum and the T6SS, the output will look like::
+For each replicon, a line gives the occurrences of systems that were asked for detection.
+For example, if the detection was run for the Flagellum and the T6SS, the output will look like::
 
   #Replicon Flagellum_single_locus Flagellum_multi_loci T6SS_single_locus T6SS_multi_loci	
   escherichia06 1   1   1   0
 
-which means that this "escherichia06" genome harbors 1 flagellum in a single locus, 1 flagellum scattered on multiple loci, and 1 T6SS in a single locus. 
+which means that this "escherichia06" genome harbors 1 flagellum in a single locus,
+1 flagellum scattered on multiple loci, and 1 T6SS in a single locus.
 
 macsyfinder.report
 ******************
@@ -115,16 +121,17 @@ Logs and configuration files
 
 Three specific output files are built to store information on the MacSyFinder execution: 
 
- * macsyfinder.out - contains information on the procedure during systems detection: clusters found, decisions made for system inference... The same information is also displayed on the standard output. 
-
- * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run. 
- 
+ * macsyfinder.out - contains information on the procedure during systems detection: clusters found,
+   decisions made for system inference... The same information is also displayed on the standard output.
+ * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run.
  * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
   
 
 File for MacSyview: results.macsyfinder.json
 --------------------------------------------
 
-This file in JSON format is used by MacSyView, for graphical output purpose. It must be loaded through MacSyView to graphically visualize detected systems. For more details, see :ref:`MacSyView's description <macsyview>`.
+This file in JSON format is used by MacSyView, for graphical output purpose.
+It must be loaded through MacSyView to graphically visualize detected systems.
+For more details, see :ref:`MacSyView's description <macsyview>`.
 
 

@@ -1,32 +1,33 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
+    Copyright © 2014-2020  Institut Pasteur (Paris), and CNRS.
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
     
-.. _system_parser:
+.. _definition_parser:
 
-*********************************
-The Parser of Systems definitions
-*********************************
+****************
+DefinitionParser
+****************
 
-The system parser object "SystemParser" instanciates Systems and Genes objects from XML system definitions (see :ref:`system_definition`).
+The model definition parser object "DefinitionParser" instantiates Models and Genes objects from
+XML model definitions (see :ref:`model_definition`).
 The parsing consists in three phases.
 
 Phase 1. 
 
-   * each Gene is parsed from the System it is defined
-   * From the list of System to detect, the list of Systems to parse is established
+   * each Gene is parsed from the Model it is defined
+   * From the list of Model to detect, the list of Models to parse is established
 
 Phase 2.
 
-   * For each system to parse 
+   * For each model to parse
    
-     * create the System
-     * add this System to the system_bank
-     * create the Genes defined in this System with their attributes but not their Homologs
+     * create the Model
+     * add this Model to the model_bank
+     * create the Genes defined in this Model with their attributes but not their Homologs
      * add these Genes in the gene_bank
     
 Phase 3. 
@@ -36,7 +37,7 @@ Phase 3.
      * For each Gene defined in this System:
      
          * create the Homologs by encapsulating Genes from the gene_bank
-         * add the Gene to the System
+         * add the Gene to the Model
 
 
 For instance::
@@ -82,10 +83,11 @@ Contrariwise:
 .. note::
     The only "full" Systems (*i.e.,* with all corresponding Genes created) are those to detect.
 
+.. _defintion_parser_api:
 
-SystemParser API reference
-==========================
-.. automodule:: macsypy.system_parser
+DefinitionParser
+================
+.. automodule:: macsypy.definition_parser
    :members:
    :private-members:
    :special-members:
