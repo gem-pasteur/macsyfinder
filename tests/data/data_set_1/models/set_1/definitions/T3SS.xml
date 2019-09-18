@@ -1,52 +1,52 @@
-<system inter_gene_max_space="10" min_mandatory_genes_required="7" min_genes_required="7" multi_loci="1">
-    <gene name="T3SS_sctC" presence="mandatory" exchangeable="1">        
+<model inter_gene_max_space="10" min_genes_required="7" min_mandatory_genes_required="7" multi_loci="1">
+    <gene exchangeable="1" name="T3SS_sctC" presence="mandatory">        
         <homologs>
-    	    <gene name="T2SS_gspD" system_ref="T2SS"/>
-    	    <gene name="T4P_pilQ" system_ref="T4P"/>
-    	    <gene name="Tad_rcpA" system_ref="Tad"/>
+    	    <gene model_ref="T2SS" name="T2SS_gspD" />
+    	    <gene model_ref="T4P" name="T4P_pilQ" />
+    	    <gene model_ref="Tad" name="Tad_rcpA" />
         </homologs>
     </gene>
     <gene name="T3SS_sctJ" presence="mandatory">       
         <homologs>
-    	    <gene name="Flg_sctJ_FLG" system_ref="Flagellum"/>
+    	    <gene model_ref="Flagellum" name="Flg_sctJ_FLG" />
         </homologs>
     </gene>
     <gene name="T3SS_sctN" presence="mandatory">       
     	<homologs>
-    	    <gene name="Flg_sctN_FLG" system_ref="Flagellum"/>
+    	    <gene model_ref="Flagellum" name="Flg_sctN_FLG" />
     	</homologs>
     </gene>
     <gene name="T3SS_sctQ" presence="mandatory">  
         <homologs>
-    	    <gene name="Flg_sctQ_FLG" system_ref="Flagellum"/>
+    	    <gene model_ref="Flagellum" name="Flg_sctQ_FLG" />
     	</homologs>
     </gene>
     <gene name="T3SS_sctR" presence="mandatory">    
     	<homologs>
-            <gene name="Flg_sctR_FLG" system_ref="Flagellum"/>
+            <gene model_ref="Flagellum" name="Flg_sctR_FLG" />
         </homologs>
     </gene>
     <gene name="T3SS_sctS" presence="mandatory">    
     	<homologs>
-            <gene name="Flg_sctS_FLG" system_ref="Flagellum"/>
+            <gene model_ref="Flagellum" name="Flg_sctS_FLG" />
         </homologs>
     </gene>
     <gene name="T3SS_sctT" presence="mandatory">    
         <homologs>
-    	    <gene name="Flg_sctT_FLG" system_ref="Flagellum"/>
+    	    <gene model_ref="Flagellum" name="Flg_sctT_FLG" />
         </homologs>
     </gene>
     <gene name="T3SS_sctU" presence="mandatory">    
         <homologs>
-            <gene name="Flg_sctU_FLG" system_ref="Flagellum"/>
+            <gene model_ref="Flagellum" name="Flg_sctU_FLG" />
     	</homologs>
     </gene>
     <gene name="T3SS_sctV" presence="mandatory">    
     	<homologs>
-            <gene name="Flg_sctV_FLG" system_ref="Flagellum"/>
+            <gene model_ref="Flagellum" name="Flg_sctV_FLG" />
         </homologs>
     </gene>
-    <gene name="Flg_fliE" presence="forbidden" system_ref="Flagellum"/>
-    <gene name="Flg_flgB" presence="forbidden" system_ref="Flagellum"/>
-    <gene name="Flg_flgC" presence="forbidden" system_ref="Flagellum"/>
-</system>
+    <gene model_ref="Flagellum" name="Flg_fliE" presence="forbidden" />
+    <gene model_ref="Flagellum" name="Flg_flgB" presence="forbidden" />
+    <gene model_ref="Flagellum" name="Flg_flgC" presence="forbidden" />
+</model>

@@ -1,27 +1,27 @@
-<system inter_gene_max_space="30" min_mandatory_genes_required="2" min_genes_required="3">  
-	<gene name="T4SS_virb4" presence="mandatory" exchangeable="1" multi_system="true">
+<model inter_gene_max_space="30" min_genes_required="3" min_mandatory_genes_required="2">  
+	<gene exchangeable="1" multi_system="true" name="T4SS_virb4" presence="mandatory">
     	<homologs>
-            <gene name="T4SS_I_traU" multi_system="true"/>
+            <gene multi_system="true" name="T4SS_I_traU" />
         </homologs>
     </gene>
-    <gene name="T4SS_t4cp1" presence="mandatory" exchangeable="1" multi_system="true">
+    <gene exchangeable="1" multi_system="true" name="T4SS_t4cp1" presence="mandatory">
         <homologs>
-            <gene name="T4SS_tcpA" multi_system="true"/>
-            <gene name="T4SS_t4cp2" multi_system="true"/>
+            <gene multi_system="true" name="T4SS_tcpA" />
+            <gene multi_system="true" name="T4SS_t4cp2" />
         </homologs>
 
     </gene>
-    <gene name="T4SS_MOBB" presence="accessory" inter_gene_max_space="60" exchangeable="1" multi_system="true">
+    <gene exchangeable="1" inter_gene_max_space="60" multi_system="true" name="T4SS_MOBB" presence="accessory">
         <analogs>
-            <gene name="T4SS_MOBC" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBF" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBH" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBP1" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBP2" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBP3" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBQ" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBT" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
-            <gene name="T4SS_MOBV" presence="accessory" inter_gene_max_space="60" multi_system="true"/>
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBC" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBF" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBH" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBP1" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBP2" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBP3" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBQ" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBT" presence="accessory" />
+            <gene inter_gene_max_space="60" multi_system="true" name="T4SS_MOBV" presence="accessory" />
         </analogs>
     </gene>
-</system>
+</model>
