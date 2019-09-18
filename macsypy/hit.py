@@ -224,9 +224,9 @@ def get_best_hits(hits, key='score'):
     """
     If several hits match the same protein, keep only the best match based either on
 
-        - score
-        - i_evalue
-        _ profile_coverage
+        * score
+        * i_evalue
+        * profile_coverage
 
     :param hits: the hits to filter, all hits must match the same protein.
     :type hits: [ :class:`macsypy.hit.Hit` object, ...]

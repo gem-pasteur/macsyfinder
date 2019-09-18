@@ -432,10 +432,11 @@ class DefinitionParser:
     def parse(self, models_2_detect):
         """
         Parse models definition in XML format to build the corresponding Model objects,
-         and add them to the model factory after checking its consistency.
+        and add them to the model factory after checking its consistency.
         To get the model ask it to model_bank
+
         :param models_2_detect: a list with the fully qualified names of the models to parse
-        (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
+                               (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
         :type models_2_detect: list of string
         """
         # one opening/closing file / definition

@@ -25,9 +25,11 @@ def build_clusters(hits, rep_info, model):
     """
     From a list of filtered hits, and replicon information (topology, length),
     build all lists of hits that satisfied the constraints:
+
         * max_gene_inter_space
         * loner
         * multi_system
+
     If Yes create a cluster
     A cluster contains at least to hits separated by less or equal than max_gene_inter_space
     Except for loner genes which are allowed to be alone in a cluster
@@ -98,7 +100,7 @@ def get_loners(hits, model):
     """
     :param hits: The list of hits to filter
     :param model: the model which will used to build the clusters
-    :type model: :class:`macsypy.model.Model' object
+    :type model: :class:`macsypy.model.Model` object
     :return: The list of cluster which each element is build with one loner
     :rtype: [Cluster, ...]
     """
@@ -110,8 +112,9 @@ def get_loners(hits, model):
 def filter_loners(cluster, loners):
     """
     filter loners to remove those which are already in the cluster
+
     :param cluster: The cluster
-    :type cluster: :class:`macsypy.cluster.Cluster' object
+    :type cluster: :class:`macsypy.cluster.Cluster` object
     :param loners: the clusters constituted by one loner to filter
     :type loners: list of cluster [Cluster, ...]
     :return: list of loners which are not already in the cluster

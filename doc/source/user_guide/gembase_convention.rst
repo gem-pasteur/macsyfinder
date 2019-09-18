@@ -13,7 +13,12 @@ Gembase format
 **************
 
 
-In order to allow the users running MacSyFinder on a bunch of genomes in a single run, we propose to adopt the following convention to fulfill the requirements for the "gembase db_type". It consists in providing for each protein, both the replicon name and a protein identifier separated by a "_" in the first field of fasta headers. "_" are accepted in the replicon name, but not in the protein identifier. Hence, the last "_" is the separator between the replicon name and the protein identifier.
+In order to allow the users running MacSyFinder on a bunch of genomes in a single run,
+we propose to adopt the following convention to fulfill the requirements for the "gembase db_type".
+It consists in providing for each protein, both the replicon name and a protein identifier separated by
+a "_" in the first field of fasta headers. "_" are accepted in the replicon name, but not in the protein identifier.
+Hence, the last "_" is the separator between the replicon name and the protein identifier.
+
 For instance::
 
   >PlasmidA_0001 YP_003225072.1_ | putative stcE protein 
@@ -53,7 +58,8 @@ For instance::
   NPAGMLPRPELQWVGYRLRQQKLERLSYFYVDHPSGIAPDVRVVLEGVHA
   FRLRFFVNGTWQARWDSTSILPQAVEVTLVMDDFAELTRLFLVSKETAE
 
-This input file contains 3 replicons: PlasmidA (which 2 first protein identifiers are 0001 and 0002), ChromosomeA (which 2 first protein identifiers are 0001 and 0020) and NC_001548 (which first protein identifier is 0015).
+This input file contains 3 replicons: PlasmidA (which 2 first protein identifiers are 0001 and 0002),
+ChromosomeA (which 2 first protein identifiers are 0001 and 0020) and NC_001548 (which first protein identifier is 0015).
 
 .. _topology-files:
 
@@ -61,7 +67,9 @@ This input file contains 3 replicons: PlasmidA (which 2 first protein identifier
 Topology files
 **************
 
-To be able to attribute a topology per replicon/genome when using the Gembase format, we propose the user to build a "topology file" in the form of a tabular file with two columns separated by a ":". The 1st column is the replicon name, and the 2nd the corresponding topology. Comments can be written after a "#". 
+To be able to attribute a topology per replicon/genome when using the Gembase format,
+we propose the user to build a "topology file" in the form of a tabular file with two columns separated by a ":".
+The 1st column is the replicon name, and the 2nd the corresponding topology. Comments can be written after a "#".
 
 For example::
 
