@@ -1,14 +1,13 @@
-<system inter_gene_max_space="10" max_nb_genes="HOHOHO"> 
+<model inter_gene_max_space="10" max_nb_genes="HOHOHO"> 
     <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
-           <gene name="sctJ" system_ref="model_2"/>
+           <gene model_ref="model_2" name="sctJ" />
        </homologs>
     </gene>
-    <gene name="sctN_FLG" presence="mandatory"/>       
-    <gene name="flgB" presence="mandatory"/>
-    <gene name="flgC" presence="mandatory"/>
-    <gene name="fliE" presence="mandatory"/>
-    <gene name="tadZ" presence="accessory" system_ref="model_2"/>
-    <gene name="sctC" presence="forbidden" system_ref="model_2"/>
-</system>
-
+    <gene name="sctN_FLG" presence="mandatory" />       
+    <gene name="flgB" presence="mandatory" />
+    <gene name="flgC" presence="mandatory" />
+    <gene name="fliE" presence="mandatory" />
+    <gene model_ref="model_2" name="tadZ" presence="accessory" />
+    <gene model_ref="model_2" name="sctC" presence="forbidden" />
+</model>
