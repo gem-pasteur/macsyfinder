@@ -11,7 +11,7 @@
 # (GPLv3). See the COPYING file for details.                                   #
 ################################################################################
 
-
+import os.path
 import xml.etree.ElementTree as Et
 import logging
 _log = logging.getLogger(__name__)
@@ -75,11 +75,21 @@ class DefinitionParser:
                 try:
                     tree = Et.parse(path)
                     root = tree.getroot()
+                    if root.tag == 'system':
+                        _log.warning(f"'system' is deprecated as xml root. "
+                                     f"Migrate {os.path.basename(path)} with macsydef_1to2 script.")
                     # get all genes which are define in an other model
                     # and add these models to the list of models to parse
+                    model_ref = root.findall(".//gene[@model_ref]")
                     sys_ref = root.findall(".//gene[@system_ref]")
-                    for gene_node in sys_ref:
-                        def_ref = gene_node.get("system_ref")
+                    if sys_ref:
+                        _log.warning(f"'system_ref' is deprecated. "
+                                     f"Migrate {os.path.basename(path)} with macsydef_1to2 script.")
+                        model_ref += sys_ref
+                    for gene_node in model_ref:
+                        def_ref = gene_node.get("model_ref")
+                        if not def_ref:
+                            def_ref = gene_node.get("system_ref")
                         def_ref_fqn = def_path[:-1]
                         def_ref_fqn.append(def_ref)
                         def_ref_fqn = join_def_path(*def_ref_fqn)
