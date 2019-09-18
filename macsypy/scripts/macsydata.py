@@ -731,7 +731,12 @@ def cmd_name(args: argparse.Namespace) -> str:
     return "macsydata {}".format(func_name)
 
 
-def verbosity_to_log_level(verbosity: int) -> str:
+def verbosity_to_log_level(verbosity: int) -> int:
+    """
+    transform the number of -v option in loglevel
+    :param int verbosity: number of -v option on the command line
+    :return: an int corresponding to a logging level
+    """
     level = max((logging.INFO - (10 * verbosity), 0))
     return level
 
