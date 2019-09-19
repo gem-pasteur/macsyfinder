@@ -245,7 +245,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Inconsistency in models definitions: the gene 'sctJ' described as homolog of 'sctN' "
-                         "with system_ref 'model_1' has an other model in bank (model_2)")
+                         "with model_ref 'model_1' has an other model in bank (model_2)")
 
     def test_bad_analog_sys_ref(self):
         model_2_detect = ['foo/bad_analog_sys_ref']
@@ -254,7 +254,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Inconsistency in models definitions: the gene 'sctJ' described as analog of 'sctN' "
-                         "with system_ref 'model_3' has an other model in bank (model_4)")
+                         "with model_ref 'model_3' has an other model in bank (model_4)")
 
     def test_bad_min_genes_required(self):
         model_2_detect = ['foo/bad_min_genes_required']

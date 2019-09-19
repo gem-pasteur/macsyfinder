@@ -42,8 +42,7 @@ class TestMacsydata(MacsyTest):
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
-            #shutil.rmtree(self.tmpdir)
-            pass
+            shutil.rmtree(self.tmpdir)
         except:
             pass
         # some function in macsydata script suppress the traceback
@@ -64,16 +63,16 @@ class TestMacsydata(MacsyTest):
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
     <gene name="flgB" presence="mandatory"/>
     <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
-</system>""")
+</model>""")
             with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
     <gene name="fliE" presence="mandatory" multi_system="True"/>
     <gene name="tadZ" presence="accessory" loner="True"/>
     <gene name="sctC" presence="forbidden"/>
-</system>""")
+</model>""")
 
         if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
