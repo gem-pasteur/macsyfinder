@@ -562,3 +562,15 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(models_2_detect)
         self.assertRegex(str(ctx.exception),
                          "gene 'sctJ' define in 'foo/model_[26]' model is already defined in an another model")
+
+
+    def test_parse_model_old_syntax(self):
+        models_2_detect = ['old/model_4']
+        with self.catch_log(log_name='macsypy') as log:
+            self.parser.parse(models_2_detect)
+            log_msg = log.get_value()
+        self.assertEqual(log_msg, """'system' is deprecated as xml root. Migrate model_4.xml with macsydef_1to2 script.
+'system_ref' is deprecated. Migrate model_4.xml with macsydef_1to2 script.
+'system' is deprecated as xml root. Migrate model_3.xml with macsydef_1to2 script.
+'system_ref' is deprecated. Migrate model_3.xml with macsydef_1to2 script.
+""")
