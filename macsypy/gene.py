@@ -75,7 +75,7 @@ class GeneBank:
         model_name = registries.split_def_name(gene.model.fqn)[0]
         key = (model_name, gene.name)
         if key in self._genes_bank:
-            raise KeyError("a gene named '{0}/{1}' is already registered".format(model_name, gene.name))
+            raise KeyError(f"a gene named '{model_name}/{gene.name}' is already registered")
         else:
             self._genes_bank[key] = gene
 
