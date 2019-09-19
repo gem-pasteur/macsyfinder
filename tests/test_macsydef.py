@@ -72,6 +72,28 @@ class TestMacsydef(MacsyTest):
                 pass
 
 
+    def test_main_in_place(self):
+        tmpdir = os.path.join(tempfile.gettempdir(), 'test_macsydef')
+        os.mkdir(tmpdir)
+        src_xml = self.find_data('models', 'old', 'definitions', 'model_4.xml')
+        test_xml = shutil.copy(src_xml, tmpdir)
+        try:
+            main(['-i', test_xml], loglevel=30)
+            self.assertFalse(os.path.exists(f"{test_xml}.ori"))
+            tree = Et.parse(test_xml)
+            root = tree.getroot()
+            self.assertEqual(root.tag, 'model')
+            sys_ref = root.findall(".//gene[@system_ref]")
+            self.assertListEqual(sys_ref, [])
+            model_ref = root.findall(".//gene[@model_ref]")
+            self.assertEqual(len(model_ref), 1)
+        finally:
+            try:
+                shutil.rmtree(tmpdir)
+            except Exception:
+                pass
+
+
     def main_with_error(self):
         src_xml = self.find_data(os.path.join('models', 'foo', 'definitions', 'not_xml.xml'))
         with self.catch_log(log_name='macsydef') as log:
