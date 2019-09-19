@@ -51,7 +51,7 @@ class DefinitionParser:
         :param parsed_models: the fully qualified name of the models already build.
         :type parsed_models: set of strings {string, ...}
         :return: a set of definitions' fully qualified names to parse.
-                 Scan the whole chain of 'system_ref' in a recursive way.
+                 Scan the whole chain of 'model_ref' in a recursive way.
         :rtype: {string, ...}
         :raises: MacsypyError when Model definition is not found.
         """
@@ -87,9 +87,7 @@ class DefinitionParser:
                                      f"Migrate {os.path.basename(path)} with macsydef_1to2 script.")
                         model_ref += sys_ref
                     for gene_node in model_ref:
-                        def_ref = gene_node.get("model_ref")
-                        if not def_ref:
-                            def_ref = gene_node.get("system_ref")
+                        def_ref = gene_node.get("model_ref") or gene_node.get("system_ref")
                         def_ref_fqn = def_path[:-1]
                         def_ref_fqn.append(def_ref)
                         def_ref_fqn = join_def_path(*def_ref_fqn)
@@ -210,7 +208,8 @@ class DefinitionParser:
         genes = []
         created_genes = set()
         gene_nodes = def_node.findall(".//gene")
-        gene_nodes = [gene_node for gene_node in gene_nodes if gene_node.get("system_ref") is None]
+        gene_nodes = [gene_node for gene_node in gene_nodes if
+                      (gene_node.get("model_ref") or gene_node.get("system_ref")) is None]
         for node in gene_nodes:
             name = node.get("name")
             if name in created_genes:
@@ -315,10 +314,10 @@ class DefinitionParser:
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
 
-        model_ref = node.get("system_ref")
+        model_ref = node.get("model_ref") or node.get("system_ref")
         if model_ref is not None and model_ref != gene.model.name:
-            msg = "Inconsistency in models definitions: the gene '{}' described as homolog of '{}'\
- with system_ref '{}' has an other model in bank ({})".format(name, gene_ref.name, model_ref, gene.model.name)
+            msg = f"Inconsistency in models definitions: the gene '{name}' described as homolog of '{gene_ref.name}' " \
+                  f"with model_ref '{model_ref}' has an other model in bank ({gene.model.name})"
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         homolog = Homolog(gene, gene_ref)
@@ -343,7 +342,7 @@ class DefinitionParser:
         """
         name = node.get("name")
         if not name:
-            msg = "Invalid model definition '{}': gene without name".format(curr_model.name)
+            msg = f"Invalid model definition '{curr_model.name}': gene without name"
             _log.error(msg)
             raise SyntaxError(msg)
         try:
@@ -355,10 +354,10 @@ class DefinitionParser:
  is not in the 'GeneBank' gene factory".format(curr_model.name, name, gene_ref.name, curr_model.name)
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
-        model_ref = node.get("system_ref")
+        model_ref = node.get("model_ref") or node.get("system_ref")
         if model_ref is not None and model_ref != gene.model.name:
             msg = f"Inconsistency in models definitions: the gene '{name}' described as analog of\
- '{gene_ref.name}' with system_ref '{model_ref}' has an other model in bank ({gene.model.name})"
+ '{gene_ref.name}' with model_ref '{model_ref}' has an other model in bank ({gene.model.name})"
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         analog = Analog(gene, gene_ref)
@@ -444,7 +443,7 @@ class DefinitionParser:
         models_2_detect = {s for s in models_2_detect}
         # one opening /closing file /definition
         defs_2_parse = self.definition_to_parse(models_2_detect, parsed_defs)
-        msg = "\nModel(s) to parse (recursive inclusion of 'system_ref'):"
+        msg = "\nModel(s) to parse (recursive inclusion of 'model_ref'):"
         
         for s in defs_2_parse:
             msg += "\n\t-{}".format(s)
@@ -470,7 +469,7 @@ class DefinitionParser:
                     _log.error(msg)
                     raise MacsypyError(msg)
 
-        # Now, all model definition related (e.g. via system_ref) to the one to detect are filled appropriately.
+        # Now, all model definition related (e.g. via model_ref) to the one to detect are filled appropriately.
         for def_fqn in defs_2_parse:
             model = self.model_bank[def_fqn]
             model_name = split_def_name(def_fqn)[0]
