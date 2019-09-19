@@ -91,7 +91,7 @@ By default the old xml file is rename as xx.xml.ori.""",
     return parsed_args
 
 
-def _2to3(xml):
+def _1to2(xml):
     """
     Parse the xml and update the syntax
 
@@ -128,7 +128,7 @@ def main(args=None, loglevel=None):
     for xml in parsed_args.definitions:
         _log.info(f"migrate {xml}")
         try:
-            tree = _2to3(xml)
+            tree = _1to2(xml)
         except Et.ParseError as err:
             _log.error(f"The definition file {xml} cannot be migrate: {err} : skip it.")
             continue
