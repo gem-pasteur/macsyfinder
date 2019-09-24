@@ -1,0 +1,7 @@
+<model inter_gene_max_space="20" min_genes_required="3" min_mandatory_genes_required="2">
+    <gene name="flgB" presence="mandatory" />
+    <gene inter_gene_max_space="2" name="flgC" presence="mandatory" />
+    <gene multi_system="True" name="fliE" presence="mandatory" />
+    <gene loner="True" name="tadZ" presence="accessory" />
+    <gene name="sctC" presence="forbidden" />
+</model>

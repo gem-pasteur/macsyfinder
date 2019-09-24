@@ -1,0 +1,49 @@
+<model inter_gene_max_space="5" min_genes_required="7" min_mandatory_genes_required="7" multi_loci="1">
+    <gene name="T4P_pilAE" presence="mandatory">
+    	<homologs>
+    	    <gene model_ref="T2SS" name="T2SS_gspG" />
+        </homologs>
+    </gene>
+    <gene name="T4P_pilI_pilV" presence="mandatory">
+        <homologs>
+    	    <gene model_ref="T2SS" name="T2SS_gspH" />
+    	    <gene model_ref="T2SS" name="T2SS_gspI" />
+    	    <gene model_ref="T2SS" name="T2SS_gspJ" />
+    	    <gene model_ref="T2SS" name="T2SS_gspK" />
+        </homologs>
+    </gene>
+    <gene name="T4P_pilB" presence="mandatory">       
+        <homologs>
+    	    <gene aligned="1" model_ref="T2SS" name="T2SS_gspE" />
+        </homologs>
+    </gene>    
+    <gene name="T4P_pilC" presence="mandatory">       
+        <homologs>
+    	    <gene aligned="1" model_ref="T2SS" name="T2SS_gspF" />
+        </homologs>
+    </gene>    
+    <gene name="T4P_pilO" presence="mandatory">       
+        <homologs>
+    	    <gene aligned="1" model_ref="T2SS" name="T2SS_gspM" />
+        </homologs>
+    </gene>    
+    <gene name="T4P_pilQ" presence="mandatory">       
+        <homologs>
+    	    <gene aligned="1" model_ref="T2SS" name="T2SS_gspD" />
+    	    <gene model_ref="Tad" name="Tad_rcpA" />
+    	    <gene model_ref="T3SS" name="T3SS_sctC" />
+        </homologs>
+    </gene>    
+    <gene name="T4P_pilM" presence="mandatory" />     
+    <gene name="T4P_pilN" presence="mandatory" /> 
+    <gene name="T4P_pilP" presence="mandatory" />      
+    <gene loner="1" name="T4P_pilT_pilU" presence="mandatory" />    
+    <gene exchangeable="1" name="T4P_pilD" presence="accessory">       
+        <homologs>
+    	    <gene model_ref="T2SS" name="T2SS_gspO" />
+        </homologs>
+    </gene> 
+    <gene model_ref="T2SS" name="T2SS_gspC" presence="forbidden" /> 
+    <gene model_ref="T2SS" name="T2SS_gspN" presence="forbidden" /> 
+    <gene model_ref="Tad" name="Tad_tadZ" presence="forbidden" /> 
+</model>

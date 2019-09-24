@@ -1,0 +1,52 @@
+<model inter_gene_max_space="10" min_genes_required="7" min_mandatory_genes_required="7" multi_loci="1">
+    <gene exchangeable="1" multi_system="true" name="T3SS_sctC" presence="mandatory">
+        <homologs>
+    	    <gene model_ref="T2SS" multi_system="true" name="T2SS_gspD" />
+    	    <gene model_ref="T4P" multi_system="true" name="T4P_pilQ" />
+    	    <gene model_ref="Tad" multi_system="true" name="Tad_rcpA" />
+        </homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctJ" presence="mandatory">
+        <homologs>
+    	    <gene model_ref="Flagellum" multi_system="true" name="Flg_sctJ_FLG" />
+        </homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctN" presence="mandatory">
+    	<homologs>
+    	    <gene model_ref="Flagellum" multi_system="true" name="Flg_sctN_FLG" />
+    	</homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctQ" presence="mandatory">
+        <homologs>
+    	    <gene model_ref="Flagellum" multi_system="true" name="Flg_sctQ_FLG" />
+    	</homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctR" presence="mandatory">
+    	<homologs>
+            <gene model_ref="Flagellum" multi_system="true" name="Flg_sctR_FLG" />
+        </homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctS" presence="mandatory">
+    	<homologs>
+            <gene model_ref="Flagellum" multi_system="true" name="Flg_sctS_FLG" />
+        </homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctT" presence="mandatory">
+        <homologs>
+    	    <gene model_ref="Flagellum" multi_system="true" name="Flg_sctT_FLG" />
+        </homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctU" presence="mandatory">
+        <homologs>
+            <gene model_ref="Flagellum" multi_system="true" name="Flg_sctU_FLG" />
+    	</homologs>
+    </gene>
+    <gene multi_system="true" name="T3SS_sctV" presence="mandatory">
+    	<homologs>
+            <gene model_ref="Flagellum" multi_system="true" name="Flg_sctV_FLG" />
+        </homologs>
+    </gene>
+    <gene model_ref="Flagellum" multi_system="true" name="Flg_fliE" presence="forbidden" />
+    <gene model_ref="Flagellum" multi_system="true" name="Flg_flgB" presence="forbidden" />
+    <gene model_ref="Flagellum" multi_system="true" name="Flg_flgC" presence="forbidden" />
+</model>

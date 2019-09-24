@@ -4,26 +4,28 @@ stages:
   - pages
 
 variables:
-  MACSY_HOME: ${CI_PROJECT_DIR}
   MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
-testing:
+testing37:
   stage: test
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:run_dep
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
+
   script:
-    - python ${CI_PROJECT_DIR}/tests.py -vvv
+    - python3.7 /usr/bin/pip3 install --no-binary=macsyfinder .
+    - python3.7 tests/run_tests.py -vvv
   except:
     - /^feat.*$/
     - /^fix.*$/
 
 coverage:
   stage: coverage
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:coverage
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
-    - cd ${CI_PROJECT_DIR}
-    - python-coverage run --source=macsypy tests.py --unit
-    - python-coverage html
-    - python-coverage report
+    - python3.7 -m pip install --no-binary=macsyfinder .
+    - coverage run --source=macsypy tests/run_tests.py
+    - coverage html
+    - coverage report
+
   artifacts:
     paths:
       - htmlcov/
@@ -33,7 +35,7 @@ coverage:
 
 pages:
   stage: pages
-  image: registry-gitlab.pasteur.fr/gem/macsyfinder:pages
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/pages
   dependencies:
     - coverage
   script:

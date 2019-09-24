@@ -1,871 +1,579 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-# MacSyFinder - Detection of macromolecular systems in protein datasets        #
-#               using systems modelling and similarity search.                 #
-# Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
-# See the COPYRIGHT file for details                                           #
-#                                                                              #
-# MacsyFinder is distributed under the terms of the GNU General Public License #
-# (GPLv3). See the COPYING file for details.                                   #
-################################################################################
-
+#########################################################################
+# MacSyFinder - Detection of macromolecular systems in protein dataset  #
+#               using systems modelling and similarity search.          #
+# Authors: Sophie Abby, Bertrand Neron                                  #
+# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# See the COPYRIGHT file for details                                    #
+#                                                                       #
+# This file is part of MacSyFinder package.                             #
+#                                                                       #
+# MacSyFinder is free software: you can redistribute it and/or modify   #
+# it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or     #
+# (at your option) any later version.                                   #
+#                                                                       #
+# MacSyFinder is distributed in the hope that it will be useful,        #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #
+# GNU General Public License for more details .                         #
+#                                                                       #
+# You should have received a copy of the GNU General Public License     #
+# along with MacSyFinder (COPYING).                                     #
+# If not, see <https://www.gnu.org/licenses/>.                          #
+#########################################################################
 
 import os
-import sys
-import inspect
 from time import strftime
-from ConfigParser import SafeConfigParser, NoSectionError, NoOptionError
-
-_prefix_path = '$PREFIX'
-_prefix_conf = '$PREFIXCONF'
-_prefix_data = '$PREFIXDATA'
-if 'MACSY_HOME' in os.environ and os.environ['MACSY_HOME']:
-    _prefix_path = os.environ['MACSY_HOME']
-    _prefix_conf = os.path.join(os.environ['MACSY_HOME'], 'etc')
-    _prefix_data = os.path.join(os.environ['MACSY_HOME'], 'data')
-
 import logging
+from configparser import ConfigParser, ParsingError, NoSectionError
+
+from macsypy import __MACSY_CONF__, __MACSY_DATA__
+
+_log = logging.getLogger(__name__)
 
 
-class Config(object):
+class MacsyDefaults(dict):
     """
-    Parse configuration files and handle the configuration according to the following file location precedence:
-    /etc/macsyfinder/macsyfinder.conf < ~/.macsyfinder/macsyfinder.conf < .macsyfinder.conf
-    
-    If a configuration file is given on the command-line, this file will be used.
-    *In fine* the arguments passed on the command-line have the highest priority.
+    Handle all default values for macsyfinder.
+    the default values must be defined here, **NOT** in argument parser nor in config
+    the argument parser or config must use a MacsyDefaults object
     """
-    
-    # if a new option is added think to add it also (if needed) in save
-    options = ('cfg_file', 'previous_run', 'sequence_db', 'db_type', 'replicon_topology', 'topology_file',
-               'inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci',
-                'hmmer_exe', 'index_db_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile', 
-                'def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix',
-                'out_dir',
-                'log_level', 'log_file', 'worker_nb', 'config_file', 'build_indexes')
 
-    def __init__(self, cfg_file="",
-                sequence_db=None,
-                db_type=None,
-                replicon_topology=None,
-                topology_file=None,
-                inter_gene_max_space=None,
-                min_mandatory_genes_required=None,
-                min_genes_required=None,
-                max_nb_genes=None,
-                multi_loci=None,
-                hmmer_exe=None,
-                index_db_exe=None,
-                e_value_res=None,
-                i_evalue_sel=None,
-                coverage_profile=None,
-                def_dir=None ,
-                res_search_dir=None,
-                res_search_suffix=None,
-                profile_dir=None,
-                profile_suffix=None,
-                res_extract_suffix=None,
-                out_dir=None,
-                log_level=None,
-                log_file=None,
-                worker_nb=None,
-                config_file=None,
-                previous_run=None,
-                build_indexes=None
-                ):
+    def __init__(self, **kwargs):
         """
-        :param cfg_file: the path to the MacSyFinder configuration file to use 
-        :type cfg_file: string
-        :param previous_run: the path to the results directory of a previous run
-        :type previous_run: string 
-        :param sequence_db: the path to the sequence input dataset (fasta format)
-        :type sequence_db: string
-        :param db_type: the type of dataset to deal with. 
-                        \"unordered_replicon\" corresponds to a non-assembled genome,
-                        \"unordered\" to a metagenomic dataset,
-                        \"ordered_replicon\" to an assembled genome, and
-                        \"gembase\" to a set of replicons where sequence identifiers follow this convention \">RepliconName_SequenceID\"."
-        :type db_type: string
-        :param replicon_topology: the topology ('linear' or 'circular') of the replicons. This option is meaningful
-                                  only if the db_type is 'ordered_replicon' or 'gembase'
-        :type replicon_topology: string
-        :param topology_file: a tabular file of mapping between replicon names and the corresponding topology
-                             (e.g. \"RepliconA linear\")
-        :type topology_file: string
-        :param inter_gene_max_space:
-        :type inter_gene_max_space: list of list of 2 elements [[ string system, integer space] , ...]
-        :param min_mandatory_genes_required:
-        :type min_mandatory_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
-        :param min_genes_required:
-        :type min_genes_required: list of list of 2 elements [[ string system, integer ] , ...]
-        :param max_nb_genes: 
-        :type max_nb_genes: list of list of 2 elements [[ string system, integer ] , ...]
-        :param multi_loci: 
-        :type multi_loci: string
-        :param hmmer_exe: the Hmmer \"hmmsearch\" executable
-        :type hmmer_exe: string
-        :param index_db_exe: the indexer executable (\"makeblastdb\" or \"formatdb\")
-        :type index_db_exe: string
-        :param e_value_res: maximal e-value for hits to be reported during Hmmer search
-        :type  e_value_res: float
-        :param i_evalue_sel: maximal independent e-value for Hmmer hits to be selected for system detection
-        :type  i_evalue_sel: float
-        :param coverage_profile: minimal profile coverage required in the hit alignment to allow the hit selection
-                                for system detection
-        :type coverage_profile: float
-        :param def_dir: the path to the directory containing systems definition files (.xml)
-        :type def_dir: string
-        :param res_search_dir: the path to the directory where to store MacSyFinder search results directories.
-        :type  res_search_dir: string
-        :param out_dir: The results are written in a directory. By default the directory is named macsyfinder-{date},
-                        but this option allow to override this behavior. If out-dir option is set out-dir will be created
-                        if outdir already exists it must be empty.
-                        If out-dir and res-search-dir are sets res-search-dir will be ignore.
-        :type out_dir: string
-        :param res_search_suffix: the suffix to give to Hmmer raw output files
-        :type  res_search_suffix: string
-        :param res_extract_suffix: the suffix to give to filtered hits output files
-        :type  res_extract_suffix: string
-        :param profile_dir: path to the profiles directory
-        :type  profile_dir: string
-        :param profile_suffix: the suffix of profile files. For each 'Gene' element,
-                               the corresponding profile is searched in the 'profile_dir',
-                               in a file which name is based on the Gene name + the profile suffix.
-        :type  profile_suffix: string
-        :param log_level: the level of log output
-        :type log_level: int
-        :param log_file: the path to the directory to write MacSyFinder log files
-        :type log_file: string
-        :param worker_nb: maximal number of processes to be used in parallel (multi-thread run, 0 use all cores available)
-        :type worker_nb: int
-        :param build_indexes: build the indexes from the sequence dataset in fasta format
-        :type build_indexes: boolean
-        """
+        :param kwargs: allow to overwrite a default value.
+                       It mainly used in unit tests
 
-        self._new_cfg_name = "macsyfinder.conf"
-        if previous_run:
-            prev_config = os.path.join(previous_run, self._new_cfg_name)
+        To define a new default value just add an attribute with the default value
+        """
+        self.__dict__ = self
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        else:
+            prefix_data = os.path.join(__MACSY_DATA__, 'data')
+        self.cfg_file = kwargs.get('cfg_file', None)
+        self.coverage_profile = kwargs.get('coverage_profile', 0.5)
+        self.e_value_search = kwargs.get('e_value_search', 1.0)
+        self.db_type = kwargs.get('db_type', None)
+        self.hmmer = kwargs.get('hmmer', 'hmmsearch')
+        self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
+        self.idx = kwargs.get('idx', False)
+        self.inter_gene_max_space = kwargs.get('inter_gene_max_space', None)
+        self.log_level = kwargs.get('log_level', logging.INFO)
+        self.log_file = kwargs.get('log_file', 'macsyfinder.log')
+        self.max_nb_genes = kwargs.get('max_nb_genes', None)
+        self.min_genes_required = kwargs.get('min_genes_required', None)
+        self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
+        self.models = kwargs.get('models', [])
+        self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
+        self.multi_loci = kwargs.get('multi_loci', set())
+        self.mute = kwargs.get('mute', False)
+        self.out_dir = kwargs.get('out_dir', None)
+        self.previous_run = kwargs.get('previous_run', False)
+        self.profile_suffix = kwargs.get('profile_suffix', '.hmm')
+        self.quiet = kwargs.get('quiet', 0)
+        self.relative_path = kwargs.get('relative_path', False)
+        self.replicon_topology = kwargs.get('replicon_topology', 'circular')
+        self.res_extract_suffix = kwargs.get('res_extract_suffix', '.res_hmm_extract')
+        self.res_search_dir = kwargs.get('res_search_dir', os.getcwd())
+        self.res_search_suffix = kwargs.get('res_search_suffix', '.search_hmm.out')
+        self.sequence_db = kwargs.get('sequence_db', None)
+        self.topology_file = kwargs.get('topology_file', None)
+        self.verbosity = kwargs.get('verbosity', 0)
+        self.worker = kwargs.get('worker', 1)
+
+
+class Config:
+    """
+    Handle configuration values for macsyfinder.
+    This values come from default and ar superseded by the configuration files, then the command line settings.
+    """
+
+    cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
+                ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
+                            'min_genes_required', 'multi_loci')),
+                ('models', tuple()),
+                ('hmmer', ('coverage_profile', 'e_value_search', 'i_evalue_sel', 'hmmer')),
+                ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
+                                 'res_search_suffix', 'res_extract_suffix')),
+                ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
+                             'verbosity', 'worker'))
+                ]
+
+    def __init__(self, defaults, parsed_args):
+        """
+        Store macsyfinder configuration options and propose an interface to access
+        to them.
+
+        The config object is populated with the defaults then superseded with the
+        value specified in configuration files and finally by the options set on the
+        command line.
+
+        :param defaults:
+        :type defaults: a :class:`MacsyDefaults` object
+        :param parsed_args: the command line arguments parsed
+        :type parsed_args: a :class:`argspace.Namescape` object
+        """
+        self.cfg_name = "macsyfinder.conf"
+        self._defaults = defaults
+
+        if __MACSY_DATA__ == '$' + 'MACSYDATA':
+            self._prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        else:
+            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
+
+        if __MACSY_CONF__ == '$' + 'MACSYCONF':
+            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__),
+                                                           '..', 'etc'
+                                                           ))
+        else:
+            self._conf_dir = __MACSY_CONF__
+        previous_run =False
+        if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
+            prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
+                                                        self.cfg_name))
+            previous_run = True
             if not os.path.exists(prev_config):
-                raise ValueError("No config file found in dir {}".format(previous_run))
+                raise ValueError("No config file found in dir {}".format(parsed_args.previous_run))
             config_files = [prev_config]
-        elif cfg_file:
-            config_files = [cfg_file]
+        elif hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
+            config_files = [parsed_args.cfg_file]
         else:
-            config_files = [os.path.join(_prefix_conf, 'macsyfinder.conf'),
-                            os.path.expanduser('~/.macsyfinder/macsyfinder.conf'),
+            config_files = [os.path.join(self._conf_dir, self.cfg_name),
+                            os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name),
                             'macsyfinder.conf']
-        self._defaults = {'replicon_topology': 'circular',
-                          'hmmer_exe': 'hmmsearch',
-                          'index_db_exe': 'makeblastdb',
-                          'e_value_res': "1",
-                          'i_evalue_sel': "0.001",
-                          'coverage_profile': "0.5",
-                          'def_dir': os.path.join(_prefix_data, 'DEF'),
-                          'res_search_dir': os.getcwd(),
-                          'res_search_suffix': '.search_hmm.out',
-                          'res_extract_suffix': '.res_hmm_extract',
-                          'profile_dir': os.path.join(_prefix_data, 'profiles'),
-                          'profile_suffix': '.hmm',
-                          'log_level': logging.WARNING,
-                          'worker_nb': '1'
-                          }
-        self.parser = SafeConfigParser(defaults=self._defaults)
-        used_files = self.parser.read(config_files)
 
-        frame = inspect.currentframe()
-        args, _, _, values = inspect.getargvalues(frame)
+        config_files_values = self._config_file_2_dict(defaults, config_files, previous_run=previous_run)
+        args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
+        if previous_run:
+            if 'sequence_db' in args_dict:
+                _log.warning("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
+                    parsed_args.sequence_db, args_dict['previous_run']))
+                del args_dict['sequence_db']
+        # the special methods are not used to fill with defaults values
+        self._options = {k: v for k, v in defaults.items()}
 
-        cmde_line_opt = {}
-        for arg in args:
-            if arg in self.options and values[arg] is not None:
-                # the option in ConfigParser are store as string
-                # so in save method I dump some options only if
-                # they are != than the default values in ConfigParser
-                cmde_line_opt[arg] = str(values[arg])
-
-        self.options = self._validate(cmde_line_opt, values)
-
-
-    def _validate(self, cmde_line_opt, cmde_line_values):
-        """
-        Get all configuration values and check the validity of their values.
-        Create the working directory
-
-        :param cmde_line_opt: the options from the command line
-        :type cmde_line_opt: dict, all values are cast in string
-        :param cmde_line_values: the options from the command line
-        :type cmde_line_values: dict, values are not cast
-        :return: all the options for this execution
-        :rtype: dictionary
-        """  
-        options = {}
-        if 'sequence_db' in cmde_line_opt:
-            cmde_line_opt['file'] = cmde_line_opt['sequence_db']
-
-        # All results and intermediate files are stored in a directory
-        # this directory is specify by out_dir option
-        # for compliance if out_dir option is not specified
-        # the output_dir will be the concatenation of research_dir and "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S")
-        try:
-            options['out_dir'] = self.parser.get('directories', 'out_dir', vars=cmde_line_opt)
-            working_dir = options['out_dir']
-        except (NoSectionError, NoOptionError):
-            if 'out_dir' in cmde_line_opt:
-                options['out_dir'] = cmde_line_opt['out_dir']
-                working_dir = options['out_dir']
-            else:
-                try:
-                    options['res_search_dir'] = self.parser.get('directories', 'res_search_dir', vars=cmde_line_opt)
-                except (NoSectionError, NoOptionError):
-                    if 'res_search_dir' in cmde_line_opt:
-                        options['res_search_dir'] = cmde_line_opt['res_search_dir']
+        for bag_of_opts in config_files_values, args_dict:
+            for opt, val in bag_of_opts.items():
+                if val is not None:
+                    met_name = '_set_{}'.format(opt)
+                    if hasattr(self, met_name):
+                        # config has a specific method to parse and store the value
+                        # for this option
+                        getattr(self, met_name)(val)
                     else:
-                        options['res_search_dir'] = self._defaults['res_search_dir']
-                working_dir = os.path.join(options['res_search_dir'], "macsyfinder-" + strftime("%Y%m%d_%H-%M-%S"))  
-        
-        if os.path.exists(working_dir) and os.listdir(working_dir):
-            raise ValueError("{0}: This results directory already exists and is not empty".format(working_dir))
-        elif not os.path.exists(working_dir):
-            try:
-                os.mkdir(working_dir)
-            except OSError as err:
-                raise ValueError("cannot create MacSyFinder working directory {0} : {1}".format(working_dir, err))
-        options['working_dir'] = working_dir
+                        # config has no method defined to set this option
+                        self._options[opt] = val
 
-        hmmer_path = os.path.join(working_dir, self.hmmer_dir)
-        try:
-            os.mkdir(hmmer_path)
-        except OSError as err:
-            raise ValueError("cannot create MacSyFinder hmmer directory {0} : {1}".format(hmmer_path, err))
 
-        try:
-            log_level = self.parser.get('general', 'log_level', vars=cmde_line_opt)
-        except (AttributeError, NoSectionError):
-            log_level = self._defaults['log_level']
+    def __getattr__(self, option_name):
+        # some getter return just a value they can be transformed in property
+        # but some other need extra argument so they cannot be a property, they must be methods
+        # to have something generic and with the same behavior
+        # that mean need to call all of them
+        # for generic getter, that mean no code in config
+        # I simulate a function (lambda) which can be called without argument
+        if option_name in self._options:
+            return lambda : self._options[option_name]
         else:
-            try:
-                log_level = int(log_level)
-            except ValueError:
-                try:
-                    log_level = getattr(logging, log_level.upper())
-                except AttributeError:
-                    log_level = logging.ERROR
-        options['log_level'] = log_level
-
-        log_error = []
-        try:
-            log_file = self.parser.get('general', 'log_file', vars=cmde_line_opt)
-            log_handler = logging.FileHandler(log_file)
-            options['log_file'] = log_file
-        except Exception as err:
-            if not isinstance(err, (NoOptionError, NoSectionError)):
-                log_error.append(err)
-            try:
-                log_file = os.path.join(options['working_dir'], 'macsyfinder.log')
-                log_handler = logging.FileHandler(log_file)
-                options['log_file'] = log_file
-            except Exception as err:
-                log_error.append(err)
-                log_handler = logging.StreamHandler(sys.stderr)
-                options['log_file'] = ''
-        handler_formatter = logging.Formatter("%(levelname)-8s : %(filename)-10s : L %(lineno)d : %(asctime)s : %(message)s")
-        log_handler.setFormatter(handler_formatter)
-        log_handler.setLevel(log_level)
-
-        root = logging.getLogger()
-        root.setLevel(logging.NOTSET)
-
-        logger = logging.getLogger('macsyfinder')
-        logger.setLevel(log_level)
-        logger.addHandler(log_handler)
-        
-        f_out_log_handler = logging.FileHandler(os.path.join(working_dir, 'macsyfinder.out'))
-        f_out_handler_formatter = logging.Formatter("%(message)s")
-        f_out_log_handler.setFormatter(f_out_handler_formatter)
-        f_out_log_handler.setLevel(logging.INFO)
-
-        c_out_log_handler = logging.StreamHandler(sys.stdout)
-        c_out_handler_formatter = logging.Formatter("%(message)s")
-        c_out_log_handler.setFormatter(c_out_handler_formatter)
-        c_out_log_handler.setLevel(logging.INFO)
-
-        out_logger = logging.getLogger('macsyfinder.out')
-        out_logger.setLevel(logging.INFO)
-        out_logger.addHandler(f_out_log_handler)
-        out_logger.addHandler(c_out_log_handler)
-
-        self._log = logging.getLogger('macsyfinder.config')
-        
-        for error in log_error:
-            self._log.warn(error)
-        try:
-            if cmde_line_opt.get('previous_run', None):
-                if os.path.exists(cmde_line_opt['previous_run']):
-                    options['previous_run'] = cmde_line_opt['previous_run']
-                else:
-                    raise ValueError("previous run directory '{0}' was not found".format(cmde_line_opt['previous_run']))
-            try:
-                options['sequence_db'] = self.parser.get('base', 'file', vars=cmde_line_opt)
-            except NoSectionError:
-                sequence_db = cmde_line_opt.get('sequence_db', None)
-                if sequence_db is None:
-                    raise ValueError("No input sequence file specified")
-                else:
-                    options['sequence_db'] = sequence_db
-            if not os.path.exists(options['sequence_db']):
-                raise ValueError("{0}: The input sequence file does not exist ".format(options['sequence_db']))
-
-            options['sequence_db'] = os.path.abspath(options['sequence_db'])
-            val_4_db_type = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
-            if 'db_type' in cmde_line_opt:
-                options['db_type'] = cmde_line_opt['db_type']
-            else:
-                try:
-                    options['db_type'] = self.parser.get('base', 'type')
-                except (NoSectionError, NoOptionError):
-                    raise ValueError("You must specify the type of the input dataset ({0}).".format(', '.join(val_4_db_type)))
-            if options['db_type'] not in val_4_db_type:
-                raise ValueError("Allowed values for the input dataset are : {0}".format(', '.join(val_4_db_type)))
-            val_4_replicon_topology = ('linear', 'circular')
-            if 'replicon_topology' in cmde_line_opt:
-                options['replicon_topology'] = cmde_line_opt['replicon_topology']
-            else:
-                try:
-                    options['replicon_topology'] = self.parser.get('base', 'replicon_topology')
-                except (NoSectionError, NoOptionError):
-                    options['replicon_topology'] = self._defaults['replicon_topology']
-            if options['replicon_topology'] not in val_4_replicon_topology:
-                raise ValueError("Allowed values for dataset replicon_topology are : {0}".format(', '.join(val_4_replicon_topology)))
-            if options['replicon_topology'] == 'circular' and options['db_type'] in ('unordered_replicon', 'unordered'):
-                self._log.warning("As the input dataset type 'db_type' is set to {0},\
- the replicon_topology file was ignored".format(options['db_type']))
-            
-            if 'topology_file' in cmde_line_opt:
-                options['topology_file'] = cmde_line_opt['topology_file']
-            else:
-                try:
-                    options['topology_file'] = self.parser.get('base', 'topology_file')
-                except (NoSectionError, NoOptionError):
-                    options['topology_file'] = None
-            if options['topology_file'] is not None:
-                if not os.path.exists(options['topology_file']):
-                    raise ValueError('topology_file cannot access {}: No such file'.format(options['topology_file']))
-                elif not os.path.isfile(options['topology_file']):
-                    raise ValueError('topology_file {} is not a regular file'.format(options['topology_file']))
-            if self.parser.has_option("system", "inter_gene_max_space"):
-                options['inter_gene_max_space'] = {}
-                inter_gene_max_space = self.parser.get("system", "inter_gene_max_space")
-                inter_gene_max_space = inter_gene_max_space.split()
-                it = iter(inter_gene_max_space)
-                try:
-                    for system in it:
-                        interval = it.next()
-                        try:
-                            interval = int(interval)
-                            options['inter_gene_max_space'][system] = interval
-                        except ValueError:
-                            raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {} in the configuration file".format(system, interval))
-                except StopIteration:
-                    raise ValueError( "Invalid syntax for 'inter_gene_max_space': you must have a list of\
- systems and corresponding 'inter_gene_max_space' separated by spaces")
-            if 'inter_gene_max_space' in cmde_line_values and cmde_line_values['inter_gene_max_space'] is not None: 
-                if 'inter_gene_max_space' not in options:
-                    options['inter_gene_max_space'] = {}
-                for item in cmde_line_values['inter_gene_max_space']:
-                    system, interval = item
-                    try:
-                        interval = int(interval)
-                        options['inter_gene_max_space'][system] = interval
-                    except ValueError:
-                        raise ValueError("The 'inter_gene_max_space for system {0} must be an integer,\
- but you provided {1} on command line".format(system, interval))
-
-            if self.parser.has_option("system", "min_mandatory_genes_required"):
-                options['min_mandatory_genes_required'] = {}
-                min_mandatory_genes_required = self.parser.get("system", "min_mandatory_genes_required")
-                min_mandatory_genes_required = min_mandatory_genes_required.split()
-                it = iter(min_mandatory_genes_required)
-                try:
-                    for system in it:
-                        quorum_mandatory_genes = it.next()
-                        try:
-                            quorum_mandatory_genes = int(quorum_mandatory_genes)
-                            options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
-                        except ValueError:
-                            raise ValueError("The value for 'min_mandatory_genes_required' option for system {0}\
- must be an integer, but you provided {1} in the configuration file".format(system, quorum_mandatory_genes))
-                except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_mandatory_genes_required': you must have a list of\
- systems and corresponding 'min_mandatory_genes_required' separated by spaces")
-
-            if 'min_mandatory_genes_required' in cmde_line_values and \
-                            cmde_line_values['min_mandatory_genes_required'] is not None:
-                if 'min_mandatory_genes_required' not in options:
-                    options['min_mandatory_genes_required'] = {}
-                for item in cmde_line_values['min_mandatory_genes_required']:
-                    system, quorum_mandatory_genes = item
-                    try:
-                        quorum_mandatory_genes = int(quorum_mandatory_genes)
-                        options['min_mandatory_genes_required'][system] = quorum_mandatory_genes
-                    except ValueError:
-                        raise ValueError("The value for 'min_mandatory_genes_required' option for system {0} must be an\
- integer, but you provided {1} on command line".format(system, quorum_mandatory_genes))
-
-            if self.parser.has_option("system", "min_genes_required"):
-                options['min_genes_required'] = {}
-                min_genes_required = self.parser.get("system", "min_genes_required")
-                min_genes_required = min_genes_required.split()
-                it = iter(min_genes_required)
-                try:
-                    for system in it:
-                        quorum_genes = it.next()
-                        try:
-                            quorum_genes = int(quorum_genes)
-                            options['min_genes_required'][system] = quorum_genes
-                        except ValueError:
-                            raise ValueError("The value for 'min_genes_required' option for system {0} must be an\
- integer, but you provided {1} in the configuration file".format(system, quorum_genes))
-                except StopIteration:
-                    raise ValueError("Invalid syntax for 'min_genes_required': you must have a list of systems and\
- corresponding 'min_mandatory_genes_required' separated by spaces")
-            if 'min_genes_required' in cmde_line_values and cmde_line_values['min_genes_required'] is not None: 
-                if 'min_genes_required' not in options:
-                    options['min_genes_required'] = {}
-                for item in cmde_line_values['min_genes_required']:
-                    system, quorum_genes = item
-                    try:
-                        quorum_genes = int(quorum_genes)
-                        options['min_genes_required'][system] = quorum_genes
-                    except ValueError:
-                        raise ValueError("The value for 'min_genes_required' option for system {0} must be an integer,\
- but you provided {1} on command line".format(system, quorum_genes))
-
-            if self.parser.has_option("system", "max_nb_genes"):
-                options['max_nb_genes'] = {}
-                max_nb_genes = self.parser.get("system", "max_nb_genes") 
-                max_nb_genes = max_nb_genes.split()
-                it = iter(max_nb_genes)
-                try:
-                    for system in it:
-                        max_genes = it.next()
-                        try:
-                            max_genes = int(max_genes)
-                            options['max_nb_genes'][system] = max_genes
-                        except ValueError:
-                            raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer,\
-                             but you provided {1} in the configuration file".format(system, max_genes))
-                except StopIteration:
-                    raise ValueError("Invalid syntax for 'max_nb_genes': you must have a list of systems and\
- corresponding 'max_nb_genes' separated by spaces")
-            if 'max_nb_genes' in cmde_line_values and cmde_line_values['max_nb_genes'] is not None: 
-                if 'max_nb_genes' not in options:
-                    options['max_nb_genes'] = {}
-                for item in cmde_line_values['max_nb_genes']:
-                    system, max_genes = item
-                    try:
-                        max_genes = int(max_genes)
-                        options['max_nb_genes'][system] = max_genes
-                    except ValueError:
-                        raise ValueError("The value for 'max_nb_genes' option for system {0} must be an integer, \
- but you provided {1} on command line".format(system, max_genes))
-
-            if self.parser.has_option("system", "multi_loci"):
-                options['multi_loci'] = self.parser.get("system", "multi_loci").split(',')
-            else:
-                options['multi_loci'] = []
-            if 'multi_loci' in cmde_line_values and cmde_line_values['multi_loci'] is not None:
-                if 'min_genes_required' not in options:
-                    options['multi_loci'] = []
-                for item in cmde_line_values['multi_loci'].split(','):
-                    options['multi_loci'].append(item)
-
-            try:
-                options['hmmer_exe'] = self.parser.get('hmmer', 'hmmer_exe', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'hmmer_exe' in cmde_line_opt:
-                    options['hmmer_exe'] = cmde_line_opt['hmmer_exe']
-                else:
-                    options['hmmer_exe'] = self._defaults['hmmer_exe']
-
-            try:
-                options['index_db_exe'] = self.parser.get('base', 'index_db_exe', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'index_db_exe' in cmde_line_opt:
-                    options['index_db_exe'] = cmde_line_opt['index_db_exe']
-                else:
-                    options['index_db_exe'] = self._defaults['index_db_exe']
-
-            try:
-                e_value_res = self.parser.get('hmmer', 'e_value_res', vars=cmde_line_opt)
-                options['e_value_res'] = float(e_value_res)
-            except ValueError:
-                msg = "Invalid value for hmmer e_value_res :{0}: (float expected)".format(e_value_res)
-                raise ValueError(msg)
-            except NoSectionError:
-                if 'e_value_res' in cmde_line_opt:
-                    options['e_value_res'] = float(cmde_line_opt['e_value_res'])
-                else:
-                    options['e_value_res'] = float(self._defaults['e_value_res'])
-            try:
-                i_evalue_sel = self.parser.get('hmmer', 'i_evalue_sel', vars=cmde_line_opt)
-                options['i_evalue_sel'] = float(i_evalue_sel)
-            except ValueError:
-                msg = "Invalid value for hmmer i_evalue_sel :{0}: (float expected)".format(i_evalue_sel)
-                raise ValueError(msg)
-            except NoSectionError:
-                if 'i_evalue_sel' in cmde_line_opt:
-                    options['i_evalue_sel'] = float(cmde_line_opt['i_evalue_sel'])
-                else:
-                    options['i_evalue_sel'] = float(self._defaults['i_evalue_sel'])
-
-            if options['i_evalue_sel'] > options['e_value_res']:
-                raise ValueError("i_evalue_sel ({:f}) must be lower or equal than e_value_res ({:f})".format(options['i_evalue_sel'], options['e_value_res']))
-
-            try:
-                coverage_profile = self.parser.get('hmmer', 'coverage_profile', vars=cmde_line_opt)
-                options['coverage_profile'] = float(coverage_profile)
-            except ValueError:
-                msg = "Invalid value for hmmer coverage_profile :{0}: (float expected)".format(coverage_profile)
-                raise ValueError(msg)
-            except NoSectionError:
-                if 'coverage_profile' in cmde_line_opt:
-                    options['coverage_profile'] = float(cmde_line_opt['coverage_profile'])
-                else:
-                    options['coverage_profile'] = float(self._defaults['coverage_profile'])
-
-            try:
-                options['def_dir'] = self.parser.get('directories', 'def_dir', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'def_dir' in cmde_line_opt:
-                    options['def_dir'] = cmde_line_opt['def_dir']
-                else:
-                    options['def_dir'] = self._defaults['def_dir']
-            if not os.path.exists(options['def_dir']):
-                raise ValueError("{0}: No such definition directory".format(options['def_dir']))
-
-            try:
-                options['profile_dir'] = self.parser.get('directories', 'profile_dir', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'profile_dir' in cmde_line_opt:
-                    options['profile_dir'] = cmde_line_opt['profile_dir']
-                else:
-                    options['profile_dir'] = self._defaults['profile_dir']
-            if not os.path.exists(options['profile_dir']):
-                raise ValueError("{0}: No such profile directory".format(options['profile_dir']))
-
-            try:
-                options['res_search_suffix'] = self.parser.get('directories', 'res_search_suffix', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'res_search_suffix' in cmde_line_opt:
-                    options['res_search_suffix'] = cmde_line_opt['res_search_suffix']
-                else:
-                    options['res_search_suffix'] = self._defaults['res_search_suffix']
-            try:
-                options['res_extract_suffix'] = self.parser.get('directories', 'res_extract_suffix', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'res_extract_suffix' in cmde_line_opt:
-                    options['res_extract_suffix'] = cmde_line_opt['res_extract_suffix']
-                else:
-                    options['res_extract_suffix'] = self._defaults['res_extract_suffix']
-            try:
-                options['profile_suffix'] = self.parser.get('directories', 'profile_suffix', vars=cmde_line_opt)
-            except NoSectionError:
-                if 'profile_suffix' in cmde_line_opt:
-                    options['profile_suffix'] = cmde_line_opt['profile_suffix']
-                else:
-                    options['profile_suffix'] = self._defaults['profile_suffix']
-            try:
-                worker_nb = self.parser.get('general', 'worker_nb', vars=cmde_line_opt)
-
-            except NoSectionError:
-                if 'worker_nb' in cmde_line_opt:
-                    worker_nb = cmde_line_opt['worker_nb']
-                else:
-                    worker_nb = self._defaults['worker_nb']
-            try:
-                worker_nb = int(worker_nb)
-                if worker_nb >= 0:
-                    options['worker_nb'] = worker_nb
-            except ValueError:
-                msg = "the number of worker must be an integer"
-                raise ValueError(msg)
-
-        except ValueError as err:
-            self._log.error(str(err), exc_info=True)
-            logging.shutdown()
-            
-            if working_dir:
-                import shutil
-                try:
-                    shutil.rmtree(working_dir)
-                except:
-                    pass
-                
-            raise err
-        # build_indexes is not meaningfull in configuration file
-        options['build_indexes'] = cmde_line_values['build_indexes']
-
-        return options
+            raise AttributeError("config object has no attribute '{}'".format(option_name))
 
 
-    def save(self, dir_path):
+    def _str_2_tuple(self, value):
         """
-        save the configuration used for this run in the ini format file
-        """
-        parser = SafeConfigParser()
-        parser.add_section('base')
-        parser.set('base', 'file', str(self.options['sequence_db']))
-        parser.set('base', 'type', str(self.options['db_type']).lower())
-        cfg_opts = [('base', ('replicon_topology', 'topology_file', 'index_db_exe',)),
-                    ('system', ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes', 'multi_loci')),
-                    ('hmmer', ('hmmer_exe', 'e_value_res', 'i_evalue_sel', 'coverage_profile')),
-                    ('directories', ('def_dir', 'res_search_dir', 'res_search_suffix', 'profile_dir', 'profile_suffix', 'res_extract_suffix')),
-                    ('general', ('log_level', 'log_file', 'worker_nb'))
-                    ]
+        transform a string with syntax  {model_fqn int} n in list of tuple
 
-        for section, directives in cfg_opts:
-            if not parser.has_section(section):
-                parser.add_section(section)
-            for directive in directives:
-                try:
-                    if self.options[directive] is not None:
-                        if directive in ('inter_gene_max_space', 'min_mandatory_genes_required', 'min_genes_required', 'max_nb_genes'):
-                            s = ''
-                            for system, space in self.options[directive].items():
-                                s += " {0} {1}".format(system, space)
-                            parser.set(section, directive, s)
-                        elif directive != 'log_file' or self.options[directive] != os.path.join(self.options['working_dir'], 'macsyfinder.log'):
-                            parser.set(section, directive, str(self.options[directive]))
-                except KeyError:
-                    pass
-        with open(os.path.join(dir_path, self._new_cfg_name), 'w') as new_cfg:
-            parser.write(new_cfg)
-
-    @property
-    def sequence_db(self):
-        """
-        :return: the path to the input sequence dataset (in fasta format)
-        :rtype: string 
-        """
-        return self.options['sequence_db']
-
-    @property
-    def db_type(self):
-        """
-        :return: the type of the input sequence data set. The allowed values are :
-          * 'unordered_replicon',
-          * 'ordered_replicon',
-          * 'gembase',
-          * 'unordered'
-        :rtype: string
-        """
-        return self.options['db_type']
-
-    @property
-    def build_indexes(self):
-        """
-        :return: True if the indexes must be rebuilt, False otherwise
-        :rtype: boolean
-        """
-        return self.options['build_indexes']
-
-    @property
-    def replicon_topology(self):
-        """
-        :return: the topology of the replicons. Two values are supported 'linear' (default) and circular.
-                 Only relevant for 'ordered' datasets
-        :rtype: string
-        """
-        return self.options['replicon_topology']
-
-    @property
-    def topology_file(self):
-        """
-        :return: the path to the file of replicons topology. 
-        :rtype: string
-        """
-        return self.options['topology_file']
-
-    def inter_gene_max_space(self, system):
-        """
-        :param system: the name of a system 
-        :type system: string
-        :return: the maximum number of components with no match allowed between two genes
-                 with a match to consider them contiguous (at the system level)
-        :rtype: integer 
+        :param str value: the string to parse
+        :return:
+        :rtype: [(model_fqn, int), ...]
         """
         try:
-            return self.options['inter_gene_max_space'][system] 
-        except KeyError:
-            return None 
+            it = iter(value.split())
+            res = [(a, next(it)) for a in it]
+            return res
+        except StopIteration:
+            raise ValueError("You must provide a list of model name and"
+                             " value separated by spaces: {}".format(value))
 
-    def min_mandatory_genes_required(self, system):
+
+    def _config_file_2_dict(self, defaults, files, previous_run=False):
         """
-        :param system: the name of a system 
-        :type system: string
-        :return: the mandatory genes quorum to assess the system presence
-        :rtype: integer 
+        parse config files files, the last one have precedence on the previous on so on, and return a dict
+        with properties, values.
+        The defaults is just used to know the type of the properties and cast them. It is not used to fill
+        the dict with default values.
+
+        :param defaults: the macsyfinder defaults value
+        :type defaults: a :class:`macsypy.config.MacsyDefaults` object
+        :param files: the configuration files to parse
+        :type files: list of string
+        :return: dict
         """
+        parser = ConfigParser()
+        parse_meth = {int: parser.getint,
+                      float: parser.getfloat,
+                      bool: parser.getboolean
+                      }
         try:
-            return self.options['min_mandatory_genes_required'][system] 
-        except KeyError:
+            used_files = parser.read(files)
+            _log.debug("Files parsed for configuration: {}".format(', '.join(used_files)))
+        except ParsingError as err:
+            raise ParsingError("A macsyfinder configuration file is not well formed: {}".format(err)) from None
+
+        opts = {}
+        sections = [s for s in parser.sections() if s != 'models']
+        for section in sections:
+            for option in parser.options(section):
+                if previous_run and option == 'out_dir':
+                    # set the out_dir from the previous_run is a non sense
+                    continue
+                opt_type = type(defaults.get(option, None))
+                try:
+                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                except (ValueError, TypeError) as err:
+                    raise ValueError("Invalid value in config_file for option '{}': {}".format(option, err))
+                opts[option] = opt_value
+        try:
+            opts['models'] = parser.items('models')
+        except NoSectionError:
+            pass
+        return opts
+
+
+    def save(self, path_or_buf=None):
+        """
+        save itself in a file in ini format.
+
+        .. note::
+            the undefined options (set to None) are omitted
+
+        :param path_or_buf: where to serialize itself.
+        :type path_or_buf: str or file like object
+        """
+        def serialize():
+            conf_str = ''
+            for section, options in self.cfg_opts:
+                conf_str += "[{}]\n".format(section)
+                if section == 'models':
+                    # [(model_family, (def_name1, ...)), ... ]
+                    for model_family, def_names in self._options['models']:
+                        def_names = ', '.join(def_names)
+                        conf_str += "{} = {}\n".format(model_family, def_names)
+                else:
+                    for opt in options:
+                        opt_value = self._options[opt]
+                        if not opt_value:
+                            continue
+                        elif isinstance(opt_value, dict):
+                            value = ""
+                            for model, v in opt_value.items():
+                                value += "{} {} ".format(model, v)
+                            opt_value = value
+                        elif isinstance(opt_value, set):
+                            opt_value = ', '.join(opt_value)
+                        conf_str += "{} = {}\n".format(opt, opt_value)
+            return conf_str
+
+        if path_or_buf is None:
+            path_or_buf = os.path.join(self.out_dir(), self.cfg_name)
+        if isinstance(path_or_buf, str):
+            with open(path_or_buf, 'w') as cfg_file:
+                print(serialize(), file=cfg_file)
+        else:
+            print(serialize(), file=path_or_buf)
+
+
+    def _set_db_type(self, value):
+        """
+        set value for 'db_type' option
+
+        :param str value: the value for db_type, allowed values are :
+                          'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
+        :raise ValueError: if value is not allowed
+        """
+        auth_values = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
+        if value in auth_values:
+            self._options['db_type'] = value
+        else:
+            raise ValueError("db_type as unauthorized value : '{}'.".format(value))
+
+
+    def _set_inter_gene_max_space(self, value):
+        """
+        set value for 'inter_gene_max_space' option
+
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
+        """
+        opt = {}
+        if isinstance(value, str):
+            try:
+                value = self._str_2_tuple(value)
+            except ValueError as err:
+                raise ValueError("Invalid syntax for 'inter_gene_max_space': {}.".format(err))
+        for model_fqn, quorum in value:
+            try:
+                opt[model_fqn] = int(quorum)
+            except ValueError:
+                raise ValueError("The value for 'inter_gene_max_space' option for model {} must be an integer, "
+                                 "but you provided {}".format(model_fqn, quorum))
+        self._options['inter_gene_max_space'] = opt
+
+
+    def inter_gene_max_space(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the gene_max_space for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
+        if self._options['inter_gene_max_space']:
+            return self._options['inter_gene_max_space'].get(model_fqn, None)
+        else:
             return None
 
-    def min_genes_required(self, system):
+
+    def _set_max_nb_genes(self, value):
         """
-        :param system: the name of a system 
-        :type system: string
-        :return: the genes (mandatory+accessory) quorum to assess the system presence
-        :rtype: integer
+        set value for 'max_nb_genes' option
+
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
         """
-        try:
-            return self.options['min_genes_required'][system] 
-        except KeyError:
+        opt = {}
+        if isinstance(value, str):
+            try:
+                value = self._str_2_tuple(value)
+            except ValueError as err:
+                raise ValueError("Invalid syntax for 'max_nb_genes': {}.".format(err))
+        for model_fqn, quorum in value:
+            try:
+                opt[model_fqn] = int(quorum)
+            except ValueError:
+                raise ValueError("The value for 'max_nb_genes' option for model {} must be an integer, "
+                                 "but you provided {}".format(model_fqn, quorum))
+        self._options['max_nb_genes'] = opt
+
+
+    def max_nb_genes(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the max_nb_genes for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
+        if self._options['max_nb_genes']:
+            return self._options['max_nb_genes'].get(model_fqn, None)
+        else:
             return None
 
-    def max_nb_genes(self, system):
+
+    def _set_min_genes_required(self, value):
         """
-        :param system: the name of a system 
-        :type system: string
-        :return: the maximum number of genes to assess the system presence
-        :rtype: integer
+        set value for 'min_genes_required' option
+
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
         """
-        try:
-            return self.options['max_nb_genes'][system] 
-        except KeyError:
+        opt = {}
+        if isinstance(value, str):
+            try:
+                value = self._str_2_tuple(value)
+            except ValueError as err:
+                raise ValueError("Invalid syntax for 'min_genes_required': {}.".format(err))
+        for model_fqn, quorum in value:
+            try:
+                opt[model_fqn] = int(quorum)
+            except ValueError:
+                raise ValueError("The value for 'min_genes_required' option for model {} must be an integer, "
+                                 "but you provided {}".format(model_fqn, quorum))
+        self._options['min_genes_required'] = opt
+
+
+    def min_genes_required(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualifed name
+        :return: the min_genes_required for the model_fqn or None if it's does not specify
+        :rtype: int or None
+        """
+        if self._options['min_genes_required']:
+            return self._options['min_genes_required'].get(model_fqn, None)
+        else:
             return None
 
-    def multi_loci(self, system):
+    def _set_min_mandatory_genes_required(self, value):
         """
-        :param system: the name of a system 
-        :type system: string
-        :return: the genes (mandatory+accessory) quorum to assess the system presence
-        :rtype: boolean
-        """
-        try:
-            return system in self.options['multi_loci'] 
-        except KeyError:
-            return False
+        set value for 'min_mandatory_genes_required' option
 
-    @property
-    def hmmer_exe(self):
+        :param str value: the string parse representing the model fully qualified name
+                          and it's associated value and so on
+                          the model_fqn is a string, the associated value must be cast in int
+        :raise ValueError: if value is not well formed
         """
-        :return: the name of the binary to execute for homology search from HMM protein profiles (Hmmer)
-        :rtype: string 
-        """
-        return self.options['hmmer_exe']
+        opt = {}
+        if isinstance(value, str):
+            try:
+                value = self._str_2_tuple(value)
+            except ValueError as err:
+                raise ValueError("Invalid syntax for 'min_mandatory_genes_required': {}.".format(err))
+        for model_fqn, quorum in value:
+            try:
+                opt[model_fqn] = int(quorum)
+            except ValueError:
+                raise ValueError("The value for 'min_mandatory_genes_required' option "
+                                 "for model {} must be an integer, but you provided {}".format(model_fqn, quorum))
+        self._options['min_mandatory_genes_required'] = opt
 
-    @property
-    def index_db_exe(self):
-        """
-        :return: the name of the binary to index the input sequences dataset for Hmmer
-        :rtype: string 
-        """
-        return self.options['index_db_exe']
 
-    @property
-    def e_value_res(self):
+    def min_mandatory_genes_required(self, model_fqn):
         """
-        :return: The e_value threshold used by Hmmer to report hits in the Hmmer raw output file
-        :rtype: float
+        :param str model_fqn: the model fully qualifed name
+        :return: the min_mandatory_genes_required for the model_fqn or None if it's does not specify
+        :rtype: int or None
         """
-        return self.options['e_value_res']
+        if self._options['min_mandatory_genes_required']:
+            return self._options['min_mandatory_genes_required'].get(model_fqn, None)
+        else:
+            return None
 
-    @property
-    def i_evalue_sel(self):
+    def _set_models(self, value):
         """
-        :return: the i_evalue threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
-        :rtype: float
-        """
-        return self.options['i_evalue_sel']
+        :param value: The models to search as return by the command line parsing or
+                      the configuration files
 
-    @property
-    def coverage_profile(self):
+                      if value come from command_line
+                          [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
+                      if value come from config file
+                         [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
+                         [(model_family, [def_name1, ...]), ... ]
         """
-        :return: the coverage threshold used to select a hit for systems detection and for the Hmmer report (filtered hits)
-        :rtype: float
-        """
-        return self.options['coverage_profile']
+        opt = []
+        for models in value:
+            model_family_name = models[0]
+            if ',' in models[1]:
+                # value is read from a config file
+                def_name = [d.strip() for d in models[1].split(',')]
+            elif len(models) > 2:
+                def_name = models[1:]
+            else:
+                def_name = [models[1]]
+            opt.append((model_family_name, def_name))
+        self._options['models'] = opt
 
-    @property
-    def def_dir(self):
-        """
-        :return: the path to the directory where are stored definitions of secretion systems (.xml files)
-        :rtype: string
-        """
-        return self.options['def_dir']
 
-    @property
-    def res_search_dir(self):
+    def out_dir(self):
         """
-        :return the path to the directory to store results of MacSyFinder runs
-        :rtype: string
+        :return: the path to the directory where the results are stored
         """
-        return self.options['res_search_dir']
+        out_dir = self._options['out_dir']
+        if out_dir:
+            return out_dir
+        else:
+            out_dir = os.path.join(self._options['res_search_dir'],
+                                   "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+            self._options['out_dir'] = out_dir
+            return out_dir
 
-    @property
+
     def working_dir(self):
         """
-        :return: the path to the working directory to use for this run
-        :rtpe: string
+        alias to :py:meth:`config.Config.out_dir`
         """
-        return self.options['working_dir']
+        return self.out_dir()
 
-    @property
-    def res_search_suffix(self):
-        """
-        :return: the suffix for Hmmer raw output files
-        :rtype: string
-        """
-        return self.options['res_search_suffix']
 
-    @property
-    def profile_dir(self):
+    def _set_replicon_topology(self, value):
         """
-        :return: the path to the directory where are the HMM protein profiles which corresponds to Gene
-        :rtype: string
-        """
-        return self.options['profile_dir']
+        set the default replicon topology
 
-    @property
-    def profile_suffix(self):
+        :param str value: 'circular' or 'linear'
         """
-        :return: the suffix for profile files
-        :rtype: string
-        """
-        return self.options['profile_suffix']
+        auth_values = ('linear', 'circular')
+        value_low = value.lower()
+        new_topo = None
+        for topo in auth_values:
+            if topo.startswith(value_low):
+                new_topo = topo
+                break
+        if new_topo is not None:
+            self._options['replicon_topology'] = new_topo
+        else:
+            raise ValueError("replicon_topology as unauthorized value : '{}'.".format(value))
 
-    @property
-    def res_extract_suffix(self):
-        """
-        :return: the suffix of extract files (tabulated files after HMM output parsing and filtering of hits)
-        :rtype: string
-        """
-        return self.options['res_extract_suffix']
 
-    @property
-    def worker_nb(self):
+    def _set_sequence_db(self, path):
         """
-        :return: the maximum number of parallel jobs
-        :rtype: int
+        :param str path: set the path to the sequence file (in fasta format) to analysed
         """
-        return self.options.get('worker_nb', None)
+        if os.path.exists(path) and os.path.isfile(path):
+            self._options['sequence_db'] = path
+        else:
+            raise ValueError("sequence_db '{}' does not exists or is not a file.".format(path))
 
-    @property
-    def previous_run(self):
-        """
-        :return: the path to the previous run directory to use (to recover Hmmer raw output)
-        :rtype: string
-        """
-        return self.options.get('previous_run', None)
 
-    @property
+    def _set_topology_file(self, path):
+        """
+        test if the path exists and set it in config
+
+        :param str path: the path to the topology file
+        """
+        if os.path.exists(path) and os.path.isfile(path):
+            self._options['topology_file'] = path
+        else:
+            raise ValueError("topology_file '{}' does not exists or is not a file.".format(path))
+
+
+    def _set_models_dir(self, path):
+        """
+        :param str path: the path to the models (definitions + profiles) are stored.
+        """
+        if os.path.exists(path) and os.path.isdir(path):
+            self._options['models_dir'] = path
+        else:
+            raise ValueError("models_dir '{}' does not exists or is not a directory.".format(path))
+
+
+    def _set_multi_loci(self, value):
+        """
+        :param str value: the models fqn list separated by comma of multi loc models
+        """
+        models_fqn = {v for v in [v.strip() for v in value.split(',')] if v}
+        self._options['multi_loci'] = set(models_fqn)
+
+
+    def multi_loci(self, model_fqn):
+        """
+        :param str model_fqn: the model fully qualified name
+        :return: True if the model is multi loci, False otherwise
+        :rtype: bool
+        """
+        return model_fqn in self._options['multi_loci']
+
+
     def hmmer_dir(self):
         """
-        :return: the name of the directory where the hmmer results are stored
-        :rtype: string
+
+        :return: The name of the directory containing the hmmsearch results (output, error, parsing)
         """
-        return "hmmer_results"
+        return 'hmmer_results'
+
+
+    def log_level(self):
+        level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
+        level = min(50, max(10, level))
+        return level
+
+
+class NoneConfig:
+
+    def __getattr__(self, property):
+        if property in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
+                        'inter_gene_max_space', 'min_genes_required'):
+            return lambda x: None
+        else:
+            return lambda: None
+

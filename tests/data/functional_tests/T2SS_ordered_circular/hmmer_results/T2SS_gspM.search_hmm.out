@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/functional_tests/models/TXSS_ori/profiles/T2SS_gspM.hmm
+# target sequence database:        acav001_T2SS-Ori_T4P-multi.fasta
+# output directed to file:         ordered_circular/hmmer_results/T2SS_gspM.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspM_tcoffee_aln  [M=134]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.7e-13   44.1  15.5    1.7e-13   44.1  15.5    1.8  2  ACAV001.B.00001.C001_00848  
+
+
+Domain annotation for each sequence (and alignments):
+>> ACAV001.B.00001.C001_00848  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   44.1  15.5   1.4e-15   1.7e-13       1     133 [.      23     151 ..      23     152 .. 0.90
+   2 ?   -2.1   3.0      0.28        33      72      81 ..     169     178 ..     139     205 .. 0.44
+
+  Alignments for each domain:
+  == domain 1  score: 44.1 bits;  conditional E-value: 1.4e-15
+            gspM_tcoffee_aln   1 fwrqrapRervlLavggaaLllviaylvlwePleerietaqaeldelraqlaelkaqaaearelaAaaksatlsgaalqdvle 83 
+                                 +w+ +apRe+ l +++g ++++++++ v + P+ + +++a a+   l aql +++a+ +ea +l+Aa   a++ + + +++l+
+  ACAV001.B.00001.C001_00848  23 RWKTLAPREQSLVLAAGTVVAVALLWWVALAPALRTLREAPAQHAALDAQLQRMQALQSEALQLQAAP--AAP-AGDASQALR 102
+                                 6**********************************************************999999987..333.34667899* PP
+
+            gspM_tcoffee_aln  84 asasdaGlaiarlaadvggavqvqlaavsfeallkWlerlrealalkvte 133
+                                 +s+s+     a+++   g++ +v l+a++ + +++Wl + r + ++ ++e
+  ACAV001.B.00001.C001_00848 103 TSLSQRLGTQAQIN-ILGDRATVTLKAAPADHVAEWLSQARSNARAVPVE 151
+                                 ****9866666777.88************************999888777 PP
+
+  == domain 2  score: -2.1 bits;  conditional E-value: 0.28
+            gspM_tcoffee_aln  72 tlsgaalqdv 81 
+                                 +l ++ +q++
+  ACAV001.B.00001.C001_00848 169 VLGPTSPQRA 178
+                                 3333433333 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (134 nodes)
+Target sequences:                          116  (38011 residues searched)
+Passed MSV filter:                        13  (0.112069); expected 2.3 (0.02)
+Passed bias filter:                        5  (0.0431034); expected 2.3 (0.02)
+Passed Vit filter:                         1  (0.00862069); expected 0.1 (0.001)
+Passed Fwd filter:                         1  (0.00862069); expected 0.0 (1e-05)
+Initial search space (Z):                116  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 509.35
+//
+[ok]

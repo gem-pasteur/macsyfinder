@@ -1,27 +1,37 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-# MacSyFinder - Detection of macromolecular systems in protein datasets        #
-#               using systems modelling and similarity search.                 #
-# Authors: Sophie Abby, Bertrand Néron                                         #
-# Copyright © 2014  Institut Pasteur (Paris) and CNRS.                         #
-# See the COPYRIGHT file for details                                           #
-#                                                                              #
-# MacsyFinder is distributed under the terms of the GNU General Public License #
-# (GPLv3). See the COPYING file for details.                                   #
-################################################################################
-
-
+#########################################################################
+# MacSyFinder - Detection of macromolecular systems in protein dataset  #
+#               using systems modelling and similarity search.          #
+# Authors: Sophie Abby, Bertrand Neron                                  #
+# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# See the COPYRIGHT file for details                                    #
+#                                                                       #
+# This file is part of MacSyFinder package.                             #
+#                                                                       #
+# MacSyFinder is free software: you can redistribute it and/or modify   #
+# it under the terms of the GNU General Public License as published by  #
+# the Free Software Foundation, either version 3 of the License, or     #
+# (at your option) any later version.                                   #
+#                                                                       #
+# MacSyFinder is distributed in the hope that it will be useful,        #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of        #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          #
+# GNU General Public License for more details .                         #
+#                                                                       #
+# You should have received a copy of the GNU General Public License     #
+# along with MacSyFinder (COPYING).                                     #
+# If not, see <https://www.gnu.org/licenses/>.                          #
+#########################################################################
 
 import threading
 import logging
-_log = logging.getLogger('macsyfinder.' + __name__)
+_log = logging.getLogger(__name__)
 import signal
 import sys
 import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
+import time
 
 def search_genes(genes, cfg):
     """
@@ -34,11 +44,10 @@ def search_genes(genes, cfg):
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
-    worker_nb = cfg.worker_nb
+    worker_nb = cfg.worker()
     if not worker_nb:
         worker_nb = len(genes)
     _log.debug("worker_nb = {0:d}".format(worker_nb))
-    sema = threading.BoundedSemaphore(value=worker_nb)
     all_reports = []
 
     def stop(signum, frame):
@@ -50,7 +59,7 @@ def search_genes(genes, cfg):
 
     signal.signal(signal.SIGTERM, stop)
 
-    def search(gene, all_reports, sema):
+    def search(gene):
         """
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
@@ -61,21 +70,21 @@ def search_genes(genes, cfg):
         :param sema: semaphore to limit the number of parallel workers
         :type sema: a threading.BoundedSemaphore
         """
-        with sema:
-            _log.info("search gene {0}".format(gene.name))
-            profile = gene.profile
-            try:
-                report = profile.execute()
-            except Exception as err:
-                _log.critical(err)
-                stop(signal.SIGKILL, None)
+        _log.info("search gene {0}".format(gene.name))
+        profile = gene.profile
+        try:
+            report = profile.execute()
+        except Exception as err:
+            _log.critical(err)
+            stop(signal.SIGKILL, None)
+        else:
             if report:
                 report.extract()
                 report.save_extract()
-                all_reports.append(report)
+                return report
 
 
-    def recover(gene, all_reports, cfg, sema):
+    def recover(gene, cfg):
         """
         Recover Hmmer output from a previous run, and produce a report
 
@@ -90,22 +99,23 @@ def search_genes(genes, cfg):
         :return: the list of all HMMReports (derived class depending on the input dataset type)
         :rtype: list of `macsypy.report.HMMReport` object
         """
-        with sema:
-            hmm_old_path = os.path.join(cfg.previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
-            _log.info("recover hmm {0}".format(hmm_old_path))
-            hmm_new_path = os.path.join(cfg.working_dir, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)
-            shutil.copy(hmm_old_path, hmm_new_path)
-            gene.profile.hmm_raw_output = hmm_new_path
-            if cfg.db_type == 'gembase':
-                report = GembaseHMMReport(gene, hmm_new_path, cfg)
-            elif cfg.db_type == 'ordered_replicon':
-                report = OrderedHMMReport(gene, hmm_new_path, cfg)
-            else:
-                report = GeneralHMMReport(gene, hmm_new_path, cfg)
-            if report:
-                report.extract()
-                report.save_extract()
-                all_reports.append(report)
+
+        hmm_old_path = os.path.join(cfg.previous_run(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
+        _log.info("recover hmm {0}".format(hmm_old_path))
+        hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
+        shutil.copy(hmm_old_path, hmm_new_path)
+        gene.profile.hmm_raw_output = hmm_new_path
+        db_type = cfg.db_type()
+        if db_type == 'gembase':
+            report = GembaseHMMReport(gene, hmm_new_path, cfg)
+        elif db_type == 'ordered_replicon':
+            report = OrderedHMMReport(gene, hmm_new_path, cfg)
+        else:
+            report = GeneralHMMReport(gene, hmm_new_path, cfg)
+        if report:
+            report.extract()
+            report.save_extract()
+            return report
 
     # there is only one instance of gene per name but the same instance can be
     # in all genes several times
@@ -114,20 +124,25 @@ def search_genes(genes, cfg):
     genes = set(genes)
     _log.debug("start searching genes")
 
-    previous_run = cfg.previous_run
-    for gene in genes:
-        if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir, gene.name + cfg.res_search_suffix)):
-            t = threading.Thread(target=recover, args=(gene, all_reports, cfg, sema))
-        else:
-            t = threading.Thread(target=search, args=(gene, all_reports, sema))
-        t.start()
+    hmmer_dir = os.path.join(cfg.working_dir(), cfg.hmmer_dir())
+    if not os.path.exists(hmmer_dir):
+        # it works because mkdir is an atomic operation
+        os.mkdir(hmmer_dir)
 
-    main_thread = threading.currentThread()   
-    while threading.activeCount() > 1:
-        for t in threading.enumerate():
-            if t is main_thread:
-                continue
-            t.join(10)
-
+    #########################################################################
+    import concurrent.futures
+    previous_run = cfg.previous_run()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=worker_nb) as executor:
+        future_search = []
+        for gene in genes:
+            if previous_run and os.path.exists(os.path.join(previous_run, cfg.hmmer_dir(),
+                                                            gene.name + cfg.res_search_suffix())):
+                future_search.append(executor.submit(recover, gene, cfg))
+            else:
+                future_search.append(executor.submit(search, gene))
+        for future in concurrent.futures.as_completed(future_search):
+            report = future.result()
+            if report:
+                all_reports.append(report)
     _log.debug("end searching genes")
     return all_reports

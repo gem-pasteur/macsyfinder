@@ -1,0 +1,6 @@
+# gene: T4P_pilN extract from T4P_ordered_linear_multi_loci/hmmer_results/T4P_pilN.search_hmm.out hmm output
+# profile length= 193
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+ACAV001.B.00001.C001_00944	UserReplicon	45	204	T4P_pilN	T4P-single-locus	2.400e-51	166.900	0.979	0.931	4	193
