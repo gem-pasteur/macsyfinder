@@ -1,0 +1,17 @@
+<model inter_gene_max_space="5" min_genes_required="3" min_mandatory_genes_required="2">
+
+    <gene name="csf1_TypeU" presence="mandatory" />
+    <gene name="csf2_TypeU" presence="mandatory">
+        <analogs>
+            <gene model_ref="model_def" name="csf3_TypeU" />
+        </analogs>
+    </gene>
+
+    <gene name="cas2_TypeI-II-III" presence="accessory">
+        <homologs>
+            <gene model_ref="model_def" name="cas5_TypeI" />
+        </homologs>
+    </gene>
+    <gene model_ref="model_def" name="cas3_TypeI" presence="forbidden" />
+    <gene model_ref="model_def" name="cas3a_TypeI" presence="forbidden" />
+</model>

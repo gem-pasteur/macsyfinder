@@ -1,3 +1,5 @@
+.eggs
+
 ######################
 # Logs and databases #
 ######################
@@ -5,7 +7,7 @@
 .DS_Store
 
 ####################
-# Eclipse metadata #
+# Eclipse metadata_path #
 ####################
 \.project
 \.pydevproject
@@ -23,7 +25,6 @@
 #################
 \.idea
 
-
 ##########################
 # Python complied source #
 ##########################
@@ -38,6 +39,7 @@ doc/_build/
 ##########################
 htmlcov/
 .coverage
+coverage_html/
 
 ###################################
 # MacsyFinder results directories #
@@ -51,11 +53,21 @@ test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
 macsyfinder-201*
+macsyfinder.egg-info/
+
+####################
+# MacSyFinder data #
+####################
+data/macsyfinder/models/TXSS/*
+data/models/TXSScan
+data/base/*
+sandbox/
 
 ##############################
 # MacsyFinder generated file #
 ##############################
 MANIFEST
+
 uninstall.cfg
 uninstall_files
 
@@ -66,4 +78,4 @@ uninstall_files
 *\.psd
 *\.psi
 *\.psq
-
+*\formatdb\.err

@@ -1,0 +1,59 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/macsyfinder/src/macsyfinder/tests/data/functional_tests/models/TXSS_modified/profiles/T4P_pilO.hmm
+# target sequence database:        acav001_T2SS-Ori_T4P-multi.fasta
+# output directed to file:         T4P_ordered_linear/hmmer_results/T4P_pilO.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilO_buen.tab.seqid  [M=187]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    2.9e-55  179.9   0.4    3.4e-55  179.7   0.4    1.0  1  ACAV001.B.00001.C001_00945  
+
+
+Domain annotation for each sequence (and alignments):
+>> ACAV001.B.00001.C001_00945  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  179.7   0.4   2.9e-57   3.4e-55       1     187 []      40     228 .]      40     228 .] 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 179.7 bits;  conditional E-value: 2.9e-57
+         pilO_buen.tab.seqid   1 kiigillavaavlalgyilllspaleeleqqeaeeeeLksqleqKsaqaknleklreelaeveqklakllkqlpnekeldeLl 83 
+                                 +++++++ ++av+a  +++ +++ ++ele+++a+e  L+++++ K ++a++l++l+++ ++v+q + +l+kqlp+++e+ +Ll
+  ACAV001.B.00001.C001_00945  40 RLLLCVFIAVAVAAFLWFFKINEYQDELEAERAKEVSLREDYQRKLVKAVSLDALKKQREQVQQYVIQLEKQLPSKAEMAALL 122
+                                 7899******************************************************************************* PP
+
+         pilO_buen.tab.seqid  84 adinrlGvesGleldsikpvkavvkrfvarlPisievtGnYeqialfirdvasLsrivtlkdikitgsklgktsv..lqleai 164
+                                  din++G+ + l+++ ++p++ vv  ++a+lPi i vtG+Y++i  f++d+a+Lsrivtl++i + ++  +  +   l +ea 
+  ACAV001.B.00001.C001_00945 123 SDINQAGLGRSLQFELFRPGQVVVRDYYAELPIAIRVTGRYHDIGAFAADIANLSRIVTLNNISLSPATAKDAPAgtLSMEAT 205
+                                 ******************************************************************77777776667****** PP
+
+         pilO_buen.tab.seqid 165 attyralspeeiAaaaaakgekK 187
+                                 a+t+r+l+p+ei a+++a+g kK
+  ACAV001.B.00001.C001_00945 206 ARTFRYLDPDEIQAQRKAAGGKK 228
+                                 ******************99998 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (187 nodes)
+Target sequences:                          116  (38011 residues searched)
+Passed MSV filter:                         6  (0.0517241); expected 2.3 (0.02)
+Passed bias filter:                        5  (0.0431034); expected 2.3 (0.02)
+Passed Vit filter:                         1  (0.00862069); expected 0.1 (0.001)
+Passed Fwd filter:                         1  (0.00862069); expected 0.0 (1e-05)
+Initial search space (Z):                116  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

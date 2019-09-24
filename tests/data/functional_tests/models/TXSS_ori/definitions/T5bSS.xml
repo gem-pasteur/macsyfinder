@@ -1,0 +1,3 @@
+<model inter_gene_max_space="1">
+    <gene loner="1" name="T5bSS_translocator" presence="mandatory" />
+</model>
