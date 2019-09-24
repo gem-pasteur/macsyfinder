@@ -4,7 +4,6 @@ MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
 USER root
 
-RUN apt-get install -y python3-coverage &&\
-    apt-get clean -y
+RUN python3.7 -m pip install coverage==4.5.4
 
 CMD ["/bin/bash"]
