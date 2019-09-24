@@ -21,10 +21,10 @@ coverage:
   stage: coverage
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
-    - pip3.7 install --no-binary=macsyfinder .
-    - python3.7-coverage run --source=macsypy tests/run_tests.py
-    - python3.7-coverage html
-    - python3.7-coverage report
+    - python3.7 -m pip install --no-binary=macsyfinder .
+    - coverage run --source=macsypy tests/run_tests.py
+    - coverage html
+    - coverage report
 
   artifacts:
     paths:
