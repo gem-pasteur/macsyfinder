@@ -28,7 +28,7 @@ coverage:
 
   artifacts:
     paths:
-      - htmlcov/
+      - coverage_html/
   except:
     - /^feat.*$/
     - /^fix.*$/
@@ -43,7 +43,7 @@ pages:
     - make html
     - cd ${CI_PROJECT_DIR}
     - mv ${CI_PROJECT_DIR}/doc/build/html/ public
-    - mv htmlcov public/
+    - mv coverage_html public/coverage
   artifacts:
     paths:
       - public
