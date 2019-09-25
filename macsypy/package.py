@@ -24,7 +24,7 @@
 
 import os
 import tempfile
-import urllib.request
+import urllib.request, urllib.parse
 import json
 import yaml
 import shutil
@@ -118,7 +118,7 @@ class RemoteModelIndex(AbstractModelIndex):
         :param org: The name of the organization on github where are stored the models
         """
         super().__init__(cache=cache)
-        self.org_name: str = org
+        self.org_name = urllib.parse.quote(org)
         self.base_url: str = "https://api.github.com"
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
@@ -179,6 +179,8 @@ class RemoteModelIndex(AbstractModelIndex):
         else:
             if vers not in versions:
                 raise RuntimeError(f"The version '{vers}' does not exists for model {pack_name}.")
+        pack_name = urllib.parse.quote(pack_name)
+        vers = urllib.parse.quote(vers)
         metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{vers}/metadata.yml"
         try:
             with urllib.request.urlopen(metadata_url) as response:
@@ -212,6 +214,7 @@ class RemoteModelIndex(AbstractModelIndex):
         :param str pack_name: the name of the package
         :return: the list of the versions
         """
+        pack_name = urllib.parse.quote(pack_name)
         url = f"{self.base_url}/repos/{self.org_name}/{pack_name}/tags"
         _log.debug(f"get {url}")
         try:
@@ -236,7 +239,9 @@ class RemoteModelIndex(AbstractModelIndex):
                          If dest is None, the macsyfinder cache will be used
         :return: The package archive path.
         """
-        url = f"{self.base_url}/repos/{self.org_name}/{pack_name}/tarball/{vers}"
+        safe_pack_name = urllib.parse.quote(pack_name)
+        safe_vers = urllib.parse.quote(vers)
+        url = f"{self.base_url}/repos/{self.org_name}/{safe_pack_name}/tarball/{safe_vers}"
         if not dest:
             package_cache = os.path.join(self.cache, self.org_name)
             if os.path.exists(self.cache) and not os.path.isdir(self.cache):
