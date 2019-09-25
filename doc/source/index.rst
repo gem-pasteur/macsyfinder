@@ -25,7 +25,7 @@ perform homology searches with the program Hmmer.
 In order to model macromolecular systems, the user:
 
     - builds or gather from databanks **HMM protein profiles** for components of interest,
-    - defines **decision rules** for each system in a dedicated XML grammar (see :ref:`system_definition`).
+    - defines **decision rules** for each system in a dedicated XML grammar (see :ref:`model_definition`).
 
 
     .. figure:: _static/figure_main-2.*

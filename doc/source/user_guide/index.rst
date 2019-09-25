@@ -29,6 +29,5 @@ MacSyFinder functioning
 .. toctree::
    :maxdepth: 2
 
-   system_definition
-   implementation
+   model_definition
    functioning

@@ -6,7 +6,7 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
     
-.. _system_definition:
+.. _model_definition:
 
 *********************************
 Macromolecular systems definition
@@ -16,7 +16,7 @@ Principles
 ----------
 
 MacSyFinder relies on the definition of models of macromolecular systems with an **XML grammar**
-that is described :ref:`below<system-definition-grammar-label>`.
+that is described :ref:`below<model-definition-grammar-label>`.
 
 A system is defined in a dedicated file named after the system
 (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components**
@@ -39,26 +39,26 @@ and which corresponds to Gene objects, and the corresponding HMM protein profile
      :align: left
 
 
-.. _system-definition-grammar-label:
+.. _model-definition-grammar-label:
 
 The XML hierarchy
 -----------------
 
-* The element root is "system". 
+* The element root is "model".
 
   * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
     without a match between two components with a match for a component profile.
-  * The element "system" may have attributes:
+  * The element "model" may have attributes:
   
      * "min_mandatory_genes_required": an integer representing the minimal number of mandatory genes required
        to infer the system presence.
      * "min_genes_required": an integer representing the minimal number of mandatory or accessory genes
-       (whose corresponding proteins match a profile of the system) required to infer the system presence.
+       (whose corresponding proteins match a profile of the model) required to infer the system presence.
      * "max_nb_genes": an integer representing the maximal number of mandatory or accessory genes in the system.
      * "multi_loci": a boolean set to True ("1", "true" or "True") to allow the definition of "scattered" systems
        (systems encoded by different loci). If not specified, *default value is false*.
      
-  * The system contains one or more element "gene".
+  * The model contains one or more element "gene".
   
 * The element "gene" has several mandatory attributes: 
 
@@ -68,9 +68,9 @@ The XML hierarchy
 
  The element "gene" may have other attributes: 
 
-   * "system_ref": which is a reference to the macromolecular system from where the gene comes from
+   * "model_ref": which is a reference to the macromolecular model from where the gene comes from
      (this attribute is used for forbidden gene and homologs gene).
-     If system_ref is not specified, it means the gene is from the current system.
+     If model_ref is not specified, it means the gene is from the current model.
    * "loner": which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
    * "exchangeable": which is a boolean. If a gene is exchangeable (value set to "1", "true" or "True") that
      means this gene or one of its homologs or analogs can be interchanged for the assessment of the presence
@@ -86,31 +86,31 @@ The XML hierarchy
    
 * The elements "homologs" and "analogs" can contain one or more element "gene".
 
-Example of a system definition in XML: ::
+Example of a model definition in XML: ::
   
-  <system inter_gene_max_space="5"> 
+  <model inter_gene_max_space="5">
     <gene name="gspD" presence="mandatory">
        <homologs>
-           <gene name="sctC" system_ref="T3SS"/>
+           <gene name="sctC" model_ref="T3SS"/>
        </homologs>
     </gene>
     <gene name="sctN_FLG" presence="mandatory" loner="1" exchangeable="1"/>       
        <analogs>
-           <gene name="gspE" system_ref="T2SS"/>
-           <gene name="pilT" system_ref="T4P"/>
+           <gene name="gspE" model_ref="T2SS"/>
+           <gene name="pilT" model_ref="T4P"/>
        </analogs>
     <gene name="sctV_FLG" presence="mandatory"/>
     <gene name="flp" presence="accessory"/>
-  </system>
+  </model>
 
 .. warning::
   
     * a gene is identified by its name.
-    * a gene can be defined only **once** in all systems.
+    * a gene can be defined only **once** in all models.
     * other occurrences of this gene must be specified as references
-      (using the "system_ref" attribute to specify what is the native system).
-    * if a gene is specified with the attribute "system_ref",
-      it means it has been (or has to be) defined in the system specified by "system_ref".
-    * if a gene is not specified with the attribute "system_ref", it means it belongs to the current system,
+      (using the "model_ref" attribute to specify what is the native model).
+    * if a gene is specified with the attribute "model_ref",
+      it means it has been (or has to be) defined in the model specified by "model_ref".
+    * if a gene is not specified with the attribute "model_ref", it means it belongs to the current model,
       where it has to be defined with all its features.
     

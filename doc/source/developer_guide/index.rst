@@ -15,6 +15,5 @@ Developer Guide
    :glob:
    :maxdepth: 2
 
-   dev_guide
    overview
    api/index

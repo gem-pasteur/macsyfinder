@@ -168,28 +168,28 @@ The Systems from the same replicon are sort against their score.
 
 .. _system-implementation:
 
-*****************
-The System object
-*****************
+****************
+The Model object
+****************
 
-The :ref:`System object <system>` represents a macromolecular system to detect. 
+The :ref:`Model object <model>` represents a macromolecular model to detect.
 It is defined *via* a definition file in XML stored in a dedicated location that can be specified *via*
 the configuration file, or the command-line (`-d` parameter).
-See :ref:`system-definition-grammar-label` for more details on the XML grammar.
+See :ref:`model-definition-grammar-label` for more details on the XML grammar.
  
-An object :ref:`SystemParser <system_parser>` is used to build a system object from its XML definition file.
+An object :ref:`ModelDEfinitionParser <definition_parser>` is used to build a model object from its XML definition file.
 
-A system is named after the file name of its XML definition.
-A system has an attribute `inter_gene_max_space` which is an integer,
+A model is named after the file tree name of its XML definition.
+A model has an attribute `inter_gene_max_space` which is an integer,
 and three kind of components are listed in function of their presence in the system:
 
-* The genes that must be present in the genome to define this system ("mandatory").
+* The genes that must be present in the genome to define this model ("mandatory").
 * The genes that can be present, but do not have to be found in every case ("accessory").
-* The genes that must not be present in the system ("forbidden").
+* The genes that must not be present in the model ("forbidden").
 
 .. note:: 
     
-    a complete description of macromolecular systems modelling is available in the section :ref:`system_definition`
+    a complete description of macromolecular models modelling is available in the section :ref:`model_definition`
 
 
 .. _gene-implementation:
@@ -198,22 +198,22 @@ and three kind of components are listed in function of their presence in the sys
 The Gene object
 ***************
 
-The :ref:`Gene object <gene>` represents genes encoding the protein components of a System. 
-Each Gene points out its System of origin (:class:`macsypy.system.System`).
+The :ref:`Gene object <gene>` represents genes encoding the protein components of a Model.
+Each Gene points out its Model of origin (:class:`macsypy.model.Model`).
 A Gene must have a corresponding HMM protein profile.
-These profiles are represented by Profile objects (:class:`macsypy.gene.Profile`),
+These profiles are represented by Profile objects (:class:`macsypy.profile.Profile`),
 and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file.
 See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`.
 
 A Gene may have Homologs or Analogs. An *"Homolog"* (resp. *"Analog"*) object encapsulates a Gene and has a reference
 to the Gene it is homolog (resp. *"analog"*) to.
-See the :ref:`Homolog API <homolog-api>` and :ref:`Analog API <analog-api>` for more details.
+See the :ref:`Homolog API <homolog>` and :ref:`Analog API <analog>` for more details.
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems,
     each gene must be instanciated only once, and stored in a *"gene_bank"*.
     gene_bank is a :class:`macsypy.gene.GeneBank` object. 
-    The gene_bank and system_bank are filled by the system_parser (:class:`macsypy.system_parser.SystemParser`)
+    The gene_bank and system_bank are filled by the system_parser (:class:`macsypy.definition_parser.ModelDefinitionParser`)
 
 
 .. _profile-implementation:
@@ -242,3 +242,9 @@ It analyses Hmmer raw outputs, and applies filters on the matches (according to 
 See :ref:`hmmer-outputs-label` for details on the resulting output files.
 For profile matches selected with the filtering parameters, *"Hit"* objects are built (see :ref:`the Hit API <hit-label>`). 
 
+.. only:: html
+
+    tests coverage
+    --------------
+
+    http://http://gem.pages.pasteur.fr/MacSyFinder/coverage
