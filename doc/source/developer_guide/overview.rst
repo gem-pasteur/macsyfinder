@@ -247,4 +247,4 @@ For profile matches selected with the filtering parameters, *"Hit"* objects are 
     tests coverage
     --------------
 
-    http://http://gem.pages.pasteur.fr/MacSyFinder/coverage
+    http://gem.pages.pasteur.fr/MacSyFinder/coverage
