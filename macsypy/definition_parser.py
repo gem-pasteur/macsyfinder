@@ -78,9 +78,9 @@ class DefinitionParser:
                     model_location = self.model_registry[model_name]
                     definition_location = model_location.get_definition(def_fqn)
                 except KeyError:
-                    raise MacsypyError("{}: No such Models in {}".format(model_name, self.cfg.models_dir()))
+                    raise MacsypyError(f"{model_name}: No such Models in {self.cfg.models_dir()}")
                 except ValueError:
-                    raise MacsypyError("{}: No such definition".format(def_fqn))
+                    raise MacsypyError(f"{def_fqn}: No such definition")
 
                 path = definition_location.path
                 try:
@@ -104,7 +104,7 @@ class DefinitionParser:
                         def_ref_fqn = join_def_path(*def_ref_fqn)
                         def_2_parse.add(def_ref_fqn)
                 except Exception as err:
-                    msg = "unable to parse model definition \"{}\" : {}".format(def_fqn, err)
+                    msg = f"unable to parse model definition \"{def_fqn}\" : {err}"
                     _log.critical(msg)
                     raise MacsypyError(msg)
             return self.definition_to_parse(def_2_parse, parsed_models)
@@ -128,14 +128,14 @@ class DefinitionParser:
 
         inter_gene_max_space = def_node.get('inter_gene_max_space')
         if inter_gene_max_space is None:
-            msg = "Invalid model definition ({}): inter_gene_max_space must be defined".format(path)
+            msg = f"Invalid model definition ({path}): inter_gene_max_space must be defined"
             _log.critical(msg)
             raise SyntaxError(msg)
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
-            msg = "Invalid model definition ({}): " \
-                  "inter_gene_max_space must be an integer: {}".format(path, inter_gene_max_space)
+            msg = f"Invalid model definition ({path}): " \
+                  f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
             _log.critical(msg)
             raise SyntaxError(msg)
         min_mandatory_genes_required = def_node.get('min_mandatory_genes_required')
@@ -143,8 +143,8 @@ class DefinitionParser:
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
             except ValueError:
-                msg = "Invalid model definition ({}): " \
-                      "min_mandatory_genes_required must be an integer: {}".format(path, min_mandatory_genes_required)
+                msg = f"Invalid model definition ({path}): " \
+                      f"min_mandatory_genes_required must be an integer: {min_mandatory_genes_required}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -153,8 +153,8 @@ class DefinitionParser:
             try:
                 min_genes_required = int(min_genes_required)
             except ValueError:
-                msg = "Invalid model definition ({}):\
- min_genes_required must be an integer: {}".format(path, min_genes_required)
+                msg = f"Invalid model definition ({path}):\
+ min_genes_required must be an integer: {min_genes_required}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -163,7 +163,7 @@ class DefinitionParser:
             try:
                 max_nb_genes = int(max_nb_genes)
             except ValueError:
-                msg = "Invalid model definition ({}): max_nb_genes must be an integer: {}".format(path, max_nb_genes)
+                msg = f"Invalid model definition ({path}): max_nb_genes must be an integer: {max_nb_genes}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
@@ -226,7 +226,7 @@ class DefinitionParser:
             if name in created_genes:
                 continue
             if not name:
-                msg = "Invalid model definition '{}': gene without a name".format(model.name)
+                msg = f"Invalid model definition '{model.name}': gene without a name"
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -242,8 +242,8 @@ class DefinitionParser:
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
             except ValueError:
-                msg = "Invalid model definition '{}': " \
-                      "inter_gene_max_space must be an integer: {}".format(model.name, inter_gene_max_space)
+                msg = f"Invalid model definition '{model.name}': " \
+                      f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
             except TypeError:
@@ -271,7 +271,7 @@ class DefinitionParser:
         for gene_node in genes_nodes:
             presence = gene_node.get("presence")
             if not presence:
-                msg = "Invalid model definition '{}': gene without presence".format(model.name)
+                msg = f"Invalid model definition '{model.name}': gene without presence"
                 _log.error(msg)
                 raise SyntaxError(msg)
             gene_name = gene_node.get('name')
@@ -289,8 +289,8 @@ class DefinitionParser:
             elif presence == 'forbidden':
                 model.add_forbidden_gene(gene)
             else:
-                msg = "Invalid model '{}' definition: presence value must be either\
- [mandatory, accessory, forbidden] not {}".format(model.name, presence)
+                msg = f"Invalid model '{model.name}' definition: presence value must be either\
+ [mandatory, accessory, forbidden] not {presence}"
                 _log.error(msg)
                 raise SyntaxError(msg)
 
@@ -319,9 +319,8 @@ class DefinitionParser:
             key = (model_name, name)
             gene = self.gene_bank[key]
         except KeyError:
-            msg = "Invalid model definition '{}': The gene '{}' described as homolog of\
- '{}' in model '{}' is not in the 'GeneBank' gene factory".format(curr_model.name, name,
-                                                                  gene_ref.name, curr_model.name)
+            msg = f"Invalid model definition '{curr_model.name}': The gene '{name}' described as homolog of " \
+                  f"'{gene_ref.name}' in model '{curr_model.name}' is not in the 'GeneBank' gene factory"
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
 
@@ -361,8 +360,8 @@ class DefinitionParser:
             key = (model_name, name)
             gene = self.gene_bank[key]
         except KeyError:
-            msg = "Invalid model definition '{}': The gene '{}' described as analog of '{}' in model '{}'\
- is not in the 'GeneBank' gene factory".format(curr_model.name, name, gene_ref.name, curr_model.name)
+            msg = f"Invalid model definition '{curr_model.name}': The gene '{name}' described as analog of " \
+                  f"'{gene_ref.name}' in model '{curr_model.name}' is not in the 'GeneBank' gene factory"
             _log.critical(msg)
             raise ModelInconsistencyError(msg)
         model_ref = node.get("model_ref") or node.get("system_ref")
@@ -422,16 +421,16 @@ class DefinitionParser:
             len_accessory_genes = len(model.accessory_genes)
             len_mandatory_genes = len(model.mandatory_genes)
             if not (model.min_genes_required <= (len_accessory_genes + len_mandatory_genes)):
-                msg = "model '{}' is not consistent: min_genes_required {:d} must be\
- lesser or equal than the number of \"accessory\" and \"mandatory\" components\
- in the model: {:d}".format(model.name, model.min_genes_required, len_accessory_genes + len_mandatory_genes)
+                msg = f"model '{model.name}' is not consistent: min_genes_required {model.min_genes_required:d} " \
+                      f"must be lesser or equal than the number of \"accessory\" and \"mandatory\" components " \
+                      f"in the model: {len_accessory_genes + len_mandatory_genes:d}"
                 _log.critical(msg)
                 raise ModelInconsistencyError(msg)
 
             if not (model.min_mandatory_genes_required <= len_mandatory_genes):
-                msg = "model '{}' is not consistent: 'min_mandatory_genes_required': {:d} " \
-                      "must be lesser or equal than the number of 'mandatory' components " \
-                      "in the model: {:d}".format(model.name, model.min_mandatory_genes_required, len_mandatory_genes)
+                msg = f"model '{model.name}' is not consistent: 'min_mandatory_genes_required':" \
+                      f" {model.min_mandatory_genes_required:d} must be lesser or equal than the number of " \
+                      f"'mandatory' components in the model: {len_mandatory_genes:d}"
                 _log.critical(msg)
                 raise ModelInconsistencyError(msg)
             # the following test
@@ -457,7 +456,7 @@ class DefinitionParser:
         msg = "\nModel(s) to parse (recursive inclusion of 'model_ref'):"
         
         for s in defs_2_parse:
-            msg += "\n\t-{}".format(s)
+            msg += f"\n\t-{s}"
         _log.info(msg)
         
         for def_fqn in defs_2_parse:
@@ -466,7 +465,7 @@ class DefinitionParser:
             definition_location = model_location.get_definition(def_fqn)
             path = definition_location.path
             if path is None:
-                raise MacsypyError("{}: No such model definitions".format(path))
+                raise MacsypyError(f"{path}: No such model definitions")
             tree = Et.parse(path)
             model_node = tree.getroot()
             model = self._create_model(def_fqn, model_node)  # one opening&closing file /definition

@@ -125,30 +125,28 @@ def match(clusters, model):
     accessory_genes = [g for g, occ in accessory_counter.items() if occ > 0]
     forbidden_genes = [g for g, occ in forbidden_counter.items() if occ > 0]
     _log.debug("#" * 50)
-    _log.debug("mandatory_genes: {}".format(mandatory_genes))
-    _log.debug("accessory_genes: {}".format(accessory_genes))
-    _log.debug("forbidden_genes: {}".format(forbidden_genes))
+    _log.debug(f"mandatory_genes: {mandatory_genes}")
+    _log.debug(f"accessory_genes: {accessory_genes}")
+    _log.debug(f"forbidden_genes: {forbidden_genes}")
 
     reasons = []
     is_a_system = True
     if forbidden_genes:
         is_a_system = False
-        msg = 'There is {} forbidden genes occurrence(s): {}'.format(
-            len(forbidden_hits), ', '.join(h.gene.name for h in forbidden_hits)
-        )
+        msg = f"There is {len(forbidden_hits)} forbidden genes occurrence(s):" \
+              f" {', '.join(h.gene.name for h in forbidden_hits)}"
         reasons.append(msg)
         _log.debug(msg)
     if len(mandatory_genes) < model.min_mandatory_genes_required:
         is_a_system = False
-        msg = 'The quorum of mandatory genes required ({}) is not reached: {}'.format(
-            model.min_mandatory_genes_required, len(mandatory_genes))
+        msg = f'The quorum of mandatory genes required ({model.min_mandatory_genes_required}) is not reached: ' \
+              f'{len(mandatory_genes)}'
         reasons.append(msg)
         _log.debug(msg)
     if len(accessory_genes) + len(mandatory_genes) < model.min_genes_required:
         is_a_system = False
-        msg = 'The quorum of genes required ({}) is not reached: {}'.format(
-            model.min_genes_required, len(accessory_genes) + len(mandatory_genes)
-        )
+        msg = f'The quorum of genes required ({model.min_genes_required}) is not reached:' \
+              f' {len(accessory_genes) + len(mandatory_genes)}'
         reasons.append(msg)
         _log.debug(msg)
 
@@ -200,7 +198,7 @@ class System:
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         """
         self._replicon_name = clusters[0].replicon_name
-        self.id = "{}_{}_{}".format(self._replicon_name, model.name, next(self._id))
+        self.id = f"{self._replicon_name}_{model.name}_{next(self._id)}"
         self.model = model
         self.clusters = clusters
         self._mandatory_occ = None
@@ -317,40 +315,32 @@ class SystemSerializer:
         self.hit_system_tracker = hit_system_tracker
 
     def __str__(self):
+        clst = ", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
+                          for cluster in self.system.clusters])
 
-        s = """system id = {sys_id}
-model = {model}
-replicon = {rep_name}
+        s = f"""system id = {self.system.id}
+model = {self.system.model.fqn}
+replicon = {self.system.replicon_name}
 clusters = {clst}
-occ = {occ}
-wholeness = {wholeness:.3f}
-loci nb = {loci}
-score = {score:.3f}
-""".format(sys_id=self.system.id,
-           model=self.system.model.fqn,
-           loci=self.system.loci,
-           rep_name=self.system.replicon_name,
-           clst=", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
-                                                                               for cluster in self.system.clusters]),
-           occ=self.system.occurrence(),
-           wholeness=self.system.wholeness,
-           score=self.system.score
-           )
+occ = {self.system.occurrence()}
+wholeness = {self.system.wholeness:.3f}
+loci nb = {self.system.loci}
+score = {self.system.score:.3f}
+"""
         for title, genes in (("mandatory", self.system.mandatory_occ), ("accessory", self.system.accessory_occ)):
-            s += "\n{} genes:\n".format(title)
+            s += f"\n{title} genes:\n"
             for g_name, hits in genes.items():
-                s += "\t- {g_ref}: {occ} ".format(g_ref=g_name,
-                                                  occ=len(hits))
+                s += f"\t- {g_name}: {len(hits)} "
                 all_hits_str = []
                 for h in hits:
                     used_in_systems = [s.id for s in self.hit_system_tracker[h.hit]
                                        if s.model.fqn != self.system.model.fqn]
                     if used_in_systems:
-                        hit_str = "{} [{}]".format(h.gene.name, ', '.join(used_in_systems))
+                        hit_str = f"{h.gene.name} [{', '.join(used_in_systems)}]"
                     else:
-                        hit_str = "{}".format(h.gene.name)
+                        hit_str = f"{h.gene.name}"
                     all_hits_str.append(hit_str)
-                s += "({})\n".format(", ".join(all_hits_str))
+                s += f'({", ".join(all_hits_str)})\n'
 
         return s
 

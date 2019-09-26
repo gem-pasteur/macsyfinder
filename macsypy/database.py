@@ -95,7 +95,7 @@ class Indexes:
             # so it must be writable
             # if the directory is not writable, formatdb do a Segmentation fault
             if not os.access(index_dir, os.R_OK | os.W_OK):
-                msg = "cannot build indexes, ({0}) is not writable".format(index_dir)
+                msg = f"cannot build indexes, ({index_dir}) is not writable"
                 _log.critical(msg)
                 raise IOError(msg)
 
@@ -132,7 +132,7 @@ class Indexes:
                         seq_nb += 1
                         my_base.write(f"{seq_id};{length:d};{seq_nb:d}\n")
         except Exception as err:
-            msg = "unable to index the sequence dataset: {0} : {1}".format(self.cfg.sequence_db(), err)
+            msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
             raise MacsypyError(msg)
 

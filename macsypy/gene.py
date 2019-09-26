@@ -53,7 +53,7 @@ class GeneBank:
         try:
             return self._genes_bank[key]
         except KeyError:
-            raise KeyError("No such gene {} in this bank".format(key))
+            raise KeyError(f"No such gene {key} in this bank")
 
 
     def __contains__(self, gene):
@@ -135,8 +135,8 @@ class Gene:
         """
         Print the name of the gene and of its homologs/analogs.
         """
-        s = "name : {0}".format(self.name)
-        s += "\ninter_gene_max_space: {:d}".format(self.inter_gene_max_space)
+        s = f"name : {self.name}"
+        s += f"\ninter_gene_max_space: {self.inter_gene_max_space:d}"
         if self.loner:
             s += "\nloner"
         if self.multi_system:

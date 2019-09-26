@@ -124,12 +124,12 @@ class ModelRegistry:
 
         def model_to_str(model, pad):
             if model.subdefinitions:
-                model_s = "{}/{}\n".format(' ' * pad, model.name)
+                model_s = f"{' ' * pad}/{model.name}\n"
                 pad = pad + len(model.name) + 1
                 for submodel in sorted(model.subdefinitions.values()):
                     model_s += model_to_str(submodel, pad)
             else:
-                model_s = "{}/{}\n".format(' ' * pad, model.name)
+                model_s = f"{' ' * pad}/{model.name}\n"
             return model_s
 
         for model in sorted(self.models()):
@@ -182,14 +182,10 @@ class ModelLocation:
                 definition_path = os.path.join(def_dir, definition)
                 new_def = self._scan_definitions(def_path=definition_path)
                 if new_def:  # _scan_definitions can return None if a dir is empty
-                    new_def.fqn = "{}{}{}".format(self.name,
-                                                  _separator,
-                                                  new_def.fqn)
+                    new_def.fqn = f"{self.name}{_separator}{new_def.fqn}"
                     if new_def.subdefinitions:
                         for def_loc in new_def.subdefinitions.values():
-                            def_loc.fqn = "{}{}{}".format(self.name,
-                                                          _separator,
-                                                          def_loc.fqn)
+                            def_loc.fqn = f"{self.name}{_separator}{def_loc.fqn}"
                     self._definitions[new_def.name] = new_def
         else:
             import glob
@@ -285,7 +281,7 @@ class ModelLocation:
                 definition = defs[level]
                 defs = definition.subdefinitions
             else:
-                raise ValueError("{} does not match with any definitions".format(level))
+                raise ValueError(f"{level} does not match with any definitions")
         return definition
 
 
@@ -305,7 +301,7 @@ class ModelLocation:
             if root_def is not None:
                 all_defs = root_def.all()
             else:
-                raise ValueError("root_def_name {} does not match with any definitions".format(root_def_name))
+                raise ValueError(f"root_def_name {root_def_name} does not match with any definitions")
         return all_defs
 
 

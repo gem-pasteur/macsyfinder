@@ -88,20 +88,9 @@ class Hit:
         """
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
-        return "{id}\t{replicon_name}\t{position:d}\t{seq_len:d}\t{gene_name}\t{model_name}\t{i_evalue:.3e}\t" \
-               "{score:.3f}\t{profil_cov:.3f}\t{seq_cov:.3f}\t" \
-               "{begin_match:d}\t{end_match:d}\n".format(id=self.id,
-                                                         replicon_name=self.replicon_name,
-                                                         position=self.position,
-                                                         seq_len=self.seq_length,
-                                                         gene_name=self.gene.name,
-                                                         model_name=self.model.name,
-                                                         i_evalue=self.i_eval,
-                                                         score=self.score,
-                                                         profil_cov=self.profile_coverage,
-                                                         seq_cov=self.sequence_coverage,
-                                                         begin_match=self.begin_match,
-                                                         end_match=self.end_match)
+        return f"{self.id}\t{self.replicon_name}\t{self.position:d}\t{self.seq_length:d}\t{self.gene.name}\t" \
+               f"{self.model.name}\t{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
+               f"{self.sequence_coverage:.3f}\t{self.begin_match:d}\t{self.end_match:d}\n"
 
 
     def __lt__(self, other):
@@ -115,12 +104,8 @@ class Hit:
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene):
-                _log.warning("Non homologs match: {g_name} ({model_name}) {other_g_name} "
-                             "({other_mod_name}) for {id}".format(g_name=self.gene.name,
-                                                                  model_name=self.model.name,
-                                                                  other_g_name=other.gene.name,
-                                                                  other_mod_name=other.model.name,
-                                                                  id=self.id))
+                _log.warning(f"Non homologs match: {self.gene.name} {self.model.name}) {other.gene.name} "
+                             f"({other.model.name}) for {self.id}")
             return self.score < other.score
         else:
             return self.id < other.id
@@ -137,12 +122,8 @@ class Hit:
         """
         if self.id == other.id:
             if not self.gene.is_homolog(other.gene):
-                _log.warning("Non homologs match: {g_name} ({model_name}) {other_g_name} "
-                             "({other_mod_name}) for {id}".format(g_name=self.gene.name,
-                                                                  model_name=self.model.name,
-                                                                  other_g_name=other.gene.name,
-                                                                  other_mod_name=other.model.name,
-                                                                  id=self.id))
+                _log.warning(f"Non homologs match: {self.gene.name} ({self.model.name}) {other.gene.name} "
+                             f"({other.model.name}) for {self.id}")
             return self.score > other.score
         else:
             return self.id > other.id
@@ -262,7 +243,7 @@ def get_best_hits(hits, key='score'):
         elif key == 'profile_coverage':
             hits_on_same_prot.sort(key=attrgetter(key), reverse=True)
         else:
-            raise MacsypyError('The criterion for Hits comparison {} does not exist or is not available.\n'
-                               'It must be either "score", "i_eval" or "profile_coverage".'.format(key))
+            raise MacsypyError(f'The criterion for Hits comparison {key} does not exist or is not available.\n'
+                               f'It must be either "score", "i_eval" or "profile_coverage".')
         best_hits.append(hits_on_same_prot[0])
     return best_hits

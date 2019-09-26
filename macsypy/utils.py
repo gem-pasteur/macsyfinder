@@ -47,6 +47,6 @@ def get_models_name_to_detect(models, model_registry) -> List[str]:
             def_loc = model_loc.get_all_definitions(root_def_name=root)
             models_name_to_detect.extend([d.fqn for d in def_loc])
         else:
-            models_name_to_detect.extend([model_loc.get_definition('{}/{}'.format(root, one_def)).fqn
+            models_name_to_detect.extend([model_loc.get_definition(f'{root}/{one_def}').fqn
                                           for one_def in definitions])
     return models_name_to_detect

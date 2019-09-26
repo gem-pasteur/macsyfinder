@@ -92,7 +92,7 @@ class ModelBank:
         :raise: KeyError if a model with the same name is already registered.
         """
         if model.fqn in self._model_bank:
-            raise KeyError("a model named {0} is already registered in the models' bank".format(model.name))
+            raise KeyError(f"a model named {model.name} is already registered in the models' bank")
         else:
             self._model_bank[model.fqn] = model
 
@@ -131,11 +131,9 @@ class Model:
         self._min_genes_required = min_genes_required
         if self._min_mandatory_genes_required is not None and self._min_genes_required is not None:
             if self._min_genes_required < self._min_mandatory_genes_required:
-                raise ModelInconsistencyError("{}: min_genes_required '{}' must be greater or equal"
-                                              " than min_mandatory_genes_required '{}'".format(
-                                                 self.fqn,
-                                                 self.min_genes_required,
-                                                 self.min_mandatory_genes_required)
+                raise ModelInconsistencyError(f"{self.fqn}: min_genes_required '{self.min_genes_required}' "
+                                              f"must be greater or equal than min_mandatory_genes_required "
+                                              f"'{self.min_mandatory_genes_required}'"
                                               )
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
@@ -145,17 +143,17 @@ class Model:
 
 
     def __str__(self):
-        s = "name: {}\n".format(self.name)
-        s += "fqn: {}\n".format(self.fqn)
+        s = f"name: {self.name}\n"
+        s += f"fqn: {self.fqn}\n"
         s += "==== mandatory genes ====\n"
         for g in self._mandatory_genes:
-            s += "{}\n".format(g.name)
+            s += f"{g.name}\n"
         s += "==== accessory genes ====\n"
         for g in self._accessory_genes:
-            s += "{}\n".format(g.name)
+            s += f"{g.name}\n"
         s += "==== forbidden genes ====\n"
         for g in self._forbidden_genes:
-            s += "{}\n".format(g.name)
+            s += f"{g.name}\n"
         s += "============== end pprint model ================\n"
         return s
 
@@ -321,7 +319,7 @@ class Model:
                     for ex in homolgs + analogs:
                         if ex.name == gene_name:
                             return ex
-        raise KeyError("Model {} does not contain gene {}".format(self.name, gene_name))
+        raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
     def get_gene_ref(self, gene):
