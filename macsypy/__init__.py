@@ -100,7 +100,7 @@ def logger_set_level(level='INFO'):
     if level in levels:
         level = levels[level]
     elif not isinstance(level, int) and level < 0:
-        raise ValueError("Level must be {} or a positive integer".format(', '.join(levels.keys())))
+        raise ValueError(f"Level must be {', '.join(levels.keys())} or a positive integer")
 
     logger = colorlog.getLogger('macsypy')
     if level <= colorlog.logging.logging.DEBUG:

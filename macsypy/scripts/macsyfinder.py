@@ -365,15 +365,15 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     try:
         models_name_to_detect = get_models_name_to_detect(config.models(), registry)
     except KeyError as err:
-        sys.exit("macsyfinder: {}".format(str(err).strip('"')))
+        sys.exit(f"macsyfinder: {err}")
 
     parser.parse(models_name_to_detect)
 
-    logger.info("MacSyFinder's results will be stored in {0}".format(working_dir))
-    logger.info("Analysis launched on {0} for model(s):".format(config.sequence_db()))
+    logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
+    logger.info(f"Analysis launched on {config.sequence_db()} for model(s):")
 
-    for s in models_name_to_detect:
-        logger.info("\t- {}".format(s))
+    for m in models_name_to_detect:
+        logger.info(f"\t- {m}")
 
     models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
     all_genes = []
@@ -421,10 +421,10 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
         systems = []
         rejected_clusters = []
         for rep_name in hits_by_replicon:
-            logger.info("Hits analysis for replicon {}".format(rep_name))
+            logger.info("Hits analysis for replicon {rep_name}")
             rep_info = rep_db[rep_name]
             for model in models_to_detect:
-                logger.info("Check model {}".format(model.fqn))
+                logger.info(f"Check model {model.fqn}")
                 hits_related_one_model = model.filter(hits_by_replicon[rep_name])
                 logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
                 logger.debug("".join([str(h) for h in hits_related_one_model]))
@@ -483,8 +483,8 @@ def systems_to_file(systems, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print("# macsyfinder {}".format(macsypy.__version__), file=sys_file)
-    print("# {}".format(' '.join(sys.argv)), file=sys_file)
+    print(f"# macsyfinder {macsypy.__version__}", file=sys_file)
+    print(f"# {' '.join(sys.argv)}", file=sys_file)
     print("# Systems found:\n", file=sys_file)
     for system in systems:
         sys_serializer = SystemSerializer(system, hit_system_tracker)
@@ -502,8 +502,8 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
     :type clst_file: file object
     :return: None
     """
-    print("# macsyfinder {}".format(macsypy.__version__), file=clst_file)
-    print("# {}".format(' '.join(sys.argv)), file=clst_file)
+    print(f"# macsyfinder {macsypy.__version__}", file=clst_file)
+    print(f"# {' '.join(sys.argv)}", file=clst_file)
     print("# Rejected clusters:\n", file=clst_file)
 
     for rej_clst in rejected_clusters:
@@ -536,9 +536,9 @@ def main(args=None, loglevel=None):
     else:
         if os.path.isdir(working_dir):
             if os.listdir(working_dir):
-                raise ValueError("'{}' already exists and is not a empty".format(working_dir))
+                raise ValueError(f"'{working_dir}' already exists and is not a empty")
         else:
-            raise ValueError("'{}' already exists and is not a directory".format(working_dir))
+            raise ValueError(f"'{working_dir}' already exists and is not a directory")
 
     ################
     # init loggers #
@@ -574,14 +574,14 @@ def main(args=None, loglevel=None):
             sys.tracebacklimit = 0
             raise OptionError("argument --db-type or --previous-run is required.")
 
-        _log.info("command used: {}".format(' '.join(sys.argv)))
+        _log.info(f"command used: {' '.join(sys.argv)}")
 
         models = ModelBank()
         genes = GeneBank()
         profiles = ProfileFactory(config)
 
         main_search_systems(config, models, genes, profiles, logger)
-    logger.debug("END")
+    logger.info("END")
 
 
 if __name__ == "__main__":

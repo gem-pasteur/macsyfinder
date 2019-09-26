@@ -134,7 +134,7 @@ class Config:
                                                         self.cfg_name))
             previous_run = True
             if not os.path.exists(prev_config):
-                raise ValueError("No config file found in dir {}".format(parsed_args.previous_run))
+                raise ValueError(f"No config file found in dir {parsed_args.previous_run}")
             config_files = [prev_config]
         elif hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
             config_files = [parsed_args.cfg_file]
@@ -147,8 +147,7 @@ class Config:
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
             if 'sequence_db' in args_dict:
-                _log.warning("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
-                    parsed_args.sequence_db, args_dict['previous_run']))
+                _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db from previous_run '{args_dict['previous_run']}'.")
                 del args_dict['sequence_db']
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
@@ -156,7 +155,7 @@ class Config:
         for bag_of_opts in config_files_values, args_dict:
             for opt, val in bag_of_opts.items():
                 if val is not None:
-                    met_name = '_set_{}'.format(opt)
+                    met_name = f'_set_{opt}'
                     if hasattr(self, met_name):
                         # config has a specific method to parse and store the value
                         # for this option
@@ -176,7 +175,7 @@ class Config:
         if option_name in self._options:
             return lambda : self._options[option_name]
         else:
-            raise AttributeError("config object has no attribute '{}'".format(option_name))
+            raise AttributeError(f"config object has no attribute '{option_name}'")
 
 
     def _str_2_tuple(self, value):
@@ -192,8 +191,7 @@ class Config:
             res = [(a, next(it)) for a in it]
             return res
         except StopIteration:
-            raise ValueError("You must provide a list of model name and"
-                             " value separated by spaces: {}".format(value))
+            raise ValueError(f"You must provide a list of model name and value separated by spaces: {value}")
 
 
     def _config_file_2_dict(self, defaults, files, previous_run=False):
@@ -216,9 +214,9 @@ class Config:
                       }
         try:
             used_files = parser.read(files)
-            _log.debug("Files parsed for configuration: {}".format(', '.join(used_files)))
+            _log.debug(f"Files parsed for configuration: {', '.join(used_files)}")
         except ParsingError as err:
-            raise ParsingError("A macsyfinder configuration file is not well formed: {}".format(err)) from None
+            raise ParsingError(f"A macsyfinder configuration file is not well formed: {err}") from None
 
         opts = {}
         sections = [s for s in parser.sections() if s != 'models']
@@ -231,7 +229,7 @@ class Config:
                 try:
                     opt_value = parse_meth.get(opt_type, parser.get)(section, option)
                 except (ValueError, TypeError) as err:
-                    raise ValueError("Invalid value in config_file for option '{}': {}".format(option, err))
+                    raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
                 opts[option] = opt_value
         try:
             opts['models'] = parser.items('models')
@@ -253,12 +251,12 @@ class Config:
         def serialize():
             conf_str = ''
             for section, options in self.cfg_opts:
-                conf_str += "[{}]\n".format(section)
+                conf_str += f"[{section}]\n"
                 if section == 'models':
                     # [(model_family, (def_name1, ...)), ... ]
                     for model_family, def_names in self._options['models']:
                         def_names = ', '.join(def_names)
-                        conf_str += "{} = {}\n".format(model_family, def_names)
+                        conf_str += f"{model_family} = {def_names}\n"
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
@@ -267,11 +265,11 @@ class Config:
                         elif isinstance(opt_value, dict):
                             value = ""
                             for model, v in opt_value.items():
-                                value += "{} {} ".format(model, v)
+                                value += f"{model} {v} "
                             opt_value = value
                         elif isinstance(opt_value, set):
                             opt_value = ', '.join(opt_value)
-                        conf_str += "{} = {}\n".format(opt, opt_value)
+                        conf_str += f"{opt} = {opt_value}\n"
             return conf_str
 
         if path_or_buf is None:
@@ -295,7 +293,7 @@ class Config:
         if value in auth_values:
             self._options['db_type'] = value
         else:
-            raise ValueError("db_type as unauthorized value : '{}'.".format(value))
+            raise ValueError(f"db_type as unauthorized value : '{value}'.")
 
 
     def _set_inter_gene_max_space(self, value):
@@ -312,13 +310,13 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'inter_gene_max_space': {}.".format(err))
+                raise ValueError(f"Invalid syntax for 'inter_gene_max_space': {err}.")
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
             except ValueError:
-                raise ValueError("The value for 'inter_gene_max_space' option for model {} must be an integer, "
-                                 "but you provided {}".format(model_fqn, quorum))
+                raise ValueError(f"The value for 'inter_gene_max_space' option for model {model_fqn} must be an integer"
+                                 f", but you provided {quorum}")
         self._options['inter_gene_max_space'] = opt
 
 
@@ -348,13 +346,13 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'max_nb_genes': {}.".format(err))
+                raise ValueError(f"Invalid syntax for 'max_nb_genes': {err}.")
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
             except ValueError:
-                raise ValueError("The value for 'max_nb_genes' option for model {} must be an integer, "
-                                 "but you provided {}".format(model_fqn, quorum))
+                raise ValueError(f"The value for 'max_nb_genes' option for model {model_fqn} must be an integer, "
+                                 f"but you provided {quorum}")
         self._options['max_nb_genes'] = opt
 
 
@@ -384,13 +382,13 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'min_genes_required': {}.".format(err))
+                raise ValueError(f"Invalid syntax for 'min_genes_required': {err}.")
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
             except ValueError:
-                raise ValueError("The value for 'min_genes_required' option for model {} must be an integer, "
-                                 "but you provided {}".format(model_fqn, quorum))
+                raise ValueError(f"The value for 'min_genes_required' option for model {model_fqn} must be an integer, "
+                                 f"but you provided {quorum}")
         self._options['min_genes_required'] = opt
 
 
@@ -419,13 +417,13 @@ class Config:
             try:
                 value = self._str_2_tuple(value)
             except ValueError as err:
-                raise ValueError("Invalid syntax for 'min_mandatory_genes_required': {}.".format(err))
+                raise ValueError(f"Invalid syntax for 'min_mandatory_genes_required': {err}.")
         for model_fqn, quorum in value:
             try:
                 opt[model_fqn] = int(quorum)
             except ValueError:
-                raise ValueError("The value for 'min_mandatory_genes_required' option "
-                                 "for model {} must be an integer, but you provided {}".format(model_fqn, quorum))
+                raise ValueError(f"The value for 'min_mandatory_genes_required' option "
+                                 f"for model {model_fqn} must be an integer, but you provided {quorum}")
         self._options['min_mandatory_genes_required'] = opt
 
 
@@ -474,7 +472,7 @@ class Config:
             return out_dir
         else:
             out_dir = os.path.join(self._options['res_search_dir'],
-                                   "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                   f"macsyfinder-{strftime('%Y%m%d_%H-%M-%S')}")
             self._options['out_dir'] = out_dir
             return out_dir
 
@@ -502,7 +500,7 @@ class Config:
         if new_topo is not None:
             self._options['replicon_topology'] = new_topo
         else:
-            raise ValueError("replicon_topology as unauthorized value : '{}'.".format(value))
+            raise ValueError(f"replicon_topology as unauthorized value : '{value}'.")
 
 
     def _set_sequence_db(self, path):
@@ -512,7 +510,7 @@ class Config:
         if os.path.exists(path) and os.path.isfile(path):
             self._options['sequence_db'] = path
         else:
-            raise ValueError("sequence_db '{}' does not exists or is not a file.".format(path))
+            raise ValueError(f"sequence_db '{path}' does not exists or is not a file.")
 
 
     def _set_topology_file(self, path):
@@ -524,7 +522,7 @@ class Config:
         if os.path.exists(path) and os.path.isfile(path):
             self._options['topology_file'] = path
         else:
-            raise ValueError("topology_file '{}' does not exists or is not a file.".format(path))
+            raise ValueError(f"topology_file '{path}' does not exists or is not a file.")
 
 
     def _set_models_dir(self, path):
@@ -534,7 +532,7 @@ class Config:
         if os.path.exists(path) and os.path.isdir(path):
             self._options['models_dir'] = path
         else:
-            raise ValueError("models_dir '{}' does not exists or is not a directory.".format(path))
+            raise ValueError(f"models_dir '{path}' does not exists or is not a directory.")
 
 
     def _set_multi_loci(self, value):

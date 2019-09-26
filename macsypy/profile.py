@@ -65,7 +65,7 @@ class ProfileFactory:
             try:
                 path = model_location.get_profile(gene.name, )
             except KeyError:
-                raise MacsypyError("{0}: No such profile".format(gene.name))
+                raise MacsypyError(f"{gene.name}: No such profile")
             profile = Profile(gene, self.cfg, path)
             self._profiles[key] = profile
         return profile
@@ -121,7 +121,7 @@ class Profile:
         """
         Print the name of the corresponding gene and the path to the HMM profile.
         """
-        return "{0} : {1}".format(self.gene.name, self.path)
+        return f"{self.gene.name} : {self.path}"
 
 
     def execute(self):
@@ -147,15 +147,10 @@ class Profile:
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                options = {"hmmer_exe": self.cfg.hmmer(),
-                           "output_file": output_path,
-                           "e_value_res": self.cfg.e_value_search(),
-                           "profile": self.path,
-                           "sequence_db": self.cfg.sequence_db(),
-                           }
-                command = "{hmmer_exe} --cpu 0 -o {output_file} -E {e_value_res:f} {profile} {sequence_db} "\
-                    .format(**options)
-                _log.debug("{0} Hmmer command line : {1}".format(self.gene.name, command))
+                command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} -E {self.cfg.e_value_search():f} " \
+                          f"{self.path} {self.cfg.sequence_db()} "
+
+                _log.debug(f"{self.gene.name} Hmmer command line : {command}")
                 try:
                     hmmer = Popen(command,
                                   shell=True,
@@ -165,20 +160,20 @@ class Profile:
                                   close_fds=False,
                                   )
                 except Exception as err:
-                    msg = "Hmmer execution failed: command = {0} : {1}".format(command, err)
+                    msg = f"Hmmer execution failed: command = {command} : {err}"
                     _log.critical(msg, exc_info=True)
                     raise err
                 hmmer.wait()
 
             if hmmer.returncode != 0:
                 if hmmer.returncode == -15:
-                    msg = "The Hmmer execution was aborted: command = {0} : return code = {1:d} check {2}".format(
-                        command, hmmer.returncode, err_path)
+                    msg = f"The Hmmer execution was aborted: command = {command} : " \
+                          f"return code = {hmmer.returncode:d} check {err_path}"
                     _log.critical(msg)
                     return
                 else:
-                    msg = "an error occurred during Hmmer execution: command = {0} : return code = {1:d} check {2}"\
-                        .format(command, hmmer.returncode, err_path)
+                    msg = f"an error occurred during Hmmer execution: command = {command} : " \
+                          f"return code = {hmmer.returncode:d} check {err_path}"
                     _log.debug(msg, exc_info=True)
                     _log.critical(msg)
                     raise RuntimeError(msg)

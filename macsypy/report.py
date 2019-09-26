@@ -232,7 +232,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                                                 begin,
                                                 end))
                     except ValueError as err:
-                        msg = "Invalid line to parse :{0}:{1}".format(line, err)
+                        msg = f"Invalid line to parse :{line}:{err}"
                         _log.debug(msg)
                         raise ValueError(msg)
 
