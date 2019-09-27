@@ -310,7 +310,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.package = pack_name
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError):
-                macsydata.do_info(self.args)
+                macsydata.do_cite(self.args)
             log_msg = log.get_value()
         self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
 
