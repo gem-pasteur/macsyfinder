@@ -48,9 +48,9 @@ class TestMacsyDefaults(MacsyTest):
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
                          'models': [],
-                         'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data', 'models')),
+                         'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), 'data', 'models')),
                          'multi_loci': set(),
-                         'mute' : False,
+                         'mute': False,
                          'out_dir': None,
                          'previous_run': False,
                          'profile_suffix': '.hmm',
@@ -81,7 +81,8 @@ class TestMacsyDefaults(MacsyTest):
     def test_MacsyDefaults_with_MACSY_DATA(self):
         import macsypy.config
         macsydata = macsypy.config.__MACSY_DATA__
-        macsypy.config.__MACSY_DATA__ = os.path.normpath(os.path.join(os.path.dirname(__file__), '..'))
+        macsypy.config.__MACSY_DATA__ = 'niportnaoik'
+        self.defaults['models_dir'] = 'niportnaoik/data/models'
         try:
             defaults = MacsyDefaults()
             self.assertDictEqual(defaults, self.defaults)
