@@ -499,6 +499,8 @@ To cite MacSyFinder:
 """)
     else:
         _log.error(f"Models '{pack_name}' not found locally.")
+        sys.tracebacklimit = 0
+        raise ValueError()
 
 
 def do_check(args: argparse.Namespace) -> None:
