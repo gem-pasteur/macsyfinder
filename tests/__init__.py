@@ -33,9 +33,11 @@ import hashlib
 from functools import partial
 import tempfile
 import uuid
-import inspect
 import colorlog
 import json
+
+import macsypy
+import macsypy.config
 
 
 def path_to_modulename(p):
@@ -51,6 +53,11 @@ class MacsyTest(unittest.TestCase):
 
     _tests_dir = os.path.normpath(os.path.dirname(__file__))
     _data_dir = os.path.join(_tests_dir, "data")
+
+    def __init__(self, *args, **kwargs):
+        macsypy.__MACSY_DATA__ = self._tests_dir
+        macsypy.config.__MACSY_DATA__ = self._tests_dir
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def setsid():
