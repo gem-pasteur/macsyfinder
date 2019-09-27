@@ -51,7 +51,7 @@ class TestConfig(MacsyTest):
             s = 'Flagellum 12 t4ss'
             cfg._str_2_tuple(s)
         self.assertEqual(str(ctx.exception),
-                         "You must provide a list of model name and value separated by spaces: {}".format(s))
+                         f"You must provide a list of model name and value separated by spaces: {s}")
 
 
     def test_config_file_2_dict(self):
@@ -86,22 +86,16 @@ class TestConfig(MacsyTest):
         for opt, val in self.defaults.items():
             if opt == 'out_dir':
                 self.assertEqual(cfg.out_dir(),
-                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 os.path.join(cfg.res_search_dir(), f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
                                  )
             elif opt == 'multi_loci':
                 self.assertFalse(cfg.multi_loci('whatever'))
             elif opt in methods_needing_args:
                 self.assertEqual(getattr(cfg, opt)('whatever'), val,
-                                 msg="test of '{}' failed : expected{} !=  got {}".format(opt,
-                                                                                          getattr(cfg, opt)('whatever'),
-                                                                                          val
-                                                                                          ))
+                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)('whatever')} !=  got {val}")
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
-                                 msg="test of '{}' failed : expected{} !=  got {}".format(opt,
-                                                                                          getattr(cfg, opt)(),
-                                                                                          val
-                                                                                          ))
+                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
 
 
     def test_Config_file(self):
@@ -123,7 +117,7 @@ class TestConfig(MacsyTest):
             if opt == 'out_dir':
                 self.assertEqual(cfg.out_dir(),
                                  os.path.join(cfg.res_search_dir(),
-                                              "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                              f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
                                  )
             elif opt == 'multi_loci':
                 self.assertTrue(cfg.multi_loci('Flagellum'))
@@ -180,7 +174,7 @@ class TestConfig(MacsyTest):
                     if opt == 'out_dir':
                         self.assertEqual(cfg.out_dir(),
                                          os.path.join(cfg.res_search_dir(),
-                                                      "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                                      f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
                                          )
                     elif opt == 'multi_loci':
                         self.assertTrue(cfg.multi_loci('Flagellum'))
@@ -224,7 +218,7 @@ class TestConfig(MacsyTest):
         for opt, val in expected_values.items():
             if opt == 'out_dir':
                 self.assertEqual(cfg.out_dir(),
-                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 os.path.join(cfg.res_search_dir(), f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
                                  )
             elif opt == 'multi_loci':
                 self.assertTrue(cfg.multi_loci('Flagellum'))
@@ -236,7 +230,7 @@ class TestConfig(MacsyTest):
 
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
-                                 msg="{} failed: expected: val '{}' != got '{}'".format(opt, val, getattr(cfg, opt)()))
+                                 msg=f"{opt} failed: expected: val '{val}' != got '{getattr(cfg, opt)}'")
 
     def test_Config_file_n_args(self):
         cfg_needing_args = {'inter_gene_max_space': [('Flagellum', '4'), ('T2SS', '2')],
@@ -255,7 +249,7 @@ class TestConfig(MacsyTest):
                             'min_mandatory_genes_required': [('Flagellum', 22), ('T6SS', 16)],
                             }
         for opt, value in cmd_needing_args.items():
-            setattr(self.parsed_args, opt, ' '.join(["{} {}".format(m, v) for m, v in value]))
+            setattr(self.parsed_args, opt, ' '.join([f"{m} {v}" for m, v in value]))
 
         simple_opt = {'hmmer': 'foo',
                       'i_evalue_sel': 20,
@@ -271,7 +265,7 @@ class TestConfig(MacsyTest):
         for opt, exp_val in expected_values.items():
             if opt == 'out_dir':
                 self.assertEqual(cfg.out_dir(),
-                                 os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                                 os.path.join(cfg.res_search_dir(), f"macsyfinder-{strftime('%Y%m%d_%H-%M-%S')}")
                                  )
             elif opt == 'multi_loci':
                 self.assertTrue(cfg.multi_loci('Flagellum'))
@@ -297,8 +291,8 @@ class TestConfig(MacsyTest):
             setattr(args, opt, val)
             with self.assertRaises(ValueError) as ctx:
                 Config(self.defaults, args)
-            self.assertEqual(str(ctx.exception), "Invalid syntax for '{}': You must provide a list of model name "
-                                                 "and value separated by spaces: {}.".format(opt, val))
+            self.assertEqual(str(ctx.exception), f"Invalid syntax for '{opt}': You must provide a list of model name "
+                                                 f"and value separated by spaces: {val}.")
 
         int_error = {'inter_gene_max_space': 'Flagellum 4.2 T2SS 2',
                      'max_nb_genes': 'Flagellum 4 T3SS FOO',
@@ -368,7 +362,7 @@ class TestConfig(MacsyTest):
     def test_out_dir(self):
         cfg = Config(self.defaults, self.parsed_args)
         self.assertEqual(cfg.out_dir(),
-                         os.path.join(cfg.res_search_dir(), "macsyfinder-{}".format(strftime("%Y%m%d_%H-%M-%S")))
+                         os.path.join(cfg.res_search_dir(), f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
                          )
         self.parsed_args.out_dir = 'foo'
         cfg = Config(self.defaults, self.parsed_args)
@@ -385,17 +379,15 @@ class TestConfig(MacsyTest):
             cfg = Config(self.defaults, self.parsed_args)
             catch_msg = log.get_value().strip()
         self.assertEqual(cfg.sequence_db(), 'tests/data/data_set_2/base/test.fa')
-        self.assertEqual("ignore sequence_db '{}' use sequence_db from previous_run '{}'.".format(
-            self.parsed_args.sequence_db,
-            self.parsed_args.previous_run),
-            catch_msg
-        )
+        self.assertEqual(f"ignore sequence_db '{self.parsed_args.sequence_db}' "
+                         f"use sequence_db from previous_run '{self.parsed_args.previous_run}'.",
+                         catch_msg)
 
     def test_previous_wo_cfg(self):
         self.parsed_args.previous_run = self.find_data(os.path.join('data_set_2'))
         with self.assertRaises(ValueError) as ctx:
             Config(self.defaults, self.parsed_args)
         self.assertEqual(str(ctx.exception),
-                         "No config file found in dir {}".format(self.parsed_args.previous_run))
+                         f"No config file found in dir {self.parsed_args.previous_run}")
 
 

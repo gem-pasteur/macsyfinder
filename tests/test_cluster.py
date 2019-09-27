@@ -56,7 +56,7 @@ class TestBuildCluster(MacsyTest):
         model = Model("foo/T2SS", 11)
         # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
         # each genes is representing by a tuple (seq_id, length)"""
-        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
 
         gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
         gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
@@ -96,7 +96,7 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[1].hits, [h70, h80])
 
         # replicon is linear, 3 clusters, the last one contains only one hit (loner)
-        rep_info = RepliconInfo('linear', 1, 100, [("g_{}".format(i), i*10) for i in range(1, 101)])
+        rep_info = RepliconInfo('linear', 1, 100, [(f"g_{i}", i*10) for i in range(1, 101)])
         h80 = Hit(gene_5, model, "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
@@ -107,21 +107,21 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[2].hits, [h80])
 
         # replicon is circular contains only one cluster
-        rep_info = RepliconInfo('circular', 1, 60, [("g_{}".format(i), i*10) for i in range(1, 7)])
+        rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i*10) for i in range(1, 7)])
         hits = [h10, h20, h30]
         clusters = build_clusters(hits, rep_info, model)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h10, h20, h30])
 
         # replicon is circular the last cluster is merge  with the first So we have only one cluster
-        rep_info = RepliconInfo('circular', 1, 60, [("g_{}".format(i), i*10) for i in range(1, 7)])
+        rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i*10) for i in range(1, 7)])
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61]
         clusters = build_clusters(hits, rep_info, model)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h51, h61, h11, h21, h31])
 
         # relicon is circular the last hit is incorporate to the first cluster
-        rep_info = RepliconInfo('circular', 1, 80, [("g_{}".format(i), i*10) for i in range(1, 9)])
+        rep_info = RepliconInfo('circular', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
         h80 = Hit(gene_4, model, "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
@@ -131,7 +131,7 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[1].hits, [h51, h61])
 
         # replicon is circular the last hit is not merged with the first cluster
-        rep_info = RepliconInfo('linear', 1, 80, [("g_{}".format(i), i*10) for i in range(1, 9)])
+        rep_info = RepliconInfo('linear', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model)
@@ -176,7 +176,7 @@ class TestHitFunc(MacsyTest):
         model = Model("foo/T2SS", 11)
         # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
         # each genes is representing by a tuple (seq_id, length)"""
-        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
 
         gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
         gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)
@@ -224,7 +224,7 @@ class TestHitFunc(MacsyTest):
         model = Model("foo/T2SS", 11)
         # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
         # each genes is representing by a tuple (seq_id, length)"""
-        rep_info = RepliconInfo('linear', 1, 60, [("g_{}".format(i), i * 10) for i in range(1, 7)])
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
 
         gene_1 = Gene(self.profile_factory, "gspD", model, self.models_location)
         gene_2 = Gene(self.profile_factory, "sctC", model, self.models_location)

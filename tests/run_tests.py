@@ -47,7 +47,7 @@ def discover(test_files=None, test_root_path=None):
                 elif os.path.isdir(test_file):
                     suite.addTests(unittest.TestLoader().discover(test_file))
             else:
-                sys.stderr.write("{0} : no such file or directory\n".format(test_file))
+                sys.stderr.write(f"{test_file} : no such file or directory\n")
 
     return suite
 

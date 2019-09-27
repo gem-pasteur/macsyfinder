@@ -115,11 +115,11 @@ set_2
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
 
-        system_str = """# macsyfinder {}
-# {}
+        system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
 # Systems found:
 
-system id = replicon_id_T2SS_{}
+system id = replicon_id_T2SS_{next(System._id) - 1}
 model = foo/T2SS
 replicon = replicon_id
 clusters = [('gspD', 1), ('sctJ', 1)]
@@ -135,7 +135,7 @@ accessory genes:
 \t- sctJ: 1 (sctJ)
 
 ============================================================
-""".format(macsypy.__version__, ' '.join(sys.argv), next(System._id) - 1)
+"""
 
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([system_1])
@@ -169,8 +169,8 @@ accessory genes:
         c2 = Cluster([h40, h50], model)
         r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
 
-        rej_clst_str = """# macsyfinder {}
-# {}
+        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
 # Rejected clusters:
 
 Cluster:
@@ -182,7 +182,7 @@ Cluster:
 These clusters has been rejected because:
 The reasons to reject this clusters
 ============================================================
-""".format(macsypy.__version__, ' '.join(sys.argv))
+"""
 
         f_out = StringIO()
         rejected_clst_to_file([r_c], f_out)
