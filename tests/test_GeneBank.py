@@ -71,7 +71,7 @@ class Test(MacsyTest):
         with self.assertRaises(KeyError) as ctx:
             self.gene_bank.add_gene(gene)
         self.assertEqual(str(ctx.exception),
-                         '"a gene named \'{0}/{1}\' is already registered"'.format("foo", gene.name))
+                         f'"a gene named \'foo/{gene.name}\' is already registered"')
 
     def test_contains(self):
         system_foo = Model("foo/bar", 10)
