@@ -288,9 +288,11 @@ class DefinitionParser:
                 model.add_accessory_gene(gene)
             elif presence == 'forbidden':
                 model.add_forbidden_gene(gene)
+            elif presence == 'neutral':
+                model.add_neutral_gene(gene)
             else:
                 msg = f"Invalid model '{model.name}' definition: presence value must be either\
- [mandatory, accessory, forbidden] not {presence}"
+ [mandatory, accessory, forbidden, neutral] not {presence}"
                 _log.error(msg)
                 raise SyntaxError(msg)
 

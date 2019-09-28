@@ -457,6 +457,7 @@ class GeneStatus(Enum):
     MANDATORY = 1
     ACCESSORY = 2
     FORBIDDEN = 3
+    NEUTRAL = 4
 
     def __str__(self):
         return self.name.lower()

@@ -140,6 +140,7 @@ class Model:
         self._mandatory_genes = []
         self._accessory_genes = []
         self._forbidden_genes = []
+        self._neutral_genes = []
 
 
     def __str__(self):
@@ -150,6 +151,9 @@ class Model:
             s += f"{g.name}\n"
         s += "==== accessory genes ====\n"
         for g in self._accessory_genes:
+            s += f"{g.name}\n"
+        s += "==== neutral genes ====\n"
+        for g in self._neutral_genes:
             s += f"{g.name}\n"
         s += "==== forbidden genes ====\n"
         for g in self._forbidden_genes:
@@ -273,6 +277,15 @@ class Model:
         self._forbidden_genes.append(gene)
 
 
+    def add_neutral_gene(self, gene):
+        """
+
+        :param gene:
+        :return:
+        """
+        self._neutral_genes.append(gene)
+
+
     @property
     def mandatory_genes(self):
         """
@@ -299,6 +312,14 @@ class Model:
         """
         return self._forbidden_genes
 
+    @property
+    def neutral_genes(self):
+        """
+        :return: the list of genes that are forbidden in this macromolecular model
+        :rtype: list of :class:`macsypy.gene.Gene` objects
+        """
+        return self._neutral_genes
+
 
     def get_gene(self, gene_name):
         """
@@ -308,7 +329,7 @@ class Model:
         :rtype: a :class:`macsypy.gene.Gene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
-        all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
+        all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes, self.neutral_genes)
         for g_list in all_genes:
             for g in g_list:
                 if g.name == gene_name:
@@ -348,9 +369,14 @@ class Model:
         :return: list of hits
         :rtype: list of :class:`macsypy.report.Hit` object
         """
-        primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes, self._forbidden_genes)]
+        print("###@@@ self._neutral_genes", [g.name for g in self._neutral_genes])
+        primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes,
+                                          self._forbidden_genes, self._neutral_genes)]
+        print("###@@@ primary_genes", [g.name for g in primary_genes])
         exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())if g.exchangeable]
+        print("###@@@ exchangeable_genes", [g.name for g in exchangeable_genes])
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
-
+        print("###@@@ all_genes", all_genes)
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
+        print("###@@@ compatible_hits", [h.gene.name for h in compatible_hits])
         return compatible_hits
