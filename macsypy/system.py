@@ -85,6 +85,9 @@ def match(clusters, model):
     forbidden_counter = {g.name: 0 for g in model.forbidden_genes}
     exchangeable_forbidden = create_exchangeable_map(model.forbidden_genes)
 
+    neutral_counter = {g.name: 0 for g in model.neutral_genes}
+    exchangeable_neutral = create_exchangeable_map(model.neutral_genes)
+
     # count the hits
     # and track for each hit for which gene it counts for
     valid_clusters = []
@@ -107,6 +110,13 @@ def match(clusters, model):
                 gene_ref = exchangeable_accessory[gene_name]
                 accessory_counter[gene_ref.name] += 1
                 valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.ACCESSORY))
+            elif gene_name in neutral_counter:
+                neutral_counter[gene_name] += 1
+                valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.NEUTRAL))
+            elif gene_name in exchangeable_neutral:
+                gene_ref = exchangeable_neutral[gene_name]
+                neutral_counter[gene_ref.name] += 1
+                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.NEUTRAL))
             elif gene_name in forbidden_counter:
                 forbidden_counter[gene_name] += 1
                 # valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.FORBIDDEN))
@@ -118,15 +128,20 @@ def match(clusters, model):
                 forbidden_hits.append(hit)
         if valid_hits:
             valid_clusters.append(Cluster(valid_hits, model))
+
     # the count is finished
     # check if the quorum is reached
     # count how many different genes are represented in the clusters
+    # the neutral genes belong to the cluster
+    # but they do not count for the quorum
     mandatory_genes = [g for g, occ in mandatory_counter.items() if occ > 0]
     accessory_genes = [g for g, occ in accessory_counter.items() if occ > 0]
+    neutral_genes = [g for g, occ in neutral_counter.items() if occ > 0]
     forbidden_genes = [g for g, occ in forbidden_counter.items() if occ > 0]
     _log.debug("#" * 50)
     _log.debug(f"mandatory_genes: {mandatory_genes}")
     _log.debug(f"accessory_genes: {accessory_genes}")
+    _log.debug(f"neutral_genes: {neutral_genes}")
     _log.debug(f"forbidden_genes: {forbidden_genes}")
 
     reasons = []
@@ -203,6 +218,7 @@ class System:
         self.clusters = clusters
         self._mandatory_occ = None
         self._accessory_occ = None
+        self._neutral_occ = None
         self._count()
 
     def _count(self):
@@ -213,6 +229,7 @@ class System:
         """
         self._mandatory_occ = {g.name: [] for g in self.model.mandatory_genes}
         self._accessory_occ = {g.name: [] for g in self.model.accessory_genes}
+        self._neutral_occ = {g.name: [] for g in self.model.neutral_genes}
 
         # all the hits are ValidHit
         for hit in self.hits:
@@ -220,6 +237,8 @@ class System:
                 self._mandatory_occ[hit.gene_ref.name].append(hit)
             elif hit.status == GeneStatus.ACCESSORY:
                 self._accessory_occ[hit.gene_ref.name].append(hit)
+            elif hit.status == GeneStatus.NEUTRAL:
+                self._neutral_occ[hit.gene_ref.name].append(hit)
 
     @property
     def replicon_name(self):
@@ -234,12 +253,17 @@ class System:
         return {k: v for k, v in self._accessory_occ.items()}
 
     @property
+    def neutral_occ(self):
+        return {k: v for k, v in self._neutral_occ.items()}
+
+    @property
     def wholeness(self):
         """
 
         :return:
         """
         # model completude
+        # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
                 (len(self._mandatory_occ) + len(self._accessory_occ))
         return score
@@ -327,7 +351,9 @@ wholeness = {self.system.wholeness:.3f}
 loci nb = {self.system.loci}
 score = {self.system.score:.3f}
 """
-        for title, genes in (("mandatory", self.system.mandatory_occ), ("accessory", self.system.accessory_occ)):
+        for title, genes in (("mandatory", self.system.mandatory_occ),
+                             ("accessory", self.system.accessory_occ),
+                             ("neutral", self.system.neutral_occ)):
             s += f"\n{title} genes:\n"
             for g_name, hits in genes.items():
                 s += f"\t- {g_name}: {len(hits)} "
@@ -356,7 +382,8 @@ score = {self.system.score:.3f}
                   'clusters': [[ str hit gene name, ...], [...]]
                   'gene_composition': {
                         'mandatory': {str gene_ref name: [ str hit gene name, ... ]},
-                        'accessory': {str gene_ref name: [ str hit gene name, ... ]}
+                        'accessory': {str gene_ref name: [ str hit gene name, ... ]},
+                        'neutral': {str gene_ref name: [ str hit gene name, ... ]}
                         }
                  }
         """
@@ -369,7 +396,10 @@ score = {self.system.score:.3f}
                       {'mandatory': {gene_ref: [hit.gene.name for hit in hits]
                                      for gene_ref, hits in self.system.mandatory_occ.items()},
                        'accessory': {gene_ref: [hit.gene.name for hit in hits]
-                                     for gene_ref, hits in self.system.accessory_occ.items()}
+                                     for gene_ref, hits in self.system.accessory_occ.items()},
+                       'neutral': {gene_ref: [hit.gene.name for hit in hits]
+                                     for gene_ref, hits in self.system.neutral_occ.items()}
+
                        }
                   }
         return json.dumps(system)

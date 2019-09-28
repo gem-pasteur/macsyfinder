@@ -377,8 +377,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
     models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
     all_genes = []
-    for system in models_to_detect:
-        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+    for model in models_to_detect:
+        genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
         ex_genes = []
 

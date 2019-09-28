@@ -207,6 +207,7 @@ class HitWeight:
     analog: float = 0.75
     mandatory: float = 1
     accessory: float = 0.5
+    neutral: float = 0
 
 
 hit_weight = HitWeight()

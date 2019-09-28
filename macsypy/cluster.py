@@ -230,6 +230,8 @@ class Cluster:
                     hit_score = hit_weight.mandatory
                 elif v_hit.status == GeneStatus.ACCESSORY:
                     hit_score = hit_weight.accessory
+                elif v_hit.status == GeneStatus.NEUTRAL:
+                    hit_score = hit_weight.neutral
                 else:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
                 # weighted the hit score according to the hit match the gene or
