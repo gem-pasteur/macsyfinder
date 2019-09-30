@@ -265,7 +265,7 @@ class System:
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                (len(self._mandatory_occ) + len(self._accessory_occ))
+                    (len(self._mandatory_occ) + len(self._accessory_occ))
         return score
 
 
