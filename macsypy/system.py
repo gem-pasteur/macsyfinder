@@ -223,7 +223,7 @@ class System:
 
     def _count(self):
         """
-        fill 2 structures one for mandatory the other for accessory
+        fill 3 structures one for mandatory, accessory and neutral
         each structure count how many hit for each gene
         :return: None
         """
@@ -268,6 +268,7 @@ class System:
                 (len(self._mandatory_occ) + len(self._accessory_occ))
         return score
 
+
     @property
     def score(self):
         """
@@ -311,6 +312,7 @@ class System:
         """
         hits = [h for cluster in self.clusters for h in cluster.hits]
         return hits
+
 
     @property
     def loci(self):
