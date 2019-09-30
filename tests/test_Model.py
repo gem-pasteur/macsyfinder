@@ -85,52 +85,52 @@ class TestModel(MacsyTest):
 
 
     def test_min_genes_required(self):
-        system_fqn = 'foo/bar'
+        model_fqn = 'foo/bar'
         min_genes_required_xml = 40
-        system = Model(system_fqn, 10, min_genes_required=min_genes_required_xml)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene(gene)
-        self.assertEqual(system.min_genes_required, min_genes_required_xml)
-        system = Model(system_fqn, 10)
+        model = Model(model_fqn, 10, min_genes_required=min_genes_required_xml)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(gene)
+        self.assertEqual(model.min_genes_required, min_genes_required_xml)
+        system = Model(model_fqn, 10)
         self.assertEqual(system.min_genes_required, len(system.mandatory_genes))
 
         self.clean_working_dir()
 
 
     def test_min_mandatory_genes_required(self):
-        system_fqn = 'foo/bar'
+        model_fqn = 'foo/bar'
         min_mandatory_genes_required_xml = 40
-        system = Model(system_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene(gene)
-        self.assertEqual(system.min_mandatory_genes_required, min_mandatory_genes_required_xml)
+        model = Model(model_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(gene)
+        self.assertEqual(model.min_mandatory_genes_required, min_mandatory_genes_required_xml)
 
-        system = Model(system_fqn, 10)
+        system = Model(model_fqn, 10)
         self.assertEqual(system.min_mandatory_genes_required, len(system.mandatory_genes))
 
         self.clean_working_dir()
 
 
     def test_max_nb_genes(self):
-        system_fqn = 'foo/bar'
+        model_fqn = 'foo/bar'
         inter_gene_max_space = 40
         max_nb_genes_xml = 10
-        system = Model(system_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
-        self.assertEqual(system.max_nb_genes, max_nb_genes_xml)
-        system = Model(system_fqn, inter_gene_max_space)
-        self.assertIsNone(system.max_nb_genes)
+        model = Model(model_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
+        self.assertEqual(model.max_nb_genes, max_nb_genes_xml)
+        model = Model(model_fqn, inter_gene_max_space)
+        self.assertIsNone(model.max_nb_genes)
 
         self.clean_working_dir()
 
 
     def test_multi_loci(self):
-        system_fqn = 'foo/True'
+        model_fqn = 'foo/True'
         inter_gene_max_space = 40
-        system = Model(system_fqn, inter_gene_max_space, multi_loci=True)
-        self.assertTrue(system.multi_loci)
-        system_fqn = 'foo/False'
+        model = Model(model_fqn, inter_gene_max_space, multi_loci=True)
+        self.assertTrue(model.multi_loci)
+        model_fqn = 'foo/False'
         inter_gene_max_space = 40
-        system = Model(system_fqn, inter_gene_max_space)
+        system = Model(model_fqn, inter_gene_max_space)
         self.assertFalse(system.multi_loci)
 
         self.clean_working_dir()
@@ -145,125 +145,128 @@ class TestModel(MacsyTest):
 
 
     def test_add_mandatory_gene(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene(gene)
-        self.assertEqual(system._mandatory_genes, [gene])
-        self.assertEqual(system._accessory_genes, [])
-        self.assertEqual(system._forbidden_genes, [])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(gene)
+        self.assertEqual(model._mandatory_genes, [gene])
+        self.assertEqual(model._accessory_genes, [])
+        self.assertEqual(model._forbidden_genes, [])
 
 
     def test_add_accessory_gene(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_accessory_gene(gene)
-        self.assertEqual(system._accessory_genes, [gene])
-        self.assertEqual(system._mandatory_genes, [])
-        self.assertEqual(system._forbidden_genes, [])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_accessory_gene(gene)
+        self.assertEqual(model._accessory_genes, [gene])
+        self.assertEqual(model._mandatory_genes, [])
+        self.assertEqual(model._forbidden_genes, [])
 
 
     def test_add_forbidden_gene(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_forbidden_gene(gene)
-        self.assertEqual(system._forbidden_genes, [gene])
-        self.assertEqual(system._accessory_genes, [])
-        self.assertEqual(system._mandatory_genes, [])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_forbidden_gene(gene)
+        self.assertEqual(model._forbidden_genes, [gene])
+        self.assertEqual(model._accessory_genes, [])
+        self.assertEqual(model._mandatory_genes, [])
 
     def test_mandatory_genes(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene(gene)
-        self.assertEqual(system.mandatory_genes, [gene])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(gene)
+        self.assertEqual(model.mandatory_genes, [gene])
 
 
     def test_accessory_genes(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_accessory_gene(gene)
-        self.assertEqual(system.accessory_genes, [gene])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_accessory_gene(gene)
+        self.assertEqual(model.accessory_genes, [gene])
 
 
     def test_forbidden_genes(self):
-        system = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_forbidden_gene(gene)
-        self.assertEqual(system.forbidden_genes, [gene])
+        model = Model("foo", 10)
+        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_forbidden_gene(gene)
+        self.assertEqual(model.forbidden_genes, [gene])
 
 
     def test_get_gene(self):
-        system = Model("foo", 10)
+        model = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene = Gene(self.profile_factory, gene_name, system, self.models_location)
-        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
-            system._mandatory_genes = []
-            system._accessory_genes = []
-            system._forbidden_genes = []
+        gene = Gene(self.profile_factory, gene_name, model, self.models_location)
+        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
+            model._mandatory_genes = []
+            model._accessory_genes = []
+            model._forbidden_genes = []
             meth(gene)
-            self.assertEqual(gene, system.get_gene(gene_name))
+            self.assertEqual(gene, model.get_gene(gene_name))
 
-        self.assertRaises(KeyError, system.get_gene, 'bar')
+        self.assertRaises(KeyError, model.get_gene, 'bar')
 
         homolog_name = 'sctJ'
-        gene_homolog = Gene(self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolog = Gene(self.profile_factory, homolog_name, model, self.models_location)
         homolog = Homolog(gene_homolog, gene)
         gene.add_homolog(homolog)
-        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
-            system._mandatory_genes = []
-            system._accessory_genes = []
-            system._forbidden_genes = []
+        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
+            model._mandatory_genes = []
+            model._accessory_genes = []
+            model._forbidden_genes = []
             meth(gene)
-            self.assertEqual(homolog, system.get_gene(homolog_name))
+            self.assertEqual(homolog, model.get_gene(homolog_name))
 
         analog_name = 'sctC'
-        gene_analog = Gene(self.profile_factory, analog_name, system, self.models_location)
+        gene_analog = Gene(self.profile_factory, analog_name, model, self.models_location)
         analog = Analog(gene_analog, gene)
         gene.add_analog(analog)
-        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
-            system._mandatory_genes = []
-            system._accessory_genes = []
-            system._forbidden_genes = []
+        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
+            model._mandatory_genes = []
+            model._accessory_genes = []
+            model._forbidden_genes = []
             meth(gene)
-            self.assertEqual(analog, system.get_gene(analog_name))
+            self.assertEqual(analog, model.get_gene(analog_name))
 
     def test_get_gene_ref(self):
-        system = Model("foo", 10)
+        model = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene_ref = Gene(self.profile_factory, gene_name, system, self.models_location)
+        gene_ref = Gene(self.profile_factory, gene_name, model, self.models_location)
         homolog_name = 'sctJ'
-        gene_homolg = Gene(self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolg = Gene(self.profile_factory, homolog_name, model, self.models_location)
         homolog = Homolog(gene_homolg, gene_ref)
         gene_ref.add_homolog(homolog)
 
-        for meth in (system.add_forbidden_gene, system.add_accessory_gene, system.add_mandatory_gene):
-            system._mandatory_genes = []
-            system._accessory_genes = []
-            system._forbidden_genes = []
+        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
+            model._mandatory_genes = []
+            model._accessory_genes = []
+            model._forbidden_genes = []
             meth(gene_ref)
-            self.assertEqual(gene_ref, system.get_gene_ref(homolog))
-        self.assertIsNone(system.get_gene_ref(gene_ref))
-        gene_ukn = Gene(self.profile_factory, 'abc', system, self.models_location)
-        self.assertRaises(KeyError, system.get_gene_ref, gene_ukn)
+            self.assertEqual(gene_ref, model.get_gene_ref(homolog))
+        self.assertIsNone(model.get_gene_ref(gene_ref))
+        gene_ukn = Gene(self.profile_factory, 'abc', model, self.models_location)
+        self.assertRaises(KeyError, model.get_gene_ref, gene_ukn)
+
 
     def test_str(self):
-        system_fqn = "foo/bar"
-        system = Model(system_fqn, 10)
-        mandatory_gene = Gene(self.profile_factory, 'sctJ_FLG', system, self.models_location)
-        system.add_mandatory_gene(mandatory_gene)
+        model_fqn = "foo/bar"
+        model = Model(model_fqn, 10)
+        mandatory_gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
+        model.add_mandatory_gene(mandatory_gene)
         homolog_name = 'sctJ'
-        gene_homolg = Gene(self.profile_factory, homolog_name, system, self.models_location)
+        gene_homolg = Gene(self.profile_factory, homolog_name, model, self.models_location)
         homolog = Homolog(gene_homolg, mandatory_gene)
         mandatory_gene.add_homolog(homolog)
 
-        accessory_gene = Gene(self.profile_factory, 'sctN_FLG', system, self.models_location)
-        system.add_accessory_gene(accessory_gene)
+        accessory_gene = Gene(self.profile_factory, 'sctN_FLG', model, self.models_location)
+        model.add_accessory_gene(accessory_gene)
         analog_name = 'sctN'
-        gene_analog = Gene(self.profile_factory, analog_name, system, self.models_location)
+        gene_analog = Gene(self.profile_factory, analog_name, model, self.models_location)
         analog = Analog(gene_analog, accessory_gene)
         accessory_gene.add_analog(analog)
 
-        forbidden_gene = Gene(self.profile_factory, 'sctC', system, self.models_location)
-        system.add_forbidden_gene(forbidden_gene)
+        neutral_gene = Gene(self.profile_factory, 'toto', model, self.models_location)
+        model.add_neutral_gene(neutral_gene)
+        forbidden_gene = Gene(self.profile_factory, 'sctC', model, self.models_location)
+        model.add_forbidden_gene(forbidden_gene)
 
         exp_str = """name: bar
 fqn: foo/bar
@@ -272,11 +275,12 @@ sctJ_FLG
 ==== accessory genes ====
 sctN_FLG
 ==== neutral genes ====
+toto
 ==== forbidden genes ====
 sctC
 ============== end pprint model ================
 """
-        self.assertEqual(str(system), exp_str)
+        self.assertEqual(str(model), exp_str)
 
     def test_eq(self):
         aa1 = Model("aaa", 10)
