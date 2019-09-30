@@ -176,6 +176,9 @@ def match(clusters, model):
 
 
 class HitSystemTracker(dict):
+    """
+    track in which system is implied each hit
+    """
 
     def __init__(self, systems):
         super(HitSystemTracker, self).__init__()
@@ -189,7 +192,9 @@ class HitSystemTracker(dict):
 
 
 class ClusterSystemTracker(dict):
-
+    """
+    track in which system is implied each cluster
+    """
     def __init__(self, systems):
         super(ClusterSystemTracker, self).__init__()
         for system in systems:
@@ -201,6 +206,9 @@ class ClusterSystemTracker(dict):
 
 
 class System:
+    """
+    Modelize as system. a system is an ocuurence of a given model on a replicon.
+    """
 
     _id = itertools.count(1)
 
@@ -242,25 +250,43 @@ class System:
 
     @property
     def replicon_name(self):
+        """
+        :return: The name of the replicon
+        :rtype: str
+        """
         return self._replicon_name
 
     @property
     def mandatory_occ(self):
+        """
+        :return: all mandatory hits constituting this system
+        :rtype: dict {str: list[ValidHit]}
+        """
         return {k: v for k, v in self._mandatory_occ.items()}
 
     @property
     def accessory_occ(self):
+        """
+        :return: all accessory hits constituting this system
+        :rtype: dict {str: list[ValidHit]}
+        """
         return {k: v for k, v in self._accessory_occ.items()}
 
     @property
     def neutral_occ(self):
+        """
+        :return: all neutral hits constituting this system
+        :rtype: dict {str: list[ValidHit]}
+        """
         return {k: v for k, v in self._neutral_occ.items()}
 
     @property
     def wholeness(self):
         """
 
-        :return:
+        :return: a score indicating the genes ratio of the model which have at least one hit
+                ('neutral' genes do not count)
+        :rtype: float
         """
         # model completude
         # the neutral hit do not participate to the model completude
@@ -335,6 +361,9 @@ class System:
 
 
 class SystemSerializer:
+    """
+    handle the different way to serialize a system
+    """
 
     def __init__(self, system, hit_system_tracker):
         self.system = system
