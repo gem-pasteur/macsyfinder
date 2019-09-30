@@ -369,14 +369,10 @@ class Model:
         :return: list of hits
         :rtype: list of :class:`macsypy.report.Hit` object
         """
-        print("###@@@ self._neutral_genes", [g.name for g in self._neutral_genes])
         primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes,
                                           self._forbidden_genes, self._neutral_genes)]
-        print("###@@@ primary_genes", [g.name for g in primary_genes])
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())if g.exchangeable]
-        print("###@@@ exchangeable_genes", [g.name for g in exchangeable_genes])
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())
+                              if g.exchangeable]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
-        print("###@@@ all_genes", all_genes)
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
-        print("###@@@ compatible_hits", [h.gene.name for h in compatible_hits])
         return compatible_hits
