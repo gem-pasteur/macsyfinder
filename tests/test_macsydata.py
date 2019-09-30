@@ -111,198 +111,198 @@ class TestMacsydata(MacsyTest):
         return arch_path
 
 
-#     def test_available(self):
-#         list_pack = macsydata.RemoteModelIndex.list_packages
-#         list_pack_vers = macsydata.RemoteModelIndex.list_package_vers
-#         meta = macsydata.RemoteModelIndex.get_metadata
-#         pack_name = 'fake_model'
-#         pack_vers = '1.0'
-#         pack_meta = {'short_desc': 'desc about fake_model'}
-#         macsydata.RemoteModelIndex.list_packages = lambda x: [pack_name]
-#         macsydata.RemoteModelIndex.list_package_vers = lambda x, pack: [pack_vers]
-#         macsydata.RemoteModelIndex.get_metadata = lambda x, pack, vers: pack_meta
-#         self.create_fake_package('fake_model')
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_available(self.args)
-#                 get_pack = sys.stdout.getvalue().strip()
-#             pack_name_vers = f"{pack_name} ({pack_vers})"
-#             expected_pack = f"{pack_name_vers:26.25} - {pack_meta['short_desc']}"
-#             self.assertEqual(get_pack, expected_pack)
-#         finally:
-#             macsydata.RemoteModelIndex.list_packages = list_pack
-#             macsydata.RemoteModelIndex.list_package_vers = list_pack_vers
-#             macsydata.RemoteModelIndex.get_metadata = meta
-#
-#
-#     def test_info(self):
-#         pack_name = "nimportnaoik"
-#         self.args.package = pack_name
-#         with self.catch_log(log_name='macsydata') as log:
-#             with self.assertRaises(ValueError):
-#                 macsydata.do_info(self.args)
-#             log_msg = log.get_value()
-#         self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
-#
-#         pack_name = "fake_pack"
-#         self.args.package = pack_name
-#         fake_pack_path = self.create_fake_package(pack_name)
-#
-#         find_local_package = macsydata._find_installed_package
-#         macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_info(self.args)
-#                 msg = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_installed_package = find_local_package
-#
-#         expected_info = """fake_pack (0.0b2)
-#
-# author: auth_name <auth_name@mondomain.fr>
-#
-# this is a short description of the repos
-#
-# how to cite:
-# \t- bla bla
-# \t- link to publication
-# \t- ligne 1
-# \t  ligne 2
-# \t  ligne 3 et bbbbb
-#
-# documentation
-# \thttp://link/to/the/documentation
-#
-# This data are released under CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
-# copyright: 2019, Institut Pasteur, CNRS"""
-#         self.assertEqual(expected_info, msg)
-#
-#
-#     def test_list(self):
-#         fake_packs = ('fake_1', 'fake_2')
-#         for name in fake_packs:
-#             self.create_fake_package(name, dest=self.models_dir)
-#         model_dir = self.tmpdir
-#         registry = ModelRegistry()
-#         for model_loc in scan_models_dir(self.models_dir):
-#             registry.add(model_loc)
-#         find_all_packages = macsydata._find_all_installed_packages
-#         macsydata._find_all_installed_packages = lambda: registry
-#
-#         self.args.verbose = 1
-#         self.args.outdated = False
-#         self.args.uptodate = False
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_list(self.args)
-#                 packs = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_all_installed_packages = find_all_packages
-#         self.assertEqual(packs,
-#                          "fake_1-0.0b2\nfake_2-0.0b2")
-#
-#
-#     def test_list_outdated(self):
-#         fake_packs = ('fake_1', 'fake_2')
-#         for name in fake_packs:
-#             self.create_fake_package(name, dest=self.models_dir)
-#         registry = ModelRegistry()
-#         for model_loc in scan_models_dir(self.models_dir):
-#             registry.add(model_loc)
-#
-#         find_all_packages = macsydata._find_all_installed_packages
-#         macsydata._find_all_installed_packages = lambda: registry
-#
-#         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
-#         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
-#                                                                         'fake_2': ['0.0b2']}[name]
-#         self.args.verbose = 1
-#         self.args.outdated = True
-#         self.args.uptodate = False
-#
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_list(self.args)
-#                 packs = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_all_installed_packages = find_all_packages
-#             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
-#         self.assertEqual(packs, 'fake_1-1.0 [0.0b2]')
-#
-#
-#     def test_list_uptodate(self):
-#         fake_packs = ('fake_1', 'fake_2')
-#         for name in fake_packs:
-#             self.create_fake_package(name, dest=self.models_dir)
-#         registry = ModelRegistry()
-#         for model_loc in scan_models_dir(self.models_dir):
-#             registry.add(model_loc)
-#         find_all_packages = macsydata._find_all_installed_packages
-#         macsydata._find_all_installed_packages = lambda: registry
-#         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
-#         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
-#                                                                         'fake_2': ['0.0b2']}[name]
-#         self.args.verbose = 1
-#         self.args.outdated = False
-#         self.args.uptodate = True
-#
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_list(self.args)
-#                 packs = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_all_installed_packages = find_all_packages
-#             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
-#         self.assertEqual(packs, 'fake_2-0.0b2')
-#
-#
-#     def test_list_verbose(self):
-#         fake_packs = ('fake_1', 'fake_2')
-#         for name in fake_packs:
-#             self.create_fake_package(name, dest=self.models_dir)
-#         registry = ModelRegistry()
-#         for model_loc in scan_models_dir(self.models_dir):
-#             registry.add(model_loc)
-#         find_all_packages = macsydata._find_all_installed_packages
-#         macsydata._find_all_installed_packages = lambda: registry
-#         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
-#         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
-#                                                                         'fake_2': ['0.0b2']}[name]
-#         os.unlink(os.path.join(self.models_dir, 'fake_1', 'metadata.yml'))
-#         self.args.verbose = 2
-#         self.args.outdated = False
-#         self.args.uptodate = False
-#
-#         try:
-#             with self.catch_io(out=True):
-#                 with self.catch_log(log_name='macsydata') as log:
-#                     macsydata.do_list(self.args)
-#                     log_msg = log.get_value().strip()
-#                 packs = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_all_installed_packages = find_all_packages
-#             macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
-#         self.assertEqual(packs, 'fake_2-0.0b2')
-#         self.assertEqual(log_msg, f"[Errno 2] No such file or directory: '{self.models_dir}/fake_1/metadata.yml'")
-#
-#
-#     def test_freeze(self):
-#         fake_packs = ('fake_1', 'fake_2')
-#         for name in fake_packs:
-#             self.create_fake_package(name, dest=self.models_dir)
-#         registry = ModelRegistry()
-#         for model_loc in scan_models_dir(self.models_dir):
-#             registry.add(model_loc)
-#         find_all_packages = macsydata._find_all_installed_packages
-#         macsydata._find_all_installed_packages = lambda: registry
-#         try:
-#             with self.catch_io(out=True):
-#                 macsydata.do_freeze(self.args)
-#                 packs = sys.stdout.getvalue().strip()
-#         finally:
-#             macsydata._find_all_installed_packages = find_all_packages
-#         self.assertEqual(packs,
-#                          "fake_1==0.0b2\nfake_2==0.0b2")
+    def test_available(self):
+        list_pack = macsydata.RemoteModelIndex.list_packages
+        list_pack_vers = macsydata.RemoteModelIndex.list_package_vers
+        meta = macsydata.RemoteModelIndex.get_metadata
+        pack_name = 'fake_model'
+        pack_vers = '1.0'
+        pack_meta = {'short_desc': 'desc about fake_model'}
+        macsydata.RemoteModelIndex.list_packages = lambda x: [pack_name]
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack: [pack_vers]
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pack, vers: pack_meta
+        self.create_fake_package('fake_model')
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_available(self.args)
+                get_pack = sys.stdout.getvalue().strip()
+            pack_name_vers = f"{pack_name} ({pack_vers})"
+            expected_pack = f"{pack_name_vers:26.25} - {pack_meta['short_desc']}"
+            self.assertEqual(get_pack, expected_pack)
+        finally:
+            macsydata.RemoteModelIndex.list_packages = list_pack
+            macsydata.RemoteModelIndex.list_package_vers = list_pack_vers
+            macsydata.RemoteModelIndex.get_metadata = meta
+
+
+    def test_info(self):
+        pack_name = "nimportnaoik"
+        self.args.package = pack_name
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError):
+                macsydata.do_info(self.args)
+            log_msg = log.get_value()
+        self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
+
+        pack_name = "fake_pack"
+        self.args.package = pack_name
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_info(self.args)
+                msg = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        expected_info = """fake_pack (0.0b2)
+
+author: auth_name <auth_name@mondomain.fr>
+
+this is a short description of the repos
+
+how to cite:
+\t- bla bla
+\t- link to publication
+\t- ligne 1
+\t  ligne 2
+\t  ligne 3 et bbbbb
+
+documentation
+\thttp://link/to/the/documentation
+
+This data are released under CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+copyright: 2019, Institut Pasteur, CNRS"""
+        self.assertEqual(expected_info, msg)
+
+
+    def test_list(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir)
+        model_dir = self.tmpdir
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = lambda: registry
+
+        self.args.verbose = 1
+        self.args.outdated = False
+        self.args.uptodate = False
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+        self.assertEqual(packs,
+                         "fake_1-0.0b2\nfake_2-0.0b2")
+
+
+    def test_list_outdated(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir)
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir):
+            registry.add(model_loc)
+
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = lambda: registry
+
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        self.args.verbose = 1
+        self.args.outdated = True
+        self.args.uptodate = False
+
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_1-1.0 [0.0b2]')
+
+
+    def test_list_uptodate(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir)
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = lambda: registry
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        self.args.verbose = 1
+        self.args.outdated = False
+        self.args.uptodate = True
+
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_list(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_2-0.0b2')
+
+
+    def test_list_verbose(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir)
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = lambda: registry
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
+                                                                        'fake_2': ['0.0b2']}[name]
+        os.unlink(os.path.join(self.models_dir, 'fake_1', 'metadata.yml'))
+        self.args.verbose = 2
+        self.args.outdated = False
+        self.args.uptodate = False
+
+        try:
+            with self.catch_io(out=True):
+                with self.catch_log(log_name='macsydata') as log:
+                    macsydata.do_list(self.args)
+                    log_msg = log.get_value().strip()
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+        self.assertEqual(packs, 'fake_2-0.0b2')
+        self.assertEqual(log_msg, f"[Errno 2] No such file or directory: '{self.models_dir}/fake_1/metadata.yml'")
+
+
+    def test_freeze(self):
+        fake_packs = ('fake_1', 'fake_2')
+        for name in fake_packs:
+            self.create_fake_package(name, dest=self.models_dir)
+        registry = ModelRegistry()
+        for model_loc in scan_models_dir(self.models_dir):
+            registry.add(model_loc)
+        find_all_packages = macsydata._find_all_installed_packages
+        macsydata._find_all_installed_packages = lambda: registry
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_freeze(self.args)
+                packs = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_all_installed_packages = find_all_packages
+        self.assertEqual(packs,
+                         "fake_1==0.0b2\nfake_2==0.0b2")
 
 
     def test_cite(self):
