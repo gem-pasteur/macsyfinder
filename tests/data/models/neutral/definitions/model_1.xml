@@ -7,7 +7,6 @@
     
     <gene name="MSH_mshB" presence="neutral"/>
     <gene name="MSH_mshC" presence="neutral"/>
-
     <gene name="MSH_mshD" presence="neutral"/>
     <gene name="MSH_mshF" presence="neutral"/>
     <gene name="MSH_mshI" presence="neutral"/>
@@ -17,5 +16,6 @@
     <gene name="MSH_mshN" presence="neutral"/>
     <gene name="MSH_mshO" presence="neutral"/>
     <gene name="MSH_mshQ" presence="neutral"/>
+
     <gene name="MSH_mshP" presence="accessory"/>
 </model>

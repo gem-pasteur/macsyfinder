@@ -410,7 +410,7 @@ class TestCluster(MacsyTest):
         # 2 mandatory, 2 accessory 1 neutral, no analog/homolog
         c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_toto], model)
         self.assertEqual(c1.score, 3.0)
-        
+
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
