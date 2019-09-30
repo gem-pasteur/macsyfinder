@@ -651,6 +651,7 @@ neutral genes:
         self.assertSetEqual({s2}, track_multi_systems_cluster[c2])
         self.assertSetEqual({s3}, track_multi_systems_cluster[c3])
 
+
     def test_count(self):
         model = Model("foo/T2SS", 10)
         gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location, exchangeable=True)
@@ -732,7 +733,7 @@ neutral genes:
                       v_h_abc,
                       v_h_toto], model)
         s1 = System(model, [c1])
-        
+
         self.assertDictEqual(s1.mandatory_occ, {'sctJ': [v_h_sctj], 'sctN': [v_h_sctn]})
         self.assertDictEqual(s1.accessory_occ, {'gspD': [v_h_gspd]})
         self.assertDictEqual(s1.neutral_occ, {'toto': [v_h_toto]})

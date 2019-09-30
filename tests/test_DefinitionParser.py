@@ -102,6 +102,7 @@ class TestModelParser(MacsyTest):
                 self.parser.definition_to_parse(models_2_detect, parsed)
         self.assertTrue(str(context.exception).startswith(f'unable to parse model definition "{fqn}" :'))
 
+
     def test_parse_with_homologs(self):
         def_2_parse = set()
         def_2_parse.add('foo/model_1')
@@ -189,6 +190,31 @@ class TestModelParser(MacsyTest):
         self.assertEqual(len(m3.forbidden_genes), 1)
         self.assertEqual(m3.forbidden_genes[0].name, 'sctC')
         self.assertEqual(m3.forbidden_genes[0].model, self.model_bank['foo/model_4'])
+
+
+    def test_with_neutral(self):
+        def_2_parse = set()
+        def_2_parse.add('neutral/model_1')
+        parsed = set()
+        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        self.parser.parse(models_2_detect)
+        self.assertEqual(len(self.model_bank), 1)
+        m1 = self.model_bank['neutral/model_1']
+        self.assertEqual(m1.name, 'model_1')
+        self.assertEqual(m1.fqn, 'neutral/model_1')
+        self.assertEqual(len(m1.mandatory_genes), 5)
+        mandatory_genes_name = [g.name for g in m1.mandatory_genes]
+        mandatory_genes_name.sort()
+
+        theoric_list = ["MSH_mshA", "MSH_mshE", "MSH_mshG", "MSH_mshL", "MSH_mshM"]
+        theoric_list.sort()
+        self.assertListEqual(mandatory_genes_name, theoric_list)
+        self.assertEqual(len(m1.accessory_genes), 1)
+        self.assertEqual(len(m1.neutral_genes), 11)
+        neutral_genes_name = [g.name for g in m1.neutral_genes]
+        self.assertListEqual(neutral_genes_name, sorted(['MSH_mshB', 'MSH_mshC', 'MSH_mshD', 'MSH_mshF', 'MSH_mshI',
+                                                         'MSH_mshI2', 'MSH_mshJ', 'MSH_mshK', 'MSH_mshN', 'MSH_mshO',
+                                                         'MSH_mshQ']))
 
 
     def test_wo_presence(self):
