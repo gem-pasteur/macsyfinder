@@ -382,6 +382,9 @@ class TestCluster(MacsyTest):
         gene_sctn.add_homolog(homolog)
         model.add_accessory_gene(gene_sctn)
 
+        gene_toto = Gene(self.profile_factory, "toto", model, self.models_location)
+        model.add_neutral_gene(gene_toto)
+
         h_gspd = Hit(gene_gspd, model, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
         h_tadz = Hit(gene_tadZ, model, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -397,10 +400,17 @@ class TestCluster(MacsyTest):
         h_sctn_hom = Hit(gene_sctn_FLG, model, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_sctn_hom = ValidHit(h_sctn_hom, gene_sctn, GeneStatus.ACCESSORY)
 
+        h_toto = Hit(gene_sctn, model, "toto", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+
         # 2 mandatory, 2 accessory no analog/homolog
         c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model)
         self.assertEqual(c1.score, 3.0)
 
+        # 2 mandatory, 2 accessory 1 neutral, no analog/homolog
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_toto], model)
+        self.assertEqual(c1.score, 3.0)
+        
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
