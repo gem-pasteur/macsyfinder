@@ -303,7 +303,8 @@ class SystemTest(MacsyTest):
                     'clusters': [['gspD', 'sctJ'], ['sctN']],
                     'gene_composition':
                         {'mandatory': {'gspD': ['gspD']},
-                         'accessory': {'sctJ': ['sctJ'], 'sctN': ['sctN']}
+                         'accessory': {'sctJ': ['sctJ'], 'sctN': ['sctN']},
+                         'neutral': {}
                          }
                     }
         self.assertDictEqual(json.loads(rec_json), exp_json)
@@ -345,6 +346,8 @@ mandatory genes:
 accessory genes:
 \t- sctJ: 1 (sctJ)
 \t- sctN: 1 (sctN)
+
+neutral genes:
 """.format(sys_multi_loci.id)
         self.assertEqual(sys_str, str(system_serializer))
 
