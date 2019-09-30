@@ -134,6 +134,8 @@ mandatory genes:
 accessory genes:
 \t- sctJ: 1 (sctJ)
 
+neutral genes:
+
 ============================================================
 """
 

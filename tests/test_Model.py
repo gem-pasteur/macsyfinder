@@ -271,6 +271,7 @@ fqn: foo/bar
 sctJ_FLG
 ==== accessory genes ====
 sctN_FLG
+==== neutral genes ====
 ==== forbidden genes ====
 sctC
 ============== end pprint model ================

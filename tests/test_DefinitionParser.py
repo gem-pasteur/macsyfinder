@@ -207,7 +207,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Invalid model 'fail_invalid_presence' definition: presence value must be either "
-                         "[mandatory, accessory, forbidden] not foo_bar")
+                         "[mandatory, accessory, forbidden, neutral] not foo_bar")
 
     def test_gene_no_name(self):
         model_2_detect = ['foo/gene_no_name']
