@@ -241,7 +241,7 @@ class Model(metaclass=MetaModel):
         :rtype: integer
         """
         if self._min_mandatory_genes_required is None:
-            return len(self._mandatory_genes)
+            return len(self.mandatory_genes)
         return self._min_mandatory_genes_required
 
 
@@ -252,7 +252,7 @@ class Model(metaclass=MetaModel):
         :rtype: integer
         """
         if self._min_genes_required is None:
-            return len(self._mandatory_genes)
+            return len(self.mandatory_genes)
         return self._min_genes_required
 
     @property
