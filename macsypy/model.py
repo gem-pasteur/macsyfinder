@@ -97,16 +97,54 @@ class ModelBank:
             self._model_bank[model.fqn] = model
 
 
-class Model:
+class MetaModel(type):
+    """
+    control the different type of gene in a model ('mandatory, accessory, ....)
+    and how to access to them.
+    The type of genes are defined in the model itself via *_gene_category* class attribute.
+    """
+
+    def getter_maker(cat):
+        """
+        Create a property which allow to access to the gene corresponding of the cat of the model
+        """
+        def getter(self):
+            return getattr(self, f"_{cat}_genes")
+        return getter
+
+    def setter_maker(cat):
+        """
+        Create the method add_<cat>_gene which allow to add gene in the right category of the model
+        """
+        def setter(self, gene):
+            getattr(self, f"_{cat}_genes").append(gene)
+        return setter
+
+    def __call__(cls, *args, **kwargs):
+        new_model_inst = super().__call__(*args, **kwargs)
+        for cat in cls._gene_category:
+            # set the private attribute of the instance
+            setattr(new_model_inst, f"_{cat}_genes", [])
+            # set the public property in the Model class
+            setattr(cls, f"{cat}_genes", property(MetaModel.getter_maker(cat)))
+            # add method to add new gene in the Model class
+            setattr(cls, f"add_{cat}_gene", MetaModel.setter_maker(cat))
+        return new_model_inst
+
+
+class Model(metaclass=MetaModel):
     """
     Handles a macromolecular model.
 
     Contains all its pre-defined characteristics expected to be fulfilled to predict a complete model:
-        - component list (genes that are required, accessory, forbidden)
+        - component list (genes that are mandatory, accessory, neutral, forbidden)
         - quorum (number of genes)
         - genetic architecture
 
     """
+
+    _gene_category = ('mandatory', 'accessory', 'neutral', 'forbidden')
+
 
     def __init__(self, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
@@ -137,27 +175,15 @@ class Model:
                                               )
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
-        self._mandatory_genes = []
-        self._accessory_genes = []
-        self._forbidden_genes = []
-        self._neutral_genes = []
 
 
     def __str__(self):
         s = f"name: {self.name}\n"
         s += f"fqn: {self.fqn}\n"
-        s += "==== mandatory genes ====\n"
-        for g in self._mandatory_genes:
-            s += f"{g.name}\n"
-        s += "==== accessory genes ====\n"
-        for g in self._accessory_genes:
-            s += f"{g.name}\n"
-        s += "==== neutral genes ====\n"
-        for g in self._neutral_genes:
-            s += f"{g.name}\n"
-        s += "==== forbidden genes ====\n"
-        for g in self._forbidden_genes:
-            s += f"{g.name}\n"
+        for cat in self._gene_category:
+            s += f"==== {cat} genes ====\n"
+            for g in getattr(self, f"{cat}_genes"):
+                s += f"{g.name}\n"
         s += "============== end pprint model ================\n"
         return s
 
@@ -246,80 +272,6 @@ class Model:
 
         return self._multi_loci
 
-        
-    def add_mandatory_gene(self, gene):
-        """
-        Add a gene to the list of mandatory genes
-
-        :param gene: gene that is mandatory for this model
-        :type gene: :class:`macsypy.gene.Gene` object
-        """
-        self._mandatory_genes.append(gene)
-
-
-    def add_accessory_gene(self, gene):
-        """
-        Add a gene to the list of accessory genes
-
-        :param gene: gene that is allowed to be present in this model
-        :type gene: :class:`macsypy.gene.Gene` object
-        """
-        self._accessory_genes.append(gene)
-
-
-    def add_forbidden_gene(self, gene):
-        """
-        Add a gene to the list of forbidden genes
-
-        :param gene: gene that must not be found in this model
-        :type gene: :class:`macsypy.genen.Gene` object
-        """
-        self._forbidden_genes.append(gene)
-
-
-    def add_neutral_gene(self, gene):
-        """
-
-        :param gene:
-        :return:
-        """
-        self._neutral_genes.append(gene)
-
-
-    @property
-    def mandatory_genes(self):
-        """
-        :return: the list of genes that are mandatory in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._mandatory_genes
-
-
-    @property
-    def accessory_genes(self):
-        """
-        :return: the list of genes that are allowed in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._accessory_genes
-
-
-    @property
-    def forbidden_genes(self):
-        """
-        :return: the list of genes that are forbidden in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._forbidden_genes
-
-    @property
-    def neutral_genes(self):
-        """
-        :return: the list of genes that are forbidden in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._neutral_genes
-
 
     def get_gene(self, gene_name):
         """
@@ -329,7 +281,7 @@ class Model:
         :rtype: a :class:`macsypy.gene.Gene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
-        all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes, self.neutral_genes)
+        all_genes = [getattr(self, f"{cat}_genes") for cat in self._gene_category]
         for g_list in all_genes:
             for g in g_list:
                 if g.name == gene_name:
@@ -369,8 +321,7 @@ class Model:
         :return: list of hits
         :rtype: list of :class:`macsypy.report.Hit` object
         """
-        primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes,
-                                          self._forbidden_genes, self._neutral_genes)]
+        primary_genes = [g for g in chain(*[getattr(self, f"{cat}_genes") for cat in self._gene_category])]
         exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())
                               if g.exchangeable]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
