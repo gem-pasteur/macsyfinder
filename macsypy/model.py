@@ -120,9 +120,6 @@ class MetaModel(type):
             getattr(self, f"_{cat}_genes").append(gene)
         return setter
 
-    # @property
-    # def gene_category(cls):
-    #     return cls._gene_category
 
     def __call__(cls, *args, **kwargs):
         new_model_inst = super().__call__(*args, **kwargs)
