@@ -120,10 +120,15 @@ class MetaModel(type):
             getattr(self, f"_{cat}_genes").append(gene)
         return setter
 
+    # @property
+    # def gene_category(cls):
+    #     return cls._gene_category
+
     def __call__(cls, *args, **kwargs):
         new_model_inst = super().__call__(*args, **kwargs)
+        setattr(cls, "gene_category", property(lambda cls: cls._gene_category))
         for cat in cls._gene_category:
-            # set the private attribute of the instance
+            # set the private attribute of the Model instance
             setattr(new_model_inst, f"_{cat}_genes", [])
             # set the public property in the Model class
             setattr(cls, f"{cat}_genes", property(MetaModel.getter_maker(cat)))
@@ -314,7 +319,7 @@ class Model(metaclass=MetaModel):
     def filter(self, hits):
         """
         filter the hits according to this model. The hits must be link to a gene, belonging to the model
-        as mandatory, accessory or forbidden, or be an analog or homologs of one these genes
+        as mandatory, accessory , neutral or forbidden, or be an analog or homologs of one these genes
 
         :param hits: list of hits to filter
         :type hits: list of :class:`macsypy.report.Hit` object

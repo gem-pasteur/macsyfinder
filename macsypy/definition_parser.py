@@ -282,17 +282,12 @@ class DefinitionParser:
                 gene.add_homolog(self._parse_homolog(homolog_node, gene, model))
             for analog_node in gene_node.findall("analogs/gene"):
                 gene.add_analog(self._parse_analog(analog_node, gene, model))
-            if presence == 'mandatory':
-                model.add_mandatory_gene(gene)
-            elif presence == 'accessory':
-                model.add_accessory_gene(gene)
-            elif presence == 'forbidden':
-                model.add_forbidden_gene(gene)
-            elif presence == 'neutral':
-                model.add_neutral_gene(gene)
+
+            if presence in model.gene_category:
+                getattr(model, f'add_{presence}_gene')(gene)
             else:
-                msg = f"Invalid model '{model.name}' definition: presence value must be either\
- [mandatory, accessory, forbidden, neutral] not {presence}"
+                msg = f"Invalid model '{model.name}' definition: presence value must be either: " \
+                      f"""{', '.join(["'{}'".format(c) for c in model.gene_category])} not {presence}"""
                 _log.error(msg)
                 raise SyntaxError(msg)
 
