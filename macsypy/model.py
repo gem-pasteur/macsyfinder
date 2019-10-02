@@ -107,6 +107,9 @@ class MetaModel(type):
     def getter_maker(cat):
         """
         Create a property which allow to access to the gene corresponding of the cat of the model
+
+        :param str cat: the type of gene category to which we create the getter
+        :return: unbound method
         """
         def getter(self):
             return getattr(self, f"_{cat}_genes")
@@ -115,6 +118,9 @@ class MetaModel(type):
     def setter_maker(cat):
         """
         Create the method add_<cat>_gene which allow to add gene in the right category of the model
+
+        :param str cat: the type of gene category to which we create the mutator
+        :return: unbound method
         """
         def setter(self, gene):
             getattr(self, f"_{cat}_genes").append(gene)
@@ -124,8 +130,8 @@ class MetaModel(type):
     def __call__(cls, *args, **kwargs):
         new_model_inst = super().__call__(*args, **kwargs)
         setattr(cls, "gene_category", property(lambda cls: cls._gene_category))
-        for cat in cls._gene_category:
-            # set the private attribute of the Model instance
+        for cat in new_model_inst.gene_category:
+            # set the private attribute in the Model instance
             setattr(new_model_inst, f"_{cat}_genes", [])
             # set the public property in the Model class
             setattr(cls, f"{cat}_genes", property(MetaModel.getter_maker(cat)))
