@@ -130,75 +130,40 @@ class TestModel(MacsyTest):
         self.assertTrue(model.multi_loci)
         model_fqn = 'foo/False'
         inter_gene_max_space = 40
-        system = Model(model_fqn, inter_gene_max_space)
-        self.assertFalse(system.multi_loci)
+        model = Model(model_fqn, inter_gene_max_space)
+        self.assertFalse(model.multi_loci)
 
         self.clean_working_dir()
 
-        # self.args.multi_loci = 'foo/False'
-        # cfg = Config(MacsyDefaults(), self.args)
+        self.args.multi_loci = 'foo/False'
 
-        # system_fqn = 'foo/False'
-        # inter_gene_max_space = 40
-        # system = Model(cfg, system_fqn, inter_gene_max_space, multi_loci=False)
-        # self.assertTrue(system.multi_loci)
+        model_fqn = 'foo/False'
+        inter_gene_max_space = 40
+        model = Model(model_fqn, inter_gene_max_space, multi_loci=False)
+        self.assertFalse(model.multi_loci)
 
 
-    def test_add_mandatory_gene(self):
+    def test_accessor_mutator(self):
         model = Model("foo", 10)
         gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_mandatory_gene(gene)
-        self.assertEqual(model._mandatory_genes, [gene])
-        self.assertEqual(model._accessory_genes, [])
-        self.assertEqual(model._forbidden_genes, [])
-
-
-    def test_add_accessory_gene(self):
-        model = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_accessory_gene(gene)
-        self.assertEqual(model._accessory_genes, [gene])
-        self.assertEqual(model._mandatory_genes, [])
-        self.assertEqual(model._forbidden_genes, [])
-
-
-    def test_add_forbidden_gene(self):
-        model = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_forbidden_gene(gene)
-        self.assertEqual(model._forbidden_genes, [gene])
-        self.assertEqual(model._accessory_genes, [])
-        self.assertEqual(model._mandatory_genes, [])
-
-    def test_mandatory_genes(self):
-        model = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_mandatory_gene(gene)
-        self.assertEqual(model.mandatory_genes, [gene])
-
-
-    def test_accessory_genes(self):
-        model = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_accessory_gene(gene)
-        self.assertEqual(model.accessory_genes, [gene])
-
-
-    def test_forbidden_genes(self):
-        model = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        model.add_forbidden_gene(gene)
-        self.assertEqual(model.forbidden_genes, [gene])
-
+        categories = set(model.gene_category)
+        for cat in categories:
+            other_cat = categories - {cat}
+            getattr(model, f'add_{cat}_gene')(gene)
+            self.assertEqual(getattr(model, f'{cat}_genes'), [gene])
+            for other in other_cat:
+                self.assertEqual(getattr(model, f'{other}_genes'), [])
+            # don't forget to reset the model to avoid
+            # to accumulate genes
+            model = Model("foo", 10)
 
     def test_get_gene(self):
         model = Model("foo", 10)
         gene_name = 'sctJ_FLG'
         gene = Gene(self.profile_factory, gene_name, model, self.models_location)
-        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
-            model._mandatory_genes = []
-            model._accessory_genes = []
-            model._forbidden_genes = []
+        for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
+            for cat in model.gene_category:
+                setattr(model, f'_{cat}_genes', [])
             meth(gene)
             self.assertEqual(gene, model.get_gene(gene_name))
 
@@ -208,10 +173,9 @@ class TestModel(MacsyTest):
         gene_homolog = Gene(self.profile_factory, homolog_name, model, self.models_location)
         homolog = Homolog(gene_homolog, gene)
         gene.add_homolog(homolog)
-        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
-            model._mandatory_genes = []
-            model._accessory_genes = []
-            model._forbidden_genes = []
+        for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
+            for cat in model.gene_category:
+                setattr(model, f'_{cat}_genes', [])
             meth(gene)
             self.assertEqual(homolog, model.get_gene(homolog_name))
 
@@ -219,10 +183,9 @@ class TestModel(MacsyTest):
         gene_analog = Gene(self.profile_factory, analog_name, model, self.models_location)
         analog = Analog(gene_analog, gene)
         gene.add_analog(analog)
-        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
-            model._mandatory_genes = []
-            model._accessory_genes = []
-            model._forbidden_genes = []
+        for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
+            for cat in model.gene_category:
+                setattr(model, f'_{cat}_genes', [])
             meth(gene)
             self.assertEqual(analog, model.get_gene(analog_name))
 
@@ -235,10 +198,9 @@ class TestModel(MacsyTest):
         homolog = Homolog(gene_homolg, gene_ref)
         gene_ref.add_homolog(homolog)
 
-        for meth in (model.add_forbidden_gene, model.add_accessory_gene, model.add_mandatory_gene):
-            model._mandatory_genes = []
-            model._accessory_genes = []
-            model._forbidden_genes = []
+        for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
+            for cat in model.gene_category:
+                setattr(model, f'_{cat}_genes', [])
             meth(gene_ref)
             self.assertEqual(gene_ref, model.get_gene_ref(homolog))
         self.assertIsNone(model.get_gene_ref(gene_ref))
@@ -313,16 +275,21 @@ sctC
         sctN_FLG.add_analog(analog)
         sctC = Gene(self.profile_factory, 'sctC', model, self.models_location)
         model.add_forbidden_gene(sctC)
+        toto = Gene(self.profile_factory, 'toto', model, self.models_location)
+        model.add_neutral_gene(toto)
+        totote = Gene(self.profile_factory, 'totote', model, self.models_location)
+        homolog = Homolog(totote, toto)
+        toto.add_homolog(homolog)
 
         # without exhangeable attribute on any genes
         hit_to_keep = []
-        for gene in (sctJ_FLG, sctN_FLG, sctC):
+        for gene in (sctJ_FLG, sctN_FLG, sctC, toto):
             hit_to_keep.append(Hit(gene, model,
                                    f"PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
-        for gene in (sctJ, sctN):
+        for gene in (sctJ, sctN, totote):
             hit_to_filter_out.append(Hit(gene, model,
                                    "PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
@@ -333,11 +300,11 @@ sctC
 
         # with exhangeable attribute on gene sctJ_FLG, sctJ, sctN, sctN_FLG
         # so we should take in count the homologs and analogs
-        for g in (sctJ_FLG, sctJ, sctN_FLG, sctN):
+        for g in (sctJ_FLG, sctJ, sctN_FLG, sctN, toto):
             g._exchangeable = True
 
         hit_to_keep = []
-        for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC):
+        for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC, toto, totote):
             hit_to_keep.append(Hit(gene, model,
                                    "PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
