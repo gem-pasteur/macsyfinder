@@ -289,17 +289,17 @@ class Model(metaclass=MetaModel):
         :rtype: a :class:`macsypy.gene.Gene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
-        all_genes = [getattr(self, f"{cat}_genes") for cat in self._gene_category]
-        for g_list in all_genes:
-            for g in g_list:
-                if g.name == gene_name:
-                    return g
-                else:
-                    homolgs = g.get_homologs()
-                    analogs = g.get_analogs()
-                    for ex in homolgs + analogs:
-                        if ex.name == gene_name:
-                            return ex
+        # create a dict with genes from all categories
+        all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category] for g in sublist}
+        if gene_name in all_genes:
+            return all_genes[gene_name]
+        else:
+            for g in all_genes.values():
+                homolgs = g.get_homologs()
+                analogs = g.get_analogs()
+                for ex in homolgs + analogs:
+                    if ex.name == gene_name:
+                        return ex
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
