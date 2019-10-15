@@ -28,7 +28,7 @@ _log = logging.getLogger(__name__)
 from itertools import chain
 
 from .error import ModelInconsistencyError
-from .registries import split_def_name
+from .registries import DefinitionLocation
 
 
 class ModelBank:
@@ -170,8 +170,8 @@ class Model(metaclass=MetaModel):
         :param multi_loci: 
         :type multi_loci: boolean
         """
-        self.name = split_def_name(fqn)[-1]
         self.fqn = fqn
+        self._name = DefinitionLocation.split_fqn(self.fqn)[-1]
         self._inter_gene_max_space = inter_gene_max_space
         self._min_mandatory_genes_required = min_mandatory_genes_required
         self._min_genes_required = min_genes_required
@@ -228,6 +228,16 @@ class Model(metaclass=MetaModel):
         :rtype: boolean
         """
         return self.fqn == other.fqn
+
+
+    @property
+    def name(self):
+        return self._name
+
+
+    @property
+    def family_name(self):
+        return DefinitionLocation.root_name(self.fqn)
 
 
     @property
@@ -290,33 +300,18 @@ class Model(metaclass=MetaModel):
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
         # create a dict with genes from all categories
-        all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category] for g in sublist}
+        all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
+                     for g in sublist}
         if gene_name in all_genes:
             return all_genes[gene_name]
         else:
             for g in all_genes.values():
-                homolgs = g.get_homologs()
-                analogs = g.get_analogs()
+                homolgs = g.homologs
+                analogs = g.analogs
                 for ex in homolgs + analogs:
                     if ex.name == gene_name:
                         return ex
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
-
-
-    def get_gene_ref(self, gene):
-        """
-        :param gene: the gene to get the gene reference.
-        :type gene: a :class:`macsypy.gene.Gene` or macsypy.gene.Homolog` or macsypy.gene.Analog` object.
-        :return: The gene reference of the gene if exists (if the gene is an Homolog or an Analog),
-                 otherwise return None.
-        :rtype: :class:`macsypy.gene.Gene` object or None
-        :raise: KeyError if gene is not in the model
-        """
-        g = self.get_gene(gene.name)
-        try:
-            return g.gene_ref
-        except AttributeError:
-            return None
 
 
     def filter(self, hits):
@@ -330,7 +325,7 @@ class Model(metaclass=MetaModel):
         :rtype: list of :class:`macsypy.report.Hit` object
         """
         primary_genes = [g for g in chain(*[getattr(self, f"{cat}_genes") for cat in self._gene_category])]
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.analogs, g.homologs)
                               if g.exchangeable]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
