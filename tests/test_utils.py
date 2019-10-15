@@ -26,11 +26,10 @@ import os
 import shutil
 import tempfile
 import argparse
-import glob
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry, scan_models_dir
-from macsypy.utils import get_models_name_to_detect
+from macsypy.utils import get_def_to_detect
 from tests import MacsyTest
 
 
@@ -46,7 +45,8 @@ class TestUtils(MacsyTest):
         except:
             pass
 
-    def test_models_name_to_detect(self):
+
+    def test_get_def_to_detect(self):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
         cmd_args.models = [('set_1', 'T9SS', 'T3SS', 'T4SS_typeI')]
@@ -56,19 +56,20 @@ class TestUtils(MacsyTest):
         models_location = scan_models_dir(cmd_args.models_dir)
         for ml in models_location:
             registry.add(ml)
+
         # case where models are specified on command line
-        res = get_models_name_to_detect([('set_1', ['T9SS', 'T3SS', 'T4SS_typeI'])], registry)
-        exp = ['set_1/T9SS', 'set_1/T3SS', 'set_1/T4SS_typeI']
+        res = get_def_to_detect([('set_1', ['T9SS', 'T3SS', 'T4SS_typeI'])], registry)
+        model_loc = registry['set_1']
+        exp = [model_loc.get_definition(name) for name in ('set_1/T9SS', 'set_1/T3SS', 'set_1/T4SS_typeI')]
         self.assertListEqual(res, exp)
 
         # case we search all models
-        res = get_models_name_to_detect([('set_1', ['all'])], registry)
-        exp = ["set_1/{}".format(os.path.splitext(os.path.basename(name))[0]) for name in
-               glob.glob(os.path.join(config.models_dir(), 'set_1', 'definitions', '*.xml'))]
+        res = get_def_to_detect([('set_1', ['all'])], registry)
+        exp = model_loc.get_all_definitions()
         self.assertListEqual(res, exp)
 
         # case the models required does not exists
         with self.assertRaises(ValueError):
-            get_models_name_to_detect([('set_1', ['FOO', 'BAR'])], registry)
+            get_def_to_detect([('set_1', ['FOO', 'BAR'])], registry)
 
 
