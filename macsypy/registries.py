@@ -367,7 +367,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
         return self.__class__.root_name(self.fqn)
 
     def __hash__(self):
-        return id(self)
+        return hash((self.fqn, self.path))
 
     def add_subdefinition(self, subdefinition):
         """
