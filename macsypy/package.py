@@ -40,7 +40,6 @@ from .registries import ModelLocation, ModelRegistry
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank
-from .profile import ProfileFactory
 from .error import MacsydataError, MacsyDataLimitError
 
 
@@ -389,10 +388,9 @@ class Package:
         config = NoneConfig()
         config.models_dir = lambda: self.path
         try:
-            profile_factory = ProfileFactory(config)
             model_registry = ModelRegistry()
             model_registry.add(model_loc)
-            parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
+            parser = DefinitionParser(config, model_bank, gene_bank, model_registry)
             parser.parse([def_loc.fqn for def_loc in all_def])
         finally:
             del config.models_dir
