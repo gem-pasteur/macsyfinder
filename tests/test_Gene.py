@@ -93,6 +93,18 @@ class TestModelGene(MacsyTest):
         except:
             pass
 
+    def test_hash(self):
+        model_foo = Model("foo", 10)
+        gene_name = 'sctJ_FLG'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene = CoreGene(gene_name, model_foo.family_name, profile)
+        gene_1 = ModelGene(c_gene, model_foo)
+        gene_2 = ModelGene(c_gene, model_foo)
+
+        self.assertTrue(isinstance(hash(gene_1), int))
+        self.assertEqual(hash(gene_1), hash(gene_1))
+        self.assertNotEqual(hash(gene_1), hash(gene_2))
+
     def test_unknown_attribute(self):
         model_foo = Model("foo", 10)
         gene_name = 'sctJ_FLG'
@@ -113,7 +125,7 @@ class TestModelGene(MacsyTest):
         gene_name = 'sctJ'
         profile = self.model_location.get_profile(gene_name)
         c_gene_ref = CoreGene(gene_name, model_foo.family_name, profile)
-        gene_ref = ModelGene(c_gene_ref, 'sctJ', model_foo)
+        gene_ref = ModelGene(c_gene_ref,  model_foo)
         homolog = Homolog(gene, gene_ref)
         gene.add_homolog(homolog)
         self.assertEqual(len(gene.homologs), 1)
