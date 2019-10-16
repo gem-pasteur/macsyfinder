@@ -28,7 +28,7 @@ import logging
 _log = logging.getLogger(__name__)
 
 from .model import Model
-from .gene import Gene
+from .gene import CoreGene, ModelGene
 from .gene import Homolog, Analog
 from .registries import split_def_name, join_def_path
 from .error import MacsypyError, ModelInconsistencyError
@@ -39,7 +39,7 @@ class DefinitionParser:
     Build a Model instance from the corresponding model definition described in the XML file.
     """
 
-    def __init__(self, cfg, model_bank, gene_bank, profile_factory, model_registry):
+    def __init__(self, cfg, model_bank, gene_bank, model_registry):
         """
         :param cfg: the configuration object of this run
         :type cfg: :class:`macsypy.config.Config` object
@@ -51,11 +51,37 @@ class DefinitionParser:
         self.cfg = cfg
         self.model_bank = model_bank
         self.gene_bank = gene_bank
-        self.profile_factory = profile_factory
         self.model_registry = model_registry
 
 
-    def definition_to_parse(self, def_2_parse, parsed_models):
+    def parse(self, models_2_detect):
+        """
+        Parse models definition in XML format to build the corresponding Model objects,
+        and add them to the model factory after checking its consistency.
+        To get the model ask it to model_bank
+
+        :param models_2_detect: a list with the fully qualified names of the models to parse
+                               (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
+        :type models_2_detect: list of string
+        """
+        models_2_check = []
+        _log.info("Models Parsing")
+        for def_loc in models_2_detect:
+            path = def_loc.path
+            if path is None:
+                raise MacsypyError(f"{path}: No such model definitions")
+            model_node = self._get_model_node(def_loc)
+            model = self._create_model(def_loc, model_node)
+            self.model_bank.add_model(model)
+            model_location = self.model_registry[def_loc.family_name]
+            self._fill_gene_bank(model_node, model_location, def_loc)
+
+            self._parse_genes(model, model_node)
+            models_2_check.append(model)
+        self.check_consistency(models_2_check)
+
+
+    def _get_model_node(self, def_loc):
         """
         :param def_2_parse: the set of definitions fqn to parse ([TXSS/T6SS TXSS/T3SS, ...])
         :type def_2_parse: set of strings {string, ...}
@@ -66,108 +92,87 @@ class DefinitionParser:
         :rtype: {string, ...}
         :raises: MacsypyError when Model definition is not found.
         """
-        diff_def = parsed_models ^ def_2_parse
-        if not diff_def:
-            return def_2_parse
-        else:            
-            for def_fqn in diff_def:
-                parsed_models.add(def_fqn)
-                def_path = split_def_name(def_fqn)
-                model_name = def_path[0]
-                try:
-                    model_location = self.model_registry[model_name]
-                    definition_location = model_location.get_definition(def_fqn)
-                except KeyError:
-                    raise MacsypyError(f"{model_name}: No such Models in {self.cfg.models_dir()}")
-                except ValueError:
-                    raise MacsypyError(f"{def_fqn}: No such definition")
+        path = def_loc.path
+        try:
+            tree = Et.parse(path)
+            model_node = tree.getroot()
 
-                path = definition_location.path
-                try:
-                    tree = Et.parse(path)
-                    root = tree.getroot()
-                    if root.tag == 'system':
-                        _log.warning(f"'system' is deprecated as xml root. "
-                                     f"Migrate {os.path.basename(path)} with macsydef_1to2 script.")
-                    # get all genes which are define in an other model
-                    # and add these models to the list of models to parse
-                    model_ref = root.findall(".//gene[@model_ref]")
-                    sys_ref = root.findall(".//gene[@system_ref]")
-                    if sys_ref:
-                        _log.warning(f"'system_ref' is deprecated. "
-                                     f"Migrate {os.path.basename(path)} with macsydef_1to2 script.")
-                        model_ref += sys_ref
-                    for gene_node in model_ref:
-                        def_ref = gene_node.get("model_ref") or gene_node.get("system_ref")
-                        def_ref_fqn = def_path[:-1]
-                        def_ref_fqn.append(def_ref)
-                        def_ref_fqn = join_def_path(*def_ref_fqn)
-                        def_2_parse.add(def_ref_fqn)
-                except Exception as err:
-                    msg = f"unable to parse model definition \"{def_fqn}\" : {err}"
-                    _log.critical(msg)
-                    raise MacsypyError(msg)
-            return self.definition_to_parse(def_2_parse, parsed_models)
+            vers = model_node.get('vers')
+            if vers != '2.0':
+                msg = f"The model defintion {os.path.basename(path)} is not versioned. " \
+                      f"Please update your model."
+                raise ModelInconsistencyError(msg)
+
+            if model_node.tag == 'system':
+                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
+                raise ModelInconsistencyError(msg)
+
+            # get all genes which are define in an other model
+            # and add these models to the list of models to parse
+            sys_ref = model_node.findall(".//gene[@system_ref]")
+            if sys_ref:
+                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
+                raise ModelInconsistencyError(msg)
+        except Exception as err:
+            msg = f"unable to parse model definition '{def_loc.fqn}' : {err}"
+            _log.critical(msg)
+            raise MacsypyError(msg) from None
+        return model_node
 
 
-    def _create_model(self, def_fqn, def_node):
+    def _create_model(self, def_loc, model_node):
         """
-        :param def_fqn: the fully qualified name of the definition.\
-          This name must match the path to a definition file.
-        :type def_fqn: string
-        :param def_node: the node corresponding to the model.
-        :type def_node: :class"`Et.ElementTree` object.
+        :param def_loc: the definition location to parse.
+        :type def_fqn: :class:`macsypy.registries.DefinitionLocation` object
+        :param model_node: the node corresponding to the model.
+        :type model_node: :class"`Et.ElementTree` object.
 
-        :return: the model corresponding to the definition fully qualified name.
+        :return: the model corresponding to the definition location.
         :rtype: :class:`macsypy.model.Model` object.
         """
-        model_name = split_def_name(def_fqn)[0]
-        model_location = self.model_registry[model_name]
-        definition_location = model_location.get_definition(def_fqn)
-        path = definition_location.path
 
-        inter_gene_max_space = def_node.get('inter_gene_max_space')
+        inter_gene_max_space = model_node.get('inter_gene_max_space')
         if inter_gene_max_space is None:
-            msg = f"Invalid model definition ({path}): inter_gene_max_space must be defined"
+            msg = f"Invalid model definition ({def_loc.path}): inter_gene_max_space must be defined"
             _log.critical(msg)
             raise SyntaxError(msg)
         try:
             inter_gene_max_space = int(inter_gene_max_space)
         except ValueError:
-            msg = f"Invalid model definition ({path}): " \
+            msg = f"Invalid model definition ({def_loc.path}): " \
                   f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
             _log.critical(msg)
             raise SyntaxError(msg)
-        min_mandatory_genes_required = def_node.get('min_mandatory_genes_required')
+        min_mandatory_genes_required = model_node.get('min_mandatory_genes_required')
         if min_mandatory_genes_required is not None:
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
             except ValueError:
-                msg = f"Invalid model definition ({path}): " \
+                msg = f"Invalid model definition ({def_loc.path}): " \
                       f"min_mandatory_genes_required must be an integer: {min_mandatory_genes_required}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        min_genes_required = def_node.get('min_genes_required')
+        min_genes_required = model_node.get('min_genes_required')
         if min_genes_required is not None:
             try:
                 min_genes_required = int(min_genes_required)
             except ValueError:
-                msg = f"Invalid model definition ({path}):\
+                msg = f"Invalid model definition ({def_loc.path}):\
  min_genes_required must be an integer: {min_genes_required}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        max_nb_genes = def_node.get('max_nb_genes')
+        max_nb_genes = model_node.get('max_nb_genes')
         if max_nb_genes is not None:
             try:
                 max_nb_genes = int(max_nb_genes)
             except ValueError:
-                msg = f"Invalid model definition ({path}): max_nb_genes must be an integer: {max_nb_genes}"
+                msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        multi_loci = def_node.get('multi_loci')
+        multi_loci = model_node.get('multi_loci')
         if multi_loci is not None:
             multi_loci = multi_loci.lower() in ("1", "true")
         else:
@@ -175,36 +180,49 @@ class DefinitionParser:
 
         # overload value get from xml
         # by these read from configuration (file or command line)
-        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(def_fqn)
+        cfg_inter_gene_max_space = self.cfg.inter_gene_max_space(def_loc.fqn)
         if cfg_inter_gene_max_space is not None:
             inter_gene_max_space = cfg_inter_gene_max_space
 
-        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(def_fqn)
+        cfg_min_mandatory_genes_required = self.cfg.min_mandatory_genes_required(def_loc.fqn)
         if cfg_min_mandatory_genes_required is not None:
             min_mandatory_genes_required = cfg_min_mandatory_genes_required
 
-        cfg_min_genes_required = self.cfg.min_genes_required(def_fqn)
+        cfg_min_genes_required = self.cfg.min_genes_required(def_loc.fqn)
         if cfg_min_genes_required is not None:
             min_genes_required = cfg_min_genes_required
 
-        cfg_max_nb_genes = self.cfg.max_nb_genes(def_fqn)
+        cfg_max_nb_genes = self.cfg.max_nb_genes(def_loc.fqn)
         if cfg_max_nb_genes:
             max_nb_genes = cfg_max_nb_genes
 
-        cfg_multi_loci = self.cfg.multi_loci(def_fqn)
+        cfg_multi_loci = self.cfg.multi_loci(def_loc.fqn)
         if cfg_multi_loci:
             multi_loci = cfg_multi_loci
 
-        model = Model(def_fqn,
+        model = Model(def_loc.fqn,
                       inter_gene_max_space,
-                      min_mandatory_genes_required,
-                      min_genes_required,
-                      max_nb_genes,
-                      multi_loci)
+                      min_mandatory_genes_required=min_mandatory_genes_required,
+                      min_genes_required=min_genes_required,
+                      max_nb_genes=max_nb_genes,
+                      multi_loci=multi_loci)
         return model
 
 
-    def _create_genes(self, model, def_node):
+    def _fill_gene_bank(self, model_node, model_location, def_loc):
+        gene_nodes = model_node.findall(".//gene")
+        for gene_node in gene_nodes:
+            gene_name = gene_node.get("name")
+            if not gene_name:
+                msg = f"Invalid model definition '{def_loc.fqn}': gene without name"
+                _log.error(msg)
+                raise SyntaxError(msg)
+            # self.gene_bank.add_new_gene if we add twice same (model_location, gene_name)
+            # the second time is NOOP
+            self.gene_bank.add_new_gene(model_location, gene_name)
+
+
+    def _parse_genes(self, model, model_node):
         """
         Create genes belonging to the models. Be careful, the returned genes have not their homologs/analogs set yet.
         all genes belonging to an other model (model_ref) are ignored
@@ -216,29 +234,18 @@ class DefinitionParser:
         :return: a list of the genes belonging to the model.
         :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
-        genes = []
-        created_genes = set()
-        gene_nodes = def_node.findall(".//gene")
-        gene_nodes = [gene_node for gene_node in gene_nodes if
-                      (gene_node.get("model_ref") or gene_node.get("system_ref")) is None]
-        for node in gene_nodes:
-            name = node.get("name")
-            if name in created_genes:
-                continue
-            if not name:
-                msg = f"Invalid model definition '{model.name}': gene without a name"
-                _log.error(msg)
-                raise SyntaxError(msg)
-
+        gene_nodes = model_node.findall("./gene")
+        for gene_node in gene_nodes:
+            name = gene_node.get("name")
             attrs = {}
             for attr in ('loner', 'exchangeable', 'multi_system'):
-                val = node.get(attr)
+                val = gene_node.get(attr)
                 if val in ("1", "true", "True"):
                     val = True
                 elif val in (None, "0", "false", "False"):
                     val = False
                 attrs[attr] = val
-            inter_gene_max_space = node.get("inter_gene_max_space")
+            inter_gene_max_space = gene_node.get("inter_gene_max_space")
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
             except ValueError:
@@ -250,41 +257,20 @@ class DefinitionParser:
                 pass
             else:
                 attrs['inter_gene_max_space'] = inter_gene_max_space
-            model_name = split_def_name(model.fqn)[0]
-            model_location = self.model_registry[model_name]
-            new_gene = Gene(self.profile_factory, name, model, model_location, **attrs)
-            genes.append(new_gene)
-            created_genes.add(new_gene.name)
-        return genes
+            new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
 
+            for homolog_node in gene_node.findall("homologs/gene"):
+                new_gene.add_homolog(self._parse_homolog(homolog_node, new_gene, model))
+            for analog_node in gene_node.findall("analogs/gene"):
+                new_gene.add_analog(self._parse_analog(analog_node, new_gene, model))
 
-    def _fill(self, model, def_node):
-        """
-        Fill the model with genes found in this model definition. Add homologs to the genes if necessary.
-        
-        :param model: the model to fill
-        :type model: :class:`macsypy.model.Model` object
-        :param def_node: the "node" in the XML hierarchy corresponding to the model
-        :type def_node: :class"`Et.ElementTree` object
-        """
-        genes_nodes = def_node.findall("gene")
-        for gene_node in genes_nodes:
             presence = gene_node.get("presence")
             if not presence:
-                msg = f"Invalid model definition '{model.name}': gene without presence"
+                msg = f"Invalid model definition '{model.fqn}': gene '{name}' without presence"
                 _log.error(msg)
                 raise SyntaxError(msg)
-            gene_name = gene_node.get('name')
-            model_name = split_def_name(model.fqn)[0]
-            key = (model_name, gene_name)
-            gene = self.gene_bank[key]
-            for homolog_node in gene_node.findall("homologs/gene"):
-                gene.add_homolog(self._parse_homolog(homolog_node, gene, model))
-            for analog_node in gene_node.findall("analogs/gene"):
-                gene.add_analog(self._parse_analog(analog_node, gene, model))
-
             if presence in model.gene_category:
-                getattr(model, f'add_{presence}_gene')(gene)
+                getattr(model, f'add_{presence}_gene')(new_gene)
             else:
                 msg = f"Invalid model '{model.name}' definition: presence value must be either: " \
                       f"""{', '.join(["'{}'".format(c) for c in model.gene_category])} not {presence}"""
@@ -307,26 +293,11 @@ class DefinitionParser:
         :raise SyntaxError: if the model definition does not follow the grammar.
         """
         name = node.get("name")
-        if not name:
-            msg = "Invalid model definition: gene without name"
-            _log.error(msg)
-            raise SyntaxError(msg)
-        try:
-            model_name = split_def_name(curr_model.fqn)[0]
-            key = (model_name, name)
-            gene = self.gene_bank[key]
-        except KeyError:
-            msg = f"Invalid model definition '{curr_model.name}': The gene '{name}' described as homolog of " \
-                  f"'{gene_ref.name}' in model '{curr_model.name}' is not in the 'GeneBank' gene factory"
-            _log.critical(msg)
-            raise ModelInconsistencyError(msg)
-
-        model_ref = node.get("model_ref") or node.get("system_ref")
-        if model_ref is not None and model_ref != gene.model.name:
-            msg = f"Inconsistency in models definitions: the gene '{name}' described as homolog of '{gene_ref.name}' " \
-                  f"with model_ref '{model_ref}' has an other model in bank ({gene.model.name})"
-            _log.critical(msg)
-            raise ModelInconsistencyError(msg)
+        model_name = split_def_name(curr_model.fqn)[0]
+        key = (model_name, name)
+        # It cannot fail
+        # all genes in the xml are created and insert in GeneBank before this step
+        gene = self.gene_bank[key]
         homolog = Homolog(gene, gene_ref)
         for homolog_node in node.findall("homologs/gene"):
             h2 = self._parse_homolog(homolog_node, gene, curr_model)
@@ -433,61 +404,5 @@ class DefinitionParser:
             # the following test
             # model.min_mandatory_genes_required <= model.min_genes_required
             # is done during the model.__init__
-
-
-    def parse(self, models_2_detect):
-        """
-        Parse models definition in XML format to build the corresponding Model objects,
-        and add them to the model factory after checking its consistency.
-        To get the model ask it to model_bank
-
-        :param models_2_detect: a list with the fully qualified names of the models to parse
-                               (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
-        :type models_2_detect: list of string
-        """
-        # one opening/closing file / definition
-        parsed_defs = set()
-        models_2_detect = {s for s in models_2_detect}
-        # one opening /closing file /definition
-        defs_2_parse = self.definition_to_parse(models_2_detect, parsed_defs)
-        msg = "\nModel(s) to parse (recursive inclusion of 'model_ref'):"
-        
-        for s in defs_2_parse:
-            msg += f"\n\t-{s}"
-        _log.info(msg)
-        
-        for def_fqn in defs_2_parse:
-            model_name = split_def_name(def_fqn)[0]
-            model_location = self.model_registry[model_name]
-            definition_location = model_location.get_definition(def_fqn)
-            path = definition_location.path
-            if path is None:
-                raise MacsypyError(f"{path}: No such model definitions")
-            tree = Et.parse(path)
-            model_node = tree.getroot()
-            model = self._create_model(def_fqn, model_node)  # one opening&closing file /definition
-            self.model_bank.add_model(model)
-            genes = self._create_genes(model, model_node)
-            for g in genes:
-                try:
-                    self.gene_bank.add_gene(g)
-                except KeyError:
-                    msg = f"gene '{g.name}' define in '{def_fqn}' model is already defined in an another model"
-                    _log.error(msg)
-                    raise MacsypyError(msg)
-
-        # Now, all model definition related (e.g. via model_ref) to the one to detect are filled appropriately.
-        for def_fqn in defs_2_parse:
-            model = self.model_bank[def_fqn]
-            model_name = split_def_name(def_fqn)[0]
-            model_location = self.model_registry[model_name]
-            definition = model_location.get_definition(def_fqn)
-            path = definition.path
-
-            tree = Et.parse(path)
-            def_node = tree.getroot()
-            self._fill(model, def_node)
-        model_2_check = {self.model_bank[s] for s in models_2_detect}
-        self.check_consistency(model_2_check)
 
 

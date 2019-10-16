@@ -30,8 +30,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
-from macsypy.gene import GeneBank
-from macsypy.profile import ProfileFactory
+from macsypy.gene import GeneBank, CoreGene, ModelGene
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
@@ -51,13 +50,12 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(defaults, self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+                                       self.model_registry)
         
         
     def tearDown(self):
@@ -66,168 +64,145 @@ class TestModelParser(MacsyTest):
         except:
             pass
 
-    def test_defintion_to_parse(self):
-        parsed = set()
-        models_2_detect = set()
-        models_2_detect.add('foo/model_1')
-        def_2_parse = self.parser.definition_to_parse(models_2_detect, parsed)
-        self.assertSetEqual(def_2_parse, {s for s in ('foo/model_1', 'foo/model_2')})
-        parsed = set()
-        models_2_detect = set()
-        definition_name = 'foo/nimportnaoik'
-        models_2_detect.add(definition_name)
-        with self.assertRaises(MacsypyError) as context:
-            with self.catch_log():
-                self.parser.definition_to_parse(models_2_detect, parsed)
-        self.assertEqual(str(context.exception), f'{definition_name}: No such definition')
-
-        parsed = set()
-        models_2_detect = set()
-        model_name = 'bar'
-        definition = f'{model_name}/nimportnaoik'
-        models_2_detect.add(definition)
-        with self.assertRaises(MacsypyError) as context:
-            with self.catch_log():
-                self.parser.definition_to_parse(models_2_detect, parsed)
-        self.assertEqual(str(context.exception), f'{model_name}: No such Models in {self.cfg.models_dir()}')
-
-        parsed = set()
-        models_2_detect = set()
-        model_name = 'foo'
-        def_name = 'not_xml'
-        fqn = f'{model_name}/{def_name}'
-        models_2_detect.add(fqn)
-        with self.assertRaises(MacsypyError) as context:
-            with self.catch_log():
-                self.parser.definition_to_parse(models_2_detect, parsed)
-        self.assertTrue(str(context.exception).startswith(f'unable to parse model definition "{fqn}" :'))
+    # def test_defintion_to_parse(self):
+    #     parsed = set()
+    #     models_2_detect = set()
+    #     models_2_detect.add('foo/model_1')
+    #     def_2_parse = self.parser.definition_to_parse(models_2_detect, parsed)
+    #     self.assertSetEqual(def_2_parse, {s for s in ('foo/model_1', 'foo/model_2')})
+    #     parsed = set()
+    #     models_2_detect = set()
+    #     definition_name = 'foo/nimportnaoik'
+    #     models_2_detect.add(definition_name)
+    #     with self.assertRaises(MacsypyError) as context:
+    #         with self.catch_log():
+    #             self.parser.definition_to_parse(models_2_detect, parsed)
+    #     self.assertEqual(str(context.exception), f'{definition_name}: No such definition')
+    #
+    #     parsed = set()
+    #     models_2_detect = set()
+    #     model_name = 'bar'
+    #     definition = f'{model_name}/nimportnaoik'
+    #     models_2_detect.add(definition)
+    #     with self.assertRaises(MacsypyError) as context:
+    #         with self.catch_log():
+    #             self.parser.definition_to_parse(models_2_detect, parsed)
+    #     self.assertEqual(str(context.exception), f'{model_name}: No such Models in {self.cfg.models_dir()}')
+    #
+    #     parsed = set()
+    #     models_2_detect = set()
+    #     model_name = 'foo'
+    #     def_name = 'not_xml'
+    #     fqn = f'{model_name}/{def_name}'
+    #     models_2_detect.add(fqn)
+    #     with self.assertRaises(MacsypyError) as context:
+    #         with self.catch_log():
+    #             self.parser.definition_to_parse(models_2_detect, parsed)
+    #     self.assertTrue(str(context.exception).startswith(f'unable to parse model definition "{fqn}" :'))
 
 
     def test_parse_with_homologs(self):
         def_2_parse = set()
         def_2_parse.add('foo/model_1')
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition('foo/model_1')]
         self.parser.parse(models_2_detect)
-        self.assertEqual(len(self.model_bank), 2)
-
-        m2 = self.model_bank['foo/model_2']
-        self.assertEqual(m2.name, 'model_2')
-        self.assertEqual(m2.fqn, 'foo/model_2')
+        self.assertEqual(len(self.model_bank), 1)
 
         m1 = self.model_bank['foo/model_1']
         self.assertEqual(m1.name, 'model_1')
         self.assertEqual(m1.fqn, 'foo/model_1')
         self.assertEqual(m1.inter_gene_max_space, 20)
-        self.assertEqual(m1.min_mandatory_genes_required, 4)
-        self.assertEqual(m1.min_genes_required, 6)
+        self.assertEqual(m1.min_mandatory_genes_required, 2)
+        self.assertEqual(m1.min_genes_required, 4)
         self.assertTrue(m1.multi_loci)
-        self.assertFalse(m2.multi_loci)
-        self.assertIsNone(m1.max_nb_genes)
-        self.assertEqual(m2.max_nb_genes, 1)
-        self.assertEqual(len(m1.mandatory_genes), 5)
-        mandatory_genes_name = [g.name for g in m1.mandatory_genes]
-        mandatory_genes_name.sort()
-        theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
-        theoric_list.sort()
+
+        self.assertEqual(len(m1.mandatory_genes), 2)
+        mandatory_genes_name = sorted([g.name for g in m1.mandatory_genes])
+        theoric_list = sorted(["sctJ_FLG", "sctN_FLG"])
         self.assertListEqual(mandatory_genes_name, theoric_list)
+
+        self.assertEqual(len(m1.accessory_genes), 2)
+        accessory_genes_name = sorted([g.name for g in m1.accessory_genes])
+        theoric_list = sorted(["flgB", "flgC"])
+        self.assertListEqual(accessory_genes_name, theoric_list)
+
+        self.assertEqual(len(m1.neutral_genes), 2)
+        neutral_genes_name = sorted([g.name for g in m1.neutral_genes])
+        theoric_list = sorted(["fliE", "tadZ"])
+        self.assertListEqual(neutral_genes_name, theoric_list)
+
+        self.assertEqual(len(m1.forbidden_genes), 1)
+        forbidden_genes_name = sorted([g.name for g in m1.forbidden_genes])
+        theoric_list = sorted(["sctC"])
+        self.assertListEqual(forbidden_genes_name, theoric_list)
+
         sctJ_FLG = [g for g in m1.mandatory_genes if g.name == 'sctJ_FLG'][0]
-        sctJ_FLG_homologs = sctJ_FLG.get_homologs()
+        sctJ_FLG_homologs = sctJ_FLG.homologs
         self.assertEqual(len(sctJ_FLG_homologs), 1)
         self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
-        sctJ = m2.get_gene('sctJ')
-        self.assertTrue(sctJ.exchangeable)
-        tadZ = m2.get_gene('tadZ')
-        self.assertFalse(tadZ.exchangeable)
-        self.assertEqual(sctJ_FLG_homologs[0].model, self.model_bank['foo/model_2'])
-        self.assertEqual(len(m1.accessory_genes), 1)
-        self.assertEqual(m1.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(m1.accessory_genes[0].model, self.model_bank['foo/model_2'])
+        self.assertFalse(sctJ_FLG.exchangeable)
+        sctN_FLG = m1.get_gene('sctN_FLG')
+        self.assertTrue(sctN_FLG.exchangeable)
+
         self.assertEqual(len(m1.forbidden_genes), 1)
         self.assertEqual(m1.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(m1.forbidden_genes[0].model, self.model_bank['foo/model_2'])
 
 
-    def test_parse_with_analogs(self):
-        def_2_parse = set()
-        def_2_parse.add('foo/model_3')
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
-        self.parser.parse(models_2_detect)
-
-        self.assertEqual(len(self.model_bank), 2)
-
-        m4 = self.model_bank['foo/model_4']
-        self.assertEqual(m4.name, 'model_4')
-        self.assertEqual(m4.fqn, 'foo/model_4')
-
-        m3 = self.model_bank['foo/model_3']
-        self.assertEqual(m3.name, 'model_3')
-        self.assertEqual(m3.fqn, 'foo/model_3')
-        self.assertEqual(m3.inter_gene_max_space, 20)
-        self.assertEqual(m3.min_mandatory_genes_required, 4)
-        self.assertEqual(m3.min_genes_required, 6)
-        self.assertTrue(m3.multi_loci)
-        self.assertFalse(m4.multi_loci)
-        self.assertIsNone(m3.max_nb_genes)
-        self.assertEqual(m4.max_nb_genes, 1)
-        self.assertEqual(len(m3.mandatory_genes), 5)
-        mandatory_genes_name = [g.name for g in m3.mandatory_genes]
-        mandatory_genes_name.sort()
-        theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
-        theoric_list.sort()
-        self.assertListEqual(mandatory_genes_name, theoric_list)
-        sctJ_FLG = [g for g in m3.mandatory_genes if g.name == 'sctJ_FLG'][0]
-        sctJ_FLG_homologs = sctJ_FLG.get_homologs()
-        self.assertListEqual(sctJ_FLG_homologs, [])
-        sctJ_FLG_analogs = sctJ_FLG.get_analogs()
-        self.assertEqual(len(sctJ_FLG_analogs), 1)
-        self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
-        self.assertEqual(sctJ_FLG_analogs[0].model, self.model_bank['foo/model_4'])
-        self.assertEqual(len(m3.accessory_genes), 1)
-        self.assertEqual(m3.accessory_genes[0].name, 'tadZ')
-        self.assertEqual(m3.accessory_genes[0].model, self.model_bank['foo/model_4'])
-        self.assertEqual(len(m3.forbidden_genes), 1)
-        self.assertEqual(m3.forbidden_genes[0].name, 'sctC')
-        self.assertEqual(m3.forbidden_genes[0].model, self.model_bank['foo/model_4'])
-
-
-    def test_with_neutral(self):
-        def_2_parse = set()
-        def_2_parse.add('neutral/model_1')
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
-        self.parser.parse(models_2_detect)
-        self.assertEqual(len(self.model_bank), 1)
-        m1 = self.model_bank['neutral/model_1']
-        self.assertEqual(m1.name, 'model_1')
-        self.assertEqual(m1.fqn, 'neutral/model_1')
-        self.assertEqual(len(m1.mandatory_genes), 5)
-        mandatory_genes_name = [g.name for g in m1.mandatory_genes]
-        mandatory_genes_name.sort()
-
-        theoric_list = ["MSH_mshA", "MSH_mshE", "MSH_mshG", "MSH_mshL", "MSH_mshM"]
-        theoric_list.sort()
-        self.assertListEqual(mandatory_genes_name, theoric_list)
-        self.assertEqual(len(m1.accessory_genes), 1)
-        self.assertEqual(len(m1.neutral_genes), 11)
-        neutral_genes_name = [g.name for g in m1.neutral_genes]
-        self.assertListEqual(neutral_genes_name, sorted(['MSH_mshB', 'MSH_mshC', 'MSH_mshD', 'MSH_mshF', 'MSH_mshI',
-                                                         'MSH_mshI2', 'MSH_mshJ', 'MSH_mshK', 'MSH_mshN', 'MSH_mshO',
-                                                         'MSH_mshQ']))
+#     def test_parse_with_analogs(self):
+#         def_2_parse = set()
+#         def_2_parse.add('foo/model_3')
+#         parsed = set()
+#         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+#         self.parser.parse(models_2_detect)
+#
+#         self.assertEqual(len(self.model_bank), 2)
+#
+#         m4 = self.model_bank['foo/model_4']
+#         self.assertEqual(m4.name, 'model_4')
+#         self.assertEqual(m4.fqn, 'foo/model_4')
+#
+#         m3 = self.model_bank['foo/model_3']
+#         self.assertEqual(m3.name, 'model_3')
+#         self.assertEqual(m3.fqn, 'foo/model_3')
+#         self.assertEqual(m3.inter_gene_max_space, 20)
+#         self.assertEqual(m3.min_mandatory_genes_required, 4)
+#         self.assertEqual(m3.min_genes_required, 6)
+#         self.assertTrue(m3.multi_loci)
+#         self.assertFalse(m4.multi_loci)
+#         self.assertIsNone(m3.max_nb_genes)
+#         self.assertEqual(m4.max_nb_genes, 1)
+#         self.assertEqual(len(m3.mandatory_genes), 5)
+#         mandatory_genes_name = [g.name for g in m3.mandatory_genes]
+#         mandatory_genes_name.sort()
+#         theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
+#         theoric_list.sort()
+#         self.assertListEqual(mandatory_genes_name, theoric_list)
+#         sctJ_FLG = [g for g in m3.mandatory_genes if g.name == 'sctJ_FLG'][0]
+#         sctJ_FLG_homologs = sctJ_FLG.get_homologs()
+#         self.assertListEqual(sctJ_FLG_homologs, [])
+#         sctJ_FLG_analogs = sctJ_FLG.get_analogs()
+#         self.assertEqual(len(sctJ_FLG_analogs), 1)
+#         self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
+#         self.assertEqual(sctJ_FLG_analogs[0].model, self.model_bank['foo/model_4'])
+#         self.assertEqual(len(m3.accessory_genes), 1)
+#         self.assertEqual(m3.accessory_genes[0].name, 'tadZ')
+#         self.assertEqual(m3.accessory_genes[0].model, self.model_bank['foo/model_4'])
+#         self.assertEqual(len(m3.forbidden_genes), 1)
+#         self.assertEqual(m3.forbidden_genes[0].name, 'sctC')
+#         self.assertEqual(m3.forbidden_genes[0].model, self.model_bank['foo/model_4'])
 
 
     def test_wo_presence(self):
-        model_2_detect = ['foo/fail_wo_presence']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/fail_wo_presence')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "Invalid model definition 'fail_wo_presence': gene without presence")
+                         "Invalid model definition 'foo/fail_wo_presence': gene 'sctN_FLG' without presence")
 
 
     def test_invalid_presence(self):
-        model_2_detect = ['foo/fail_invalid_presence']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/fail_invalid_presence')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
@@ -236,65 +211,45 @@ class TestModelParser(MacsyTest):
                          "'mandatory', 'accessory', 'neutral', 'forbidden' not foo_bar")
 
     def test_gene_no_name(self):
-        model_2_detect = ['foo/gene_no_name']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/gene_no_name')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "Invalid model definition 'gene_no_name': gene without a name")
+                         "Invalid model definition 'foo/gene_no_name': gene without name")
 
     def test_invalid_homolog(self):
-        model_2_detect = ['foo/invalid_homolog']
-        with self.assertRaises(ModelInconsistencyError) as context:
-            with self.catch_log():
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/invalid_homolog')]
+        with self.assertRaises(MacsypyError) as context:
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "Invalid model definition 'invalid_homolog': The gene 'foo_bar' described as "
-                         "homolog of 'gspD' in model 'invalid_homolog' is not in the 'GeneBank' gene factory")
+                         "The gene foo/foo_bar have no profile.")
 
     def test_invalid_homolog_2(self):
-        model_2_detect = ['foo/invalid_homolog_2']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/invalid_homolog_2')]
         with self.assertRaises(SyntaxError) as ctx:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
-        self.assertEqual(str(ctx.exception), "Invalid model definition: gene without name")
+        self.assertEqual(str(ctx.exception), "Invalid model definition 'foo/invalid_homolog_2': gene without name")
 
-    def test_invalid_analog(self):
-        model_2_detect = ['foo/invalid_analog']
-        with self.assertRaises(ModelInconsistencyError) as context:
-            with self.catch_log():
-                self.parser.parse(model_2_detect)
-        self.assertEqual(str(context.exception),
-                         "Invalid model definition 'invalid_analog': The gene 'foo_bar' described as "
-                         "analog of 'gspD' in model 'invalid_analog' is not in the 'GeneBank' gene factory")
-
-    def test_invalid_analog_2(self):
-        model_2_detect = ['foo/invalid_analog_2']
-        with self.assertRaises(SyntaxError) as ctx:
-            with self.catch_log():
-                self.parser.parse(model_2_detect)
-        self.assertEqual(str(ctx.exception), "Invalid model definition 'invalid_analog_2': gene without name")
-
-    def test_bad_homolog_sys_ref(self):
-        model_2_detect = ['foo/bad_homolog_sys_ref']
-        with self.assertRaises(ModelInconsistencyError) as context:
-            with self.catch_log():
-                self.parser.parse(model_2_detect)
-        self.assertEqual(str(context.exception),
-                         "Inconsistency in models definitions: the gene 'sctJ' described as homolog of 'sctN' "
-                         "with model_ref 'model_1' has an other model in bank (model_2)")
-
-    def test_bad_analog_sys_ref(self):
-        model_2_detect = ['foo/bad_analog_sys_ref']
-        with self.assertRaises(ModelInconsistencyError) as context:
-            with self.catch_log():
-                self.parser.parse(model_2_detect)
-        self.assertEqual(str(context.exception),
-                         "Inconsistency in models definitions: the gene 'sctJ' described as analog of 'sctN' "
-                         "with model_ref 'model_3' has an other model in bank (model_4)")
-
+#     def test_invalid_analog(self):
+#         model_2_detect = ['foo/invalid_analog']
+#         with self.assertRaises(ModelInconsistencyError) as context:
+#             with self.catch_log():
+#                 self.parser.parse(model_2_detect)
+#         self.assertEqual(str(context.exception),
+#                          "Invalid model definition 'invalid_analog': The gene 'foo_bar' described as "
+#                          "analog of 'gspD' in model 'invalid_analog' is not in the 'GeneBank' gene factory")
+#
+#     def test_invalid_analog_2(self):
+#         model_2_detect = ['foo/invalid_analog_2']
+#         with self.assertRaises(SyntaxError) as ctx:
+#             with self.catch_log():
+#                 self.parser.parse(model_2_detect)
+#         self.assertEqual(str(ctx.exception), "Invalid model definition 'invalid_analog_2': gene without name")
+#
     def test_bad_min_genes_required(self):
-        model_2_detect = ['foo/bad_min_genes_required']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_genes_required')]
         with self.assertRaises(ModelInconsistencyError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
@@ -303,14 +258,14 @@ class TestModelParser(MacsyTest):
                          'or equal than the number of "accessory" and "mandatory" components in the model: 6')
 
     def test_bad_min_genes_required_2(self):
-        model_2_detect = ['foo/bad_min_genes_required_2']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_genes_required_2')]
         with self.catch_log():
             with self.assertRaisesRegex(SyntaxError, "Invalid model definition (.*): "
                                                      "min_genes_required must be an integer: 16.5"):
                 self.parser.parse(model_2_detect)
 
     def test_bad_min_mandatory_genes_required(self):
-        model_2_detect = ['foo/bad_min_mandatory_genes_required']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_mandatory_genes_required')]
         with self.catch_log():
             with self.assertRaises(ModelInconsistencyError) as context:
                 self.parser.parse(model_2_detect)
@@ -319,7 +274,7 @@ class TestModelParser(MacsyTest):
                          'be lesser or equal than the number of "accessory" and "mandatory" components in the model: 6')
 
     def test_bad_min_mandatory_genes_required_2(self):
-        model_2_detect = ['foo/bad_min_mandatory_genes_required_2']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_mandatory_genes_required_2')]
         with self.assertRaises(ModelInconsistencyError) as context:
             with self.catch_log():
                 # error raised by System initialization
@@ -332,7 +287,7 @@ class TestModelParser(MacsyTest):
                          " than min_mandatory_genes_required '8'")
 
     def test_bad_min_mandatory_genes_required_4(self):
-        model_2_detect = ['foo/bad_min_mandatory_genes_required_4']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_mandatory_genes_required_4')]
         with self.assertRaisesRegex(SyntaxError, "Invalid model definition (.*): "
                                                   "min_mandatory_genes_required must be an integer: 12.5"):
             with self.catch_log():
@@ -340,7 +295,7 @@ class TestModelParser(MacsyTest):
 
 
     def test_min_mandatory_genes_required_lesser_than_mandatory_genes(self):
-        model_2_detect = ['foo/bad_min_mandatory_genes_required_3']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_mandatory_genes_required_3')]
         with self.assertRaises(ModelInconsistencyError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
@@ -349,13 +304,13 @@ class TestModelParser(MacsyTest):
                          " 'min_mandatory_genes_required': 6 must be lesser or equal than the number of 'mandatory' "
                          "components in the model: 5")
 
-
+#
     def test_bad_max_nb_genes(self):
-        model_2_detect = 'foo/bad_max_nb_genes'
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_max_nb_genes')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
-                self.parser.parse([model_2_detect])
-        model_name, def_name = model_2_detect.split('/')
+                self.parser.parse(model_2_detect)
+        model_name, def_name = model_2_detect[0].split_fqn(model_2_detect[0].fqn)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(
                              os.path.join(self.cfg.models_dir(),
@@ -365,7 +320,7 @@ class TestModelParser(MacsyTest):
 
 
     def test_bad_inter_gene_max_space(self):
-        model_2_detect = ['foo/bad_inter_gene_max_space']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_inter_gene_max_space')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
@@ -376,7 +331,7 @@ class TestModelParser(MacsyTest):
                          )
 
     def test_no_inter_gene_max_space(self):
-        model_2_detect = ['foo/no_inter_gene_max_space']
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/no_inter_gene_max_space')]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
@@ -389,27 +344,30 @@ class TestModelParser(MacsyTest):
 
 
     def test_loner(self):
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
-        self.parser.parse(models_2_detect)
+        model_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(model_2_detect)
 
-        m = self.model_bank[model_fqn]
-        flgC = m.get_gene('flgC')
-        self.assertFalse(flgC.loner)
-        tadZ = m.get_gene('tadZ')
-        self.assertTrue(tadZ.loner)
+        m5 = self.model_bank[model_fqn]
+        m5_flgC = m5.get_gene('flgC')
+        self.assertFalse(m5_flgC.loner)
+        m5_tadZ = m5.get_gene('tadZ')
+        self.assertTrue(m5_tadZ.loner)
+
+        model_fqn = 'foo/model_6'
+        model_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(model_2_detect)
+        m6 = self.model_bank[model_fqn]
+        m6_flgC = m6.get_gene('flgC')
+        self.assertFalse(m6_flgC.loner)
+        m6_tadZ = m6.get_gene('tadZ')
+        self.assertFalse(m6_tadZ.loner)
 
 
     def test_multi_system(self):
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
-        self.parser.parse(models_2_detect)
+        model_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(model_2_detect)
 
         m = self.model_bank[model_fqn]
         flgC = m.get_gene('flgC')
@@ -419,37 +377,27 @@ class TestModelParser(MacsyTest):
 
 
     def test_gene_inter_gene_max_space(self):
-        def_2_parse = set()
-        model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        model_fqn = ['foo/model_5', 'foo/model_6']
+        models_2_detect = [self.model_registry['foo'].get_definition(fqn) for fqn in model_fqn]
         self.parser.parse(models_2_detect)
 
-        m = self.model_bank[model_fqn]
-        self.assertEqual(m.name, 'model_5')
-        self.assertEqual(m.fqn, model_fqn)
-        self.assertEqual(m.inter_gene_max_space, 20)
-        self.assertEqual(m.min_mandatory_genes_required, 2)
-        self.assertEqual(m.min_genes_required, 3)
-        self.assertFalse(m.multi_loci)
-        self.assertEqual(len(m.mandatory_genes), 3)
-        mandatory_genes_name = [g.name for g in m.mandatory_genes]
-        mandatory_genes_name.sort()
-        theoric_list = ["flgB", "flgC", "fliE"]
-        theoric_list.sort()
-        self.assertListEqual(mandatory_genes_name, theoric_list)
-        flgC = m.get_gene('flgC')
-        self.assertEqual(flgC.inter_gene_max_space, 2)
+        m5 = self.model_bank['foo/model_5']
+        self.assertEqual(m5.name, 'model_5')
+        self.assertEqual(m5.fqn, 'foo/model_5')
+        self.assertEqual(m5.inter_gene_max_space, 20)
+        m5_flgB = m5.get_gene('flgB')
+        m5_flgC = m5.get_gene('flgC')
+        self.assertEqual(m5_flgB.inter_gene_max_space, 20)
+        self.assertEqual(m5_flgC.inter_gene_max_space, 2)
+        m6 = self.model_bank['foo/model_6']
+        m6_flgC = m6.get_gene('flgC')
+        self.assertEqual(m6_flgC.inter_gene_max_space, 12)
 
 
     def test_inter_gene_max_space_cfg(self):
         # test inter_gene_max_space is specified from configuration
         # so this value must overload the value read from xml
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
 
         inter_gene_max_space_cfg = [[model_fqn, '222']]
         self.args.inter_gene_max_space = inter_gene_max_space_cfg
@@ -457,15 +405,13 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
 
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertEqual(m.inter_gene_max_space, 222)
@@ -474,10 +420,7 @@ class TestModelParser(MacsyTest):
     def test_min_mandatory_genes_required_cfg(self):
         # test min_mandatory_genes_required is specified from configuration
         # so this value must overload the value read from xml
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
 
         min_mandatory_genes_required = [[model_fqn, '3']]
         self.args.min_mandatory_genes_required = min_mandatory_genes_required
@@ -485,15 +428,13 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
 
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertEqual(m.min_mandatory_genes_required, 3)
@@ -513,15 +454,13 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
 
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertEqual(m.min_genes_required, 4)
@@ -530,10 +469,7 @@ class TestModelParser(MacsyTest):
     def test_max_nb_genes_cfg(self):
         # test max_nb_genes is specified from configuration
         # so this value must overload the value read from xml
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
 
         max_nb_genes = [[model_fqn, '4']]
         self.args.max_nb_genes = max_nb_genes
@@ -541,15 +477,13 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
 
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertEqual(m.max_nb_genes, 4)
@@ -558,32 +492,28 @@ class TestModelParser(MacsyTest):
     def test_multi_loci_cfg(self):
         # test multi_loci is specified from configuration
         # so this value must overload the value read from xml
-        def_2_parse = set()
         model_fqn = 'foo/model_5'
-        def_2_parse.add(model_fqn)
-        parsed = set()
 
         self.args.multi_loci = model_fqn
 
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
-        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.profile_factory, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
 
-        models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertTrue(m.multi_loci)
 
 
     def test_bad_gene_inter_gene_max_space_2(self):
-        models_2_detect = ['foo/bad_inter_gene_max_space_2']
+        model_fqn = 'foo/bad_inter_gene_max_space_2'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.assertRaises(SyntaxError) as ctx:
             with self.catch_log():
                 self.parser.parse(models_2_detect)
@@ -592,22 +522,33 @@ class TestModelParser(MacsyTest):
                                              "inter_gene_max_space must be an integer: 2.5")
 
 
-    def test_parse_2genes_defines_in_2models(self):
-        models_2_detect = ['foo/model_2', 'foo/model_6']
-        with self.assertRaises(MacsypyError) as ctx:
-            with self.catch_log():
-                self.parser.parse(models_2_detect)
-        self.assertRegex(str(ctx.exception),
-                         "gene 'sctJ' define in 'foo/model_[26]' model is already defined in an another model")
-
-
     def test_parse_model_old_syntax(self):
-        models_2_detect = ['old/model_4']
+        model_fqn = 'foo/model_old_1'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
-            self.parser.parse(models_2_detect)
-            log_msg = log.get_value()
-        self.assertEqual(log_msg, """'system' is deprecated as xml root. Migrate model_4.xml with macsydef_1to2 script.
-'system_ref' is deprecated. Migrate model_4.xml with macsydef_1to2 script.
-'system' is deprecated as xml root. Migrate model_3.xml with macsydef_1to2 script.
-'system_ref' is deprecated. Migrate model_3.xml with macsydef_1to2 script.
-""")
+            with self.assertRaises(MacsypyError) as ctx:
+                self.parser.parse(models_2_detect)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         "unable to parse model definition 'foo/model_old_1' : "
+                         "The model defintion model_old_1.xml is not versioned. Please update your model.")
+
+        model_fqn = 'foo/model_old_2'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        with self.catch_log(log_name='macsypy') as log:
+            with self.assertRaises(MacsypyError) as ctx:
+                self.parser.parse(models_2_detect)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         "unable to parse model definition 'foo/model_old_2' : "
+                         "The model defintion model_old_2.xml is obsolete. Please update your model.")
+
+        model_fqn = 'foo/model_old_3'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        with self.catch_log(log_name='macsypy') as log:
+            with self.assertRaises(MacsypyError) as ctx:
+                self.parser.parse(models_2_detect)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         "unable to parse model definition 'foo/model_old_3' : "
+                         "The model defintion model_old_3.xml is obsolete. Please update your model.")

@@ -1,7 +1,7 @@
-<model inter_gene_max_space="10" max_nb_genes="HOHOHO"> 
+<model inter_gene_max_space="10" max_nb_genes="HOHOHO" vers="2.0">
     <gene name="sctJ_FLG" presence="mandatory">
        <homologs>
-           <gene model_ref="model_2" name="sctJ" />
+           <gene name="sctJ" />
        </homologs>
     </gene>
     <gene name="sctN_FLG" presence="mandatory" />       
