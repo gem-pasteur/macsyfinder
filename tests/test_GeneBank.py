@@ -33,6 +33,8 @@ from macsypy.gene import CoreGene, ModelGene
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
+from macsypy.error import MacsypyError
+
 from tests import MacsyTest
 
 
@@ -80,6 +82,12 @@ class Test(MacsyTest):
         self.gene_bank.add_new_gene(self.model_location, gene_name)
         gbk_contains_after = list(self.gene_bank)
         self.assertEqual(gbk_contains_bfore, gbk_contains_after)
+
+        gene_name = "bar"
+        with self.assertRaises(MacsypyError) as ctx:
+            self.gene_bank.add_new_gene(self.model_location, gene_name)
+        self.assertEqual(str(ctx.exception),
+                         f"The gene {self.model_name}/{gene_name} have no profile.")
 
 
     def test_contains(self):

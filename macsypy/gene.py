@@ -27,6 +27,8 @@ import logging
 _log = logging.getLogger(__name__)
 from enum import Enum
 
+from .error import MacsypyError
+
 
 class GeneBank:
     """
@@ -86,7 +88,10 @@ class GeneBank:
         """
         key = (model_location.name, name)
         if key not in self._genes_bank:
-            profile = model_location.get_profile(name)
+            try:
+                profile = model_location.get_profile(name)
+            except KeyError:
+                raise MacsypyError(f"The gene {model_location.name}/{name} have no profile.")
             gene = CoreGene(name, model_location.name, profile)
             self._genes_bank[key] = gene
 
