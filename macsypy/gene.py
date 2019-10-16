@@ -47,7 +47,7 @@ class GeneBank:
                     TXSS/T6SS_tssH ('TXSS', 'T6SS_tssH')
         :type key: tuple (string, string)
         :return: return the Gene corresponding to the key.
-        :rtype: :class:`macsypy.gene.Gene` object
+        :rtype: :class:`macsypy.gene.CoreGene` object
         :raise KeyError: if the key does not exist in GeneBank.
         """
         try:
@@ -61,11 +61,11 @@ class GeneBank:
         Implement the membership test operator
 
         :param gene: the gene to test
-        :type gene: :class:`macsypy.gene.Gene` object
+        :type gene: :class:`macsypy.gene.CoreGene` object
         :return: True if the gene is in, False otherwise
         :rtype: boolean
         """
-        return gene in list(self._genes_bank.values())
+        return gene in set(self._genes_bank.values())
 
 
     def __iter__(self):
@@ -75,7 +75,7 @@ class GeneBank:
         return iter(self._genes_bank.values())
 
 
-    def add_gene(self, gene):
+    def add_new_gene(self, model_location, name):
         """
         Add a gene in the bank
 
@@ -83,31 +83,52 @@ class GeneBank:
         :type gene: :class:`macsypy.gene.Gene` object
         :raise: KeyError if a gene with the same name is already registered
         """
-        model_name = registries.split_def_name(gene.model.fqn)[0]
-        key = (model_name, gene.name)
-        if key in self._genes_bank:
-            raise KeyError(f"a gene named '{model_name}/{gene.name}' is already registered")
-        else:
+        key = (model_location.name, name)
+        if key not in self._genes_bank:
+            profile = model_location.get_profile(name)
+            gene = CoreGene(name, model_location.name, profile)
             self._genes_bank[key] = gene
 
 
-class Gene:
+class CoreGene:
+
+    def __init__(self, name, model_family_name, profile):
+        self._name = name
+        self._model_family_name = model_family_name
+        self._profile = profile
+
+    def __hash__(self):
+        return hash((self._name, self._model_family_name))
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def model_family_name(self):
+        return self._model_family_name
+
+    @property
+    def profile(self):
+        """
+        The HMM protein Profile corresponding to this gene :class:`macsypy.profile.Profile` object
+        """
+
+        return self._profile
+
+
+class ModelGene:
     """
     Handle Gene of a (secretion) System
 
     """
 
-    def __init__(self, profile_factory, name, model, model_location, loner=False, exchangeable=False,
-                 multi_system=False, inter_gene_max_space=None):
+    def __init__(self, gene, model, loner=False, exchangeable=False, multi_system=False, inter_gene_max_space=None):
         """
         handle gene
 
-        :param name: the name of the Gene.
-        :type name: string.
         :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
-        :param model_location: where all the paths profiles and definitions are register for a kind of model.
-        :type model_location: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
         :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
@@ -118,18 +139,21 @@ class Gene:
         :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
         :type inter_gene_max_space: integer
         """
-        self.name = name 
-        self.profile = profile_factory.get_profile(self, model_location)
-        """:ivar profile: The HMM protein Profile corresponding to this gene :class:`macsypy.profile.Profile` object"""
-
-        self.homologs = []
-        self.analogs = []
+        self._gene = gene
+        self._homologs = []
+        self._analogs = []
         self._model = model
         self._loner = loner
         self._exchangeable = exchangeable
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
 
+
+    def __getattr__(self, item):
+        try:
+            return getattr(self._gene, item)
+        except AttributeError:
+            raise AttributeError(f"'ModelGene' object has no attribute '{item}'")
 
     def __str__(self):
         """
@@ -206,6 +230,10 @@ class Gene:
         else:
             return self._model.inter_gene_max_space
 
+    @property
+    def gene_ref(self):
+        return None
+
 
     def add_homolog(self, homolog):
         """
@@ -214,15 +242,15 @@ class Gene:
         :param homolog: homolog to add
         :type homolog:  :class:`macsypy.gene.Homolog` object 
         """
-        self.homologs.append(homolog)
+        self._homologs.append(homolog)
 
-
-    def get_homologs(self):
+    @property
+    def homologs(self):
         """
         :return: the Gene homologs
         :type: list of :class:`macsypy.gene.Homolog` object
         """
-        return self.homologs
+        return self._homologs[:]
 
 
     def add_analog(self, analog):
@@ -232,15 +260,15 @@ class Gene:
         :param analog: analog to add
         :type analog:  :class:`macsypy.gene.Analog` object 
         """
-        self.analogs.append(analog)
+        self._analogs.append(analog)
 
-
-    def get_analogs(self):
+    @property
+    def analogs(self):
         """
         :return: the Gene analogs
         :type: list of :class:`macsypy.gene.Analog` object
         """
-        return self.analogs
+        return self._analogs[:]
 
 
     def __eq__(self, gene):
@@ -331,41 +359,6 @@ class Gene:
             return True
         else:
             return False
-
-
-    def is_authorized(self, model, include_forbidden=True):
-        """
-        :return: True if this gene is found in the Model, False otherwise.
-        :param model: the query of the test
-        :type model: :class:`macsypy.model.Model` object.
-        :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
-        :type include_forbidden: boolean
-        :rtype: boolean.
-        """
-        genes = model.mandatory_genes + model.accessory_genes
-        if include_forbidden:
-            genes = genes + model.forbidden_genes
-        for g in genes:
-            if self == g:
-                return True
-            if g.exchangeable and (g.is_homolog(self) or g.is_analog(self)):
-                return True
-        return False
-
-
-    def get_compatible_models(self, model_list, include_forbidden=True):
-        """
-        Test every model in model_list for compatibility with the gene using the is_authorized function.
-
-        :param model_list: a list of model names to test
-        :type model_list: list of strings
-        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible models or not
-        :type include_forbidden: boolean
-        :return: the list of compatible models
-        :rtype: list of :class:`macsypy.model.Model` objects, or void list if none compatible
-        """
-        compatibles = [model for model in model_list if self.is_authorized(model, include_forbidden=include_forbidden)]
-        return compatibles
 
 
 class Homolog:
