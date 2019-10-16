@@ -50,7 +50,11 @@ class GeneBank:
         try:
             return self._genes_bank[key]
         except KeyError:
-            raise KeyError(f"No such gene {key} in this bank")
+            raise KeyError(f"No such gene '{key}' in this bank")
+
+
+    def __len__(self):
+        return len(self._genes_bank)
 
 
     def __contains__(self, gene):
