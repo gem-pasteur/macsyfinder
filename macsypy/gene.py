@@ -283,8 +283,7 @@ class ModelGene:
 
     def __hash__(self):
         # needed to be hashable in Py3 when __eq__ is defined
-        # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable  
-        
+        # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable
         return id(self)
 
 
