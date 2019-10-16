@@ -28,8 +28,7 @@ import tempfile
 import argparse
 
 from macsypy.gene import Homolog
-from macsypy.gene import Gene
-from macsypy.profile import ProfileFactory
+from macsypy.gene import CoreGene, ModelGene
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
@@ -48,8 +47,8 @@ class TestHomolog(MacsyTest):
         self.cfg = Config(MacsyDefaults(), args)
 
         self.model_name = 'foo'
-        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
-        self.profile_factory = ProfileFactory(self.cfg)
+        self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+
 
     def tearDown(self):
         try:
@@ -57,26 +56,58 @@ class TestHomolog(MacsyTest):
         except:
             pass
 
+
     def test_gene_ref(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
+
+        gene_name = 'sctJ_FLG'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        gene_ref = ModelGene(c_gene_ref, model)
+
+        gene_name = 'sctJ'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene = CoreGene(gene_name, model.family_name, profile)
+        gene = ModelGene(c_gene, model)
         homolog_1 = Homolog(gene, gene_ref)
+        gene.add_homolog(homolog_1)
+
         self.assertEqual(homolog_1.gene_ref, gene_ref)
- 
+
+
     def test_is_aligned(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
+
+        gene_name = 'sctJ_FLG'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        gene_ref = ModelGene(c_gene_ref, model)
+
+        gene_name = 'sctJ'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene = CoreGene(gene_name, model.family_name, profile)
+        gene = ModelGene(c_gene, model)
+
         homolog = Homolog(gene, gene_ref)
         self.assertFalse(homolog.is_aligned())
+
         homolog = Homolog(gene, gene_ref, aligned=True)
         self.assertTrue(homolog.is_aligned())
 
+
     def test_delegation(self):
         model = Model("T2SS", 10)
-        gene_ref = Gene(self.profile_factory, 'sctJ_FLG', model, self.models_location)
-        gene = Gene(self.profile_factory, 'sctJ', model, self.models_location)
+
+        gene_name = 'sctJ_FLG'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        gene_ref = ModelGene(c_gene_ref, model)
+
+        gene_name = 'sctJ'
+        profile = self.model_location.get_profile(gene_name)
+        c_gene = CoreGene(gene_name, model.family_name, profile)
+        gene = ModelGene(c_gene, model)
+
         homolog = Homolog(gene, gene_ref)
         self.assertEqual(homolog.model, model)
 
