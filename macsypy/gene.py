@@ -23,12 +23,9 @@
 #########################################################################
 
 
-import os
 import logging
 _log = logging.getLogger(__name__)
 from enum import Enum
-
-from . import registries
 
 
 class GeneBank:
