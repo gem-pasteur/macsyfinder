@@ -197,7 +197,7 @@ class Model(metaclass=MetaModel):
 
 
     def __hash__(self):
-        return id(self)
+        return hash(self.fqn)
 
 
     def __lt__(self, other):
@@ -301,7 +301,7 @@ class Model(metaclass=MetaModel):
         """
         # create a dict with genes from all categories
         all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
-                     for g in sublist}
+                for g in sublist}
         if gene_name in all_genes:
             return all_genes[gene_name]
         else:
