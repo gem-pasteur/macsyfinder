@@ -37,7 +37,7 @@ class Hit:
     """
 
 
-    def __init__(self, gene, model, hit_id, hit_seq_length, replicon_name,
+    def __init__(self, gene, hit_id, hit_seq_length, replicon_name,
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
@@ -66,7 +66,6 @@ class Hit:
         :type end_match: integer
         """
         self.gene = gene
-        self.model = model
         self.id = hit_id
         self.seq_length = hit_seq_length
         self.replicon_name = replicon_name
@@ -81,7 +80,7 @@ class Hit:
 
     def __hash__(self):
         """To be hashable, it's needed to be put in a set or used as dict key"""
-        return id(self)
+        return hash((self.gene.name, self.id, self.seq_length, self.position, self.i_eval))
 
 
     def __str__(self):
@@ -89,7 +88,7 @@ class Hit:
         Print useful information on the Hit: regarding Hmmer statistics, and sequence information
         """
         return f"{self.id}\t{self.replicon_name}\t{self.position:d}\t{self.seq_length:d}\t{self.gene.name}\t" \
-               f"{self.model.name}\t{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
+               f"{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
                f"{self.sequence_coverage:.3f}\t{self.begin_match:d}\t{self.end_match:d}\n"
 
 
@@ -103,9 +102,6 @@ class Hit:
         :return: True if self is < other, False otherwise
         """
         if self.id == other.id:
-            if not self.gene.is_homolog(other.gene):
-                _log.warning(f"Non homologs match: {self.gene.name} {self.model.name}) {other.gene.name} "
-                             f"({other.model.name}) for {self.id}")
             return self.score < other.score
         else:
             return self.id < other.id
@@ -121,9 +117,6 @@ class Hit:
         :return: True if self is > other, False otherwise
         """
         if self.id == other.id:
-            if not self.gene.is_homolog(other.gene):
-                _log.warning(f"Non homologs match: {self.gene.name} ({self.model.name}) {other.gene.name} "
-                             f"({other.model.name}) for {self.id}")
             return self.score > other.score
         else:
             return self.id > other.id
@@ -140,7 +133,6 @@ class Hit:
         """
         epsilon = 0.001
         return (self.gene.name == other.gene.name and
-                self.model.name == other.model.name and
                 self.id == other.id and
                 self.seq_length == other.seq_length and
                 self.replicon_name == other.replicon_name and
@@ -161,13 +153,6 @@ class Hit:
         """
         return self.position
 
-
-    def get_syst_inter_gene_max_space(self):
-        """
-        :returns: the 'inter_gene_max_space' parameter defined for the gene of the hit
-        :rtype: integer
-        """
-        return self.gene.model.inter_gene_max_space
 
 
 class ValidHit:
