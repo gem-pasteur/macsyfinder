@@ -314,6 +314,13 @@ class Model(metaclass=MetaModel):
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
+    @property
+    def genes(self):
+        # we assume that a gene cannot appear twice in a model
+        return {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
+                for g in sublist}
+
+
     def filter(self, hits):
         """
         filter the hits according to this model. The hits must be link to a gene, belonging to the model
