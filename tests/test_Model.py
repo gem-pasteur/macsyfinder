@@ -344,13 +344,13 @@ sctC
         # without exhangeable attribute on any genes
         hit_to_keep = []
         for gene in (sctJ_FLG, sctN_FLG, sctC, toto):
-            hit_to_keep.append(Hit(gene, model,
+            hit_to_keep.append(Hit(gene,
                                    f"PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
         for gene in (sctJ, sctN, totote):
-            hit_to_filter_out.append(Hit(gene, model,
+            hit_to_filter_out.append(Hit(gene,
                                    "PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
@@ -365,20 +365,19 @@ sctC
 
         hit_to_keep = []
         for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC, toto, totote):
-            hit_to_keep.append(Hit(gene, model,
+            hit_to_keep.append(Hit(gene,
                                    "PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
-        other_model = Model("foo/T2SS", 10)
         gene_name = 'gspD'
         profile = self.model_location.get_profile(gene_name)
         gspD_core = CoreGene(gene_name, model.family_name, profile)
         gene = ModelGene(gspD_core, model)
-        hit_to_filter_out.append(Hit(gene, other_model, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+        hit_to_filter_out.append(Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
                                      float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
                                  )
-        hit_to_filter_out.append(Hit(gene, other_model, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
+        hit_to_filter_out.append(Hit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
                                      float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
                                  )
         filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
@@ -388,3 +387,11 @@ sctC
         # so I mute off warnings
         with self.catch_log():
             self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
+
+    def test_hash(self):
+        model_bar = Model('Foo/bar', 10)
+        model_bar_bis = Model('Foo/bar', 10)
+        model_buz = Model('Foo/buz', 10)
+        self.assertTrue(isinstance(hash(model_bar), int))
+        self.assertEqual(hash(model_bar), hash(model_bar_bis))
+        self.assertNotEqual(hash(model_bar), hash(model_buz))
