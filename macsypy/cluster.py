@@ -54,10 +54,12 @@ def build_clusters(hits, rep_info, model):
     :return: list of clusters
     :rtype: List of :class:`Cluster` objects
     """
-    def collocates(h1, h2):
+    def collocates(h1, h2, model):
         # compute the number of genes between h1 and h2
         dist = h2.get_position() - h1.get_position() - 1
-        inter_gene_max_space = max(h1.gene.inter_gene_max_space, h2.gene.inter_gene_max_space)
+        g1 = model.get_gene(h1.gene.name)
+        g2 = model.get_gene(h2.gene.name)
+        inter_gene_max_space = max(g1.inter_gene_max_space, g2.inter_gene_max_space)
         if 0 <= dist <= inter_gene_max_space:
             return True
         elif dist <= 0 and rep_info.topology == 'circular':
@@ -73,16 +75,17 @@ def build_clusters(hits, rep_info, model):
     # remove duplicates hits (several hits for the same sequence),
     # keep the first one, this with the best score
     # position == sequence rank in replicon
-    hits = ([next(group) for pos, group in itertools.groupby(hits, lambda h: h.position)])
+    hits = [next(group) for pos, group in itertools.groupby(hits, lambda h: h.position)]
     if hits:
         cluster_scaffold.append(hits[0])
         previous_hit = hits[0]
         for hit in hits[1:]:
-            if collocates(previous_hit, hit):
+            if collocates(previous_hit, hit, model):
                 cluster_scaffold.append(hit)
             else:
                 # by definition a loner gene can be alone in a cluster
-                if len(cluster_scaffold) > 1 or cluster_scaffold[0].gene.loner:
+                is_a_loner = model.get_gene(cluster_scaffold[0].gene.name).loner
+                if len(cluster_scaffold) > 1 or is_a_loner:
                     cluster = Cluster(cluster_scaffold, model)
                     clusters.append(cluster)
                 cluster_scaffold = [hit]
@@ -91,15 +94,15 @@ def build_clusters(hits, rep_info, model):
         # close the current cluster
         if len(cluster_scaffold) > 1:
             new_cluster = Cluster(cluster_scaffold, model)
-            if clusters and collocates(new_cluster.hits[-1], clusters[0].hits[0]):
+            if clusters and collocates(new_cluster.hits[-1], clusters[0].hits[0], model):
                 # handle circular replicon
                 clusters[0].merge(new_cluster, before=True)
             else:
                 clusters.append(new_cluster)
         elif clusters:
-            if collocates(previous_hit, clusters[0].hits[0]):
+            if collocates(previous_hit, clusters[0].hits[0], model):
                 clusters[0].merge(Cluster([previous_hit], model), before=True)
-            elif previous_hit.gene.loner:
+            elif model.get_gene(previous_hit.gene.name).loner:
                 # this hit is far from other clusters
                 # but by definition a loner gene can be alone in a cluster
                 cluster = Cluster(cluster_scaffold, model)
@@ -109,13 +112,16 @@ def build_clusters(hits, rep_info, model):
 
 def get_loners(hits, model):
     """
+    Create a list of Clusters each cluster is build with one hit matching a loner
+
     :param hits: The list of hits to filter
     :param model: the model which will used to build the clusters
     :type model: :class:`macsypy.model.Model` object
     :return: The list of cluster which each element is build with one loner
     :rtype: [Cluster, ...]
     """
-    loners = [hit for hit in hits if hit.gene.loner]
+    gene_loners = {g.name for g in model.genes if g.loner}
+    loners = [hit for hit in hits if hit.gene.name in gene_loners]
     loners = [Cluster([hit], model) for hit in loners]
     return loners
 
@@ -159,8 +165,10 @@ class Cluster:
         self._score = None
         self._genes_ref = None
 
+
     def __len__(self):
         return len(self.hits)
+
 
     def _check_replicon_consistency(self):
         rep_name = self.hits[0].replicon_name
@@ -169,6 +177,7 @@ class Cluster:
             _log.error(msg)
             raise MacsypyError(msg)
 
+
     def __contains__(self, v_hit):
         """
         :param v_hit: The hit to test
@@ -176,6 +185,7 @@ class Cluster:
         :return: True if the hit is in the cluster hits, False otherwise
         """
         return v_hit in self.hits
+
 
     def fulfilled_function(self, gene):
         """
@@ -211,6 +221,7 @@ class Cluster:
     @property
     def replicon_name(self):
         return self.hits[0].replicon_name
+
 
     @property
     def score(self):
