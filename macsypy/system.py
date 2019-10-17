@@ -71,7 +71,7 @@ def match(clusters, model):
         map = {}
         for gene in genes:
             if gene.exchangeable:
-                for ex_gene in itertools.chain(gene.get_homologs(), gene.get_analogs()):
+                for ex_gene in itertools.chain(gene.homologs, gene.analogs):
                     map[ex_gene.name] = gene
         return map
 
@@ -429,7 +429,7 @@ score = {self.system.score:.3f}
                        'accessory': {gene_ref: [hit.gene.name for hit in hits]
                                      for gene_ref, hits in self.system.accessory_occ.items()},
                        'neutral': {gene_ref: [hit.gene.name for hit in hits]
-                                     for gene_ref, hits in self.system.neutral_occ.items()}
+                                   for gene_ref, hits in self.system.neutral_occ.items()}
 
                        }
                   }
