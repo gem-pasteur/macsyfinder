@@ -391,7 +391,7 @@ class Package:
             model_registry = ModelRegistry()
             model_registry.add(model_loc)
             parser = DefinitionParser(config, model_bank, gene_bank, model_registry)
-            parser.parse([def_loc.fqn for def_loc in all_def])
+            parser.parse(all_def)
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")
