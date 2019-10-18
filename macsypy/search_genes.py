@@ -22,7 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-import threading
+import concurrent.futures
 import logging
 _log = logging.getLogger(__name__)
 import signal
@@ -31,7 +31,6 @@ import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
-import time
 
 def search_genes(genes, cfg):
     """
@@ -129,8 +128,6 @@ def search_genes(genes, cfg):
         # it works because mkdir is an atomic operation
         os.mkdir(hmmer_dir)
 
-    #########################################################################
-    import concurrent.futures
     previous_run = cfg.previous_run()
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_nb) as executor:
         future_search = []
