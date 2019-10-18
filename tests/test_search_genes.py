@@ -30,7 +30,7 @@ import tempfile
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import Gene
+from macsypy.gene import CoreGene, ModelGene
 import macsypy.gene
 from macsypy.model import Model
 from macsypy.hit import Hit
@@ -63,7 +63,7 @@ class TestSearchGenes(MacsyTest):
 
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
-        self.profile_factory = macsypy.profile.ProfileFactory(self.cfg)
+
 
     def tearDown(self):
         try:
@@ -72,12 +72,14 @@ class TestSearchGenes(MacsyTest):
         except:
             pass
 
+
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
         model = Model("foo/T2SS", 10)
-        gene_abc = Gene(self.profile_factory, "abc", model, self.models_location)
-        report = search_genes([gene_abc], self.cfg)
-        expected_hit = [Hit(gene_abc, model, "ESCO030p01_000260", 706, "ESCO030p01",
+        profile = Profile()
+        c_gene_abc = CoreGene("abc", model.family_name, self.models_location.get_profile("abc"))
+        report = search_genes([c_gene_abc], self.cfg)
+        expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
                             26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
                             )]
         self.assertEqual(len(report), 1)
