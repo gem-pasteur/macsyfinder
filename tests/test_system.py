@@ -29,6 +29,7 @@ import json
 from macsypy.hit import Hit, ValidHit
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Homolog, Analog, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
@@ -47,16 +48,17 @@ class SystemTest(MacsyTest):
         self.cfg = Config(MacsyDefaults(), args)
 
         self.model_name = 'foo'
-        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.profile_factory = ProfileFactory(self.cfg)
 
 
     def test_init(self):
         model = Model("foo/T2SS", 10)
         # test if id is well incremented
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
 
@@ -72,13 +74,13 @@ class SystemTest(MacsyTest):
 
     def test_hits(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model)
         model.add_accessory_gene(gene_sctn)
 
@@ -96,13 +98,13 @@ class SystemTest(MacsyTest):
 
     def test_multi_loci(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model)
         model.add_accessory_gene(gene_sctn)
 
@@ -125,13 +127,13 @@ class SystemTest(MacsyTest):
 
     def test_loci(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         model.add_accessory_gene(gene_sctn)
 
@@ -154,13 +156,13 @@ class SystemTest(MacsyTest):
 
     def test_wholeness(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         model.add_accessory_gene(gene_sctn)
 
@@ -179,13 +181,13 @@ class SystemTest(MacsyTest):
 
     def test_occurrence(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         model.add_accessory_gene(gene_sctn)
 
@@ -211,24 +213,24 @@ class SystemTest(MacsyTest):
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_tadZ = CoreGene("tadZ", model.family_name, self.models_location.get_profile("tadZ"))
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
         gene_tadZ = ModelGene(c_gene_tadZ, model)
         model.add_mandatory_gene(gene_tadZ)
 
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
-        c_gene_sctJ_FLG = CoreGene("sctJ_FLG", model.family_name, self.models_location.get_profile("sctJ_FLG"))
+        c_gene_sctJ_FLG = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctJ_FLG = ModelGene(c_gene_sctJ_FLG, model)
         analog = Analog(gene_sctJ_FLG, gene_sctj)
         gene_sctj.add_analog(analog)
         model.add_accessory_gene(gene_sctj)
 
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
-        c_gene_sctn_FLG = CoreGene("sctN_FLG", model.family_name, self.models_location.get_profile("sctN_FLG"))
+        c_gene_sctn_FLG = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_FLG = ModelGene(c_gene_sctn_FLG, model)
         homolog = Homolog(gene_sctn_FLG, gene_sctj)
         gene_sctn.add_homolog(homolog)
@@ -294,13 +296,13 @@ class SystemTest(MacsyTest):
 
     def test_SystemSerializer_to_json(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         model.add_accessory_gene(gene_sctn)
 
@@ -333,13 +335,13 @@ class SystemTest(MacsyTest):
 
     def test_SystemSerializer_str(self):
         model = Model("foo/T2SS", 10)
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model)
         model.add_accessory_gene(gene_sctn)
 
@@ -378,34 +380,34 @@ neutral genes:
 
     def test_match(self):
         model = Model("foo/T2SS", 10)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, exchangeable=True)
 
-        c_gene_sctn_flg = CoreGene("sctN_FLG", model.family_name, self.models_location.get_profile("sctN_FLG"))
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = Homolog(ModelGene(c_gene_sctn_flg, model), gene_sctn)
         gene_sctn.add_homolog(gene_sctn_flg)
 
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
-        c_gene_sctj_flg = CoreGene("sctJ_FLG", model.family_name, self.models_location.get_profile("sctJ_FLG"))
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctj_flg = Analog(ModelGene(c_gene_sctj_flg, model), gene_sctj)
         gene_sctj.add_analog(gene_sctj_flg)
 
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model, exchangeable=True)
-        c_gene_flgb = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_flgb = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd_an = Analog(ModelGene(c_gene_flgb, model), gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        c_gene_abc = CoreGene("abc", model.family_name, self.models_location.get_profile("abc"))
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model, exchangeable=True)
-        c_gene_tadz = CoreGene("tadZ", model.family_name, self.models_location.get_profile("tadZ"))
+        c_gene_tadz = CoreGene(self.model_location, "tadZ", self.profile_factory)
         gene_abc_ho = Homolog(ModelGene(c_gene_tadz, model), gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
 
-        c_gene_toto = CoreGene("toto", model.family_name, self.models_location.get_profile("toto"))
+        c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
         gene_toto = ModelGene(c_gene_toto, model, exchangeable=True)
-        c_gene_totote = CoreGene("totote", model.family_name, self.models_location.get_profile("totote"))
+        c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
         gene_toto_ho = Homolog(ModelGene(c_gene_totote, model), gene_toto)
         gene_toto.add_homolog(gene_toto_ho)
 
@@ -535,31 +537,31 @@ neutral genes:
         model_1 = Model("foo/T2SS", 10)
         model_2 = Model("foo/T3SS", 10)
 
-        c_gene_sctn_flg = CoreGene("sctN_FLG", model_2.family_name, self.models_location.get_profile("sctN_FLG"))
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_2)
-        c_gene_sctj_flg = CoreGene("sctJ_FLG", model_2.family_name, self.models_location.get_profile("sctJ_FLG"))
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctj_flg = ModelGene(c_gene_sctj_flg, model_2)
-        c_gene_flgB = CoreGene("flgB", model_2.family_name, self.models_location.get_profile("flgB"))
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
         gene_flgB = ModelGene(c_gene_flgB, model_2)
-        c_gene_tadZ = CoreGene("tadZ", model_2.family_name, self.models_location.get_profile("tadZ"))
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
         gene_tadZ = ModelGene(c_gene_tadZ, model_2)
 
-        c_gene_sctn = CoreGene("sctN", model_1.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_1, exchangeable=True)
         gene_sctn_hom = Homolog(gene_sctn_flg, gene_sctn)
         gene_sctn.add_homolog(gene_sctn_hom)
 
-        c_gene_sctj = CoreGene("sctJ", model_1.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model_1, exchangeable=True)
         gene_sctj_an = Analog(gene_sctj_flg, gene_sctj)
         gene_sctj.add_analog(gene_sctj_an)
 
-        c_gene_gspd = CoreGene("gspD", model_1.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model_1, exchangeable=True)
         gene_gspd_an = Analog(gene_flgB, gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        c_gene_abc = CoreGene("abc", model_1.family_name, self.models_location.get_profile("abc"))
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model_1, exchangeable=True)
         gene_abc_ho = Homolog(gene_tadZ, gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
@@ -616,31 +618,31 @@ neutral genes:
         model_1 = Model("foo/T2SS", 10)
         model_2 = Model("foo/T3SS", 10)
 
-        c_gene_sctn_flg = CoreGene("sctN_FLG", model_2.family_name, self.models_location.get_profile("sctN_FLG"))
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_2)
-        c_gene_sctj_flg = CoreGene("sctJ_FLG", model_2.family_name, self.models_location.get_profile("sctJ_FLG"))
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctj_flg = ModelGene(c_gene_sctj_flg, model_2)
-        c_gene_flgB = CoreGene("flgB", model_2.family_name, self.models_location.get_profile("flgB"))
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
         gene_flgB = ModelGene(c_gene_flgB, model_2)
-        c_gene_tadZ = CoreGene("tadZ", model_2.family_name, self.models_location.get_profile("tadZ"))
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
         gene_tadZ = ModelGene(c_gene_tadZ, model_2)
 
-        c_gene_sctn = CoreGene("sctN", model_1.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_1, exchangeable=True)
         gene_sctn_hom = Homolog(gene_sctn_flg, gene_sctn)
         gene_sctn.add_homolog(gene_sctn_hom)
 
-        c_gene_sctj = CoreGene("sctJ", model_1.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model_1, exchangeable=True)
         gene_sctj_an = Analog(gene_sctj_flg, gene_sctj)
         gene_sctj.add_analog(gene_sctj_an)
 
-        c_gene_gspd = CoreGene("gspD", model_1.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model_1, exchangeable=True)
         gene_gspd_an = Analog(gene_flgB, gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        c_gene_abc = CoreGene("abc", model_1.family_name, self.models_location.get_profile("abc"))
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model_1, exchangeable=True)
         gene_abc_ho = Homolog(gene_tadZ, gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
@@ -694,33 +696,33 @@ neutral genes:
 
     def test_count(self):
         model = Model("foo/T2SS", 10)
-        c_gene_sctn = CoreGene("sctN", model.family_name, self.models_location.get_profile("sctN"))
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, exchangeable=True)
-        c_gene_sctn_flg = CoreGene("sctN_FLG", model.family_name, self.models_location.get_profile("sctN_FLG"))
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = Homolog(ModelGene(c_gene_sctn_flg, model), gene_sctn)
         gene_sctn.add_homolog(gene_sctn_flg)
 
-        c_gene_sctj = CoreGene("sctJ", model.family_name, self.models_location.get_profile("sctJ"))
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
-        c_gene_sctj_flg = CoreGene("sctJ_FLG", model.family_name, self.models_location.get_profile("sctJ_FLG"))
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctj_flg = Analog(ModelGene(c_gene_sctj_flg, model), gene_sctj)
         gene_sctj.add_analog(gene_sctj_flg)
 
-        c_gene_gspd = CoreGene("gspD", model.family_name, self.models_location.get_profile("gspD"))
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model, exchangeable=True)
-        c_gene_flgB = CoreGene("flgB", model.family_name, self.models_location.get_profile("flgB"))
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
         gene_gspd_an = Analog(ModelGene(c_gene_flgB, model), gene_gspd)
         gene_gspd.add_analog(gene_gspd_an)
 
-        c_gene_abc = CoreGene("abc", model.family_name, self.models_location.get_profile("abc"))
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model, exchangeable=True)
-        c_gene_tadZ = CoreGene("tadZ", model.family_name, self.models_location.get_profile("tadZ"))
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
         gene_abc_ho = Homolog(ModelGene(c_gene_tadZ, model), gene_abc)
         gene_abc.add_homolog(gene_abc_ho)
 
-        c_gene_toto = CoreGene("toto", model.family_name, self.models_location.get_profile("toto"))
+        c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
         gene_toto = ModelGene(c_gene_toto, model, exchangeable=True)
-        c_gene_totote = CoreGene("totote", model.family_name, self.models_location.get_profile("totote"))
+        c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
         gene_toto_ho = Homolog(ModelGene(c_gene_totote, model), gene_toto)
         gene_toto.add_homolog(gene_toto_ho)
 
