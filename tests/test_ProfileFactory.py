@@ -61,7 +61,7 @@ class TestProfileFactory(MacsyTest):
 
     def test_get_profile(self):
         gene_name = 'sctJ_FLG'
-        gene = CoreGene(gene_name, self.models_location, self.profile_factory)
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
         profile = self.profile_factory.get_profile(gene, self.models_location)
         self.assertTrue(isinstance(profile, Profile))
         self.assertEqual(profile.gene.name, gene_name)
@@ -69,7 +69,7 @@ class TestProfileFactory(MacsyTest):
 
     def test_get_uniq_object(self):
         gene_name = 'sctJ_FLG'
-        gene = CoreGene(gene_name, self.models_location, self.profile_factory)
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
         profile1 = self.profile_factory.get_profile(gene, self.models_location)
         profile2 = self.profile_factory.get_profile(gene, self.models_location)
         self.assertEqual(profile1, profile2)
@@ -77,7 +77,7 @@ class TestProfileFactory(MacsyTest):
 
     def test_unknow_profile(self):
         gene_name = 'sctJ_FLG'
-        gene = CoreGene(gene_name, self.models_location, self.profile_factory)
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
         gene._name = "bar"
         with self.assertRaises(MacsypyError) as ctx:
             self.profile_factory.get_profile(gene, self.models_location)
