@@ -33,6 +33,7 @@ import argparse
 from macsypy.profile import Profile
 from macsypy.gene import CoreGene, ModelGene
 from macsypy.model import Model
+from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from tests import MacsyTest, which
@@ -55,6 +56,8 @@ class TestProfile(MacsyTest):
 
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.profile_factory = ProfileFactory(self.cfg)
+
 
     def tearDown(self):
         try:
@@ -67,8 +70,7 @@ class TestProfile(MacsyTest):
         model = Model("foo/T2SS", 10)
 
         gene_name = 'abc'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
         path = self.model_location.get_profile("abc")
@@ -80,8 +82,7 @@ class TestProfile(MacsyTest):
         model = Model("foo/T2SS", 10)
 
         gene_name = 'abc'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
         path = self.model_location.get_profile("abc", )
@@ -97,8 +98,7 @@ class TestProfile(MacsyTest):
             model = Model("foo/T2SS", 10)
 
             gene_name = 'abc'
-            profile = self.model_location.get_profile(gene_name)
-            c_gene = CoreGene(gene_name, model.family_name, profile)
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
             gene = ModelGene(c_gene, model)
 
             profile_path = self.model_location.get_profile("abc")
@@ -124,8 +124,7 @@ class TestProfile(MacsyTest):
         model = Model("foo/T2SS", 10)
 
         gene_name = 'abc'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
         path = self.model_location.get_profile("abc", )
@@ -148,8 +147,7 @@ sys.exit(127)
             model = Model("foo/T2SS", 10)
 
             gene_name = 'abc'
-            profile = self.model_location.get_profile(gene_name)
-            c_gene = CoreGene(gene_name, model.family_name, profile)
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
             gene = ModelGene(c_gene, model)
 
             path = self.model_location.get_profile("abc", )
