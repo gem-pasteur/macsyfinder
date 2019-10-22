@@ -30,7 +30,6 @@ import argparse
 
 from macsypy.profile import ProfileFactory, Profile
 from macsypy.gene import CoreGene
-from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
