@@ -31,6 +31,44 @@ from subprocess import Popen
 from threading import Lock
 
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
+from .error import MacsypyError
+
+
+class ProfileFactory:
+    """
+    Build and store all Profile objects. Profiles must not be instanciated directly.
+    The profile_factory must be used. The profile_factory ensures there is only one instance
+    of profile for a given name.
+    To get a profile, use the method get_profile. If the profile is already cached, this instance is returned.
+    Otherwise a new profile is built, stored in the profile_factory and then returned.
+
+    """
+
+    def __init__(self, cfg):
+        self._profiles = {}
+        self.cfg = cfg
+
+    def get_profile(self, gene, model_location):
+        """
+        :param gene: the gene associated to this profile
+        :type gene: :class:`macsypy.gene.Gene` or :class:`macsypy.gene.Homolog` or :class:`macsypy.gene.Analog` object
+        :param model_location: The where to get the profile
+        :type model_location: :class:`macsypy.registries.ModelLocation` object.
+        :return: the profile corresponding to the name.
+                 If the profile already exists, return it. Otherwise build it, store it and return it.
+        :rtype: :class:`macsypy.profile.Profile` object
+        """
+        key = (model_location.name, gene.name)
+        if key in self._profiles:
+            profile = self._profiles[key]
+        else:
+            try:
+                path = model_location.get_profile(gene.name)
+            except KeyError:
+                raise MacsypyError(f"'{model_location.name}/{gene.name}': No such profile")
+            profile = Profile(gene, self.cfg, path)
+            self._profiles[key] = profile
+        return profile
 
 
 class Profile:
