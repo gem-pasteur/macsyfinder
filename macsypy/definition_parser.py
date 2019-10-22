@@ -39,7 +39,7 @@ class DefinitionParser:
     Build a Model instance from the corresponding model definition described in the XML file.
     """
 
-    def __init__(self, cfg, model_bank, gene_bank, model_registry):
+    def __init__(self, cfg, model_bank, gene_bank, model_registry, profile_factory):
         """
         :param cfg: the configuration object of this run
         :type cfg: :class:`macsypy.config.Config` object
@@ -52,6 +52,7 @@ class DefinitionParser:
         self.model_bank = model_bank
         self.gene_bank = gene_bank
         self.model_registry = model_registry
+        self.profile_factory = profile_factory
 
 
     def parse(self, models_2_detect):
@@ -219,7 +220,7 @@ class DefinitionParser:
                 raise SyntaxError(msg)
             # self.gene_bank.add_new_gene if we add twice same (model_location, gene_name)
             # the second time is NOOP
-            self.gene_bank.add_new_gene(model_location, gene_name)
+            self.gene_bank.add_new_gene(model_location, gene_name, self.profile_factory)
 
 
     def _parse_genes(self, model, model_node):
