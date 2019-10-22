@@ -31,6 +31,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import CoreGene, ModelGene, Homolog, Analog
+from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit
 from macsypy.registries import ModelLocation
 from tests import MacsyTest
@@ -54,6 +55,8 @@ class TestModel(MacsyTest):
         self.cfg = Config(MacsyDefaults(), self.args)
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
+        self.profile_factory = ProfileFactory(self.cfg)
+
 
     def tearDown(self):
         self.clean_working_dir()
@@ -86,8 +89,8 @@ class TestModel(MacsyTest):
         model_fqn = 'foo/model_1'
         min_genes_required_xml = 40
         model = Model(model_fqn, 10, min_genes_required=min_genes_required_xml)
-        profile = self.model_location.get_profile('sctJ_FLG')
-        c_gene = CoreGene('sctJ_FLG', model.family_name, profile)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
         model.add_mandatory_gene(gene)
         self.assertEqual(model.min_genes_required, min_genes_required_xml)
@@ -101,8 +104,8 @@ class TestModel(MacsyTest):
         model_fqn = 'foo/bar'
         min_mandatory_genes_required_xml = 40
         model = Model(model_fqn, 10, min_mandatory_genes_required=min_mandatory_genes_required_xml)
-        profile = self.model_location.get_profile('sctJ_FLG')
-        c_gene = CoreGene('sctJ_FLG', model.family_name, profile)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
         model.add_mandatory_gene(gene)
         self.assertEqual(model.min_mandatory_genes_required, min_mandatory_genes_required_xml)
@@ -147,8 +150,8 @@ class TestModel(MacsyTest):
 
     def test_accessor_mutator(self):
         model = Model("foo", 10)
-        profile = self.model_location.get_profile('sctJ_FLG')
-        c_gene = CoreGene('sctJ_FLG', model.family_name, profile)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
         categories = set(model.gene_category)
         for cat in categories:
@@ -164,8 +167,7 @@ class TestModel(MacsyTest):
     def test_get_gene(self):
         model = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
         for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
             for cat in model.gene_category:
@@ -176,8 +178,7 @@ class TestModel(MacsyTest):
         self.assertRaises(KeyError, model.get_gene, 'bar')
 
         homolog_name = 'sctJ'
-        profile = self.model_location.get_profile(homolog_name)
-        c_gene_homolog = CoreGene(homolog_name, model.family_name, profile)
+        c_gene_homolog = CoreGene(self.model_location, homolog_name, self.profile_factory)
         gene_homolog = ModelGene(c_gene_homolog, model)
         homolog = Homolog(gene_homolog, gene)
         gene.add_homolog(homolog)
@@ -188,8 +189,7 @@ class TestModel(MacsyTest):
             self.assertEqual(homolog, model.get_gene(homolog_name))
 
         analog_name = 'sctC'
-        profile = self.model_location.get_profile(analog_name)
-        c_gene_analog = CoreGene(analog_name, model.family_name, profile)
+        c_gene_analog = CoreGene(self.model_location, analog_name, self.profile_factory)
         gene_analog = ModelGene(c_gene_analog, model)
         analog = Analog(gene_analog, gene)
         gene.add_analog(analog)
@@ -234,34 +234,33 @@ class TestModel(MacsyTest):
     def test_str(self):
         model_fqn = "foo/bar"
         model = Model(model_fqn, 10)
-        profile = self.model_location.get_profile('sctJ_FLG')
-        c_gene = CoreGene('sctJ_FLG', model.family_name, profile)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         mandatory_gene = ModelGene(c_gene, model)
         model.add_mandatory_gene(mandatory_gene)
         homolog_name = 'sctJ'
-        profile = self.model_location.get_profile(homolog_name)
-        c_gene_homolg = CoreGene(homolog_name, model.family_name, profile)
+        c_gene_homolg = CoreGene(self.model_location, homolog_name, self.profile_factory)
         gene_homolg = ModelGene(c_gene_homolg, model)
         homolog = Homolog(gene_homolg, mandatory_gene)
         mandatory_gene.add_homolog(homolog)
 
-        profile = self.model_location.get_profile('sctN_FLG')
-        c_gene = CoreGene('sctN_FLG', model.family_name, profile)
+        gene_name = 'sctN_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         accessory_gene = ModelGene(c_gene, model)
         model.add_accessory_gene(accessory_gene)
         analog_name = 'sctN'
-        c_gene_analog = CoreGene(analog_name, model.family_name, profile)
+        c_gene_analog = CoreGene(self.model_location, analog_name, self.profile_factory)
         gene_analog = ModelGene(c_gene_analog, model)
         analog = Analog(gene_analog, accessory_gene)
         accessory_gene.add_analog(analog)
 
-        profile = self.model_location.get_profile('toto')
-        c_gene = CoreGene('toto', model.family_name, profile)
+        gene_name = 'toto'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         neutral_gene = ModelGene(c_gene, model)
         model.add_neutral_gene(neutral_gene)
 
-        profile = self.model_location.get_profile('sctC')
-        c_gene = CoreGene('sctC', model.family_name, profile)
+        gene_name = 'sctC'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         forbidden_gene = ModelGene(c_gene, model)
         model.add_forbidden_gene(forbidden_gene)
 
@@ -298,45 +297,38 @@ sctC
         model_fqn = "foo/bar"
         model = Model(model_fqn, 10)
         gene_name = 'sctJ_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        sctJ_FLG_core = CoreGene(gene_name, model.family_name, profile)
+        sctJ_FLG_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ_FLG = ModelGene(sctJ_FLG_core, model)
         model.add_mandatory_gene(sctJ_FLG)
         gene_name = 'sctJ'
-        profile = self.model_location.get_profile(gene_name)
-        sctJ_core = CoreGene(gene_name, model.family_name, profile)
+        sctJ_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ = ModelGene(sctJ_core, model)
         homolog = Homolog(sctJ, sctJ_FLG)
         sctJ_FLG.add_homolog(homolog)
 
         gene_name = 'sctN_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        sctN_FLG_core = CoreGene(gene_name, model.family_name, profile)
+        sctN_FLG_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctN_FLG = ModelGene(sctN_FLG_core, model)
         model.add_accessory_gene(sctN_FLG)
 
         gene_name = 'sctN'
-        profile = self.model_location.get_profile(gene_name)
-        sctN_core = CoreGene(gene_name, model.family_name, profile)
+        sctN_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctN = ModelGene(sctN_core, model)
         analog = Analog(sctN, sctN_FLG)
         sctN_FLG.add_analog(analog)
 
         gene_name = 'sctC'
-        profile = self.model_location.get_profile(gene_name)
-        sctC_core = CoreGene(gene_name, model.family_name, profile)
+        sctC_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctC = ModelGene(sctC_core, model)
         model.add_forbidden_gene(sctC)
 
         gene_name = 'toto'
-        profile = self.model_location.get_profile(gene_name)
-        toto_core = CoreGene(gene_name, model.family_name, profile)
+        toto_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         toto = ModelGene(toto_core, model)
         model.add_neutral_gene(toto)
 
         gene_name = 'totote'
-        profile = self.model_location.get_profile(gene_name)
-        totote_core = CoreGene(gene_name, model.family_name, profile)
+        totote_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         totote = ModelGene(totote_core, model)
         homolog = Homolog(totote, toto)
         toto.add_homolog(homolog)
@@ -371,8 +363,7 @@ sctC
                                )
         hit_to_filter_out = []
         gene_name = 'gspD'
-        profile = self.model_location.get_profile(gene_name)
-        gspD_core = CoreGene(gene_name, model.family_name, profile)
+        gspD_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(gspD_core, model)
         hit_to_filter_out.append(Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
                                      float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
