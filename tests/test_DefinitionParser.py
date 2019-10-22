@@ -30,6 +30,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
+from macsypy.profile import ProfileFactory
 from macsypy.gene import GeneBank, CoreGene, ModelGene
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
@@ -50,12 +51,13 @@ class TestModelParser(MacsyTest):
         self.cfg = Config(defaults, self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
+        self.profile_factory = ProfileFactory(self.cfg)
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
-                                       self.model_registry)
+                                       self.model_registry, self.profile_factory)
         
         
     def tearDown(self):
@@ -223,7 +225,7 @@ class TestModelParser(MacsyTest):
         with self.assertRaises(MacsypyError) as context:
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
-                         "The gene foo/foo_bar have no profile.")
+                         "'foo/foo_bar': No such profile")
 
     def test_invalid_homolog_2(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/invalid_homolog_2')]
@@ -409,7 +411,8 @@ class TestModelParser(MacsyTest):
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
 
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
@@ -432,7 +435,8 @@ class TestModelParser(MacsyTest):
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
 
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
@@ -458,7 +462,8 @@ class TestModelParser(MacsyTest):
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
 
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
@@ -481,7 +486,8 @@ class TestModelParser(MacsyTest):
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
 
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
@@ -503,7 +509,8 @@ class TestModelParser(MacsyTest):
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
-        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank, self.model_registry)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
 
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
