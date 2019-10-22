@@ -30,6 +30,7 @@ import argparse
 from macsypy.gene import Homolog
 from macsypy.gene import CoreGene, ModelGene
 from macsypy.model import Model
+from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from tests import MacsyTest
@@ -48,6 +49,7 @@ class TestHomolog(MacsyTest):
 
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.profile_factory = ProfileFactory(self.cfg)
 
 
     def tearDown(self):
@@ -61,13 +63,11 @@ class TestHomolog(MacsyTest):
         model = Model("T2SS", 10)
 
         gene_name = 'sctJ_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_ref = ModelGene(c_gene_ref, model)
 
         gene_name = 'sctJ'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
         homolog_1 = Homolog(gene, gene_ref)
         gene.add_homolog(homolog_1)
@@ -79,13 +79,11 @@ class TestHomolog(MacsyTest):
         model = Model("T2SS", 10)
 
         gene_name = 'sctJ_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_ref = ModelGene(c_gene_ref, model)
 
         gene_name = 'sctJ'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
         homolog = Homolog(gene, gene_ref)
@@ -99,13 +97,11 @@ class TestHomolog(MacsyTest):
         model = Model("T2SS", 10)
 
         gene_name = 'sctJ_FLG'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene_ref = CoreGene(gene_name, model.family_name, profile)
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_ref = ModelGene(c_gene_ref, model)
 
         gene_name = 'sctJ'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
         homolog = Homolog(gene, gene_ref)
