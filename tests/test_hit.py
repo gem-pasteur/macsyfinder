@@ -28,6 +28,7 @@ import argparse
 from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
+from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
@@ -46,12 +47,16 @@ class HitTest(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        self.profile_factory = ProfileFactory(self.cfg)
+
 
     def test_cmp(self):
-        model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.model_location.get_profile(gene_name)
-        gene = CoreGene(gene_name, model.family_name, profile)
+        gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         # compare hit with different id (comparison based on seq identifier)
         h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
@@ -72,10 +77,8 @@ class HitTest(MacsyTest):
 
 
     def test_eq(self):
-        model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.model_location.get_profile(gene_name)
-        gene = CoreGene(gene_name, model.family_name, profile)
+        gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -86,11 +89,10 @@ class HitTest(MacsyTest):
         self.assertEqual(h0, h1)
         self.assertNotEqual(h0, h2)
 
+
     def test_str(self):
-        model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.model_location.get_profile(gene_name)
-        gene = CoreGene(gene_name, model.family_name, profile)
+        gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         hit_prop = {'id': "PSAE001c01_006940",
                     'hit_seq_len': 803,
@@ -114,10 +116,8 @@ class HitTest(MacsyTest):
 
 
     def test_get_position(self):
-        model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.model_location.get_profile(gene_name)
-        gene = CoreGene(gene_name, model.family_name, profile)
+        gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -125,10 +125,8 @@ class HitTest(MacsyTest):
 
 
     def test_hash(self):
-        model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.model_location.get_profile(gene_name)
-        gene = CoreGene(gene_name, model.family_name, profile)
+        gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
                  float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
@@ -154,15 +152,14 @@ class ValidHitTest(MacsyTest):
         models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
 
         model = Model("foo/T2SS", 10)
+        profile_factory = ProfileFactory(cfg)
         gene_name = "gspD"
-        profile = models_location.get_profile(gene_name)
-        self.c_gene_gspd = CoreGene(gene_name, model.family_name, profile)
+        self.c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
         self.gene_gspd = ModelGene(self.c_gene_gspd, model)
 
         model.add_mandatory_gene(self.gene_gspd)
         gene_name = "sctJ"
-        profile = models_location.get_profile(gene_name)
-        self.c_gene_sctj = CoreGene(gene_name, model.family_name, profile)
+        self.c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
         self.gene_sctj = ModelGene(self.c_gene_sctj, model)
         model.add_accessory_gene(self.gene_sctj)
 
@@ -199,12 +196,17 @@ class GetBestHitTest(MacsyTest):
         self.model_name = 'foo'
         self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        self.profile_factory = ProfileFactory(self.cfg)
+
 
     def test_get_best_hits(self):
         model = Model("foo/T2SS", 10)
         gene_name = "gspD"
-        profile = self.models_location.get_profile(gene_name)
-        c_gene_gspd = CoreGene(gene_name, model.family_name, profile)
+        c_gene_gspd = CoreGene(self.models_location, gene_name, self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
 
         #        gene, model, id,            hit_seq_len, replicon_name, position, i_eval,
