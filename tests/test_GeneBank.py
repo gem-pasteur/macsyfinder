@@ -34,6 +34,7 @@ from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
+from macsypy.profile import ProfileFactory
 
 from tests import MacsyTest
 
@@ -52,7 +53,7 @@ class Test(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.gene_bank = GeneBank()
-
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -69,39 +70,36 @@ class Test(MacsyTest):
                          f"\"No such gene 'foo/{gene_name}' in this bank\"")
         model_foo = Model(self.model_name, 10)
 
-        profile = self.model_location.get_profile(gene_name)
-        c_gene = CoreGene(gene_name, model_foo.family_name, profile)
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model_foo)
 
-        self.gene_bank.add_new_gene(self.model_location, gene_name)
+        self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
 
         gene_from_bank = self.gene_bank[(model_foo.family_name, gene_name)]
         self.assertTrue(isinstance(gene_from_bank, CoreGene))
         self.assertEqual(gene_from_bank, gene)
         gbk_contains_bfore = list(self.gene_bank)
-        self.gene_bank.add_new_gene(self.model_location, gene_name)
+        self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
         gbk_contains_after = list(self.gene_bank)
         self.assertEqual(gbk_contains_bfore, gbk_contains_after)
 
         gene_name = "bar"
         with self.assertRaises(MacsypyError) as ctx:
-            self.gene_bank.add_new_gene(self.model_location, gene_name)
+            self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
         self.assertEqual(str(ctx.exception),
-                         f"The gene {self.model_name}/{gene_name} have no profile.")
+                         f"'{self.model_name}/{gene_name}': No such profile")
 
 
     def test_contains(self):
         model_foo = Model("foo/bar", 10)
-
         gene_name = 'sctJ_FLG'
 
-        self.gene_bank.add_new_gene(self.model_location, gene_name)
+        self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
         gene_in = self.gene_bank[(model_foo.family_name, gene_name)]
         self.assertIn(gene_in, self.gene_bank)
 
         gene_name = 'abc'
-        profile = self.model_location.get_profile(gene_name)
-        c_gene_out = CoreGene(gene_name, model_foo.family_name, profile)
+        c_gene_out = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_out = ModelGene(c_gene_out, model_foo)
         self.assertNotIn(gene_out, self.gene_bank)
 
@@ -109,13 +107,13 @@ class Test(MacsyTest):
     def test_iter(self):
         genes_names = ['sctJ_FLG', 'abc']
         for g in genes_names:
-            self.gene_bank.add_new_gene(self.model_location, g)
+            self.gene_bank.add_new_gene(self.model_location, g, self.profile_factory)
         self.assertListEqual([g.name for g in self.gene_bank],
                              genes_names)
 
 
     def test_get_uniq_object(self):
         gene_name = 'sctJ_FLG'
-        self.gene_bank.add_new_gene(self.model_location, gene_name)
-        self.gene_bank.add_new_gene(self.model_location, gene_name)
+        self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
+        self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
         self.assertEqual(len(self.gene_bank), 1)
