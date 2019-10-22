@@ -78,7 +78,7 @@ class GeneBank:
         return iter(self._genes_bank.values())
 
 
-    def add_new_gene(self, model_location, name):
+    def add_new_gene(self, model_location, name, profile_factory):
         """
         Add a gene in the bank
 
@@ -88,20 +88,16 @@ class GeneBank:
         """
         key = (model_location.name, name)
         if key not in self._genes_bank:
-            try:
-                profile = model_location.get_profile(name)
-            except KeyError:
-                raise MacsypyError(f"The gene {model_location.name}/{name} have no profile.")
-            gene = CoreGene(name, model_location.name, profile)
+            gene = CoreGene(model_location, name, profile_factory)
             self._genes_bank[key] = gene
 
 
 class CoreGene:
 
-    def __init__(self, name, model_family_name, profile):
+    def __init__(self, model_location, name, profile_factory):
         self._name = name
-        self._model_family_name = model_family_name
-        self._profile = profile
+        self._model_family_name = model_location.name
+        self._profile = profile_factory.get_profile(self, model_location)
 
     def __hash__(self):
         return hash((self._name, self._model_family_name))
