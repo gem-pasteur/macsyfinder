@@ -28,9 +28,9 @@ import logging
 _log = logging.getLogger(__name__)
 
 from .model import Model
-from .gene import CoreGene, ModelGene
+from .gene import ModelGene
 from .gene import Homolog, Analog
-from .registries import split_def_name, join_def_path
+from .registries import split_def_name
 from .error import MacsypyError, ModelInconsistencyError
 
 
