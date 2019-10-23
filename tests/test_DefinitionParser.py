@@ -31,7 +31,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.profile import ProfileFactory
-from macsypy.gene import GeneBank
+from macsypy.gene import GeneBank, ModelGene
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
@@ -106,6 +106,8 @@ class TestModelParser(MacsyTest):
         sctJ_FLG_homologs = sctJ_FLG.homologs
         self.assertEqual(len(sctJ_FLG_homologs), 1)
         self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
+        self.assertTrue(isinstance(sctJ_FLG_homologs[0].gene, ModelGene))
+        self.assertTrue(isinstance(sctJ_FLG_homologs[0].gene_ref, ModelGene))
         self.assertFalse(sctJ_FLG.exchangeable)
         sctN_FLG = m1.get_gene('sctN_FLG')
         self.assertTrue(sctN_FLG.exchangeable)
