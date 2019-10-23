@@ -220,7 +220,6 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
                                 hits.append(Hit(self.gene,
-                                                self.gene.model,
                                                 hit_id,
                                                 seq_lg,
                                                 replicon_name,
