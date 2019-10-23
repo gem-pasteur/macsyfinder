@@ -45,7 +45,7 @@ from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
 from macsypy.system import match, System, HitSystemTracker, SystemSerializer
-from macsypy.utils import get_models_name_to_detect
+from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
@@ -363,19 +363,19 @@ def main_search_systems(config, model_bank, gene_bank, logger):
     # create models
     parser = DefinitionParser(config, model_bank, gene_bank, registry)
     try:
-        models_name_to_detect = get_models_name_to_detect(config.models(), registry)
+        models_def_to_detect = get_def_to_detect(config.models(), registry)
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
 
-    parser.parse(models_name_to_detect)
+    parser.parse(models_def_to_detect)
 
     logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
     logger.info(f"Analysis launched on {config.sequence_db()} for model(s):")
 
-    for m in models_name_to_detect:
-        logger.info(f"\t- {m}")
+    for m in models_def_to_detect:
+        logger.info(f"\t- {m.fqn}")
 
-    models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
+    models_to_detect = [model_bank[model_loc.fqn] for model_loc in models_def_to_detect]
     all_genes = []
     for model in models_to_detect:
         genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
