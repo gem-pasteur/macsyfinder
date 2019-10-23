@@ -298,7 +298,8 @@ class DefinitionParser:
         key = (model_name, name)
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
-        gene = self.gene_bank[key]
+        c_gene = self.gene_bank[key]
+        gene = ModelGene(c_gene, curr_model)
         homolog = Homolog(gene, gene_ref)
         for homolog_node in node.findall("homologs/gene"):
             h2 = self._parse_homolog(homolog_node, gene, curr_model)
