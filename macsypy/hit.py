@@ -154,7 +154,6 @@ class Hit:
         return self.position
 
 
-
 class ValidHit:
     """
     Encapsulates a :class:`macsypy.report.Hit`
