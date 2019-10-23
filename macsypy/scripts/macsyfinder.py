@@ -325,7 +325,7 @@ def parse_args(args):
     return parser, parsed_args
 
 
-def main_search_systems(config, model_bank, gene_bank, logger):
+def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
@@ -361,7 +361,7 @@ def main_search_systems(config, model_bank, gene_bank, logger):
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank, registry)
+    parser = DefinitionParser(config, model_bank, gene_bank, registry, profile_factory)
     try:
         models_def_to_detect = get_def_to_detect(config.models(), registry)
     except KeyError as err:
@@ -384,9 +384,9 @@ def main_search_systems(config, model_bank, gene_bank, logger):
 
         for g in genes:
             if g.exchangeable:
-                h_s = g.get_homologs()
+                h_s = g.homologs
                 ex_genes += h_s
-                a_s = g.get_analogs()
+                a_s = g.analogs
                 ex_genes += a_s
         all_genes += (genes + ex_genes)
     #############################################
@@ -578,8 +578,9 @@ def main(args=None, loglevel=None):
 
         models = ModelBank()
         genes = GeneBank()
+        profile_factory = ProfileFactory(config)
 
-        main_search_systems(config, models, genes, logger)
+        main_search_systems(config, models, genes, profile_factory, logger)
     logger.info("END")
 
 
