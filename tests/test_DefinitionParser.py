@@ -31,7 +31,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.profile import ProfileFactory
-from macsypy.gene import GeneBank, CoreGene, ModelGene
+from macsypy.gene import GeneBank
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
@@ -65,42 +65,6 @@ class TestModelParser(MacsyTest):
             shutil.rmtree(self.cfg.working_dir())
         except:
             pass
-
-    # def test_defintion_to_parse(self):
-    #     parsed = set()
-    #     models_2_detect = set()
-    #     models_2_detect.add('foo/model_1')
-    #     def_2_parse = self.parser.definition_to_parse(models_2_detect, parsed)
-    #     self.assertSetEqual(def_2_parse, {s for s in ('foo/model_1', 'foo/model_2')})
-    #     parsed = set()
-    #     models_2_detect = set()
-    #     definition_name = 'foo/nimportnaoik'
-    #     models_2_detect.add(definition_name)
-    #     with self.assertRaises(MacsypyError) as context:
-    #         with self.catch_log():
-    #             self.parser.definition_to_parse(models_2_detect, parsed)
-    #     self.assertEqual(str(context.exception), f'{definition_name}: No such definition')
-    #
-    #     parsed = set()
-    #     models_2_detect = set()
-    #     model_name = 'bar'
-    #     definition = f'{model_name}/nimportnaoik'
-    #     models_2_detect.add(definition)
-    #     with self.assertRaises(MacsypyError) as context:
-    #         with self.catch_log():
-    #             self.parser.definition_to_parse(models_2_detect, parsed)
-    #     self.assertEqual(str(context.exception), f'{model_name}: No such Models in {self.cfg.models_dir()}')
-    #
-    #     parsed = set()
-    #     models_2_detect = set()
-    #     model_name = 'foo'
-    #     def_name = 'not_xml'
-    #     fqn = f'{model_name}/{def_name}'
-    #     models_2_detect.add(fqn)
-    #     with self.assertRaises(MacsypyError) as context:
-    #         with self.catch_log():
-    #             self.parser.definition_to_parse(models_2_detect, parsed)
-    #     self.assertTrue(str(context.exception).startswith(f'unable to parse model definition "{fqn}" :'))
 
 
     def test_parse_with_homologs(self):
