@@ -30,14 +30,12 @@ import tempfile
 import argparse
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene
-import macsypy.gene
-from macsypy.model import Model
+from macsypy.gene import CoreGene
 from macsypy.hit import Hit
 from macsypy.registries import ModelLocation
+from macsypy.profile import ProfileFactory
 from macsypy.database import Indexes
 from macsypy.search_genes import search_genes
-import macsypy.search_genes
 from tests import MacsyTest, which
 
 
@@ -59,11 +57,11 @@ class TestSearchGenes(MacsyTest):
         self.cfg = Config(MacsyDefaults(), args)
 
         self.model_name = 'foo'
-        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
         idx = Indexes(self.cfg)
         idx._build_my_indexes()
-
+        self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
@@ -75,9 +73,8 @@ class TestSearchGenes(MacsyTest):
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
-        model = Model("foo/T2SS", 10)
-        profile = Profile()
-        c_gene_abc = CoreGene("abc", model.family_name, self.models_location.get_profile("abc"))
+        gene_name = "abc"
+        c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
         report = search_genes([c_gene_abc], self.cfg)
         expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
                             26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663

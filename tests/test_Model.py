@@ -350,7 +350,7 @@ sctC
         filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
         self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
 
-        # with exhangeable attribute on gene sctJ_FLG, sctJ, sctN, sctN_FLG
+        # with exchangeable attribute on gene sctJ_FLG, sctJ, sctN, sctN_FLG
         # so we should take in count the homologs and analogs
         for g in (sctJ_FLG, sctJ, sctN_FLG, sctN, toto):
             g._exchangeable = True
