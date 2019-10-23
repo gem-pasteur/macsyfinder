@@ -30,7 +30,7 @@ import argparse
 from io import StringIO
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import Gene, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
 from macsypy.hit import Hit, ValidHit
@@ -104,14 +104,18 @@ set_2
 
         model = Model("foo/T2SS", 10)
         # test if id is well incremented
-        gene_gspd = Gene(profile_factory, "gspD", model, models_location)
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
-        gene_sctj = Gene(profile_factory, "sctJ", model, models_location)
+        gene_name = "sctJ"
+        c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
 
-        hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
 
@@ -144,6 +148,7 @@ neutral genes:
         systems_to_file([system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
+
     def test_rejected_clst_to_file(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
@@ -158,15 +163,19 @@ neutral genes:
 
         model = Model("foo/T2SS", 11)
 
-        gene_1 = Gene(profile_factory, "gspD", model, models_location)
-        gene_2 = Gene(profile_factory, "sctC", model, models_location)
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_1 = ModelGene(c_gene_gspd, model)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_2 = ModelGene(c_gene_sctc, model)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(gene_1, model, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = Hit(gene_2, model, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h40 = Hit(gene_1, model, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h50 = Hit(gene_2, model, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h10 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h40 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h50 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
         c1 = Cluster([h10, h20], model)
         c2 = Cluster([h40, h50], model)
         r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
