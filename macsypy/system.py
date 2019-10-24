@@ -96,27 +96,30 @@ def match(clusters, model):
         valid_hits = []
         for hit in cluster.hits:
             gene_name = hit.gene.name
+            # the ValidHit need to be linked to the
+            # gene of the model
+            gene = model.get_gene(gene_name)
             if gene_name in mandatory_counter:
                 mandatory_counter[hit.gene.name] += 1
-                valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.MANDATORY))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
             elif gene_name in exchangeable_mandatory:
                 gene_ref = exchangeable_mandatory[gene_name]
                 mandatory_counter[gene_ref.name] += 1
-                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.MANDATORY))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
             elif gene_name in accessory_counter:
                 accessory_counter[gene_name] += 1
-                valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.ACCESSORY))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in exchangeable_accessory:
                 gene_ref = exchangeable_accessory[gene_name]
                 accessory_counter[gene_ref.name] += 1
-                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.ACCESSORY))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in neutral_counter:
                 neutral_counter[gene_name] += 1
-                valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.NEUTRAL))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in exchangeable_neutral:
                 gene_ref = exchangeable_neutral[gene_name]
                 neutral_counter[gene_ref.name] += 1
-                valid_hits.append(ValidHit(hit, gene_ref, GeneStatus.NEUTRAL))
+                valid_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in forbidden_counter:
                 forbidden_counter[gene_name] += 1
                 # valid_hits.append(ValidHit(hit, hit.gene, GeneStatus.FORBIDDEN))
