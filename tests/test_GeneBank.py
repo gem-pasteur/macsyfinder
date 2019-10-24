@@ -70,18 +70,15 @@ class Test(MacsyTest):
                          f"\"No such gene 'foo/{gene_name}' in this bank\"")
         model_foo = Model(self.model_name, 10)
 
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model_foo)
-
         self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
 
         gene_from_bank = self.gene_bank[(model_foo.family_name, gene_name)]
         self.assertTrue(isinstance(gene_from_bank, CoreGene))
-        self.assertEqual(gene_from_bank, gene)
-        gbk_contains_bfore = list(self.gene_bank)
+        self.assertEqual(gene_from_bank.name, gene_name)
+        gbk_contains_before = list(self.gene_bank)
         self.gene_bank.add_new_gene(self.model_location, gene_name, self.profile_factory)
         gbk_contains_after = list(self.gene_bank)
-        self.assertEqual(gbk_contains_bfore, gbk_contains_after)
+        self.assertEqual(gbk_contains_before, gbk_contains_after)
 
         gene_name = "bar"
         with self.assertRaises(MacsypyError) as ctx:
