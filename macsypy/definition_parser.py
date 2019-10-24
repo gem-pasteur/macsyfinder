@@ -29,7 +29,7 @@ _log = logging.getLogger(__name__)
 
 from .model import Model
 from .gene import ModelGene
-from .gene import Homolog, Analog
+from .gene import Exchangeable
 from .registries import split_def_name
 from .error import MacsypyError, ModelInconsistencyError
 
@@ -239,7 +239,7 @@ class DefinitionParser:
         for gene_node in gene_nodes:
             name = gene_node.get("name")
             attrs = {}
-            for attr in ('loner', 'exchangeable', 'multi_system'):
+            for attr in ('loner', 'multi_system'):
                 val = gene_node.get(attr)
                 if val in ("1", "true", "True"):
                     val = True
@@ -260,10 +260,8 @@ class DefinitionParser:
                 attrs['inter_gene_max_space'] = inter_gene_max_space
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
 
-            for homolog_node in gene_node.findall("homologs/gene"):
-                new_gene.add_homolog(self._parse_homolog(homolog_node, new_gene, model))
-            for analog_node in gene_node.findall("analogs/gene"):
-                new_gene.add_analog(self._parse_analog(analog_node, new_gene, model))
+            for exchangeable_node in gene_node.findall("exchangeables/gene"):
+                new_gene.add_homolog(self._parse_exchangeable(exchangeable_node, new_gene, model))
 
             presence = gene_node.get("presence")
             if not presence:
@@ -279,7 +277,7 @@ class DefinitionParser:
                 raise SyntaxError(msg)
 
 
-    def _parse_homolog(self, node, gene_ref, curr_model):
+    def _parse_exchangeable(self, node, gene_ref, curr_model):
         """
         Parse a xml element gene and build the corresponding object
 
@@ -299,31 +297,8 @@ class DefinitionParser:
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
         c_gene = self.gene_bank[key]
-        homolog = Homolog(c_gene, gene_ref)
+        homolog = Exchangeable(c_gene, gene_ref)
         return homolog
-
-
-    def _parse_analog(self, node, gene_ref, curr_model):
-        """
-        Parse a xml element gene and build the corresponding object
-
-        :param node: a "node" corresponding to the gene element in the XML hierarchy
-        :type node: :class:`xml.etree.ElementTree.Element` object.
-        :param gene_ref: the gene which this gene is homolog to
-        :type gene_ref: class:`macsypy.gene.Gene` object.
-        :type curr_model: :class:`macsypy.model.Model` object
-        :return: the gene object corresponding to the node
-        :return: the gene object corresponding to the node
-        :rtype: :class:`macsypy.gene.Analog` object 
-        """
-        name = node.get("name")
-        model_name = split_def_name(curr_model.fqn)[0]
-        key = (model_name, name)
-        # It cannot fail
-        # all genes in the xml are created and insert in GeneBank before this step
-        c_gene = self.gene_bank[key]
-        analog = Analog(c_gene, gene_ref)
-        return analog
 
 
     def check_consistency(self, models):
