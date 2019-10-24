@@ -324,7 +324,7 @@ class Exchangeable(ModelGene):
 
 
     def add_exchangeable(self, exchangeable):
-        raise MacsypyError("cannot add 'Exchangeable' to an Exchangeable")
+        raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
 
 
 class GeneStatus(Enum):
