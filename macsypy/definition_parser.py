@@ -299,11 +299,7 @@ class DefinitionParser:
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
         c_gene = self.gene_bank[key]
-        gene = ModelGene(c_gene, curr_model)
-        homolog = Homolog(gene, gene_ref)
-        for homolog_node in node.findall("homologs/gene"):
-            h2 = self._parse_homolog(homolog_node, gene, curr_model)
-            homolog.add_homolog(h2)
+        homolog = Homolog(c_gene, gene_ref)
         return homolog
 
 
@@ -321,29 +317,12 @@ class DefinitionParser:
         :rtype: :class:`macsypy.gene.Analog` object 
         """
         name = node.get("name")
-        if not name:
-            msg = f"Invalid model definition '{curr_model.name}': gene without name"
-            _log.error(msg)
-            raise SyntaxError(msg)
-        try:
-            model_name = split_def_name(curr_model.fqn)[0]
-            key = (model_name, name)
-            gene = self.gene_bank[key]
-        except KeyError:
-            msg = f"Invalid model definition '{curr_model.name}': The gene '{name}' described as analog of " \
-                  f"'{gene_ref.name}' in model '{curr_model.name}' is not in the 'GeneBank' gene factory"
-            _log.critical(msg)
-            raise ModelInconsistencyError(msg)
-        model_ref = node.get("model_ref") or node.get("system_ref")
-        if model_ref is not None and model_ref != gene.model.name:
-            msg = f"Inconsistency in models definitions: the gene '{name}' described as analog of\
- '{gene_ref.name}' with model_ref '{model_ref}' has an other model in bank ({gene.model.name})"
-            _log.critical(msg)
-            raise ModelInconsistencyError(msg)
-        analog = Analog(gene, gene_ref)
-        for analog_node in node.findall("analogs/gene"):
-            h2 = self._parse_analog(analog_node, gene, curr_model)
-            analog.add_analog(h2)
+        model_name = split_def_name(curr_model.fqn)[0]
+        key = (model_name, name)
+        # It cannot fail
+        # all genes in the xml are created and insert in GeneBank before this step
+        c_gene = self.gene_bank[key]
+        analog = Analog(c_gene, gene_ref)
         return analog
 
 
