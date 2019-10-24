@@ -116,59 +116,60 @@ class TestModelGene(MacsyTest):
 
     def test_add_homolog(self):
         model_foo = Model("foo", 10)
-        gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model_foo)
         gene_name = 'sctJ'
         c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_ref = ModelGene(c_gene_ref,  model_foo)
-        homolog = Homolog(gene, gene_ref)
-        gene.add_homolog(homolog)
-        self.assertEqual(len(gene.homologs), 1)
-        self.assertEqual(gene.homologs[0], homolog)
+
+        h_gene_name = 'sctJ_FLG'
+        h_c_gene = CoreGene(self.model_location, h_gene_name, self.profile_factory)
+
+        homolog = Homolog(h_c_gene, gene_ref)
+        gene_ref.add_homolog(homolog)
+        self.assertEqual(len(gene_ref.homologs), 1)
+        self.assertEqual(gene_ref.homologs[0], homolog)
 
 
     def test_homologs(self):
         model_foo = Model("foo", 10)
+
         gene_name = 'sctN'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model_foo)
+        c_sctn = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctn = ModelGene(c_sctn, model_foo)
 
         gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
+        c_sctJ_FLG = CoreGene(self.model_location, gene_name, self.profile_factory)
 
-        homolog_1 = Homolog(sctJ_FLG, gene)
-        gene.add_homolog(homolog_1)
-        homolog_2 = Homolog(sctJ, gene)
-        gene.add_homolog(homolog_2)
-        self.assertEqual(gene.homologs, [homolog_1, homolog_2])
+        gene_name = 'sctJ'
+        c_sctJ = CoreGene(self.model_location, gene_name, self.profile_factory)
+
+        homolog_1 = Homolog(c_sctJ, sctn)
+        sctn.add_homolog(homolog_1)
+        homolog_2 = Homolog(c_sctJ_FLG, sctn)
+        sctn.add_homolog(homolog_2)
+        self.assertEqual(sctn.homologs, [homolog_1, homolog_2])
 
 
     def test_is_homolog(self):
         model_foo = Model("foo", 10)
 
         gene_name = 'sctN'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctN = ModelGene(c_gene, model_foo)
+        c_sctn = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctn = ModelGene(c_sctn, model_foo)
 
         gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
+        c_sctj_flg = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctj_flg = ModelGene(c_sctj_flg, model_foo)
 
         gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-        homolog = Homolog(sctJ_FLG, sctJ)
-        sctJ.add_homolog(homolog)
+        c_sctj = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctj = ModelGene(c_sctj, model_foo)
+        homolog = Homolog(c_sctj_flg, sctj)
+        sctj.add_homolog(homolog)
 
-        self.assertTrue(sctN.is_homolog(sctN))
-        self.assertFalse(sctJ_FLG.is_homolog(sctJ))
-        self.assertTrue(sctJ.is_homolog(sctJ_FLG))
-        self.assertFalse(sctN.is_homolog(sctJ))
+        self.assertFalse(sctj_flg.is_homolog)
+        self.assertFalse(sctj.is_homolog)
+        self.assertTrue(homolog.is_homolog)
+        self.assertFalse(sctn.is_homolog)
 
 
     def test_add_analog(self):
@@ -216,35 +217,31 @@ class TestModelGene(MacsyTest):
         sctN = ModelGene(c_gene, model_foo)
 
         gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
+        c_sctJ_FLG= CoreGene(self.model_location, gene_name, self.profile_factory)
 
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ = ModelGene(c_gene, model_foo)
-        analog = Analog(sctJ_FLG, sctJ)
+        analog = Analog(c_sctJ_FLG, sctJ)
         sctJ.add_analog(analog)
 
-        self.assertTrue(sctN.is_analog(sctN))
-        self.assertFalse(sctJ_FLG.is_analog(sctJ))
-        self.assertTrue(sctJ.is_analog(sctJ_FLG))
-        self.assertFalse(sctN.is_analog(sctJ))
+        self.assertFalse(sctN.is_analog)
+        self.assertFalse(sctJ.is_analog)
+        self.assertTrue(analog.is_analog)
 
 
-    def test_gene_ref(self):
+    def test_alternat_of(self):
         model_foo = Model("foo", 10)
 
-        gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
-
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-        analog = Analog(sctJ_FLG, sctJ)
-        sctJ.add_analog(analog)
-        self.assertEqual(analog.gene_ref, sctJ)
-        self.assertIsNone(sctJ_FLG.gene_ref)
+        sctj = ModelGene(c_gene, model_foo)
+
+        gene_name = 'sctJ_FLG'
+        c_sctj_flg = CoreGene(self.model_location, gene_name, self.profile_factory)
+        analog = Analog(c_sctj_flg, sctj)
+        sctj.add_analog(analog)
+        self.assertEqual(analog.alternate_of(), sctj)
 
 
     def test_model(self):
