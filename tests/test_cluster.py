@@ -408,18 +408,19 @@ class TestCluster(MacsyTest):
 
         c_gene_sctj = CoreGene(self.model_location, "sctC", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
+
         c_gene_sctJ_FLG = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctJ_FLG = ModelGene(c_gene_sctJ_FLG, model)
-        analog = Analog(gene_sctJ_FLG, gene_sctj)
-        gene_sctj.add_analog(analog)
+
+        analog_sctJ_FLG = Analog(gene_sctJ_FLG, gene_sctj)
+        gene_sctj.add_analog(analog_sctJ_FLG)
         model.add_accessory_gene(gene_sctj)
 
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         c_gene_sctn_FLG = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
-        gene_sctn_FLG = ModelGene(c_gene_sctn_FLG, model)
-        homolog = Homolog(gene_sctn_FLG, gene_sctj)
-        gene_sctn.add_homolog(homolog)
+        homolog_sctn_FLG = Homolog(c_gene_sctn_FLG, gene_sctn)
+        gene_sctn.add_homolog(homolog_sctn_FLG)
         model.add_accessory_gene(gene_sctn)
 
         c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
@@ -434,12 +435,12 @@ class TestCluster(MacsyTest):
         h_sctj = Hit(c_gene_sctj, "h_sctj", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
         h_sctj_an = Hit(c_gene_sctJ_FLG, "h_sctj_an", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctj_an = ValidHit(h_sctj_an, gene_sctj, GeneStatus.ACCESSORY)
+        v_h_sctj_an = ValidHit(h_sctj_an, analog_sctJ_FLG, GeneStatus.ACCESSORY)
 
         h_sctn = Hit(c_gene_sctn, "sctn", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
         h_sctn_hom = Hit(c_gene_sctn_FLG, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctn_hom = ValidHit(h_sctn_hom, gene_sctn, GeneStatus.ACCESSORY)
+        v_h_sctn_hom = ValidHit(h_sctn_hom, homolog_sctn_FLG, GeneStatus.ACCESSORY)
 
         h_toto = Hit(c_gene_sctn, "toto", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
@@ -468,13 +469,13 @@ class TestCluster(MacsyTest):
         c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctn, v_h_sctj_an], model)
         self.assertEqual(c1.score, 2.875)
 
-        # 2 mandatory
-        # 1 accessory + 1 accessory analog of the 1rst accessory
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model)
-        self.assertEqual(c1.score, 2.5)
+        # # 2 mandatory
+        # # 1 accessory + 1 accessory analog of the 1rst accessory
+        # c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model)
+        # self.assertEqual(c1.score, 2.5)
 
         # test the cache score
-        self.assertEqual(c1.score, 2.5)
+        self.assertEqual(c1.score, 2.875)
 
         non_valid_hit = ValidHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)
         c1 = Cluster([v_h_gspd, non_valid_hit, v_h_tadz], model)
@@ -586,6 +587,7 @@ class TestRejectedCluster(MacsyTest):
         r_c = RejectedClusters(model, c1, "bla")
         self.assertListEqual(r_c.clusters, [c1])
         self.assertEqual(r_c.reason, 'bla')
+
 
     def test_str(self):
         model = Model("foo/T2SS", 11)
