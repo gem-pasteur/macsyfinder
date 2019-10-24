@@ -59,7 +59,7 @@ class TestHomolog(MacsyTest):
             pass
 
 
-    def test_gene_ref(self):
+    def test_alternate_of(self):
         model = Model("T2SS", 10)
 
         gene_name = 'sctJ_FLG'
@@ -68,11 +68,10 @@ class TestHomolog(MacsyTest):
 
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model)
-        homolog_1 = Homolog(gene, gene_ref)
-        gene.add_homolog(homolog_1)
+        homolog_1 = Homolog(c_gene, gene_ref)
+        gene_ref.add_homolog(homolog_1)
 
-        self.assertEqual(homolog_1.gene_ref, gene_ref)
+        self.assertEqual(homolog_1.alternate_of(), gene_ref)
 
 
     def test_is_aligned(self):
@@ -91,19 +90,3 @@ class TestHomolog(MacsyTest):
 
         homolog = Homolog(gene, gene_ref, aligned=True)
         self.assertTrue(homolog.is_aligned())
-
-
-    def test_delegation(self):
-        model = Model("T2SS", 10)
-
-        gene_name = 'sctJ_FLG'
-        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene_ref = ModelGene(c_gene_ref, model)
-
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model)
-
-        homolog = Homolog(gene, gene_ref)
-        self.assertEqual(homolog.model, model)
-
