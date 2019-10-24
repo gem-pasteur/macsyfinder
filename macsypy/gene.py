@@ -155,7 +155,7 @@ class ModelGene:
         try:
             return getattr(self._gene, item)
         except AttributeError:
-            raise AttributeError(f"'ModelGene' object has no attribute '{item}'")
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
 
     def __str__(self):
         """
@@ -232,9 +232,13 @@ class ModelGene:
         else:
             return self._model.inter_gene_max_space
 
-    @property
-    def gene_ref(self):
-        return None
+
+    def alternate_of(self):
+        """
+        :return: the gene to which this one is homolog to (reference gene)
+        :rtype: :class:`macsypy.gene.Gene` object
+        """
+        return self
 
 
     def add_homolog(self, homolog):
@@ -272,54 +276,24 @@ class ModelGene:
         """
         return self._analogs[:]
 
-
-    def __eq__(self, gene):
-        """
-        :return: True if the gene names (gene.name) are the same, False otherwise.
-        :param gene: the query of the test
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :rtype: boolean.
-        """
-        return self.name == gene.name
-
-
     def __hash__(self):
         # needed to be hashable in Py3 when __eq__ is defined
         # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable
         return id(self)
 
-
-    def is_homolog(self, gene):
-        """
-        :return: True if the two genes are homologs, False otherwise.
-        :param gene: the query of the test
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :rtype: boolean.
-        """
-
-        if self == gene:
-            return True
-        else:
-            for h in self.homologs:
-                if gene == h.gene:
-                    return True
+    @property
+    def is_homolog(self):
         return False
 
 
-    def is_analog(self, gene):
+    @property
+    def is_analog(self):
         """
         :return: True if the two genes are analogs, False otherwise.
         :param gene: the query of the test
         :type gene: :class:`macsypy.gene.Gene` object.
         :rtype: boolean.
         """
-
-        if self == gene:
-            return True
-        else:
-            for h in self.analogs:
-                if gene == h.gene:
-                    return True
         return False
 
 
@@ -362,12 +336,12 @@ class ModelGene:
             return False
 
 
-class Homolog:
+class Homolog(ModelGene):
     """
     Handle homologs, encapsulate a Gene
     """
 
-    def __init__(self, gene, gene_ref, aligned=False):
+    def __init__(self, c_gene, gene_ref, aligned=False):
         """
         :param gene: the gene
         :type gene: :class:`macsypy.gene.Gene` object.
@@ -377,12 +351,13 @@ class Homolog:
                         Otherwise, only partial overlapping between the profiles.
         :type aligned: boolean
         """
-        self._gene = gene
+        super().__init__(c_gene, gene_ref.model,
+                         loner=gene_ref.loner,
+                         exchangeable=gene_ref.exchangeable,
+                         multi_system=gene_ref.multi_system,
+                         inter_gene_max_space=gene_ref.inter_gene_max_space)
         self._ref = gene_ref
         self.aligned = aligned
-
-    def __getattr__(self, name):
-        return getattr(self._gene, name)
 
 
     def is_aligned(self):
@@ -393,15 +368,11 @@ class Homolog:
         return self.aligned
 
     @property
-    def gene(self):
-        """
+    def is_homolog(self):
+        return True
 
-        :return: the gene which encapsulated in this homolog
-        """
-        return self._gene
 
-    @property
-    def gene_ref(self):
+    def alternate_of(self):
         """
         :return: the gene to which this one is homolog to (reference gene)
         :rtype: :class:`macsypy.gene.Gene` object
@@ -409,41 +380,39 @@ class Homolog:
         return self._ref
 
 
-class Analog:
+class Analog(ModelGene):
     """
-    Handle analogs, encapsulate a Gene
+    Handle homologs, encapsulate a Gene
     """
 
-    def __init__(self, gene, gene_ref):
+    def __init__(self, c_gene, gene_ref):
         """
         :param gene: the gene
         :type gene: :class:`macsypy.gene.Gene` object.
-        :param gene_ref: the gene to which the current is analog.
+        :param gene_ref: the gene to which the current is homolog.
         :type gene_ref: :class:`macsypy.gene.Gene` object.
+        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.
+                        Otherwise, only partial overlapping between the profiles.
+        :type aligned: boolean
         """
-        self._gene = gene
+        super().__init__(c_gene, gene_ref.model,
+                         loner=gene_ref.loner,
+                         exchangeable=gene_ref.exchangeable,
+                         multi_system=gene_ref.multi_system,
+                         inter_gene_max_space=gene_ref.inter_gene_max_space)
         self._ref = gene_ref
 
 
-    def __getattr__(self, name):
-        return getattr(self.gene, name)
-
-
-    @property
-    def gene(self):
+    def alternate_of(self):
         """
-
-        :return: the gene which encapsulated in this Analog
-        """
-        return self._gene
-
-    @property
-    def gene_ref(self):
-        """
-        :return: the gene to which this one is analog to (reference gene)
+        :return: the gene to which this one is homolog to (reference gene)
         :rtype: :class:`macsypy.gene.Gene` object
         """
         return self._ref
+
+    @property
+    def is_analog(self):
+        return True
 
 
 class GeneStatus(Enum):
