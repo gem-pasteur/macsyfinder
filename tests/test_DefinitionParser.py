@@ -202,22 +202,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(ctx.exception), "Invalid model definition 'foo/invalid_homolog_2': gene without name")
 
-#     def test_invalid_analog(self):
-#         model_2_detect = ['foo/invalid_analog']
-#         with self.assertRaises(ModelInconsistencyError) as context:
-#             with self.catch_log():
-#                 self.parser.parse(model_2_detect)
-#         self.assertEqual(str(context.exception),
-#                          "Invalid model definition 'invalid_analog': The gene 'foo_bar' described as "
-#                          "analog of 'gspD' in model 'invalid_analog' is not in the 'GeneBank' gene factory")
-#
-#     def test_invalid_analog_2(self):
-#         model_2_detect = ['foo/invalid_analog_2']
-#         with self.assertRaises(SyntaxError) as ctx:
-#             with self.catch_log():
-#                 self.parser.parse(model_2_detect)
-#         self.assertEqual(str(ctx.exception), "Invalid model definition 'invalid_analog_2': gene without name")
-#
+
     def test_bad_min_genes_required(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_min_genes_required')]
         with self.assertRaises(ModelInconsistencyError) as context:
