@@ -115,6 +115,7 @@ class MetaModel(type):
             return getattr(self, f"_{cat}_genes")
         return getter
 
+
     def setter_maker(cat):
         """
         Create the method add_<cat>_gene which allow to add gene in the right category of the model
@@ -301,14 +302,12 @@ class Model(metaclass=MetaModel):
         """
         # create a dict with genes from all categories
         all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
-                for g in sublist}
+                     for g in sublist}
         if gene_name in all_genes:
             return all_genes[gene_name]
         else:
             for g in all_genes.values():
-                homolgs = g.homologs
-                analogs = g.analogs
-                for ex in homolgs + analogs:
+                for ex in g.exchangeables:
                     if ex.name == gene_name:
                         return ex
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
@@ -332,8 +331,7 @@ class Model(metaclass=MetaModel):
         :rtype: list of :class:`macsypy.report.Hit` object
         """
         primary_genes = [g for g in chain(*[getattr(self, f"{cat}_genes") for cat in self._gene_category])]
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.analogs, g.homologs)
-                              if g.exchangeable]
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
         return compatible_hits
