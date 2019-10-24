@@ -27,16 +27,17 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.gene import Homolog
+from macsypy.gene import Exchangeable
 from macsypy.gene import CoreGene, ModelGene
 from macsypy.model import Model
 from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-class TestHomolog(MacsyTest):
+class TestExchangeable(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -68,25 +69,79 @@ class TestHomolog(MacsyTest):
 
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        homolog_1 = Homolog(c_gene, gene_ref)
-        gene_ref.add_homolog(homolog_1)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
+        gene_ref.add_exchangeable(homolog_1)
 
         self.assertEqual(homolog_1.alternate_of(), gene_ref)
 
-
-    def test_is_aligned(self):
+    def test_is_exchangeable(self):
         model = Model("T2SS", 10)
-
         gene_name = 'sctJ_FLG'
         c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene_ref = ModelGene(c_gene_ref, model)
 
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
 
-        homolog = Homolog(gene, gene_ref)
-        self.assertFalse(homolog.is_aligned())
+        self.assertTrue(homolog_1.is_exchangeable)
 
-        homolog = Homolog(gene, gene_ref, aligned=True)
-        self.assertTrue(homolog.is_aligned())
+    def test_add_exchangeable(self):
+        model = Model("T2SS", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene_ref = ModelGene(c_gene_ref, model)
+
+        gene_name = 'sctJ'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
+        homolog_2 = Exchangeable(c_gene, gene_ref)
+
+        with self.assertRaises(MacsypyError) as ctx:
+            homolog_1.add_exchangeable(homolog_2)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot add 'Exchangeable' to an Exchangeable")
+
+    def test_model(self):
+        model = Model("T2SS", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene_ref = ModelGene(c_gene_ref, model)
+
+        gene_name = 'sctJ'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
+
+        self.assertEqual(homolog_1.model, gene_ref.model)
+
+
+    def test_loner(self):
+        model = Model("T2SS", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene_ref = ModelGene(c_gene_ref, model)
+        gene_ref_loner = ModelGene(c_gene_ref, model, loner=True)
+
+        gene_name = 'sctJ'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
+        homolog_2 = Exchangeable(c_gene, gene_ref_loner)
+
+        self.assertFalse(homolog_1.loner)
+        self.assertTrue(homolog_2.loner)
+
+    def test_multi_system(self):
+        model = Model("T2SS", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene_ref = ModelGene(c_gene_ref, model)
+        gene_ref_multi_system = ModelGene(c_gene_ref, model, multi_system=True)
+
+        gene_name = 'sctJ'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        homolog_1 = Exchangeable(c_gene, gene_ref)
+        homolog_2 = Exchangeable(c_gene, gene_ref_multi_system)
+
+        self.assertFalse(homolog_1.multi_system)
+        self.assertTrue(homolog_2.multi_system)
+
