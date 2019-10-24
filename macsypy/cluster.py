@@ -195,8 +195,8 @@ class Cluster:
         :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
         """
         if self._genes_ref is None:
-            self._genes_ref = {h.gene_ref for h in self.hits}
-        return gene in self._genes_ref
+            self._genes_ref = {h.gene_ref.name for h in self.hits}
+        return gene.name in self._genes_ref
 
 
     def merge(self, cluster, before=False):
