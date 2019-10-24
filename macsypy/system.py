@@ -244,12 +244,13 @@ class System:
 
         # all the hits are ValidHit
         for hit in self.hits:
+            name = hit.gene_ref.alternate_of().name
             if hit.status == GeneStatus.MANDATORY:
-                self._mandatory_occ[hit.gene_ref.name].append(hit)
+                self._mandatory_occ[name].append(hit)
             elif hit.status == GeneStatus.ACCESSORY:
-                self._accessory_occ[hit.gene_ref.name].append(hit)
+                self._accessory_occ[name].append(hit)
             elif hit.status == GeneStatus.NEUTRAL:
-                self._neutral_occ[hit.gene_ref.name].append(hit)
+                self._neutral_occ[name].append(hit)
 
     @property
     def replicon_name(self):
