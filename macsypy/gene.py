@@ -27,6 +27,7 @@ import logging
 _log = logging.getLogger(__name__)
 from enum import Enum
 
+from .error import MacsypyError
 
 class GeneBank:
     """
@@ -320,6 +321,10 @@ class Exchangeable(ModelGene):
         :rtype: :class:`macsypy.gene.Gene` object
         """
         return self._ref
+
+
+    def add_exchangeable(self, exchangeable):
+        raise MacsypyError("cannot add 'Exchangeable' to an Exchangeable")
 
 
 class GeneStatus(Enum):
