@@ -2,15 +2,15 @@
 
     <gene name="csf1_TypeU" presence="mandatory" />
     <gene name="csf2_TypeU" presence="mandatory">
-        <analogs>
+        <exchangeables>
             <gene name="csf3_TypeU" />
-        </analogs>
+        </exchangeables>
     </gene>
 
     <gene name="cas2_TypeI-II-III" presence="accessory">
-        <homologs>
+        <exchangeables>
             <gene name="cas5_TypeI" />
-        </homologs>
+        </exchangeables>
     </gene>
     <gene name="cas3_TypeI" presence="forbidden" />
     <gene name="cas3a_TypeI" presence="forbidden" />
