@@ -27,7 +27,7 @@ import shutil
 import tempfile
 import argparse
 
-from macsypy.gene import CoreGene, ModelGene, Homolog, Analog, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
@@ -114,7 +114,7 @@ class TestModelGene(MacsyTest):
         self.assertEqual(str(ctx.exception), "'ModelGene' object has no attribute 'foo'")
 
 
-    def test_add_homolog(self):
+    def test_add_exchangeable(self):
         model_foo = Model("foo", 10)
         gene_name = 'sctJ'
         c_gene_ref = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -123,13 +123,13 @@ class TestModelGene(MacsyTest):
         h_gene_name = 'sctJ_FLG'
         h_c_gene = CoreGene(self.model_location, h_gene_name, self.profile_factory)
 
-        homolog = Homolog(h_c_gene, gene_ref)
-        gene_ref.add_homolog(homolog)
-        self.assertEqual(len(gene_ref.homologs), 1)
-        self.assertEqual(gene_ref.homologs[0], homolog)
+        homolog = Exchangeable(h_c_gene, gene_ref)
+        gene_ref.add_exchangeable(homolog)
+        self.assertEqual(len(gene_ref.exchangeables), 1)
+        self.assertEqual(gene_ref.exchangeables[0], homolog)
 
 
-    def test_homologs(self):
+    def test_exhangeables(self):
         model_foo = Model("foo", 10)
 
         gene_name = 'sctN'
@@ -142,14 +142,14 @@ class TestModelGene(MacsyTest):
         gene_name = 'sctJ'
         c_sctJ = CoreGene(self.model_location, gene_name, self.profile_factory)
 
-        homolog_1 = Homolog(c_sctJ, sctn)
-        sctn.add_homolog(homolog_1)
-        homolog_2 = Homolog(c_sctJ_FLG, sctn)
-        sctn.add_homolog(homolog_2)
-        self.assertEqual(sctn.homologs, [homolog_1, homolog_2])
+        homolog_1 = Exchangeable(c_sctJ, sctn)
+        sctn.add_exchangeable(homolog_1)
+        homolog_2 = Exchangeable(c_sctJ_FLG, sctn)
+        sctn.add_exchangeable(homolog_2)
+        self.assertEqual(sctn.exchangeables, [homolog_1, homolog_2])
 
 
-    def test_is_homolog(self):
+    def test_is_exchangeable(self):
         model_foo = Model("foo", 10)
 
         gene_name = 'sctN'
@@ -163,74 +163,16 @@ class TestModelGene(MacsyTest):
         gene_name = 'sctJ'
         c_sctj = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctj = ModelGene(c_sctj, model_foo)
-        homolog = Homolog(c_sctj_flg, sctj)
-        sctj.add_homolog(homolog)
+        homolog = Exchangeable(c_sctj_flg, sctj)
+        sctj.add_exchangeable(homolog)
 
-        self.assertFalse(sctj_flg.is_homolog)
-        self.assertFalse(sctj.is_homolog)
-        self.assertTrue(homolog.is_homolog)
-        self.assertFalse(sctn.is_homolog)
-
-
-    def test_add_analog(self):
-        model_foo = Model("foo", 10)
-
-        gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
-
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-
-        analog = Analog(sctJ, sctJ_FLG)
-        sctJ_FLG.add_analog(analog)
-        self.assertEqual(len(sctJ_FLG.analogs), 1)
-        self.assertEqual(sctJ_FLG.analogs[0], analog)
+        self.assertFalse(sctj_flg.is_exchangeable)
+        self.assertFalse(sctj.is_exchangeable)
+        self.assertTrue(homolog.is_exchangeable)
+        self.assertFalse(sctn.is_exchangeable)
 
 
-    def test_analogs(self):
-        model_foo = Model("foo", 10)
-        gene_name = 'sctN'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(c_gene, model_foo)
-
-        gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-
-        analog_1 = Analog(sctJ_FLG, gene)
-        gene.add_analog(analog_1)
-        analog_2 = Analog(sctJ, gene)
-        gene.add_analog(analog_2)
-        self.assertEqual(gene.analogs, [analog_1, analog_2])
-
-
-    def test_is_analog(self):
-        model_foo = Model("foo", 10)
-
-        gene_name = 'sctN'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctN = ModelGene(c_gene, model_foo)
-
-        gene_name = 'sctJ_FLG'
-        c_sctJ_FLG= CoreGene(self.model_location, gene_name, self.profile_factory)
-
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-        analog = Analog(c_sctJ_FLG, sctJ)
-        sctJ.add_analog(analog)
-
-        self.assertFalse(sctN.is_analog)
-        self.assertFalse(sctJ.is_analog)
-        self.assertTrue(analog.is_analog)
-
-
-    def test_alternat_of(self):
+    def test_alternate_of(self):
         model_foo = Model("foo", 10)
 
         gene_name = 'sctJ'
@@ -239,9 +181,9 @@ class TestModelGene(MacsyTest):
 
         gene_name = 'sctJ_FLG'
         c_sctj_flg = CoreGene(self.model_location, gene_name, self.profile_factory)
-        analog = Analog(c_sctj_flg, sctj)
-        sctj.add_analog(analog)
-        self.assertEqual(analog.alternate_of(), sctj)
+        analog = Exchangeable(c_sctj_flg, sctj)
+        sctj.add_exchangeable(analog)
+        self.assertEqual(sctj.alternate_of(), sctj)
 
 
     def test_model(self):
@@ -327,22 +269,6 @@ class TestModelGene(MacsyTest):
         self.assertTrue(sctJ.is_forbidden(model_foo))
 
 
-    def test_exchangeable(self):
-        """
-        test getter for exchangeable property
-        """
-        model_foo = Model("foo", 10)
-        gene_name = 'sctJ_FLG'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo)
-        self.assertFalse(sctJ_FLG.exchangeable)
-
-        gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo, exchangeable=True)
-        self.assertTrue(sctJ.exchangeable)
-
-
     def test_multi_system(self):
         """
         test getter for multi_system property
@@ -392,29 +318,27 @@ class TestModelGene(MacsyTest):
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ = ModelGene(c_gene, model_foo)
 
-        homolog = Homolog(sctJ, sctJ_FLG)
-        sctJ_FLG.add_homolog(homolog)
+        homolog = Exchangeable(sctJ, sctJ_FLG)
+        sctJ_FLG.add_exchangeable(homolog)
 
         gene_name = 'sctN'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctN = ModelGene(c_gene, model_foo)
 
-        analog = Analog(sctN, sctJ_FLG)
-        sctJ_FLG.add_analog(analog)
+        analog = Exchangeable(sctN, sctJ_FLG)
+        sctJ_FLG.add_exchangeable(analog)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
-    homologs: sctJ
-    analogs: sctN"""
+    exchangeables: sctJ, sctN"""
         self.assertEqual(str(sctJ_FLG), s)
 
         gene_name = 'sctJ_FLG'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ_FLG = ModelGene(c_gene, model_foo, loner=True, exchangeable=True, multi_system=True, inter_gene_max_space=10)
+        sctJ_FLG = ModelGene(c_gene, model_foo, loner=True, multi_system=True, inter_gene_max_space=10)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
 loner
-multi_system
-exchangeable"""
+multi_system"""
         self.assertEqual(str(sctJ_FLG), s)
 
 
