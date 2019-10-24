@@ -165,7 +165,7 @@ class ModelGene:
             s += "\nmulti_system"
         if self._exchangeables:
             s += "\n    exchangeables: "
-            for h in self.homologs:
+            for h in self.exchangeables:
                 s += h.name + ", "
             s = s[:-2]
         return s
