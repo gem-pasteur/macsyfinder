@@ -272,7 +272,7 @@ class DefinitionParser:
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
 
             for exchangeable_node in gene_node.findall("exchangeables/gene"):
-                new_gene.add_homolog(self._parse_exchangeable(exchangeable_node, new_gene, model))
+                new_gene.add_exchangeable(self._parse_exchangeable(exchangeable_node, new_gene, model))
 
             presence = gene_node.get("presence")
             if not presence:
