@@ -187,8 +187,7 @@ class ValidHit:
 class HitWeight:
 
     hitself: float = 1
-    homolog: float = 0.75
-    analog: float = 0.75
+    exchangeable: float = 0.75
     mandatory: float = 1
     accessory: float = 0.5
     neutral: float = 0
