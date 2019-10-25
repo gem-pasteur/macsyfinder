@@ -120,26 +120,26 @@ class CoreGene:
 
 class ModelGene:
     """
-    Handle Gene of a (secretion) System
-
+    Handle Gene describe in a Model
     """
 
     def __init__(self, gene, model, loner=False, multi_system=False, inter_gene_max_space=None):
         """
-        handle gene
+        handle gene describe in a model
 
+        :param gene: a gene link to a profile
+        :type gene: a :class:`macsypy.gene.CoreGene` object.
         :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
-          without any effects on the model assessment, False otherwise.
-        :type exchangeable: boolean.
-        :param multi_system: True if this Gene can belong to different occurrences of this System. 
+        :param multi_system: True if this Gene can belong to different occurrences of this System.
         :type multi_system: boolean.
         :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
         :type inter_gene_max_space: integer
         """
+        if not isinstance(gene, CoreGene):
+            raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not f{type(gene)}.")
         self._gene = gene
         self._exchangeables = []
         self._model = model
@@ -293,15 +293,16 @@ class ModelGene:
 
 class Exchangeable(ModelGene):
     """
-    Handle homologs, encapsulate a Gene
+    Handle Exchangeables. Exchangeable are ModelGene which can replaced functionally an other ModelGene.
+    Biologically it can be Homolog or Analog
     """
 
     def __init__(self, c_gene, gene_ref):
         """
         :param gene: the gene
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :param gene_ref: the gene to which the current is homolog.
-        :type gene_ref: :class:`macsypy.gene.Gene` object.
+        :type gene: :class:`macsypy.gene.CoreGene` object.
+        :param gene_ref: the gene to which the current can replace it.
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object.
         """
         super().__init__(c_gene, gene_ref.model,
                          loner=gene_ref.loner,
