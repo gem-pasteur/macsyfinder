@@ -29,7 +29,7 @@ import random
 from macsypy.error import MacsypyError
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
-from macsypy.gene import CoreGene, ModelGene, Homolog, Analog, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
@@ -407,20 +407,20 @@ class TestCluster(MacsyTest):
         model.add_mandatory_gene(gene_tadZ)
 
         c_gene_sctj = CoreGene(self.model_location, "sctC", self.profile_factory)
-        gene_sctj = ModelGene(c_gene_sctj, model, exchangeable=True)
+        gene_sctj = ModelGene(c_gene_sctj, model)
 
         c_gene_sctJ_FLG = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
         gene_sctJ_FLG = ModelGene(c_gene_sctJ_FLG, model)
 
-        analog_sctJ_FLG = Analog(gene_sctJ_FLG, gene_sctj)
-        gene_sctj.add_analog(analog_sctJ_FLG)
+        analog_sctJ_FLG = Exchangeable(gene_sctJ_FLG, gene_sctj)
+        gene_sctj.add_exchangeable(analog_sctJ_FLG)
         model.add_accessory_gene(gene_sctj)
 
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         c_gene_sctn_FLG = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
-        homolog_sctn_FLG = Homolog(c_gene_sctn_FLG, gene_sctn)
-        gene_sctn.add_homolog(homolog_sctn_FLG)
+        homolog_sctn_FLG = Exchangeable(c_gene_sctn_FLG, gene_sctn)
+        gene_sctn.add_exchangeable(homolog_sctn_FLG)
         model.add_accessory_gene(gene_sctn)
 
         c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
