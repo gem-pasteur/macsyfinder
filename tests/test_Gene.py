@@ -32,6 +32,7 @@ from macsypy.model import Model
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
@@ -92,6 +93,16 @@ class TestModelGene(MacsyTest):
             shutil.rmtree(self.cfg.working_dir())
         except:
             pass
+
+    def test_init(self):
+        model_foo = Model("foo", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene_1 = ModelGene(c_gene, model_foo)
+        with self.assertRaises(MacsypyError) as ctx:
+            ModelGene(gene_1, model_foo)
+        self.assertEqual(str(ctx.exception),
+                         "The ModeleGene gene argument must be a CoreGene not <class 'macsypy.gene.ModelGene'>.")
 
     def test_hash(self):
         model_foo = Model("foo", 10)
