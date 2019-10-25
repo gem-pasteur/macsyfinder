@@ -24,6 +24,7 @@
 
 import os.path
 import xml.etree.ElementTree as Et
+from collections import Counter
 import logging
 _log = logging.getLogger(__name__)
 
@@ -47,6 +48,10 @@ class DefinitionParser:
         :type model_bank: :class:`macsypy.model.ModelBank` object
         :param gene_bank: the gene factory
         :type gene_bank: :class:`macsypy.gene.GeneBank` object
+        :param model_registry: The registry with all model location
+        :type model_registry: :class:`macsypy.registry.ModelRegistry` object
+        :param profile_factory: The profile factory
+        :type profile_factory: :class:`macsypy.profil.ProfilFactory` object
         """
         self.cfg = cfg
         self.model_bank = model_bank
@@ -61,9 +66,8 @@ class DefinitionParser:
         and add them to the model factory after checking its consistency.
         To get the model ask it to model_bank
 
-        :param models_2_detect: a list with the fully qualified names of the models to parse
-                               (eg ['TXSS/T2SS', 'CRISPR-Cas/typing/CAS-TypeII', ...])
-        :type models_2_detect: list of string
+        :param models_2_detect: a list of model definition to parse.
+        :type models_2_detect: list of :class:`macsypy.registry.DefinitionLocation`
         """
         models_2_check = []
         _log.info("Models Parsing")
@@ -84,52 +88,49 @@ class DefinitionParser:
 
     def _get_model_node(self, def_loc):
         """
-        :param def_2_parse: the set of definitions fqn to parse ([TXSS/T6SS TXSS/T3SS, ...])
-        :type def_2_parse: set of strings {string, ...}
-        :param parsed_models: the fully qualified name of the models already build.
-        :type parsed_models: set of strings {string, ...}
-        :return: a set of definitions' fully qualified names to parse.
-                 Scan the whole chain of 'model_ref' in a recursive way.
-        :rtype: {string, ...}
-        :raises: MacsypyError when Model definition is not found.
+        :param def_loc: a definition location to parse)
+        :type def_loc: return the node corresponding to the 'model' tag
+
         """
         path = def_loc.path
         try:
             tree = Et.parse(path)
             model_node = tree.getroot()
-
-            vers = model_node.get('vers')
-            msg = None
-            if vers is None:
-                msg = f"The model defintion {os.path.basename(path)} is not versioned. " \
-                      f"Please update your model."
-            elif vers != '2.0':
-                msg = f"The model defintion {os.path.basename(path)} has not the right version. " \
-                      f"version supported is '2.0'. Please update your model."
-                raise ModelInconsistencyError(msg)
-            elif model_node.tag == 'system':
-                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
-
-            if msg:
-                raise ModelInconsistencyError(msg)
-
-            # get all genes which are define in an other model
-            # and add these models to the list of models to parse
-            sys_ref = model_node.findall(".//gene[@system_ref]")
-            if sys_ref:
-                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
-                raise ModelInconsistencyError(msg)
-            # Since ElementTree from stdlib provides only limited xpath support,
-            # you can use | xpath OR operator only if you are using lxml
-            if model_node.findall(".//homologs") + model_node.findall(".//analogs"):
-                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
-                raise ModelInconsistencyError(msg)
-
+            self._check_syntax(model_node, path)
         except Exception as err:
             msg = f"unable to parse model definition '{def_loc.fqn}' : {err}"
             _log.critical(msg)
             raise MacsypyError(msg) from None
         return model_node
+
+
+    def _check_syntax(self, model_node, path):
+        vers = model_node.get('vers')
+        msg = None
+        if vers is None:
+            msg = f"The model definition {os.path.basename(path)} is not versioned. " \
+                  f"Please update your model."
+        elif vers != '2.0':
+            msg = f"The model definition {os.path.basename(path)} has not the right version. " \
+                  f"version supported is '2.0'. Please update your model."
+            raise ModelInconsistencyError(msg)
+        elif model_node.tag == 'system':
+            msg = f"The model definition {os.path.basename(path)} is obsolete. Please update your model."
+
+        if msg:
+            raise ModelInconsistencyError(msg)
+
+        # get all genes which are define in an other model
+        # and add these models to the list of models to parse
+        sys_ref = model_node.findall(".//gene[@system_ref]")
+        if sys_ref:
+            msg = f"The model definition {os.path.basename(path)} is obsolete. Please update your model."
+            raise ModelInconsistencyError(msg)
+        # Since ElementTree from stdlib provides only limited xpath support,
+        # you can use | xpath OR operator only if you are using lxml
+        if model_node.findall(".//homologs") + model_node.findall(".//analogs"):
+            msg = f"The model definition {os.path.basename(path)} is obsolete. Please update your model."
+            raise ModelInconsistencyError(msg)
 
 
     def _create_model(self, def_loc, model_node):
