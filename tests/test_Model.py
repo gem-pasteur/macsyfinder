@@ -30,7 +30,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
-from macsypy.gene import CoreGene, ModelGene, Homolog, Analog
+from macsypy.gene import CoreGene, ModelGene, Exchangeable
 from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit
 from macsypy.registries import ModelLocation
@@ -180,24 +180,14 @@ class TestModel(MacsyTest):
         homolog_name = 'sctJ'
         c_gene_homolog = CoreGene(self.model_location, homolog_name, self.profile_factory)
         gene_homolog = ModelGene(c_gene_homolog, model)
-        homolog = Homolog(gene_homolog, gene)
-        gene.add_homolog(homolog)
+        homolog = Exchangeable(gene_homolog, gene)
+        gene.add_exchangeable(homolog)
         for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
             for cat in model.gene_category:
                 setattr(model, f'_{cat}_genes', [])
             meth(gene)
             self.assertEqual(homolog, model.get_gene(homolog_name))
 
-        analog_name = 'sctC'
-        c_gene_analog = CoreGene(self.model_location, analog_name, self.profile_factory)
-        gene_analog = ModelGene(c_gene_analog, model)
-        analog = Analog(gene_analog, gene)
-        gene.add_analog(analog)
-        for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
-            for cat in model.gene_category:
-                setattr(model, f'_{cat}_genes', [])
-            meth(gene)
-            self.assertEqual(analog, model.get_gene(analog_name))
 
     # def test_get_gene_ref(self):
     #     model = Model("foo", 10)
@@ -241,8 +231,8 @@ class TestModel(MacsyTest):
         homolog_name = 'sctJ'
         c_gene_homolg = CoreGene(self.model_location, homolog_name, self.profile_factory)
         gene_homolg = ModelGene(c_gene_homolg, model)
-        homolog = Homolog(gene_homolg, mandatory_gene)
-        mandatory_gene.add_homolog(homolog)
+        homolog = Exchangeable(gene_homolg, mandatory_gene)
+        mandatory_gene.add_exchangeable(homolog)
 
         gene_name = 'sctN_FLG'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -251,8 +241,8 @@ class TestModel(MacsyTest):
         analog_name = 'sctN'
         c_gene_analog = CoreGene(self.model_location, analog_name, self.profile_factory)
         gene_analog = ModelGene(c_gene_analog, model)
-        analog = Analog(gene_analog, accessory_gene)
-        accessory_gene.add_analog(analog)
+        analog = Exchangeable(gene_analog, accessory_gene)
+        accessory_gene.add_exchangeable(analog)
 
         gene_name = 'toto'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -296,15 +286,17 @@ sctC
     def test_filter(self):
         model_fqn = "foo/bar"
         model = Model(model_fqn, 10)
+        model_2 = Model("foo/buz", 10)
+
         gene_name = 'sctJ_FLG'
         sctJ_FLG_core = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ_FLG = ModelGene(sctJ_FLG_core, model)
         model.add_mandatory_gene(sctJ_FLG)
+
         gene_name = 'sctJ'
         sctJ_core = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(sctJ_core, model)
-        homolog = Homolog(sctJ, sctJ_FLG)
-        sctJ_FLG.add_homolog(homolog)
+        sctj = Exchangeable(sctJ_core, sctJ_FLG)
+        sctJ_FLG.add_exchangeable(sctj)
 
         gene_name = 'sctN_FLG'
         sctN_FLG_core = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -313,9 +305,8 @@ sctC
 
         gene_name = 'sctN'
         sctN_core = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctN = ModelGene(sctN_core, model)
-        analog = Analog(sctN, sctN_FLG)
-        sctN_FLG.add_analog(analog)
+        sctn = Exchangeable(sctN_core, sctN_FLG)
+        sctN_FLG.add_exchangeable(sctn)
 
         gene_name = 'sctC'
         sctC_core = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -329,55 +320,35 @@ sctC
 
         gene_name = 'totote'
         totote_core = CoreGene(self.model_location, gene_name, self.profile_factory)
-        totote = ModelGene(totote_core, model)
-        homolog = Homolog(totote, toto)
-        toto.add_homolog(homolog)
+        totote = Exchangeable(totote_core, toto)
+        toto.add_exchangeable(totote)
 
-        # without exhangeable attribute on any genes
+        gene_name = 'gspD'
+        gspd_core = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gspd = ModelGene(gspd_core, model_2)
+
+        gene_name = 'tadZ'
+        tadz_core = CoreGene(self.model_location, gene_name, self.profile_factory)
+        tadz = Exchangeable(tadz_core, gspd)
+        gspd.add_exchangeable(tadz)
+
         hit_to_keep = []
-        for gene in (sctJ_FLG, sctN_FLG, sctC, toto):
+        for gene in (sctJ_FLG, sctN_FLG, sctC, toto, totote):
             hit_to_keep.append(Hit(gene,
                                    f"PSAE001c01_{gene.name}",
                                    1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
-        for gene in (sctJ, sctN, totote):
+        for gene in (gspd, tadz):
             hit_to_filter_out.append(Hit(gene,
-                                   "PSAE001c01_{gene.name}",
-                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
-                               )
+                                     f"PSAE001c01_{gene.name}",
+                                     1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                                     )
 
         filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
+
         self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
 
-        # with exchangeable attribute on gene sctJ_FLG, sctJ, sctN, sctN_FLG
-        # so we should take in count the homologs and analogs
-        for g in (sctJ_FLG, sctJ, sctN_FLG, sctN, toto):
-            g._exchangeable = True
-
-        hit_to_keep = []
-        for gene in (sctJ_FLG, sctJ, sctN, sctN_FLG, sctC, toto, totote):
-            hit_to_keep.append(Hit(gene,
-                                   "PSAE001c01_{gene.name}",
-                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
-                               )
-        hit_to_filter_out = []
-        gene_name = 'gspD'
-        gspD_core = CoreGene(self.model_location, gene_name, self.profile_factory)
-        gene = ModelGene(gspD_core, model)
-        hit_to_filter_out.append(Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
-                                     float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-                                 )
-        hit_to_filter_out.append(Hit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
-                                     float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
-                                 )
-        filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)
-        # when we sort hits we compare hits
-        # a warning is raised if 2 hit have the same id and the gene are not homologous
-        # it's due to dummy hits we create for test
-        # so I mute off warnings
-        with self.catch_log():
-            self.assertListEqual(sorted(hit_to_keep), sorted(filtered_hits))
 
     def test_hash(self):
         model_bar = Model('Foo/bar', 10)
