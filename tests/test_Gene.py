@@ -315,17 +315,13 @@ class TestModelGene(MacsyTest):
         sctJ_FLG = ModelGene(c_gene, model_foo)
 
         gene_name = 'sctJ'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctJ = ModelGene(c_gene, model_foo)
-
-        homolog = Exchangeable(sctJ, sctJ_FLG)
+        c_sctJ = CoreGene(self.model_location, gene_name, self.profile_factory)
+        homolog = Exchangeable(c_sctJ, sctJ_FLG)
         sctJ_FLG.add_exchangeable(homolog)
 
         gene_name = 'sctN'
-        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
-        sctN = ModelGene(c_gene, model_foo)
-
-        analog = Exchangeable(sctN, sctJ_FLG)
+        c_sctN = CoreGene(self.model_location, gene_name, self.profile_factory)
+        analog = Exchangeable(c_sctN, sctJ_FLG)
         sctJ_FLG.add_exchangeable(analog)
         s = """name : sctJ_FLG
 inter_gene_max_space: 10
