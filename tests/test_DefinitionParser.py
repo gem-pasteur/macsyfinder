@@ -31,7 +31,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.profile import ProfileFactory
-from macsypy.gene import GeneBank, CoreGene, ModelGene
+from macsypy.gene import GeneBank, CoreGene, ModelGene, Exchangeable
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
@@ -67,7 +67,7 @@ class TestModelParser(MacsyTest):
             pass
 
 
-    def test_parse_with_homologs(self):
+    def test_parse_with_exchangeable(self):
         def_2_parse = set()
         def_2_parse.add('foo/model_1')
         models_2_detect = [self.model_registry['foo'].get_definition('foo/model_1')]
@@ -102,64 +102,17 @@ class TestModelParser(MacsyTest):
         theoric_list = sorted(["sctC"])
         self.assertListEqual(forbidden_genes_name, theoric_list)
 
-        sctJ_FLG = [g for g in m1.mandatory_genes if g.name == 'sctJ_FLG'][0]
-        sctJ_FLG_homologs = sctJ_FLG.homologs
+        sctJ_FLG = m1.get_gene('sctJ_FLG')
+        sctJ_FLG_homologs = sctJ_FLG.exchangeables
         self.assertEqual(len(sctJ_FLG_homologs), 1)
         self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0], Homolog))
+        self.assertTrue(isinstance(sctJ_FLG_homologs[0], Exchangeable))
         self.assertTrue(isinstance(sctJ_FLG_homologs[0]._gene, CoreGene))
         self.assertTrue(isinstance(sctJ_FLG_homologs[0].alternate_of(), ModelGene))
-        self.assertFalse(sctJ_FLG.exchangeable)
         self.assertTrue(sctJ_FLG_homologs[0].loner)
-        sctN_FLG = m1.get_gene('sctN_FLG')
-        self.assertTrue(sctN_FLG.exchangeable)
-
-        self.assertEqual(len(m1.forbidden_genes), 1)
-        self.assertEqual(m1.forbidden_genes[0].name, 'sctC')
-
-
-#     def test_parse_with_analogs(self):
-#         def_2_parse = set()
-#         def_2_parse.add('foo/model_3')
-#         parsed = set()
-#         models_2_detect = self.parser.definition_to_parse(def_2_parse, parsed)
-#         self.parser.parse(models_2_detect)
-#
-#         self.assertEqual(len(self.model_bank), 2)
-#
-#         m4 = self.model_bank['foo/model_4']
-#         self.assertEqual(m4.name, 'model_4')
-#         self.assertEqual(m4.fqn, 'foo/model_4')
-#
-#         m3 = self.model_bank['foo/model_3']
-#         self.assertEqual(m3.name, 'model_3')
-#         self.assertEqual(m3.fqn, 'foo/model_3')
-#         self.assertEqual(m3.inter_gene_max_space, 20)
-#         self.assertEqual(m3.min_mandatory_genes_required, 4)
-#         self.assertEqual(m3.min_genes_required, 6)
-#         self.assertTrue(m3.multi_loci)
-#         self.assertFalse(m4.multi_loci)
-#         self.assertIsNone(m3.max_nb_genes)
-#         self.assertEqual(m4.max_nb_genes, 1)
-#         self.assertEqual(len(m3.mandatory_genes), 5)
-#         mandatory_genes_name = [g.name for g in m3.mandatory_genes]
-#         mandatory_genes_name.sort()
-#         theoric_list = ["sctJ_FLG", "sctN_FLG", "flgB", "flgC", "fliE"]
-#         theoric_list.sort()
-#         self.assertListEqual(mandatory_genes_name, theoric_list)
-#         sctJ_FLG = [g for g in m3.mandatory_genes if g.name == 'sctJ_FLG'][0]
-#         sctJ_FLG_homologs = sctJ_FLG.get_homologs()
-#         self.assertListEqual(sctJ_FLG_homologs, [])
-#         sctJ_FLG_analogs = sctJ_FLG.get_analogs()
-#         self.assertEqual(len(sctJ_FLG_analogs), 1)
-#         self.assertEqual(sctJ_FLG_analogs[0].name, 'sctJ')
-#         self.assertEqual(sctJ_FLG_analogs[0].model, self.model_bank['foo/model_4'])
-#         self.assertEqual(len(m3.accessory_genes), 1)
-#         self.assertEqual(m3.accessory_genes[0].name, 'tadZ')
-#         self.assertEqual(m3.accessory_genes[0].model, self.model_bank['foo/model_4'])
-#         self.assertEqual(len(m3.forbidden_genes), 1)
-#         self.assertEqual(m3.forbidden_genes[0].name, 'sctC')
-#         self.assertEqual(m3.forbidden_genes[0].model, self.model_bank['foo/model_4'])
+        self.assertFalse(sctJ_FLG.is_exchangeable)
+        sctJ = m1.get_gene('sctJ')
+        self.assertTrue(sctJ.is_exchangeable)
 
 
     def test_wo_presence(self):
