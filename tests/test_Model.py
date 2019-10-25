@@ -179,46 +179,13 @@ class TestModel(MacsyTest):
 
         homolog_name = 'sctJ'
         c_gene_homolog = CoreGene(self.model_location, homolog_name, self.profile_factory)
-        gene_homolog = ModelGene(c_gene_homolog, model)
-        homolog = Exchangeable(gene_homolog, gene)
+        homolog = Exchangeable(c_gene_homolog, gene)
         gene.add_exchangeable(homolog)
         for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
             for cat in model.gene_category:
                 setattr(model, f'_{cat}_genes', [])
             meth(gene)
             self.assertEqual(homolog, model.get_gene(homolog_name))
-
-
-    # def test_get_gene_ref(self):
-    #     model = Model("foo", 10)
-    #     gene_name = 'sctJ_FLG'
-    #     profile = self.model_location.get_profile(gene_name)
-    #     c_gene = CoreGene(gene_name, model.family_name, profile)
-    #     gene_ref = ModelGene(c_gene, model)
-    #
-    #     homolog_name = 'sctJ'
-    #     profile = self.model_location.get_profile(homolog_name)
-    #     c_gene_homolg = CoreGene(homolog_name, model.family_name, profile)
-    #     gene_homolg = ModelGene(c_gene_homolg, model)
-    #     homolog = Homolog(gene_homolg, gene_ref)
-    #     gene_ref.add_homolog(homolog)
-    #
-    #     for meth in [getattr(model, f'add_{cat}_gene') for cat in model.gene_category]:
-    #         for cat in model.gene_category:
-    #             setattr(model, f'_{cat}_genes', [])
-    #         meth(gene_ref)
-    #         print()
-    #         print("###############################")
-    #         print("gene_ref", gene_ref)
-    #         print("model.get_gene_ref(homolog)", model.get_gene_ref(homolog))
-    #         print("###############################")
-    #         self.assertEqual(gene_ref, model.get_gene_ref(homolog))
-    #     self.assertIsNone(model.get_gene_ref(gene_ref))
-    #
-    #     profile = self.model_location.get_profile('abc')
-    #     c_gene_ukn = CoreGene('abc', model.family_name, profile)
-    #     gene_ukn = ModelGene(c_gene_ukn, model)
-    #     self.assertRaises(KeyError, model.get_gene_ref, gene_ukn)
 
 
     def test_str(self):
@@ -230,8 +197,7 @@ class TestModel(MacsyTest):
         model.add_mandatory_gene(mandatory_gene)
         homolog_name = 'sctJ'
         c_gene_homolg = CoreGene(self.model_location, homolog_name, self.profile_factory)
-        gene_homolg = ModelGene(c_gene_homolg, model)
-        homolog = Exchangeable(gene_homolg, mandatory_gene)
+        homolog = Exchangeable(c_gene_homolg, mandatory_gene)
         mandatory_gene.add_exchangeable(homolog)
 
         gene_name = 'sctN_FLG'
@@ -240,8 +206,7 @@ class TestModel(MacsyTest):
         model.add_accessory_gene(accessory_gene)
         analog_name = 'sctN'
         c_gene_analog = CoreGene(self.model_location, analog_name, self.profile_factory)
-        gene_analog = ModelGene(c_gene_analog, model)
-        analog = Exchangeable(gene_analog, accessory_gene)
+        analog = Exchangeable(c_gene_analog, accessory_gene)
         accessory_gene.add_exchangeable(analog)
 
         gene_name = 'toto'

@@ -410,9 +410,8 @@ class TestCluster(MacsyTest):
         gene_sctj = ModelGene(c_gene_sctj, model)
 
         c_gene_sctJ_FLG = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
-        gene_sctJ_FLG = ModelGene(c_gene_sctJ_FLG, model)
 
-        analog_sctJ_FLG = Exchangeable(gene_sctJ_FLG, gene_sctj)
+        analog_sctJ_FLG = Exchangeable(c_gene_sctJ_FLG, gene_sctj)
         gene_sctj.add_exchangeable(analog_sctJ_FLG)
         model.add_accessory_gene(gene_sctj)
 

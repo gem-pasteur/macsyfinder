@@ -546,22 +546,22 @@ neutral genes:
 
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_1)
-        gene_sctn_hom = Exchangeable(gene_sctn_flg, gene_sctn)
+        gene_sctn_hom = Exchangeable(c_gene_sctn_flg, gene_sctn)
         gene_sctn.add_exchangeable(gene_sctn_hom)
 
         c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model_1)
-        gene_sctj_an = Exchangeable(gene_sctj_flg, gene_sctj)
+        gene_sctj_an = Exchangeable(c_gene_sctj_flg, gene_sctj)
         gene_sctj.add_exchangeable(gene_sctj_an)
 
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model_1)
-        gene_gspd_an = Exchangeable(gene_flgB, gene_gspd)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
         gene_gspd.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model_1)
-        gene_abc_ho = Exchangeable(gene_tadZ, gene_abc)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
         gene_abc.add_exchangeable(gene_abc_ho)
 
         model_1.add_mandatory_gene(gene_sctn)
@@ -627,22 +627,22 @@ neutral genes:
 
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_1)
-        gene_sctn_hom = Exchangeable(gene_sctn_flg, gene_sctn)
-        gene_sctn.add_exchangeable(gene_sctn_hom)
+        gene_sctn_hom = Exchangeable(c_gene_sctn, gene_sctn_flg)
+        gene_sctn_flg.add_exchangeable(gene_sctn_hom)
 
         c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_sctj = ModelGene(c_gene_sctj, model_1)
-        gene_sctj_an = Exchangeable(gene_sctj_flg, gene_sctj)
-        gene_sctj.add_exchangeable(gene_sctj_an)
+        gene_sctj_an = Exchangeable(c_gene_sctj, gene_sctj_flg)
+        gene_sctj_flg.add_exchangeable(gene_sctj_an)
 
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model_1)
-        gene_gspd_an = Exchangeable(gene_flgB, gene_gspd)
-        gene_gspd.add_exchangeable(gene_gspd_an)
+        gene_gspd_an = Exchangeable(c_gene_gspd, gene_tadZ)
+        gene_tadZ.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model_1)
-        gene_abc_ho = Exchangeable(gene_tadZ, gene_abc)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
         gene_abc.add_exchangeable(gene_abc_ho)
 
         model_1.add_mandatory_gene(gene_sctn)
