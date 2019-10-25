@@ -445,7 +445,7 @@ class TestModelParser(MacsyTest):
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          "unable to parse model definition 'foo/model_old_1' : "
-                         "The model defintion model_old_1.xml is not versioned. Please update your model.")
+                         "The model definition model_old_1.xml is not versioned. Please update your model.")
 
         # the root is system instead of mmodel
         model_fqn = 'foo/model_old_2'
@@ -456,7 +456,7 @@ class TestModelParser(MacsyTest):
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          f"unable to parse model definition '{model_fqn}' : "
-                         "The model defintion model_old_2.xml is obsolete. Please update your model.")
+                         "The model definition model_old_2.xml is obsolete. Please update your model.")
 
         # there still system_ref attribute
         model_fqn = 'foo/model_old_3'
@@ -467,7 +467,7 @@ class TestModelParser(MacsyTest):
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          f"unable to parse model definition '{model_fqn}' : "
-                         "The model defintion model_old_3.xml is obsolete. Please update your model.")
+                         "The model definition model_old_3.xml is obsolete. Please update your model.")
 
         # there still homologs tag
         model_fqn = 'foo/model_old_4'
@@ -478,7 +478,7 @@ class TestModelParser(MacsyTest):
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          f"unable to parse model definition '{model_fqn}' : "
-                         "The model defintion model_old_4.xml is obsolete. Please update your model.")
+                         "The model definition model_old_4.xml is obsolete. Please update your model.")
 
         # there still analogs tag
         model_fqn = 'foo/model_old_5'
@@ -489,4 +489,4 @@ class TestModelParser(MacsyTest):
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          f"unable to parse model definition '{model_fqn}' : "
-                         "The model defintion model_old_5.xml is obsolete. Please update your model.")
+                         "The model definition model_old_5.xml is obsolete. Please update your model.")
