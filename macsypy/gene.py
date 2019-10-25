@@ -29,6 +29,7 @@ from enum import Enum
 
 from .error import MacsypyError
 
+
 class GeneBank:
     """
     Store all Gene objects. Ensure that genes are instanciated only once.
@@ -79,11 +80,15 @@ class GeneBank:
 
     def add_new_gene(self, model_location, name, profile_factory):
         """
-        Add a gene in the bank
+        Create a gene and store it in the bank. If the same gene (same name) is add twice,
+        it is created only the first time.
 
-        :param gene: the gene to add
-        :type gene: :class:`macsypy.gene.Gene` object
-        :raise: KeyError if a gene with the same name is already registered
+        :param model_location: the location where the model family can be found.
+        :type model_location: :class:`macsypy.registry.ModelLocation` object
+        :param name: the name of the gene to add
+        :type name: str
+        :param profile_factory: The Profile factory
+        :type profile_factory: :class:`profile.ProfileFactory` object.
         """
         key = (model_location.name, name)
         if key not in self._genes_bank:
@@ -92,7 +97,10 @@ class GeneBank:
 
 
 class CoreGene:
-
+    """
+    Modelize gene attach to a profile.
+    It can be only one instance with the the same name (familly name, gene name)
+    """
     def __init__(self, model_location, name, profile_factory):
         self._name = name
         self._model_family_name = model_location.name
@@ -103,10 +111,16 @@ class CoreGene:
 
     @property
     def name(self):
+        """
+        The name of the gene a hmm profile with the same name must exists.
+        """
         return self._name
 
     @property
     def model_family_name(self):
+        """
+        The name of the model family for instance 'CRISPRCas' or 'TXSS'
+        """
         return self._model_family_name
 
     @property
@@ -156,7 +170,7 @@ class ModelGene:
 
     def __str__(self):
         """
-        Print the name of the gene and of its homologs/analogs.
+        Print the name of the gene and of its exchangeable genes.
         """
         s = f"name : {self.name}"
         s += f"\ninter_gene_max_space: {self.inter_gene_max_space:d}"
@@ -193,32 +207,36 @@ class ModelGene:
     @property
     def exchangeables(self):
         """
-        :return: True if this gene can be replaced with one of its homologs or analogs without any effects on the model,
-                 False otherwise.
-        :rtype: boolean.
+        :return: the list of genes which can replace this one without any effect on the model
+        :rtype: list of :class:`macsypy.gene.ModelGene` objects
         """
         return self._exchangeables[:]
 
 
     @property
     def is_exchangeable(self):
+        """
+        :return: True if this gene is describe in the model as an exchangeable.
+                 False if ot is describe as first level gene.
+        """
         return False
 
 
     def alternate_of(self):
         """
-        :return: the gene to which this one is homolog to (reference gene)
-        :rtype: :class:`macsypy.gene.Gene` object
+        :return: the gene to which this one is an exchangeable to (reference gene),
+                 or itself if it is a first level gene.
+        :rtype: :class:`macsypy.gene.ModelGene` object
         """
         return self
 
 
     def add_exchangeable(self, exchangeable):
         """
-        Add a homolog gene to the Gene
+        Add a exchangeable gene to this Gene
 
-        :param homolog: homolog to add
-        :type homolog:  :class:`macsypy.gene.Homolog` object
+        :param exchangeable: the exchangeable to add
+        :type exchangeable:  :class:`macsypy.gene.Exchangeable` object
         """
         self._exchangeables.append(exchangeable)
 
@@ -318,13 +336,18 @@ class Exchangeable(ModelGene):
 
     def alternate_of(self):
         """
-        :return: the gene to which this one is homolog to (reference gene)
-        :rtype: :class:`macsypy.gene.Gene` object
+        :return: the gene to which this one is an exchangeable to (reference gene)
+        :rtype: :class:`macsypy.gene.ModelGene` object
         """
         return self._ref
 
 
     def add_exchangeable(self, exchangeable):
+        """
+        This method should never be called, it's a security to avoid to add exchangeable to an exchangeable.
+        :param exchangeable:
+        :return:
+        """
         raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
 
 
