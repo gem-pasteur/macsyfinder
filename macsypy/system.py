@@ -70,8 +70,7 @@ def match(clusters, model):
         """
         map = {}
         for gene in genes:
-            if gene.exchangeable:
-                for ex_gene in itertools.chain(gene.homologs, gene.analogs):
+            for ex_gene in gene.exchangeables:
                     map[ex_gene.name] = gene
         return map
 
