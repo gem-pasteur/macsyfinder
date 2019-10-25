@@ -247,10 +247,8 @@ class Cluster:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
                 # weighted the hit score according to the hit match the gene or
                 # is an analog/homolog
-                if v_hit.gene_ref.is_homolog:
-                    hit_score *= hit_weight.homolog
-                elif v_hit.gene_ref.is_analog:
-                    hit_score *= hit_weight.analog
+                if v_hit.gene_ref.is_exchangeable:
+                    hit_score *= hit_weight.exchangeable
                 else:
                     hit_score *= hit_weight.hitself
                 score += hit_score
