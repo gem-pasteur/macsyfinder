@@ -33,29 +33,25 @@ from .registries import DefinitionLocation
 
 class ModelBank:
     """
-    Build and store all Models objects. Systems must not be instantiated directly.
-    This model factory must be used. It ensures there is a unique instance
-    of a model for a given model name.
-    To get a model, use the method __getitem__ via the "[]". If the Model is already cached in the ModelBank,
-    it is returned. Otherwise a new model is built, stored and then returned.
+    Store all Models objects.
     """
 
     def __init__(self):
         self._model_bank = {}
 
 
-    def __getitem__(self, name):
+    def __getitem__(self, fqn):
         """
-        :param name: the name of the model
-        :type name: string
-        :return: the model corresponding to the name.
-         If the model already exists, return it, otherwise build it and return it.
+        :param fqn: the fully qualified name of the model
+        :type fqn: string
+        :return: the model corresponding to the fqn.
         :rtype: :class:`macsypy.model.Model` object
+        :raise KeyError: if the model corresponding to the name does not exists
         """
-        if name in self._model_bank:
-            return self._model_bank[name]
+        if fqn in self._model_bank:
+            return self._model_bank[fqn]
         else:
-            raise KeyError(name)
+            raise KeyError(fqn)
 
 
     def __contains__(self, model):
@@ -198,6 +194,10 @@ class Model(metaclass=MetaModel):
 
 
     def __hash__(self):
+        """
+
+        :return:
+        """
         return hash(self.fqn)
 
 
@@ -238,6 +238,10 @@ class Model(metaclass=MetaModel):
 
     @property
     def family_name(self):
+        """
+        :return: the family name of the model for instance 'CRISPRCas' or 'TXSS'
+        :rtype: str
+        """
         return DefinitionLocation.root_name(self.fqn)
 
 
@@ -297,7 +301,7 @@ class Model(metaclass=MetaModel):
         :param gene_name: the name of the gene to get
         :type gene_name: string
         :return: the gene corresponding to gene_name.
-        :rtype: a :class:`macsypy.gene.Gene` object.
+        :rtype: a :class:`macsypy.gene.ModelGene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
         # create a dict with genes from all categories
@@ -315,6 +319,9 @@ class Model(metaclass=MetaModel):
 
     @property
     def genes(self):
+        """
+        :return: all the genes without the exchangeables which are described in the model.
+        """
         # we assume that a gene cannot appear twice in a model
         return {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
                 for g in sublist}
