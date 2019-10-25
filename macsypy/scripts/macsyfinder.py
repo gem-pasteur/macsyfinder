@@ -383,11 +383,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
         ex_genes = []
 
         for g in genes:
-            if g.exchangeable:
-                h_s = g.homologs
-                ex_genes += h_s
-                a_s = g.analogs
-                ex_genes += a_s
+            ex_genes += g.exchangeables
         all_genes += (genes + ex_genes)
     #############################################
     # this part of code is executed in parallel
