@@ -139,7 +139,7 @@ class ModelGene:
         :type inter_gene_max_space: integer
         """
         if not isinstance(gene, CoreGene):
-            raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not f{type(gene)}.")
+            raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not {type(gene)}.")
         self._gene = gene
         self._exchangeables = []
         self._model = model
