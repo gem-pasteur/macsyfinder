@@ -99,13 +99,18 @@ class DefinitionParser:
             model_node = tree.getroot()
 
             vers = model_node.get('vers')
-            if vers != '2.0':
+            msg = None
+            if vers is None:
                 msg = f"The model defintion {os.path.basename(path)} is not versioned. " \
                       f"Please update your model."
+            elif vers != '2.0':
+                msg = f"The model defintion {os.path.basename(path)} has not the right version. " \
+                      f"version supported is '2.0'. Please update your model."
                 raise ModelInconsistencyError(msg)
-
-            if model_node.tag == 'system':
+            elif model_node.tag == 'system':
                 msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
+
+            if msg:
                 raise ModelInconsistencyError(msg)
 
             # get all genes which are define in an other model
@@ -114,6 +119,12 @@ class DefinitionParser:
             if sys_ref:
                 msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
                 raise ModelInconsistencyError(msg)
+            # Since ElementTree from stdlib provides only limited xpath support,
+            # you can use | xpath OR operator only if you are using lxml
+            if model_node.findall(".//homologs") + model_node.findall(".//analogs"):
+                msg = f"The model defintion {os.path.basename(path)} is obsolete. Please update your model."
+                raise ModelInconsistencyError(msg)
+
         except Exception as err:
             msg = f"unable to parse model definition '{def_loc.fqn}' : {err}"
             _log.critical(msg)

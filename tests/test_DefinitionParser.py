@@ -31,7 +31,7 @@ import argparse
 from macsypy.config import Config, MacsyDefaults
 from macsypy.model import ModelBank
 from macsypy.profile import ProfileFactory
-from macsypy.gene import GeneBank, CoreGene, ModelGene, Homolog
+from macsypy.gene import GeneBank, CoreGene, ModelGene
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.error import MacsypyError, ModelInconsistencyError
@@ -483,6 +483,7 @@ class TestModelParser(MacsyTest):
 
 
     def test_parse_model_old_syntax(self):
+        # the attribute vers is not set
         model_fqn = 'foo/model_old_1'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
@@ -493,6 +494,7 @@ class TestModelParser(MacsyTest):
                          "unable to parse model definition 'foo/model_old_1' : "
                          "The model defintion model_old_1.xml is not versioned. Please update your model.")
 
+        # the root is system instead of mmodel
         model_fqn = 'foo/model_old_2'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
@@ -500,9 +502,10 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
-                         "unable to parse model definition 'foo/model_old_2' : "
+                         f"unable to parse model definition '{model_fqn}' : "
                          "The model defintion model_old_2.xml is obsolete. Please update your model.")
 
+        # there still system_ref attribute
         model_fqn = 'foo/model_old_3'
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         with self.catch_log(log_name='macsypy') as log:
@@ -510,5 +513,27 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(models_2_detect)
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
-                         "unable to parse model definition 'foo/model_old_3' : "
+                         f"unable to parse model definition '{model_fqn}' : "
                          "The model defintion model_old_3.xml is obsolete. Please update your model.")
+
+        # there still homologs tag
+        model_fqn = 'foo/model_old_4'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        with self.catch_log(log_name='macsypy') as log:
+            with self.assertRaises(MacsypyError) as ctx:
+                self.parser.parse(models_2_detect)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         f"unable to parse model definition '{model_fqn}' : "
+                         "The model defintion model_old_4.xml is obsolete. Please update your model.")
+
+        # there still analogs tag
+        model_fqn = 'foo/model_old_5'
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        with self.catch_log(log_name='macsypy') as log:
+            with self.assertRaises(MacsypyError) as ctx:
+                self.parser.parse(models_2_detect)
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         f"unable to parse model definition '{model_fqn}' : "
+                         "The model defintion model_old_5.xml is obsolete. Please update your model.")
