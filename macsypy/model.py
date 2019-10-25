@@ -330,7 +330,7 @@ class Model(metaclass=MetaModel):
         :return: list of hits
         :rtype: list of :class:`macsypy.report.Hit` object
         """
-        primary_genes = [g for g in chain(*[getattr(self, f"{cat}_genes") for cat in self._gene_category])]
+        primary_genes = self.genes
         exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
