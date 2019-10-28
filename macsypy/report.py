@@ -47,7 +47,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
     def __init__(self, gene, hmmer_output, cfg):
         """
         :param gene: the gene corresponding to the profile search reported here
-        :type gene: :class:`macsypy.gene.Gene` object
+        :type gene: :class:`macsypy.gene.CoreGene` object
         :param hmmer_output: The path to the raw Hmmer output file
         :type hmmer_output: string
         :param cfg: the configuration object
@@ -72,7 +72,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
 
     def __str__(self):
         """
-        Print information on filtered hits
+        :return: string representation of this report
+        :rtype: str
         """
         s = f"""# gene: {self.gene.name} extract from {self._hmmer_raw_out} hmm output
 # profile length= {len(self.gene.profile):d}
@@ -171,21 +172,14 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         Parse the raw Hmmer output to extract the hits, and filter them with threshold criteria selected
         ("coverage_profile" and "i_evalue_select" command-line parameters)
 
-        :param hit_id: the sequence identifier
-        :type hit_id: string 
-        :param gene_profile_lg: the length of the profile matched
-        :type gene_profile_lg: integer
-        :param seq_lg: the length of the sequence
-        :type seq_lg: integer
-        :param coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
-                                   for hit selection.
-        :type coverage_threshold: float
-        :param replicon_name: the identifier of the replicon
-        :type replicon_name: string
-        :param position_hit: the rank of the sequence matched in the input dataset file
-        :type position_hit: integer
-        :param i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
-        :type i_evalue_sel: float
+        :param str hit_id: the sequence identifier
+        :param int gene_profile_lg: the length of the profile matched
+        :paramint  seq_lg: the length of the sequence
+        :param float coverage_threshold: the minimal coverage of the profile to be reached in the Hmmer alignment
+                                        for hit selection.
+        :param str replicon_name: the identifier of the replicon
+        :param int position_hit: the rank of the sequence matched in the input dataset file
+        :param float i_evalue_sel: the maximal i-evalue (independent evalue) for hit selection
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
