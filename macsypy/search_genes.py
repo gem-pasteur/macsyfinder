@@ -39,7 +39,7 @@ def search_genes(genes, cfg):
     The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
 
     :param genes: the genes to search in the input sequence dataset
-    :type genes: list of :class:`macsypy.gene.Gene` objects
+    :type genes: list of :class:`macsypy.gene.CoreGene` objects
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
@@ -63,7 +63,7 @@ def search_genes(genes, cfg):
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
         :param gene: the gene to search
-        :type gene: a :class:`macsypy.gene.Gene` object
+        :type gene: a :class:`macsypy.gene.CoreGene` object
         :param all_reports: a container to append the generated HMMReport objects
         :type all_reports: list of `macsypy.report.HMMReport` object (derived class depending on the input dataset type)
         :param sema: semaphore to limit the number of parallel workers
@@ -88,7 +88,7 @@ def search_genes(genes, cfg):
         Recover Hmmer output from a previous run, and produce a report
 
         :param gene: the gene to search
-        :type gene: a :class:`macsypy.gene.Gene` object
+        :type gene: a :class:`macsypy.gene.CoreGene` object
         :param all_reports: a container to append the generated HMMReport object
         :type all_reports: list
         :param cfg: the configuration 
