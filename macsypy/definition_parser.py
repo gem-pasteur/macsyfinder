@@ -88,7 +88,7 @@ class DefinitionParser:
 
     def _get_model_node(self, def_loc):
         """
-        :param def_loc: a definition location to parse)
+        :param def_loc: a definition location to parse.
         :type def_loc: return the node corresponding to the 'model' tag
 
         """
@@ -105,6 +105,16 @@ class DefinitionParser:
 
 
     def _check_syntax(self, model_node, path):
+        """
+        Check if the definition does not contains logical error which is allow by syntax
+        and absence of explicit grammar.
+
+        :param model_node: the node correponding to the model
+        :type model_node:  :class:`Et.Element` object
+        :param str path: the path of the definition.
+        :return: None
+        :raises ModelInconsistencyError: if an error is encountered in the document.
+        """
         vers = model_node.get('vers')
         msg = None
         if vers is None:
@@ -138,7 +148,7 @@ class DefinitionParser:
         :param def_loc: the definition location to parse.
         :type def_fqn: :class:`macsypy.registries.DefinitionLocation` object
         :param model_node: the node corresponding to the model.
-        :type model_node: :class"`Et.ElementTree` object.
+        :type model_node: :class:`Et.ElementTree` object.
 
         :return: the model corresponding to the definition location.
         :rtype: :class:`macsypy.model.Model` object.
@@ -223,6 +233,17 @@ class DefinitionParser:
 
 
     def _fill_gene_bank(self, model_node, model_location, def_loc):
+        """
+        find all gene node and add them to the gene_bank
+
+        :param model_node: :param model_node: the node corresponding to the model.
+        :type model_node: :class:`Et.ElementTree` object.
+        :param model_location:
+        :type model_location: class:`macsypy.registries.ModelLocation` object.
+        :param def_loc: a definition location to parse.
+        :type def_loc: the node corresponding to the 'model' tag
+        :return: None
+        """
         gene_nodes = model_node.findall(".//gene")
         for gene_node in gene_nodes:
             gene_name = gene_node.get("name")
@@ -237,15 +258,13 @@ class DefinitionParser:
 
     def _parse_genes(self, model, model_node):
         """
-        Create genes belonging to the models. Be careful, the returned genes have not their homologs/analogs set yet.
-        all genes belonging to an other model (model_ref) are ignored
+        Create genes belonging to the models.
+        Each gene is directly added to the model in it's right category ('mandatory, accessory, ...)
 
         :param model: the Model currently parsing
         :type model: :class:`macsypy.model.Model` object
         :param def_node: the element gene
         :type def_node: :class"`Et.ElementTree` object
-        :return: a list of the genes belonging to the model.
-        :rtype: [:class:`macsypy.gene.Gene`, ...]
         """
         gene_nodes = model_node.findall("./gene")
         for gene_node in gene_nodes:
@@ -291,17 +310,16 @@ class DefinitionParser:
 
     def _parse_exchangeable(self, node, gene_ref, curr_model):
         """
-        Parse a xml element gene and build the corresponding object
+        Parse a xml element gene child of exchangeable and build the corresponding object
 
         :param node: a "node" corresponding to the gene element in the XML hierarchy
         :type node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
-        :type gene_ref: class:`macsypy.gene.Gene` object
+        :type gene_ref: class:`macsypy.gene.ModelGene` object
         :param curr_model: the model being parsed .
         :type curr_model: :class:`macsypy.model.Model` object
         :return: the gene object corresponding to the node
-        :rtype: :class:`macsypy.gene.Homolog` object
-        :raise SyntaxError: if the model definition does not follow the grammar.
+        :rtype: :class:`macsypy.gene.Exchangeable` object
         """
         name = node.get("name")
         model_name = split_def_name(curr_model.fqn)[0]
@@ -309,8 +327,8 @@ class DefinitionParser:
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
         c_gene = self.gene_bank[key]
-        homolog = Exchangeable(c_gene, gene_ref)
-        return homolog
+        ex = Exchangeable(c_gene, gene_ref)
+        return ex
 
 
     def check_consistency(self, models):
