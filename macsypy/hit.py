@@ -26,6 +26,7 @@ from operator import attrgetter
 import logging
 from dataclasses import dataclass
 
+from macsypy.gene import ModelGene
 from macsypy.error import MacsypyError
 
 _log = logging.getLogger(__name__)
@@ -159,11 +160,13 @@ class ValidHit:
         :param hit:
         :type hit: :class:`macsypy.hit.Hit` object
         :param gene_ref:
-        :type gene_ref: :class:`macsypy.gene.Gene` object
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object
         :param gene_status:
         :type gene_status: :class:`macsypy.gene.GeneStatus` object
         """
         self.hit = hit
+        if not isinstance(gene_ref, ModelGene):
+            raise MacsypyError(f"The ValidHit 'gene_ref' argument must be a ModelGene not {type(gene_ref)}.")
         self.gene_ref = gene_ref
         self.status = gene_status
 
