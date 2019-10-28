@@ -112,7 +112,7 @@ class RemoteModelIndex(AbstractModelIndex):
     This class allow to interact with ModelIndex on github
     """
 
-    def __init__(self, org: str = "macsy-models", cache=None) -> None :
+    def __init__(self, org: str = "macsy-models", cache=None) -> None:
         """
 
         :param org: The name of the organization on github where are stored the models
