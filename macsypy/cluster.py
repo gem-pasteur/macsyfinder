@@ -42,14 +42,14 @@ def build_clusters(hits, rep_info, model):
         * multi_system
 
     If Yes create a cluster
-    A cluster contains at least to hits separated by less or equal than max_gene_inter_space
+    A cluster contains at least two hits separated by less or equal than max_gene_inter_space
     Except for loner genes which are allowed to be alone in a cluster
 
     :param hits: list of filtered hits
-    :type hits: list of :class:`macsypy.report.Hit` objects
+    :type hits: list of :class:`macsypy.hit.Hit` objects
     :param rep_info: the replicon to analyse
     :type rep_info: :class:`macsypy.Indexes.RepliconInfo` object
-    :param model:
+    :param model: the model to study
     :type model: :class:`macsypy.model.Model` object
     :return: list of clusters
     :rtype: List of :class:`Cluster` objects
@@ -154,8 +154,8 @@ class Cluster:
     def __init__(self, hits, model):
         """
 
-        :param hits: the valid hits constituting this cluster
-        :type hits: [ :class:`macsypy.hit.ValidHit` , ... ]
+        :param hits: the hits constituting this cluster
+        :type hits: [ :class:`macsypy.hit.Hit` | :class:`macsypy.hit.ValidHit`, ... ]
         :param model: the model associated to this cluster
         :type model: :class:`macsypy.model.Model`
         """
@@ -171,6 +171,9 @@ class Cluster:
 
 
     def _check_replicon_consistency(self):
+        """
+        :raise: MacsypyError if all hits of a cluster are NOT related to the same replicon
+        """
         rep_name = self.hits[0].replicon_name
         if not all([h.replicon_name == rep_name for h in self.hits]):
             msg = "Cannot build a cluster from hits coming from different replicons"
@@ -258,6 +261,10 @@ class Cluster:
 
 
     def __str__(self):
+        """
+
+        :return: a string representation of this cluster
+        """
         s = """Cluster:
     - model: {}
     - hits: {}""".format(self.model.name, ', '.join(["({}, {}, {})".format(h.id,
