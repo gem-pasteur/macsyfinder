@@ -42,28 +42,16 @@ class Hit:
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`macsypy.gene.Gene` object
-        :param model: the model to which this gene belongs
-        :type model: :class:`macsypy.model.Model` object
-        :param hit_id: the identifier of the hit
-        :type hit_id: string
-        :param hit_seq_length: the length of the hit sequence
-        :type hit_seq_length: integer
-        :param replicon_name: the name of the replicon
-        :type replicon_name: string
-        :param position_hit: the rank of the sequence matched in the input dataset file
-        :type position_hit: integer
-        :param i_eval: the best-domain evalue (i-evalue, "independent evalue")
-        :type i_eval: float
-        :param score: the score of the hit
-        :type score: float
-        :param profile_coverage: percentage of the profile that matches the hit sequence
-        :type profile_coverage: float
-        :param sequence_coverage: percentage of the hit sequence that matches the profile
-        :type sequence_coverage: float
-        :param begin_match: where the hit with the profile starts in the sequence
-        :type begin_match: integer
-        :param end_match: where the hit with the profile ends in the sequence
-        :type end_match: integer
+        :param str hit_id: the identifier of the hit
+        :param int hit_seq_length: the length of the hit sequence
+        :param str replicon_name: the name of the replicon
+        :param int position_hit: the rank of the sequence matched in the input dataset file
+        :param float i_eval: the best-domain evalue (i-evalue, "independent evalue")
+        :param float score: the score of the hit
+        :param float profile_coverage: percentage of the profile that matches the hit sequence
+        :param float sequence_coverage: percentage of the hit sequence that matches the profile
+        :param int begin_match: where the hit with the profile starts in the sequence
+        :param int end_match: where the hit with the profile ends in the sequence
         """
         self.gene = gene
         self.id = hit_id
@@ -85,7 +73,8 @@ class Hit:
 
     def __str__(self):
         """
-        Print useful information on the Hit: regarding Hmmer statistics, and sequence information
+        :return: Useful information on the Hit: regarding Hmmer statistics, and sequence information
+        :rtype: str
         """
         return f"{self.id}\t{self.replicon_name}\t{self.position:d}\t{self.seq_length:d}\t{self.gene.name}\t" \
                f"{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
@@ -94,7 +83,7 @@ class Hit:
 
     def __lt__(self, other):
         """
-        compare two Hits. If the sequence identifier is the same, do the comparison on the score.
+        Compare two Hits. If the sequence identifier is the same, do the comparison on the score.
         Otherwise, do it on alphabetical comparison of the sequence identifier.
 
         :param other: the hit to compare to the current object
@@ -185,7 +174,9 @@ class ValidHit:
 
 @dataclass(frozen=True)
 class HitWeight:
-
+    """
+    The weight to compute the cluster and system score
+    """
     hitself: float = 1
     exchangeable: float = 0.75
     mandatory: float = 1

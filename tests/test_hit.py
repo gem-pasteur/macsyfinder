@@ -175,6 +175,11 @@ class ValidHitTest(MacsyTest):
         self.assertEqual(v_hit_2.gene_ref, self.gene_gspd)
         self.assertEqual(v_hit_2.status, GeneStatus.ACCESSORY)
 
+        with self.assertRaises(MacsypyError) as ctx:
+            ValidHit(self.hit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "The ValidHit 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+
     def test_hash(self):
         self.assertEqual(hash(self.hit_1), hash(self.hit_1))
         self.assertNotEqual(hash(self.hit_1), hash(self.hit_2))
