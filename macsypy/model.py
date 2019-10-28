@@ -334,7 +334,7 @@ class Model(metaclass=MetaModel):
         and the name of ModelGene of the model
         (the name of the ModelGene is the name of the CoreGene embed in the ModelGene)
         only the hits related to genes implied in the model are kept.
-        
+
         :param hits: list of hits to filter
         :type hits: list of :class:`macsypy.report.Hit` object
         :return: list of hits
