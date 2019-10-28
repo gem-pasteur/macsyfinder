@@ -329,9 +329,12 @@ class Model(metaclass=MetaModel):
 
     def filter(self, hits):
         """
-        filter the hits according to this model. The hits must be link to a gene, belonging to the model
-        as mandatory, accessory , neutral or forbidden, or be an analog or homologs of one these genes
-
+        filter out the hits according to this model.
+        The filtering is based on the name of CoreGene associated to hit
+        and the name of ModelGene of the model
+        (the name of the ModelGene is the name of the CoreGene embed in the ModelGene)
+        only the hits related to genes implied in the model are kept.
+        
         :param hits: list of hits to filter
         :type hits: list of :class:`macsypy.report.Hit` object
         :return: list of hits
