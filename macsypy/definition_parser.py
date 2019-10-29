@@ -24,7 +24,6 @@
 
 import os.path
 import xml.etree.ElementTree as Et
-from collections import Counter
 import logging
 _log = logging.getLogger(__name__)
 
@@ -146,7 +145,7 @@ class DefinitionParser:
     def _create_model(self, def_loc, model_node):
         """
         :param def_loc: the definition location to parse.
-        :type def_fqn: :class:`macsypy.registries.DefinitionLocation` object
+        :type def_loc: :class:`macsypy.registries.DefinitionLocation` object
         :param model_node: the node corresponding to the model.
         :type model_node: :class:`Et.ElementTree` object.
 
@@ -263,8 +262,8 @@ class DefinitionParser:
 
         :param model: the Model currently parsing
         :type model: :class:`macsypy.model.Model` object
-        :param def_node: the element gene
-        :type def_node: :class"`Et.ElementTree` object
+        :param model_node: the element 'model'
+        :type model_node: :class"`Et.ElementTree` object
         """
         gene_nodes = model_node.findall("./gene")
         for gene_node in gene_nodes:
@@ -390,5 +389,3 @@ class DefinitionParser:
             # the following test
             # model.min_mandatory_genes_required <= model.min_genes_required
             # is done during the model.__init__
-
-

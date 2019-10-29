@@ -46,6 +46,7 @@ class MacsyDefaults(dict):
 
         To define a new default value just add an attribute with the default value
         """
+        super().__init__()
         self.__dict__ = self
         if __MACSY_DATA__ == '$' + 'MACSYDATA':
             prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
@@ -91,7 +92,7 @@ class Config:
 
     cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
                 ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
-                            'min_genes_required', 'multi_loci')),
+                                'min_genes_required', 'multi_loci')),
                 ('models', tuple()),
                 ('hmmer', ('coverage_profile', 'e_value_search', 'i_evalue_sel', 'hmmer')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
@@ -128,7 +129,7 @@ class Config:
                                                            ))
         else:
             self._conf_dir = __MACSY_CONF__
-        previous_run =False
+        previous_run = False
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
             prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
                                                         self.cfg_name))
@@ -147,7 +148,8 @@ class Config:
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
             if 'sequence_db' in args_dict:
-                _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db from previous_run '{args_dict['previous_run']}'.")
+                _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db "
+                             f"from previous_run '{args_dict['previous_run']}'.")
                 del args_dict['sequence_db']
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
@@ -173,7 +175,7 @@ class Config:
         # for generic getter, that mean no code in config
         # I simulate a function (lambda) which can be called without argument
         if option_name in self._options:
-            return lambda : self._options[option_name]
+            return lambda: self._options[option_name]
         else:
             raise AttributeError(f"config object has no attribute '{option_name}'")
 
@@ -574,4 +576,3 @@ class NoneConfig:
             return lambda x: None
         else:
             return lambda: None
-

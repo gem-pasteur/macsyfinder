@@ -317,8 +317,8 @@ class Exchangeable(ModelGene):
 
     def __init__(self, c_gene, gene_ref):
         """
-        :param gene: the gene
-        :type gene: :class:`macsypy.gene.CoreGene` object.
+        :param c_gene: the gene
+        :type c_gene: :class:`macsypy.gene.CoreGene` object.
         :param gene_ref: the gene to which the current can replace it.
         :type gene_ref: :class:`macsypy.gene.ModelGene` object.
         """

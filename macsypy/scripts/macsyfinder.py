@@ -232,7 +232,7 @@ def parse_args(args):
                                type=float,
                                default=None,
                                help="Maximal independent e-value for Hmmer hits to be selected for model detection. "
-                                     "(default = 0.001)")
+                                    "(default = 0.001)")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
@@ -474,6 +474,8 @@ def systems_to_file(systems, hit_system_tracker, sys_file):
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
     :return: None
@@ -581,15 +583,3 @@ def main(args=None, loglevel=None):
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
