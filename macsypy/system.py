@@ -50,7 +50,7 @@ from .hit import ValidHit
 def match(clusters, model):
     """
     Check a set of clusters fill model constraints.
-    If yes create a :class:`macsypy.system.PutativeSystem` otherwise create
+    If yes create a :class:`macsypy.system.System` otherwise create
     a :class:`macsypy.cluster.RejectedClusters`.
 
     :param clusters: The list of cluster to check if fit the model
@@ -62,11 +62,11 @@ def match(clusters, model):
     """
     def create_exchangeable_map(genes):
         """
-        create a map between an exchangeable (homolog or analog) gene name and it's gene ref
+        create a map between an exchangeable (homolog or analog) gene name and it's gene reference
 
-        :param genes: The genes to get the homologs or analogs
-        :type genes: list of :class:`macsypy.gene.Gene` objects
-        :rtype: a dict with keys are the homolog_or analog gene_name the reference gene name
+        :param genes: The genes to get the exchangeable genes
+        :type genes: list of :class:`macsypy.gene.ModelGene` objects
+        :rtype: a dict with keys are the exchangeable gene_name and the value the reference gene name
         """
         map = {}
         for gene in genes:
@@ -209,7 +209,7 @@ class ClusterSystemTracker(dict):
 
 class System:
     """
-    Modelize as system. a system is an ocuurence of a given model on a replicon.
+    Modelize as system. a system is an occurrence of a given model on a replicon.
     """
 
     _id = itertools.count(1)
@@ -294,7 +294,7 @@ class System:
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                    (len(self._mandatory_occ) + len(self._accessory_occ))
+                   (len(self._mandatory_occ) + len(self._accessory_occ))
         return score
 
 
@@ -302,7 +302,7 @@ class System:
     def score(self):
         """
         :return: a score take in account
-            * if a hit match for the gene or is an homolog or analog
+            * if a hit match for the gene or it is an exchangeable gene
             * if a hit is duplicated and already present in the system or the cluster
             * if a hit match for mandatory/accessory gene of the model
         :rtype: float
@@ -369,10 +369,21 @@ class SystemSerializer:
     """
 
     def __init__(self, system, hit_system_tracker):
+        """
+
+        :param system: the system to serialize
+        :type system: :class:`macsypy.system.System' object
+        :param hit_system_tracker:
+        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
+        """
         self.system = system
         self.hit_system_tracker = hit_system_tracker
 
     def __str__(self):
+        """
+
+        :return: a string representation of system readable by human
+        """
         clst = ", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                           for cluster in self.system.clusters])
 
@@ -420,6 +431,7 @@ score = {self.system.score:.3f}
                         'neutral': {str gene_ref name: [ str hit gene name, ... ]}
                         }
                  }
+        :rtype: str
         """
         system = {'id': self.system.id,
                   'model': self.system.model.fqn,
