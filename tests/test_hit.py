@@ -261,5 +261,5 @@ class HitWeightTest(MacsyTest):
     def test_hit_weight(self):
         self.assertEqual(hit_weight.mandatory, 1)
         self.assertEqual(hit_weight.accessory, 0.5)
-        self.assertEqual(hit_weight.hitself, 1)
+        self.assertEqual(hit_weight.itself, 1)
         self.assertEqual(hit_weight.exchangeable, 0.75)
