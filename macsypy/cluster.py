@@ -253,7 +253,7 @@ class Cluster:
                 if v_hit.gene_ref.is_exchangeable:
                     hit_score *= hit_weight.exchangeable
                 else:
-                    hit_score *= hit_weight.hitself
+                    hit_score *= hit_weight.itself
                 score += hit_score
                 seen_hits.add(v_hit.gene_ref)
         self._score = score

@@ -180,7 +180,7 @@ class HitWeight:
     """
     The weight to compute the cluster and system score
     """
-    hitself: float = 1
+    itself: float = 1
     exchangeable: float = 0.75
     mandatory: float = 1
     accessory: float = 0.5
