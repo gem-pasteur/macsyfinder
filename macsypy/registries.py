@@ -40,10 +40,10 @@ def split_def_name(fqn):
     :rtype: list of string
     """
     split = fqn.split(_separator)
-    if split[0] == '': # '/foo/bar'
+    if split[0] == '':  # '/foo/bar'
         split = split[1:]
     if split[-1] == '':
-        split = split[:-1] # 'foo/bar/'
+        split = split[:-1]  # 'foo/bar/'
     return split
 
 

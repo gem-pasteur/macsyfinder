@@ -71,7 +71,7 @@ def match(clusters, model):
         map = {}
         for gene in genes:
             for ex_gene in gene.exchangeables:
-                    map[ex_gene.name] = gene
+                map[ex_gene.name] = gene
         return map
 
     # init my structures to count gene occurrences

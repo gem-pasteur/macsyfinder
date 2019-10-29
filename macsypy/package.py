@@ -24,7 +24,8 @@
 
 import os
 import tempfile
-import urllib.request, urllib.parse
+import urllib.request
+import urllib.parse
 import json
 import yaml
 import shutil
@@ -412,7 +413,7 @@ class Package:
         errors = []
         warnings = []
         data = self._load_metadata()
-        must_have = ("author", "short_desc", "vers" )
+        must_have = ("author", "short_desc", "vers")
         nice_to_have = ("cite", "doc", "licence", "copyright")
         for item in must_have:
             if item not in data:

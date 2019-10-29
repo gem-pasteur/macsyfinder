@@ -35,8 +35,10 @@ from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 def search_genes(genes, cfg):
     """
     For each gene of the list, use the corresponding profile to perform an Hmmer search, and parse the output
-    to generate a HMMReport that is saved in a file after Hit filtering. These tasks are performed in parallel using threads.
-    The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
+    to generate a HMMReport that is saved in a file after Hit filtering.
+    These tasks are performed in parallel using threads.
+    The number of workers can be limited by worker_nb directive in the config object or
+    in the command-line with the "-w" option.
 
     :param genes: the genes to search in the input sequence dataset
     :type genes: list of :class:`macsypy.gene.CoreGene` objects
@@ -64,10 +66,6 @@ def search_genes(genes, cfg):
 
         :param gene: the gene to search
         :type gene: a :class:`macsypy.gene.CoreGene` object
-        :param all_reports: a container to append the generated HMMReport objects
-        :type all_reports: list of `macsypy.report.HMMReport` object (derived class depending on the input dataset type)
-        :param sema: semaphore to limit the number of parallel workers
-        :type sema: a threading.BoundedSemaphore
         """
         _log.info(f"search gene {gene.name}")
         profile = gene.profile
@@ -89,12 +87,8 @@ def search_genes(genes, cfg):
 
         :param gene: the gene to search
         :type gene: a :class:`macsypy.gene.CoreGene` object
-        :param all_reports: a container to append the generated HMMReport object
-        :type all_reports: list
-        :param cfg: the configuration 
+        :param cfg: the configuration
         :type cfg: :class:`macsypy.config.Config` object
-        :param sema: semaphore to limit the number of parallel workers
-        :type sema: a threading.BoundedSemaphore.
         :return: the list of all HMMReports (derived class depending on the input dataset type)
         :rtype: list of `macsypy.report.HMMReport` object
         """
