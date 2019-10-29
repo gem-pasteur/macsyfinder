@@ -94,7 +94,7 @@ def parse_args(args):
     :param args: The arguments provided on the command line
     :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Nampsace` object.
+    :rtype: :class:`aprgparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -441,8 +441,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                     loners = cluster.get_loners(hits_related_one_model, model)
                     clusters_combination = []
                     for one_cluster in clusters:
-                        one_clust_combination = []
-                        one_clust_combination.append(one_cluster)
+                        one_clust_combination = [one_cluster]
                         filtered_loners = cluster.filter_loners(one_cluster, loners)
                         one_clust_combination.extend(filtered_loners)
                         clusters_combination.append([one_clust_combination])
