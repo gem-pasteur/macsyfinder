@@ -373,18 +373,18 @@ class TestConfig(MacsyTest):
         self.assertEqual(cfg.out_dir(), cfg.working_dir())
 
     def test_previous_n_sequence_db(self):
-        self.parsed_args.previous_run = self.find_data(os.path.join('data_set_2', 'results'))
-        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'test_aesu.fa'))
+        self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results'))
+        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'VICH001.B.00001.C001.prt'))
         with self.catch_log() as log:
             cfg = Config(self.defaults, self.parsed_args)
             catch_msg = log.get_value().strip()
-        self.assertEqual(cfg.sequence_db(), 'tests/data/data_set_2/base/test.fa')
+        self.assertEqual(cfg.sequence_db(), 'tests/data/base/VICH001.B.00001.C001.prt')
         self.assertEqual(f"ignore sequence_db '{self.parsed_args.sequence_db}' "
                          f"use sequence_db from previous_run '{self.parsed_args.previous_run}'.",
                          catch_msg)
 
     def test_previous_wo_cfg(self):
-        self.parsed_args.previous_run = self.find_data(os.path.join('data_set_2'))
+        self.parsed_args.previous_run = self.find_data(os.path.join('data_set'))
         with self.assertRaises(ValueError) as ctx:
             Config(self.defaults, self.parsed_args)
         self.assertEqual(str(ctx.exception),
