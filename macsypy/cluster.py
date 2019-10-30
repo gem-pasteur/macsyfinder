@@ -283,7 +283,8 @@ class RejectedClusters:
         """
         :param model:
         :type model: :class:`macsypy.model.Model` object
-        :param clusters:
+        :param clusters: list of clusters. These Clusters should be created with
+                         :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ValidHit` objects
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         :param str reason: the reason why these clusters have been rejected
         """
@@ -295,6 +296,10 @@ class RejectedClusters:
         self.reason = reason
 
     def __str__(self):
+        """
+
+        :return: a string representation of this RejectedCluster
+        """
         s = ''
         for c in self.clusters:
             s += str(c)
