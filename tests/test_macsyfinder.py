@@ -142,6 +142,15 @@ neutral genes:
         systems_to_file([system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
+        system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Systems found
+"""
+        f_out = StringIO()
+        track_multi_systems_hit = HitSystemTracker([])
+        systems_to_file([], track_multi_systems_hit, f_out)
+        self.assertMultiLineEqual(system_str, f_out.getvalue())
+        
 
     def test_rejected_clst_to_file(self):
         args = argparse.Namespace()
@@ -192,6 +201,14 @@ The reasons to reject this clusters
         f_out = StringIO()
         rejected_clst_to_file([r_c], f_out)
         self.maxDiff = None
+        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+
+        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Rejected clusters
+"""
+        f_out = StringIO()
+        rejected_clst_to_file([], f_out)
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
 
