@@ -48,9 +48,9 @@ class TestUtils(MacsyTest):
 
     def test_get_def_to_detect(self):
         cmd_args = argparse.Namespace()
-        cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
-        cmd_args.models = [('set_1', 'T9SS', 'T3SS', 'T4SS_typeI')]
-        config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'data_set_1', 'models')),
+        cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
+        cmd_args.models = [('set_1', 'def_1_1', 'def_1_2', 'def_1_3')]
+        config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'fake_model_dir')),
                         cmd_args)
         registry = ModelRegistry()
         models_location = scan_models_dir(cmd_args.models_dir)
@@ -58,9 +58,9 @@ class TestUtils(MacsyTest):
             registry.add(ml)
 
         # case where models are specified on command line
-        res = get_def_to_detect([('set_1', ['T9SS', 'T3SS', 'T4SS_typeI'])], registry)
+        res = get_def_to_detect([('set_1', ['def_1_1', 'def_1_2', 'def_1_3'])], registry)
         model_loc = registry['set_1']
-        exp = [model_loc.get_definition(name) for name in ('set_1/T9SS', 'set_1/T3SS', 'set_1/T4SS_typeI')]
+        exp = [model_loc.get_definition(name) for name in ('set_1/def_1_1', 'set_1/def_1_2', 'set_1/def_1_3')]
         self.assertListEqual(res, exp)
 
         # case we search all models
