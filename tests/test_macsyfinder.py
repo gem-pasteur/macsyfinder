@@ -28,18 +28,20 @@ import shutil
 import tempfile
 import argparse
 from io import StringIO
+import logging
+import unittest
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, GeneStatus, GeneBank
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelRegistry, scan_models_dir, ModelLocation
 from macsypy.hit import Hit, ValidHit
-from macsypy.model import Model
+from macsypy.model import Model, ModelBank
 from macsypy.system import System, HitSystemTracker
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.scripts.macsyfinder import systems_to_file, rejected_clst_to_file, parse_args
+from macsypy.scripts.macsyfinder import systems_to_file, rejected_clst_to_file, parse_args, search_systems
 import macsypy
-from tests import MacsyTest
+from tests import MacsyTest, which
 
 
 class TestMacsyfinder(MacsyTest):
@@ -57,32 +59,24 @@ class TestMacsyfinder(MacsyTest):
 
     def test_list_models(self):
         cmd_args = argparse.Namespace()
-        cmd_args.models_dir = os.path.join(self._data_dir, 'data_set_1', 'models')
+        cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
         cmd_args.list_models = True
         registry = ModelRegistry()
         models_location = scan_models_dir(cmd_args.models_dir)
         for ml in models_location:
             registry.add(ml)
         list_models = """set_1
-      /CONJ
-      /Flagellum
-      /T2SS
-      /T3SS
-      /T4P
-      /T4SS_typeF
-      /T4SS_typeI
-      /T9SS
-      /Tad
+      /def_1_1
+      /def_1_2
+      /def_1_3
+      /def_1_4
 set_2
-      /CONJ
-      /Flagellum
-      /T2SS
-      /T3SS
-      /T4P
-      /T4SS_typeF
-      /T4SS_typeI
-      /T9SS
-      /Tad
+      /level_1
+              /def_1_1
+              /def_1_2
+              /level_2
+                      /def_2_3
+                      /def_2_4
 """
         self.assertEqual(str(registry), list_models)
 
@@ -250,3 +244,36 @@ The reasons to reject this clusters
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.i_evalue_sel, 0.5)
         self.assertListEqual(args.min_genes_required, [['TXSScan/T2SS', '15'], ['TXSScan/Flagellum', '10']])
+
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_search_systems(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='ERROR')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+        seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
+        model_dir = self.find_data('data_set', 'models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
+                            'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3',
+                            'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_13',
+                            'VICH001.B.00001.C001_T4P_12', 'VICH001.B.00001.C001_T4P_10',
+                            'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
+                            'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
+                            'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
+                            'VICH001.B.00001.C001_T4bP_15']
+        self.assertListEqual([s.id for s in systems], expected_sys_id)
+
+        expected_scores = [10.5, 10.0, 8.25, 7.5, 12.0, 10.5, 9.5, 9.0, 8.5, 8.0, 7.5, 7.0, 6.0, 5.0, 5.5]
+        self.assertListEqual([s.score for s in systems], expected_scores)
+        self.assertEqual(len(rejected_clst), 11)
