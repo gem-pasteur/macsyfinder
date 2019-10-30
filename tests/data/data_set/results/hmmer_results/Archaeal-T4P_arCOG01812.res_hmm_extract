@@ -1,0 +1,10 @@
+# gene: Archaeal-T4P_arCOG01812 extract from results/hmmer_results/Archaeal-T4P_arCOG01812.search_hmm.out hmm output
+# profile length= 245
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00413	VICH001.B.00001.C001	373	407	Archaeal-T4P_arCOG01812	4.100e-04	16.600	0.531	0.302	270	392
+VICH001.B.00001.C001_00413	VICH001.B.00001.C001	373	407	Archaeal-T4P_arCOG01812	5.200e-05	19.500	0.629	0.386	69	225
+VICH001.B.00001.C001_02307	VICH001.B.00001.C001	2204	408	Archaeal-T4P_arCOG01812	9.600e-04	15.400	0.555	0.314	274	401
+VICH001.B.00001.C001_02307	VICH001.B.00001.C001	2204	408	Archaeal-T4P_arCOG01812	1.900e-08	30.800	0.563	0.314	67	194
+VICH001.B.00001.C001_02599	VICH001.B.00001.C001	2488	406	Archaeal-T4P_arCOG01812	1.400e-07	27.900	0.563	0.325	67	198

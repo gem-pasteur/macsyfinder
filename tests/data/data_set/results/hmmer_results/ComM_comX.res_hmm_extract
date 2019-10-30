@@ -1,0 +1,5 @@
+# gene: ComM_comX extract from results/hmmer_results/ComM_comX.search_hmm.out hmm output
+# profile length= 92
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end

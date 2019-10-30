@@ -1,0 +1,84 @@
+# macsyfinder 20191030.dev
+# /home/bneron/Projects/GEM/macsyfinder/py3.7/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results --relative-path
+# Rejected clusters:
+
+Cluster:
+    - model: Archaeal-T4P
+    - hits: (VICH001.B.00001.C001_01967, Archaeal-T4P_arCOG00589, 1882), (VICH001.B.00001.C001_01973, Archaeal-T4P_arCOG00589, 1888)
+These clusters has been rejected because:
+The quorum of mandatory genes required (3) is not reached: 0
+The quorum of genes required (3) is not reached: 1
+============================================================
+Cluster:
+    - model: ComM
+    - hits: (VICH001.B.00001.C001_00857, ComM_comEB, 788)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 0
+The quorum of genes required (4) is not reached: 1
+============================================================
+Cluster:
+    - model: ComM
+    - hits: (VICH001.B.00001.C001_01796, ComM_comEC, 1714)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 1
+The quorum of genes required (4) is not reached: 1
+============================================================
+Cluster:
+    - model: ComM
+    - hits: (VICH001.B.00001.C001_00857, ComM_comEB, 788)
+Cluster:
+    - model: ComM
+    - hits: (VICH001.B.00001.C001_01796, ComM_comEC, 1714)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 1
+The quorum of genes required (4) is not reached: 2
+============================================================
+Cluster:
+    - model: MSH
+    - hits: (VICH001.B.00001.C001_00512, MSH_mshA, 463)
+These clusters has been rejected because:
+The quorum of mandatory genes required (3) is not reached: 1
+The quorum of genes required (4) is not reached: 1
+============================================================
+Cluster:
+    - model: T2SS
+    - hits: (VICH001.B.00001.C001_02308, T4P_pilD, 2205)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 1
+The quorum of genes required (6) is not reached: 1
+============================================================
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_00476, T4P_pilT, 427), (VICH001.B.00001.C001_00477, T4P_pilU, 428)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 1
+The quorum of genes required (5) is not reached: 2
+============================================================
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_00847, T4P_pilO, 778), (VICH001.B.00001.C001_00850, T4P_pilE, 781), (VICH001.B.00001.C001_00851, T4P_fimT, 782), (VICH001.B.00001.C001_00852, T4P_pilW, 783), (VICH001.B.00001.C001_00853, T4P_pilX, 784), (VICH001.B.00001.C001_00854, T4P_pilV, 785)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 2
+============================================================
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_02305, T4P_pilA, 2202), (VICH001.B.00001.C001_02306, T4P_pilB, 2203), (VICH001.B.00001.C001_02307, T4P_pilC, 2204), (VICH001.B.00001.C001_02308, T4P_pilD, 2205)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 3
+The quorum of genes required (5) is not reached: 4
+============================================================
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_02502, MSH_mshM, 2391), (VICH001.B.00001.C001_02505, T4P_pilQ, 2394), (VICH001.B.00001.C001_02506, T4P_pilP, 2395), (VICH001.B.00001.C001_02507, T4P_pilO, 2396), (VICH001.B.00001.C001_02508, T4P_pilN, 2397), (VICH001.B.00001.C001_02509, T4P_pilM, 2398)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_00476, T4P_pilT, 427), (VICH001.B.00001.C001_00477, T4P_pilU, 428)
+Cluster:
+    - model: T4P
+    - hits: (VICH001.B.00001.C001_00847, T4P_pilO, 778), (VICH001.B.00001.C001_00850, T4P_pilE, 781), (VICH001.B.00001.C001_00851, T4P_fimT, 782), (VICH001.B.00001.C001_00852, T4P_pilW, 783), (VICH001.B.00001.C001_00853, T4P_pilX, 784), (VICH001.B.00001.C001_00854, T4P_pilV, 785)
+These clusters has been rejected because:
+The quorum of mandatory genes required (4) is not reached: 3
+============================================================
