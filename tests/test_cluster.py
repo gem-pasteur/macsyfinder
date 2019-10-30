@@ -576,13 +576,16 @@ class TestRejectedCluster(MacsyTest):
         model = Model("foo/T2SS", 11)
 
         c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_1 = ModelGene(c_gene_1, model)
         c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
-
+        gene_2 = ModelGene(c_gene_2, model)
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
         h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        c1 = Cluster([h10, h20], model)
+        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_h10, v_h20], model)
         r_c = RejectedClusters(model, c1, "bla")
         self.assertListEqual(r_c.clusters, [c1])
         self.assertEqual(r_c.reason, 'bla')

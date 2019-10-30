@@ -150,7 +150,7 @@ neutral genes:
         track_multi_systems_hit = HitSystemTracker([])
         systems_to_file([], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
-        
+
 
     def test_rejected_clst_to_file(self):
         args = argparse.Namespace()
@@ -176,11 +176,15 @@ neutral genes:
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
         h10 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
         h20 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
         h40 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
         h50 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        c1 = Cluster([h10, h20], model)
-        c2 = Cluster([h40, h50], model)
+        v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_h10, v_h20], model)
+        c2 = Cluster([v_h40, v_h50], model)
         r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
 
         rej_clst_str = f"""# macsyfinder {macsypy.__version__}
@@ -282,13 +286,13 @@ The reasons to reject this clusters
         profile_factory = ProfileFactory(config)
         systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
         expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
-                            'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3',
-                            'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_13',
-                            'VICH001.B.00001.C001_T4P_12', 'VICH001.B.00001.C001_T4P_10',
-                            'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
-                            'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
-                            'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
-                            'VICH001.B.00001.C001_T4bP_15']
+                           'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3',
+                           'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_13',
+                           'VICH001.B.00001.C001_T4P_12', 'VICH001.B.00001.C001_T4P_10',
+                           'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
+                           'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
+                           'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
+                           'VICH001.B.00001.C001_T4bP_15']
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
         expected_scores = [10.5, 10.0, 8.25, 7.5, 12.0, 10.5, 9.5, 9.0, 8.5, 8.0, 7.5, 7.0, 6.0, 5.0, 5.5]
