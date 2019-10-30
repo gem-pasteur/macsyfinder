@@ -406,6 +406,7 @@ score = {self.system.score:.3f}
                 for h in hits:
                     used_in_systems = [s.id for s in self.hit_system_tracker[h.hit]
                                        if s.model.fqn != self.system.model.fqn]
+                    used_in_systems.sort()
                     if used_in_systems:
                         hit_str = f"{h.gene.name} [{', '.join(used_in_systems)}]"
                     else:
