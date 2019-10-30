@@ -455,7 +455,8 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             systems.append(res)
                         else:
                             rejected_clusters.append(res)
-
+        if systems:
+            systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
     return systems, rejected_clusters
 
 
@@ -577,7 +578,6 @@ def main(args=None, loglevel=None):
             system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
             track_multi_systems_hit = HitSystemTracker(systems)
 
-            systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
             with open(system_filename, "w") as sys_file:
                 systems_to_file(systems, track_multi_systems_hit, sys_file)
 
