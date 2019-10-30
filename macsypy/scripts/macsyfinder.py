@@ -474,11 +474,14 @@ def systems_to_file(systems, hit_system_tracker, sys_file):
     """
     print(f"# macsyfinder {macsypy.__version__}", file=sys_file)
     print(f"# {' '.join(sys.argv)}", file=sys_file)
-    print("# Systems found:\n", file=sys_file)
-    for system in systems:
-        sys_serializer = SystemSerializer(system, hit_system_tracker)
-        print(sys_serializer, file=sys_file)
-        print("=" * 60, file=sys_file)
+    if systems:
+        print("# Systems found:\n", file=sys_file)
+        for system in systems:
+            sys_serializer = SystemSerializer(system, hit_system_tracker)
+            print(sys_serializer, file=sys_file)
+            print("=" * 60, file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
 
 
 def rejected_clst_to_file(rejected_clusters, clst_file):
@@ -493,11 +496,13 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
     """
     print(f"# macsyfinder {macsypy.__version__}", file=clst_file)
     print(f"# {' '.join(sys.argv)}", file=clst_file)
-    print("# Rejected clusters:\n", file=clst_file)
-
-    for rej_clst in rejected_clusters:
-        print(rej_clst, file=clst_file)
-        print("=" * 60, file=clst_file)
+    if rejected_clusters:
+        print("# Rejected clusters:\n", file=clst_file)
+        for rej_clst in rejected_clusters:
+            print(rej_clst, file=clst_file)
+            print("=" * 60, file=clst_file)
+    else:
+        print("# No Rejected clusters", file=clst_file)
 
 
 def main(args=None, loglevel=None):
@@ -574,17 +579,16 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        if systems or rejected_clusters:
-            system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-            track_multi_systems_hit = HitSystemTracker(systems)
+        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        track_multi_systems_hit = HitSystemTracker(systems)
 
-            with open(system_filename, "w") as sys_file:
-                systems_to_file(systems, track_multi_systems_hit, sys_file)
+        with open(system_filename, "w") as sys_file:
+            systems_to_file(systems, track_multi_systems_hit, sys_file)
 
-            cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
-            with open(cluster_filename, "w") as clst_file:
-                rejected_clst_to_file(rejected_clusters, clst_file)
-        else:
+        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clst_to_file(rejected_clusters, clst_file)
+        if not (systems or rejected_clusters):
             logger.info("No hits found in this dataset.")
     logger.info("END")
 
