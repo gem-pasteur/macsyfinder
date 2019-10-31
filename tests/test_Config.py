@@ -390,4 +390,24 @@ class TestConfig(MacsyTest):
         self.assertEqual(str(ctx.exception),
                          f"No config file found in dir {self.parsed_args.previous_run}")
 
+    def test_cut_ga(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertTrue(cfg.cut_ga())
+
+    def test_e_value_search(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertIsNone(cfg.e_value_search())
+
+        self.parsed_args.e_value_search = 1.0
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.e_value_search(), 1.0)
+        self.assertFalse(cfg.cut_ga())
+
+        self.parsed_args.e_value_search = "toto"
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "'e_value_search' must be a float: Not 'toto'")
+
+
 
