@@ -147,9 +147,12 @@ class Profile:
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} -E {self.cfg.e_value_search():f} " \
+                if self.cfg.cut_ga():
+                    hmmer_threshold = f"--cut_ga"
+                else:
+                    hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
+                command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} {hmmer_threshold} " \
                           f"{self.path} {self.cfg.sequence_db()} "
-
                 _log.debug(f"{self.gene.name} Hmmer command line : {command}")
                 try:
                     hmmer = Popen(command,
