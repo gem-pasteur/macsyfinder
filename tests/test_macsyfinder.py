@@ -120,7 +120,7 @@ set_2
 system id = replicon_id_T2SS_{next(System._id) - 1}
 model = foo/T2SS
 replicon = replicon_id
-clusters = [('gspD', 1), ('sctJ', 1)]
+clusters = [('hit_1', 'gspD', 1), ('hit_2', 'sctJ', 1)]
 occ = 1
 wholeness = 1.000
 loci nb = 1

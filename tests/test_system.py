@@ -321,7 +321,7 @@ class SystemTest(MacsyTest):
                     'model': 'foo/T2SS',
                     'loci_nb': 2,
                     'replicon_name': 'replicon_id',
-                    'clusters': [['gspD', 'sctJ'], ['sctN']],
+                    'clusters': [[['h_gspd', 'gspD', 1], ['h_sctj', 'sctJ', 1]], [['h_sctn', 'sctN', 1]]],
                     'gene_composition':
                         {'mandatory': {'gspD': ['gspD']},
                          'accessory': {'sctJ': ['sctJ'], 'sctN': ['sctN']},
@@ -358,7 +358,7 @@ class SystemTest(MacsyTest):
         sys_str = """system id = {}
 model = foo/T2SS
 replicon = replicon_id
-clusters = [('gspD', 10), ('sctJ', 20)], [('sctN', 30)]
+clusters = [('h_gspd', 'gspD', 10), ('h_sctj', 'sctJ', 20)], [('h_sctn', 'sctN', 30)]
 occ = 1
 wholeness = 1.000
 loci nb = 1
