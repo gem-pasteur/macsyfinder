@@ -249,7 +249,7 @@ class Cluster:
                 else:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
                 # weighted the hit score according to the hit match the gene or
-                # is an analog/homolog
+                # is an exchangeable
                 if v_hit.gene_ref.is_exchangeable:
                     hit_score *= hit_weight.exchangeable
                 else:
@@ -267,9 +267,8 @@ class Cluster:
         """
         s = """Cluster:
     - model: {}
-    - hits: {}""".format(self.model.name, ', '.join(["({}, {}, {})".format(h.id,
-                                                                           h.gene.name,
-                                                                           h.position) for h in self.hits]))
+    - hits: {}""".format(self.model.name,
+                         ', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits]))
         return s
 
 
