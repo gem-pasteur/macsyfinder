@@ -384,7 +384,7 @@ class SystemSerializer:
 
         :return: a string representation of system readable by human
         """
-        clst = ", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
+        clst = ", ".join(["[" + ", ".join([str((v_h.id, v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                           for cluster in self.system.clusters])
 
         s = f"""system id = {self.system.id}
@@ -425,7 +425,7 @@ score = {self.system.score:.3f}
                   'model': str model fully qualified name
                   'loci_nb': int number of loci
                   'replicon_name': str the replicon name
-                  'clusters': [[ str hit gene name, ...], [...]]
+                  'clusters': [[[ str hit id, str hit gene name, int hit position], ...], [...]]
                   'gene_composition': {
                         'mandatory': {str gene_ref name: [ str hit gene name, ... ]},
                         'accessory': {str gene_ref name: [ str hit gene name, ... ]},
@@ -438,7 +438,7 @@ score = {self.system.score:.3f}
                   'model': self.system.model.fqn,
                   'loci_nb': len(self.system.clusters),
                   'replicon_name': self.system.replicon_name,
-                  'clusters': [[v_h.gene.name for v_h in cluster.hits]for cluster in self.system.clusters],
+                  'clusters': [[[v_h.id, v_h.gene.name, v_h.position] for v_h in cluster.hits]for cluster in self.system.clusters],
                   'gene_composition':
                       {'mandatory': {gene_ref: [hit.gene.name for hit in hits]
                                      for gene_ref, hits in self.system.mandatory_occ.items()},
