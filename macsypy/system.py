@@ -26,6 +26,7 @@ import itertools
 import json
 import statistics
 from itertools import chain
+import abc
 import logging
 _log = logging.getLogger(__name__)
 
@@ -308,13 +309,20 @@ class System:
         return self.loci > 1
 
 
-class SystemSerializer:
+class SystemSerializer(metaclass=abc.ABCMeta):
 
     def __init__(self, system, hit_system_tracker):
         self.system = system
         self.hit_system_tracker = hit_system_tracker
 
-    def __str__(self):
+    @abc.abstractmethod
+    def serialize(self):
+        pass
+
+
+class StringSystemSerializer(SystemSerializer):
+
+    def serialize(self):
         clst = ", ".join(["[" + ", ".join([str((v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
                           for cluster in self.system.clusters])
 
@@ -345,7 +353,36 @@ score = {self.system.score:.3f}
         return s
 
 
-    def to_json(self):
+class TsvSystemSerializer(SystemSerializer):
+
+    header = "hit_id\treplicon\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
+             "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
+             "hit_begin_match\thit_end_match"
+
+    def serialize(self):
+        """
+
+        :return: a serialisation of this system in tabulated separated value format
+                 each line represent a hit and have the following structure:
+                   hit_id\treplicon\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ
+                   \thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t
+                   hit_begin_match\thit_end_match
+        :rtype: str
+        """
+        tsv = ''
+        for cluster in self.system.clusters:
+            for vh in cluster.hits:
+                tsv += f"{vh.id}\t{self.system.replicon_name}\t{vh.gene.name}\t{vh.position}\t{self.system.model.fqn}\t" \
+                       f"{self.system.id}\t{self.system.loci}\t{self.system.wholeness}\t{self.system.score}\t" \
+                       f"{self.system.occurrence()}\t{vh.gene_ref.name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval}\t" \
+                       f"{vh.score}\t{vh.profile_coverage}\t{vh.sequence_coverage}\t{vh.begin_match}\t{vh.end_match}\n"
+
+        return tsv
+
+
+class JsonSystemSerializer(SystemSerializer):
+
+    def serialize(self):
         """
         :return: a serialisation of this system in json format
                  The json have the following structure
