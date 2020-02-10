@@ -33,7 +33,8 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker, SystemSerializer
+from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker
+from macsypy.system import StringSystemSerializer, TsvSystemSerializer, JsonSystemSerializer
 
 from tests import MacsyTest
 
@@ -294,8 +295,8 @@ class SystemTest(MacsyTest):
         sys_multi_loci = System(model, [c1, c2])
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
 
-        system_serializer = SystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
-        rec_json = system_serializer.to_json()
+        system_serializer = JsonSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+        rec_json = system_serializer.serialize()
         exp_json = {'id': sys_multi_loci.id,
                     'model': 'foo/T2SS',
                     'loci_nb': 2,
@@ -328,7 +329,7 @@ class SystemTest(MacsyTest):
         c2 = Cluster([v_h_sctj], model)
         sys_multi_loci = System(model, [c1, c2])
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
-        system_serializer = SystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+        system_serializer = StringSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
 
         sys_str = """system id = {}
 model = foo/T2SS
@@ -346,7 +347,43 @@ accessory genes:
 \t- sctJ: 1 (sctJ)
 \t- sctN: 1 (sctN)
 """.format(sys_multi_loci.id)
-        self.assertEqual(sys_str, str(system_serializer))
+        self.assertEqual(sys_str, system_serializer.serialize())
+
+
+    def test_SystemSerializer_tsv(self):
+        model = Model("foo/T2SS", 10)
+        gene_gspd = Gene(self.profile_factory, "gspD", model, self.models_location)
+        model.add_mandatory_gene(gene_gspd)
+        gene_sctj = Gene(self.profile_factory, "sctJ", model, self.models_location)
+        model.add_accessory_gene(gene_sctj)
+        gene_sctn = Gene(self.profile_factory, "sctN", model, self.models_location)
+        model.add_accessory_gene(gene_sctn)
+
+        h_gspd = Hit(gene_gspd, model, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+        h_tadz = Hit(gene_sctj, model, "h_tadz", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 20, 30)
+        v_h_tadz = ValidHit(h_tadz, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj = Hit(gene_sctn, model, "h_sctj", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 30, 40)
+        v_h_sctj = ValidHit(h_sctj, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_h_gspd, v_h_tadz], model)
+        c2 = Cluster([v_h_sctj], model)
+        sys_multi_loci = System(model, [c1, c2])
+        hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
+        system_serializer = TsvSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+
+        sys_tsv = "\t".join(["h_gspd", "replicon_id", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1",
+                             "1.0", "2.0", "1", "gspD", "mandatory", "803",
+                             "1.0", "1.0", "1.0", "1.0", "10", "20"])
+        sys_tsv += "\n"
+        sys_tsv += "\t".join(["h_tadz", "replicon_id", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1",
+                              "1.0", "2.0", "1", "sctJ", "accessory", "803",
+                              "1.0", "1.0", "1.0", "1.0", "20", "30"])
+        sys_tsv += "\n"
+        sys_tsv += "\t".join(["h_sctj", "replicon_id", "sctN", "30", "foo/T2SS", sys_multi_loci.id, "1",
+                              "1.0", "2.0", "1", "sctN", "accessory", "803",
+                              "1.0", "1.0", "1.0", "1.0", "30", "40"])
+        sys_tsv += "\n"
+        self.assertEqual(sys_tsv, system_serializer.serialize())
 
 
     def test_match(self):
