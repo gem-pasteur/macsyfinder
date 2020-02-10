@@ -44,7 +44,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
-from macsypy.system import match, System, HitSystemTracker, SystemSerializer
+from macsypy.system import match, System, HitSystemTracker, StringSystemSerializer, TsvSystemSerializer
 from macsypy.utils import get_models_name_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
@@ -459,23 +459,34 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                         else:
                             rejected_clusters.append(res)
 
-        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        system_filename = os.path.join(config.working_dir(), "systems.txt")
+        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
         track_multi_systems_hit = HitSystemTracker(systems)
 
-        systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
+        systems.sort(key=lambda syst: (syst.replicon_name, syst.clusters[0].hits[0].position, syst.model.fqn, - syst.score))
+
         with open(system_filename, "w") as sys_file:
-            systems_to_file(systems, track_multi_systems_hit, sys_file)
+            systems_to_txt(systems, track_multi_systems_hit, sys_file)
 
-        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
+
+        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
         with open(cluster_filename, "w") as clst_file:
-            rejected_clst_to_file(rejected_clusters, clst_file)
+            rejected_clst_to_txt(rejected_clusters, clst_file)
     else:
-        logger.info("No hits found in this dataset.")
+        logger.info("No hits found in this data set.")
 
 
-def systems_to_file(systems, hit_system_tracker, sys_file):
+def _outfile_header():
+    header = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}"""
+    return header
+
+
+def systems_to_tsv(systems, hit_system_tracker, sys_file):
     """
-    print systems occurrences in a file
+    print systems occurrences in a file in tabulated  format
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
@@ -483,16 +494,33 @@ def systems_to_file(systems, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(f"# macsyfinder {macsypy.__version__}", file=sys_file)
-    print(f"# {' '.join(sys.argv)}", file=sys_file)
+    print(_outfile_header(), file=sys_file)
+    print("# Systems found:", file=sys_file)
+    print(TsvSystemSerializer.header, file=sys_file)
+    for system in systems:
+        sys_serializer = TsvSystemSerializer(system, hit_system_tracker)
+        print(sys_serializer.serialize(), file=sys_file)
+
+
+def systems_to_txt(systems, hit_system_tracker, sys_file):
+    """
+    print systems occurrences in a file in human readable format
+
+    :param systems: list of systems found
+    :type systems: list of :class:`macsypy.system.System` objects
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
+    :return: None
+    """
+    print(_outfile_header(), file=sys_file)
     print("# Systems found:\n", file=sys_file)
     for system in systems:
-        sys_serializer = SystemSerializer(system, hit_system_tracker)
-        print(sys_serializer, file=sys_file)
+        sys_serializer = StringSystemSerializer(system, hit_system_tracker)
+        print(sys_serializer.serialize(), file=sys_file)
         print("=" * 60, file=sys_file)
 
 
-def rejected_clst_to_file(rejected_clusters, clst_file):
+def rejected_clst_to_txt(rejected_clusters, clst_file):
     """
     print rejected clusters in a file
 
@@ -502,8 +530,7 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
     :type clst_file: file object
     :return: None
     """
-    print(f"# macsyfinder {macsypy.__version__}", file=clst_file)
-    print(f"# {' '.join(sys.argv)}", file=clst_file)
+    print(_outfile_header(), file=clst_file)
     print("# Rejected clusters:\n", file=clst_file)
 
     for rej_clst in rejected_clusters:
