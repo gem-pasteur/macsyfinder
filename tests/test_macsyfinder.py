@@ -37,7 +37,7 @@ from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.system import System, HitSystemTracker
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.scripts.macsyfinder import systems_to_file, rejected_clst_to_file, parse_args
+from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, parse_args
 import macsypy
 from tests import MacsyTest
 
@@ -86,7 +86,7 @@ set_2
 """
         self.assertEqual(str(registry), list_models)
 
-    def test_systems_to_file(self):
+    def test_systems_to_txt(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
@@ -139,10 +139,63 @@ accessory genes:
 
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([system_1])
-        systems_to_file([system_1], track_multi_systems_hit, f_out)
+        systems_to_txt([system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
-    def test_rejected_clst_to_file(self):
+
+    def test_systems_to_tsv(self):
+            args = argparse.Namespace()
+            args.sequence_db = self.find_data("base", "test_base.fa")
+            args.db_type = 'gembase'
+            args.models_dir = self.find_data('models')
+            cfg = Config(MacsyDefaults(), args)
+
+            model_name = 'foo'
+            models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+            # we need to reset the ProfileFactory
+            # because it's a like a singleton
+            # so other tests are influenced by ProfileFactory and it's configuration
+            # for instance search_genes get profile without hmmer_exe
+            profile_factory = ProfileFactory(cfg)
+
+            model = Model("foo/T2SS", 10)
+            # test if id is well incremented
+            gene_gspd = Gene(profile_factory, "gspD", model, models_location)
+            model.add_mandatory_gene(gene_gspd)
+            gene_sctj = Gene(profile_factory, "sctJ", model, models_location)
+            model.add_accessory_gene(gene_sctj)
+
+            hit_1 = Hit(gene_gspd, model, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+            hit_2 = Hit(gene_sctj, model, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+            system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
+
+            system_tsv = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Systems found:
+"""
+            system_tsv += "\t".join(["hit_id", "replicon", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
+                                     "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
+                                     "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
+                                     "hit_begin_match", "hit_end_match"])
+            system_tsv += "\n"
+            system_tsv += "\t".join(["hit_1", "replicon_id", "gspD", "1", "foo/T2SS", system_1.id,
+                                     "1", "1.0", "1.5", "1", "gspD", "mandatory", "803", "1.0", "1.0", "1.0",
+                                     "1.0", "10", "20"])
+            system_tsv += "\n"
+            system_tsv += "\t".join(["hit_2", "replicon_id", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.0",
+                                     "1.5", "1", "sctJ", "accessory", "803", "1.0", "1.0", "1.0", "1.0", "10", "20"])
+            system_tsv += "\n\n"
+
+            f_out = StringIO()
+            track_multi_systems_hit = HitSystemTracker([system_1])
+            systems_to_tsv([system_1], track_multi_systems_hit, f_out)
+            self.assertMultiLineEqual(system_tsv, f_out.getvalue())
+
+
+    def test_rejected_clst_to_txt(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
@@ -185,7 +238,7 @@ The reasons to reject this clusters
 """
 
         f_out = StringIO()
-        rejected_clst_to_file([r_c], f_out)
+        rejected_clst_to_txt([r_c], f_out)
         self.maxDiff = None
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
