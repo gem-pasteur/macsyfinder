@@ -321,6 +321,7 @@ class Model(metaclass=MetaModel):
     def genes(self):
         """
         :return: all the genes without the exchangeables which are described in the model.
+        :rtype: set of :class:`macsypy.gene.ModelGene` objects.
         """
         # we assume that a gene cannot appear twice in a model
         return {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
