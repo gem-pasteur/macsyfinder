@@ -26,6 +26,7 @@ from operator import attrgetter
 import logging
 from dataclasses import dataclass
 
+from macsypy.gene import ModelGene
 from macsypy.error import MacsypyError
 
 _log = logging.getLogger(__name__)
@@ -37,36 +38,23 @@ class Hit:
     """
 
 
-    def __init__(self, gene, model, hit_id, hit_seq_length, replicon_name,
+    def __init__(self, gene, hit_id, hit_seq_length, replicon_name,
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
         :type gene: :class:`macsypy.gene.Gene` object
-        :param model: the model to which this gene belongs
-        :type model: :class:`macsypy.model.Model` object
-        :param hit_id: the identifier of the hit
-        :type hit_id: string
-        :param hit_seq_length: the length of the hit sequence
-        :type hit_seq_length: integer
-        :param replicon_name: the name of the replicon
-        :type replicon_name: string
-        :param position_hit: the rank of the sequence matched in the input dataset file
-        :type position_hit: integer
-        :param i_eval: the best-domain evalue (i-evalue, "independent evalue")
-        :type i_eval: float
-        :param score: the score of the hit
-        :type score: float
-        :param profile_coverage: percentage of the profile that matches the hit sequence
-        :type profile_coverage: float
-        :param sequence_coverage: percentage of the hit sequence that matches the profile
-        :type sequence_coverage: float
-        :param begin_match: where the hit with the profile starts in the sequence
-        :type begin_match: integer
-        :param end_match: where the hit with the profile ends in the sequence
-        :type end_match: integer
+        :param str hit_id: the identifier of the hit
+        :param int hit_seq_length: the length of the hit sequence
+        :param str replicon_name: the name of the replicon
+        :param int position_hit: the rank of the sequence matched in the input dataset file
+        :param float i_eval: the best-domain evalue (i-evalue, "independent evalue")
+        :param float score: the score of the hit
+        :param float profile_coverage: percentage of the profile that matches the hit sequence
+        :param float sequence_coverage: percentage of the hit sequence that matches the profile
+        :param int begin_match: where the hit with the profile starts in the sequence
+        :param int end_match: where the hit with the profile ends in the sequence
         """
         self.gene = gene
-        self.model = model
         self.id = hit_id
         self.seq_length = hit_seq_length
         self.replicon_name = replicon_name
@@ -81,21 +69,22 @@ class Hit:
 
     def __hash__(self):
         """To be hashable, it's needed to be put in a set or used as dict key"""
-        return id(self)
+        return hash((self.gene.name, self.id, self.seq_length, self.position, self.i_eval))
 
 
     def __str__(self):
         """
-        Print useful information on the Hit: regarding Hmmer statistics, and sequence information
+        :return: Useful information on the Hit: regarding Hmmer statistics, and sequence information
+        :rtype: str
         """
         return f"{self.id}\t{self.replicon_name}\t{self.position:d}\t{self.seq_length:d}\t{self.gene.name}\t" \
-               f"{self.model.name}\t{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
+               f"{self.i_eval:.3e}\t{self.score:.3f}\t{self.profile_coverage:.3f}\t" \
                f"{self.sequence_coverage:.3f}\t{self.begin_match:d}\t{self.end_match:d}\n"
 
 
     def __lt__(self, other):
         """
-        compare two Hits. If the sequence identifier is the same, do the comparison on the score.
+        Compare two Hits. If the sequence identifier is the same, do the comparison on the score.
         Otherwise, do it on alphabetical comparison of the sequence identifier.
 
         :param other: the hit to compare to the current object
@@ -103,9 +92,6 @@ class Hit:
         :return: True if self is < other, False otherwise
         """
         if self.id == other.id:
-            if not self.gene.is_homolog(other.gene):
-                _log.warning(f"Non homologs match: {self.gene.name} {self.model.name}) {other.gene.name} "
-                             f"({other.model.name}) for {self.id}")
             return self.score < other.score
         else:
             return self.id < other.id
@@ -121,9 +107,6 @@ class Hit:
         :return: True if self is > other, False otherwise
         """
         if self.id == other.id:
-            if not self.gene.is_homolog(other.gene):
-                _log.warning(f"Non homologs match: {self.gene.name} ({self.model.name}) {other.gene.name} "
-                             f"({other.model.name}) for {self.id}")
             return self.score > other.score
         else:
             return self.id > other.id
@@ -140,7 +123,6 @@ class Hit:
         """
         epsilon = 0.001
         return (self.gene.name == other.gene.name and
-                self.model.name == other.model.name and
                 self.id == other.id and
                 self.seq_length == other.seq_length and
                 self.replicon_name == other.replicon_name and
@@ -162,14 +144,6 @@ class Hit:
         return self.position
 
 
-    def get_syst_inter_gene_max_space(self):
-        """
-        :returns: the 'inter_gene_max_space' parameter defined for the gene of the hit
-        :rtype: integer
-        """
-        return self.gene.model.inter_gene_max_space
-
-
 class ValidHit:
     """
     Encapsulates a :class:`macsypy.report.Hit`
@@ -186,11 +160,13 @@ class ValidHit:
         :param hit:
         :type hit: :class:`macsypy.hit.Hit` object
         :param gene_ref:
-        :type gene_ref: :class:`macsypy.gene.Gene` object
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object
         :param gene_status:
         :type gene_status: :class:`macsypy.gene.GeneStatus` object
         """
         self.hit = hit
+        if not isinstance(gene_ref, ModelGene):
+            raise MacsypyError(f"The ValidHit 'gene_ref' argument must be a ModelGene not {type(gene_ref)}.")
         self.gene_ref = gene_ref
         self.status = gene_status
 
@@ -201,12 +177,14 @@ class ValidHit:
 
 @dataclass(frozen=True)
 class HitWeight:
-
-    hitself: float = 1
-    homolog: float = 0.75
-    analog: float = 0.75
+    """
+    The weight to compute the cluster and system score
+    """
+    itself: float = 1
+    exchangeable: float = 0.75
     mandatory: float = 1
     accessory: float = 0.5
+    neutral: float = 0
 
 
 hit_weight = HitWeight()

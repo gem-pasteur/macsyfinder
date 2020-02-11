@@ -45,7 +45,7 @@ from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
 from macsypy.system import match, System, HitSystemTracker, StringSystemSerializer, TsvSystemSerializer
-from macsypy.utils import get_models_name_to_detect
+from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
@@ -94,7 +94,7 @@ def parse_args(args):
     :param args: The arguments provided on the command line
     :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Nampsace` object.
+    :rtype: :class:`aprgparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
@@ -232,7 +232,7 @@ def parse_args(args):
                                type=float,
                                default=None,
                                help="Maximal independent e-value for Hmmer hits to be selected for model detection. "
-                                     "(default = 0.001)")
+                                    "(default = 0.001)")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
@@ -325,7 +325,7 @@ def parse_args(args):
     return parser, parsed_args
 
 
-def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
+def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
@@ -347,6 +347,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     :param logger: The logger use to display information to the user.
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
+    :return: the systems and rejected clusters found
+    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCluster`, ...])
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
@@ -361,33 +363,29 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, registry)
+    parser = DefinitionParser(config, model_bank, gene_bank, registry, profile_factory)
     try:
-        models_name_to_detect = get_models_name_to_detect(config.models(), registry)
+        models_def_to_detect = get_def_to_detect(config.models(), registry)
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
 
-    parser.parse(models_name_to_detect)
+    parser.parse(models_def_to_detect)
 
     logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
     logger.info(f"Analysis launched on {config.sequence_db()} for model(s):")
 
-    for m in models_name_to_detect:
-        logger.info(f"\t- {m}")
+    for m in models_def_to_detect:
+        logger.info(f"\t- {m.fqn}")
 
-    models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
+    models_to_detect = [model_bank[model_loc.fqn] for model_loc in models_def_to_detect]
     all_genes = []
-    for system in models_to_detect:
-        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+    for model in models_to_detect:
+        genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
         ex_genes = []
 
         for g in genes:
-            if g.exchangeable:
-                h_s = g.get_homologs()
-                ex_genes += h_s
-                a_s = g.get_analogs()
-                ex_genes += a_s
+            ex_genes += g.exchangeables
         all_genes += (genes + ex_genes)
     #############################################
     # this part of code is executed in parallel
@@ -401,6 +399,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     #############################################
     all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
+    systems = []
+    rejected_clusters = []
     if len(all_hits) > 0:
         # It's important to keep this sorting to have in last all_hits version
         # the hits with the same replicon_name and position sorted by score
@@ -418,8 +418,6 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         rep_db = RepliconDB(config)
-        systems = []
-        rejected_clusters = []
         for rep_name in hits_by_replicon:
             logger.info("Hits analysis for replicon {rep_name}")
             rep_info = rep_db[rep_name]
@@ -445,8 +443,7 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                     loners = cluster.get_loners(hits_related_one_model, model)
                     clusters_combination = []
                     for one_cluster in clusters:
-                        one_clust_combination = []
-                        one_clust_combination.append(one_cluster)
+                        one_clust_combination = [one_cluster]
                         filtered_loners = cluster.filter_loners(one_cluster, loners)
                         one_clust_combination.extend(filtered_loners)
                         clusters_combination.append([one_clust_combination])
@@ -458,24 +455,9 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
                             systems.append(res)
                         else:
                             rejected_clusters.append(res)
-
-        system_filename = os.path.join(config.working_dir(), "systems.txt")
-        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
-        track_multi_systems_hit = HitSystemTracker(systems)
-
-        systems.sort(key=lambda syst: (syst.replicon_name, syst.clusters[0].hits[0].position, syst.model.fqn, - syst.score))
-
-        with open(system_filename, "w") as sys_file:
-            systems_to_txt(systems, track_multi_systems_hit, sys_file)
-
-        with open(tsv_filename, "w") as tsv_file:
-            systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
-
-        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
-        with open(cluster_filename, "w") as clst_file:
-            rejected_clst_to_txt(rejected_clusters, clst_file)
-    else:
-        logger.info("No hits found in this data set.")
+        if systems:
+            systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+    return systems, rejected_clusters
 
 
 def _outfile_header():
@@ -495,12 +477,14 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
     :return: None
     """
     print(_outfile_header(), file=sys_file)
-    print("# Systems found:", file=sys_file)
-    print(TsvSystemSerializer.header, file=sys_file)
-    for system in systems:
-        sys_serializer = TsvSystemSerializer(system, hit_system_tracker)
-        print(sys_serializer.serialize(), file=sys_file)
-
+    if systems:
+        print("# Systems found:", file=sys_file)
+        print(TsvSystemSerializer.header, file=sys_file)
+        for system in systems:
+            sys_serializer = TsvSystemSerializer(system, hit_system_tracker)
+            print(sys_serializer.serialize(), file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
 
 def systems_to_txt(systems, hit_system_tracker, sys_file):
     """
@@ -508,16 +492,22 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
     :return: None
     """
+
     print(_outfile_header(), file=sys_file)
-    print("# Systems found:\n", file=sys_file)
-    for system in systems:
-        sys_serializer = StringSystemSerializer(system, hit_system_tracker)
-        print(sys_serializer.serialize(), file=sys_file)
-        print("=" * 60, file=sys_file)
+    if systems:
+        print("# Systems found:\n", file=sys_file)
+        for system in systems:
+            sys_serializer = StringSystemSerializer(system, hit_system_tracker)
+            print(sys_serializer.serialize(), file=sys_file)
+            print("=" * 60, file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -531,11 +521,13 @@ def rejected_clst_to_txt(rejected_clusters, clst_file):
     :return: None
     """
     print(_outfile_header(), file=clst_file)
-    print("# Rejected clusters:\n", file=clst_file)
-
-    for rej_clst in rejected_clusters:
-        print(rej_clst, file=clst_file)
-        print("=" * 60, file=clst_file)
+    if rejected_clusters:
+        print("# Rejected clusters:\n", file=clst_file)
+        for rej_clst in rejected_clusters:
+            print(rej_clst, file=clst_file)
+            print("=" * 60, file=clst_file)
+    else:
+        print("# No Rejected clusters", file=clst_file)
 
 
 def main(args=None, loglevel=None):
@@ -605,23 +597,30 @@ def main(args=None, loglevel=None):
 
         models = ModelBank()
         genes = GeneBank()
-        profiles = ProfileFactory(config)
+        profile_factory = ProfileFactory(config)
 
-        main_search_systems(config, models, genes, profiles, logger)
+        systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+
+        ##############################
+        # Write the results in files #
+        ##############################
+        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
+        track_multi_systems_hit = HitSystemTracker(systems)
+
+        with open(system_filename, "w") as sys_file:
+            systems_to_txt(systems, track_multi_systems_hit, sys_file)
+
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
+
+        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clst_to_txt(rejected_clusters, clst_file)
+        if not (systems or rejected_clusters):
+            logger.info("No hits found in this dataset.")
     logger.info("END")
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-

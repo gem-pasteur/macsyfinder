@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T2SS_gspN.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/T2SS_gspN.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspN  [M=112]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.2e-24   84.0   3.8      2e-24   83.2   2.4    1.9  2  VICH001.B.00001.C001_02591  C ATG TAG 2896907 2897665 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02591  C ATG TAG 2896907 2897665 Valid VC2723 759 @NP_232350.1@ VC2723 1 2896907 2897665 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   83.2   2.4   7.9e-28     2e-24       3     112 .]      10     116 ..       8     116 .. 0.96
+   2 ?   -0.4   0.0     0.074   1.9e+02      69      94 ..     129     154 ..     119     208 .. 0.66
+
+  Alignments for each domain:
+  == domain 1  score: 83.2 bits;  conditional E-value: 7.9e-28
+                   T2SS_gspN   3 lvvvlfilfllitlPadaverrlvaesaavglaelsgslwrgalsgvtltgvrltkgsvawrlslfpllgGkvtltldqdrsa 85 
+                                 l+  +++  ++++lPa+++ + l+  +++++l++  g+lw+g++++v+++g++l  g+++w+l+l++ll G+++++++++r++
+  VICH001.B.00001.C001_02591  10 LFSTVLMTSVVVHLPAQVALSPLPL-PEGLELTGIEGTLWQGQAAQVRWQGMSL--GDLNWDLHLSALLLGQLEADIRFGRGS 89 
+                                 6677888889***************.****************************..*************************** PP
+
+                   T2SS_gspN  86 rlqlgGlavvslgldglqarggtlsaP 112
+                                 ++ql+G++vv++gl g++a+   ls+P
+  VICH001.B.00001.C001_02591  90 STQLRGKGVVGVGLSGPYADDFLLSLP 116
+                                 *********************999987 PP
+
+  == domain 2  score: -0.4 bits;  conditional E-value: 0.074
+                   T2SS_gspN  69 pl.lgGkvtltldqdrsar...lqlgGlav 94 
+                                 pl  +G+++++++q r ++    q    a 
+  VICH001.B.00001.C001_02591 129 PLmAQGQLEMAVKQYRFGEpycQQ----AE 154
+                                 444567777776666655522222....22 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (112 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       115  (0.0454905); expected 50.6 (0.02)
+Passed bias filter:                       82  (0.0324367); expected 50.6 (0.02)
+Passed Vit filter:                         7  (0.00276899); expected 2.5 (0.001)
+Passed Fwd filter:                         1  (0.00039557); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 9447.30
+//
+[ok]

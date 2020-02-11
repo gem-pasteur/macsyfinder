@@ -40,10 +40,10 @@ def split_def_name(fqn):
     :rtype: list of string
     """
     split = fqn.split(_separator)
-    if split[0] == '':
+    if split[0] == '':  # '/foo/bar'
         split = split[1:]
     if split[-1] == '':
-        split = split[:-1]
+        split = split[:-1]  # 'foo/bar/'
     return split
 
 
@@ -330,7 +330,14 @@ class ModelLocation:
         return self.name
 
 
-class DefinitionLocation(dict):
+class MetaDefLoc(type):
+
+    @property
+    def separator(cls):
+        return cls._separator
+
+
+class DefinitionLocation(dict, metaclass=MetaDefLoc):
     """
     Manage were definitions are stored. a Model is a xml definition and associated profiles.
     It has 3 attributes
@@ -340,10 +347,27 @@ class DefinitionLocation(dict):
     subdefinitions: the subdefintions if it exists
     """
 
+    _separator = '/'
+
     def __init__(self, name=None, subdefinitions=None, path=None):
         super().__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
         self.__dict__ = self  # allow to use dot notation to access to property here name or subdefinitions ...
 
+
+    @classmethod
+    def split_fqn(cls, fqn):
+        return [f for f in fqn.split(cls.separator) if f]
+
+    @classmethod
+    def root_name(cls, fqn):
+        return cls.split_fqn(fqn)[0]
+
+    @property
+    def family_name(self):
+        return self.__class__.root_name(self.fqn)
+
+    def __hash__(self):
+        return hash((self.fqn, self.path))
 
     def add_subdefinition(self, subdefinition):
         """

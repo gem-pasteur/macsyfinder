@@ -1,0 +1,13 @@
+<model inter_gene_max_space="20" min_mandatory_genes_required="4" min_genes_required="6" multi_loci="1" vers="2.0">
+    <gene name="sctJ_FLG" presence="mandatory">
+       <analogs>
+           <gene name="sctJ"/>
+       </analogs>
+    </gene>
+    <gene name="sctN_FLG" presence="mandatory"/>
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory"/>
+    <gene name="fliE" presence="mandatory"/>
+    <gene name="tadZ" presence="accessory"/>
+    <gene name="sctC" presence="forbidden"/>
+</model>

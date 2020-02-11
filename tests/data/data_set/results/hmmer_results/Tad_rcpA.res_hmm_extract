@@ -1,0 +1,7 @@
+# gene: Tad_rcpA extract from results/hmmer_results/Tad_rcpA.search_hmm.out hmm output
+# profile length= 225
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00409	VICH001.B.00001.C001	369	559	Tad_rcpA	1.200e-30	103.700	0.987	0.451	284	535
+VICH001.B.00001.C001_02505	VICH001.B.00001.C001	2394	578	Tad_rcpA	1.400e-35	119.900	0.991	0.422	333	576

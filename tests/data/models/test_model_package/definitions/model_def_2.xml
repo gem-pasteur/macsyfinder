@@ -1,0 +1,10 @@
+<model inter_gene_max_space="5" min_genes_required="3" min_mandatory_genes_required="2" vers="2.0">
+
+    <gene name="csf3_TypeU" presence="mandatory" />
+    <gene name="cas5_TypeI" presence="mandatory" />
+
+    <gene name="cas6_TypeI-III" presence="mandatory" />
+    <gene name="cas3_TypeI" presence="accessory" />
+    <gene name="cas3a_TypeI" presence="accessory" />
+
+</model>

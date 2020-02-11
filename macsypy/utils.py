@@ -22,31 +22,30 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-from typing import List
+from .registries import DefinitionLocation
 
 
-def get_models_name_to_detect(models, model_registry) -> List[str]:
+def get_def_to_detect(models, model_registry):
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
                   [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
-    :return: the models fully qualified name to launch a detection on.
-    :rtype: list of string ['model_1/def1', 'model_1/def2', ..., 'model_2/def1', ...]
+    :return: the definitions to parse
+    :rtype: list of :class:`macsypy.registries.DefinitionLocation` objects
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
-    models_name_to_detect = []
-    for group_of_defs in models:
-        root = group_of_defs[0]
-        definitions = group_of_defs[1]
-        model_loc = model_registry[root.split('/')[0]]
-        if 'all' in [d.lower() for d in definitions]:
+    def_to_detect = []
+    for group_of_model in models:
+        root, def_name = group_of_model
+        model_family = DefinitionLocation.root_name(root)
+        model_loc = model_registry[model_family]
+        if 'all' in [d.lower() for d in def_name]:
             if root == model_loc.name:
                 root = None
             def_loc = model_loc.get_all_definitions(root_def_name=root)
-            models_name_to_detect.extend([d.fqn for d in def_loc])
+            def_to_detect += def_loc
         else:
-            models_name_to_detect.extend([model_loc.get_definition(f'{root}/{one_def}').fqn
-                                          for one_def in definitions])
-    return models_name_to_detect
+            def_to_detect += [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_name]
+    return def_to_detect
