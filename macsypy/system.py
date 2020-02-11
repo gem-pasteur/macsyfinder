@@ -323,11 +323,14 @@ class System:
         so macsyfinder build only one system
         the occurrence is an indicator of how many systems are
         it's based on the number of occurrence of each mandatory genes
+        The multi_system genes are not take in account.
 
         :return: a predict number of biologic systems
         """
-        occ_per_gene = [len(hits) for hits in self._mandatory_occ.values()]
-        # if a systems contains 5 gene whit occ of 1 and 5 gene with 0 occ
+        genes = {g.name: g for g in self.model.genes}
+        occ_per_gene = [len(hits) for gene_name, hits in self._mandatory_occ.items()
+                        if not genes[gene_name].multi_system]
+        # if a systems contains 5 gene with occ of 1 and 5 gene with 0 occ
         # the median is 0.5
         # round(0.5) = 0
         # so I fix a floor value at 1
