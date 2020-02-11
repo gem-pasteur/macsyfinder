@@ -1,0 +1,305 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilU.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/T4P_pilU.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilU.mafft-edit  [M=342]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+   1.9e-179  592.8   1.8   2.2e-179  592.6   1.8    1.0  1  VICH001.B.00001.C001_00477  D ATG TAG 492348 493454 Valid VC0
+   3.5e-105  348.7   1.0   4.1e-105  348.4   1.0    1.0  1  VICH001.B.00001.C001_00476  D ATG TAG 491296 492333 Valid VC0
+    2.3e-30  102.7   0.3    3.9e-30  101.9   0.3    1.3  1  VICH001.B.00001.C001_00412  D GTG TAG 431374 433101 Valid VC0
+    1.8e-28   96.4   0.7      3e-28   95.8   0.3    1.5  2  VICH001.B.00001.C001_02600  C ATG TAA 2903668 2905179 Valid V
+    7.1e-28   94.5   0.2    5.4e-26   88.3   0.1    2.1  2  VICH001.B.00001.C001_02306  D ATG TAA 2597654 2599342 Valid V
+    1.6e-24   83.4   0.0      3e-24   82.6   0.0    1.5  1  VICH001.B.00001.C001_00829  D ATG TAG 896155 897666 Valid VC0
+     0.0005   16.1   0.1     0.0016   14.4   0.0    1.7  2  VICH001.B.00001.C001_01317  C ATG TAA 1447951 1448706 Valid V
+      0.002   14.1   0.3      0.003   13.5   0.1    1.4  2  VICH001.B.00001.C001_00008  C ATG TAA 4871 5608 Valid VC0008 
+     0.0039   13.2   0.1      0.016   11.1   0.0    1.9  2  VICH001.B.00001.C001_01728  D ATG TAA 1949718 1950704 Valid V
+     0.0082   12.1   0.0      0.012   11.5   0.0    1.3  1  VICH001.B.00001.C001_01799  C ATG TAA 2027802 2028488 Valid V
+  ------ inclusion threshold ------
+      0.023   10.6   0.1       0.04    9.8   0.1    1.3  1  VICH001.B.00001.C001_02214  C ATG TAA 2466516 2468636 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_00477  D ATG TAG 492348 493454 Valid VC0463 1107 @NP_230117.1@ VC0463 1 492348 493454 | twitchin
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  592.6   1.8  9.6e-182  2.2e-179       2     342 .]       3     341 ..       2     341 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 592.6 bits;  conditional E-value: 9.6e-182
+             pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsa 84 
+                                 l++ l  ++++k+sdl+it+++p   +vdG+++ ++ e+ls ++++ l++a++++ + a+f++t+e+nfa+ ++++Grfrvsa
+  VICH001.B.00001.C001_00477   3 LNQYLDGMLTHKASDLYITVGAPILYRVDGELRAQG-EALSVADVTALLHAMMDDARQAEFKQTREANFAV-VRDSGRFRVSA 83 
+                                 8999*******************************9.9*********************************.99********* PP
+
+             pilU.mafft-edit  85 flqqelvGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                                 f+q+el+G+v+rriet+ipt++elklpevl+++a+akrGlvl+vGatGsGkstt+aa++gyrn++++Ghiltvedp+efvheh
+  VICH001.B.00001.C001_00477  84 FFQRELPGAVIRRIETRIPTFEELKLPEVLQNLAIAKRGLVLVVGATGSGKSTTMAAMTGYRNQHRTGHILTVEDPIEFVHEH 166
+                                 *********************************************************************************** PP
+
+             pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreq 250
+                                 krc+vtqrevGldtes+evalknslrqapd+iliGeir+retmeya++faetGhlc+atlhan+anqal+ri+hlvp+e+req
+  VICH001.B.00001.C001_00477 167 KRCIVTQREVGLDTESYEVALKNSLRQAPDMILIGEIRSRETMEYAMTFAETGHLCMATLHANNANQALERILHLVPKEQREQ 249
+                                 *********************************************************************************** PP
+
+             pilU.mafft-edit 251 llldlslnlralvaqrlipkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyed 333
+                                 +lldlslnl++++aq+l+++k+gkgr++++evlln+p+++dlir+Ge+helk +m++s+e+Gmqtfdqal++l++++kis++d
+  VICH001.B.00001.C001_00477 250 FLLDLSLNLKGVIAQQLLRDKNGKGRHGVFEVLLNSPRIADLIRRGELHELKATMARSQEVGMQTFDQALYQLVVDDKISEQD 332
+                                 *********************************************************************************** PP
+
+             pilU.mafft-edit 334 alrnadsan 342
+                                 al++adsan
+  VICH001.B.00001.C001_00477 333 ALHSADSAN 341
+                                 *******98 PP
+
+>> VICH001.B.00001.C001_00476  D ATG TAG 491296 492333 Valid VC0462 1038 @NP_230116.1@ VC0462 1 491296 492333 | twitchin
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  348.4   1.0  1.8e-107  4.1e-105       2     332 ..       3     332 ..       2     339 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 348.4 bits;  conditional E-value: 1.8e-107
+             pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsa 84 
+                                 + +ll+  v++++sdl+++a+vpp++++dG+v+k++  +++++++++l+ +i+++ q++++e++ e +f+ +  ++Grfrv+a
+  VICH001.B.00001.C001_00476   3 IAELLEFSVKHNASDLHLSAGVPPMVRIDGEVRKLGVPAFTHSDVHRLIFEIMNDAQRSEYEEKLEVDFSFELPNVGRFRVNA 85 
+                                 789******************************************************************************** PP
+
+             pilU.mafft-edit  85 flqqelvGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                                 f q     +v+r+i+t iptl++l+ pe++ ++a   +Glvl+ G tGsGksttlaa+v+y n++ + hilt+edp+efvh+ 
+  VICH001.B.00001.C001_00476  86 FHQARGCSAVFRTIPTVIPTLEQLDAPEIFSKIANYEKGLVLVTGPTGSGKSTTLAAMVNYVNAHHNKHILTIEDPIEFVHSN 168
+                                 *********************************************************************************** PP
+
+             pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreq 250
+                                 ++c++ qrev  dt+sf+ al+++lr+ pdvil+Ge+rd+et+  a++ aetGhl + tlh+ sa +++drii+++p   +  
+  VICH001.B.00001.C001_00476 169 NKCLINQREVHRDTHSFKNALRSALREDPDVILVGELRDQETISLALTAAETGHLVFGTLHTSSAAKTIDRIIDVFPGSDKDM 251
+                                 *********************************************************************************** PP
+
+             pilU.mafft-edit 251 llldlslnlralvaqrlipkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisye 332
+                                 +   ls  lra++aq+l+++  g gr+a+ e++l tp + +lir  +v+++ ++++     Gmqt++q   +l+ +g +  +
+  VICH001.B.00001.C001_00476 252 VRSMLSESLRAVIAQKLLKRV-GGGRVACHEIMLATPAIRNLIREDKVAQMYSIIQTGAAHGMQTMEQNAKQLIARGVVDAQ 332
+                                 ******************876.559********************************************9999988877655 PP
+
+>> VICH001.B.00001.C001_00412  D GTG TAG 431374 433101 Valid VC0405 1728 @NP_230059.1@ VC0405 1 431374 433101 | MSHA bio
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  101.9   0.3   1.7e-32   3.9e-30       2     270 ..     186     454 ..     185     464 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 101.9 bits;  conditional E-value: 1.7e-32
+             pilU.mafft-edit   2 lekllkllverkgsdlfitaevppa...lkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiG.rf 80 
+                                 +++l++  ++ ++sd++i  ++ +     ++dG + +   ++++ ++al l  +++ +  +++ +  +++ f i ++g     
+  VICH001.B.00001.C001_00412 186 INSLFEDAIQVGASDIHIEPDANVLrlrQRIDGVLHETLLHEVNIASALVLRLKLMANLDISEKRLPQDGRFNIRVKGQSvDI 268
+                                 7899999***********9887764222689**9999999999999****************************998764279 PP
+
+             pilU.mafft-edit  81 rvsaflqqelvGmvlrrietk..iptldelklpe.vlkeva.lakr..GlvllvGatGsGksttlaalvgyrnenssGhiltv 157
+                                 r+s++  q+   +v+r ++    +  l+e  +p+ +l  +    kr  G++l+ G tGsGk+ttl   ++  n+ s  +i+t 
+  VICH001.B.00001.C001_00412 269 RMSTMPIQHGESVVMRLLNQSagVRKLEESGIPPhLLLRLRhQLKRphGMILVTGPTGSGKTTTLYGALNELNT-SGKKIITA 350
+                                 *****99999999999987652267899*99975255555413354559****************988876665.4458**** PP
+
+             pilU.mafft-edit 158 edpvefvhehkrcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldrii 240
+                                 edpve+  +  + v  + ++ ld   f   l+  lrq pd+il+Ge+rd+et+e  +  a tGhl l+tlh+n+a  +  r+i
+  VICH001.B.00001.C001_00412 351 EDPVEYRISRINQVQVNPKINLD---FSTLLRTFLRQDPDIILVGEMRDQETVEIGLRAALTGHLVLSTLHTNDAVDSALRLI 430
+                                 ************99999999999...7889*****************************************988765555555 PP
+
+             pilU.mafft-edit 241 hlvpeerreqllldlslnlralvaqrlipk 270
+                                 ++        l+   +  +ra+vaqrl++k
+  VICH001.B.00001.C001_00412 431 DM---GAPGYLV---ASAVRAVVAQRLVRK 454
+                                 54...4444443...457899999999987 PP
+
+>> VICH001.B.00001.C001_02600  C ATG TAA 2903668 2905179 Valid VC2732 1512 @NP_232359.1@ VC2732 1 2903668 2905179 | gene
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   95.8   0.3   1.3e-30     3e-28       2     269 ..     127     394 ..     126     402 .. 0.73
+   2 ?   -3.3   0.0       1.7   3.8e+02     272     295 ..     437     460 ..     433     499 .. 0.67
+
+  Alignments for each domain:
+  == domain 1  score: 95.8 bits;  conditional E-value: 1.3e-30
+             pilU.mafft-edit   2 lekllkllverkgsdlfi.tae..vppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr.. 79 
+                                 ++++l + +++++sd++i t e  +   ++vdG +++v   + + ++ l    +++ +  +a+ +  +++  ++     Gr  
+  VICH001.B.00001.C001_02600 127 INAMLGEAIKEGASDIHIeTFEktLSIRFRVDGVLREVLAPSRKLSSLLVSRVKVMAKLDIAEKRVPQDGRISLR--IGGRav 207
+                                 789999***********9444511445678999999887444333344444446777777777777777766554..444432 PP
+
+             pilU.mafft-edit  80 .frvsaflqqelvGmvlrrietkiptldelklpevlke....valakr..GlvllvGatGsGksttlaalvgyrnenssGhil 155
+                                   rvs++   +   +v+r ++ +   ld  +l    ++      l kr  G++l+ G tGsGksttl a ++  n+ s+  il
+  VICH001.B.00001.C001_02600 208 dVRVSTMPSSHGERVVMRLLDKNATRLDLHSLGMTAHNhdnfRRLIKRphGIILVTGPTGSGKSTTLYAGLQELNS-SERNIL 289
+                                 38******9999999****99999988765554443331111235555559****************998877665.5678** PP
+
+             pilU.mafft-edit 156 tvedpvefvhehkrcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldr 238
+                                 tvedp+ef  +      tq +  +d  +f   l++ lrq pdv+++Geird et + a++ + tGhl ++tlh+n+a  a+ r
+  VICH001.B.00001.C001_02600 290 TVEDPIEFDID--GIGQTQVNPRVDM-TFARGLRAILRQDPDVVMVGEIRDLETAQIAVQASLTGHLVMSTLHTNTAVGAVTR 369
+                                 ********544..3445666666775.699***************************************************99 PP
+
+             pilU.mafft-edit 239 iihlvpeerreqllldlslnlralvaqrlip 269
+                                 + ++  e     +l+  s  l +++aqrl++
+  VICH001.B.00001.C001_02600 370 LRDMGIE----PFLI--SSSLLGVLAQRLVR 394
+                                 8665332....2333..44455666666665 PP
+
+  == domain 2  score: -3.3 bits;  conditional E-value: 1.7
+             pilU.mafft-edit 272 dgkgraaavevllntplvsdlirk 295
+                                 + +gr+++ e+ll    + +li+ 
+  VICH001.B.00001.C001_02600 437 GYRGRTGIHELLLVDDALQELIHS 460
+                                 567777777777777777777753 PP
+
+>> VICH001.B.00001.C001_02306  D ATG TAA 2597654 2599342 Valid VC2424 1689 @NP_232054.1@ VC2424 1 2597654 2599342 | type
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   88.3   0.1   2.4e-28   5.4e-26       2     278 ..     186     463 ..     185     473 .. 0.77
+   2 !    4.2   0.0    0.0088         2     274     326 ..     498     548 ..     493     558 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 88.3 bits;  conditional E-value: 2.4e-28
+             pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplske.ealtlvrailsekqladfertkec..nfaisaegiG 78 
+                                 ++++l   v +++sd++      +    l+ dG +++   +p s+  + l    +ils+  +a+ +  +++     +s++++ 
+  VICH001.B.00001.C001_02306 186 INQVLLDAVRKGASDIHFEpyeNQYRIRLRCDGILVETQ-QPASHLsRRLAARIKILSKLDIAERRLPQDGriKLRLSRDTAI 267
+                                 788999999999999986522145667788999888766.4444440444444578888777766655555115678899999 PP
+
+             pilU.mafft-edit  79 rfrvsaflqqelvGmvlrrietkiptl..delklpevlkevala..kr..GlvllvGatGsGksttlaalvgyrnenssGhil 155
+                                  +rvs++       +vlr ++     l  d+l   +  k++ l+  kr  G++l+ G tGsGk+ +l + +   n+ s+  i 
+  VICH001.B.00001.C001_02306 268 DMRVSTLPTLWGEKIVLRLLDSSAANLdiDKLGYNPQQKQLYLNalKRpqGMILMTGPTGSGKTVSLYTGLRILNT-SQINIS 349
+                                 9*****999999999***99998887611567766667776553225445*************9999776666665.556899 PP
+
+             pilU.mafft-edit 156 tvedpvefvhehkrcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldr 238
+                                 t edpve   +  + v  q ++G+    f  al++ lrq pdv+++Geird et e a++ a+tGhl l+tlh+nsa +++ r
+  VICH001.B.00001.C001_02306 350 TAEDPVEINLSGINQVQVQPKIGF---GFAEALRSFLRQDPDVVMVGEIRDLETAEIAVKAAQTGHLVLSTLHTNSAAETVIR 429
+                                 ***********************9...5999**********************************************999999 PP
+
+             pilU.mafft-edit 239 iihlvpeerreqllldlslnlralvaqrlipkkdgkgraa 278
+                                 + ++  e       ++l+  l  ++aqrl ++  ++ ++a
+  VICH001.B.00001.C001_02306 430 LANMGVEP------FNLASSLSLIIAQRLARRLCKHCKIA 463
+                                 88875543......55666666688888877776666655 PP
+
+  == domain 2  score: 4.2 bits;  conditional E-value: 0.0088
+             pilU.mafft-edit 274 kgraaavevl.lntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyea 326
+                                  gr+++ ev+ +nt l+  ++++  +h++ ++    +  Gmqt++++  e + +
+  VICH001.B.00001.C001_02306 498 SGRVGIYEVMaFNTELAEAIMQRASIHQIERLA---KANGMQTLQESGLEKLRE 548
+                                 5899****99579999999********998875...567999999886666555 PP
+
+>> VICH001.B.00001.C001_00829  D ATG TAG 896155 897666 Valid VC0835 1512 @NP_230483.1@ VC0835 1 896155 897666 | toxin co
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   82.6   0.0   1.3e-26     3e-24     119     240 ..     226     351 ..      90     378 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 82.6 bits;  conditional E-value: 1.3e-26
+             pilU.mafft-edit 119 lakrGlvllvGatGsGksttlaalvg...yrnenssGhiltvedpvefvhe..hkrcvvtqrevGldtesfevalknslrqap 196
+                                  +  Gl ++ G+tGsGkst+l   ++   +   + +G  +tvedpve++ +   ++++v+  +     + f  a+++++r+ p
+  VICH001.B.00001.C001_00829 226 NTSYGLFIVSGTTGSGKSTSLKKYIEllfFNKYKGKGCFVTVEDPVEYLISgaQQSSIVADNDD-KTKNPFADAVRSAMRRDP 307
+                                 4668*****************998874424555679************8652256677777664.56789************* PP
+
+             pilU.mafft-edit 197 dviliGeirdretmeyaiafaetGhlclatlhansanqaldrii 240
+                                 dvi+iGeird+ t+e   +  e+Gh cl+t+ha s    l+r+ 
+  VICH001.B.00001.C001_00829 308 DVIMIGEIRDKPTVEALSSAVESGHYCLTTIHAGSVVSVLQRLS 351
+                                 ***************999999**************999999975 PP
+
+>> VICH001.B.00001.C001_01317  C ATG TAA 1447951 1448706 Valid VC1359 756 @NP_231003.1@ VC1359 1 1447951 1448706 | amino
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.4   0.0   6.9e-06    0.0016     112     185 ..      24      96 ..      16     107 .. 0.81
+   2 ?   -1.2   0.0      0.38        88     188     240 ..     156     216 ..     150     223 .. 0.60
+
+  Alignments for each domain:
+  == domain 1  score: 14.4 bits;  conditional E-value: 6.9e-06
+             pilU.mafft-edit 112 evlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfe 185
+                                 +vlk++ l+ k+G  +++ G +GsGkst +   ++  +e+++G i+   +  e   + k+  + +revG+  + f+
+  VICH001.B.00001.C001_01317  24 HVLKNINLNvKKGeRIVICGPSGSGKSTMIR-CINRLEEHQKGQIIVAGN--ELTEDLKNIELVRREVGMCFQHFN 96 
+                                 6899887743555267888********8765.6778899******98765..788999999999*****9877776 PP
+
+  == domain 2  score: -1.2 bits;  conditional E-value: 0.38
+             pilU.mafft-edit 188 lknslrqapdviliGeird.......retmeyaiafaetGhlclatlha.nsanqaldrii 240
+                                 +  sl   p+++l+ e  +       re ++  ++ ae G   l   h    a +  dr+i
+  VICH001.B.00001.C001_01317 156 IARSLCMNPQIMLFDEPTSaldpemvREVLDVMVELAEEGMTMLCVTHEmGFAKEVADRVI 216
+                                 5555555555555555433222333378888888888888777766664144666667766 PP
+
+>> VICH001.B.00001.C001_00008  C ATG TAA 4871 5608 Valid VC0008 738 @NP_062592.1@ VC0008 1 4871 5608 | amino acid ABC tr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   13.5   0.1   1.3e-05     0.003     111     194 ..      14      99 ..       5     118 .. 0.74
+   2 ?   -3.8   0.0       2.4   5.5e+02       9      33 ..     185     209 ..     178     225 .. 0.53
+
+  Alignments for each domain:
+  == domain 1  score: 13.5 bits;  conditional E-value: 1.3e-05
+             pilU.mafft-edit 111 pevlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGhiltvedpvefv.hehkrcvvtqrevGldtesfevalkn 190
+                                  evlk + l+ +rG +v+++G++G+Gkst l   v++ ++  +G i   e  v+   h++ + +  +r+ G+  + + +    
+  VICH001.B.00001.C001_00008  14 SEVLKGIDLEiQRGeIVVIIGSSGTGKSTLLR-CVNFLEQADQGSIRIDELTVDTQkHTKADVLALRRKTGFVFQNYALFAHL 95 
+                                 5778866654245538999*********9775.68999999999998777788764155555566678888888887777666 PP
+
+             pilU.mafft-edit 191 slrq 194
+                                 + rq
+  VICH001.B.00001.C001_00008  96 TARQ 99 
+                                 6666 PP
+
+  == domain 2  score: -3.8 bits;  conditional E-value: 2.4
+             pilU.mafft-edit   9 lverkgsdlfitaevppalkvdGkv 33 
+                                 l +++ + l +t e+  a  v  +v
+  VICH001.B.00001.C001_00008 185 LATQHQTMLVVTHEMQFAKEVADRV 209
+                                 4444444444444444444444444 PP
+
+>> VICH001.B.00001.C001_01728  D ATG TAA 1949718 1950704 Valid VC1806 987 @NP_231441.1@ VC1806 1 1949718 1950704 | hypot
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   11.1   0.0     7e-05     0.016     104     145 ..      18      61 ..       6      69 .. 0.77
+   2 ?   -1.1   0.0      0.36        83     282     320 ..      86     126 ..      81     129 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 11.1 bits;  conditional E-value: 7e-05
+             pilU.mafft-edit 104 tldelklpevlkevala.krGl.vllvGatGsGksttlaalvgy 145
+                                 +ld+ +  ++l +++l  k  l +l+ G+tGsGks+t+ al + 
+  VICH001.B.00001.C001_01728  18 SLDSTTKDKLLSNLSLLrKASLnILITGSTGSGKSSTINALFDM 61 
+                                 567777788999999751556734567*************9886 PP
+
+  == domain 2  score: -1.1 bits;  conditional E-value: 0.36
+             pilU.mafft-edit 282 vllntplvsdlir..kGevhelkevmkksrelGmqtfdqal 320
+                                 vl +tp + d i   k +v+ +k++++k  + G  + d  l
+  VICH001.B.00001.C001_01728  86 VLWDTPGLGDGIDedKKHVQAIKQLLNKRDDHGQLAIDLVL 126
+                                 67778888887752366788899999998888887777655 PP
+
+>> VICH001.B.00001.C001_01799  C ATG TAA 2027802 2028488 Valid VC1883 687 @NP_231517.1@ VC1883 1 2027802 2028488 | ABC t
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   11.5   0.0   5.3e-05     0.012     111     153 ..      21      64 ..       4     121 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 11.5 bits;  conditional E-value: 5.3e-05
+             pilU.mafft-edit 111 pevlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGh 153
+                                  +vlk v+++ krG lv ++G++GsGkst l  ++g  ++ s+G 
+  VICH001.B.00001.C001_01799  21 TQVLKGVSFElKRGeLVSIIGSSGSGKSTLLH-ILGALDDASEGQ 64 
+                                 589***998658886899**********9775.445555555555 PP
+
+>> VICH001.B.00001.C001_02214  C ATG TAA 2466516 2468636 Valid VC2319 2121 @NP_231950.1@ VC2319 1 2466516 2468636 | exod
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    9.8   0.1   0.00018      0.04      83     143 ..     209     268 ..     197     281 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 9.8 bits;  conditional E-value: 0.00018
+             pilU.mafft-edit  83 saflqqelvGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalv 143
+                                 +a +++ +  + l+ +e  ip  + l+  +v   val++r   ++ G  G+Gk+tt++ l+
+  VICH001.B.00001.C001_02214 209 EAVVEKAQRAADLQALEQLIPLTHCLNWQKVAAAVALTRRF-AVISGGPGTGKTTTVTKLL 268
+                                 6777778888889999*********************9985.5678999******986554 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (342 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       147  (0.0581487); expected 50.6 (0.02)
+Passed bias filter:                      118  (0.0466772); expected 50.6 (0.02)
+Passed Vit filter:                        29  (0.0114715); expected 2.5 (0.001)
+Passed Fwd filter:                        11  (0.00435127); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):              11  [number of targets reported over threshold]
+# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.04
+# Mc/sec: 7212.00
+//
+[ok]

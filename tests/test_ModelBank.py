@@ -47,7 +47,7 @@ class Test(MacsyTest):
     def tearDown(self):
         ModelBank._model_bank = {}
 
-    def test_add_get_system(self):
+    def test_add_get_model(self):
         model_name = 'foo'
         self.assertRaises(KeyError,  self.system_bank.__getitem__, model_name)
         system_foo = Model(model_name, 10)

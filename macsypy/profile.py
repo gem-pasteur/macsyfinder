@@ -63,9 +63,9 @@ class ProfileFactory:
             profile = self._profiles[key]
         else:
             try:
-                path = model_location.get_profile(gene.name, )
+                path = model_location.get_profile(gene.name)
             except KeyError:
-                raise MacsypyError(f"{gene.name}: No such profile")
+                raise MacsypyError(f"'{model_location.name}/{gene.name}': No such profile")
             profile = Profile(gene, self.cfg, path)
             self._profiles[key] = profile
         return profile
@@ -147,9 +147,12 @@ class Profile:
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} -E {self.cfg.e_value_search():f} " \
+                if self.cfg.cut_ga():
+                    hmmer_threshold = f"--cut_ga"
+                else:
+                    hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
+                command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} {hmmer_threshold} " \
                           f"{self.path} {self.cfg.sequence_db()} "
-
                 _log.debug(f"{self.gene.name} Hmmer command line : {command}")
                 try:
                     hmmer = Popen(command,

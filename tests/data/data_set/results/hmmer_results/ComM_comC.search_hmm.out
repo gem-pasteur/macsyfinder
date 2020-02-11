@@ -1,0 +1,82 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/ComM_comC.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/ComM_comC.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       ComM_comC  [M=206]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.1e-40  137.1   4.4    1.8e-40  136.4   4.4    1.3  1  VICH001.B.00001.C001_02308  D ATG TGA 2600669 2601544 Valid V
+    6.9e-31  105.1  19.1    6.9e-31  105.1  19.1    1.4  1  VICH001.B.00001.C001_00833  D ATG TGA 900726 901487 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02308  D ATG TGA 2600669 2601544 Valid VC2426 876 @NP_232056.1@ VC2426 1 2600669 2601544 | leade
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  136.4   4.4   1.4e-43   1.8e-40      11     204 ..      62     267 ..      57     269 .. 0.91
+
+  Alignments for each domain:
+  == domain 1  score: 136.4 bits;  conditional E-value: 1.4e-43
+                   ComM_comC  11 siifprShCdqCkkkLrfleliPilSyllqrgkCrkCkkkisliyllfElvtgllfllivisa..eleslillillslllils 91 
+                                 ++  prS C++C++++r+++ iP+lS+l +rg+C +Ck++is +y+l+El+t+l+ l+i  ++   + ++ ll++ ++l+ ++
+  VICH001.B.00001.C001_02308  62 TLSLPRSTCPHCQTPIRVIDNIPLLSWLALRGQCSHCKAPISARYPLIELLTALMSLVIATHFpfGVFAVALLFFSYVLIAAT 144
+                                 56679********************************************************996666788888888999999* PP
+
+                   ComM_comC  92 vtDlkylevpllllilfllvlillkvl....lsllsgllsllvlflllallail.....lkeslGlGDikllavlglvlgvkk 165
+                                  +D+ +l++p++l ++ l   i+l++l    +sl + ++++++ +l l  +  l      ke++G GD+klla lg  lg ++
+  VICH001.B.00001.C001_02308 145 FIDFDTLLLPDQLTLPLLWGGIALALLgfspVSLSDAVIGAMAGYLSLWSIYWLfklltGKEGMGYGDFKLLAALGAWLGWQQ 227
+                                 ****************9999999998898888899999999999999887777755566689********************* PP
+
+                   ComM_comC 166 lllilflasvigliylllalllk.skkkkplpFvPfislg 204
+                                 l +i++l+sv+g+i+ l+ l  + +  +  +pF+P+++++
+  VICH001.B.00001.C001_02308 228 LPVIVLLSSVVGVIFGLIQLRQQkKGIDMAFPFGPYLAIA 267
+                                 *****************998877788999********998 PP
+
+>> VICH001.B.00001.C001_00833  D ATG TGA 900726 901487 Valid VC0839 762 @NP_230487.1@ VC0839 1 900726 901487 | leader pe
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  105.1  19.1   5.5e-34   6.9e-31      14     206 .]      43     244 ..      22     244 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 105.1 bits;  conditional E-value: 5.5e-34
+                   ComM_comC  14 fprShCdqCkkkLrfleliPilSyllqrgkCrkCkkkisliyllfElvtgllfllivisa.e.leslillillslllilsvtD 94 
+                                 ++rS C++C +k++ ++ +P+lSyll++gkCr+C +kisl y+++El + ++   i++   + + s++ll l+++l+ l+v+D
+  VICH001.B.00001.C001_00833  43 SNRSMCPKCGNKISWYDNVPLLSYLLLHGKCRHCDEKISLSYFIVELSFFIIAFPIYWLStDwVDSFVLLGLYFILFNLFVID 125
+                                 67*********************************************9999988888887643699999************** PP
+
+                   ComM_comC  95 lkylevpllllilfllvlillkvl...lsllsgllsllvlflllallail....lk.eslGlGDikllavlglvlgvkkllli 169
+                                 +k +++p+ll ++++++  ++      l++ s++++ ++ f++ ++   +    ++   +G+GDikl+  +g+++gv+ + ++
+  VICH001.B.00001.C001_00833 126 FKSMLLPNLLTYPIFMLAFIYVQQnpaLTVESSIIGGFAAFIISYVSNFIvrlfKRiDVMGGGDIKLYTAIGTLIGVEFVPYL 208
+                                 ************998887766655677444455555555555444433333433442469*********************** PP
+
+                   ComM_comC 170 lflasvigliylllalllkskkkkplpFvPfislgfl 206
+                                 ++l+s+i+ i  + a  +  +    +p +P i+++f+
+  VICH001.B.00001.C001_00833 209 FLLSSIIAFIHWFFA-RVSCRYCLYIPLGPSIIISFV 244
+                                 **********98764.444777788999****99985 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (206 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       210  (0.0830696); expected 50.6 (0.02)
+Passed bias filter:                       73  (0.0288766); expected 50.6 (0.02)
+Passed Vit filter:                         8  (0.00316456); expected 2.5 (0.001)
+Passed Fwd filter:                         2  (0.000791139); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 8688.14
+//
+[ok]

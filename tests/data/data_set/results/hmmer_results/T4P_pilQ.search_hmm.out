@@ -1,0 +1,100 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilQ.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/T4P_pilQ.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilQ  [M=185]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.7e-64  213.7   2.5    2.8e-64  213.0   2.5    1.4  1  VICH001.B.00001.C001_02505  C TTG TAA 2801169 2802905 Valid V
+      2e-38  128.7   1.2    3.9e-38  127.8   1.2    1.4  1  VICH001.B.00001.C001_00409  D ATG TAA 427707 429386 Valid VC0
+     0.0042   13.5   1.0     0.0065   12.9   1.0    1.3  1  VICH001.B.00001.C001_00825  D ATG TAG 892950 894419 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02505  C TTG TAA 2801169 2802905 Valid VC2630 1737 @NP_232258.1@ VC2630 1 2801169 2802905 | fimb
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  213.0   2.5   3.3e-67   2.8e-64       1     168 [.     412     576 ..     412     578 .] 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 213.0 bits;  conditional E-value: 3.3e-67
+                    T4P_pilQ   1 ldlelsalesegkakilasPrlivangeeAeiklgeevpvqveseedssgtttvefkeaglkLevtprItddgkitldlsvev 83 
+                                 ldlelsal++e+ka+i++sPrli++n+++A i++g+e+p+ ++s   ssg++tv+fk+a+l+L+vtp+It+d++ +ldlsv++
+  VICH001.B.00001.C001_02505 412 LDLELSALQNESKAEIISSPRLITTNKQPAYIEQGTEIPYLESS---SSGASTVAFKKAVLSLKVTPQITPDNRLVLDLSVTQ 491
+                                 799*****************************************...89********************************** PP
+
+                    T4P_pilQ  84 sslkesvksgtgeavlikkrevetkvlvkdGeTvvlgGiiqeeerntvskvplLgdiPvigaLFrsttktkqkrellifitpk 166
+                                 ++ +e+vk+gtgeav+i+++++ t+vlv++GeTvvlgGi+q++ +n+v+kvplLgd+Pv+gaLFr+t+++  k+ellif+tpk
+  VICH001.B.00001.C001_02505 492 DRRGETVKTGTGEAVSIDTQRIGTQVLVNNGETVVLGGIFQHSINNSVDKVPLLGDLPVLGALFRRTYEQMGKSELLIFVTPK 574
+                                 *********************************************************************************** PP
+
+                    T4P_pilQ 167 Ii 168
+                                 ++
+  VICH001.B.00001.C001_02505 575 VV 576
+                                 98 PP
+
+>> VICH001.B.00001.C001_00409  D ATG TAA 427707 429386 Valid VC0402 1680 @NP_230056.1@ VC0402 1 427707 429386 | MSHA bio
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  127.8   1.2   4.6e-41   3.9e-38       1     175 [.     353     542 ..     353     551 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 127.8 bits;  conditional E-value: 4.6e-41
+                    T4P_pilQ   1 ldlelsalesegkakilasPrlivangeeAeiklgeevpvqveseed........ssgtttvefkeaglkLevtprItddgki 75 
+                                 +d+ +s +  +g+ ++l+sPr++ +n+++A ik+g++  + ++ ++         +s  +t +    g++L+vtp+I+d g++
+  VICH001.B.00001.C001_00409 353 FDAVISFMATQGDLNVLSSPRVTASNNQKAVIKVGTDEYYVTDLSSVvgtgdnaqASPDITLTPFFSGISLDVTPQIDDQGNV 435
+                                 578899*****************************99888877765578998866666666666778**************** PP
+
+                    T4P_pilQ  76 tldlsvevsslkesvksgtg.....eavli..kkrevetkvlvkdGeTvvlgGiiqeeerntvskvplLgdiPvigaLFrstt 151
+                                 +l+++++v ++++++k+  +     e +l   + re ++ ++ kdG+ vv+gG++++++  +vskvp+Lgd+P +g LFr+tt
+  VICH001.B.00001.C001_00409 436 LLHVHPAVIEVEQQTKKILYrseeiELPLArsSIRESDSVIRAKDGDVVVIGGLMKSNTVDQVSKVPFLGDVPALGHLFRNTT 518
+                                 **********99996655554445555554115588999******************************************** PP
+
+                    T4P_pilQ 152 ktkqkrellifitpkIikdeskke 175
+                                 k +qk+el+i+++p ++  ++ ++
+  VICH001.B.00001.C001_00409 519 KLTQKTELVILLKPTVVGVNTWQK 542
+                                 ****************98776555 PP
+
+>> VICH001.B.00001.C001_00825  D ATG TAG 892950 894419 Valid VC0831 1470 @NP_230479.1@ VC0831 1 892950 894419 | toxin co
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.9   1.0   7.8e-06    0.0065      34     138 ..     346     454 ..     313     455 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 12.9 bits;  conditional E-value: 7.8e-06
+                    T4P_pilQ  34 lgeevpvqveseed...ssgtttvefkea..glkLevtprItddgkitldlsvevsslkesvksgtg.eavlikkrevetkvl 110
+                                 + ++++ ++e+++d   +++t+tv++ +   g ++ v p+I ddg+i ++   + ++l ++  + +g + ++++++e   +v+
+  VICH001.B.00001.C001_00825 346 TNSKYISSIETTKDtntDEETRTVKVSDLvtGFSMMVMPKILDDGRIQISSGFSRKQLVSI-GTAQGiTLPTVDENESMNTVT 427
+                                 4445555555555566766777777777522678889**********99999999999998.444455999999999999999 PP
+
+                    T4P_pilQ 111 vkdGeTvvlgGiiqeeerntvskvplLg 138
+                                 ++ Ge v l+ +++++  ++ + v lLg
+  VICH001.B.00001.C001_00825 428 MNPGE-VRLAMLFKDNYIQNSNGVQLLG 454
+                                 99999.4567777777777777777776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (185 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                        57  (0.0225475); expected 50.6 (0.02)
+Passed bias filter:                       34  (0.0134494); expected 50.6 (0.02)
+Passed Vit filter:                         6  (0.00237342); expected 2.5 (0.001)
+Passed Fwd filter:                         3  (0.00118671); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 15604.92
+//
+[ok]

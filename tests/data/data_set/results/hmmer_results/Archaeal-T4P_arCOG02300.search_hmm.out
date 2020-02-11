@@ -1,0 +1,68 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG02300.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG02300.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02300  [M=359]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    0.00019   18.0  10.8    0.00019   18.0  10.8    1.9  3  VICH001.B.00001.C001_02308  D ATG TGA 2600669 2601544 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02308  D ATG TGA 2600669 2601544 Valid VC2426 876 @NP_232056.1@ VC2426 1 2600669 2601544 | leade
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -4.0   0.7      0.37   9.4e+02      57      74 ..      11      28 ..       6      33 .. 0.75
+   2 !   18.0  10.8   7.4e-08   0.00019       4      96 ..     131     226 ..     128     247 .. 0.82
+   3 ?   -3.3   0.1      0.23   5.7e+02     339     351 ..     254     266 ..     251     269 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: -4.0 bits;  conditional E-value: 0.37
+                  arCOG02300 57 saiiglfvifilgliLyv 74
+                                + ++++++++i+g +L+v
+  VICH001.B.00001.C001_02308 11 FPVLATLFGLIVGSFLNV 28
+                                567778888888888876 PP
+
+  == domain 2  score: 18.0 bits;  conditional E-value: 7.4e-08
+                  arCOG02300   4 iplilglivlilasytDiKtgiIpnkltfpllalgillnlllgl....ksgnilfalsaiiglfvifilgliLyvlggwagGD 82 
+                                 ++l++   vli a++ D+ t + p++lt+pll  gi l+ll g+    +s+ ++ a++++++l +i+ l  +L    g++ GD
+  VICH001.B.00001.C001_02308 131 VALLFFSYVLIAATFIDFDTLLLPDQLTLPLLWGGIALALL-GFspvsLSDAVIGAMAGYLSLWSIYWLFKLLTGKEGMGYGD 212
+                                 678888899************************99999554.4422223467788999************************* PP
+
+                  arCOG02300  83 Vklltalsallpya 96 
+                                  kll+al+a l  +
+  VICH001.B.00001.C001_02308 213 FKLLAALGAWLGWQ 226
+                                 *********99765 PP
+
+  == domain 3  score: -3.3 bits;  conditional E-value: 0.23
+                  arCOG02300 339 vkkamPFaPaifl 351
+                                 + +a+PF P + +
+  VICH001.B.00001.C001_02308 254 IDMAFPFGPYLAI 266
+                                 6789*****9987 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (359 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       208  (0.0822785); expected 50.6 (0.02)
+Passed bias filter:                       71  (0.0280854); expected 50.6 (0.02)
+Passed Vit filter:                        11  (0.00435127); expected 2.5 (0.001)
+Passed Fwd filter:                         1  (0.00039557); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.02
+# Mc/sec: 15140.99
+//
+[ok]

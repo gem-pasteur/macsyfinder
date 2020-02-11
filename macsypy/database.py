@@ -80,7 +80,8 @@ class Indexes:
         """
         Build the indexes from the sequence data set in fasta format
 
-        :param force: If True, force the index building even if the index files are present in the sequence dataset folder
+        :param force: If True, force the index building even
+                      if the index files are present in the sequence data set folder
         :type force: boolean
         """
         my_indexes = self.find_my_indexes()

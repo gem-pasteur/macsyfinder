@@ -24,7 +24,8 @@
 
 import os
 import tempfile
-import urllib.request, urllib.parse
+import urllib.request
+import urllib.parse
 import json
 import yaml
 import shutil
@@ -37,10 +38,10 @@ _log = logging.getLogger(__name__)
 
 from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry
+from .profile import ProfileFactory
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank
-from .profile import ProfileFactory
 from .error import MacsydataError, MacsyDataLimitError
 
 
@@ -112,7 +113,7 @@ class RemoteModelIndex(AbstractModelIndex):
     This class allow to interact with ModelIndex on github
     """
 
-    def __init__(self, org: str = "macsy-models", cache=None) -> None :
+    def __init__(self, org: str = "macsy-models", cache=None) -> None:
         """
 
         :param org: The name of the organization on github where are stored the models
@@ -392,8 +393,8 @@ class Package:
             profile_factory = ProfileFactory(config)
             model_registry = ModelRegistry()
             model_registry.add(model_loc)
-            parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, model_registry)
-            parser.parse([def_loc.fqn for def_loc in all_def])
+            parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
+            parser.parse(all_def)
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")
@@ -412,7 +413,7 @@ class Package:
         errors = []
         warnings = []
         data = self._load_metadata()
-        must_have = ("author", "short_desc", "vers" )
+        must_have = ("author", "short_desc", "vers")
         nice_to_have = ("cite", "doc", "licence", "copyright")
         for item in must_have:
             if item not in data:

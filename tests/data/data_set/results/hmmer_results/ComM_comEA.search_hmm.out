@@ -1,0 +1,95 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/ComM_comEA.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/ComM_comEA.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       ComM_comEA  [M=143]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.6e-19   67.6   0.0    1.8e-19   67.4   0.0    1.0  1  VICH001.B.00001.C001_01831  C ATG TAA 2066452 2066763 Valid V
+    1.3e-11   41.9   0.0    3.2e-11   40.6   0.0    1.6  1  VICH001.B.00001.C001_02584  D ATG TAG 2890041 2892362 Valid V
+    0.00052   17.2   0.2     0.0056   13.9   0.0    2.3  2  VICH001.B.00001.C001_01183  D GTG TAA 1291219 1293051 Valid u
+    0.00058   17.1   0.0     0.0012   16.1   0.0    1.5  1  VICH001.B.00001.C001_00923  D ATG TAA 1001910 1002437 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01831  C ATG TAA 2066452 2066763 Valid VC1917 312 @NP_231551.1@ VC1917 1 2066452 2066763 | hypot
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   67.4   0.0   2.8e-22   1.8e-19      64     134 ..      24      95 ..      12     102 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 67.4 bits;  conditional E-value: 2.8e-22
+                  ComM_comEA  64 aseqasagtasstskeakvnlntasleelqe.isGiGekkaediiayreenGkfktvedlkkvsGiGektle 134
+                                 + e+++ +++ +++   +vn+ntas+eel + ++GiG kka++i++yre+nG f  ++dl++v GiGe t+ 
+  VICH001.B.00001.C001_01831  24 NAEETAPAAQVEEGIVITVNINTASAEELATlLKGIGLKKAQAIVDYREANGPFTHIDDLTNVKGIGEATVR 95 
+                                 556777777888889999***********98469**********************************9985 PP
+
+>> VICH001.B.00001.C001_02584  D ATG TAG 2890041 2892362 Valid VC2716 2322 @NP_232343.1@ VC2716 1 2890041 2892362 | hypo
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   40.6   0.0   5.1e-14   3.2e-11      78     136 ..     492     550 ..     444     555 .. 0.90
+
+  Alignments for each domain:
+  == domain 1  score: 40.6 bits;  conditional E-value: 5.1e-14
+                  ComM_comEA  78 keakvnlntasleelqeisGiGekkaediiayreenGkfktvedlkkvsGiGektlekl 136
+                                 +   v++ntas++ l ++ G+    a++i++yr+enG+f++   lkkv  +G+k++e+ 
+  VICH001.B.00001.C001_02584 492 NAVGVDVNTASAALLTRVAGLSAALAQNIVDYRDENGRFESRSALKKVPRLGPKAFEQC 550
+                                 55679****************************************************85 PP
+
+>> VICH001.B.00001.C001_01183  D GTG TAA 1291219 1293051 Valid uvrC 1833 @VC1214@NP_230859.1@ VC1214 1 1291219 1293051 |
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    0.5   0.0      0.12        76       6      36 ..      12      42 ..      10      79 .. 0.63
+   2 !   13.9   0.0   8.8e-06    0.0056      89     137 ..     555     605 ..     536     609 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 0.5 bits;  conditional E-value: 0.12
+                  ComM_comEA  6 kGavksPGvyelkvgdrvldalekaGGltdk 36
+                                k   ++PGvy + +++     + ka  l+++
+  VICH001.B.00001.C001_01183 12 KTVTNQPGVYRMYNAEAEVIYVGKAKDLKKR 42
+                                6667899***999888655566666666655 PP
+
+  == domain 2  score: 13.9 bits;  conditional E-value: 8.8e-06
+                  ComM_comEA  89 leelqeisGiGekkaediiayreenGkfk..tvedlkkvsGiGektleklk 137
+                                 ++ l+ i+G+G+k+ +++++y     ++k  +ve++ kv Gi +   e++ 
+  VICH001.B.00001.C001_01183 555 TSTLEGIEGVGPKRRQALLKYLGGMQELKraSVEEIAKVPGISHALAENIY 605
+                                 568999***************98766555338**********988877775 PP
+
+>> VICH001.B.00001.C001_00923  D ATG TAA 1001910 1002437 Valid VC0936 528 @NP_230583.1@ VC0936 1 1001910 1002437 | polys
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.1   0.0   1.9e-06    0.0012       5      44 ..     104     143 ..     102     149 .. 0.91
+
+  Alignments for each domain:
+  == domain 1  score: 16.1 bits;  conditional E-value: 1.9e-06
+                  ComM_comEA   5 vkGavksPGvyelkvgdrvldalekaGGltdkadekrlnl 44 
+                                 v G v +PG y+ + g  v++a+  aGG t++a + +l +
+  VICH001.B.00001.C001_00923 104 VNGQVMKPGSYPYHPGLTVNKAITIAGGFTERASKTNLFI 143
+                                 789******************************9988755 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (143 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                        73  (0.0288766); expected 50.6 (0.02)
+Passed bias filter:                       50  (0.0197785); expected 50.6 (0.02)
+Passed Vit filter:                         6  (0.00237342); expected 2.5 (0.001)
+Passed Fwd filter:                         4  (0.00158228); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 6031.09
+//
+[ok]

@@ -1,0 +1,266 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilW.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/T4P_pilW.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilW  [M=120]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.2e-11   42.1   1.1    1.9e-11   41.5   1.1    1.3  1  VICH001.B.00001.C001_00852  D ATG TAA 924747 925349 Valid VC0
+      6e-09   33.4   0.6    1.4e-08   32.2   0.6    1.7  1  VICH001.B.00001.C001_00419  D ATG TAA 437069 437839 Valid VC0
+    1.7e-08   31.9   0.4    2.5e-08   31.4   0.4    1.3  1  VICH001.B.00001.C001_02595  C ATG TAA 2900354 2901019 Valid V
+    1.8e-08   31.8   1.5    5.5e-08   30.3   1.5    1.8  1  VICH001.B.00001.C001_00850  C ATG TAA 923726 924169 Valid VC0
+    5.5e-07   27.0   0.5    8.2e-07   26.5   0.5    1.2  1  VICH001.B.00001.C001_02598  C ATG TAA 2901967 2902407 Valid V
+    7.9e-07   26.6   1.2    7.9e-07   26.6   1.2    1.6  2  VICH001.B.00001.C001_00512  C ATG TAA 534198 534722 Valid VC0
+    2.3e-06   25.0   0.4      4e-06   24.3   0.4    1.4  1  VICH001.B.00001.C001_02305  D ATG TAA 2597151 2597654 Valid V
+    2.4e-06   25.0   1.3    3.9e-06   24.3   1.3    1.4  1  VICH001.B.00001.C001_00822  D ATG TAA 890449 891123 Valid VC0
+      4e-06   24.3   1.6    1.3e-05   22.6   0.6    2.0  2  VICH001.B.00001.C001_00418  D ATG TGA 436458 437069 Valid VC0
+    6.1e-06   23.7   0.6    1.3e-05   22.7   0.6    1.5  1  VICH001.B.00001.C001_00851  D TTG TAA 924224 924778 Valid VC0
+      4e-05   21.1   1.0    6.1e-05   20.5   0.2    1.7  2  VICH001.B.00001.C001_00415  D ATG TAA 434833 435423 Valid VC0
+    5.4e-05   20.6   2.7    7.4e-05   20.2   2.7    1.5  1  VICH001.B.00001.C001_00417  D ATG TAA 436022 436510 Valid VC0
+    5.5e-05   20.6   2.9    0.00014   19.3   2.7    1.7  1  VICH001.B.00001.C001_00416  D ATG TAA 435449 435985 Valid VC0
+    0.00048   17.6   0.2    0.00088   16.7   0.2    1.4  1  VICH001.B.00001.C001_02597  C ATG TAA 2901349 2901933 Valid V
+    0.00067   17.1   3.5    0.00089   16.7   3.4    1.4  1  VICH001.B.00001.C001_02596  C ATG TAA 2901006 2901359 Valid V
+  ------ inclusion threshold ------
+       0.04   11.4   1.3      0.071   10.6   1.3    1.6  1  VICH001.B.00001.C001_00854  D ATG TGA 926571 926984 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_00852  D ATG TAA 924747 925349 Valid VC0859 603 @NP_230506.1@ VC0859 1 924747 925349 | hypotheti
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   41.5   1.1   1.2e-13   1.9e-11       1      75 [.      13      87 ..      13     129 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 41.5 bits;  conditional E-value: 1.2e-13
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartaldlitrelrsanyksnaisdgsdlva 75
+                                +G TLiE +vA +++ +++++v ++fls+ k+ ++ s+++ l ++++ +++++++++++a+++   +++ + + a
+  VICH001.B.00001.C001_00852 13 QGNTLIEFMVAALVGAMALAIVGTVFLSNQKAAAQRSKEIMLLQQVSSVMQQMKEDIQRAGFDDVGNQSMRLSGA 87
+                                799***********************************************************9998888775433 PP
+
+>> VICH001.B.00001.C001_00419  D ATG TAA 437069 437839 Valid VC0412 771 @NP_230066.1@ VC0412 1 437069 437839 | hypotheti
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   32.2   0.6   8.7e-11   1.4e-08       1      65 [.       3      67 ..       3     108 .. 0.92
+
+  Alignments for each domain:
+  == domain 1  score: 32.2 bits;  conditional E-value: 8.7e-11
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartaldlitrelrsanyksn 65
+                                +G+TLiE+++++ +l++v l    +  +++ ++ ++ a+  l +++r+  +++ relr a ++s 
+  VICH001.B.00001.C001_00419  3 RGFTLIEMVITIILLGIVGLFLGNIAGQAMGIYVDTTAREALIQQGRFLTERMSRELREAVPNSV 67
+                                7***********************************************************99886 PP
+
+>> VICH001.B.00001.C001_02595  C ATG TAA 2900354 2901019 Valid VC2727 666 @NP_232354.1@ VC2727 1 2900354 2901019 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   31.4   0.4   1.6e-10   2.5e-08       1      64 [.      14      77 ..      14     101 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 31.4 bits;  conditional E-value: 1.6e-10
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartaldlitrelrsanyks 64
+                                +G+TLiE+LvA+ai   +++ ++q++ +  +s+e + +++ +  ++++a+  ++ + r+   ++
+  VICH001.B.00001.C001_02595 14 AGFTLIEVLVAIAIFASLSVGAYQVLNQVQRSNEISAERTARLAELQRAMVIMDADFRQMALRQ 77
+                                5****************************************************99877765554 PP
+
+>> VICH001.B.00001.C001_00850  C ATG TAA 923726 924169 Valid VC0857 444 @NP_230504.1@ VC0857 1 923726 924169 | fimbrial 
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   30.3   1.5   3.5e-10   5.5e-08       1      43 [.      17      59 ..      17     138 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 30.3 bits;  conditional E-value: 3.5e-10
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelq 43
+                                +G+TLiEl++A++i++ ++++++  + + +k   r +a+a++ 
+  VICH001.B.00001.C001_00850 17 QGMTLIELMIAVVIVGVLASIAYPAYTNYVKEGHRKQAMADMA 59
+                                7************************************999986 PP
+
+>> VICH001.B.00001.C001_02598  C ATG TAA 2901967 2902407 Valid VC2730 441 @NP_232357.1@ VC2730 1 2901967 2902407 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   26.5   0.5   5.2e-09   8.2e-07       2      41 ..       9      48 ..       8      58 .. 0.91
+
+  Alignments for each domain:
+  == domain 1  score: 26.5 bits;  conditional E-value: 5.2e-09
+                    T4P_pilW  2 GlTLiElLvAlailllvvlavlqlflsglksferqsaaae 41
+                                G+TL+E++v+++il+++++ v+  +l +    ++q+a ++
+  VICH001.B.00001.C001_02598  9 GFTLLEVMVVVVILGILASFVVPNLLGNKEKADQQKAVTD 48
+                                9**************************9999999998876 PP
+
+>> VICH001.B.00001.C001_00512  C ATG TAA 534198 534722 Valid VC0502 525 @NP_230153.1@ VC0502 1 534198 534722 | type IV p
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   26.6   1.2     5e-09   7.9e-07       1      32 [.       5      36 ..       5      59 .. 0.89
+   2 ?   -3.4   0.0       9.4   1.5e+03      29      48 ..      90     109 ..      88     115 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 26.6 bits;  conditional E-value: 5e-09
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglks 32
+                                +G+TLiEl++A++il+ ++++++  f++ +k 
+  VICH001.B.00001.C001_00512  5 QGFTLIELIIAIVILGVIAVIAAPRFINISKD 36
+                                7************************9997765 PP
+
+  == domain 2  score: -3.4 bits;  conditional E-value: 9.4
+                    T4P_pilW  29 glksferqsaaaelqdnart 48 
+                                 g  sfe ++a+ +++ n++ 
+  VICH001.B.00001.C001_00512  90 GKDSFEEINAQVQAWFNIDS 109
+                                 66778888888888777665 PP
+
+>> VICH001.B.00001.C001_02305  D ATG TAA 2597151 2597654 Valid VC2423 504 @NP_232053.1@ VC2423 1 2597151 2597654 | fimbr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   24.3   0.4   2.5e-08     4e-06       1      34 [.      24      57 ..      24      79 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 24.3 bits;  conditional E-value: 2.5e-08
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksfe 34
+                                kG+TLiEl++++a+++ +++++  ++++ +k ++
+  VICH001.B.00001.C001_02305 24 KGFTLIELMIVVAVIGVLAAIAIPQYQNYVKKSA 57
+                                7************************999887766 PP
+
+>> VICH001.B.00001.C001_00822  D ATG TAA 890449 891123 Valid VC0828 675 @NP_230476.1@ VC0828 1 890449 891123 | toxin co-
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   24.3   1.3   2.5e-08   3.9e-06       2      50 ..      25      72 ..      24     117 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 24.3 bits;  conditional E-value: 2.5e-08
+                    T4P_pilW  2 GlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartal 50
+                                G+TL+E++++l i++ v++ v++l + +  s+++++aa+ l++ ++ a+
+  VICH001.B.00001.C001_00822 25 GMTLLEVIIVLGIMGVVSAGVVTLAQRAIDSQNMTKAAQNLNS-VQIAM 72
+                                9********************************9999955543.34444 PP
+
+>> VICH001.B.00001.C001_00418  D ATG TGA 436458 437069 Valid VC0411 612 @NP_230065.1@ VC0411 1 436458 437069 | MSHA pili
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   22.6   0.6   8.1e-08   1.3e-05       1      53 [.      24      76 ..      24      95 .. 0.90
+   2 ?    0.3   0.0      0.66     1e+02      46     100 ..     123     180 ..     111     185 .. 0.55
+
+  Alignments for each domain:
+  == domain 1  score: 22.6 bits;  conditional E-value: 8.1e-08
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartaldli 53
+                                +G+TL+E+++++++l+ +++ v++ ++  +k+++ q    ++ + +r +ld +
+  VICH001.B.00001.C001_00418 24 RGFTLVEMIIVIVVLGVALVGVTTSLYPRSKQSAEQVLSVKAAELGRAVLDEV 76
+                                7************************9999999988888888888888888765 PP
+
+  == domain 2  score: 0.3 bits;  conditional E-value: 0.66
+                    T4P_pilW  46 artaldlitr...........elrsanyksnaisdgsdlvaketvvaegntlslrniPetekttya 100
+                                 ++ + d+it+           ++ s  y++ + s  +      +v  +g++ s+  +P+te t y+
+  VICH001.B.00001.C001_00418 123 FNDVDDYITSspipvtdvlgtDI-SSEYQRFSVSIQV-----FYVSDNGGQFSA--TPATERTHYK 180
+                                 55555555554333332222233.3333333333333.....345567888888..8888888775 PP
+
+>> VICH001.B.00001.C001_00851  D TTG TAA 924224 924778 Valid VC0858 555 @NP_230505.1@ VC0858 1 924224 924778 | type IV p
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   22.7   0.6     8e-08   1.3e-05       1      44 [.      17      60 ..      17      68 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 22.7 bits;  conditional E-value: 8e-08
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqd 44
+                                +G+TL+ElL+++a+l+ ++l ++  f   ++++++++ a+elq 
+  VICH001.B.00001.C001_00851 17 RGFTLLELLITVAVLTTMLLFAAPNFSKVSQQTKMTNLANELQG 60
+                                7************************************9999985 PP
+
+>> VICH001.B.00001.C001_00415  D ATG TAA 434833 435423 Valid VC0408 591 @NP_230062.1@ VC0408 1 434833 435423 | MSHA pili
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   20.5   0.2   3.9e-07   6.1e-05       1      32 [.      18      49 ..      18      57 .. 0.88
+   2 ?   -2.5   0.0       4.9   7.7e+02      67      75 ..     152     160 ..     131     183 .. 0.56
+
+  Alignments for each domain:
+  == domain 1  score: 20.5 bits;  conditional E-value: 3.9e-07
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglks 32
+                                +G++L+El++++++++l+++a+l  fl+ +  
+  VICH001.B.00001.C001_00415 18 QGFSLVELVIVIVVVGLLAVAALPRFLDVTDE 49
+                                7**********************999987655 PP
+
+  == domain 2  score: -2.5 bits;  conditional E-value: 4.9
+                    T4P_pilW  67 isdgsdlva 75 
+                                 ++++ +++a
+  VICH001.B.00001.C001_00415 152 SNSNYKYSA 160
+                                 222222222 PP
+
+>> VICH001.B.00001.C001_00417  D ATG TAA 436022 436510 Valid VC0410 489 @NP_230064.1@ VC0410 1 436022 436510 | MSHA pili
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   20.2   2.7   4.7e-07   7.4e-05       1      42 [.       6      46 ..       6     112 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 20.2 bits;  conditional E-value: 4.7e-07
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaael 42
+                                kG+TLiEl+v++ +l+++++ +++ fl    sf++   ++e+
+  VICH001.B.00001.C001_00417  6 KGFTLIELVVVIILLGILSAYAASRFLG-PSSFAVVTTQSEI 46
+                                7*********************999987.6666666666655 PP
+
+>> VICH001.B.00001.C001_00416  D ATG TAA 435449 435985 Valid VC0409 537 @NP_230063.1@ VC0409 1 435449 435985 | MSHA pili
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   19.3   2.7   8.7e-07   0.00014       2      29 ..       9      36 ..       8      45 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 19.3 bits;  conditional E-value: 8.7e-07
+                    T4P_pilW  2 GlTLiElLvAlailllvvlavlqlflsg 29
+                                G+TLiEl+v+++il+++++ ++  fl+ 
+  VICH001.B.00001.C001_00416  9 GFTLIELVVVIVILGILAVTAAPRFLNL 36
+                                9*******************99999874 PP
+
+>> VICH001.B.00001.C001_02597  C ATG TAA 2901349 2901933 Valid VC2729 585 @NP_232356.1@ VC2729 1 2901349 2901933 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.7   0.2   5.6e-06   0.00088       1      38 [.       5      42 ..       5      48 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 16.7 bits;  conditional E-value: 5.6e-06
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsa 38
+                                +G+TL+E+L++l++++  ++av  +f + +k  +++sa
+  VICH001.B.00001.C001_02597  5 RGFTLLEILLVLVLVSASAVAVIATFPVSVKDEAKISA 42
+                                7*********************9999888777666665 PP
+
+>> VICH001.B.00001.C001_02596  C ATG TAA 2901006 2901359 Valid VC2728 354 @NP_232355.1@ VC2728 1 2901006 2901359 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.7   3.4   5.7e-06   0.00089       1      55 [.       5      56 ..       5     108 .. 0.67
+
+  Alignments for each domain:
+  == domain 1  score: 16.7 bits;  conditional E-value: 5.7e-06
+                    T4P_pilW  1 kGlTLiElLvAlailllvvlavlqlflsglksferqsaaaelqdnartaldlitr 55
+                                +G+TL+E+LvAlai    ++a+ ++  s ++ ++  +   e   +a+++ +++++
+  VICH001.B.00001.C001_02596  5 RGFTLLEVLVALAIF---ATAAISVIRSVSQHINTVNYLEEKMFAAMVVDNQMAQ 56
+                                7************96...4555555555566666666665555555555555555 PP
+
+>> VICH001.B.00001.C001_00854  D ATG TGA 926571 926984 Valid VC0861 414 @NP_230508.1@ VC0861 1 926571 926984 | type IV p
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.6   1.3   0.00045     0.071       1      35 [.       6      42 ..       6     101 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 10.6 bits;  conditional E-value: 0.00045
+                    T4P_pilW  1 kGlTLiElLvAlaill..lvvlavlqlflsglksfer 35
+                                +G++LiE++++ ++++   + l+ lq ++++++ +++
+  VICH001.B.00001.C001_00854  6 SGFSLIEVMISFVLIGvgALGLVKLQAYIEQRADYAM 42
+                                6**********99976114555555666666655554 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (120 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       235  (0.0929589); expected 50.6 (0.02)
+Passed bias filter:                      181  (0.0715981); expected 50.6 (0.02)
+Passed Vit filter:                        40  (0.0158228); expected 2.5 (0.001)
+Passed Fwd filter:                        16  (0.00632911); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):              16  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.02
+# Mc/sec: 5061.05
+//
+[ok]
