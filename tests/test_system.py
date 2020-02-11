@@ -97,6 +97,30 @@ class SystemTest(MacsyTest):
         self.assertEqual(system_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
 
+    def test_position(self):
+        model = Model("foo/T2SS", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
+                                  Cluster([v_hit_3], model)])
+        # loner are to take in account to compute position
+        self.assertEqual(system_1.position, (10, 20))
+
+
     def test_multi_loci(self):
         model = Model("foo/T2SS", 10)
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
