@@ -235,6 +235,42 @@ class SystemTest(MacsyTest):
         s = System(model, [c1, c2])
         self.assertEqual(s.occurrence(), 2)
 
+        ##########################
+        # with multi system gene #
+        ##########################
+        # the multi_system genes should not count in the occurence
+        model = Model("foo/T2SS", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_tadz = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        gene_tadz = ModelGene(c_gene_tadz, model)
+        model.add_mandatory_gene(gene_tadz)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_mandatory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model, multi_system=True)
+        model.add_mandatory_gene(gene_sctn)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_tadz, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_tadz, GeneStatus.MANDATORY)
+        hit_3_1 = Hit(c_gene_sctj, "hit_3_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3_1 = ValidHit(hit_3_1, gene_sctj, GeneStatus.MANDATORY)
+        hit_3_2 = Hit(c_gene_sctj, "hit_3_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3_2 = ValidHit(hit_3_2, gene_sctj, GeneStatus.MANDATORY)
+        hit_4_1 = Hit(c_gene_sctn, "hit_4_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4_1 = ValidHit(hit_4_1, gene_sctn, GeneStatus.MANDATORY)
+        hit_4_2 = Hit(c_gene_sctn, "hit_4_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4_2 = ValidHit(hit_4_2, gene_sctn, GeneStatus.MANDATORY)
+        hit_4_3 = Hit(c_gene_sctn, "hit_4_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4_3 = ValidHit(hit_4_3, gene_sctn, GeneStatus.MANDATORY)
+
+        c = Cluster([v_hit_1, v_hit_2, v_hit_3_1, v_hit_3_2, v_hit_4_1, v_hit_4_2, v_hit_4_3], model)
+        s = System(model, [c])
+        self.assertEqual(s.occurrence(), 1)
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
