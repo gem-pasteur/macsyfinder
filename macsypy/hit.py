@@ -42,7 +42,7 @@ class Hit:
                  position_hit, i_eval, score, profile_coverage, sequence_coverage, begin_match, end_match):
         """
         :param gene: the gene corresponding to this profile
-        :type gene: :class:`macsypy.gene.Gene` object
+        :type gene: :class:`macsypy.gene.CoreGene` object
         :param str hit_id: the identifier of the hit
         :param int hit_seq_length: the length of the hit sequence
         :param str replicon_name: the name of the replicon
