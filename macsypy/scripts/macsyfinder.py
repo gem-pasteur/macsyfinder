@@ -44,7 +44,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
-from macsypy.system import match, System, HitSystemTracker, StringSystemSerializer, TsvSystemSerializer
+from macsypy.system import match, System, HitSystemTracker, TxtSystemSerializer, TsvSystemSerializer
 from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
@@ -503,7 +503,7 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
     if systems:
         print("# Systems found:\n", file=sys_file)
         for system in systems:
-            sys_serializer = StringSystemSerializer(system, hit_system_tracker)
+            sys_serializer = TxtSystemSerializer(system, hit_system_tracker)
             print(sys_serializer.serialize(), file=sys_file)
             print("=" * 60, file=sys_file)
     else:
