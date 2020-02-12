@@ -33,17 +33,16 @@ Example to get a gene object: ::
     pilO = gene_bank["pilO"]
 
 
-Homolog/Analog are Composition with Gene.
-Then a gene in some model is seen as a Gene, in some other models as an Homolg or Analog.
+Exchangeable is a Composition with Gene.
+Then a gene in some model is seen as a Gene, in some other models as an Exchangeable.
 But there only one instance of this gene.::
 
     sctn = Gene(name="sctN", model_A)
     sctn_flg = Gene(name="sctN_FLG", model_A)
-    sctn_homolog = Homolg(sctn, sctn_flg)
-    sctn_flg.add_homolg(sctn_homolog)
+    sctn_ex = Exchangeable(sctn, sctn_flg)
 
-which means that sctn_flg has an homolog which is sctn
-sctn appear as a gene `sctn` and as homolog `sctn_homolg`
+which means that sctn_flg can replaced by sctn
+sctn appear as a gene `sctn` and as exchangeable `sctn_ex`
 
 
 GeneBank
@@ -64,33 +63,18 @@ Gene
    :private-members:
    :special-members:
 
-.. _homolog_api:
+.. _exchangeable_api:
 
 .. note::
 
-    All attributes/methods which are not directly implemented in Homolog are redirected to that of the encapsulated Gene.
+    All attributes/methods which are not directly implemented in Exchangeable are redirected to that of the encapsulated Gene.
 
-Homolog
-=======
+Exchangeable
+============
 
 .. automodule:: macsypy.gene
-   :members: Homolog
+   :members: Exchangeable
    :private-members:
    :special-members:
 
 
-.. _analog_api:
-
-.. note::
-
-    All attributes/methods which are not directly implemented in Analog are redirected to that of the encapsulated Gene.
-
-Analog
-======
-
-.. automodule:: macsypy.gene
-   :members: Analog
-   :private-members:
-   :special-members:
-   
- 

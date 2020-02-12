@@ -331,6 +331,9 @@ class Exchangeable(ModelGene):
 
     @property
     def is_exchangeable(self):
+        """
+        :return: True
+        """
         return True
 
 
@@ -352,6 +355,9 @@ class Exchangeable(ModelGene):
 
 
 class GeneStatus(Enum):
+    """
+    Handle status of Gene
+    """
 
     MANDATORY = 1
     ACCESSORY = 2
