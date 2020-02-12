@@ -369,8 +369,8 @@ class System:
     @property
     def position(self):
         """
-        return the position of the systems
-        :return:
+        :return: The position of the first and last hit, excluded the hit coding for loners.
+        :rtype: tuple (start: int, end:int)
         """
         hits = [h.position for h in self.hits if not h.gene_ref.loner]
         hits.sort()
@@ -386,7 +386,7 @@ class SystemSerializer(metaclass=abc.ABCMeta):
         """
 
         :param system: the system to serialize
-        :type system: :class:`macsypy.system.System' object
+        :type system: :class:`macsypy.system.System` object
         :param hit_system_tracker:
         :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         """
@@ -398,14 +398,13 @@ class SystemSerializer(metaclass=abc.ABCMeta):
         pass
 
 
-class StringSystemSerializer(SystemSerializer):
+class TxtSystemSerializer(SystemSerializer):
     """
     Handle System serialization in text
     """
 
     def serialize(self):
         """
-
         :return: a string representation of system readable by human
         """
         clst = ", ".join(["[" + ", ".join([str((v_h.id, v_h.gene.name, v_h.position)) for v_h in cluster.hits]) + "]"
@@ -450,13 +449,14 @@ class TsvSystemSerializer(SystemSerializer):
              "hit_begin_match\thit_end_match"
 
     def serialize(self):
-        """
+        r"""
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                   hit_id\treplicon\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ
-                   \thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t
-                   hit_begin_match\thit_end_match
+                     hit_id\\treplicon\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
+                     \\tsys_occ\\thit_gene_ref\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
+                     \\thit_seq_cov\\tit_begin_match\\thit_end_match
+
         :rtype: str
         """
         tsv = ''
@@ -477,20 +477,20 @@ class JsonSystemSerializer(SystemSerializer):
 
     def serialize(self):
         """
-
         :return: a serialisation of this system in json format
-                 The json have the following structure
-                 {'id': str system_id
-                  'model': str model fully qualified name
-                  'loci_nb': int number of loci
-                  'replicon_name': str the replicon name
-                  'clusters': [[[ str hit id, str hit gene name, int hit position], ...], [...]]
-                  'gene_composition': {
-                        'mandatory': {str gene_ref name: [ str hit gene name, ... ]},
-                        'accessory': {str gene_ref name: [ str hit gene name, ... ]},
-                        'neutral': {str gene_ref name: [ str hit gene name, ... ]}
-                        }
-                 }
+                 The json have the following structure: ::
+
+                     {'id': str system_id
+                      'model': str model fully qualified name
+                      'loci_nb': int number of loci
+                      'replicon_name': str the replicon name
+                      'clusters': [[[ str hit id, str hit gene name, int hit position], ...], [...]]
+                      'gene_composition': {
+                            'mandatory': {str gene_ref name: [ str hit gene name, ... ]},
+                            'accessory': {str gene_ref name: [ str hit gene name, ... ]},
+                            'neutral': {str gene_ref name: [ str hit gene name, ... ]}
+                            }
+                     }
         :rtype: str
         """
         system = {'id': self.system.id,

@@ -15,9 +15,24 @@ System
 It represents an occurrence of a model in a replicon.
 
 
-model API reference
-===================
+System
+=======
 .. automodule:: macsypy.system
-   :members:
+   :members: System
+   :private-members:
+   :special-members:
+
+SystemSerializer
+================
+
+Use to serilize the systems found. :class:`macsypy.system.SystemSerializer` is an abstract class.
+There is 3 concretes classes which implements SystemSerializer:
+
+    * :class:`macsypy.system.TxtSystemSerializer`
+    * :class:`macsypy.system.TsvSystemSerializer`
+    * :class:`macsypy.system.JsonSystemSerializer`
+
+.. automodule:: macsypy.system
+   :members: SystemSerializer, TxtSystemSerializer, TsvSystemSerializer, JsonSystemSerializer
    :private-members:
    :special-members:
