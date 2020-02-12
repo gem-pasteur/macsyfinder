@@ -48,8 +48,8 @@ sctn appear as a gene `sctn` and as exchangeable `sctn_ex`
 GeneBank
 ========
 
- .. automodule:: macsypy.gene
-   :members: GeneBank
+ .. autoclass:: macsypy.gene.GeneBank
+   :members:
    :private-members:
    :special-members:
 
@@ -74,8 +74,8 @@ The ModelGene is attached to the model and is composed of a CoreGene.
 CoreGene
 ========
 
-.. automodule:: macsypy.gene
-   :members: CoreGene
+.. autoclass:: macsypy.gene.CoreGene
+   :members:
    :private-members:
    :special-members:
 
@@ -84,8 +84,8 @@ CoreGene
 ModelGene
 =========
 
-.. automodule:: macsypy.gene
-   :members: ModelGene
+.. autoclass:: macsypy.gene.ModelGene
+   :members:
    :private-members:
    :special-members:
 
@@ -99,9 +99,18 @@ ModelGene
 Exchangeable
 ============
 
-.. automodule:: macsypy.gene
-   :members: Exchangeable
+.. autoclass:: macsypy.gene.Exchangeable
+   :members:
    :private-members:
    :special-members:
 
 
+.. _gene_status_api:
+
+GeneStatus
+==========
+
+.. autoclass:: macsypy.gene.GeneStatus
+   :members:
+   :private-members:
+   :special-members:

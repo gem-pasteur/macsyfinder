@@ -21,32 +21,32 @@ For matches selected with the filtering parameters, *"Hit"* objects (:class:`mac
 HMMReport API reference
 =======================
 
-.. automodule:: macsypy.report
-   :members: HMMReport
+.. autoclass:: macsypy.report.HMMReport
+   :members:
    :private-members:
    :special-members:
 
 GeneralHMMReport API reference
 ==============================
 
-.. automodule:: macsypy.report
-   :members: GeneralHMMReport
+.. autoclass:: macsypy.report.GeneralHMMReport
+   :members:
    :private-members:
    :special-members:
 
 OrderedHMMReport
 ================
 
-.. automodule:: macsypy.report
-   :members: OrderedHMMReport
+.. autoclass:: macsypy.report.OrderedHMMReport
+   :members:
    :private-members:
    :special-members:
    
 GembaseHMMReport 
 ================
 
-.. automodule:: macsypy.report
-   :members: GembaseHMMReport
+.. autoclass:: macsypy.report.GembaseHMMReport
+   :members:
    :private-members:
    :special-members:
 

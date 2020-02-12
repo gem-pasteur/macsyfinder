@@ -17,8 +17,8 @@ It represents an occurrence of a model in a replicon.
 
 System
 =======
-.. automodule:: macsypy.system
-   :members: System
+.. autoclass:: macsypy.system.System
+   :members:
    :private-members:
    :special-members:
 
