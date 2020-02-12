@@ -6,7 +6,7 @@
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
 
-.. _gene:
+.. _gene_module:
 
 ****
 gene
@@ -53,13 +53,39 @@ GeneBank
    :private-members:
    :special-members:
 
-.. _gene_api:
 
 Gene
 ====
 
+There is two classes to modelize a gene: :class:`macsypy.gene.CoreGene` and :class:`macsypy.gene.ModelGene`.
+The CoreGene are created using the :class:`macsypy.gene.GeneBank` factory and there is only one instance
+of a CoreGene with a given name.
+Whereas several ModelGene with the same name can appear in different model and can have differents properties,
+`loner` in one model and not in an other, have different `inter_gene_max_space` ...
+The ModelGene is attached to the model and is composed of a CoreGene.
+
+.. note::
+    The :class:`macsypy.hit.Hit` object are link to a CoreGene, whereas the :class:`macsypy.hit.ValidHit` `ref_gene`
+    attribute reference a :class:`macsypy.gene.ModelGene`
+
+
+.. _core_gene_api:
+
+CoreGene
+========
+
 .. automodule:: macsypy.gene
-   :members: Gene
+   :members: CoreGene
+   :private-members:
+   :special-members:
+
+.. _model_gene_api:
+
+ModelGene
+=========
+
+.. automodule:: macsypy.gene
+   :members: ModelGene
    :private-members:
    :special-members:
 
@@ -67,7 +93,8 @@ Gene
 
 .. note::
 
-    All attributes/methods which are not directly implemented in Exchangeable are redirected to that of the encapsulated Gene.
+    All attributes/methods which are not directly implemented in Exchangeable are redirected
+    to that of the encapsulated ModelGene.
 
 Exchangeable
 ============
