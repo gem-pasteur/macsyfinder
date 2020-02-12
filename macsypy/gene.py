@@ -349,7 +349,7 @@ class Exchangeable(ModelGene):
         """
         This method should never be called, it's a security to avoid to add exchangeable to an exchangeable.
 
-        :param exchangeable: 
+        :param exchangeable:
         :type exchangeable: :class:`macsypy.gene.Exchangeable`
         :raise MacsypyError:
         """
@@ -359,6 +359,13 @@ class Exchangeable(ModelGene):
 class GeneStatus(Enum):
     """
     Handle status of Gene
+    GeneStatus can take 4 value:
+
+    * MANDATORY
+    * ACCESSORY
+    * FORBIDDEN
+    * NEUTRAL
+
     """
 
     MANDATORY = 1
