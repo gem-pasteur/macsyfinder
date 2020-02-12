@@ -39,8 +39,8 @@ and quorum constraints
 
 ModelBank
 =========
- .. automodule:: macsypy.model
-   :members: ModelBank
+ .. autoclass:: macsypy.model.ModelBank
+   :members:
    :private-members:
    :special-members:
 
@@ -50,7 +50,7 @@ ModelBank
 Model
 =====
 
-.. automodule:: macsypy.model
-   :members: Model
+.. autoclass:: macsypy.model.Model
+   :members:
    :private-members:
    :special-members:

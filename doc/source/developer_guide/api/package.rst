@@ -31,8 +31,8 @@ ModelIndex
 
 Package
 =======
-.. automodule:: macsypy.package
-   :members: Package
+.. autoclass:: macsypy.package.Package
+   :members:
    :private-members:
    :special-members:
 
