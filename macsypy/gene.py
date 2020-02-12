@@ -139,7 +139,7 @@ class ModelGene:
 
     def __init__(self, gene, model, loner=False, multi_system=False, inter_gene_max_space=None):
         """
-        handle gene describe in a model
+        Handle gene described in a Model
 
         :param gene: a gene link to a profile
         :type gene: a :class:`macsypy.gene.CoreGene` object.
@@ -348,8 +348,10 @@ class Exchangeable(ModelGene):
     def add_exchangeable(self, exchangeable):
         """
         This method should never be called, it's a security to avoid to add exchangeable to an exchangeable.
-        :param exchangeable:
-        :return:
+
+        :param exchangeable: 
+        :type exchangeable: :class:`macsypy.gene.Exchangeable`
+        :raise MacsypyError:
         """
         raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
 
