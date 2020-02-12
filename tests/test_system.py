@@ -34,7 +34,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
 from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker
-from macsypy.system import StringSystemSerializer, TsvSystemSerializer, JsonSystemSerializer
+from macsypy.system import TxtSystemSerializer, TsvSystemSerializer, JsonSystemSerializer
 
 from tests import MacsyTest
 
@@ -414,7 +414,7 @@ class SystemTest(MacsyTest):
         c2 = Cluster([v_h_sctn], model)
         sys_multi_loci = System(model, [c1, c2])
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
-        system_serializer = StringSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
+        system_serializer = TxtSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
 
         sys_str = """system id = {}
 model = foo/T2SS
