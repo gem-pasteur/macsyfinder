@@ -183,7 +183,7 @@ class Config:
 
     def _str_2_tuple(self, value):
         """
-        transform a string with syntax  {model_fqn int} n in list of tuple
+        transform a string with syntax {model_fqn int} in list of tuple
 
         :param str value: the string to parse
         :return:
