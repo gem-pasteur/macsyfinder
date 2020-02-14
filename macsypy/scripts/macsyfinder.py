@@ -419,7 +419,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         rep_db = RepliconDB(config)
         for rep_name in hits_by_replicon:
-            logger.info("Hits analysis for replicon {rep_name}")
+            logger.info(f"Hits analysis for replicon {rep_name}")
             rep_info = rep_db[rep_name]
             for model in models_to_detect:
                 logger.info(f"Check model {model.fqn}")
