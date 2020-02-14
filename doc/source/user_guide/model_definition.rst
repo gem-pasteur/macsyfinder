@@ -28,6 +28,7 @@ A model is the association of several elements:
 The models are grouped by family and eventually subfamily, for instance *secretion* or *cas protein*, ...
 A models family are a model package.
 
+ .. _package_structure:
 A package model follow the structure below ::
 
     family_name
@@ -73,7 +74,7 @@ How to install new models
 =========================
 
 MacSyFinder does not provide models. You must install Models before to use MacSyFinder.
-There is a small utility tool shiped with macsyfinder to deal with macsy-models: `macsydata`
+There is a small utility tool shipped with `MacSyFinder` to deal with macsy-models: ``macsydata``.
 
 
 macsydata <subcommand> [options]
@@ -82,9 +83,9 @@ The main sub-command are
 
 * ``macsydata available`` to get the models family available
 * ``macsydata search`` to search a model given its name or a pattern or in description
-* ``macsydata install`` to install a package (we can fix version see --help)
+* ``macsydata install`` to install a package (the installed version can be set see --help)
 * ``macsydata cite`` how to cite the model
-* ``macsydata --help`` will give you the extende list of available subcommand
+* ``macsydata --help`` will give you the extended list of available subcommand
 
 and macsydata subcommand --help to have specific help about the subcommand
 
@@ -92,27 +93,96 @@ and macsydata subcommand --help to have specific help about the subcommand
 Where the models are located
 ============================
 
+MacSyFinder look at several location to find macsy-models.
+
 system wide
 -----------
+
+By default macsydata installed models in shared location (set by --install-data option)
+By default in `/usr/share/macsyfinder/` or `/usr/local/share/macsyfinder` depending on your distribution.
+If you use a virtualenv the shared resources are located in the `<virtualenv>/share/macsyfinder` directory.
+
 
 user wide
 ---------
 
+If you have not rights to installed in system wide you can installed models in the macsyfinder cache
+located in your home `$HOME/.macsyfinder/data/`.
+macsydata install packages in this location when you use the `--user` option.
+The packages installed in user land is added to the system wide packages.
+If two packages have the same name the package in user land superseded the system wide package.
+
 project wide
 ------------
 
+If you cannot install macsy_models package in system or user land locations you can specify a
+specific location with the ``--models-dir`` command line option. The path must point a directory
+that contains models packages.
+
+ .. _model_package:
 
 Write my own model-package
 ==========================
 
+The whole package structure is described `above <package_structure>`_
+
 metadata file
 -------------
+
+This file contains some meta information about the package itself.
+This file is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format.
+This file must have the following structure: ::
+
+    ---
+    maintainer:
+      name: The name of the person who maintain/to contact for further informations. (required)
+      email: The email of the maintainer (required)
+    short_desc: A one line description of the package (can be used with macsydata search) (required)
+    vers: the package version (required)
+    cite: The list of publication to mentioned when the user have to cite the package (optional used by `macsydata cite`)
+    doc: where to find extended documentation (optional)
+    licence: The licence under the package is released (optional but highly recommended)
+    copyright: The copyright of the package (optional)
+
+for example ::
+
+    ---
+    maintainer:
+      name: first name last name
+      email: login@my_domain.com
+    short_desc: Models for 15 types of secretion systems or bacterial appendages (T1SS, T2SS, T3SS, T4P, pT4SSt, pT4SSi, T5aSS, T5bSS, T5bSS, T6SSi, T6SSii, T6SSiii, Flagellum, Tad, T9SS).
+    vers: 0.0a1
+    cite:
+      - |
+        Abby Sophie S., Cury Jean, Guglielmini Julien, Néron Bertrand, Touchon Marie, Rocha Eduardo P. C. (2016).
+        Identification of protein secretion systems in bacterial genomes.
+        In Scientific Reports, 6, pp. 23080.
+        http://dx.doi.org/10.1038/srep23080
+    doc: https://github.com/macsy-models/TXSS
+    licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+    copyright: 2014-2020, Institut Pasteur, CNRS
+
+*This file is **mandatory**. Without this file your archive/repository will not considered as a package.*
+
+.. note::
+
+    * *-* specify an item of yaml list
+    * *|* is used to specify a single item but over multi lines.
+
 
 README.md
 ---------
 
+A description of the package, what kind of systems the package models.
+How to use it, ... in `markdown <https://guides.github.com/features/mastering-markdown/>`_ format.
+
 LICENCE
 -------
+
+The licence use to protect and share your work.
+If you don't know which licence to choose.
+Have a look on `CreativeCommons <https://creativecommons.org/share-your-work/>`_
+*This file is optional, but highly recommended.*
 
 Write my definitions
 --------------------
@@ -204,10 +274,22 @@ Example of a model definition in XML: ::
     * a hmm profile with the same name must be exists in the `profiles` directory
 
 
-provide hmm profiles
+Provide hmm profiles
 --------------------
 
+For each gene mentioned in each model you have to provide a hmm profile
+that capture this gene. The hmm profile must be created from specific alignment with `hmmbuild`
+from `HMMER package <http://hmmer.org/>`_.
+This profile *MUST* have the same name as the name of the gene mentioned in the definition.
+The names are Case sensitive. All the profile must be placed in the `profiles` directory.
 
-share your models
+
+Share your models
 =================
 
+If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository
+check the validity of your package with the ``macsydata check`` command
+create a tag and the submit a pull request to https://github.com/macsy-models organization.
+So once your PR will be accepted the model package will be automatically available through the macsydata tool.
+If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
+The archive is also usable with the `macsydata` tool.
