@@ -48,7 +48,7 @@ class TestMacsydata(MacsyTest):
         self.args.org = 'foo'
         self._remote_exists = macsydata.RemoteModelIndex.remote_exists
         macsydata.RemoteModelIndex.remote_exists = lambda x: True
-
+        macsydata._log = macsydata.init_logger(20)  # 20 logging.INFO
 
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
@@ -1146,5 +1146,5 @@ Maybe you can use --user option to install in your HOME.""")
         level = macsydata.verbosity_to_log_level(1)
         self.assertEqual(level, 10)
         level = macsydata.verbosity_to_log_level(5)
-        self.assertEqual(level, 0)
+        self.assertEqual(level, 1)
 

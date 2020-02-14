@@ -41,39 +41,8 @@ from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, ModelLocation, scan_models_dir
 from macsypy.package import RemoteModelIndex, LocalModelIndex, Package, parse_arch_path
 
-
-def init_logger(level='INFO', out=True):
-    logger = colorlog.getLogger('macsydata')
-    logging = colorlog.logging.logging
-    handlers = []
-    if out:
-        stdout_handler = colorlog.StreamHandler(sys.stderr)
-        stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
-                                                     datefmt=None,
-                                                     reset=True,
-                                                     log_colors={
-                                                         'DEBUG': 'cyan',
-                                                         'INFO': 'green',
-                                                         'WARNING': 'yellow',
-                                                         'ERROR': 'red',
-                                                         'CRITICAL': 'bold_red',
-                                                     },
-                                                     secondary_log_colors={},
-                                                     style='%'
-                                                     )
-        stdout_handler.setFormatter(stdout_formatter)
-        logger.addHandler(stdout_handler)
-        handlers.append(stdout_handler)
-    else:
-        null_handler = logging.NullHandler()
-        logger.addHandler(null_handler)
-        handlers.append(null_handler)
-
-    logger.setLevel(getattr(logging, level))
-    return logger
-
-
-_log = init_logger()
+# _log is set in main func
+_log = None
 
 
 def get_version_message():
@@ -338,7 +307,8 @@ def do_install(args: argparse.Namespace) -> None:
     if remote:
         _log.info(f"Downloading {pack_name} ({target_vers}).")
         model_index = RemoteModelIndex(org=args.org, cache=args.cache)
-        arch_path = model_index.download(pack_name, target_vers)
+        _log.debug(f"call download with pack_name={pack_name}, vers={target_vers}")
+        arch_path = model_index.download(pack_name, str(target_vers))
     else:
         model_index = LocalModelIndex(cache=args.cache)
         arch_path = args.package
@@ -744,13 +714,57 @@ def cmd_name(args: argparse.Namespace) -> str:
     return "macsydata {}".format(func_name)
 
 
+def init_logger(level='INFO', out=True):
+    """
+
+    :param level: The logger threshold could be a positive int or string
+                  among: 'CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'
+    :param out: if the log message must be displayed
+    :return: logger
+    :rtype: :class:`logging.Logger` instance
+    """
+    logger = colorlog.getLogger('macsydata')
+    logging = colorlog.logging.logging
+    handlers = []
+    if out:
+        stdout_handler = colorlog.StreamHandler(sys.stderr)
+        if level <= logging.DEBUG:
+            msg_formatter = "%(log_color)s%(levelname)-8s : %(module)s: L %(lineno)d :%(reset)s %(message)s"
+        else:
+            msg_formatter = "%(log_color)s%(message)s"
+        stdout_formatter = colorlog.ColoredFormatter(msg_formatter,
+                                                     datefmt=None,
+                                                     reset=True,
+                                                     log_colors={
+                                                         'DEBUG': 'cyan',
+                                                         'INFO': 'green',
+                                                         'WARNING': 'yellow',
+                                                         'ERROR': 'red',
+                                                         'CRITICAL': 'bold_red',
+                                                     },
+                                                     secondary_log_colors={},
+                                                     style='%'
+                                                     )
+        stdout_handler.setFormatter(stdout_formatter)
+        logger.addHandler(stdout_handler)
+        handlers.append(stdout_handler)
+    else:
+        null_handler = logging.NullHandler()
+        logger.addHandler(null_handler)
+        handlers.append(null_handler)
+    if isinstance(level, str):
+        level = getattr(logging, level)
+    logger.setLevel(level)
+    return logger
+
+
 def verbosity_to_log_level(verbosity: int) -> int:
     """
     transform the number of -v option in loglevel
     :param int verbosity: number of -v option on the command line
     :return: an int corresponding to a logging level
     """
-    level = max((logging.INFO - (10 * verbosity), 0))
+    level = max((logging.INFO - (10 * verbosity), 1))
     return level
 
 
@@ -762,12 +776,17 @@ def main(args=None) -> None:
     :type args: list
     :rtype: int
     """
+    global _log
     args = sys.argv[1:] if args is None else args
     parser = build_arg_parser()
     parsed_args = parser.parse_args(args)
 
+    log_level = verbosity_to_log_level(parsed_args.verbose)
+    # set logger for module 'package'
     macsypy.init_logger()
-    macsypy.logger_set_level(level=verbosity_to_log_level(parsed_args.verbose))
+    macsypy.logger_set_level(level=log_level)
+    # set logger for this script
+    _log = init_logger(verbosity_to_log_level(parsed_args.verbose))
 
     if 'func' in parsed_args:
         parsed_args.func(parsed_args)
