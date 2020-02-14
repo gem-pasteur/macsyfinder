@@ -57,7 +57,7 @@ Command-line options
 
 Positional arguments::
 
-  systems               The systems to detect. This is an obligatory option
+  models                The systems to detect. This is an obligatory option
                         with no keyword associated to it. To detect all systems 
                         described in .xml available, set to "all" (case insensitive). 
                         Otherwise, a single or multiple systems can be specified. 
@@ -264,8 +264,8 @@ In MacSyFinder, five sections are defined:
  
   * **base** : all information related to the protein dataset under study
   
-    * *file* : the path to the dataset in Fasta format (*no default value*)
-    * *type* : the type of dataset to handle, four types are supported:
+    * *sequence_db* : the path to the dataset in Fasta format (*no default value*)
+    * *db_type* : the type of dataset to handle, four types are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
         * *unordered_replicon* : a set of sequences corresponding to a complete replicon
@@ -282,18 +282,16 @@ In MacSyFinder, five sections are defined:
   
   * **system**
   
-    * *inter_gene_max_space* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
-    * *min_mandatory_genes_required* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
-    * *min_genes_required* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
+    * *inter_gene_max_space* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+    * *min_mandatory_genes_required* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+    * *min_genes_required* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
     
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
-    * *index_db_exe* the executable to use to build the index for the hmm.
-      The value can be 'makeblastdb' or 'formatdb' or the absolute path toward one of these two binaries (default= *makeblastdb* )
     * *e_value_res* = (default= *1* )
     * *i_evalue_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
@@ -302,11 +300,9 @@ In MacSyFinder, five sections are defined:
     
     * *res_search_dir* = (default= *./datatest/res_search* )
     * *res_search_suffix* = (default= *.search_hmm.out* )
-    * *profile_dir* = (default= *./profiles* )
-    * *profile_suffix* = (default= *.fasta-aln_edit.hmm* )
+    * *models_dir* = (default= *./models* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
-    * *def_dir* = (default= *./DEF/* )
-  
+
   * **general**
   
     * *log_level*: (default= *debug* ) This corresponds to an integer code:
@@ -326,7 +322,7 @@ Example of a configuration file::
   
     [base]
     prefix = /path/to/macsyfinder/home/
-    file = %(prefix)s/dataset/prru_psae.001.c01.fasta
+    file = %(prefix)s/data/base/prru_psae.001.c01.fasta
     type = gembase
     replicon_topology = circular
     
@@ -344,10 +340,10 @@ Example of a configuration file::
 
     [directories]
     prefix = /path/to/macsyfinder/home/
-    def_dir = %(prefix)s/data/DEF
+    data_dir = %(prefix)s/data/
     res_search_dir = %(prefix)s/dataset/res_search/
     res_search_suffix = .raw_hmm
-    profile_dir = %(prefix)s/data/profiles
+    models_dir = %(data_dir)/data/models
     profile_suffix = .fasta-aln.hmm
     res_extract_suffix = .res_hmm
 
