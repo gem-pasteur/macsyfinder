@@ -486,6 +486,7 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
     else:
         print("# No Systems found", file=sys_file)
 
+
 def systems_to_txt(systems, hit_system_tracker, sys_file):
     """
     print systems occurrences in a file in human readable format
@@ -604,7 +605,7 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
+        system_filename = os.path.join(config.working_dir(), "systems.txt")
         tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
         track_multi_systems_hit = HitSystemTracker(systems)
 
