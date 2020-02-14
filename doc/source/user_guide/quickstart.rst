@@ -21,17 +21,18 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
 
 * On a "metagenomic" dataset for example: 
 
-  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta all``" 
-  will detect all systems modelled in .xml files placed in the default definition folder in a metagenomic dataset.
+  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all``"
+  will detect all systems modelled in .xml files placed in the model_family definitions folder located in the models default location
+  in a metagenomic dataset.
 
-  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta -d mydefinitions/ all``" 
-  will detect all systems modelled in .xml files placed in the *"mydefinitions"* folder.
+  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models/ --models model_family all``"
+  will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder.
 
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 
-  "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta -d mydefinitions/ SystemA SystemB``" 
-  will detect the systems *"SystemA"* and *"SystemB"* in a complete genome from *"SystemA.xml"* and *"SystemB.xml"*
-  definition files placed in the folder *"mydefinitions"*.
+  "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models/ --models model_family ModelA ModelB``"
+  will detect the models *"ModelA"* and *"ModelB"* in a complete genome from *"ModelA.xml"* and *"ModelB.xml"*
+  definition files placed in the folder *"my-models/model_family/mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input datasets. 
 
@@ -56,9 +57,9 @@ See :ref:`input-dataset-label` for more on input datasets.
 
     Systems have to be spelled in a case-sensitive way to run their detection from the command-line.
     The name of the system corresponds to the suffix defined for xml files (.xml by default),
-    for example *"toto"* for a system defined in *"toto.xml"*.
+    for example *"toto"* for a model defined in *"toto.xml"*.
     
-    The *"all"* keyword allows to detect all systems available in the definition folder in a single run.
+    The *"all"* keyword allows to detect all models available in the definitions folder in a single run.
     See the :ref:`Command-line options <command-line-label>`.
 
 
