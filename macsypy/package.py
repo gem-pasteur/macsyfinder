@@ -240,6 +240,7 @@ class RemoteModelIndex(AbstractModelIndex):
                          If dest is None, the macsyfinder cache will be used
         :return: The package archive path.
         """
+        _log.debug(f"call download with pack_name={pack_name}, vers={vers}, dest={dest}")
         safe_pack_name = urllib.parse.quote(pack_name)
         safe_vers = urllib.parse.quote(vers)
         url = f"{self.base_url}/repos/{self.org_name}/{safe_pack_name}/tarball/{safe_vers}"
