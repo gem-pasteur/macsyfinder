@@ -16,7 +16,7 @@ MacSyFinder functioning
 Functioning overview
 ********************
 
-    .. image:: ../_static/FigureS2_figure_TXSScan_last-new.*
+    .. image:: ../_static/MSF_functioning.svg
      :height: 500px
      :align: left
 
@@ -43,7 +43,7 @@ For each system, the list includes:
     - accessory components
     - neutral components
     - forbidden components
-    - exchangeables these components can be functionally replaced by other components (usualy by analogs or homologs)
+    - exchangeables these components can be functionally replaced by other components (usually by analogs or homologs)
 
 Hmmer is run on the corresponding set of HMM profiles, and the hits are filtered according to criteria defined
 by the user (see :ref:`Hmmer options <hmmer-options>` and :ref:`HMMReport`).
@@ -75,7 +75,7 @@ For *ordered* datasets:
 -----------------------
 
 1. The search starts first with the hits filtering to keep all hits related to a model (mandatory, accessory, neutral,
-    forbidden, exchangeable)
+   forbidden, exchangeable)
 
 2.  We looking for the formation of clusters of contiguous hits
     **(co-localization criterion)** for each replicon.
@@ -84,18 +84,19 @@ For *ordered* datasets:
     from the two genes with hits (system-specific, of gene-specific parameter).
     The `loner` components may form a cluster on their own.
 
-4. Clusters are used to fill system occurrences (:func:`macsypy.systems.match`).
-   In this step, the **quorum** criteria for the system assessment are checked according to the model's definition.
+3. Clusters are used to fill system according the quorum (:func:`macsypy.system.match`).
+   In this step, the **quorum** criteria for the system assessment are checked according to the model's definition:
+   min_genes_required, min_mandatory_genes_required.
    In the case of single loci (default) each clusters + loners are evaluated for quorum separately.
    In the case of multi loci (``multi_loci=True``) each clusters and all clusters combination are evaluated for the quorum.
-   The clusters which fill the quorum are reported the the `systems.txt` and `systems.tsv` report file see :ref:`outputs`.
-   The clusters which not fulfill the quorum are reported in the `rejected_clusters` file
+   The clusters which fill the quorum are reported the the `systems.txt` and `systems.tsv` files see :ref:`outputs`.
+   The clusters which not fulfill the quorum are reported in the `rejected_clusters.txt` file.
 
 For *unordered* datasets: 
 -------------------------
 
-1. The Hits are grouped by model.
-2. They are used to fill a single system per model type.
+1. The Hits are filtered by model.
+2. They are used to check if they fill the quorum (in other words the clustering step is skipped).
 
 .. note::
     The "unordered" mode of detection is less powerful, as a single occurrence of a given model is filled for
