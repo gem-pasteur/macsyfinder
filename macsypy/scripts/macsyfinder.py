@@ -41,7 +41,7 @@ from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import OptionError
+from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
 from macsypy.system import match, System, HitSystemTracker, TxtSystemSerializer, TsvSystemSerializer
@@ -417,46 +417,63 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
             hits_by_replicon[rep_name].sort(key=attrgetter('position'))
 
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
-        rep_db = RepliconDB(config)
-        for rep_name in hits_by_replicon:
-            logger.info(f"Hits analysis for replicon {rep_name}")
-            rep_info = rep_db[rep_name]
-            for model in models_to_detect:
-                logger.info(f"Check model {model.fqn}")
-                hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-                logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
-                logger.debug("".join([str(h) for h in hits_related_one_model]))
-                logger.debug("#" * 80)
-                logger.info("Building clusters")
-                clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
-                logger.debug("{:#^80}".format("CLUSTERS"))
-                logger.debug("\n" + "\n".join([str(c) for c in clusters]))
-                logger.debug("#" * 80)
-                logger.info("Searching systems")
-                if model.multi_loci:
-                    # The loners are already in clusters lists with their context
-                    # so they are take in account
-                    clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-                else:
-                    # we must add loners manually
-                    # but only if the cluster does not already contains them
-                    loners = cluster.get_loners(hits_related_one_model, model)
-                    clusters_combination = []
-                    for one_cluster in clusters:
-                        one_clust_combination = [one_cluster]
-                        filtered_loners = cluster.filter_loners(one_cluster, loners)
-                        one_clust_combination.extend(filtered_loners)
-                        clusters_combination.append([one_clust_combination])
+        db_type = config.db_type()
+        if db_type in ('ordered_replicon', 'gembase'):
+            rep_db = RepliconDB(config)
+            for rep_name in hits_by_replicon:
+                logger.info(f"Hits analysis for replicon {rep_name}")
+                rep_info = rep_db[rep_name]
+                for model in models_to_detect:
+                    logger.info(f"Check model {model.fqn}")
+                    hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+                    logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+                    logger.debug("".join([str(h) for h in hits_related_one_model]))
+                    logger.debug("#" * 80)
+                    logger.info("Building clusters")
+                    clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
+                    logger.debug("{:#^80}".format("CLUSTERS"))
+                    logger.debug("\n" + "\n".join([str(c) for c in clusters]))
+                    logger.debug("#" * 80)
+                    logger.info("Searching systems")
+                    if model.multi_loci:
+                        # The loners are already in clusters lists with their context
+                        # so they are take in account
+                        clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+                    else:
+                        # we must add loners manually
+                        # but only if the cluster does not already contains them
+                        loners = cluster.get_loners(hits_related_one_model, model)
+                        clusters_combination = []
+                        for one_cluster in clusters:
+                            one_clust_combination = [one_cluster]
+                            filtered_loners = cluster.filter_loners(one_cluster, loners)
+                            one_clust_combination.extend(filtered_loners)
+                            clusters_combination.append([one_clust_combination])
 
-                for one_combination_set in clusters_combination:
-                    for one_clust_combination in one_combination_set:
-                        res = match(one_clust_combination, model)
-                        if isinstance(res, System):
-                            systems.append(res)
-                        else:
-                            rejected_clusters.append(res)
-        if systems:
-            systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+                    for one_combination_set in clusters_combination:
+                        for one_clust_combination in one_combination_set:
+                            res = match(one_clust_combination, model)
+                            if isinstance(res, System):
+                                systems.append(res)
+                            else:
+                                rejected_clusters.append(res)
+
+        elif db_type in ("unordered_replicon", "unordered"):
+            for rep_name in hits_by_replicon:
+                logger.info(f"Hits analysis for replicon {rep_name}")
+                for model in models_to_detect:
+                    logger.info(f"Check model {model.fqn}")
+                    hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+                    clust = cluster.Cluster(hits_related_one_model, model)
+                    res = match([clust], model)
+                    if isinstance(res, System):
+                        systems.append(res)
+                    else:
+                        rejected_clusters.append(res)
+        else:
+            raise MacsypyError(f"dbtype have an invalid value {db_type}")
+    if systems:
+        systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
     return systems, rejected_clusters
 
 
@@ -615,7 +632,7 @@ def main(args=None, loglevel=None):
         with open(tsv_filename, "w") as tsv_file:
             systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
 
-        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
+        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
         with open(cluster_filename, "w") as clst_file:
             rejected_clst_to_txt(rejected_clusters, clst_file)
         if not (systems or rejected_clusters):
