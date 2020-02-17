@@ -252,7 +252,7 @@ Each file can define options, at the end all options are added. If an option is 
    
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
-overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.
+overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
 The Config object provides some default values and performs some validations of the values, for instance:
