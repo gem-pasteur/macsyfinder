@@ -117,7 +117,7 @@ def get_loners(hits, model):
     :param hits: The list of hits to filter
     :param model: the model which will used to build the clusters
     :type model: :class:`macsypy.model.Model` object
-    :return: The list of cluster which each element is build with one loner
+    :return: The list of cluster which each element is build at least with one loner
     :rtype: [Cluster, ...]
     """
     gene_loners = {g.name for g in model.genes if g.loner}
