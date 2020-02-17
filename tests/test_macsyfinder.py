@@ -197,11 +197,11 @@ neutral genes:
                                      "hit_begin_match", "hit_end_match"])
             system_tsv += "\n"
             system_tsv += "\t".join(["hit_1", "replicon_id", "gspD", "1", "foo/T2SS", system_1.id,
-                                     "1", "1.0", "1.5", "1", "gspD", "mandatory", "803", "1.0", "1.0", "1.0",
-                                     "1.0", "10", "20"])
+                                     "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000", "1.000",
+                                     "1.000", "10", "20"])
             system_tsv += "\n"
-            system_tsv += "\t".join(["hit_2", "replicon_id", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.0",
-                                     "1.5", "1", "sctJ", "accessory", "803", "1.0", "1.0", "1.0", "1.0", "10", "20"])
+            system_tsv += "\t".join(["hit_2", "replicon_id", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.000",
+                                     "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000", "1.000", "1.000", "10", "20"])
             system_tsv += "\n\n"
 
             f_out = StringIO()
