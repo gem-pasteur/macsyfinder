@@ -53,67 +53,148 @@ Systems detection results
 
 Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
 
-  * macsyfinder.tab - for **"ordered" datasets only** (db_type is "ordered_replicon" or "gembase").
-    It provides a summary of the number of each type of systems that have been detected.
-  * macsyfinder.report - contains all the sequence identifiers of proteins detected as being part of a system,
-    along with statistics on the Hmmer hit, and the status of the component in the system.
-  * macsyfinder.summary - contains a line of information for each detected system.
+  * systems.txt - all potential systems detected with their components in human readable format.
+  * systems.tsv - all potential systems detected with their components in a tabulate separated value format.
+  * rejected_clusters.txt - contains the lists of clusters that are not passed the quorum.
 
 
-macsyfinder.tab
-***************
-For each replicon, a line gives the occurrences of systems that were asked for detection.
-For example, if the detection was run for the Flagellum and the T6SS, the output will look like::
+systems.txt
+***********
+start with some comments
+    - the version of macsyfinder used
+    - the command line used to produce this file
 
-  #Replicon Flagellum_single_locus Flagellum_multi_loci T6SS_single_locus T6SS_multi_loci	
-  escherichia06 1   1   1   0
+Then for each replicon, a list of systems detected each systems is described with
+    - **system_id** the unique identifier of a systems
+    - **model** the model used to assigned this systems
+    - **replicon** the name of the replicon
+    - **clusters** the clusters composition of this system.
+        - each clusters is a list of tuple.
+        - each tuple is composed of:
+            - the name of the matching gene in the replicon
+            - the name of the gene profile
+            - the position of the sequence in the replicon
 
-which means that this "escherichia06" genome harbors 1 flagellum in a single locus,
-1 flagellum scattered on multiple loci, and 1 T6SS in a single locus.
+    - **occurrence** the estimated number of occurrence
+    - **wholeness** The % of model
+    - **loci nb** The number of loci
+    - **score** The system score
+    - **systems components** the number of occurrence of each model components.
+      in parenthesis the name of profile that match
+      in square bracket the name of other putative systems where this gene is involved.
 
-macsyfinder.report
-******************
+macsyfinder.txt example ::
+
+    # macsyfinder 20200217.dev
+    # macsyfinder --sequence-db DATA_TEST/sequences.prt --db-type=gembase --models-dir data/models/ --models TFF-SF_final all -w 4
+    # Systems found:
+
+    system id = VICH001.B.00001.C001_MSH_1
+    model = TFF-SF_final/MSH
+    replicon = VICH001.B.00001.C001
+    clusters = [('VICH001.B.00001.C001_00406', 'MSH_mshI', 366), ('VICH001.B.00001.C001_00407', 'MSH_mshJ', 367), ('VICH001.B.00001.C001_00408', 'MSH_mshK', 368), ('VICH001.B.00001.C001_00409', '
+    MSH_mshL', 369), ('VICH001.B.00001.C001_00410', 'MSH_mshM', 370), ('VICH001.B.00001.C001_00411', 'MSH_mshN', 371), ('VICH001.B.00001.C001_00412', 'MSH_mshE', 372), ('VICH001.B.00001.C001_0041
+    3', 'MSH_mshG', 373), ('VICH001.B.00001.C001_00414', 'MSH_mshF', 374), ('VICH001.B.00001.C001_00415', 'MSH_mshB', 375), ('VICH001.B.00001.C001_00416', 'MSH_mshA', 376), ('VICH001.B.00001.C001
+    _00417', 'MSH_mshC', 377), ('VICH001.B.00001.C001_00418', 'MSH_mshD', 378), ('VICH001.B.00001.C001_00419', 'MSH_mshO', 379), ('VICH001.B.00001.C001_00420', 'MSH_mshP', 380), ('VICH001.B.00001
+    .C001_00421', 'MSH_mshQ', 381)]
+    occ = 1
+    wholeness = 0.941
+    loci nb = 1
+    score = 10.500
+
+    mandatory genes:
+            - MSH_mshA: 1 (MSH_mshA)
+            - MSH_mshE: 1 (MSH_mshE)
+            - MSH_mshG: 1 (MSH_mshG)
+            - MSH_mshL: 1 (MSH_mshL)
+            - MSH_mshM: 1 (MSH_mshM)
+
+    accessory genes:
+            - MSH_mshB: 1 (MSH_mshB)
+            - MSH_mshC: 1 (MSH_mshC)
+            - MSH_mshD: 1 (MSH_mshD)
+            - MSH_mshF: 1 (MSH_mshF)
+            - MSH_mshI: 1 (MSH_mshI)
+            - MSH_mshI2: 0 ()
+            - MSH_mshJ: 1 (MSH_mshJ)
+            - MSH_mshK: 1 (MSH_mshK)
+            - MSH_mshN: 1 (MSH_mshN)
+            - MSH_mshO: 1 (MSH_mshO)
+            - MSH_mshQ: 1 (MSH_mshQ)
+            - MSH_mshP: 1 (MSH_mshP)
+
+    neutral genes:
+
+    ============================================================
+    system id = VICH001.B.00001.C001_T4P_14
+    model = TFF-SF_final/T4P
+    replicon = VICH001.B.00001.C001
+    clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850',
+     'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00
+    854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.000
+    01.C001_02308', 'T4P_pilD', 2205)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VI
+    CH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+    occ = 1
+    wholeness = 0.944
+    loci nb = 4
+    score = 12.000
+
+    mandatory genes:
+            - T4P_pilE: 1 (T4P_pilE)
+            - T4P_pilB: 1 (T4P_pilB)
+            - T4P_pilC: 1 (T4P_pilC)
+            - T4P_pilO: 2 (T4P_pilO, T4P_pilO)
+            - T4P_pilQ: 1 (T4P_pilQ)
+            - T4P_pilN: 1 (T4P_pilN)
+            - T4P_pilT: 1 (T4P_pilT)
+            - T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_4])
+
+    accessory genes:
+            - T4P_pilA: 1 (T4P_pilA)
+            - T4P_pilV: 1 (T4P_pilV)
+            - T4P_pilY: 0 ()
+            - T4P_pilW: 1 (T4P_pilW)
+            - T4P_pilX: 1 (T4P_pilX)
+            - T4P_fimT: 1 (T4P_fimT)
+            - T4P_pilM: 1 (T4P_pilM)
+            - T4P_pilP: 1 (T4P_pilP)
+            - T4P_pilU: 1 (T4P_pilU)
+            - MSH_mshM: 1 (MSH_mshM)
+
+    neutral genes:
+
+
+
+systems.tsv
+***********
+
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
-    * Hit_Id - the sequence identifier of the hit
-    * Replicon_name	- the name of the replicon it belongs to
-    * Position - the position of the sequence in the replicon
-    * Sequence_length - the length of the sequence
-    * Gene - the name of the components matched with the profile
-    * Reference_system - the system that includes the component matched
-    * Predicted_system - the system assigned
-    * System_Id - the unique identifier attributed to the detected system
-    * System_status	- the status of the detected system
-    * Gene_status - the status of the component in the assigned system's definition 
-    * i-evalue - Hmmer statistics, the indepent-evalue
-    * Score	- Hmmer score
-    * Profile_coverage - the percentage of the profile covered by the alignment with the sequence
-    * Sequence_coverage - the percentage of the sequence covered by the alignment with the profile
-    * Begin_match - the position in the sequence where the profile match begins
-    * End_match - the position in the sequence where the profile match ends
 
-macsyfinder.summary
-*******************
-Each line corresponds to a system that has been detected. It includes:
-    * Replicon_name	- the name of the replicon 
-    * System_Id	- the unique identifier attributed to the detected system
-    * Reference_system - the type of system detected	
-    * System_status	- the status of the system
-    * Nb_loci - the number of loci that constitutes the system
-    * Nb_Ref_mandatory - the number of mandatory genes in the system definition
-    * Nb_Ref_accessory - the number of accessory genes in the system definition
-    * Nb_Ref_Genes_detected_NR - the number of different components (accessory+mandatory) in the system 
-    * Nb_Genes_with_match - the number of components detected with the profiles in the system
-    * System_length	- the full number of components (with match or not) in the locus (or loci) that constitutes the system 
-    * Nb_Mandatory_NR - the number of different mandatory components matched  
-    * Nb_Accessory_NR - the number of different accessory components matched 
-    * Nb_missing_mandatory - the number of mandatory components from the system definition with no match in this system occurrence
-    * Nb_missing_accessory - the number of accessory components from the system definition with no match in this system occurrence	
-    * List_missing_mandatory - the list of the missing mandatory components
-    * List_missing_accessory - the list of the missing accessory components
-    * Loci_positions - the sequence position (rank of the fasta sequence in the input sequence file) of the different loci encoding the system 
-    * Occur_Mandatory - counts of the mandatory components
-    * Occur_Accessory - counts of the accessory components
-    * Occur_Forbidden - counts of the forbidden components
+    * **hit_id** - the unique identifier of the hit
+    * **replicon** - the name of the replicon it belongs to
+    * **hit_pos** - the position of the sequence in the replicon
+    * **model_fqn** - the model fully qualified name
+    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_loci** - the number of loci
+    * **sys_wholeness** - the wholeness of the system
+    * **sys_score** - the system score
+    * **hit_gene_ref** - the gene in the model for which this hit play the role
+    * **hit_status** - the status of the component in the assigned system's definition
+    * **hit_seq_len** - the length of the proteiq sequence match by this hit
+    * **hit_i_evalue** - Hmmer statistics, the indepent-evalue
+    * **hit_score** - Hmmer score
+    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_begin_match** - the position in the sequence where the profile match begins
+    * **hit_end_match** - the position in the sequence where the profile match ends
+
+This file can be easily parsed python `pandas <https://pandas.pydata.org/>`_ library. ::
+
+    import pandas as pd
+
+    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
+
+.. note::
+    each system reported is separated form the others with a blank line, theses lines are ignored during pandas parsing.
 
 
 Logs and configuration files
@@ -121,8 +202,6 @@ Logs and configuration files
 
 Three specific output files are built to store information on the MacSyFinder execution: 
 
- * macsyfinder.out - contains information on the procedure during systems detection: clusters found,
-   decisions made for system inference... The same information is also displayed on the standard output.
  * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run.
  * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
   
