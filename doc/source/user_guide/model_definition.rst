@@ -29,6 +29,7 @@ The models are grouped by family and eventually subfamily, for instance *secreti
 A models family are a model package.
 
 .. _package_structure:
+
 A package model follow the structure below ::
 
     family_name
