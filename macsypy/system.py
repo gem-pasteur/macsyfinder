@@ -463,9 +463,9 @@ class TsvSystemSerializer(SystemSerializer):
         for cluster in self.system.clusters:
             for vh in cluster.hits:
                 tsv += f"{vh.id}\t{self.system.replicon_name}\t{vh.gene.name}\t{vh.position}\t{self.system.model.fqn}\t" \
-                       f"{self.system.id}\t{self.system.loci}\t{self.system.wholeness}\t{self.system.score}\t" \
-                       f"{self.system.occurrence()}\t{vh.gene_ref.name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval}\t" \
-                       f"{vh.score}\t{vh.profile_coverage}\t{vh.sequence_coverage}\t{vh.begin_match}\t{vh.end_match}\n"
+                       f"{self.system.id}\t{self.system.loci}\t{self.system.wholeness:.3f}\t{self.system.score:.3f}\t" \
+                       f"{self.system.occurrence()}\t{vh.gene_ref.name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval:.3}\t" \
+                       f"{vh.score:.3f}\t{vh.profile_coverage:.3f}\t{vh.sequence_coverage:.3f}\t{vh.begin_match}\t{vh.end_match}\n"
 
         return tsv
 
