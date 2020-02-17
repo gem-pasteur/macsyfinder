@@ -462,16 +462,16 @@ neutral genes:
         system_serializer = TsvSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
 
         sys_tsv = "\t".join(["h_gspd", "replicon_id", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1",
-                             "1.0", "2.0", "1", "gspD", "mandatory", "803",
-                             "1.0", "1.0", "1.0", "1.0", "10", "20"])
+                             "1.000", "2.000", "1", "gspD", "mandatory", "803",
+                             "1.0", "1.000", "1.000", "1.000", "10", "20"])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["h_sctj", "replicon_id", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.0", "2.0", "1", "sctJ", "accessory", "803",
-                              "1.0", "1.0", "1.0", "1.0", "20", "30"])
+                              "1.000", "2.000", "1", "sctJ", "accessory", "803",
+                              "1.0", "1.000", "1.000", "1.000", "20", "30"])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["h_sctn", "replicon_id", "sctN", "30", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.0", "2.0", "1", "sctN", "accessory", "803",
-                              "1.0", "1.0", "1.0", "1.0", "30", "40"])
+                              "1.000", "2.000", "1", "sctN", "accessory", "803",
+                              "1.0", "1.000", "1.000", "1.000", "30", "40"])
         sys_tsv += "\n"
         self.assertEqual(sys_tsv, system_serializer.serialize())
 
