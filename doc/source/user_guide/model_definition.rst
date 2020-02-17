@@ -28,7 +28,7 @@ A model is the association of several elements:
 The models are grouped by family and eventually subfamily, for instance *secretion* or *cas protein*, ...
 A models family are a model package.
 
- .. _package_structure:
+.. _package_structure:
 A package model follow the structure below ::
 
     family_name
@@ -93,7 +93,7 @@ and macsydata subcommand --help to have specific help about the subcommand
 Where the models are located
 ============================
 
-MacSyFinder look at several location to find macsy-models.
+MacSyFinder look at several locations to find macsy-models.
 
 system wide
 -----------
