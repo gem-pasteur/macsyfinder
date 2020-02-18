@@ -226,7 +226,10 @@ def parse_args(args):
                                action='store',
                                type=float,
                                default=None,
-                               help='Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
+                               help='Maximal e-value for hits to be reported during Hmmer search. '
+                                    'By default hmmsearch use per profile threshold (--cut_ga option) '
+                                    'If --e-value-search is set the --cut-ga option is disabled and the new threshold '
+                                    '(-E in hmmsearch) is applied to all profiles.')
     hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
                                type=float,
