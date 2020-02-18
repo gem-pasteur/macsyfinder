@@ -345,18 +345,19 @@ class TestConfig(MacsyTest):
                          "models_dir 'FOO' does not exists or is not a directory.")
 
     def test_save(self):
-        self.parsed_args.max_nb_genes = [['set_1/T2SS', 5], ['set_1/Flagelum', 12]]
-        self.parsed_args.multi_loci = 'set_1/T2SS,set_1/Flagelum'
-        self.parsed_args.models = [['set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
+        self.parsed_args.max_nb_genes = [['Set_1/T2SS', 5], ['set_1/Flagelum', 12]]
+        self.parsed_args.multi_loci = 'Set_1/T2SS,set_1/Flagelum'
+        self.parsed_args.models = [['Set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
         cfg = Config(self.defaults, self.parsed_args)
         expected = {k: v for k, v in cfg._options.items() if v}
-        expected['max_nb_genes'] = 'set_1/T2SS 5 set_1/Flagelum 12'
-        expected['models'] = [('set_1', 'T9SS, T3SS, T4SS_typeI')]
+        expected['max_nb_genes'] = 'Set_1/T2SS 5 set_1/Flagelum 12'
+        expected['models'] = [('models_1', 'Set_1 T9SS T3SS T4SS_typeI')]
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
             saved_opt = cfg._config_file_2_dict(self.defaults, [cfg_path])
             saved_opt['multi_loci'] = {v for v in [v.strip() for v in saved_opt['multi_loci'].split(',')] if v}
+            self.maxDiff = None
             self.assertDictEqual(saved_opt, expected)
 
     def test_out_dir(self):

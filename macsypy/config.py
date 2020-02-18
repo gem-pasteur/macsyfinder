@@ -257,9 +257,9 @@ class Config:
                 conf_str += f"[{section}]\n"
                 if section == 'models':
                     # [(model_family, (def_name1, ...)), ... ]
-                    for model_family, def_names in self._options['models']:
-                        def_names = ', '.join(def_names)
-                        conf_str += f"{model_family} = {def_names}\n"
+                    for i, models in enumerate(self._options['models'], 1):
+                        model_family, def_names = models
+                        conf_str += f"models_{i} = {model_family} {' '.join(def_names)}\n"
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
@@ -454,15 +454,12 @@ class Config:
         """
         opt = []
         for models in value:
-            model_family_name = models[0]
-            if ',' in models[1]:
-                # value is read from a config file
-                def_name = [d.strip() for d in models[1].split(',')]
-            elif len(models) > 2:
-                def_name = models[1:]
+            if models[0].startswith('models'):
+                model_family_name, *models_name = models[1].split(' ')
             else:
-                def_name = [models[1]]
-            opt.append((model_family_name, def_name))
+                model_family_name = models[0]
+                models_name = models[1:]
+            opt.append((model_family_name, models_name))
         self._options['models'] = opt
 
 
