@@ -8,9 +8,9 @@
     
 .. _model_definition:
 
-********************************
-Macromolecular models definition
-********************************
+*********************
+Macromolecular models
+*********************
 
 Principles
 ==========
@@ -23,10 +23,10 @@ MacSyFinder relies on models of macromolecular systems.
 A model is the association of several elements:
     * a definition which describe the systems to capture.
       the definitions use a xml grammar. for more information about definition see :ref:`below<model-definition-grammar-label>`.
-    * a set of profile for each gene belonging the model
+    * a set of profile, one for each gene belonging the models.
 
 The models are grouped by family and eventually subfamily, for instance *secretion* or *cas protein*, ...
-A models family are a model package.
+A model family are a model package.
 
 .. _package_structure:
 
@@ -197,16 +197,16 @@ Features regarding **co-localization** parameters for system detection are also 
 Three distinct types of components can be used to model a given system content,
 and which corresponds to Gene objects, and the corresponding HMM protein profiles.
 
-* **Mandatory** components represent essential components to be found to infer the System presence.
-* **Accessory** components correspond to components that can be found in some systems occurrence,
+* **mandatory** components represent essential components to be found to infer the System presence.
+* **accessory** components correspond to components that can be found in some systems occurrence,
   or fastly evolving components that are hard to detect with a single profile.
 * **neutral** components used to build the clusters but not take in account to build the system.
-* **Forbidden** components are components which presence is eliminatory for the System assessment. 
+* **forbidden** components are components which presence is eliminatory for the System assessment.
 
 
-    .. image:: ../_static/Figure1_figure_system_no_mb-new3_2col.*
-     :height: 500px
-     :align: left
+.. image:: ../_static/MSF_modelling.svg
+    :height: 1000px
+    :align: left
 
 
 .. _model-definition-grammar-label:
