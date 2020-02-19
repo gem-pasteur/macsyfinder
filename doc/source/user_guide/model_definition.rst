@@ -199,7 +199,7 @@ and which corresponds to Gene objects, and the corresponding HMM protein profile
 
 * **mandatory** components represent essential components to be found to infer the System presence.
 * **accessory** components correspond to components that can be found in some systems occurrence,
-  or fastly evolving components that are hard to detect with a single profile.
+  or quickly evolving components that are hard to detect with a single profile.
 * **neutral** components used to build the clusters but not take in account to build the system.
 * **forbidden** components are components which presence is eliminatory for the System assessment.
 
