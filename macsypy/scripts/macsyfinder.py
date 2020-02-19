@@ -139,7 +139,7 @@ If the name 'all' is in the list all models from the family will be searched.'
 '--models TXSS all' 
           means for all models found in model package TXSS
 '--models CRIPRcas/subtyping all' 
-         means MSF will search for all 'subtyping' family model in CRISPRCas model package.
+         means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
 (required unless --previous-run is set)
 """)
 
@@ -236,7 +236,7 @@ This option can be repeated several times:
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
-                                help="""Allow the storage of multi-loci systems for the specified models.
+                                help="""Specifies if the system can be detected as a 'scattered' system.
 The models are specified as a comma separated list of fully qualified name
     "--multi-loci model_familyA/model_1,model_familyB/model_2"
 """)
@@ -261,14 +261,14 @@ If --e-value-search is set the --cut-ga option is disabled and the new threshold
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""Maximal independent e-value for Hmmer hits to be selected for model detection.
+                               help=f"""Maximal independent e-value for Hmmer hits to be selected for system detection.
 (default:{msf_def['i_evalue_sel']})""")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
                                help=f"""Minimal profile coverage required in the hit alignment to allow
-the hit selection for model detection. 
+the hit selection for system detection. 
 (default: {msf_def['coverage_profile']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
