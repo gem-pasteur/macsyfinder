@@ -159,7 +159,7 @@ class TestMacsydata(MacsyTest):
 
         expected_info = """fake_pack (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 

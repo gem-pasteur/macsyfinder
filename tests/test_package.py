@@ -134,7 +134,7 @@ class TestRemoteModelIndex(MacsyTest):
         elif url == 'https://api.github.com/repos/package_download/bad_pack/tarball/0.2':
             raise urllib.error.HTTPError(url, 404, 'not found', None, None)
         elif url == 'https://raw.githubusercontent.com/get_metadata/foo/0.0/metadata.yml':
-            data = yaml.dump({"author": {"name": "moi"}})
+            data = yaml.dump({"maintainer": {"name": "moi"}})
             return MockResponse(data, 200)
         else:
             raise RuntimeError("test non prevu", url)
@@ -233,7 +233,7 @@ Please wait before to try again.""")
             remote = package.RemoteModelIndex(org="get_metadata")
             remote.cache = self.tmpdir
             metadata = remote.get_metadata(pack_name)
-            self.assertDictEqual(metadata, {"author": {"name": "moi"}})
+            self.assertDictEqual(metadata, {"maintainer": {"name": "moi"}})
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
             package.RemoteModelIndex.list_package_vers = list_package_vers
@@ -408,7 +408,7 @@ class TestPackage(MacsyTest):
             shutil.rmtree(self.tmpdir)
         os.makedirs(self.tmpdir)
 
-        self.metadata = {"author": {"name": "auth_name",
+        self.metadata = {"maintainer": {"name": "auth_name",
                                     "email": "auth_name@mondomain.fr"},
                          "short_desc": "this is a short description of the repos",
                          "vers": "0.0b2",
@@ -589,18 +589,18 @@ ligne 3 et bbbbb
 
         load_metadata_meth = package.Package._load_metadata
 
-        #############
-        # No author #
-        #############
+        #################
+        # No maintainer #
+        #################
         no_auth_meta_data = self.metadata.copy()
-        del no_auth_meta_data['author']
+        del no_auth_meta_data['maintainer']
         try:
             package.Package._load_metadata = lambda x: no_auth_meta_data
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'author' is mandatory in metadata_path."])
+        self.assertEqual(errors, ["field 'maintainer' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
         #################
@@ -688,22 +688,22 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata_path file"])
 
         ##################
-        # No author name #
+        # No maintainer name #
         ##################
         # this test must the last of the set
-        # because we remove a key in author value
+        # because we remove a key in maintainer value
         # the copy is a shallow copy
-        # so author value is a reference to the good_metadata[author]
+        # so maintainer value is a reference to the good_metadata[maintainer]
         # side effect
         no_auth_name_meta_data = self.metadata.copy()
-        del no_auth_name_meta_data['author']['name']
+        del no_auth_name_meta_data['maintainer']['name']
         try:
             package.Package._load_metadata = lambda x: no_auth_name_meta_data
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'author.name' is mandatory in metadata_path."])
+        self.assertEqual(errors, ["field 'maintainer.name' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
 
@@ -721,7 +721,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertListEqual(errors,
-                             ["field 'author' is mandatory in metadata_path.",
+                             ["field 'maintainer' is mandatory in metadata_path.",
                               "field 'vers' is mandatory in metadata_path."])
         self.assertListEqual(warnings,
                              ["It's better if the field 'cite' is setup in metadata_path file",
@@ -748,7 +748,7 @@ ligne 3 et bbbbb
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -782,7 +782,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -811,7 +811,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -844,7 +844,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 

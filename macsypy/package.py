@@ -414,7 +414,7 @@ class Package:
         errors = []
         warnings = []
         data = self._load_metadata()
-        must_have = ("author", "short_desc", "vers")
+        must_have = ("maintainer", "short_desc", "vers")
         nice_to_have = ("cite", "doc", "licence", "copyright")
         for item in must_have:
             if item not in data:
@@ -422,10 +422,10 @@ class Package:
         for item in nice_to_have:
             if item not in data:
                 warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
-        if "author" in data:
+        if "maintainer" in data:
             for item in ("name", "email"):
-                if item not in data["author"]:
-                    errors.append(f"field 'author.{item}' is mandatory in metadata_path.")
+                if item not in data["maintainer"]:
+                    errors.append(f"field 'maintainer.{item}' is mandatory in metadata_path.")
         return errors, warnings
 
 
@@ -458,7 +458,7 @@ class Package:
         info = f"""
 {pack_name} ({metadata['vers']})
 
-author: {metadata['author']['name']} <{metadata['author']['email']}>
+maintainer: {metadata['maintainer']['name']} <{metadata['maintainer']['email']}>
 
 {metadata['short_desc']}
 
