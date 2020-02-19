@@ -205,9 +205,9 @@ These profiles are represented by Profile objects (:class:`macsypy.profile.Profi
 and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file.
 See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`.
 
-A Gene may have Homologs or Analogs. An *"Homolog"* (resp. *"Analog"*) object encapsulates a Gene and has a reference
-to the Gene it is homolog (resp. *"analog"*) to.
-See the :ref:`Homolog API <homolog>` and :ref:`Analog API <analog>` for more details.
+A Gene may be functionnaly replaced by an other (usualy Homologs or Analogs).
+Exchageable object encapsulates a Gene and has a reference to the Gene it is exchangeable to.
+See the :ref:`Exchangeable API <exchangeable_api>` for more details.
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems,
@@ -240,7 +240,7 @@ This object has methods to extract and build *"Hits"* that are then analyzed for
 
 It analyses Hmmer raw outputs, and applies filters on the matches (according to :ref:`Hmmer options<hmmer-options>`).
 See :ref:`hmmer-outputs-label` for details on the resulting output files.
-For profile matches selected with the filtering parameters, *"Hit"* objects are built (see :ref:`the Hit API <hit-label>`). 
+For profile matches selected with the filtering parameters, *"Hit"* objects are built (see :ref:`the Hit API <hit>`).
 
 .. only:: html
 

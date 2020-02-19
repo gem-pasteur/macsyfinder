@@ -53,6 +53,7 @@ GeneBank
    :private-members:
    :special-members:
 
+.. _gene:
 
 Gene
 ====
