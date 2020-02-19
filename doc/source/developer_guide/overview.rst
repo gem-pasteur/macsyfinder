@@ -205,13 +205,13 @@ These profiles are represented by Profile objects (:class:`macsypy.profile.Profi
 and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file.
 See :ref:`profile-implementation`). A Gene has several properties described in the :ref:`Gene API <gene>`.
 
-A Gene may be functionnaly replaced by an other (usualy Homologs or Analogs).
-Exchageable object encapsulates a Gene and has a reference to the Gene it is exchangeable to.
+A Gene may be functionally replaced by an other (usually Homologs or Analogs).
+Exchangeable object encapsulates a Gene and has a reference to the Gene it is exchangeable to.
 See the :ref:`Exchangeable API <exchangeable_api>` for more details.
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several systems,
-    each gene must be instanciated only once, and stored in a *"gene_bank"*.
+    each gene must be instantiated only once, and stored in a *"gene_bank"*.
     gene_bank is a :class:`macsypy.gene.GeneBank` object. 
     The gene_bank and system_bank are filled by the system_parser (:class:`macsypy.definition_parser.ModelDefinitionParser`)
 
