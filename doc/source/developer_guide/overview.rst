@@ -177,7 +177,7 @@ It is defined *via* a definition file in XML stored in a dedicated location that
 the configuration file, or the command-line (`-d` parameter).
 See :ref:`model-definition-grammar-label` for more details on the XML grammar.
  
-An object :ref:`ModelDEfinitionParser <definition_parser>` is used to build a model object from its XML definition file.
+An object :ref:`ModelDefinitionParser <definition_parser>` is used to build a model object from its XML definition file.
 
 A model is named after the file tree name of its XML definition.
 A model has an attribute `inter_gene_max_space` which is an integer,
