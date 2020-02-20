@@ -132,7 +132,9 @@ metadata file
 
 This file contains some meta information about the package itself.
 This file is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format.
-This file must have the following structure: ::
+This file must have the following structure:
+
+.. code-block:: yaml
 
     ---
     maintainer:
@@ -145,20 +147,22 @@ This file must have the following structure: ::
     licence: The licence under the package is released (optional but highly recommended)
     copyright: The copyright of the package (optional)
 
-for example ::
+for example
+
+.. code-block:: yaml
 
     ---
     maintainer:
-      name: first name last name
-      email: login@my_domain.com
+       name: first name last name
+       email: login@my_domain.com
     short_desc: Models for 15 types of secretion systems or bacterial appendages (T1SS, T2SS, T3SS, T4P, pT4SSt, pT4SSi, T5aSS, T5bSS, T5bSS, T6SSi, T6SSii, T6SSiii, Flagellum, Tad, T9SS).
     vers: 0.0a1
     cite:
-      - |
-        Abby Sophie S., Cury Jean, Guglielmini Julien, Néron Bertrand, Touchon Marie, Rocha Eduardo P. C. (2016).
-        Identification of protein secretion systems in bacterial genomes.
-        In Scientific Reports, 6, pp. 23080.
-        http://dx.doi.org/10.1038/srep23080
+       - |
+         Abby Sophie S., Cury Jean, Guglielmini Julien, Néron Bertrand, Touchon Marie, Rocha Eduardo P. C. (2016).
+         Identification of protein secretion systems in bacterial genomes.
+         In Scientific Reports, 6, pp. 23080.
+         http://dx.doi.org/10.1038/srep23080
     doc: https://github.com/macsy-models/TXSS
     licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
     copyright: 2014-2020, Institut Pasteur, CNRS
