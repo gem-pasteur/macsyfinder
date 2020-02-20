@@ -12,9 +12,10 @@
 gene
 ****
 
-The Gene object represents genes encoding the protein components of a System.
-See :ref:`gene-implementation` for an overview of the implementation.
-
+TThe :ref:`Gene object <gene>` represents genes encoding the protein components of a Model.
+There is 2 kind of gene The ``CoreGene`` (:class:`macsypy.gene.CoreGene`) which must be unique given a name.
+A ``CoreGene`` must have a corresponding HMM protein profile.
+A ``ModelGene`` encapsulate a CoreGene and is linked to a Model.
 
 .. warning::
     To optimize computation and to avoid concurrency problems when we search several models,
@@ -24,25 +25,42 @@ See :ref:`gene-implementation` for an overview of the implementation.
     are instantiated in :func:`macsypy.scripts.macsyfinder.main` function
     and filled by a definition_parser (:class:`macsypy.defintion_parser.DefinitionParser`)
 
-Example to get a gene object: ::
+Example to get a CoreGene object: ::
   
-    #get a model
-    t2ss =  modelb_ank["T2SS"]
-    
-    #get of a gene
-    pilO = gene_bank["pilO"]
+    # get a model object
+    model_a = model_bank("TXSS/model_a")
+    model_b = model_bank("TXSS/model_b")
 
+    # get of a <CoreGene> object
+    t2ss =  gene_bank[("TXSS", "T2SS")]
+    pilO = gene_bank[("TXSS", "pilO")]
 
-Exchangeable is a Composition with Gene.
+to create a ModelGene ::
+
+    modelA_t2ss(t2ss, model_A)
+    modelA_pilO(pilO, model_a, loner=True, inter_gene_max_space=12)
+    modelB_pilO(pilO, model_b, inter_gene_max_space=5)
+
+There is only *one* instance of CoreGene with a given name (model family name, gene name) in one MSF run.
+But several instance of a ModelGene with the same name may exists.
+Above, there is 2 <ModelGene> representing *pilO* one in model_a the second in model_b with different properties.
+
+Exchangeable inherits from ModelGene.
 Then a gene in some model is seen as a Gene, in some other models as an Exchangeable.
-But there only one instance of this gene.::
+But there only one instance of the corresponding CoreGene.::
 
-    sctn = Gene(name="sctN", model_A)
-    sctn_flg = Gene(name="sctN_FLG", model_A)
-    sctn_ex = Exchangeable(sctn, sctn_flg)
+    core_sctn = gene_bank(("TXSS", "sctN"))
+    core_sctn_flg = gene_bank(("TXSS", "sctN_FLG"))
+    model_sctn = ModelGene(core_sctn, model_a)
+    ex_sctn_flg = Exchangeable(core_stn_flg, model_sctn)
+    model_sctn.add_exchangeable(ex_sctn_flg)
 
-which means that sctn_flg can replaced by sctn
-sctn appear as a gene `sctn` and as exchangeable `sctn_ex`
+    model_sctn_flg = ModelGene(core_sctn_flg, model_b)
+
+which means that in model_a the gene *sctn* can be functionally replaced by *sctn_flg*.
+In Model_a it appear as an alternative to sctn but in model_B it appear as sctn_flg itself.
+In one MacSyFinder run several instances of ModelGene and/or Exchangeable with the same name may coexists .
+But in A whole macsyfinder run there is only one instance core_sctn_flg and core_sctn.
 
 
 GeneBank
@@ -91,11 +109,6 @@ ModelGene
    :special-members:
 
 .. _exchangeable_api:
-
-.. note::
-
-    All attributes/methods which are not directly implemented in Exchangeable are redirected
-    to that of the encapsulated ModelGene.
 
 Exchangeable
 ============
