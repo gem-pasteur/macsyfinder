@@ -36,7 +36,6 @@ import colorlog
 _log = colorlog.getLogger('macsypy')
 
 import macsypy
-from macsypy.argparse_utils import ArgumentDefaultsHelpRawTextFormatter
 from macsypy.config import MacsyDefaults, Config
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
