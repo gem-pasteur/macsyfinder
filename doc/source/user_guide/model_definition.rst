@@ -167,7 +167,8 @@ for example
     licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
     copyright: 2014-2020, Institut Pasteur, CNRS
 
-*This file is **mandatory**. Without this file your archive/repository will not considered as a package.*
+.. warning::
+    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not considered as a package.
 
 .. note::
 
