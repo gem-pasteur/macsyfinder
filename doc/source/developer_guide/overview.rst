@@ -205,10 +205,10 @@ A ``CoreGene`` must have a corresponding HMM protein profile.
 These profiles are represented by Profile objects (:class:`macsypy.profile.Profile`),
 and must be named after the gene name. For instance, the gene *gspD* will correspond to the "gspD.hmm" profile file.
 See :ref:`profile-implementation`). After hmmsearch step the hits are link the them.
-The CoreGene must be created by using the GeneBak factory.
+The CoreGene must be created by using the GeneBank factory.
 
 
-And a ``ModelGene`` (:class:`macsypy.gene.ModelGene`) which encapsulate a CoreGene and is linked to a Model.
+A ``ModelGene`` (:class:`macsypy.gene.ModelGene`) which encapsulate a CoreGene and is linked to a Model.
 Instead CoreGene, several ModelGene with the same name may coexists in macsyfinder,
 in different Models and hold different values for attributes as *inter_gene_max_space*, ...
 Each ModelGene points out its Model of origin (:class:`macsypy.model.Model`).
