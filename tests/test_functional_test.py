@@ -292,15 +292,35 @@ class Test(MacsyTest):
                                                     models="TXSS_modified T4P-single-locus",
                                                     topology="linear"
                                                     )
-        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_db_type')
-        os.makedirs(self.out_dir)
 
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_db_type')
         args = args.format(out_dir=self.out_dir)
         with self.catch_io(out=True):
             with self.assertRaises(OptionError) as ctx:
                 macsyfinder.main(args=args.split(), loglevel='ERROR')
         self.assertEqual(str(ctx.exception),
                          "argument --db-type or --previous-run is required.")
+
+    def test_model_unkown(self):
+        args = "--sequence-db {seq_db} " \
+               "--db-type ordered_replicon " \
+               "--models-dir {models_dir} " \
+               "-o {{out_dir}} "\
+               "-m {models} -o {{out_dir}} ".format(seq_db=self.find_data('functional_tests',
+                                                                          'acav001_T2SS-Ori_T4P-multi.fasta'),
+                                                    models_dir=self.find_data('functional_tests', 'models'),
+                                                    models="TXSS_modified Unkown_model",
+                                                    topology="linear"
+                                                    )
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_model_unkwon')
+        os.makedirs(self.out_dir)
+
+        args = args.format(out_dir=self.out_dir)
+        with self.assertRaises(ValueError) as ctx:
+            macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         "Unkown_model does not match with any definitions")
 
 
     def _test_macsyfinder_run(self, args_tpl):
