@@ -138,9 +138,6 @@ Systems detection options::
                         system name, the second value to an integer. This
                         option can be repeated several times: 
                         "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10"
-                        
-  --max-nb-genes SYSTEM VALUE
-                        The maximal number of genes allowed in the system. 
 
   --multi-loci SYSTEM 
                         Specifies if the system can be detected as a 'scattered' system.
