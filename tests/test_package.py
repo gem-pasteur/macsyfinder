@@ -419,7 +419,7 @@ ligne 2
 ligne 3 et bbbbb
 """],
                          "doc": "http://link/to/the/documentation",
-                         "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
+                         "license": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
                          "copyright": "2019, Institut Pasteur, CNRS"
                           }
 
@@ -430,7 +430,7 @@ ligne 3 et bbbbb
         except:
             pass
 
-    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
+    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, license=True):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
         if definitions:
@@ -460,9 +460,9 @@ ligne 3 et bbbbb
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
-        if licence:
-            with open(os.path.join(pack_path, "LICENCE"), 'w') as f:
-                f.write("# This the Licence\n")
+        if license:
+            with open(os.path.join(pack_path, "LICENSE"), 'w') as f:
+                f.write("# This the License\n")
         return pack_path
 
 
@@ -561,22 +561,22 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["The package 'fake_model' have not any README file."])
 
 
-    def test_check_structure_no_licence(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+    def test_check_structure_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it."])
 
-    def test_check_no_readme_n_no_licence(self):
-        fake_pack_path = self.create_fake_package('fake_model', readme=False, licence=False)
+    def test_check_no_readme_n_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it.",
                                     "The package 'fake_model' have not any README file."])
 
@@ -660,18 +660,18 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata_path file"])
 
         ##############
-        # No licence #
+        # No license #
         ##############
-        no_licence_metadata = self.metadata.copy()
-        del no_licence_metadata['licence']
+        no_license_metadata = self.metadata.copy()
+        del no_license_metadata['license']
         try:
-            package.Package._load_metadata = lambda x: no_licence_metadata
+            package.Package._load_metadata = lambda x: no_license_metadata
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'licence' is setup in metadata_path file"])
+        self.assertEqual(warnings, ["It's better if the field 'license' is setup in metadata_path file"])
 
         ################
         # No copyright #
@@ -725,10 +725,10 @@ ligne 3 et bbbbb
                               "field 'vers' is mandatory in metadata_path."])
         self.assertListEqual(warnings,
                              ["It's better if the field 'cite' is setup in metadata_path file",
-                              "It's better if the field 'licence' is setup in metadata_path file"])
+                              "It's better if the field 'license' is setup in metadata_path file"])
 
     def test_help(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
 
         receive_help = pack.help()
@@ -741,7 +741,7 @@ ligne 3 et bbbbb
 
 
     def test_info(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
 
         info = pack.info()
@@ -831,12 +831,12 @@ copyright: 2019, Institut Pasteur, CNRS
         self.assertEqual(info, expected_info)
 
         ##############
-        # No licence #
+        # No license #
         ##############
-        no_licence_metadata = self.metadata.copy()
-        del no_licence_metadata['licence']
+        no_license_metadata = self.metadata.copy()
+        del no_license_metadata['license']
         try:
-            package.Package._load_metadata = lambda x: no_licence_metadata
+            package.Package._load_metadata = lambda x: no_license_metadata
             pack = package.Package(fake_pack_path)
             info = pack.info()
         finally:
@@ -858,7 +858,7 @@ how to cite:
 documentation
 \thttp://link/to/the/documentation
 
-This data are released under No licence available
+This data are released under No license available
 copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
