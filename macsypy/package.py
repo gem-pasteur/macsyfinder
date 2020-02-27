@@ -367,8 +367,8 @@ class Package:
             elif not os.path.isdir(os.path.join(self.path, 'profiles')):
                 errors.append(f"'{os.path.join(self.path, 'profiles')}' is not a directory.")
 
-            if not os.path.exists(os.path.join(self.path, 'LICENCE')):
-                warnings.append(f"The package '{self.name}' have not any LICENCE file. "
+            if not os.path.exists(os.path.join(self.path, 'LICENSE')):
+                warnings.append(f"The package '{self.name}' have not any LICENSE file. "
                                 f"May be you have not right to use it.")
             if not self.readme:
                 warnings.append(f"The package '{self.name}' have not any README file.")
@@ -412,18 +412,18 @@ class Package:
         errors = []
         warnings = []
         data = self._load_metadata()
-        must_have = ("author", "short_desc", "vers" )
-        nice_to_have = ("cite", "doc", "licence", "copyright")
+        must_have = ("maintainer", "short_desc", "vers" )
+        nice_to_have = ("cite", "doc", "license", "copyright")
         for item in must_have:
             if item not in data:
                 errors.append(f"field '{item}' is mandatory in metadata_path.")
         for item in nice_to_have:
             if item not in data:
                 warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
-        if "author" in data:
+        if "maintainer" in data:
             for item in ("name", "email"):
-                if item not in data["author"]:
-                    errors.append(f"field 'author.{item}' is mandatory in metadata_path.")
+                if item not in data["maintainer"]:
+                    errors.append(f"field 'maintainer.{item}' is mandatory in metadata_path.")
         return errors, warnings
 
 
@@ -448,15 +448,15 @@ class Package:
             metadata['cite'] = ["No citation available\n"]
         if 'doc' not in metadata:
             metadata['doc'] = "No documentation available"
-        if 'licence' not in metadata:
-            metadata['licence'] = "No licence available"
+        if 'license' not in metadata:
+            metadata['license'] = "No license available"
         copyrights = f"copyright: {metadata['copyright']}" if 'copyright' in metadata else ''
         pack_name = self.name
         cite = '\n'.join([f"\t- {c}".replace('\n', '\n\t  ') for c in metadata['cite']]).rstrip()
         info = f"""
 {pack_name} ({metadata['vers']})
 
-author: {metadata['author']['name']} <{metadata['author']['email']}>
+maintainer: {metadata['maintainer']['name']} <{metadata['maintainer']['email']}>
 
 {metadata['short_desc']}
 
@@ -466,7 +466,7 @@ how to cite:
 documentation
 \t{metadata['doc']}
 
-This data are released under {metadata['licence']}
+This data are released under {metadata['license']}
 {copyrights}
 """
         return info
