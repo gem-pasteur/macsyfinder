@@ -66,7 +66,7 @@ class TestMacsydata(MacsyTest):
                             profiles=True,
                             metadata=True,
                             readme=True,
-                            licence=True,
+                            license=True,
                             dest=''):
         pack_path = os.path.join(self.tmpdir, dest, model)
         os.mkdir(pack_path)
@@ -97,9 +97,9 @@ class TestMacsydata(MacsyTest):
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
-        if licence:
-            with open(os.path.join(pack_path, "LICENCE"), 'w') as f:
-                f.write("# This the Licence\n")
+        if license:
+            with open(os.path.join(pack_path, "LICENSE"), 'w') as f:
+                f.write("# This the License\n")
         return pack_path
 
     def _fake_download(self, pack_name, vers, dest=None):
@@ -367,12 +367,12 @@ for instance if you want to add the models to 'macsy-models'
 
     def test_check_with_warnings(self):
         pack_name = 'fake_1'
-        path = self.create_fake_package(pack_name, readme=False, licence=False)
+        path = self.create_fake_package(pack_name, readme=False, license=False)
         self.args.path = path
         with self.catch_log(log_name='macsydata') as log:
             macsydata.do_check(self.args)
             log_msg = log.get_value().strip()
-        expected_msg = """The package 'fake_1' have not any LICENCE file. May be you have not right to use it.
+        expected_msg = """The package 'fake_1' have not any LICENSE file. May be you have not right to use it.
 The package 'fake_1' have not any README file.
 macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
