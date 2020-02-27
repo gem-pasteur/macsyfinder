@@ -1,5 +1,5 @@
 ---
-author:
+maintainer:
   name: auth_name
   email: auth_name@mondomain.fr
 short_desc: this is a short description of the repos
@@ -12,5 +12,5 @@ cite:
     ligne 2
     ligne 3 et bbbbb
 doc: http://link/to/the/documentation
-licence: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+license: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
 copyright: 2019, Institut Pasteur, CNRS

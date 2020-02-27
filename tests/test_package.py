@@ -134,7 +134,7 @@ class TestRemoteModelIndex(MacsyTest):
         elif url == 'https://api.github.com/repos/package_download/bad_pack/tarball/0.2':
             raise urllib.error.HTTPError(url, 404, 'not found', None, None)
         elif url == 'https://raw.githubusercontent.com/get_metadata/foo/0.0/metadata.yml':
-            data = yaml.dump({"author": {"name": "moi"}})
+            data = yaml.dump({"maintainer": {"name": "moi"}})
             return MockResponse(data, 200)
         else:
             raise RuntimeError("test non prevu", url)
@@ -233,7 +233,7 @@ Please wait before to try again.""")
             remote = package.RemoteModelIndex(org="get_metadata")
             remote.cache = self.tmpdir
             metadata = remote.get_metadata(pack_name)
-            self.assertDictEqual(metadata, {"author": {"name": "moi"}})
+            self.assertDictEqual(metadata, {"maintainer": {"name": "moi"}})
         finally:
             package.RemoteModelIndex.remote_exists = rem_exists
             package.RemoteModelIndex.list_package_vers = list_package_vers
@@ -408,7 +408,7 @@ class TestPackage(MacsyTest):
             shutil.rmtree(self.tmpdir)
         os.makedirs(self.tmpdir)
 
-        self.metadata = {"author": {"name": "auth_name",
+        self.metadata = {"maintainer": {"name": "auth_name",
                                     "email": "auth_name@mondomain.fr"},
                          "short_desc": "this is a short description of the repos",
                          "vers": "0.0b2",
@@ -419,7 +419,7 @@ ligne 2
 ligne 3 et bbbbb
 """],
                          "doc": "http://link/to/the/documentation",
-                         "licence": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
+                         "license": "CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)",
                          "copyright": "2019, Institut Pasteur, CNRS"
                           }
 
@@ -430,7 +430,7 @@ ligne 3 et bbbbb
         except:
             pass
 
-    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, licence=True):
+    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, license=True):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
         if definitions:
@@ -460,9 +460,9 @@ ligne 3 et bbbbb
         if readme:
             with open(os.path.join(pack_path, "README"), 'w') as f:
                 f.write("# This a README\n")
-        if licence:
-            with open(os.path.join(pack_path, "LICENCE"), 'w') as f:
-                f.write("# This the Licence\n")
+        if license:
+            with open(os.path.join(pack_path, "LICENSE"), 'w') as f:
+                f.write("# This the License\n")
         return pack_path
 
 
@@ -561,22 +561,22 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["The package 'fake_model' have not any README file."])
 
 
-    def test_check_structure_no_licence(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+    def test_check_structure_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it."])
 
-    def test_check_no_readme_n_no_licence(self):
-        fake_pack_path = self.create_fake_package('fake_model', readme=False, licence=False)
+    def test_check_no_readme_n_no_license(self):
+        fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
         pack = package.Package(fake_pack_path)
         errors, warnings = pack._check_structure()
 
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENCE file. "
+        self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it.",
                                     "The package 'fake_model' have not any README file."])
 
@@ -590,17 +590,17 @@ ligne 3 et bbbbb
         load_metadata_meth = package.Package._load_metadata
 
         #############
-        # No author #
+        # No maintainer #
         #############
         no_auth_meta_data = self.metadata.copy()
-        del no_auth_meta_data['author']
+        del no_auth_meta_data['maintainer']
         try:
             package.Package._load_metadata = lambda x: no_auth_meta_data
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'author' is mandatory in metadata_path."])
+        self.assertEqual(errors, ["field 'maintainer' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
         #################
@@ -660,18 +660,18 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata_path file"])
 
         ##############
-        # No licence #
+        # No license #
         ##############
-        no_licence_metadata = self.metadata.copy()
-        del no_licence_metadata['licence']
+        no_license_metadata = self.metadata.copy()
+        del no_license_metadata['license']
         try:
-            package.Package._load_metadata = lambda x: no_licence_metadata
+            package.Package._load_metadata = lambda x: no_license_metadata
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'licence' is setup in metadata_path file"])
+        self.assertEqual(warnings, ["It's better if the field 'license' is setup in metadata_path file"])
 
         ################
         # No copyright #
@@ -688,22 +688,22 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata_path file"])
 
         ##################
-        # No author name #
+        # No maintainer name #
         ##################
         # this test must the last of the set
-        # because we remove a key in author value
+        # because we remove a key in maintainer value
         # the copy is a shallow copy
-        # so author value is a reference to the good_metadata[author]
+        # so maintainer value is a reference to the good_metadata[maintainer]
         # side effect
         no_auth_name_meta_data = self.metadata.copy()
-        del no_auth_name_meta_data['author']['name']
+        del no_auth_name_meta_data['maintainer']['name']
         try:
             package.Package._load_metadata = lambda x: no_auth_name_meta_data
             pack = package.Package(fake_pack_path)
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'author.name' is mandatory in metadata_path."])
+        self.assertEqual(errors, ["field 'maintainer.name' is mandatory in metadata_path."])
         self.assertEqual(warnings, [])
 
 
@@ -721,14 +721,14 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertListEqual(errors,
-                             ["field 'author' is mandatory in metadata_path.",
+                             ["field 'maintainer' is mandatory in metadata_path.",
                               "field 'vers' is mandatory in metadata_path."])
         self.assertListEqual(warnings,
                              ["It's better if the field 'cite' is setup in metadata_path file",
-                              "It's better if the field 'licence' is setup in metadata_path file"])
+                              "It's better if the field 'license' is setup in metadata_path file"])
 
     def test_help(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
 
         receive_help = pack.help()
@@ -741,14 +741,14 @@ ligne 3 et bbbbb
 
 
     def test_info(self):
-        fake_pack_path = self.create_fake_package('fake_model', licence=False)
+        fake_pack_path = self.create_fake_package('fake_model', license=False)
         pack = package.Package(fake_pack_path)
 
         info = pack.info()
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -782,7 +782,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -811,7 +811,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -831,12 +831,12 @@ copyright: 2019, Institut Pasteur, CNRS
         self.assertEqual(info, expected_info)
 
         ##############
-        # No licence #
+        # No license #
         ##############
-        no_licence_metadata = self.metadata.copy()
-        del no_licence_metadata['licence']
+        no_license_metadata = self.metadata.copy()
+        del no_license_metadata['license']
         try:
-            package.Package._load_metadata = lambda x: no_licence_metadata
+            package.Package._load_metadata = lambda x: no_license_metadata
             pack = package.Package(fake_pack_path)
             info = pack.info()
         finally:
@@ -844,7 +844,7 @@ copyright: 2019, Institut Pasteur, CNRS
         expected_info = """
 fake_model (0.0b2)
 
-author: auth_name <auth_name@mondomain.fr>
+maintainer: auth_name <auth_name@mondomain.fr>
 
 this is a short description of the repos
 
@@ -858,7 +858,7 @@ how to cite:
 documentation
 \thttp://link/to/the/documentation
 
-This data are released under No licence available
+This data are released under No license available
 copyright: 2019, Institut Pasteur, CNRS
 """
         self.assertEqual(info, expected_info)
