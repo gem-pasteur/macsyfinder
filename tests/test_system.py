@@ -447,30 +447,33 @@ neutral genes:
         model.add_accessory_gene(gene_sctj)
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model)
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+        gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
+        gene_sctn.add_exchangeable(gene_sctn_flg)
         model.add_accessory_gene(gene_sctn)
 
         h_gspd = Hit(c_gene_gspd, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
         h_sctj = Hit(c_gene_sctj, "h_sctj", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 20, 30)
         v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
-        h_sctn = Hit(c_gene_sctn, "h_sctn", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 30, 40)
-        v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
+        h_sctn_flg = Hit(c_gene_sctn_flg, "h_sctn_flg", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 30, 40)
+        v_h_sctn_flg = ValidHit(h_sctn_flg, gene_sctn_flg, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h_gspd, v_h_sctj], model)
-        c2 = Cluster([v_h_sctn], model)
+        c2 = Cluster([v_h_sctn_flg], model)
         sys_multi_loci = System(model, [c1, c2])
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
         system_serializer = TsvSystemSerializer(sys_multi_loci, hit_multi_sys_tracker)
 
         sys_tsv = "\t".join(["h_gspd", "replicon_id", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1",
-                             "1.000", "2.000", "1", "gspD", "mandatory", "803",
+                             "1.000", "1.875", "1", "gspD", "mandatory", "803",
                              "1.0", "1.000", "1.000", "1.000", "10", "20"])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["h_sctj", "replicon_id", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.000", "2.000", "1", "sctJ", "accessory", "803",
+                              "1.000", "1.875", "1", "sctJ", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "20", "30"])
         sys_tsv += "\n"
-        sys_tsv += "\t".join(["h_sctn", "replicon_id", "sctN", "30", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.000", "2.000", "1", "sctN", "accessory", "803",
+        sys_tsv += "\t".join(["h_sctn_flg", "replicon_id", "sctN_FLG", "30", "foo/T2SS", sys_multi_loci.id, "1",
+                              "1.000", "1.875", "1", "sctN", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "30", "40"])
         sys_tsv += "\n"
         self.assertEqual(sys_tsv, system_serializer.serialize())

@@ -454,7 +454,7 @@ class TsvSystemSerializer(SystemSerializer):
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
                      hit_id\\treplicon\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
-                     \\tsys_occ\\thit_gene_ref\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
+                     \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
                      \\thit_seq_cov\\tit_begin_match\\thit_end_match
 
         :rtype: str
@@ -464,7 +464,7 @@ class TsvSystemSerializer(SystemSerializer):
             for vh in cluster.hits:
                 tsv += f"{vh.id}\t{self.system.replicon_name}\t{vh.gene.name}\t{vh.position}\t{self.system.model.fqn}\t" \
                        f"{self.system.id}\t{self.system.loci}\t{self.system.wholeness:.3f}\t{self.system.score:.3f}\t" \
-                       f"{self.system.occurrence()}\t{vh.gene_ref.name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval:.3}\t" \
+                       f"{self.system.occurrence()}\t{vh.gene_ref.alternate_of().name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval:.3}\t" \
                        f"{vh.score:.3f}\t{vh.profile_coverage:.3f}\t{vh.sequence_coverage:.3f}\t{vh.begin_match}\t{vh.end_match}\n"
 
         return tsv
