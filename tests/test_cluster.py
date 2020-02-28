@@ -372,10 +372,13 @@ class TestCluster(MacsyTest):
         c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
         c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
         c_gene_3 = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        c_gene_4 = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
 
         gene_1 = ModelGene(c_gene_1, model)
         gene_2 = ModelGene(c_gene_2, model)
         gene_3 = ModelGene(c_gene_3, model)
+        gene_4 = Exchangeable(c_gene_4, gene_3)
+        gene_3.add_exchangeable(gene_4)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -389,12 +392,10 @@ class TestCluster(MacsyTest):
         self.assertTrue(c.fulfilled_function(gene_1))
         self.assertFalse(c.fulfilled_function(gene_3))
 
-        h50 = Hit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
-
+        h50 = Hit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        v_h50 = ValidHit(h50, gene_4, GeneStatus.ACCESSORY)
         c = Cluster([v_h10, v_h50], model)
-        self.assertTrue(c.fulfilled_function(gene_2))
-
+        self.assertTrue(c.fulfilled_function(gene_3))
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
