@@ -157,9 +157,16 @@ class ValidHit:
 
     def __init__(self, hit, gene_ref, gene_status):
         """
-        :param hit:
+        :param hit: a match between a hmm profile and a replicon
         :type hit: :class:`macsypy.hit.Hit` object
-        :param gene_ref:
+        :param gene_ref: The ModelGene to attache to this hit
+                         The ModeleGene have the same name than the CoreGene
+                         But one hit can be link to several ModelGene (several Model)
+                         To know for what gene this hit play role use the
+                         :meth:`macsypy.gene.ModelGene.alternate_of` ::
+
+                            hit.gene_ref.alternate_of()
+
         :type gene_ref: :class:`macsypy.gene.ModelGene` object
         :param gene_status:
         :type gene_status: :class:`macsypy.gene.GeneStatus` object
