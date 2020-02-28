@@ -342,15 +342,19 @@ class SystemTest(MacsyTest):
 
         # system with 1 cluster
         # 2 mandatory
-        # 1 accessory + 1 accessory analog
+        # 1 accessory + 1 accessory exchangeable
         s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj_an, v_h_sctn], model)])
         self.assertEqual(s.score, 2.875)
 
-        # system with 1 cluster
-        # 2 mandatory
-        # 1 accessory + 1 accessory homolog
-        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model)])
-        self.assertEqual(s.score, 2.875)
+        # system with 2 cluster
+        # 1 mandatory + 1 accessory
+        #    1        +      0.5
+        # 1 mandatory + 1 accessory exchangeable same role as cluster_1 accessory
+        #    1        +      0.375
+        # system penalty due to 2 genes with same role in 2 clusters: -1.5
+        #    2.875 - 1.5 = 1.375
+        s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj_an], model)])
+        self.assertEqual(s.score, 1.375)
 
 
     def test_SystemSerializer_to_json(self):
