@@ -1,0 +1,5 @@
+# gene: Archaeal-T4P_arCOG05166 extract from results/hmmer_results/Archaeal-T4P_arCOG05166.search_hmm.out hmm output
+# profile length= 131
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end

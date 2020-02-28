@@ -23,12 +23,11 @@
 #########################################################################
 
 
-import os
 import logging
 _log = logging.getLogger(__name__)
 from enum import Enum
 
-from . import registries
+from .error import MacsypyError
 
 
 class GeneBank:
@@ -47,13 +46,17 @@ class GeneBank:
                     TXSS/T6SS_tssH ('TXSS', 'T6SS_tssH')
         :type key: tuple (string, string)
         :return: return the Gene corresponding to the key.
-        :rtype: :class:`macsypy.gene.Gene` object
+        :rtype: :class:`macsypy.gene.CoreGene` object
         :raise KeyError: if the key does not exist in GeneBank.
         """
         try:
             return self._genes_bank[key]
         except KeyError:
-            raise KeyError(f"No such gene {key} in this bank")
+            raise KeyError(f"No such gene '{key}' in this bank")
+
+
+    def __len__(self):
+        return len(self._genes_bank)
 
 
     def __contains__(self, gene):
@@ -61,11 +64,11 @@ class GeneBank:
         Implement the membership test operator
 
         :param gene: the gene to test
-        :type gene: :class:`macsypy.gene.Gene` object
+        :type gene: :class:`macsypy.gene.CoreGene` object
         :return: True if the gene is in, False otherwise
         :rtype: boolean
         """
-        return gene in list(self._genes_bank.values())
+        return gene in set(self._genes_bank.values())
 
 
     def __iter__(self):
@@ -75,65 +78,99 @@ class GeneBank:
         return iter(self._genes_bank.values())
 
 
-    def add_gene(self, gene):
+    def add_new_gene(self, model_location, name, profile_factory):
         """
-        Add a gene in the bank
+        Create a gene and store it in the bank. If the same gene (same name) is add twice,
+        it is created only the first time.
 
-        :param gene: the gene to add
-        :type gene: :class:`macsypy.gene.Gene` object
-        :raise: KeyError if a gene with the same name is already registered
+        :param model_location: the location where the model family can be found.
+        :type model_location: :class:`macsypy.registry.ModelLocation` object
+        :param name: the name of the gene to add
+        :type name: str
+        :param profile_factory: The Profile factory
+        :type profile_factory: :class:`profile.ProfileFactory` object.
         """
-        model_name = registries.split_def_name(gene.model.fqn)[0]
-        key = (model_name, gene.name)
-        if key in self._genes_bank:
-            raise KeyError(f"a gene named '{model_name}/{gene.name}' is already registered")
-        else:
+        key = (model_location.name, name)
+        if key not in self._genes_bank:
+            gene = CoreGene(model_location, name, profile_factory)
             self._genes_bank[key] = gene
 
 
-class Gene:
+class CoreGene:
     """
-    Handle Gene of a (secretion) System
-
+    Modelize gene attach to a profile.
+    It can be only one instance with the the same name (familly name, gene name)
     """
+    def __init__(self, model_location, name, profile_factory):
+        self._name = name
+        self._model_family_name = model_location.name
+        self._profile = profile_factory.get_profile(self, model_location)
 
-    def __init__(self, profile_factory, name, model, model_location, loner=False, exchangeable=False,
-                 multi_system=False, inter_gene_max_space=None):
+    def __hash__(self):
+        return hash((self._name, self._model_family_name))
+
+    @property
+    def name(self):
         """
-        handle gene
+        The name of the gene a hmm profile with the same name must exists.
+        """
+        return self._name
 
-        :param name: the name of the Gene.
-        :type name: string.
+    @property
+    def model_family_name(self):
+        """
+        The name of the model family for instance 'CRISPRCas' or 'TXSS'
+        """
+        return self._model_family_name
+
+    @property
+    def profile(self):
+        """
+        The HMM protein Profile corresponding to this gene :class:`macsypy.profile.Profile` object
+        """
+
+        return self._profile
+
+
+class ModelGene:
+    """
+    Handle Gene describe in a Model
+    """
+
+    def __init__(self, gene, model, loner=False, multi_system=False, inter_gene_max_space=None):
+        """
+        Handle gene described in a Model
+
+        :param gene: a gene link to a profile
+        :type gene: a :class:`macsypy.gene.CoreGene` object.
         :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
-        :param model_location: where all the paths profiles and definitions are register for a kind of model.
-        :type model_location: :class:`macsypy.registries.ModelLocation` object.
         :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
         :type loner: boolean.
-        :param exchangeable: True if this Gene can be replaced with one of its homologs or analogs
-          without any effects on the model assessment, False otherwise.
-        :type exchangeable: boolean.
-        :param multi_system: True if this Gene can belong to different occurrences of this System. 
+        :param multi_system: True if this Gene can belong to different occurrences of this System.
         :type multi_system: boolean.
         :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
         :type inter_gene_max_space: integer
         """
-        self.name = name 
-        self.profile = profile_factory.get_profile(self, model_location)
-        """:ivar profile: The HMM protein Profile corresponding to this gene :class:`macsypy.profile.Profile` object"""
-
-        self.homologs = []
-        self.analogs = []
+        if not isinstance(gene, CoreGene):
+            raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not {type(gene)}.")
+        self._gene = gene
+        self._exchangeables = []
         self._model = model
         self._loner = loner
-        self._exchangeable = exchangeable
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
 
 
+    def __getattr__(self, item):
+        try:
+            return getattr(self._gene, item)
+        except AttributeError:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+
     def __str__(self):
         """
-        Print the name of the gene and of its homologs/analogs.
+        Print the name of the gene and of its exchangeable genes.
         """
         s = f"name : {self.name}"
         s += f"\ninter_gene_max_space: {self.inter_gene_max_space:d}"
@@ -141,17 +178,10 @@ class Gene:
             s += "\nloner"
         if self.multi_system:
             s += "\nmulti_system"
-        if self.exchangeable:
-            s += "\nexchangeable"
-        if self.homologs:
-            s += "\n    homologs: "
-            for h in self.homologs:
+        if self._exchangeables:
+            s += "\n    exchangeables: "
+            for h in self.exchangeables:
                 s += h.name + ", "
-            s = s[:-2]
-        if self.analogs:
-            s += "\n    analogs: "
-            for a in self.analogs:
-                s += a.name + ", "
             s = s[:-2]
         return s
 
@@ -175,13 +205,40 @@ class Gene:
 
 
     @property
-    def exchangeable(self):
+    def exchangeables(self):
         """
-        :return: True if this gene can be replaced with one of its homologs or analogs without any effects on the model,
-                 False otherwise.
-        :rtype: boolean.
+        :return: the list of genes which can replace this one without any effect on the model
+        :rtype: list of :class:`macsypy.gene.ModelGene` objects
         """
-        return self._exchangeable
+        return self._exchangeables[:]
+
+
+    @property
+    def is_exchangeable(self):
+        """
+        :return: True if this gene is describe in the model as an exchangeable.
+                 False if ot is describe as first level gene.
+        """
+        return False
+
+
+    def alternate_of(self):
+        """
+        :return: the gene to which this one is an exchangeable to (reference gene),
+                 or itself if it is a first level gene.
+        :rtype: :class:`macsypy.gene.ModelGene` object
+        """
+        return self
+
+
+    def add_exchangeable(self, exchangeable):
+        """
+        Add a exchangeable gene to this Gene
+
+        :param exchangeable: the exchangeable to add
+        :type exchangeable:  :class:`macsypy.gene.Exchangeable` object
+        """
+        self._exchangeables.append(exchangeable)
 
 
     @property
@@ -207,91 +264,10 @@ class Gene:
             return self._model.inter_gene_max_space
 
 
-    def add_homolog(self, homolog):
-        """
-        Add a homolog gene to the Gene
-
-        :param homolog: homolog to add
-        :type homolog:  :class:`macsypy.gene.Homolog` object 
-        """
-        self.homologs.append(homolog)
-
-
-    def get_homologs(self):
-        """
-        :return: the Gene homologs
-        :type: list of :class:`macsypy.gene.Homolog` object
-        """
-        return self.homologs
-
-
-    def add_analog(self, analog):
-        """
-        Add an analogous gene to the Gene
-
-        :param analog: analog to add
-        :type analog:  :class:`macsypy.gene.Analog` object 
-        """
-        self.analogs.append(analog)
-
-
-    def get_analogs(self):
-        """
-        :return: the Gene analogs
-        :type: list of :class:`macsypy.gene.Analog` object
-        """
-        return self.analogs
-
-
-    def __eq__(self, gene):
-        """
-        :return: True if the gene names (gene.name) are the same, False otherwise.
-        :param gene: the query of the test
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :rtype: boolean.
-        """
-        return self.name == gene.name
-
-
     def __hash__(self):
         # needed to be hashable in Py3 when __eq__ is defined
-        # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable  
-        
+        # see https://stackoverflow.com/questions/1608842/types-that-define-eq-are-unhashable
         return id(self)
-
-
-    def is_homolog(self, gene):
-        """
-        :return: True if the two genes are homologs, False otherwise.
-        :param gene: the query of the test
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :rtype: boolean.
-        """
-
-        if self == gene:
-            return True
-        else:
-            for h in self.homologs:
-                if gene == h.gene:
-                    return True
-        return False
-
-
-    def is_analog(self, gene):
-        """
-        :return: True if the two genes are analogs, False otherwise.
-        :param gene: the query of the test
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :rtype: boolean.
-        """
-
-        if self == gene:
-            return True
-        else:
-            for h in self.analogs:
-                if gene == h.gene:
-                    return True
-        return False
 
 
     def is_mandatory(self, model):
@@ -333,130 +309,69 @@ class Gene:
             return False
 
 
-    def is_authorized(self, model, include_forbidden=True):
-        """
-        :return: True if this gene is found in the Model, False otherwise.
-        :param model: the query of the test
-        :type model: :class:`macsypy.model.Model` object.
-        :param include_forbidden: tells if forbidden genes should be considered as "authorized" or not
-        :type include_forbidden: boolean
-        :rtype: boolean.
-        """
-        genes = model.mandatory_genes + model.accessory_genes
-        if include_forbidden:
-            genes = genes + model.forbidden_genes
-        for g in genes:
-            if self == g:
-                return True
-            if g.exchangeable and (g.is_homolog(self) or g.is_analog(self)):
-                return True
-        return False
-
-
-    def get_compatible_models(self, model_list, include_forbidden=True):
-        """
-        Test every model in model_list for compatibility with the gene using the is_authorized function.
-
-        :param model_list: a list of model names to test
-        :type model_list: list of strings
-        :param include_forbidden: tells if forbidden genes should be considered as defining a compatible models or not
-        :type include_forbidden: boolean
-        :return: the list of compatible models
-        :rtype: list of :class:`macsypy.model.Model` objects, or void list if none compatible
-        """
-        compatibles = [model for model in model_list if self.is_authorized(model, include_forbidden=include_forbidden)]
-        return compatibles
-
-
-class Homolog:
+class Exchangeable(ModelGene):
     """
-    Handle homologs, encapsulate a Gene
+    Handle Exchangeables. Exchangeable are ModelGene which can replaced functionally an other ModelGene.
+    Biologically it can be Homolog or Analog
     """
 
-    def __init__(self, gene, gene_ref, aligned=False):
+    def __init__(self, c_gene, gene_ref):
         """
-        :param gene: the gene
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :param gene_ref: the gene to which the current is homolog.
-        :type gene_ref: :class:`macsypy.gene.Gene` object.
-        :param aligned: if True, the profile of this gene overlaps totally the sequence of the reference gene profile.
-                        Otherwise, only partial overlapping between the profiles.
-        :type aligned: boolean
+        :param c_gene: the gene
+        :type c_gene: :class:`macsypy.gene.CoreGene` object.
+        :param gene_ref: the gene to which the current can replace it.
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object.
         """
-        self._gene = gene
+        super().__init__(c_gene, gene_ref.model,
+                         loner=gene_ref.loner,
+                         multi_system=gene_ref.multi_system,
+                         inter_gene_max_space=gene_ref.inter_gene_max_space)
         self._ref = gene_ref
-        self.aligned = aligned
 
-    def __getattr__(self, name):
-        return getattr(self._gene, name)
-
-
-    def is_aligned(self):
-        """
-        :return: True if this gene homolog is aligned to its homolog, False otherwise.
-        :rtype: boolean
-        """
-        return self.aligned
 
     @property
-    def gene(self):
+    def is_exchangeable(self):
         """
+        :return: True
+        """
+        return True
 
-        :return: the gene which encapsulated in this homolog
-        """
-        return self._gene
 
-    @property
-    def gene_ref(self):
+    def alternate_of(self):
         """
-        :return: the gene to which this one is homolog to (reference gene)
-        :rtype: :class:`macsypy.gene.Gene` object
+        :return: the gene to which this one is an exchangeable to (reference gene)
+        :rtype: :class:`macsypy.gene.ModelGene` object
         """
         return self._ref
 
 
-class Analog:
-    """
-    Handle analogs, encapsulate a Gene
-    """
-
-    def __init__(self, gene, gene_ref):
+    def add_exchangeable(self, exchangeable):
         """
-        :param gene: the gene
-        :type gene: :class:`macsypy.gene.Gene` object.
-        :param gene_ref: the gene to which the current is analog.
-        :type gene_ref: :class:`macsypy.gene.Gene` object.
+        This method should never be called, it's a security to avoid to add exchangeable to an exchangeable.
+
+        :param exchangeable:
+        :type exchangeable: :class:`macsypy.gene.Exchangeable`
+        :raise MacsypyError:
         """
-        self._gene = gene
-        self._ref = gene_ref
-
-
-    def __getattr__(self, name):
-        return getattr(self.gene, name)
-
-
-    @property
-    def gene(self):
-        """
-
-        :return: the gene which encapsulated in this Analog
-        """
-        return self._gene
-
-    @property
-    def gene_ref(self):
-        """
-        :return: the gene to which this one is analog to (reference gene)
-        :rtype: :class:`macsypy.gene.Gene` object
-        """
-        return self._ref
+        raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
 
 
 class GeneStatus(Enum):
+    """
+    Handle status of Gene
+    GeneStatus can take 4 value:
+
+    * MANDATORY
+    * ACCESSORY
+    * FORBIDDEN
+    * NEUTRAL
+
+    """
 
     MANDATORY = 1
     ACCESSORY = 2
     FORBIDDEN = 3
+    NEUTRAL = 4
 
     def __str__(self):
         return self.name.lower()

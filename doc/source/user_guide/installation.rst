@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
+    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -26,7 +26,7 @@ MacSyFinder has two dependencies:
 Otherwise, the paths to these executables must be specified in the command-line:
 see the :ref:`command-line options <hmmer-options>`.
  
-**Python version 3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
+**Python version >=3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
 
 ==================================
 MacSyFinder Installation procedure
@@ -37,17 +37,17 @@ It is recommended to use pip to install MacSyFinder package.
 Archive overview
 ================
 
-* doc => the documentation in html and pdf
-* etc => a template of macsyfinder configuration file
-* test => all needed for unit tests
-* macsypy => the macsyfinder python library
-* setup.py => the installation script
-* requirements.txt => the python dependencies
-* requirements_dev.txt => the python dependencies for developers
-* COPYING => the licensing
-* COPYRIGHT => the copyright
-* README.md => very brief macsyfinder overview
-* CONTRIBUTORS => list of people who contribute to the code
+* **doc** => the documentation in html and pdf
+* **etc** => a template of macsyfinder configuration file
+* **test** => all needed for unit tests
+* **macsypy** => the macsyfinder python library
+* **setup.py** => the installation script
+* **requirements.txt** => the python dependencies
+* **requirements_dev.txt** => the python dependencies for developers
+* **COPYING** => the licensing
+* **COPYRIGHT** => the copyright
+* **README.md** => very brief macsyfinder overview
+* **CONTRIBUTORS** => list of people who contribute to the code
 
 
 Installation steps:
@@ -70,7 +70,8 @@ Perform the installation.
 
 
 If you have not the privileges to perform a system wide installation,
-you can use either install it in your home or use a [virtual environment](https://virtualenv.pypa.io/en/stable/).
+you can use either install it in your home or
+use a [virtual environment](https://virtualenv.pypa.io/en/stable/).
 
 installation in your home
 """""""""""""""""""""""""
@@ -85,8 +86,9 @@ installation in a virtualenv
 
 ::
 
-    vitualenv macsyfinder
-    source macsyfinder/bin/activate
+    python3.7 -m venv macsyfinder
+    cd macsyfinder
+    source bin/activate
     pip install --no-binary macsyfinder macsyfinder
 
 To exit the virtualenv just execute the `deactivate` command.

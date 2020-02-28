@@ -259,7 +259,7 @@ setup(name='macsyfinder',
       description="MacSyFinder: Detection of macromolecular systems in protein datasets using systems modelling and similarity search",
       long_description=read_md('README.md'),
       author="Sophie Abby, Bertrand Néron",
-      author_email="sabby@pasteur.fr, bneron@pasteur.fr",
+      author_email="sophie.abby@univ-grenoble-alpes.fr, bneron@pasteur.fr",
       url="https://github.com/gem-pasteur/macsyfinder/",
       download_url='https://github.com/gem-pasteur/macsyfinder/',
       license="GPLv3",
@@ -287,7 +287,6 @@ setup(name='macsyfinder',
           'console_scripts': [
               'macsyfinder=macsypy.scripts.macsyfinder:main',
               'macsydata=macsypy.scripts.macsydata:main',
-              'macsydef_1to2=macsypy.scripts.macsydef_1to2:main'
           ]
       },
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]

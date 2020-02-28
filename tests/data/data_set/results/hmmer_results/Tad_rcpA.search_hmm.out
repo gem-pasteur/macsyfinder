@@ -1,0 +1,87 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Tad_rcpA.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/Tad_rcpA.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       Tad_rcpA  [M=225]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    7.8e-36  120.7   2.4    1.4e-35  119.9   2.4    1.3  1  VICH001.B.00001.C001_02505  C TTG TAA 2801169 2802905 Valid V
+    7.4e-31  104.4   2.0    1.2e-30  103.7   2.0    1.3  1  VICH001.B.00001.C001_00409  D ATG TAA 427707 429386 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02505  C TTG TAA 2801169 2802905 Valid VC2630 1737 @NP_232258.1@ VC2630 1 2801169 2802905 | fimb
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  119.9   2.4   1.1e-38   1.4e-35       1     223 [.     333     576 ..     333     577 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 119.9 bits;  conditional E-value: 1.1e-38
+                    Tad_rcpA   1 rvvevsrkvlkqlGvslsaviggvngslansatgsgF........................gtaekiesgaleigakk.lkal 58 
+                                 r+v v++  l++lGv++  ++++   s+++s  ++ +                         +a+ i+  + ++g+   l   
+  VICH001.B.00001.C001_02505 333 RIVTVKEGNLEELGVRWGVMSTNGSHSVGGSIESNLWqkglladdefpvdeflnvnlastsANASSIAFQVAKLGSGTlLDLE 415
+                                 6999****************886666666666665557777888888999999988886555567777777888666658889 PP
+
+                    Tad_rcpA  59 lnaleekglvkvLaepnLvalsgesAkflvGGelpiptgnetngsvtieykeyGvkLnltptvlsngrisLkvstevSeldse 141
+                                 l al++++ +++++ p L++++ + A +  G e+p  + ++  g  t+ +k+  ++L++tp++   +r+ L +s +  +  + 
+  VICH001.B.00001.C001_02505 416 LSALQNESKAEIISSPRLITTNKQPAYIEQGTEIPYLESSSS-GASTVAFKKAVLSLKVTPQITPDNRLVLDLSVT--QDRRG 495
+                                 *************************************99777.9************************99888755..45556 PP
+
+                    Tad_rcpA 142 gsvslgggstvpslrtrrvettvelasgeslvlaGllsseekesidklPllgdiPilGalfrsketlknqteLviivtpelv 223
+                                 ++v++g+g    s+ t+r+ t+v +++ge++vl+G+++++ ++s+dk+Pllgd+P+lGalfr + ++ +++eL+i+vtp++v
+  VICH001.B.00001.C001_02505 496 ETVKTGTGE-AVSIDTQRIGTQVLVNNGETVVLGGIFQHSINNSVDKVPLLGDLPVLGALFRRTYEQMGKSELLIFVTPKVV 576
+                                 999999965.569*******************************************************************98 PP
+
+>> VICH001.B.00001.C001_00409  D ATG TAA 427707 429386 Valid VC0402 1680 @NP_230056.1@ VC0402 1 427707 429386 | MSHA bio
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  103.7   2.0   9.9e-34   1.2e-30       2     223 ..     284     535 ..     283     537 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 103.7 bits;  conditional E-value: 9.9e-34
+                    Tad_rcpA   2 vvevsrkvlkqlGvslsavig..gvngslansatgsgF...................gtaekiesgaleigakklkallnale 63 
+                                 + ev  +   q G+++s+ ++  g+n +++++++ ++                    g      +    i++ ++ a++ ++ 
+  VICH001.B.00001.C001_00409 284 ILEVTLSDGYQQGINWSKAFSsnGANYKIGSGSITQDSngnpitsvlpgldaignllG-----GQSNVVISSGSFDAVISFMA 361
+                                 5666666777889999999876645555555444434345555555555444422211.....12223446777********* PP
+
+                    Tad_rcpA  64 ekglvkvLaepnLvalsgesAkflvGGelpiptgnetn........gsvtieykey..GvkLnltptvlsngrisLkvstevS 136
+                                 ++g  +vL+ p ++a + ++A + vG + + +t  +           s+ i+  ++  G++L +tp++ ++g + L+v + v 
+  VICH001.B.00001.C001_00409 362 TQGDLNVLSSPRVTASNNQKAVIKVGTDEYYVTDLSSVvgtgdnaqASPDITLTPFfsGISLDVTPQIDDQGNVLLHVHPAVI 444
+                                 **************************97665554332234444477899999999999************************* PP
+
+                    Tad_rcpA 137 elds.egsvsl.gggstvpslrt..rrvettvelasgeslvlaGllsseekesidklPllgdiPilGalfrsketlknqteLv 215
+                                 e+++ ++++   ++ + +p  r+  r+ ++ +  ++g+++v++Gl++s++   ++k+P+lgd+P lG+lfr+++ l ++teLv
+  VICH001.B.00001.C001_00409 445 EVEQqTKKILYrSEEIELPLARSsiRESDSVIRAKDGDVVVIGGLMKSNTVDQVSKVPFLGDVPALGHLFRNTTKLTQKTELV 527
+                                 **98433333313447888765333********************************************************** PP
+
+                    Tad_rcpA 216 iivtpelv 223
+                                 i++ p +v
+  VICH001.B.00001.C001_00409 528 ILLKPTVV 535
+                                 *****998 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (225 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                        75  (0.0296677); expected 50.6 (0.02)
+Passed bias filter:                       58  (0.022943); expected 50.6 (0.02)
+Passed Vit filter:                         5  (0.00197785); expected 2.5 (0.001)
+Passed Fwd filter:                         2  (0.000791139); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 9489.48
+//
+[ok]

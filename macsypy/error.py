@@ -53,7 +53,7 @@ class OptionError(MacsypyError):
 
 class ModelInconsistencyError(MacsypyError):
     """
-    Raised when a secretion model is not consistent.
+    Raised when a definition model is not consistent.
     """
     pass
 

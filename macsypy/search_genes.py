@@ -22,7 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-import threading
+import concurrent.futures
 import logging
 _log = logging.getLogger(__name__)
 import signal
@@ -31,16 +31,17 @@ import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 
-import time
 
 def search_genes(genes, cfg):
     """
     For each gene of the list, use the corresponding profile to perform an Hmmer search, and parse the output
-    to generate a HMMReport that is saved in a file after Hit filtering. These tasks are performed in parallel using threads.
-    The number of workers can be limited by worker_nb directive in the config object or in the command-line with the \"-w\" option.
+    to generate a HMMReport that is saved in a file after Hit filtering.
+    These tasks are performed in parallel using threads.
+    The number of workers can be limited by worker_nb directive in the config object or
+    in the command-line with the "-w" option.
 
     :param genes: the genes to search in the input sequence dataset
-    :type genes: list of :class:`macsypy.gene.Gene` objects
+    :type genes: list of :class:`macsypy.gene.CoreGene` objects
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
@@ -64,11 +65,7 @@ def search_genes(genes, cfg):
         Search gene in the database built from the input sequence file (execute \"hmmsearch\"), and produce a HMMReport
 
         :param gene: the gene to search
-        :type gene: a :class:`macsypy.gene.Gene` object
-        :param all_reports: a container to append the generated HMMReport objects
-        :type all_reports: list of `macsypy.report.HMMReport` object (derived class depending on the input dataset type)
-        :param sema: semaphore to limit the number of parallel workers
-        :type sema: a threading.BoundedSemaphore
+        :type gene: a :class:`macsypy.gene.CoreGene` object
         """
         _log.info(f"search gene {gene.name}")
         profile = gene.profile
@@ -89,13 +86,9 @@ def search_genes(genes, cfg):
         Recover Hmmer output from a previous run, and produce a report
 
         :param gene: the gene to search
-        :type gene: a :class:`macsypy.gene.Gene` object
-        :param all_reports: a container to append the generated HMMReport object
-        :type all_reports: list
-        :param cfg: the configuration 
+        :type gene: a :class:`macsypy.gene.CoreGene` object
+        :param cfg: the configuration
         :type cfg: :class:`macsypy.config.Config` object
-        :param sema: semaphore to limit the number of parallel workers
-        :type sema: a threading.BoundedSemaphore.
         :return: the list of all HMMReports (derived class depending on the input dataset type)
         :rtype: list of `macsypy.report.HMMReport` object
         """
@@ -129,8 +122,6 @@ def search_genes(genes, cfg):
         # it works because mkdir is an atomic operation
         os.mkdir(hmmer_dir)
 
-    #########################################################################
-    import concurrent.futures
     previous_run = cfg.previous_run()
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_nb) as executor:
         future_search = []

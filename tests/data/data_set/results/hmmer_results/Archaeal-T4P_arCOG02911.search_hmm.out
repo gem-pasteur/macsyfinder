@@ -1,0 +1,91 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG02911.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG02911.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02911  [M=145]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+     0.0023   15.4   0.4     0.0035   14.8   0.4    1.3  1  VICH001.B.00001.C001_00851  D TTG TAA 924224 924778 Valid VC0
+     0.0053   14.2   1.1     0.0092   13.5   1.1    1.5  1  VICH001.B.00001.C001_00822  D ATG TAA 890449 891123 Valid VC0
+  ------ inclusion threshold ------
+       0.15    9.5   4.8       0.24    8.8   3.0    2.0  1  VICH001.B.00001.C001_01277  C ATG TAA 1395061 1396692 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_00851  D TTG TAA 924224 924778 Valid VC0858 555 @NP_230505.1@ VC0858 1 924224 924778 | type IV p
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.8   0.4   4.2e-06    0.0035      13     108 ..      24     144 ..      17     182 .. 0.66
+
+  Alignments for each domain:
+  == domain 1  score: 14.8 bits;  conditional E-value: 4.2e-06
+                  arCOG02911  13 lgiiviavslvlvygvpslgktaeishmteveqeftelksdidslivnvsr..........gltvsveislgtipflspirss 85 
+                                 l i+v++++ +l++  p  +k +++ +mt+  +e++++  + +s +v+ ++          ++t + ++ l+++  ++ i +s
+  VICH001.B.00001.C001_00851  24 LLITVAVLTTMLLFAAPNFSKVSQQTKMTNLANELQGFLIQAKSEAVFRNQdlwvhiqglpSITGQWQLVLSSVSDVAAIDAS 106
+                                 6799*********************************9999988888864455666666665555555555554445667888 PP
+
+                  arCOG02911  86 gtlsveesdsgtinvtvngyng................s 108
+                                  t+++ +  ++  nv v+++n+                 
+  VICH001.B.00001.C001_00851 107 NTVALLQ-GQRYQNVFVSKTNTltevkfdhvmgnpqeaG 144
+                                 8888887.6666677776666654444444444444330 PP
+
+>> VICH001.B.00001.C001_00822  D ATG TAA 890449 891123 Valid VC0828 675 @NP_230476.1@ VC0828 1 890449 891123 | toxin co-
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   13.5   1.1   1.1e-05    0.0092       9      93 ..      26     109 ..      24     210 .. 0.60
+
+  Alignments for each domain:
+  == domain 1  score: 13.5 bits;  conditional E-value: 1.1e-05
+                  arCOG02911   9 fvlilgiiviavs.lvlvygvpslgktaeishmteveqeftelksdidslivnvsrgltvsveislgtipflspirssgtlsv 90 
+                                 + l+  iiv+++  +v + +v+  ++  ++++mt++ q++++++  +++   +   + + + + +  t  + ++  s g++s 
+  VICH001.B.00001.C001_00822  26 MTLLEVIIVLGIMgVVSAGVVTLAQRAIDSQNMTKAAQNLNSVQIAMTQTYRSLG-NYPATANANAAT-QLANGLVSLGKVSA 106
+                                 5555566666554044555566667777999999999999999999999876655.555555555555.44445555666665 PP
+
+                  arCOG02911  91 ees 93 
+                                 +e 
+  VICH001.B.00001.C001_00822 107 DEA 109
+                                 554 PP
+
+>> VICH001.B.00001.C001_01277  C ATG TAA 1395061 1396692 Valid VC1313 1632 @NP_230957.1@ VC1313 1 1395061 1396692 | meth
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    8.8   3.0   0.00029      0.24      35     103 ..     288     377 ..     190     430 .. 0.60
+
+  Alignments for each domain:
+  == domain 1  score: 8.8 bits;  conditional E-value: 0.00029
+                  arCOG02911  35 a......eishmteveqeftelksdidslivnvsrgltvsveislgt.............ipflspirssgtlsvees..... 93 
+                                 +      ++++ t+v ++++++k+ + +++ n   +++ s+ +  +                               s     
+  VICH001.B.00001.C001_01277 288 SadgmkeQQYQITQVATAMAQMKAAVADVARNT--EDSASQAMAANHksqegarenasmvR----------------Siqqva 352
+                                 1444445899*********************94..66666666666522333333333330................233333 PP
+
+                  arCOG02911  94 ...............dsgtinvtvn 103
+                                                +s++inv+v+
+  VICH001.B.00001.C001_01277 353 diigeagqtvseleqQSSQINVVVD 377
+                                 3333333333333448888888875 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (145 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       139  (0.0549842); expected 50.6 (0.02)
+Passed bias filter:                      127  (0.0502373); expected 50.6 (0.02)
+Passed Vit filter:                        14  (0.00553797); expected 2.5 (0.001)
+Passed Fwd filter:                         4  (0.00158228); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.03
+# Mc/sec: 4076.96
+//
+[ok]

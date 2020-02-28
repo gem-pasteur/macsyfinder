@@ -332,6 +332,34 @@ class ModelLocationTest(MacsyTest):
 
 class DefinitionLocationTest(MacsyTest):
 
+    def test_separator(self):
+        self.assertEqual(DefinitionLocation.separator, DefinitionLocation._separator)
+
+    def test_split_fqn(self):
+        self.assertListEqual(DefinitionLocation.split_fqn('/foo/bar'), ['foo', 'bar'])
+
+    def test_root_name(self):
+        self.assertEqual(DefinitionLocation.root_name('/foo/bar'), 'foo')
+
+    def test_family_name(self):
+        model_name = 'foo'
+        model_path = '/path/to/model.xml'
+        mdfl = DefinitionLocation(name=model_name,
+                                  path=model_path)
+        self.assertEqual(mdfl.family_name, model_name)
+
+    def test_hash(self):
+        mdfl_1 = DefinitionLocation(name='/foo/model_1',
+                                    path='/path/to/model_1.xml')
+        mdfl_2 = DefinitionLocation(name='/foo/model_1',
+                                    path='/path/to/model_1.xml')
+        mdfl_3 = DefinitionLocation(name='/foo/model_3',
+                                    path='/path/to/model_3.xml')
+        self.assertTrue(isinstance(hash(mdfl_1), int))
+        self.assertEqual(hash(mdfl_1), hash(mdfl_2))
+        self.assertNotEqual(hash(mdfl_1), hash(mdfl_3))
+
+
     def test_DefinitionLocationn(self):
         model_name = 'foo'
         model_path = '/path/to/model.xml'

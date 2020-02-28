@@ -1,0 +1,54 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T2SS_gspC.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/T2SS_gspC.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspC  [M=97]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    2.8e-21   73.2   0.2    5.4e-21   72.2   0.2    1.5  1  VICH001.B.00001.C001_02601  C ATG TAA 2907245 2908162 Valid V
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02601  C ATG TAA 2907245 2908162 Valid VC2734 918 @NP_232360.1@ VC2734 1 2907245 2908162 | gener
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   72.2   0.2   2.1e-24   5.4e-21       6      96 ..      67     163 ..      49     164 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 72.2 bits;  conditional E-value: 2.1e-24
+                   T2SS_gspC   6 tkaeknPvaakkeed.....ertlFGkaaakk......apvapnappsdlklrLtGilassnaekslAiIenggkqqtysvGe 77 
+                                  kae++P+      d     + +lFG+ ++ k      +pv+++ap+++l+l+L G++as++a+kslA+I+n g q ty+++e
+  VICH001.B.00001.C001_02601  67 LKAERQPL------DisvlqKGELFGVFTEPKeapvveQPVVVDAPKTRLSLVLSGVVASNDAQKSLAVIANRGVQATYGINE 143
+                                 44455444......133444456777777777766999999****************************************** PP
+
+                   T2SS_gspC  78 ev.spgakivaInkdrVile 96 
+                                  + +++ak++a+ +drVi++
+  VICH001.B.00001.C001_02601 144 VIeGTQAKLKAVMPDRVIIS 163
+                                 **99**************97 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (97 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                        55  (0.0217563); expected 50.6 (0.02)
+Passed bias filter:                       50  (0.0197785); expected 50.6 (0.02)
+Passed Vit filter:                        10  (0.0039557); expected 2.5 (0.001)
+Passed Fwd filter:                         1  (0.00039557); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

@@ -41,11 +41,11 @@ from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import OptionError
+from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
-from macsypy.system import match, System, HitSystemTracker, SystemSerializer
-from macsypy.utils import get_models_name_to_detect
+from macsypy.system import match, System, HitSystemTracker, TxtSystemSerializer, TsvSystemSerializer
+from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
@@ -94,11 +94,12 @@ def parse_args(args):
     :param args: The arguments provided on the command line
     :type args: List of strings [without the program name]
     :return: The arguments parsed
-    :rtype: :class:`aprgparse.Nampsace` object.
+    :rtype: :class:`aprgparse.Namespace` object.
     """
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
+        # formatter_class=ArgumentDefaultsHelpRawTextFormatter,
+        formatter_class=argparse.RawTextHelpFormatter,
         description=dedent('''
 
 
@@ -121,51 +122,69 @@ def parse_args(args):
     using systems modelling and similarity search.  
     '''))
 
+    msf_def = MacsyDefaults()
     # , formatter_class=argparse.RawDescriptionHelpFormatter)
     # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--models",
                         action='append',
                         nargs='*',
                         default=None,
-                        help='TODO bla-bla')
+                        help="""The models to search. The --models option can be set several times.'
+For each --models options the first element must be the name of family models, 
+followed by the name of the models.
+If the name 'all' is in the list all models from the family will be searched.'
+'--models TXSS Flagellum T2SS' 
+          means MSF will search for models TXSS/Flagellum and TXSS/T2SS
+'--models TXSS all' 
+          means for all models found in model package TXSS
+'--models CRIPRcas/subtyping all' 
+         means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
+(required unless --previous-run is set)
+""")
 
     genome_options = parser.add_argument_group(title="Input dataset options")
     genome_options.add_argument("--sequence-db",
                                 action='store',
                                 default=None,
-                                help="Path to the sequence dataset in fasta format.")
+                                help="""Path to the sequence dataset in fasta format.
+(required unless --previous-run is set)
+""")
 
     genome_options.add_argument("--db-type",
                                 choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
                                 default=None,
-                                help='The type of dataset to deal with. "unordered_replicon" corresponds '
-                                     'to a non-assembled genome,"unordered" to a metagenomic dataset, '
-                                     '"ordered_replicon" to an assembled genome, '
-                                     'and "gembase" to a set of replicons where sequence identifiers '
-                                     'follow this convention: ">RepliconName SequenceID".')
+                                help='''The type of dataset to deal with. "unordered_replicon" corresponds
+to a non-assembled genome,"unordered" to a metagenomic dataset,
+"ordered_replicon" to an assembled genome,
+and "gembase" to a set of replicons where sequence identifiers
+follow this convention: ">RepliconName SequenceID".
+(required unless --previous-run is set)
+''')
 
     genome_options.add_argument("--replicon-topology",
                                 choices=['linear', 'circular'],
                                 default=None,
-                                help="The topology of the replicons "
-                                     "(this option is meaningful only if the db_type is "
-                                     "'ordered_replicon' or 'gembase'. ")
+                                help="""The topology of the replicons
+(this option is meaningful only if the db_type is
+'ordered_replicon' or 'gembase'.
+""")
 
     genome_options.add_argument("--topology-file",
                                 default=None,
-                                help="Topology file path. The topology file allows to specify a topology "
-                                     "(linear or circular) for each replicon (this option is meaningful only if "
-                                     "the db_type is 'ordered_replicon' or 'gembase'. "
-                                     "A topology file is a tabular file with two columns: "
-                                     "the 1st is the replicon name, and the 2nd the corresponding topology:\n"
-                                     "\"RepliconA\tlinear\"")
+                                help="""Topology file path. The topology file allows to specify a topology
+(linear or circular) for each replicon (this option is meaningful only if
+the db_type is 'ordered_replicon' or 'gembase'.
+A topology file is a tabular file with two columns:
+the 1st is the replicon name, and the 2nd the corresponding topology:
+\"RepliconA\tlinear\"
+""")
 
     genome_options.add_argument("--idx",
                                 action='store_true',
                                 default=False,
-                                help="Forces to build the indexes for the sequence dataset even "
-                                     "if they were previously computed and present at the dataset location "
-                                     "(default = False)"
+                                help=f"""Forces to build the indexes for the sequence dataset even
+if they were previously computed and present at the dataset location.
+(default: {msf_def['idx']})"""
                                 )
 
     system_options = parser.add_argument_group(title="Systems detection options")
@@ -173,105 +192,123 @@ def parse_args(args):
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="Co-localization criterion: maximum number of components non-matched by a"
-                                     "profile allowed between two matched components "
-                                     "for them to be considered contiguous. "
-                                     "Option only meaningful for 'ordered' datasets. "
-                                     "The first value must match to a model, the second to a number of components. "
-                                     "This option can be repeated several times:\n"
-                                     "--inter-gene-max-space T2SS 12 --inter-gene-max-space Flagellum 20"
+                                help="""Co-localization criterion: maximum number of components non-matched by a
+profile allowed between two matched components
+for them to be considered contiguous.
+Option only meaningful for 'ordered' datasets.
+The first value must match to a model, the second to a number of components.
+This option can be repeated several times:
+    "--inter-gene-max-space TXSS/T2SS 12 --inter-gene-max-space TXSS/Flagellum 20
+"""
                                 )
     system_options.add_argument("--min-mandatory-genes-required",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of mandatory genes required for model assessment. "
-                                     "The first value must correspond to a model name, the second value to an integer. "
-                                     "This option can be repeated several times:\n"
-                                     "--min-mandatory-genes-required T2SS 15 --min-mandatory-genes-required Flagellum 10"
+                                help="""The minimal number of mandatory genes required for model assessment.
+The first value must correspond to a model fully qualified name, the second value to an integer.
+This option can be repeated several times:
+    "--min-mandatory-genes-required TXSS/T2SS 15 --min-mandatory-genes-required TXSS/Flagellum 10"
+"""
                                 )
     system_options.add_argument("--min-genes-required",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The minimal number of genes required for model assessment "
-                                     "(includes both 'mandatory' and 'accessory' components). "
-                                     "The first value must correspond to a model name, the second value to an integer. "
-                                     "This option can be repeated several times:\n"
-                                     "--min-genes-required TXSScanT2SS 15 --min-genes-required TXSScan/Flagellum 10"
+                                help="""The minimal number of genes required for model assessment "
+(includes both 'mandatory' and 'accessory' components).
+The first value must correspond to a model fully qualified name, the second value to an integer.
+This option can be repeated several times:
+    "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10
+"""
                                 )
     system_options.add_argument("--max-nb-genes",
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="The maximal number of genes required for model assessment. "
-                                     "The first value must correspond to a model name, the second value to an integer. "
-                                     "This option can be repeated several times:\n"
-                                     "--max-nb-genes T2SS 5 --max-nb-genes Flagellum 10"
+                                help=argparse.SUPPRESS
+#                               the max-nb-genes is implemented untli config
+#                               but not used in quorum
+#                               so disable it until we found a biological use case
+#                               help="""The maximal number of genes required for model assessment.
+# The first value must correspond to a model name, the second value to an integer.
+# This option can be repeated several times:
+#     "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
+# """
                                 )
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
-                                help="Allow the storage of multi-loci systems for the specified systems. "
-                                     "The systems are specified as a comma separated list "
-                                     "(--multi-loci sys1,sys2) default is False"
-                                )
-
+                                help="""Specifies if the system can be detected as a 'scattered' system.
+The models are specified as a comma separated list of fully qualified name
+    "--multi-loci model_familyA/model_1,model_familyB/model_2"
+""")
     hmmer_options = parser.add_argument_group(title="Options for Hmmer execution and hits filtering")
     hmmer_options.add_argument('--hmmer',
                                action='store',
                                default=None,
-                               help='Path to the Hmmer program.')
+                               help=f"""Path to the hmmsearch program.
+If it is not specify rely on the PATH
+(default: {msf_def['hmmer']})""")
     hmmer_options.add_argument('--e-value-search',
                                action='store',
                                type=float,
                                default=None,
-                               help='Maximal e-value for hits to be reported during Hmmer search. (default = 1)')
+                               help=f"""Maximal e-value for hits to be reported during hmmsearch search.
+By default MF set per profile threshold for hmmsearch run (--cut_ga option)
+If --e-value-search is set the --cut-ga option is disabled and the new threshold
+(-E in hmmsearch) is applied to all profiles.)
+(default: {msf_def['e_value_search']})
+""")
     hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
                                type=float,
                                default=None,
-                               help="Maximal independent e-value for Hmmer hits to be selected for model detection. "
-                                     "(default = 0.001)")
+                               help=f"""Maximal independent e-value for Hmmer hits to be selected for system detection.
+(default:{msf_def['i_evalue_sel']})""")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
-                               help="Minimal profile coverage required in the hit alignment to allow "
-                                    "the hit selection for model detection. (default = 0.5)")
+                               help=f"""Minimal profile coverage required in the hit alignment to allow
+the hit selection for system detection. 
+(default: {msf_def['coverage_profile']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
                              default=None,
                              help="""specify the path to the models if the models are not installed in the canonical place.
-                                     It gather definitions (xml files) and hmm profiles in a specific
-                                     structure. A directory with the name of the model with at least two directories
-                                     "profiles" which contains all hmm profile for gene describe in definitions and
-                                     "models" which contains either xml file of definitions or subdirectories
-                                     to organize the model in subsystems.""")
+It gather definitions (xml files) and hmm profiles in a specific
+structure. A directory with the name of the model with at least two directories
+profiles" which contains all hmm profile for gene describe in definitions and
+models" which contains either xml file of definitions or subdirectories
+to organize the model in subsystems.""")
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
                              default=None,
                              help="""Path to the directory where to store results.
-                                     if out-dir is specified res-search-dir will be ignored.""")
+if out-dir is specified res-search-dir will be ignored.""")
     dir_options.add_argument('--res-search-suffix',
                              action='store',
                              default=None,
-                             help="The suffix to give to Hmmer raw output files.")
+                             help="The suffix to give to Hmmer raw output files. "
+                                  f"(default: {msf_def['res_search_suffix']})")
     dir_options.add_argument('--res-extract-suffix',
                              action='store',
                              default=None,
-                             help="The suffix to give to filtered hits output files.")
+                             help="The suffix to give to filtered hits output files. "
+                                  f"(default: {msf_def['res_extract_suffix']})")
     dir_options.add_argument('--profile-suffix',
                              action='store',
                              default=None,
-                             help="""The suffix of profile files. For each 'Gene' element, the corresponding profile is
-                                     searched in the 'profile_dir', in a file which name is based on the
-                                     Gene name + the profile suffix.
-                                     For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
-                                     then the profile should be placed at the specified location 
-                                     and be named 'gspG.hmm3'"""
+                             help=f"""The suffix of profile files. For each 'Gene' element, the corresponding profile is
+searched in the 'profile_dir', in a file which name is based on the
+Gene name + the profile suffix.
+For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
+then the profile should be placed at the specified location 
+and be named 'gspG.hmm3'
+(default: {msf_def['profile_suffix']})"""
                              )
 
     general_options = parser.add_argument_group(title="General options", description=None)
@@ -279,20 +316,22 @@ def parse_args(args):
                                  action='store',
                                  type=int,
                                  default=None,
-                                 help="""Number of workers to be used by MacSyFinder.
-                                         In the case the user wants to run MacSyFinder in a multi-thread mode.
-                                         (0 mean all cores will be used, default 1)"""
+                                 help=f"""Number of workers to be used by MacSyFinder.
+In the case the user wants to run MacSyFinder in a multi-thread mode.
+(0 mean all cores will be used).
+(default: {msf_def['worker']})"""
                                  )
     general_options.add_argument("-v", "--verbosity",
                                  action="count",
                                  default=0,
                                  help="""Increases the verbosity level. There are 4 levels:
-                                         Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
+Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     general_options.add_argument("--mute",
                                  action="store_true",
                                  default=False,
-                                 help="mute the log on stdout. "
-                                      "(continue to log on macsyfinder.log)")
+                                 help=f"""mute the log on stdout.
+(continue to log on macsyfinder.log)
+(default: {msf_def['mute']})""")
     general_options.add_argument("--version",
                                  action="version",
                                  version=get_version_message())
@@ -307,11 +346,11 @@ def parse_args(args):
                                  action='store',
                                  default=None,
                                  help="""Path to a previous MacSyFinder run directory.
-                                         It allows to skip the Hmmer search step on same dataset,
-                                         as it uses previous run results and thus parameters regarding Hmmer detection.
-                                         The configuration file from this previous run will be used.
-                                         (conflict with options  --config, --sequence-db, --profile-suffix,
-                                         --res-extract-suffix, --e-value-res, --db-type, --hmmer)""")
+It allows to skip the Hmmer search step on same dataset,
+as it uses previous run results and thus parameters regarding Hmmer detection.
+The configuration file from this previous run will be used.
+Conflict with options  
+    --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
                                  default=False,
@@ -325,7 +364,7 @@ def parse_args(args):
     return parser, parsed_args
 
 
-def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
+def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
@@ -347,6 +386,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     :param logger: The logger use to display information to the user.
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
+    :return: the systems and rejected clusters found
+    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCluster`, ...])
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
@@ -361,33 +402,29 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank, profile_factory, registry)
+    parser = DefinitionParser(config, model_bank, gene_bank, registry, profile_factory)
     try:
-        models_name_to_detect = get_models_name_to_detect(config.models(), registry)
+        models_def_to_detect = get_def_to_detect(config.models(), registry)
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
 
-    parser.parse(models_name_to_detect)
+    parser.parse(models_def_to_detect)
 
     logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
     logger.info(f"Analysis launched on {config.sequence_db()} for model(s):")
 
-    for m in models_name_to_detect:
-        logger.info(f"\t- {m}")
+    for m in models_def_to_detect:
+        logger.info(f"\t- {m.fqn}")
 
-    models_to_detect = [model_bank[model_fqn] for model_fqn in models_name_to_detect]
+    models_to_detect = [model_bank[model_loc.fqn] for model_loc in models_def_to_detect]
     all_genes = []
-    for system in models_to_detect:
-        genes = system.mandatory_genes + system.accessory_genes + system.forbidden_genes
+    for model in models_to_detect:
+        genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
         ex_genes = []
 
         for g in genes:
-            if g.exchangeable:
-                h_s = g.get_homologs()
-                ex_genes += h_s
-                a_s = g.get_analogs()
-                ex_genes += a_s
+            ex_genes += g.exchangeables
         all_genes += (genes + ex_genes)
     #############################################
     # this part of code is executed in parallel
@@ -401,6 +438,8 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
     #############################################
     all_hits = [hit for subl in [report.hits for report in all_reports] for hit in subl]
 
+    systems = []
+    rejected_clusters = []
     if len(all_hits) > 0:
         # It's important to keep this sorting to have in last all_hits version
         # the hits with the same replicon_name and position sorted by score
@@ -417,65 +456,75 @@ def main_search_systems(config, model_bank, gene_bank, profile_factory, logger):
             hits_by_replicon[rep_name].sort(key=attrgetter('position'))
 
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
-        rep_db = RepliconDB(config)
-        systems = []
-        rejected_clusters = []
-        for rep_name in hits_by_replicon:
-            logger.info("Hits analysis for replicon {rep_name}")
-            rep_info = rep_db[rep_name]
-            for model in models_to_detect:
-                logger.info(f"Check model {model.fqn}")
-                hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-                logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
-                logger.debug("".join([str(h) for h in hits_related_one_model]))
-                logger.debug("#" * 80)
-                logger.info("Building clusters")
-                clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
-                logger.debug("{:#^80}".format("CLUSTERS"))
-                logger.debug("\n" + "\n".join([str(c) for c in clusters]))
-                logger.debug("#" * 80)
-                logger.info("Searching systems")
-                if model.multi_loci:
-                    # The loners are already in clusters lists with their context
-                    # so they are take in account
-                    clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-                else:
-                    # we must add loners manually
-                    # but only if the cluster does not already contains them
-                    loners = cluster.get_loners(hits_related_one_model, model)
-                    clusters_combination = []
-                    for one_cluster in clusters:
-                        one_clust_combination = []
-                        one_clust_combination.append(one_cluster)
-                        filtered_loners = cluster.filter_loners(one_cluster, loners)
-                        one_clust_combination.extend(filtered_loners)
-                        clusters_combination.append([one_clust_combination])
+        db_type = config.db_type()
+        if db_type in ('ordered_replicon', 'gembase'):
+            rep_db = RepliconDB(config)
+            for rep_name in hits_by_replicon:
+                logger.info(f"Hits analysis for replicon {rep_name}")
+                rep_info = rep_db[rep_name]
+                for model in models_to_detect:
+                    logger.info(f"Check model {model.fqn}")
+                    hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+                    logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+                    logger.debug("".join([str(h) for h in hits_related_one_model]))
+                    logger.debug("#" * 80)
+                    logger.info("Building clusters")
+                    clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
+                    logger.debug("{:#^80}".format("CLUSTERS"))
+                    logger.debug("\n" + "\n".join([str(c) for c in clusters]))
+                    logger.debug("#" * 80)
+                    logger.info("Searching systems")
+                    if model.multi_loci:
+                        # The loners are already in clusters lists with their context
+                        # so they are take in account
+                        clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+                    else:
+                        # we must add loners manually
+                        # but only if the cluster does not already contains them
+                        loners = cluster.get_loners(hits_related_one_model, model)
+                        clusters_combination = []
+                        for one_cluster in clusters:
+                            one_clust_combination = [one_cluster]
+                            filtered_loners = cluster.filter_loners(one_cluster, loners)
+                            one_clust_combination.extend(filtered_loners)
+                            clusters_combination.append([one_clust_combination])
 
-                for one_combination_set in clusters_combination:
-                    for one_clust_combination in one_combination_set:
-                        res = match(one_clust_combination, model)
-                        if isinstance(res, System):
-                            systems.append(res)
-                        else:
-                            rejected_clusters.append(res)
+                    for one_combination_set in clusters_combination:
+                        for one_clust_combination in one_combination_set:
+                            res = match(one_clust_combination, model)
+                            if isinstance(res, System):
+                                systems.append(res)
+                            else:
+                                rejected_clusters.append(res)
 
-        system_filename = os.path.join(config.working_dir(), "macsyfinder.systems")
-        track_multi_systems_hit = HitSystemTracker(systems)
+        elif db_type in ("unordered_replicon", "unordered"):
+            for rep_name in hits_by_replicon:
+                logger.info(f"Hits analysis for replicon {rep_name}")
+                for model in models_to_detect:
+                    logger.info(f"Check model {model.fqn}")
+                    hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+                    clust = cluster.Cluster(hits_related_one_model, model)
+                    res = match([clust], model)
+                    if isinstance(res, System):
+                        systems.append(res)
+                    else:
+                        rejected_clusters.append(res)
+        else:
+            raise MacsypyError(f"dbtype have an invalid value {db_type}")
+    if systems:
+        systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+    return systems, rejected_clusters
 
-        systems.sort(key=lambda system: (system.model.fqn, - system.score, system.loci))
-        with open(system_filename, "w") as sys_file:
-            systems_to_file(systems, track_multi_systems_hit, sys_file)
 
-        cluster_filename = os.path.join(config.working_dir(), "macsyfinder.rejected_cluster")
-        with open(cluster_filename, "w") as clst_file:
-            rejected_clst_to_file(rejected_clusters, clst_file)
-    else:
-        logger.info("No hits found in this dataset.")
+def _outfile_header():
+    header = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}"""
+    return header
 
 
-def systems_to_file(systems, hit_system_tracker, sys_file):
+def systems_to_tsv(systems, hit_system_tracker, sys_file):
     """
-    print systems occurrences in a file
+    print systems occurrences in a file in tabulated  format
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
@@ -483,16 +532,42 @@ def systems_to_file(systems, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(f"# macsyfinder {macsypy.__version__}", file=sys_file)
-    print(f"# {' '.join(sys.argv)}", file=sys_file)
-    print("# Systems found:\n", file=sys_file)
-    for system in systems:
-        sys_serializer = SystemSerializer(system, hit_system_tracker)
-        print(sys_serializer, file=sys_file)
-        print("=" * 60, file=sys_file)
+    print(_outfile_header(), file=sys_file)
+    if systems:
+        print("# Systems found:", file=sys_file)
+        print(TsvSystemSerializer.header, file=sys_file)
+        for system in systems:
+            sys_serializer = TsvSystemSerializer(system, hit_system_tracker)
+            print(sys_serializer.serialize(), file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
 
 
-def rejected_clst_to_file(rejected_clusters, clst_file):
+def systems_to_txt(systems, hit_system_tracker, sys_file):
+    """
+    print systems occurrences in a file in human readable format
+
+    :param systems: list of systems found
+    :type systems: list of :class:`macsypy.system.System` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
+    :return: None
+    """
+
+    print(_outfile_header(), file=sys_file)
+    if systems:
+        print("# Systems found:\n", file=sys_file)
+        for system in systems:
+            sys_serializer = TxtSystemSerializer(system, hit_system_tracker)
+            print(sys_serializer.serialize(), file=sys_file)
+            print("=" * 60, file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
+
+
+def rejected_clst_to_txt(rejected_clusters, clst_file):
     """
     print rejected clusters in a file
 
@@ -502,13 +577,14 @@ def rejected_clst_to_file(rejected_clusters, clst_file):
     :type clst_file: file object
     :return: None
     """
-    print(f"# macsyfinder {macsypy.__version__}", file=clst_file)
-    print(f"# {' '.join(sys.argv)}", file=clst_file)
-    print("# Rejected clusters:\n", file=clst_file)
-
-    for rej_clst in rejected_clusters:
-        print(rej_clst, file=clst_file)
-        print("=" * 60, file=clst_file)
+    print(_outfile_header(), file=clst_file)
+    if rejected_clusters:
+        print("# Rejected clusters:\n", file=clst_file)
+        for rej_clst in rejected_clusters:
+            print(rej_clst, file=clst_file)
+            print("=" * 60, file=clst_file)
+    else:
+        print("# No Rejected clusters", file=clst_file)
 
 
 def main(args=None, loglevel=None):
@@ -578,23 +654,30 @@ def main(args=None, loglevel=None):
 
         models = ModelBank()
         genes = GeneBank()
-        profiles = ProfileFactory(config)
+        profile_factory = ProfileFactory(config)
 
-        main_search_systems(config, models, genes, profiles, logger)
+        systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+
+        ##############################
+        # Write the results in files #
+        ##############################
+        system_filename = os.path.join(config.working_dir(), "systems.txt")
+        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
+        track_multi_systems_hit = HitSystemTracker(systems)
+
+        with open(system_filename, "w") as sys_file:
+            systems_to_txt(systems, track_multi_systems_hit, sys_file)
+
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
+
+        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clst_to_txt(rejected_clusters, clst_file)
+        if not (systems or rejected_clusters):
+            logger.info("No hits found in this dataset.")
     logger.info("END")
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-

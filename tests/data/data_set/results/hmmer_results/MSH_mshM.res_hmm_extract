@@ -1,0 +1,9 @@
+# gene: MSH_mshM extract from results/hmmer_results/MSH_mshM.search_hmm.out hmm output
+# profile length= 266
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00410	VICH001.B.00001.C001	370	281	MSH_mshM	1.800e-129	428.000	1.000	0.940	1	264
+VICH001.B.00001.C001_01720	VICH001.B.00001.C001	1638	383	MSH_mshM	1.500e-20	70.900	0.838	0.624	143	381
+VICH001.B.00001.C001_02326	VICH001.B.00001.C001	2223	529	MSH_mshM	9.800e-74	245.300	0.989	0.499	1	264
+VICH001.B.00001.C001_02502	VICH001.B.00001.C001	2391	491	MSH_mshM	5.700e-08	29.700	0.680	0.367	8	187

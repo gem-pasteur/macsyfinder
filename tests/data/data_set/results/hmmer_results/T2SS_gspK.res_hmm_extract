@@ -1,0 +1,7 @@
+# gene: T2SS_gspK extract from results/hmmer_results/T2SS_gspK.search_hmm.out hmm output
+# profile length= 59
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00853	VICH001.B.00001.C001	784	413	T2SS_gspK	1.600e-04	19.000	0.797	0.114	14	60
+VICH001.B.00001.C001_02594	VICH001.B.00001.C001	2483	336	T2SS_gspK	1.100e-22	77.200	1.000	0.176	6	64
