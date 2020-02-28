@@ -163,7 +163,7 @@ class Cluster:
         self.model = model
         self._check_replicon_consistency()
         self._score = None
-        self._genes_ref = None
+        self._genes_roles = None
 
 
     def __len__(self):
@@ -197,9 +197,9 @@ class Cluster:
         :type gene: :class:`macsypy.gene.Gene` object
         :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
         """
-        if self._genes_ref is None:
-            self._genes_ref = {h.gene_ref.name for h in self.hits}
-        return gene.name in self._genes_ref
+        if self._genes_roles is None:
+            self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
+        return gene.name in self._genes_roles
 
 
     def merge(self, cluster, before=False):
