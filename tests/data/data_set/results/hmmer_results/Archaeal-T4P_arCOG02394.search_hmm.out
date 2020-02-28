@@ -1,0 +1,67 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG02394.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG02394.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02394  [M=256]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    0.00012   19.1   0.0    0.00017   18.6   0.0    1.2  1  VICH001.B.00001.C001_00403  C ATG TAA 421678 422322 Valid VC0
+    0.00059   16.8   0.0    0.00085   16.3   0.0    1.2  1  VICH001.B.00001.C001_00478  D GTG TAG 493566 494369 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_00403  C ATG TAA 421678 422322 Valid VC0396 645 @NP_230050.1@ VC0396 1 421678 422322 | LuxR fami
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   18.6   0.0   1.3e-07   0.00017     184     234 ..     147     196 ..     108     206 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 18.6 bits;  conditional E-value: 1.3e-07
+                  arCOG02394 184 ekakkeleeLsemekqvLmalysGvspleipdmlgidvdeveeiydrLidk 234
+                                 ++++  +++L+  e+q+L  l +G+s+++i++ l i++++v++++ +  +k
+  VICH001.B.00001.C001_00403 147 HQVQA-TVDLTAREIQILRCLQTGASNMQIAENLFISEFTVKSHLYQIFKK 196
+                                 45555.9*************************************9998776 PP
+
+>> VICH001.B.00001.C001_00478  D GTG TAG 493566 494369 Valid VC0464 804 @NP_230118.1@ VC0464 1 493566 494369 | LuxR fami
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.3   0.0   6.8e-07   0.00085     143     230 ..     118     240 ..     110     255 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 16.3 bits;  conditional E-value: 6.8e-07
+                  arCOG02394 143 gkkrpvleikhvkggesvtsyislpskrl........lnllkryLrkls.........................ekakke..l 190
+                                 g++ +v  +  ++g + + +y+ + + r         l+   + L++l+                         e+a+++  +
+  VICH001.B.00001.C001_00478 118 GWQDEVSLVVNLDGERAIVVYLGCFKPRSfpreqitaLQQRFTVLQALCqqhwqqqplrlaesaqpsqelrtwvEQAIQSfgA 200
+                                 5666677777777777777777777777677777666555555666666666677777777788888888888788888899* PP
+
+                  arCOG02394 191 eeLsemekqvLmalysGvspleipdmlgidvdeveeiydr 230
+                                 + Ls+ e+++  +l  G +++ei++ l i++ +v+++ +r
+  VICH001.B.00001.C001_00478 201 QRLSPREQEITALLIQGLDSQEIAEALAISHGTVKNHRKR 240
+                                 ******************************7777665443 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (256 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       107  (0.0423259); expected 50.6 (0.02)
+Passed bias filter:                       69  (0.0272943); expected 50.6 (0.02)
+Passed Vit filter:                        14  (0.00553797); expected 2.5 (0.001)
+Passed Fwd filter:                         2  (0.000791139); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 21593.83
+//
+[ok]

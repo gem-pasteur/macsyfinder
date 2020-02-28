@@ -29,8 +29,7 @@ import tempfile
 import argparse
 
 from macsypy.profile import ProfileFactory, Profile
-from macsypy.gene import Gene
-from macsypy.model import Model
+from macsypy.gene import CoreGene
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.error import MacsypyError
@@ -60,24 +59,26 @@ class TestProfileFactory(MacsyTest):
 
 
     def test_get_profile(self):
-        system_foo = Model("foo", 10)
         gene_name = 'sctJ_FLG'
-        gene = Gene(self.profile_factory, gene_name, system_foo, self.models_location)
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
         profile = self.profile_factory.get_profile(gene, self.models_location)
         self.assertTrue(isinstance(profile, Profile))
         self.assertEqual(profile.gene.name, gene_name)
 
 
     def test_get_uniq_object(self):
-        system_foo = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
+        gene_name = 'sctJ_FLG'
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
         profile1 = self.profile_factory.get_profile(gene, self.models_location)
         profile2 = self.profile_factory.get_profile(gene, self.models_location)
         self.assertEqual(profile1, profile2)
 
 
     def test_unknow_profile(self):
-        system_foo = Model("foo", 10)
-        gene = Gene(self.profile_factory, 'sctJ_FLG', system_foo, self.models_location)
-        gene.name = "foo"
-        self.assertRaises(MacsypyError, self.profile_factory.get_profile, gene, self.models_location)
+        gene_name = 'sctJ_FLG'
+        gene = CoreGene(self.models_location, gene_name, self.profile_factory)
+        gene._name = "bar"
+        with self.assertRaises(MacsypyError) as ctx:
+            self.profile_factory.get_profile(gene, self.models_location)
+        self.assertEqual(str(ctx.exception),
+                         f"'{self.model_name}/{gene.name}': No such profile")

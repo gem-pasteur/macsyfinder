@@ -1,0 +1,14 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="4" min_genes_required="6" multi_loci="1" vers="2.0">
+    <gene name="Tad_rcpA" presence="mandatory"/>    	
+    <gene name="Tad_tadA" presence="mandatory"/>
+    <gene name="Tad_tadB" presence="mandatory"/>
+    <gene name="Tad_tadC" presence="mandatory"/>
+    <gene name="Tad_tadV" presence="mandatory" loner="1"/>
+    <gene name="Tad_tadZ" presence="mandatory"/>
+    <gene name="Tad_flp" presence="mandatory"/>
+    <gene name="Tad_tadE" presence="accessory"/>
+    <gene name="Tad_tadF" presence="accessory"/>
+    <gene name="Tad_tadD" presence="accessory"/>
+    <gene name="Tad_rcpB" presence="accessory"/>
+    <gene name="Tad_rcpC" presence="accessory"/>
+</model>

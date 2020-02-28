@@ -26,5 +26,4 @@ MacSyFinder API documentation
     database
     error
     utils
-    argparse_utils
     package

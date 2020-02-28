@@ -52,7 +52,7 @@ log*
 test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
-macsyfinder-201*
+macsyfinder-*
 macsyfinder.egg-info/
 
 ####################

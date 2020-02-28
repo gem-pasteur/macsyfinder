@@ -589,9 +589,9 @@ ligne 3 et bbbbb
 
         load_metadata_meth = package.Package._load_metadata
 
-        #############
+        #################
         # No maintainer #
-        #############
+        #################
         no_auth_meta_data = self.metadata.copy()
         del no_auth_meta_data['maintainer']
         try:

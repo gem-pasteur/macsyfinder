@@ -1,0 +1,98 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/ComM_comEC.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results/hmmer_results/ComM_comEC.search_hmm.out
+# sequence reporting threshold:    E-value <= 1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       ComM_comEC  [M=643]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.3e-60  202.8  13.1    3.7e-59  197.9  13.1    2.1  1  VICH001.B.00001.C001_01796  C TTG TGA 2023660 2025918 Valid V
+  ------ inclusion threshold ------
+      0.026   10.1   0.1      0.041    9.4   0.1    1.1  1  VICH001.B.00001.C001_00260  D TTG TGA 269068 270435 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01796  C TTG TGA 2023660 2025918 Valid VC1879 2259 @NP_231513.1@ VC1879 1 2023660 2025918 | Rec2
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  197.9  13.1   2.9e-62   3.7e-59      42     643 .]     137     718 ..     131     718 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 197.9 bits;  conditional E-value: 2.9e-62
+                  ComM_comEC  42 slelelegkleepegqrnfggFdYqeyLkrqkiyqvlevkkiqelekvkslslkllslrrkiialiks.hlpealreyvqaLl 123
+                                   ++e++ +l+++ g  n+ gFd +++   q +     vk  +  + v+++      +r +++  +++    ++ ++ + aL+
+  VICH001.B.00001.C001_01796 137 NDRVEFSVTLKPIVGRLNQTGFDLEAHYMAQSVVARAVVKPDTAYQIVQESG-----IRSSLFFELEQlTHTSPYQGLILALT 214
+                                 55789999***************99988888877776676655555555544.....5555555444404567899******* PP
+
+                  ComM_comEC 124 lgerdkeedevlevyqslGiiHLlalSGlhVgfllallkylllrlgltreklkillllf......llvYalLtGlaasviRal 200
+                                 +ger+ ++++  +++ + G+iHL+a+SGlh+g+   +    +l lg++r ++++l  +f       ++Ya L G++    Ral
+  VICH001.B.00001.C001_01796 215 FGERKGIDEQEWQALRNSGLIHLVAISGLHIGIAFSV--GYFLGLGMMRFHAQLLWSPFvcgallAVLYAWLAGFTLPTQRAL 295
+                                 ********************************97665..56789*********998876333222589*************** PP
+
+                  ComM_comEC 201 lqslval..llaklgikkldnlalsllvlllvnPyflfsaGgvLSfalafiLiliseasifkka.....iieslvisLgslPi 276
+                                 ++ l ++   +   ++  l+ + l+l+ +ll+ P + +s  + +Sf+  +i ++    ++ +++     + +   +  +  P+
+  VICH001.B.00001.C001_01796 296 IMCLLNValIMLAFPLSALKRILLTLVAVLLWSPFASLSNSFWMSFLAVAIVLYQLASQSQRQVwwkalLWAQVFLVCLMAPV 378
+                                 **998875577788999*****************************76666555554455555544444333333333456** PP
+
+                  ComM_comEC 277 llyyfaefsllslllnalfsllfdvillpllvilflllvlsa....llvsllnlllewlekllelvsqvdvatlvfgkPslll 355
+                                   y+f  +s+ ++l n++f + f+++++p l ++ ll+v+          ++++ +  l   l+ +         +   ++  
+  VICH001.B.00001.C001_01796 379 TAYFFGGLSVTAVLYNLVFIPWFSLVIVPALFLGLLLMVVWPsvaaAYWPWVDWTFLPLDWALQFAD----VGWWVVPSKVQG 457
+                                 ******************************9999999988443333555566666666666665554....444444445667 PP
+
+                  ComM_comEC 356 lllllvslillydlikkkllkklkrtlvllvlvlflli.klslegevtvlDiGQGdsifvrapvkrktvLiDvgGklafskek 437
+                                 ++   v+++lly +++      ++ +l+l ++ l  ++  l ++ +++vlD+G G +i+++    +++++ D+g        +
+  VICH001.B.00001.C001_01796 458 VVAASVAILLLYRFMSL-----KACSLLLGMIGLWWWFpSLTPLWRMDVLDVGHGLAIVIE--QDERAIVYDTGS-------S 526
+                                 88889999999999988.....5667777777888888899*******************9..667788889984.......6 PP
+
+                  ComM_comEC 438 WqkraqtslaekvlipyLkarGvkkldaliLthtDkdHiGdleevikqikvkrllvskgllkekefvaelqaakvkveelkag 520
+                                 W      s  ++v+ p+L+ rG++++d +iL+h D+dH Gd + ++ + + + +  s              ++ ++   + +g
+  VICH001.B.00001.C001_01796 527 WP---GGSYVQSVIEPMLQQRGLRQVDGVILSHLDNDHAGDWQGLAERWQPNWIRAS--------------QLGTEFMPCIRG 592
+                                 74...56899***********************************999876655433..............4567788999** PP
+
+                  ComM_comEC 521 dalkikssqleVLsPekp.gdgenddslvlygk..lggksflfTGdlekegEkellekyPnlkvdvLKvghHGskkssseafl 600
+                                 ++ + +s+++ VL P +   ++ n+ s v+ +     + s l+ Gd+ + gE  l++   +l+ +v+ v hHGsk+ss  +f+
+  VICH001.B.00001.C001_01796 593 ESWQWQSLHFTVLWPPQAvSRAYNQHSCVIRMTdtQSNHSVLLSGDVTAMGEWLLARDGAQLQSEVMIVPHHGSKTSSTAEFI 675
+                                 *************9988779*******99876511567889****************************************** PP
+
+                  ComM_comEC 601 kqlkpklaliSaGknNRykhPhqevlerlkaakvkvyrTdqqG 643
+                                 +q++pkla+ S+ k+NR ++P+ +v+ r++a++v+ + T + G
+  VICH001.B.00001.C001_01796 676 AQVNPKLAIASVAKDNRWNLPNPQVVARYQAQQVEWLDTGHAG 718
+                                 ***********************************99997765 PP
+
+>> VICH001.B.00001.C001_00260  D TTG TGA 269068 270435 Valid VC0264 1368 @NP_229920.1@ VC0264 1 269068 270435 | hypothet
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    9.4   0.1   3.3e-05     0.041     461     483 ..      65      87 ..      63      95 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 9.4 bits;  conditional E-value: 3.3e-05
+                  ComM_comEC 461 kkldaliLthtDkdHiGdleevi 483
+                                  ++daliLth+  dHiG l+ ++
+  VICH001.B.00001.C001_00260  65 GHVDALILTHAHIDHIGRLPWLL 87 
+                                 589**************998765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (643 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       156  (0.0617089); expected 50.6 (0.02)
+Passed bias filter:                       74  (0.0292722); expected 50.6 (0.02)
+Passed Vit filter:                        14  (0.00553797); expected 2.5 (0.001)
+Passed Fwd filter:                         3  (0.00118671); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.05u 0.00s 00:00:00.05 Elapsed: 00:00:00.05
+# Mc/sec: 10847.53
+//
+[ok]

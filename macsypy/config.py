@@ -46,6 +46,7 @@ class MacsyDefaults(dict):
 
         To define a new default value just add an attribute with the default value
         """
+        super().__init__()
         self.__dict__ = self
         if __MACSY_DATA__ == '$' + 'MACSYDATA':
             prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
@@ -53,7 +54,8 @@ class MacsyDefaults(dict):
             prefix_data = os.path.join(__MACSY_DATA__, 'data')
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
-        self.e_value_search = kwargs.get('e_value_search', 1.0)
+        self.e_value_search = kwargs.get('e_value_search', None)
+        self.cut_ga = kwargs.get('cut_ga', True)
         self.db_type = kwargs.get('db_type', None)
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
@@ -91,9 +93,9 @@ class Config:
 
     cfg_opts = [('base', ('db_type', 'idx', 'replicon_topology', 'sequence_db', 'topology_file')),
                 ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
-                            'min_genes_required', 'multi_loci')),
+                                'min_genes_required', 'multi_loci')),
                 ('models', tuple()),
-                ('hmmer', ('coverage_profile', 'e_value_search', 'i_evalue_sel', 'hmmer')),
+                ('hmmer', ('coverage_profile', 'e_value_search', 'cut_ga', 'i_evalue_sel', 'hmmer')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
@@ -128,7 +130,7 @@ class Config:
                                                            ))
         else:
             self._conf_dir = __MACSY_CONF__
-        previous_run =False
+        previous_run = False
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
             prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
                                                         self.cfg_name))
@@ -147,7 +149,8 @@ class Config:
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
             if 'sequence_db' in args_dict:
-                _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db from previous_run '{args_dict['previous_run']}'.")
+                _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db "
+                             f"from previous_run '{args_dict['previous_run']}'.")
                 del args_dict['sequence_db']
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in defaults.items()}
@@ -173,14 +176,14 @@ class Config:
         # for generic getter, that mean no code in config
         # I simulate a function (lambda) which can be called without argument
         if option_name in self._options:
-            return lambda : self._options[option_name]
+            return lambda: self._options[option_name]
         else:
             raise AttributeError(f"config object has no attribute '{option_name}'")
 
 
     def _str_2_tuple(self, value):
         """
-        transform a string with syntax  {model_fqn int} n in list of tuple
+        transform a string with syntax {model_fqn int} in list of tuple
 
         :param str value: the string to parse
         :return:
@@ -254,9 +257,9 @@ class Config:
                 conf_str += f"[{section}]\n"
                 if section == 'models':
                     # [(model_family, (def_name1, ...)), ... ]
-                    for model_family, def_names in self._options['models']:
-                        def_names = ', '.join(def_names)
-                        conf_str += f"{model_family} = {def_names}\n"
+                    for i, models in enumerate(self._options['models'], 1):
+                        model_family, def_names = models
+                        conf_str += f"models_{i} = {model_family} {' '.join(def_names)}\n"
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
@@ -451,15 +454,12 @@ class Config:
         """
         opt = []
         for models in value:
-            model_family_name = models[0]
-            if ',' in models[1]:
-                # value is read from a config file
-                def_name = [d.strip() for d in models[1].split(',')]
-            elif len(models) > 2:
-                def_name = models[1:]
+            if models[0].startswith('models'):
+                model_family_name, *models_name = models[1].split(' ')
             else:
-                def_name = [models[1]]
-            opt.append((model_family_name, def_name))
+                model_family_name = models[0]
+                models_name = models[1:]
+            opt.append((model_family_name, models_name))
         self._options['models'] = opt
 
 
@@ -561,9 +561,28 @@ class Config:
 
 
     def log_level(self):
+        """
+        :return: the verbosity output level
+        :rtype: int
+        """
         level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
         level = min(50, max(10, level))
         return level
+
+
+    def _set_e_value_search(self, value):
+        """
+        set the value for the -E hmmsearch option and disable cut_ga option
+
+        :param float value: the value of -E hmmsearch
+        :return: None
+        """
+        try:
+            value = float(value)
+        except ValueError:
+            raise ValueError(f"'e_value_search' must be a float: Not '{value}'") from None
+        self._options['e_value_search'] = value
+        self._options['cut_ga'] = False
 
 
 class NoneConfig:
@@ -574,4 +593,3 @@ class NoneConfig:
             return lambda x: None
         else:
             return lambda: None
-

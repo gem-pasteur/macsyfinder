@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014  Institut Pasteur, Paris.                           
+    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -57,11 +57,17 @@ Command-line options
 
 Positional arguments::
 
-  systems               The systems to detect. This is an obligatory option
-                        with no keyword associated to it. To detect all systems 
-                        described in .xml available, set to "all" (case insensitive). 
-                        Otherwise, a single or multiple systems can be specified. 
-                        For example: "SystemA SystemB".
+  --models              The models to search. The --models option can be set several times.'
+                        For each --models options the first element must be the name of family models,
+                        followed by the name of the models.
+                        If the name 'all' is in the list all models from the family will be searched.'
+                        '--models TXSS Flagellum T2SS'
+                                  means MSF will search for models TXSS/Flagellum and TXSS/T2SS
+                        '--models TXSS all'
+                                  means for all models found in model package TXSS
+                        '--models CRIPRcas/subtyping all'
+                                 means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
+                        (required unless --previous-run is set)
 
 Optional arguments::
 
@@ -74,6 +80,7 @@ Input dataset options::
 
   --sequence-db SEQUENCE_DB
                         Path to the sequence dataset in fasta format.
+                        (required unless --previous-run is set)
                         
   --db-type {unordered_replicon,ordered_replicon,gembase,unordered}
                         The type of dataset to deal with. "unordered_replicon"
@@ -82,7 +89,8 @@ Input dataset options::
                         assembled genome, and "gembase" to a set of replicons
                         where sequence identifiers follow this convention:
                         ">RepliconName_SequenceID"
-                        
+                        (required unless --previous-run is set)
+
   --replicon-topology {linear,circular}
                         The topology of the replicons (this option is
                         meaningful only if the db_type is 'ordered_replicon'
@@ -99,7 +107,8 @@ Input dataset options::
                         
   --idx                 Forces to build the indexes for the sequence dataset
                         even if they were presviously computed and present at
-                        the dataset location (default = False)
+                        the dataset location.
+                        (default = False)
 
 .. _system-detect-options:
 
@@ -113,15 +122,14 @@ Systems detection options::
                         datasets. The first value must match a system name, 
                         the second a number of components. This option can be
                         repeated several times: 
-                        "--inter-gene-max-space T3SS 12 --inter-gene-max-space Flagellum 20"
+                        "--inter-gene-max-space TXSS/T3SS 12 --inter-gene-max-space TXSS/Flagellum 20"
                         
   --min-mandatory-genes-required SYSTEM VALUE
                         The minimal number of mandatory genes required for
                         system assessment. The first value must correspond to
                         a system name, the second value to an integer. This
                         option can be repeated several times: 
-                        "--min-mandatory-genes-required T2SS 15 
-                        --min-mandatory-genes-required Flagellum 10"
+                        "--min-mandatory-genes-required TXSS/T2SS 15 --min-mandatory-genes-required TXSS/Flagellum 10"
                         
   --min-genes-required SYSTEM VALUE
                         The minimal number of genes required for system
@@ -129,32 +137,30 @@ Systems detection options::
                         components). The first value must correspond to a
                         system name, the second value to an integer. This
                         option can be repeated several times: 
-                        "--min-genes-required T2SS 15 --min-genes-required Flagellum 10"
-                        
-  --max-nb-genes SYSTEM VALUE
-                        The maximal number of genes allowed in the system. 
+                        "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10"
 
   --multi-loci SYSTEM 
-                        Specifies if the system can be detected as a 'scattered'
-                        system. (default: False)
+                        Specifies if the system can be detected as a 'scattered' system.
+                        The models are specified as a comma separated list of fully qualified name
+                        "--multi-loci model_familyA/model_1,model_familyB/model_2"
 
 .. _hmmer-options:
 
 Options for Hmmer execution and hits filtering::
 
-  --hmmer HMMER_EXE     Path to the Hmmer program.
-  
-  --index-db INDEX_DB_EXE
-                        The indexer to be used for Hmmer. The value can be
-                        either 'makeblastdb' or 'formatdb' or the path to one
-                        of these binary (default = makeblastb).
+  --hmmer HMMER_EXE     Path to the hmmsearch program.
+                        If it is not specify rely on the PATH.
+                        (default: None)
                         
   --e-value-search E_VALUE_RES
-                        Maximal e-value for hits to be reported during Hmmer
-                        search. (default = 1)
+                        Maximal e-value for hits to be reported during hmmsearch search.
+                        By default MF set per profile threshold for hmmsearch run (--cut_ga option)
+                        If --e-value-search is set the --cut-ga option is disabled and the new threshold
+                        (-E in hmmsearch) is applied to all profiles.)
+                        (default: None)
                         
   --i-evalue-select I_EVALUE_SEL
-                        Maximal independent e-value for Hmmer hits to be
+                        Maximal independent e-value for hmmsearch hits to be
                         selected for system detection. (default = 0.001)
                         
   --coverage-profile COVERAGE_PROFILE
@@ -164,8 +170,13 @@ Options for Hmmer execution and hits filtering::
 
 Path options::
 
-  -d DEF_DIR, --def DEF_DIR
-                        Path to the systems definition files.
+  --models-dir MODELS_DIR
+                        specify the path to the models if the models are not installed in the canonical place.
+                        It gather definitions (xml files) and hmm profiles in a specific
+                        structure. A directory with the name of the model with at least two directories
+                        profiles" which contains all hmm profile for gene describe in definitions and
+                        models" which contains either xml file of definitions or subdirectories
+                        to organize the model in subsystems.
   
   -o OUT_DIR, --out-dir OUT_DIR
                         Path to the directory where to store results. 
@@ -177,21 +188,19 @@ Path options::
                         
   --res-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files.
+                        (default: .search_hmm.out)
                         
   --res-extract-suffix RES_EXTRACT_SUFFIX
                         The suffix to give to filtered hits output files.
-                        
-  -p PROFILE_DIR, --profile-dir PROFILE_DIR
-                        Path to the profiles directory.
+                         (default: .res_hmm_extract)
                         
   --profile-suffix PROFILE_SUFFIX
-                        The suffix of profile files. For each 'Gene' element,
-                        the corresponding profile is searched in the
-                        'profile_dir', in a file which name is based on the
-                        Gene name + the profile suffix. For instance, if the
-                        Gene is named 'gspG' and the suffix is '.hmm3', then
-                        the profile should be placed in the specified folder 
-                        'profile_dir' and be named 'gspG.hmm3'. 
+                        The suffix of profile files. For each 'Gene' element, the corresponding profile is
+                        searched in the 'profile_dir', in a file which name is based on the
+                        Gene name + the profile suffix.
+                        For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
+                        then the profile should be placed at the specified location
+                        and be named 'gspG.hmm3'
                         (default: ".hmm")
 
 General options::
@@ -199,12 +208,19 @@ General options::
   -w WORKER_NB, --worker WORKER_NB
                         Number of workers to be used by MacSyFinder. In the case
                         the user wants to run MacSyFinder in a multi-thread mode. 
-                        All workers can be used with the value '0'. (default = 1)
+                        All workers can be used with the value '0'.
+                        (default: 1)
                         
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
                         Error messages (default), Warning (-v), Info (-vv) and
                         Debug(-vvv).
-                        
+
+  --mute                mute the log on stdout.
+                        (continue to log on macsyfinder.log)
+                        (default: False)
+
+  --version             show program's version number and exit.
+
   --log LOG_FILE        Path to the directory where to store the 'macsyfinder.log'
                         log file.
                         
@@ -252,7 +268,7 @@ Each file can define options, at the end all options are added. If an option is 
    
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
-overwhelm values from systems' :ref:`XML definition files <system-definition-grammar-label>`.
+overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
 The Config object provides some default values and performs some validations of the values, for instance:
@@ -264,8 +280,8 @@ In MacSyFinder, five sections are defined:
  
   * **base** : all information related to the protein dataset under study
   
-    * *file* : the path to the dataset in Fasta format (*no default value*)
-    * *type* : the type of dataset to handle, four types are supported:
+    * *sequence_db* : the path to the dataset in Fasta format (*no default value*)
+    * *db_type* : the type of dataset to handle, four types are supported:
        
         * *unordered* : a set of sequences (*e.g.* a metagenomic dataset)
         * *unordered_replicon* : a set of sequences corresponding to a complete replicon
@@ -280,20 +296,18 @@ In MacSyFinder, five sections are defined:
       Two topologies are supported: 'linear' and 'circular' (*default* = 'circular')
       This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
   
-  * **system**
+  * **model**
   
-    * *inter_gene_max_space* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
-    * *min_mandatory_genes_required* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
-    * *min_genes_required* = list of system name and integer separated by spaces.
-      These values will supersede the values found in the system definition file.
+    * *inter_gene_max_space* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+    * *min_mandatory_genes_required* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+    * *min_genes_required* = list of models fully qualified name and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
     
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
-    * *index_db_exe* the executable to use to build the index for the hmm.
-      The value can be 'makeblastdb' or 'formatdb' or the absolute path toward one of these two binaries (default= *makeblastdb* )
     * *e_value_res* = (default= *1* )
     * *i_evalue_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
@@ -302,11 +316,9 @@ In MacSyFinder, five sections are defined:
     
     * *res_search_dir* = (default= *./datatest/res_search* )
     * *res_search_suffix* = (default= *.search_hmm.out* )
-    * *profile_dir* = (default= *./profiles* )
-    * *profile_suffix* = (default= *.fasta-aln_edit.hmm* )
+    * *models_dir* = (default= *./models* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
-    * *def_dir* = (default= *./DEF/* )
-  
+
   * **general**
   
     * *log_level*: (default= *debug* ) This corresponds to an integer code:
@@ -326,34 +338,36 @@ Example of a configuration file::
   
     [base]
     prefix = /path/to/macsyfinder/home/
-    file = %(prefix)s/dataset/prru_psae.001.c01.fasta
-    type = gembase
+    file = %(prefix)s/data/base/prru_psae.001.c01.fasta
+    db_type = gembase
     replicon_topology = circular
     
-    [system]
-    inter_gene_max_space = T2SS 22 Flagellum 44
-    min_mandatory_genes_required = T2SS 6 Flagellum 4
-    min_genes_required = T2SS 8 Flagellum 4
+    [models]
+    models_1 = TFF-SF_final all
+
+    [models_opt]
+    inter_gene_max_space = TXSS/T2SS 22 TXSS/Flagellum 44
+    min_mandatory_genes_required = TXSS/T2SS 6 TXSS/Flagellum 4
+    min_genes_required = TXSS/T2SS 8 TXSS/Flagellum 4
     
     [hmmer]
-    hmmer_exe = hmmsearch
-    index_db_exe = makeblastdb
+    hmmer = hmmsearch
     e_value_res = 1
     i_evalue_sel = 0.5
     coverage_profile = 0.5
 
     [directories]
     prefix = /path/to/macsyfinder/home/
-    def_dir = %(prefix)s/data/DEF
+    data_dir = %(prefix)s/data/
     res_search_dir = %(prefix)s/dataset/res_search/
     res_search_suffix = .raw_hmm
-    profile_dir = %(prefix)s/data/profiles
+    models_dir = %(data_dir)/data/models
     profile_suffix = .fasta-aln.hmm
     res_extract_suffix = .res_hmm
 
    [general]
    log_level = debug
-
+   worker = 4
 
 .. note::
 

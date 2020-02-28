@@ -28,34 +28,30 @@ _log = logging.getLogger(__name__)
 from itertools import chain
 
 from .error import ModelInconsistencyError
-from .registries import split_def_name
+from .registries import DefinitionLocation
 
 
 class ModelBank:
     """
-    Build and store all Models objects. Systems must not be instantiated directly.
-    This model factory must be used. It ensures there is a unique instance
-    of a model for a given model name.
-    To get a model, use the method __getitem__ via the "[]". If the Model is already cached in the ModelBank,
-    it is returned. Otherwise a new model is built, stored and then returned.
+    Store all Models objects.
     """
 
     def __init__(self):
         self._model_bank = {}
 
 
-    def __getitem__(self, name):
+    def __getitem__(self, fqn):
         """
-        :param name: the name of the model
-        :type name: string
-        :return: the model corresponding to the name.
-         If the model already exists, return it, otherwise build it and return it.
+        :param fqn: the fully qualified name of the model
+        :type fqn: string
+        :return: the model corresponding to the fqn.
         :rtype: :class:`macsypy.model.Model` object
+        :raise KeyError: if the model corresponding to the name does not exists
         """
-        if name in self._model_bank:
-            return self._model_bank[name]
+        if fqn in self._model_bank:
+            return self._model_bank[fqn]
         else:
-            raise KeyError(name)
+            raise KeyError(fqn)
 
 
     def __contains__(self, model):
@@ -97,16 +93,63 @@ class ModelBank:
             self._model_bank[model.fqn] = model
 
 
-class Model:
+class MetaModel(type):
+    """
+    control the different type of gene in a model ('mandatory, accessory, ....)
+    and how to access to them.
+    The type of genes are defined in the model itself via *_gene_category* class attribute.
+    """
+
+    def getter_maker(cat):
+        """
+        Create a property which allow to access to the gene corresponding of the cat of the model
+
+        :param str cat: the type of gene category to which we create the getter
+        :return: unbound method
+        """
+        def getter(self):
+            return getattr(self, f"_{cat}_genes")
+        return getter
+
+
+    def setter_maker(cat):
+        """
+        Create the method add_<cat>_gene which allow to add gene in the right category of the model
+
+        :param str cat: the type of gene category to which we create the mutator
+        :return: unbound method
+        """
+        def setter(self, gene):
+            getattr(self, f"_{cat}_genes").append(gene)
+        return setter
+
+
+    def __call__(cls, *args, **kwargs):
+        new_model_inst = super().__call__(*args, **kwargs)
+        setattr(cls, "gene_category", property(lambda cls: cls._gene_category))
+        for cat in new_model_inst.gene_category:
+            # set the private attribute in the Model instance
+            setattr(new_model_inst, f"_{cat}_genes", [])
+            # set the public property in the Model class
+            setattr(cls, f"{cat}_genes", property(MetaModel.getter_maker(cat)))
+            # add method to add new gene in the Model class
+            setattr(cls, f"add_{cat}_gene", MetaModel.setter_maker(cat))
+        return new_model_inst
+
+
+class Model(metaclass=MetaModel):
     """
     Handles a macromolecular model.
 
     Contains all its pre-defined characteristics expected to be fulfilled to predict a complete model:
-        - component list (genes that are required, accessory, forbidden)
+        - component list (genes that are mandatory, accessory, neutral, forbidden)
         - quorum (number of genes)
         - genetic architecture
 
     """
+
+    _gene_category = ('mandatory', 'accessory', 'neutral', 'forbidden')
+
 
     def __init__(self, fqn, inter_gene_max_space, min_mandatory_genes_required=None,
                  min_genes_required=None, max_nb_genes=None, multi_loci=False):
@@ -124,8 +167,8 @@ class Model:
         :param multi_loci: 
         :type multi_loci: boolean
         """
-        self.name = split_def_name(fqn)[-1]
         self.fqn = fqn
+        self._name = DefinitionLocation.split_fqn(self.fqn)[-1]
         self._inter_gene_max_space = inter_gene_max_space
         self._min_mandatory_genes_required = min_mandatory_genes_required
         self._min_genes_required = min_genes_required
@@ -137,29 +180,25 @@ class Model:
                                               )
         self._max_nb_genes = max_nb_genes
         self._multi_loci = multi_loci
-        self._mandatory_genes = []
-        self._accessory_genes = []
-        self._forbidden_genes = []
 
 
     def __str__(self):
         s = f"name: {self.name}\n"
         s += f"fqn: {self.fqn}\n"
-        s += "==== mandatory genes ====\n"
-        for g in self._mandatory_genes:
-            s += f"{g.name}\n"
-        s += "==== accessory genes ====\n"
-        for g in self._accessory_genes:
-            s += f"{g.name}\n"
-        s += "==== forbidden genes ====\n"
-        for g in self._forbidden_genes:
-            s += f"{g.name}\n"
+        for cat in self._gene_category:
+            s += f"==== {cat} genes ====\n"
+            for g in getattr(self, f"{cat}_genes"):
+                s += f"{g.name}\n"
         s += "============== end pprint model ================\n"
         return s
 
 
     def __hash__(self):
-        return id(self)
+        """
+
+        :return:
+        """
+        return hash(self.fqn)
 
 
     def __lt__(self, other):
@@ -193,6 +232,20 @@ class Model:
 
 
     @property
+    def name(self):
+        return self._name
+
+
+    @property
+    def family_name(self):
+        """
+        :return: the family name of the model for instance 'CRISPRCas' or 'TXSS'
+        :rtype: str
+        """
+        return DefinitionLocation.root_name(self.fqn)
+
+
+    @property
     def inter_gene_max_space(self):
         """
         :return: set the maximum distance allowed between 2 genes for this model
@@ -211,7 +264,7 @@ class Model:
         :rtype: integer
         """
         if self._min_mandatory_genes_required is None:
-            return len(self._mandatory_genes)
+            return len(self.mandatory_genes)
         return self._min_mandatory_genes_required
 
 
@@ -222,7 +275,7 @@ class Model:
         :rtype: integer
         """
         if self._min_genes_required is None:
-            return len(self._mandatory_genes)
+            return len(self.mandatory_genes)
         return self._min_genes_required
 
     @property
@@ -242,115 +295,54 @@ class Model:
 
         return self._multi_loci
 
-        
-    def add_mandatory_gene(self, gene):
-        """
-        Add a gene to the list of mandatory genes
-
-        :param gene: gene that is mandatory for this model
-        :type gene: :class:`macsypy.gene.Gene` object
-        """
-        self._mandatory_genes.append(gene)
-
-
-    def add_accessory_gene(self, gene):
-        """
-        Add a gene to the list of accessory genes
-
-        :param gene: gene that is allowed to be present in this model
-        :type gene: :class:`macsypy.gene.Gene` object
-        """
-        self._accessory_genes.append(gene)
-
-
-    def add_forbidden_gene(self, gene):
-        """
-        Add a gene to the list of forbidden genes
-
-        :param gene: gene that must not be found in this model
-        :type gene: :class:`macsypy.genen.Gene` object
-        """
-        self._forbidden_genes.append(gene)
-
-
-    @property
-    def mandatory_genes(self):
-        """
-        :return: the list of genes that are mandatory in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._mandatory_genes
-
-
-    @property
-    def accessory_genes(self):
-        """
-        :return: the list of genes that are allowed in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._accessory_genes
-
-
-    @property
-    def forbidden_genes(self):
-        """
-        :return: the list of genes that are forbidden in this macromolecular model
-        :rtype: list of :class:`macsypy.gene.Gene` objects
-        """
-        return self._forbidden_genes
-
 
     def get_gene(self, gene_name):
         """
         :param gene_name: the name of the gene to get
         :type gene_name: string
         :return: the gene corresponding to gene_name.
-        :rtype: a :class:`macsypy.gene.Gene` object.
+        :rtype: a :class:`macsypy.gene.ModelGene` object.
         :raise: KeyError the model does not contain any gene with name gene_name.
         """
-        all_genes = (self.mandatory_genes, self.accessory_genes, self.forbidden_genes)
-        for g_list in all_genes:
-            for g in g_list:
-                if g.name == gene_name:
-                    return g
-                else:
-                    homolgs = g.get_homologs()
-                    analogs = g.get_analogs()
-                    for ex in homolgs + analogs:
-                        if ex.name == gene_name:
-                            return ex
+        # create a dict with genes from all categories
+        all_genes = {g.name: g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
+                     for g in sublist}
+        if gene_name in all_genes:
+            return all_genes[gene_name]
+        else:
+            for g in all_genes.values():
+                for ex in g.exchangeables:
+                    if ex.name == gene_name:
+                        return ex
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
-    def get_gene_ref(self, gene):
+    @property
+    def genes(self):
         """
-        :param gene: the gene to get the gene reference.
-        :type gene: a :class:`macsypy.gene.Gene` or macsypy.gene.Homolog` or macsypy.gene.Analog` object.
-        :return: The gene reference of the gene if exists (if the gene is an Homolog or an Analog),
-                 otherwise return None.
-        :rtype: :class:`macsypy.gene.Gene` object or None
-        :raise: KeyError if gene is not in the model
+        :return: all the genes without the exchangeables which are described in the model.
+        :rtype: set of :class:`macsypy.gene.ModelGene` objects.
         """
-        g = self.get_gene(gene.name)
-        try:
-            return g.gene_ref
-        except AttributeError:
-            return None
+        # we assume that a gene cannot appear twice in a model
+        return {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
+                for g in sublist}
 
 
     def filter(self, hits):
         """
-        filter the hits according to this model. The hits must be link to a gene, belonging to the model
-        as mandatory, accessory or forbidden, or be an analog or homologs of one these genes
+        filter out the hits according to this model.
+        The filtering is based on the name of CoreGene associated to hit
+        and the name of ModelGene of the model
+        (the name of the ModelGene is the name of the CoreGene embed in the ModelGene)
+        only the hits related to genes implied in the model are kept.
 
         :param hits: list of hits to filter
         :type hits: list of :class:`macsypy.report.Hit` object
         :return: list of hits
         :rtype: list of :class:`macsypy.report.Hit` object
         """
-        primary_genes = [g for g in chain(self._mandatory_genes, self._accessory_genes, self._forbidden_genes)]
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in chain(g.get_analogs(), g.get_homologs())if g.exchangeable]
+        primary_genes = self.genes
+        exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
         all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
-
         compatible_hits = [h for h in hits if h.gene.name in all_genes]
         return compatible_hits
