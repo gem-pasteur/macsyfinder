@@ -49,7 +49,7 @@ from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-
+from macsypy.score import BestSystemSelector
 
 def get_version_message():
     """
@@ -661,8 +661,8 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        system_filename = os.path.join(config.working_dir(), "systems.txt")
-        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
+        system_filename = os.path.join(config.working_dir(), "all_systems.txt")
+        tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
         track_multi_systems_hit = HitSystemTracker(systems)
 
         with open(system_filename, "w") as sys_file:
@@ -676,6 +676,22 @@ def main(args=None, loglevel=None):
             rejected_clst_to_txt(rejected_clusters, clst_file)
         if not (systems or rejected_clusters):
             logger.info("No hits found in this dataset.")
+
+        ###########################
+        # select the best systems #
+        ###########################
+        best_systems = []
+        systems = sorted(systems, key=lambda s: (s.replicon_name, s.model.fqn))
+        for _, sys_group in itertools.groupby(systems, key=lambda s: (s.replicon_name, s.model.fqn)):
+            bss = BestSystemSelector(list(sys_group), track_multi_systems_hit)
+            best_systems.extend(bss.best_system())
+
+        best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+        tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(best_systems, track_multi_systems_hit, tsv_file)
+
+
     logger.info("END")
 
 
