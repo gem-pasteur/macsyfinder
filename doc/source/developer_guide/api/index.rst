@@ -21,6 +21,7 @@ MacSyFinder API documentation
     hit
     cluster
     system
+    score
     report
     search_genes
     database
