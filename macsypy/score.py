@@ -63,6 +63,7 @@ class ComposedScore:
         self._overlapping_genes = sum([1 for vh in used_in_systems if used_in_systems[vh]])
         self._overlapping_length = sum([1 for used_in in used_in_systems.values() for h in used_in])
 
+
     @property
     def system(self):
         """
@@ -113,7 +114,7 @@ class BestSystemSelector:
         """
         models = {sys.model.fqn for sys in systems}
         if len(models) != 1:
-            raise MacsypyError(f"Cannot build Score with system from different models: {','.join(models)}")
+            raise MacsypyError(f"Cannot build Score with system from different models: {', '.join(models)}")
         self. systems = systems
         self.hit_tracker = hit_tracker
 
