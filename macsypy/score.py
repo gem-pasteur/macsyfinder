@@ -59,8 +59,8 @@ class ComposedScore:
         """
         used_in_systems = {}
         for vh in self._system.hits:
-            used_in_systems[vh] = [s.id for s in self._hit_tracker[vh.hit] if s.model.fqn != self._system.model.fqn]
-        self._overlapping_genes = len(used_in_systems)
+            used_in_systems[vh] = {s.id for s in self._hit_tracker[vh.hit] if s.model.fqn != self._system.model.fqn}
+        self._overlapping_genes = sum([1 for vh in used_in_systems if used_in_systems[vh]])
         self._overlapping_length = sum([1 for used_in in used_in_systems.values() for h in used_in])
 
     @property
