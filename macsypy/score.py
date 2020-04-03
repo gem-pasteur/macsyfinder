@@ -106,7 +106,7 @@ class BestSystemSelector:
     def __init__(self, systems, hit_tracker):
         """
 
-        :param systems: The systems to sort, filter. The systems must be occurrence of the same model
+        :param systems: The systems to sort, filter. The systems must be occurrence of the **same model**
         :type systems: list of :class:`macsypy.system.System` object
         :param hit_tracker: the hit tracker build for this run
         :type hit_tracker: :class:`macsypy.hit.HitTracker` object
@@ -116,6 +116,7 @@ class BestSystemSelector:
             raise MacsypyError(f"Cannot build Score with system from different models: {','.join(models)}")
         self. systems = systems
         self.hit_tracker = hit_tracker
+
 
     def best_system(self):
         """
