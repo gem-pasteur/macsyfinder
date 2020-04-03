@@ -77,13 +77,14 @@ class ComposedScore:
         :return: the system score itself
         :rtype: float
         """
-        return self.sys_score()
+        return self._sys_score
 
 
     @property
     def overlapping_genes(self):
         """
-        :return: The number of overlapping genes (number of genes which are represented several times)
+        :return: The number of overlapping genes (number of genes which are represented several times
+                 in **different models**)
         :rtype: int
         """
         return self._overlapping_genes
