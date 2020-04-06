@@ -115,7 +115,7 @@ class BestSystemSelector:
         models = {sys.model.fqn for sys in systems}
         if len(models) != 1:
             raise MacsypyError(f"Cannot build Score with system from different models: {', '.join(models)}")
-        self. systems = systems
+        self.systems = systems
         self.hit_tracker = hit_tracker
 
 
@@ -137,18 +137,18 @@ class BestSystemSelector:
         score, best_systems = next(grouped)
         best_systems = list(best_systems)
         if len(best_systems) > 1:
-            best_score = [ComposedScore(sys, self.hit_tracker) for sys in best_systems]
+            best_scores = [ComposedScore(sys, self.hit_tracker) for sys in best_systems]
             criterion = lambda cs: cs.overlapping_genes
-            best_score = itertools.groupby(sorted(best_score, key=criterion), key=criterion)
-            _, best_score = next(best_score)
-            best_score = list(best_score)
-            if len(best_score) > 1:
+            best_scores = itertools.groupby(sorted(best_scores, key=criterion), key=criterion)
+            _, best_scores = next(best_scores)
+            best_scores = list(best_scores)
+            if len(best_scores) > 1:
                 criterion = lambda cs: cs.overlapping_length
-                best_score = itertools.groupby(sorted(best_score, key=criterion), key=criterion)
-                _, best_score = next(best_score)
-                return [cs.system for cs in best_score]
+                best_scores = itertools.groupby(sorted(best_scores, key=criterion), key=criterion)
+                _, best_scores = next(best_scores)
+                return [cs.system for cs in best_scores]
             else:
-                return [cs.system for cs in best_score]
+                return [cs.system for cs in best_scores]
         else:
             return best_systems
 
