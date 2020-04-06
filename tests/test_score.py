@@ -307,7 +307,6 @@ class BestSystemSelectorTest(MacsyTest):
         s5 = System(model_3, [m3_c1, m3_c2])
         return s0, s1, s2, s3, s4, s5
 
-
     def test_BestSystemSelector(self):
         bs = BestSystemSelector(self.systems[:3], self.hit_system_tracker)
         self.assertTrue(isinstance(bs, BestSystemSelector))
@@ -323,6 +322,11 @@ class BestSystemSelectorTest(MacsyTest):
         self.assertEqual(best_systems[0], self.systems[0])
 
         bs = BestSystemSelector(self.systems[1:4], self.hit_system_tracker)
+        best_systems = bs.best_system()
+        self.assertEqual(len(best_systems), 1)
+        self.assertEqual(best_systems[0], self.systems[1])
+
+        bs = BestSystemSelector([self.systems[1], self.systems[3]], self.hit_system_tracker)
         best_systems = bs.best_system()
         self.assertEqual(len(best_systems), 1)
         self.assertEqual(best_systems[0], self.systems[1])
