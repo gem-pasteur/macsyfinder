@@ -39,8 +39,10 @@ from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model, ModelBank
 from macsypy.system import System, HitSystemTracker
 from macsypy.cluster import Cluster, RejectedClusters
+from macsypy.error import MacsypyError
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, parse_args, search_systems
+from macsypy.scripts.macsyfinder import list_models
 
 import macsypy
 from tests import MacsyTest, which
@@ -63,11 +65,8 @@ class TestMacsyfinder(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
         cmd_args.list_models = True
-        registry = ModelRegistry()
-        models_location = scan_models_dir(cmd_args.models_dir)
-        for ml in models_location:
-            registry.add(ml)
-        list_models = """set_1
+        rcv_list_models = list_models(cmd_args)
+        exp_list_models = """set_1
       /def_1_1
       /def_1_2
       /def_1_3
@@ -80,7 +79,7 @@ set_2
                       /def_2_3
                       /def_2_4
 """
-        self.assertEqual(str(registry), list_models)
+        self.assertEqual(exp_list_models, rcv_list_models)
 
 
     def test_systems_to_txt(self):
@@ -209,6 +208,16 @@ neutral genes:
             track_multi_systems_hit = HitSystemTracker([system_1])
             systems_to_tsv([system_1], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_tsv, f_out.getvalue())
+
+            # test No system found
+            system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Systems found
+"""
+            f_out = StringIO()
+            track_multi_systems_hit = HitSystemTracker([])
+            systems_to_tsv([], track_multi_systems_hit, f_out)
+            self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
     def test_rejected_clst_to_txt(self):
@@ -359,3 +368,52 @@ The reasons to reject this clusters
         expected_scores = [10.5, 10.0, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.25, 7.5]
         self.assertListEqual([s.score for s in systems], expected_scores)
         self.assertEqual(len(rejected_clst), 11)
+
+        # test hits but No Systems
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4 -o {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        self.assertEqual(systems, [])
+
+        # test No hits
+        seq_db = self.find_data('base', 'test_aesu.fa')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4 -o {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        self.assertEqual(systems, [])
+        self.assertEqual(rejected_clst, [])
+
+    def test_search_systems_model_unknown(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='ERROR')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+        seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
+        model_dir = self.find_data('data_set', 'models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4 -o {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+
+        exit_ori = sys.exit
+        sys.exit = self.fake_exit
+        try:
+            with self.assertRaises(TypeError) as ctx:
+                _ = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+            self.assertEqual(str(ctx.exception),
+                             "macsyfinder: \"No such model definition: 'nimporaoik'\"")
+        finally:
+            sys.exit = exit_ori

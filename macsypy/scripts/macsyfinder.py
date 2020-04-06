@@ -51,6 +51,7 @@ from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.score import BestSystemSelector
 
+
 def get_version_message():
     """
     :return: the long description of the macsyfinder version
@@ -420,7 +421,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     all_genes = []
     for model in models_to_detect:
         genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
-        # Exchangeable homologs/analogs are also added cause they can "replace" an important gene...
+        # Exchangeable (formerly homologs/analogs) are also added because they can "replace" an important gene...
         ex_genes = []
 
         for g in genes:
@@ -675,7 +676,7 @@ def main(args=None, loglevel=None):
         with open(cluster_filename, "w") as clst_file:
             rejected_clst_to_txt(rejected_clusters, clst_file)
         if not (systems or rejected_clusters):
-            logger.info("No hits found in this dataset.")
+            logger.info("No Systems found in this dataset.")
 
         ###########################
         # select the best systems #
@@ -690,7 +691,6 @@ def main(args=None, loglevel=None):
         tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
         with open(tsv_filename, "w") as tsv_file:
             systems_to_tsv(best_systems, track_multi_systems_hit, tsv_file)
-
 
     logger.info("END")
 
