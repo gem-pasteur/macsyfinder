@@ -83,6 +83,8 @@ def do_available(args: argparse.Namespace) -> None:
             last_vers = all_versions[0]
             metadata = remote.get_metadata(pack, vers=last_vers)
             pack_vers = f"{pack} ({last_vers})"
+            # 26 = length of field
+            # 25 = number of displayed chars
             print(f"{pack_vers:26.25} - {metadata['short_desc']}")
 
 
@@ -239,7 +241,6 @@ def do_install(args: argparse.Namespace) -> None:
         user_req = requirements.Requirement(args.package)
 
     pack_name = user_req.name
-
     inst_pack_loc = _find_installed_package(pack_name)
 
     if inst_pack_loc:
@@ -255,6 +256,8 @@ def do_install(args: argparse.Namespace) -> None:
         local_vers = None
     user_specifier = user_req.specifier
     if not user_specifier and inst_pack_loc:
+        # the user do not request for a specific version
+        # and there already a version installed locally
         user_specifier = specifiers.SpecifierSet(f">{local_vers}")
 
     if remote:
