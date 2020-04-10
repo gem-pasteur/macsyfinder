@@ -49,7 +49,7 @@ from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.score import BestSystemSelector
+from macsypy.solution import Solution, find_best_solution
 
 
 def get_version_message():
@@ -681,12 +681,16 @@ def main(args=None, loglevel=None):
         ###########################
         # select the best systems #
         ###########################
+        logger.info("Compute best solutions")
         best_systems = []
-        systems = sorted(systems, key=lambda s: (s.replicon_name, s.model.fqn))
-        for _, sys_group in itertools.groupby(systems, key=lambda s: (s.replicon_name, s.model.fqn)):
-            bss = BestSystemSelector(list(sys_group), track_multi_systems_hit)
-            best_systems.extend(bss.best_system())
-
+        # group systems found by replicon
+        # before to search best system combination
+        for _, syst_group in itertools.groupby(systems, key=lambda s: s.replicon_name):
+            systems = sorted(syst_group, key=lambda s: (- s.score, s.id))
+            print([(s.id, s.score) for s in systems])
+            best_sol_4_1_replicon = find_best_solution(systems, Solution([]), Solution([]))
+            print(best_sol_4_1_replicon)
+            best_systems.extend(best_sol_4_1_replicon.systems)
         best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
         tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
         with open(tsv_filename, "w") as tsv_file:
