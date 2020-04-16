@@ -127,8 +127,8 @@ def find_best_solution(sorted_systems, best_sol, cur_sol, branch=0):
     """
     _log.debug("######################### find_best_solution ###################################")
     _log.debug(f"### {branch} ## sorted_systems {[(s.id, s.score) for s in sorted_systems]}")
-    _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]}")
-    _log.debug(f"### {branch} ## cur_sol {[(s.id, s.score) for s in cur_sol.systems]}")
+    _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]} score {best_sol.score}")
+    _log.debug(f"### {branch} ## cur_sol {[(s.id, s.score) for s in cur_sol.systems]} score {cur_sol.score}")
     if not sorted_systems:
         _log.debug(f"### {branch} ## NO more systems to explore RETURN best_sol ##\n{best_sol}")
         return best_sol
