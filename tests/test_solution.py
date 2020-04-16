@@ -158,61 +158,61 @@ def _build_systems(cfg, profile_factory):
     return s0, s1, s2, s3, s4
 
 
-# class SolutionTest(MacsyTest):
-#
-#     def setUp(self) -> None:
-#         args = argparse.Namespace()
-#         args.sequence_db = self.find_data("base", "test_base.fa")
-#         args.db_type = 'gembase'
-#         args.models_dir = self.find_data('models')
-#         self.cfg = Config(MacsyDefaults(), args)
-#
-#         # we need to reset the ProfileFactory
-#         # because it's a like a singleton
-#         # so other tests are influenced by ProfileFactory and it's configuration
-#         # for instance search_genes get profile without hmmer_exe
-#         self.profile_factory = ProfileFactory(self.cfg)
-#         self.systems = _build_systems(self.cfg, self.profile_factory)
-#
-#     def test_hits(self):
-#         systems = self.systems[0:2]
-#         sol = Solution(systems)
-#         hits = set([h.hit for h in systems[0].hits] + [h.hit for h in systems[1].hits])
-#         self.assertSetEqual(hits, sol.hits)
-#
-#     def test_iadd(self):
-#         sol = Solution([self.systems[0]])
-#         sol1 = sol
-#         sol += self.systems[1]
-#         self.assertTrue(isinstance(sol, Solution))
-#         sol2 = Solution(self.systems[0:2])
-#         self.assertSetEqual(sol.hits, sol2.hits)
-#         self.assertEqual(sol.score, sol2.score)
-#
-#     def test_eq(self):
-#         sol_0 = Solution([self.systems[0]])
-#         sol_0_bis = Solution([self.systems[0]])
-#         sol_1 = Solution([self.systems[1]])
-#         self.assertEqual(sol_0, sol_0_bis)
-#         self.assertNotEqual(sol_0, sol_1)
-#
-#     def test_str(self):
-#         systems = self.systems[0:2]
-#         sol = Solution(systems)
-#         expec_sol_str = """Score of the solution = 3.5
-# Sys_ID=replicon_id_A_0 Score=1.5
-# Sys_ID=replicon_id_B_1 Score=2.0"""
-#         self.assertEqual(str(sol),  expec_sol_str)
-#
-#     def test_score(self):
-#         systems = self.systems[0:2]
-#         sol = Solution(systems)
-#         self.assertEqual(sum(s.score for s in systems), sol.score)
-#
-#     def test_is_compatible(self):
-#         sol = Solution([self.systems[0]])
-#         self.assertTrue(sol.is_compatible(self.systems[1]))
-#         self.assertFalse(sol.is_compatible(self.systems[2]))
+class SolutionTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        self.cfg = Config(MacsyDefaults(), args)
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        self.profile_factory = ProfileFactory(self.cfg)
+        self.systems = _build_systems(self.cfg, self.profile_factory)
+
+    def test_hits(self):
+        systems = self.systems[0:2]
+        sol = Solution(systems)
+        hits = set([h.hit for h in systems[0].hits] + [h.hit for h in systems[1].hits])
+        self.assertSetEqual(hits, sol.hits)
+
+    def test_iadd(self):
+        sol = Solution([self.systems[0]])
+        sol1 = sol
+        sol += self.systems[1]
+        self.assertTrue(isinstance(sol, Solution))
+        sol2 = Solution(self.systems[0:2])
+        self.assertSetEqual(sol.hits, sol2.hits)
+        self.assertEqual(sol.score, sol2.score)
+
+    def test_eq(self):
+        sol_0 = Solution([self.systems[0]])
+        sol_0_bis = Solution([self.systems[0]])
+        sol_1 = Solution([self.systems[1]])
+        self.assertEqual(sol_0, sol_0_bis)
+        self.assertNotEqual(sol_0, sol_1)
+
+    def test_str(self):
+        systems = self.systems[0:2]
+        sol = Solution(systems)
+        expec_sol_str = """Score of the solution = 3.5
+Sys_ID=replicon_id_A_0 Score=1.5
+Sys_ID=replicon_id_B_1 Score=2.0"""
+        self.assertEqual(str(sol),  expec_sol_str)
+
+    def test_score(self):
+        systems = self.systems[0:2]
+        sol = Solution(systems)
+        self.assertEqual(sum(s.score for s in systems), sol.score)
+
+    def test_is_compatible(self):
+        sol = Solution([self.systems[0]])
+        self.assertTrue(sol.is_compatible(self.systems[1]))
+        self.assertFalse(sol.is_compatible(self.systems[2]))
 
 
 class SolutionFuncTest(MacsyTest):
