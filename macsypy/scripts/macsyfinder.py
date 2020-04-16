@@ -669,9 +669,15 @@ def main(args=None, loglevel=None):
         best_systems = []
         # group systems found by replicon
         # before to search best system combination
-        for _, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
+
+        import time
+        for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = sorted(syst_group, key=lambda s: (- s.score, s.id))
+            logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
+            t0 = time.time()
             best_sol_4_1_replicon = find_best_solution(syst_group, Solution([]), Solution([]))
+            t1 = time.time()
+            logger.info(f"It took {t1 - t0:.2f}sec to find best solution for replicon {rep_name}")
             best_systems.extend(best_sol_4_1_replicon.systems)
         best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
