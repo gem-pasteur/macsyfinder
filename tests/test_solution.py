@@ -242,8 +242,23 @@ class SolutionFuncTest(MacsyTest):
 
 
     def test_compute_max_bound(self):
-        self.assertEqual(compute_max_bound([self.systems[0]]), self.systems[0].score)
-        self.assertEqual(compute_max_bound(self.systems[:-1]), 8.0)
+        # systems = [('replicon_id_C_2', 3.0), ('replicon_id_B_1', 2.0), ('replicon_id_A_0', 1.5),
+        #            ('replicon_id_D_3', 1.5), ('replicon_id_E_4', 0.5)]
+        # replicon_id_C_2 ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
+        # replicon_id_B_1 ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
+        # replicon_id_A_0 ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
+        # replicon_id_D_3 ['hit_abc', 'hit_sctn']
+        # replicon_id_E_4 ['hit_gspd']
+
+        # sol_1 is empty so all systems are compatible to sol_1
+        sol_1 = Solution([])
+        self.assertEqual(compute_max_bound(sol_1, [self.systems[0]]), self.systems[0].score)
+        self.assertEqual(compute_max_bound(sol_1, self.systems[:-1]), 8.0)
+
+        # sol2 = replicon_id_A_0
+        # score of systems compatible sol_2 <=> systems compatible to system A = score(B) = 2.0
+        sol_2 = Solution([self.systems[0]])
+        self.assertEqual(compute_max_bound(sol_2, self.systems), 2.0)
 
 
     def test_find_best_solution(self):
