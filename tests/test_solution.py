@@ -306,3 +306,19 @@ class SolutionFuncTest(MacsyTest):
         expected_sol = Solution([sorted_syst[0]])
         self.assertEqual(best_sol, expected_sol,
                          f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
+        # systems = [('replicon_id_C_2', 3.0), ('replicon_id_B_1', 2.0), ('replicon_id_A_0', 1.5),
+        #            ('replicon_id_D_3', 1.5), ('replicon_id_E_4', 0.5)]
+        # replicon_id_C_2 ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
+        # replicon_id_B_1 ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
+        # replicon_id_A_0 ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
+        # replicon_id_D_3 ['hit_abc', 'hit_sctn']
+        # replicon_id_E_4 ['hit_gspd']
+        # C and D are compatible
+        # B and A are compatible
+        # B and E are compatible
+        sorted_syst = sorted_systems[:]
+        find_best_solution = solution_explorer()
+        best_sol = find_best_solution(sorted_syst, Solution([]), Solution([]))
+        expected_sol = Solution([sorted_syst[0], sorted_syst[3]])
+        self.assertEqual(best_sol, expected_sol,
+                         f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
