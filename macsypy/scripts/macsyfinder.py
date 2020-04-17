@@ -49,7 +49,7 @@ from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.solution import Solution, find_best_solution
+from macsypy.solution import Solution, solution_explorer
 
 
 def get_version_message():
@@ -675,6 +675,7 @@ def main(args=None, loglevel=None):
             syst_group = sorted(syst_group, key=lambda s: (- s.score, s.id))
             logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
             t0 = time.time()
+            find_best_solution = solution_explorer()
             best_sol_4_1_replicon = find_best_solution(syst_group, Solution([]), Solution([]))
             t1 = time.time()
             logger.info(f"It took {t1 - t0:.2f}sec to find best solution for replicon {rep_name}")
