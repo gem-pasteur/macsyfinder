@@ -109,56 +109,69 @@ def compute_max_bound(systems):
     return sum([s.score for s in systems])
 
 
-def find_best_solution(sorted_systems, best_sol, cur_sol, branch=0):
-    """
+def solution_explorer():
+    roots = set()
 
-    :param sorted_systems: the systems to analyse to find the best combination of systems.
-                           These systems must be sorted by their score in descending order.
-    :type sorted_systems: list of :class:`macsypy.system.System` objets
-    :param best_sol: The current best solution
-    :type best_sol: :class:`macsypy.solution.Solution` object
-    :param cur_sol: The current solution
-    :type cur_sol: :class:`macsypy.solution.Solution` object
-    :param branch: identifier of the solution branch in the solution space
-                   This parameter should not be set it is used only for debugging
-                   and should be set to 0 when the function is not a recursive call
-    :return: The best solution among the sorted_systems
-    :rtype: :class:`macsypy.solution.Solution` object
-    """
-    _log.debug("######################### find_best_solution ###################################")
-    _log.debug(f"### {branch} ## sorted_systems {[(s.id, s.score) for s in sorted_systems]}")
-    _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]} score {best_sol.score}")
-    _log.debug(f"### {branch} ## cur_sol {[(s.id, s.score) for s in cur_sol.systems]} score {cur_sol.score}")
-    if not sorted_systems:
-        _log.debug(f"### {branch} ## NO more systems to explore RETURN best_sol ##\n{best_sol}")
-        return best_sol
+    def find_best_solution(sorted_systems, best_sol, cur_sol, branch=0):
+        """
 
-    # It's IMPORTANT to do a copy of sorted_systems
-    # otherwise (for instance using pop to get the first element)
-    # the side effect will empty the sorted_systems even outside the function :-(
-    system_to_test = sorted_systems[0]
-    remaining_syst = sorted_systems[1:]
+        :param sorted_systems: the systems to analyse to find the best combination of systems.
+                               These systems must be sorted by their score in descending order.
+        :type sorted_systems: list of :class:`macsypy.system.System` objets
+        :param best_sol: The current best solution
+        :type best_sol: :class:`macsypy.solution.Solution` object
+        :param cur_sol: The current solution
+        :type cur_sol: :class:`macsypy.solution.Solution` object
+        :param branch: identifier of the solution branch in the solution space
+                       This parameter should not be set it is used only for debugging
+                       and should be set to 0 when the function is not a recursive call
+        :return: The best solution among the sorted_systems
+        :rtype: :class:`macsypy.solution.Solution` object
+        """
+        nonlocal roots
+        _log.debug("######################### find_best_solution ###################################")
+        _log.debug(f"### {branch} ## sorted_systems {[(s.id, s.score) for s in sorted_systems]}")
+        _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]} score {best_sol.score}")
+        _log.debug(f"### {branch} ## cur_sol {[(s.id, s.score) for s in cur_sol.systems]} score {cur_sol.score}")
+        if not sorted_systems:
+            _log.debug(f"### {branch} ## NO more systems to explore RETURN best_sol ##\n{best_sol}")
+            return best_sol
 
-    max_bound = compute_max_bound(sorted_systems)
-    if max_bound + cur_sol.score < best_sol.score:
-        _log.debug(f"### {branch} ## max_bound + cur_sol.score < best_sol.score "
-                   f"{max_bound} + {cur_sol.score} < {best_sol.score} Stop exploring this branch")
-        _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
-        return best_sol
+        # It's IMPORTANT to do a copy of sorted_systems
+        # otherwise (for instance using pop to get the first element)
+        # the side effect will empty the sorted_systems even outside the function :-(
+        system_to_test = sorted_systems[0]
+        remaining_syst = sorted_systems[1:]
+        if not cur_sol.systems:
+            if system_to_test in roots:
+                _log.debug(f"### {branch} ## This branch is already in regsitered for exploration skip it")
+                _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
+                return best_sol
+            else:
+                _log.debug(f"### {branch} ## add new root {system_to_test.id}")
+                roots.add(system_to_test)
+        max_bound = compute_max_bound(sorted_systems)
+        if max_bound + cur_sol.score < best_sol.score:
+            _log.debug(f"### {branch} ## max_bound + cur_sol.score < best_sol.score "
+                       f"{max_bound} + {cur_sol.score} < {best_sol.score} Stop exploring this branch")
+            _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
+            return best_sol
 
-    if cur_sol.is_compatible(system_to_test):
-        _log.debug(f"### {branch} ## cur_sol is compatible with {system_to_test.id}")
-        cur_sol += system_to_test
-        if cur_sol.score > best_sol.score:
-            best_sol = cur_sol
-        _log.debug(f"### {branch} ## best sol so far ##\n{best_sol}")
-        return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
-    else:
-        _log.debug(f"### {branch} ## cur_sol is NOT compatible with {system_to_test.id}")
-        _log.debug(f"### {branch} ## lets explore new branch of solutions")
-        is_the_best = find_best_solution(sorted_systems, best_sol, Solution([]), branch=branch + 1)
-        if is_the_best.score > best_sol.score:
-            _log.debug(f"### {branch} ## The solution from the new branch become the best solution")
-            best_sol = is_the_best
-        _log.debug(f"### {branch} ## continue to explore the branch {branch}")
-        return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
+        if cur_sol.is_compatible(system_to_test):
+            _log.debug(f"### {branch} ## cur_sol is compatible with {system_to_test.id}")
+            cur_sol += system_to_test
+            if cur_sol.score > best_sol.score:
+                best_sol = cur_sol
+            _log.debug(f"### {branch} ## best sol so far ##\n{best_sol}")
+            return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
+        else:
+            _log.debug(f"### {branch} ## cur_sol is NOT compatible with {system_to_test.id}")
+            _log.debug(f"### {branch} ## lets explore new branch of solutions")
+            is_the_best = find_best_solution(sorted_systems, best_sol, Solution([]), branch=branch + 1)
+            if is_the_best.score > best_sol.score:
+                _log.debug(f"### {branch} ## The solution from the new branch become the best solution")
+                best_sol = is_the_best
+            _log.debug(f"### {branch} ## continue to explore the branch {branch}")
+            return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
+
+    return find_best_solution
