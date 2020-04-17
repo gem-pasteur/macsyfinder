@@ -97,7 +97,7 @@ class Solution:
         return self._systems
 
 
-def compute_max_bound(systems):
+def compute_max_bound(solution, systems):
     """
     Computes a grand estimation of the maximal score to be found using the set of systems as ground for a solution
 
@@ -106,7 +106,7 @@ def compute_max_bound(systems):
     :return: the max score of the systems
     :rtype: float
     """
-    return sum([s.score for s in systems])
+    return sum([s.score for s in systems if solution.is_compatible(s)])
 
 
 def solution_explorer():
@@ -150,7 +150,7 @@ def solution_explorer():
             else:
                 _log.debug(f"### {branch} ## add new root {system_to_test.id}")
                 roots.add(system_to_test)
-        max_bound = compute_max_bound(sorted_systems)
+        max_bound = compute_max_bound(cur_sol, sorted_systems)
         if max_bound + cur_sol.score < best_sol.score:
             _log.debug(f"### {branch} ## max_bound + cur_sol.score < best_sol.score "
                        f"{max_bound} + {cur_sol.score} < {best_sol.score} Stop exploring this branch")
