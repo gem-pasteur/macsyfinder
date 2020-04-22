@@ -21,9 +21,9 @@ MacSyFinder API documentation
     hit
     cluster
     system
-    score
     report
     search_genes
+    solution
     database
     error
     utils
