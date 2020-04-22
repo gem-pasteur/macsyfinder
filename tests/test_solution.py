@@ -33,7 +33,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System
-from macsypy.solution import Solution, compute_max_bound, solution_explorer
+from macsypy.solution import Solution, SolutionExplorer
 from tests import MacsyTest
 
 
@@ -215,7 +215,7 @@ Sys_ID=replicon_id_B_1 Score=2.0"""
         self.assertFalse(sol.is_compatible(self.systems[2]))
 
 
-class SolutionFuncTest(MacsyTest):
+class SolutionExplorerTest(MacsyTest):
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -252,13 +252,15 @@ class SolutionFuncTest(MacsyTest):
 
         # sol_1 is empty so all systems are compatible to sol_1
         sol_1 = Solution([])
-        self.assertEqual(compute_max_bound(sol_1, [self.systems[0]]), self.systems[0].score)
-        self.assertEqual(compute_max_bound(sol_1, self.systems[:-1]), 8.0)
+        sol_exp = SolutionExplorer()
+        self.assertEqual(sol_exp.compute_max_bound(sol_1, [self.systems[0]]), self.systems[0].score)
+        self.assertEqual(sol_exp.compute_max_bound(sol_1, self.systems[:-1]), 8.0)
 
         # sol2 = replicon_id_A_0
         # score of systems compatible sol_2 <=> systems compatible to system A = score(B) = 2.0
         sol_2 = Solution([self.systems[0]])
-        self.assertEqual(compute_max_bound(sol_2, self.systems), 2.0)
+        sol_exp = SolutionExplorer()
+        self.assertEqual(sol_exp.compute_max_bound(sol_2, self.systems), 2.0)
 
 
     def test_find_best_solution(self):
@@ -272,8 +274,8 @@ class SolutionFuncTest(MacsyTest):
         # C and D are compatible
         # B and A are compatible
         # So the best Solution expected is C D
-        find_best_solution = solution_explorer()
-        best_sol = find_best_solution(sorted_syst, Solution([]), Solution([]))
+        sol_exp = SolutionExplorer()
+        best_sol = sol_exp.find_best_solution(sorted_syst, Solution([]), Solution([]))
         expected_sol = Solution([sorted_syst[0], sorted_syst[-1]])
         self.assertEqual(best_sol, expected_sol,
                          f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
@@ -285,8 +287,8 @@ class SolutionFuncTest(MacsyTest):
         # C is alone
         # B and A are compatible
         # So the best Solution expected is B and A
-        find_best_solution = solution_explorer()
-        best_sol = find_best_solution(sorted_syst, Solution([]), Solution([]))
+        sol_exp = SolutionExplorer()
+        best_sol = sol_exp.find_best_solution(sorted_syst, Solution([]), Solution([]))
         expected_sol = Solution(sorted_syst[1:])
         self.assertEqual(best_sol, expected_sol,
                          f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
@@ -301,8 +303,8 @@ class SolutionFuncTest(MacsyTest):
         # B and E are compatible
         # So the best Solution expected is C
         # but the branch B E is stoped as the max bound is lower than best_solution C
-        find_best_solution = solution_explorer()
-        best_sol = find_best_solution(sorted_syst, Solution([]), Solution([]))
+        sol_exp = SolutionExplorer()
+        best_sol = sol_exp.find_best_solution(sorted_syst, Solution([]), Solution([]))
         expected_sol = Solution([sorted_syst[0]])
         self.assertEqual(best_sol, expected_sol,
                          f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
@@ -313,12 +315,12 @@ class SolutionFuncTest(MacsyTest):
         # replicon_id_A_0 ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
         # replicon_id_D_3 ['hit_abc', 'hit_sctn']
         # replicon_id_E_4 ['hit_gspd']
-        # C and D are compatible
-        # B and A are compatible
-        # B and E are compatible
+        # C and D are compatible 4.5
+        # B and A are compatible 3.5
+        # B and E are compatible 2.5
         sorted_syst = sorted_systems[:]
-        find_best_solution = solution_explorer()
-        best_sol = find_best_solution(sorted_syst, Solution([]), Solution([]))
+        sol_exp = SolutionExplorer()
+        best_sol = sol_exp.find_best_solution(sorted_syst, Solution([]), Solution([]))
         expected_sol = Solution([sorted_syst[0], sorted_syst[3]])
         self.assertEqual(best_sol, expected_sol,
                          f"\n== sol found ==\n{best_sol} \n== is different than expected ==\n{expected_sol}")
