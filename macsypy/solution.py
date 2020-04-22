@@ -29,9 +29,7 @@ _log = logging.getLogger(__name__)
 
 class Solution:
     """
-    manage set of systems to build a solution to the systems search
-    the best solution should have the highest score and the components (hits)
-    should have no overlaps (hit belonging to several system)
+    Manage a set of systems to build a solution.
     """
 
     def __init__(self, systems):
@@ -97,27 +95,44 @@ class Solution:
         return self._systems
 
 
-def compute_max_bound(solution, systems):
+class SolutionExplorer:
     """
-    Computes a grand estimation of the maximal score to be found using the set of systems as ground for a solution
-
-    :param systems:
-    :type systems: list of :class:`macsypy.system.System`
-    :return: the max score of the systems
-    :rtype: float
+    Allow to explore the solution space and find the best solution.
+    For each sets of systems, typically for all systems found for one replicon,
+    a new new SolutionExplorer created. Otherwise the result will be wrong.
     """
-    return sum([s.score for s in systems if solution.is_compatible(s)])
 
-
-def solution_explorer():
-    roots = set()
-
-    def find_best_solution(sorted_systems, best_sol, cur_sol, branch=0):
+    def __init__(self):
         """
+
+        """
+        self._visited = set()
+
+
+    def compute_max_bound(self, solution, systems):
+        """
+        Computes a grand estimation of the maximal score to be found using the set of systems as ground for a solution.
+        Actually the max bound is the sum of the systems scores which are compatible with the solution (not sharing hits)
+
+        :param solution: The solution used to filter compatible systems
+        :type solution: :class:`macsypy.solution.Solution` object
+        :param systems: the systems uses to compute the max bound
+        :type systems: list of :class:`macsypy.system.System`
+        :return: the max score of the systems
+        :rtype: float
+        """
+        return sum([s.score for s in systems if solution.is_compatible(s)])
+
+
+    def find_best_solution(self, sorted_systems, best_sol, cur_sol, branch=0):
+        """
+        The best solution is the combination of systems which does not share components
+        (systems :class:`macsypy.system.System` with not same hits :class:`macsypy.hit.Hit`)
+        and maximize the score (the sum of systems scores)
 
         :param sorted_systems: the systems to analyse to find the best combination of systems.
                                These systems must be sorted by their score in descending order.
-        :type sorted_systems: list of :class:`macsypy.system.System` objets
+        :type sorted_systems: list of :class:`macsypy.system.System` objects
         :param best_sol: The current best solution
         :type best_sol: :class:`macsypy.solution.Solution` object
         :param cur_sol: The current solution
@@ -128,7 +143,6 @@ def solution_explorer():
         :return: The best solution among the sorted_systems
         :rtype: :class:`macsypy.solution.Solution` object
         """
-        nonlocal roots
         _log.debug("######################### find_best_solution ###################################")
         _log.debug(f"### {branch} ## sorted_systems {[(s.id, s.score) for s in sorted_systems]}")
         _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]} score {best_sol.score}")
@@ -143,14 +157,14 @@ def solution_explorer():
         system_to_test = sorted_systems[0]
         remaining_syst = sorted_systems[1:]
         if not cur_sol.systems:
-            if system_to_test in roots:
-                _log.debug(f"### {branch} ## This branch is already in regsitered for exploration skip it")
+            if system_to_test in self._visited:
+                _log.debug(f"### {branch} ## This branch is already in registered for exploration skip it")
                 _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
                 return best_sol
             else:
                 _log.debug(f"### {branch} ## add new root {system_to_test.id}")
-                roots.add(system_to_test)
-        max_bound = compute_max_bound(cur_sol, sorted_systems)
+                self._visited.add(system_to_test)
+        max_bound = self.compute_max_bound(cur_sol, sorted_systems)
         if max_bound + cur_sol.score < best_sol.score:
             _log.debug(f"### {branch} ## max_bound + cur_sol.score < best_sol.score "
                        f"{max_bound} + {cur_sol.score} < {best_sol.score} Stop exploring this branch")
@@ -163,15 +177,13 @@ def solution_explorer():
             if cur_sol.score > best_sol.score:
                 best_sol = cur_sol
             _log.debug(f"### {branch} ## best sol so far ##\n{best_sol}")
-            return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
+            return self.find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
         else:
             _log.debug(f"### {branch} ## cur_sol is NOT compatible with {system_to_test.id}")
             _log.debug(f"### {branch} ## lets explore new branch of solutions")
-            is_the_best = find_best_solution(sorted_systems, best_sol, Solution([]), branch=branch + 1)
+            is_the_best = self.find_best_solution(sorted_systems, best_sol, Solution([]), branch=branch + 1)
             if is_the_best.score > best_sol.score:
                 _log.debug(f"### {branch} ## The solution from the new branch become the best solution")
                 best_sol = is_the_best
             _log.debug(f"### {branch} ## continue to explore the branch {branch}")
-            return find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
-
-    return find_best_solution
+            return self.find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
