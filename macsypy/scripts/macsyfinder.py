@@ -49,7 +49,7 @@ from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.solution import Solution, SolutionExplorer
+from macsypy.solution import find_best_solution
 
 
 def get_version_message():
@@ -672,14 +672,15 @@ def main(args=None, loglevel=None):
 
         import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
-            syst_group = sorted(syst_group, key=lambda s: (- s.score, s.id))
+            #syst_group = sorted(syst_group, key=lambda s: (- s.score, s.id))
+            syst_group = list(syst_group)
             logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
             t0 = time.time()
-            sol_exp = SolutionExplorer()
-            best_sol_4_1_replicon = sol_exp.find_best_solution(syst_group, Solution([]), Solution([]))
+            #sol_exp = SolutionExplorer()
+            best_sol_4_1_replicon, score = find_best_solution(syst_group)
             t1 = time.time()
-            logger.info(f"It took {t1 - t0:.2f}sec to find best solution for replicon {rep_name}")
-            best_systems.extend(best_sol_4_1_replicon.systems)
+            logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score}) for replicon {rep_name}")
+            best_systems.extend(best_sol_4_1_replicon)
         best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
 
