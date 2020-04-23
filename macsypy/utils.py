@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+import contextlib
+import os
+import sys
+
 from .registries import DefinitionLocation
 
 
@@ -49,3 +53,22 @@ def get_def_to_detect(models, model_registry):
         else:
             def_to_detect += [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_name]
     return def_to_detect
+
+
+@contextlib.contextmanager
+def no_stdout():
+    """
+    supress message write on stdout inside the context
+    for instance::
+
+        print('after context')
+
+        before context
+        after context
+
+    :return:
+    """
+    save_stdout = sys.stdout
+    sys.stdout = open(os.devnull, 'w')
+    yield
+    sys.stdout = save_stdout
