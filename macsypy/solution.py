@@ -23,167 +23,52 @@
 #########################################################################
 
 import logging
+import itertools
+from macsypy.utils import no_stdout
+from macsypy.error import MacsypyError
+
+
+with no_stdout():
+    # mip display version message @the import :-(
+    import mip
 
 _log = logging.getLogger(__name__)
 
 
-class Solution:
+def find_best_solution(systems):
     """
-    Manage a set of systems to build a solution.
+    Among the systems choose the combination of systems which does not share :class:`macsypy.hit.Hit`
+    and maximize the sum of systems scores
+
+    :param systems: the systems to analyse
+    :type systems: list of :class:`macsypy.system.System` object
+    :return: the list of systems which represent the best solution and the it's score
+    :rtype: tuple of 2 elements ([:class:`macsypy.system.System`, ...], float score)
     """
+    scores = [s.score for s in systems]
+    ranks = range(len(systems))
+    # create a new Model
+    m = mip.Model("")
+    if _log.getEffectiveLevel() > 10:
+        m.verbose = 0
+    # let's create variable which can take 0/1 for each system
+    # and add them to the model
+    x = [m.add_var(var_type=mip.BINARY) for i in ranks]
 
-    def __init__(self, systems):
-        """
-        :param systems: the systems which composed the solution
-        :type systems: list of :class:`macsypy.system.System` object
-        """
-        self._score = 0
-        self._hits = set()
-        self._systems = systems
-        for s in systems:
-            self._hits.update({vh.hit for vh in s.hits})
-            self._score += s.score
+    # add constraints
+    for i, j in itertools.combinations(ranks, 2):
+        if not systems[i].is_compatible(systems[j]):
+            m += x[i] + x[j] <= 1, f'{systems[i].id} and {systems[j].id} are not compatible'
 
-    def __eq__(self, other):
-        # 2 solutions are equal if they are composed with the same systems
-        return {s.id for s in self.systems} == {s.id for s in other.systems}
+    # We want to optimize the scores
+    m.objective = mip.maximize(mip.xsum(x[i] * scores[i] for i in ranks))
 
-    def __iadd__(self, system):
-        return Solution(self._systems + [system])
+    status = m.optimize()
 
-
-    def __str__(self):
-        out = f"Score of the solution = {self.score}\n"
-        out += '\n'.join([f"Sys_ID={s.id} Score={s.score}" for s in self.systems])
-        return out
-
-
-    def is_compatible(self, system):
-        """
-        :param system: the system to compare to the solution
-        :type system: :class:`macsypy.system.System` instance
-        :return: True if the system does not share components (hits) with the systems that are part of the solution.
-                 False otherwise
-        """
-        s2 = {vh.hit for vh in system.hits}
-        return not (self.hits & s2)
-
-
-    @property
-    def score(self):
-        """
-        The score of the solution
-        :rtype: float
-        """
-        return self._score
-
-    @property
-    def hits(self):
-        """
-        :return: The hits composing the solution
-                 This is all hits from all systems used to build this solution
-        :rtype: set of :class:`macsypy.hit.Hit` object`
-        """
-        return self._hits
-
-    @property
-    def systems(self):
-        """
-        :return: The systems composing the solution
-        :rtype: set of :class:`macsypy.systems.Systems` object`
-        """
-        return self._systems
-
-
-class SolutionExplorer:
-    """
-    Allow to explore the solution space and find the best solution.
-    For each sets of systems, typically for all systems found for one replicon,
-    a new new SolutionExplorer created. Otherwise the result will be wrong.
-    """
-
-    def __init__(self):
-        """
-
-        """
-        self._visited = set()
-
-
-    def compute_max_bound(self, solution, systems):
-        """
-        Computes a grand estimation of the maximal score to be found using the set of systems as ground for a solution.
-        Actually the max bound is the sum of the systems scores which are compatible with the solution (not sharing hits)
-
-        :param solution: The solution used to filter compatible systems
-        :type solution: :class:`macsypy.solution.Solution` object
-        :param systems: the systems uses to compute the max bound
-        :type systems: list of :class:`macsypy.system.System`
-        :return: the max score of the systems
-        :rtype: float
-        """
-        return sum([s.score for s in systems if solution.is_compatible(s)])
-
-
-    def find_best_solution(self, sorted_systems, best_sol, cur_sol, branch=0):
-        """
-        The best solution is the combination of systems which does not share components
-        (systems :class:`macsypy.system.System` with not same hits :class:`macsypy.hit.Hit`)
-        and maximize the score (the sum of systems scores)
-
-        :param sorted_systems: the systems to analyse to find the best combination of systems.
-                               These systems must be sorted by their score in descending order.
-        :type sorted_systems: list of :class:`macsypy.system.System` objects
-        :param best_sol: The current best solution
-        :type best_sol: :class:`macsypy.solution.Solution` object
-        :param cur_sol: The current solution
-        :type cur_sol: :class:`macsypy.solution.Solution` object
-        :param branch: identifier of the solution branch in the solution space
-                       This parameter should not be set it is used only for debugging
-                       and should be set to 0 when the function is not a recursive call
-        :return: The best solution among the sorted_systems
-        :rtype: :class:`macsypy.solution.Solution` object
-        """
-        _log.debug("######################### find_best_solution ###################################")
-        _log.debug(f"### {branch} ## sorted_systems {[(s.id, s.score) for s in sorted_systems]}")
-        _log.debug(f"### {branch} ## best_sol {[(s.id, s.score) for s in best_sol.systems]} score {best_sol.score}")
-        _log.debug(f"### {branch} ## cur_sol {[(s.id, s.score) for s in cur_sol.systems]} score {cur_sol.score}")
-        if not sorted_systems:
-            _log.debug(f"### {branch} ## NO more systems to explore RETURN best_sol ##\n{best_sol}")
-            return best_sol
-
-        # It's IMPORTANT to do a copy of sorted_systems
-        # otherwise (for instance using pop to get the first element)
-        # the side effect will empty the sorted_systems even outside the function :-(
-        system_to_test = sorted_systems[0]
-        remaining_syst = sorted_systems[1:]
-        if not cur_sol.systems:
-            if system_to_test in self._visited:
-                _log.debug(f"### {branch} ## This branch is already in registered for exploration skip it")
-                _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
-                return best_sol
-            else:
-                _log.debug(f"### {branch} ## add new root {system_to_test.id}")
-                self._visited.add(system_to_test)
-        max_bound = self.compute_max_bound(cur_sol, sorted_systems)
-        if max_bound + cur_sol.score < best_sol.score:
-            _log.debug(f"### {branch} ## max_bound + cur_sol.score < best_sol.score "
-                       f"{max_bound} + {cur_sol.score} < {best_sol.score} Stop exploring this branch")
-            _log.debug(f"### {branch} ## RETURN best_sol \n{[s.id for s in best_sol.systems]}")
-            return best_sol
-
-        if cur_sol.is_compatible(system_to_test):
-            _log.debug(f"### {branch} ## cur_sol is compatible with {system_to_test.id}")
-            cur_sol += system_to_test
-            if cur_sol.score > best_sol.score:
-                best_sol = cur_sol
-            _log.debug(f"### {branch} ## best sol so far ##\n{best_sol}")
-            return self.find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
-        else:
-            _log.debug(f"### {branch} ## cur_sol is NOT compatible with {system_to_test.id}")
-            _log.debug(f"### {branch} ## lets explore new branch of solutions")
-            is_the_best = self.find_best_solution(sorted_systems, best_sol, Solution([]), branch=branch + 1)
-            if is_the_best.score > best_sol.score:
-                _log.debug(f"### {branch} ## The solution from the new branch become the best solution")
-                best_sol = is_the_best
-            _log.debug(f"### {branch} ## continue to explore the branch {branch}")
-            return self.find_best_solution(remaining_syst, best_sol, cur_sol, branch=branch)
+    if status == mip.OptimizationStatus.OPTIMAL:
+        _log.debug('optimal solution cost {} found'.format(m.objective_value))
+        best_ranks = [i for i, v in enumerate(m.vars) if abs(v.x) > 1e-6]
+        best_sol = [systems[i] for i in best_ranks]
+    else:
+        raise MacsypyError("No optimal solution")
+    return best_sol, m.objective_value

@@ -380,6 +380,11 @@ class System:
         used_in_systems = [s.id for s in self.hit_system_tracker[h.hit] if s.model.fqn != self.model.fqn]
         return used_in_systems
 
+    def is_compatible(self, other):
+        other_hits = {vh.hit for vh in other.hits}
+        my_hits = {vh.hit for vh in self.hits}
+        return not (my_hits & other_hits)
+
 
 class SystemSerializer(metaclass=abc.ABCMeta):
     """
