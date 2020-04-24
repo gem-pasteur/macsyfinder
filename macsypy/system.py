@@ -376,9 +376,6 @@ class System:
         hits.sort()
         return hits[0], hits[-1]
 
-    def overlap(self, ):
-        used_in_systems = [s.id for s in self.hit_system_tracker[h.hit] if s.model.fqn != self.model.fqn]
-        return used_in_systems
 
     def is_compatible(self, other):
         """
