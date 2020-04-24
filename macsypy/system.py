@@ -350,7 +350,7 @@ class System:
     @property
     def loci(self):
         """
-        :return: The number of loci of this system
+        :return: The number of loci of this system (loners are not considered)
         :rtype: int > 0
         """
         # we do not take loners in account
