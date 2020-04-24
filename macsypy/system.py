@@ -381,8 +381,18 @@ class System:
         return used_in_systems
 
     def is_compatible(self, other):
-        other_hits = {vh.hit for vh in other.hits}
-        my_hits = {vh.hit for vh in self.hits}
+        """
+        :param other: the other systems to test compatibility
+        :type other: :class:`macsypy.system.System` object
+        :return: True if other system is compatible with this one. False otherwise.
+                 Two systems are compatible if they do not share :class:`macsypy.hit.Hit`
+                 except hit corresponding to a multi_system gene in the model.
+
+                 .. note::
+                    This method is used to compute the best combination of systems.
+        """
+        other_hits = {vh.hit for vh in other.hits if not vh.multi_system}
+        my_hits = {vh.hit for vh in self.hits if not vh.multi_system}
         return not (my_hits & other_hits)
 
 

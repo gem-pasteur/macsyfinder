@@ -356,6 +356,117 @@ class SystemTest(MacsyTest):
         s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj_an], model)])
         self.assertEqual(s.score, 1.375)
 
+    def test_is_compatible(self):
+        model_A = Model("foo/A", 10)
+        model_B = Model("foo/B", 10)
+        model_C = Model("foo/C", 10)
+        model_D = Model("foo/D", 10)
+
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+        gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_B)
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+        gene_sctj_flg = ModelGene(c_gene_sctj_flg, model_B)
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
+        gene_flgB = ModelGene(c_gene_flgB, model_B)
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        gene_tadZ = ModelGene(c_gene_tadZ, model_B)
+
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model_A, multi_system=True)
+        gene_sctn_hom = Exchangeable(c_gene_sctn_flg, gene_sctn)
+        gene_sctn.add_exchangeable(gene_sctn_hom)
+
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model_A)
+        gene_sctj_an = Exchangeable(c_gene_sctj_flg, gene_sctj)
+        gene_sctj.add_exchangeable(gene_sctj_an)
+
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model_A)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd.add_exchangeable(gene_gspd_an)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model_A)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc.add_exchangeable(gene_abc_ho)
+
+        model_A.add_mandatory_gene(gene_sctn)
+        model_A.add_mandatory_gene(gene_sctj)
+        model_A.add_accessory_gene(gene_gspd)
+        model_A.add_forbidden_gene(gene_abc)
+
+        model_B.add_mandatory_gene(gene_sctn_flg)
+        model_B.add_mandatory_gene(gene_sctj_flg)
+        model_B.add_accessory_gene(gene_flgB)
+        model_B.add_accessory_gene(gene_tadZ)
+
+        model_C.add_mandatory_gene(gene_sctn_flg)
+        model_C.add_mandatory_gene(gene_sctj_flg)
+        model_C.add_mandatory_gene(gene_flgB)
+        model_C.add_accessory_gene(gene_tadZ)
+        model_C.add_accessory_gene(gene_gspd)
+
+        model_D.add_mandatory_gene(gene_abc)
+        model_D.add_accessory_gene(gene_sctn)
+
+        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        model_A._min_mandatory_genes_required = 2
+        model_A._min_genes_required = 2
+        c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+                      ],
+                     model_A)
+
+        c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+                     model_A)
+
+        model_B._min_mandatory_genes_required = 1
+        model_B._min_genes_required = 2
+        c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
+                     model_B)
+        model_C._min_mandatory_genes_required = 1
+        model_C._min_genes_required = 2
+        c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+                     model_C)
+        model_D._min_mandatory_genes_required = 1
+        model_D._min_genes_required = 1
+        c5 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
+                      ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
+                     model_D)
+
+        sys_A = System(model_A, [c1, c2])
+        # we need to tweek the replicon_id to have stable ressults
+        # whatever the number of tests ran
+        # or the tests order
+        sys_A.id = "replicon_id_A"
+        sys_B = System(model_B, [c3])
+        sys_B.id = "replicon_id_B"
+        sys_C = System(model_C, [c4])
+        sys_C.id = "replicon_id_C"
+        sys_D = System(model_D, [c5])
+        sys_D.id = "replicon_id_D"
+
+        self.assertTrue(sys_A.is_compatible(sys_B))
+        self.assertFalse(sys_A.is_compatible(sys_C))  # share h_gspd
+        self.assertTrue(sys_A.is_compatible(sys_D))   # share h_sctn but sctn is defined as multi_system im model A
+
 
     def test_SystemSerializer_to_json(self):
         model = Model("foo/T2SS", 10)
