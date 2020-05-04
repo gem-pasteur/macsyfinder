@@ -33,7 +33,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System
-from macsypy.solution import find_best_solution
+from macsypy.solution import find_best_solutions
 from tests import MacsyTest
 
 
@@ -225,11 +225,15 @@ class SolutionExplorerTest(MacsyTest):
         # C and D are compatible 4.5
         # B and A are compatible 3.5
         # So the best Solution expected is C D 4.5
-
-        best_sol, score = find_best_solution(sorted_syst)
-        expected_sol = {self.systems[k] for k in 'CD'}
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'CD']]
+        # The order of solutions are not relevant
+        # The order of systems in each solutions are not relevant
+        # transform list in set to compare them
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'ABC']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -240,10 +244,12 @@ class SolutionExplorerTest(MacsyTest):
         # C is alone 3.0
         # B and A are compatible 3.5
         # So the best Solution expected is B and A
-        best_sol, score = find_best_solution(sorted_syst)
-        expected_sol = {self.systems[k] for k in 'BA'}
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'BA']]
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 3.5)
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'BCE']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -254,11 +260,12 @@ class SolutionExplorerTest(MacsyTest):
         # C is alone 3.0
         # B and E are compatible 2.5
         # So the best Solution expected is C
-        # but the branch B E is stopped as the max bound is lower than best_solution C
-        best_sol, score = find_best_solution(sorted_syst)
-        expected_sol = {self.systems[k] for k in 'C'}
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'C']]
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 3.0)
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
         # systems = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5),
         #            ('replicon_id_D', 1.5), ('replicon_id_E', 0.5)]
         # replicon_id_C ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
@@ -271,10 +278,12 @@ class SolutionExplorerTest(MacsyTest):
         # B and E are compatible 2.5
         systems = [self.systems[k] for k in 'ABCDE']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
-        best_sol, score = find_best_solution(sorted_syst)
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'CD']]
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
-        expected_sol = {self.systems[k] for k in 'CD'}
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
 
         # systems = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5),
         #            ('replicon_id_D', 1.5), ('replicon_id_E', 0.5), ('replicon_id_F', 1.0)]
@@ -287,27 +296,40 @@ class SolutionExplorerTest(MacsyTest):
         # B and A  and F are compatible 4.5
         # B and E are compatible 2.5
         # E and F are compatible
+        # So the best Solution expected are C D / B A F
         systems = [self.systems[k] for k in 'ABCDEF']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
-        best_sol, score = find_best_solution(sorted_syst)
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'BAF'],
+                        [self.systems[k] for k in 'CD']]
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
-        expected_sol = {self.systems[k] for k in 'BAF'}
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'ABCDGH']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         # sorted_syst = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5), ('replicon_id_D', 1.5)
         #                ('replicon_id_G', 3.0), ('replicon_id_H', 2.0)]
-        # replicon_id_C ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
-        # replicon_id_B ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
         # replicon_id_A ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
+        # replicon_id_B ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
+        # replicon_id_C ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
         # replicon_id_D ['hit_abc', 'hit_sctn']
+        # replicon_id_G ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
+        # replicon_id_H ['hit_abc', 'hit_sctn']
         # C and D are compatible 4.5
-        # B and A are compatible 3.5
+        # C and H are compatible 4.5
+        # G and D are compatible 4.5
         # G and H are compatible 4.5
-        # So the best Solution expected is C D 4.5
+        # B and A are compatible 3.5
+        # So the best Solution expected are C D / C H / G D / G H with score 4.5
 
-        best_sol, score = find_best_solution(sorted_syst)
-        expected_sol = {self.systems[k] for k in 'CD'}
+        best_sol, score = find_best_solutions(sorted_syst)
+        expected_sol = [[self.systems[k] for k in 'CD'],
+                        [self.systems[k] for k in 'CH'],
+                        [self.systems[k] for k in 'GD'],
+                        [self.systems[k] for k in 'GH']]
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(set(best_sol), expected_sol)
+        self.assertSetEqual(best_sol, expected_sol)
