@@ -22,53 +22,38 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-import logging
 import itertools
-from macsypy.utils import no_stdout
-from macsypy.error import MacsypyError
+import networkx as nx
 
 
-with no_stdout():
-    # mip display version message @the import :-(
-    import mip
-
-_log = logging.getLogger(__name__)
-
-
-def find_best_solution(systems):
+def find_best_solutions(systems):
     """
     Among the systems choose the combination of systems which does not share :class:`macsypy.hit.Hit`
     and maximize the sum of systems scores
 
     :param systems: the systems to analyse
     :type systems: list of :class:`macsypy.system.System` object
-    :return: the list of systems which represent the best solution and the it's score
-    :rtype: tuple of 2 elements ([:class:`macsypy.system.System`, ...], float score)
+    :return: the list of list of systems which represent one best solution and the it's score
+    :rtype: tuple of 2 elements
+            ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
+            The inner list represent a best solution
     """
-    scores = [s.score for s in systems]
-    ranks = range(len(systems))
-    # create a new Model
-    m = mip.Model("")
-    if _log.getEffectiveLevel() > 10:
-        m.verbose = 0
-    # let's create variable which can take 0/1 for each system
-    # and add them to the model
-    x = [m.add_var(var_type=mip.BINARY) for i in ranks]
+    G = nx.Graph()
+    # add nodes (vertices)
+    G.add_nodes_from(systems)
+    # let's create an edges between compatible nodes
+    for sys_i, sys_j in itertools.combinations(systems, 2):
+        if sys_i.is_compatible(sys_j):
+            G.add_edge(sys_i, sys_j)
 
-    # add constraints
-    for i, j in itertools.combinations(ranks, 2):
-        if not systems[i].is_compatible(systems[j]):
-            m += x[i] + x[j] <= 1, f'{systems[i].id} and {systems[j].id} are not compatible'
-
-    # We want to optimize the scores
-    m.objective = mip.maximize(mip.xsum(x[i] * scores[i] for i in ranks))
-
-    status = m.optimize()
-
-    if status == mip.OptimizationStatus.OPTIMAL:
-        _log.debug('optimal solution cost {} found'.format(m.objective_value))
-        best_ranks = [i for i, v in enumerate(m.vars) if abs(v.x) > 1e-6]
-        best_sol = [systems[i] for i in best_ranks]
-    else:
-        raise MacsypyError("No optimal solution")
-    return best_sol, m.objective_value
+    cliques = nx.algorithms.clique.find_cliques(G)
+    max_score = 0
+    max_cliques = []
+    for c in cliques:
+        current_score = sum([s.score for s in c])
+        if current_score > max_score:
+            max_score = current_score
+            max_cliques = [c]
+        elif current_score == max_score:
+            max_cliques.append(c)
+    return max_cliques, max_score
