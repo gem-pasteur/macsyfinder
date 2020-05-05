@@ -224,6 +224,7 @@ class SolutionExplorerTest(MacsyTest):
         # replicon_id_D ['hit_abc', 'hit_sctn']
         # C and D are compatible 4.5
         # B and A are compatible 3.5
+        # B and D are compatible 3.5
         # So the best Solution expected is C D 4.5
         best_sol, score = find_best_solutions(sorted_syst)
         expected_sol = [[self.systems[k] for k in 'CD']]
@@ -266,6 +267,7 @@ class SolutionExplorerTest(MacsyTest):
         expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 3.0)
         self.assertSetEqual(best_sol, expected_sol)
+
         # systems = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5),
         #            ('replicon_id_D', 1.5), ('replicon_id_E', 0.5)]
         # replicon_id_C ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
@@ -276,6 +278,7 @@ class SolutionExplorerTest(MacsyTest):
         # C and D are compatible 4.5
         # B and A are compatible 3.5
         # B and E are compatible 2.5
+        # D and E are compatible 2.0
         systems = [self.systems[k] for k in 'ABCDE']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         best_sol, score = find_best_solutions(sorted_syst)
@@ -291,11 +294,13 @@ class SolutionExplorerTest(MacsyTest):
         # replicon_id_B ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
         # replicon_id_A ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
         # replicon_id_D ['hit_abc', 'hit_sctn']
-        # replicon_id_E ['hit_abc']
+        # replicon_id_E ['hit_gspd']
+        # replicon_id_F ['hit_abc']
         # C and D are compatible 4.5
-        # B and A  and F are compatible 4.5
-        # B and E are compatible 2.5
-        # E and F are compatible
+        # C and F are compatible 4.0
+        # B and A and F are compatible 4.5
+        # B and D and E are compatible 4.0
+        # B and E and F are compatible 3.5
         # So the best Solution expected are C D / B A F
         systems = [self.systems[k] for k in 'ABCDEF']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -310,7 +315,7 @@ class SolutionExplorerTest(MacsyTest):
         systems = [self.systems[k] for k in 'ABCDGH']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         # sorted_syst = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5), ('replicon_id_D', 1.5)
-        #                ('replicon_id_G', 3.0), ('replicon_id_H', 2.0)]
+        #                ('replicon_id_G', 3.0), ('replicon_id_H', 1.5)]
         # replicon_id_A ['hit_sctj', 'hit_sctn', 'hit_gspd', 'hit_sctj', 'hit_sctn']
         # replicon_id_B ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB']
         # replicon_id_C ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
