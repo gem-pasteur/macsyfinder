@@ -138,7 +138,7 @@ class TsvSystemSerializer(SystemSerializer):
 
 class TsvSolutionSerializer:
     """
-    Handle Solution serialization in tsv format
+    Handle Solution (list of Systems) serialization in tsv format
     """
 
     def __init__(self):
@@ -150,10 +150,13 @@ class TsvSolutionSerializer:
     def serialize(self, solution, sol_id, hit_system_tracker):
         """
         :param solution: the solution to serialize
-        :type solution: list of :class:`macsypy.system.sSystem` object
+        :type solution: list of :class:`macsypy.system.System` object
         :param hit_system_tracker:
         :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
-        :return:
+        :return: a serialisation of this solution (a list of systems) in tabulated separated value format
+                 each line represent a hit and have the same structure as system serialization
+                 :meth:`macsypy.serialization.TsvSystemSerializer.serialize` but with an extra column
+                 sol_id which is a technical id to identified the different solutions.
         """
         tsv = ''
         sys_ser = TsvSystemSerializer()
