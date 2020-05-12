@@ -84,11 +84,11 @@ class TsvSystemSerializer(SystemSerializer):
     Handle System serialization in tsv format
     """
 
-    header = "hit_id\treplicon\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
+    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
              "hit_begin_match\thit_end_match\tused_in"
 
-    template = Template("$vh_id\t$sys_replicon_name\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
+    template = Template("$sys_replicon_name\t$vh_id\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
                         "$sys_id\t$sys_loci\t$sys_wholeness\t$sys_score\t"
                         "$sys_occurrence\t$vh_gene_role\t$vh_status\t$vh_seq_length\t$vh_i_eval\t"
                         "$vh_score\t$vh_profile_coverage\t$vh_sequence_coverage\t$vh_begin_match"
@@ -100,7 +100,7 @@ class TsvSystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     hit_id\\treplicon\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
+                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
                      \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
                      \\thit_seq_cov\\tit_begin_match\\thit_end_match
 
@@ -111,8 +111,8 @@ class TsvSystemSerializer(SystemSerializer):
             for vh in cluster.hits:
                 used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
                 tsv += self.template.substitute(
-                    vh_id=vh.id,
                     sys_replicon_name=system.replicon_name,
+                    vh_id=vh.id,
                     vh_gene_name=vh.gene.name,
                     vh_position=vh.position,
                     sys_model_fqn=system.model.fqn,
