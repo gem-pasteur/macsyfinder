@@ -44,12 +44,13 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits
-from macsypy.system import match, System, HitSystemTracker, TxtSystemSerializer, TsvSystemSerializer
+from macsypy.system import match, System, HitSystemTracker
 from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions
+from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer
 
 
 def get_version_message():
@@ -541,8 +542,8 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
         print("# Systems found:", file=sys_file)
         print(TsvSystemSerializer.header, file=sys_file)
         for system in systems:
-            sys_serializer = TsvSystemSerializer(system, hit_system_tracker)
-            print(sys_serializer.serialize(), file=sys_file)
+            sys_serializer = TsvSystemSerializer()
+            print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -564,9 +565,33 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
     if systems:
         print("# Systems found:\n", file=sys_file)
         for system in systems:
-            sys_serializer = TxtSystemSerializer(system, hit_system_tracker)
-            print(sys_serializer.serialize(), file=sys_file)
+            sys_serializer = TxtSystemSerializer()
+            print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
             print("=" * 60, file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
+
+
+def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
+    """
+    print solution in a file in tabulated format
+    A solution is a set of systems which represents an optimal combination of
+    systems to maximize the score.
+
+    :param solutions: list of systems found
+    :type solutions: list of list of :class:`macsypy.system.System` objects
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
+    :return: None
+    """
+    print(_outfile_header(), file=sys_file)
+    if solutions:
+        sol_serializer = TsvSolutionSerializer()
+        print("# Systems found:", file=sys_file)
+        print(sol_serializer.header, file=sys_file)
+        for sol_id, solution in enumerate(solutions, 1):
+            solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+            print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -669,7 +694,7 @@ def main(args=None, loglevel=None):
         # select the best systems #
         ###########################
         logger.info("\n{:#^70}".format(" Computing best solutions "))
-        best_systems = []
+        best_solutions = []
         # group systems found by replicon
         # before to search best system combination
 
@@ -681,13 +706,7 @@ def main(args=None, loglevel=None):
             best_sol_4_1_replicon, score = find_best_solutions(syst_group)
             t1 = time.time()
             logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score}) for replicon {rep_name}")
-            best_systems.extend(best_sol_4_1_replicon)
-        # flattern the list
-        # TODO in waiting to found how to represents best solutions
-        # when several solutions for one replicon are equivalent
-        best_systems = [syst for sol in best_systems for syst in sol]
-        best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-
+            best_solutions.extend(best_sol_4_1_replicon)
 
         ##############################
         # Write the results in files #
@@ -710,7 +729,7 @@ def main(args=None, loglevel=None):
 
         tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
         with open(tsv_filename, "w") as tsv_file:
-            systems_to_tsv(best_systems, track_multi_systems_hit, tsv_file)
+            solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
 
     logger.info("END")
 
