@@ -58,8 +58,11 @@ def get_version_message():
     :rtype: str
     """
     version = macsypy.__version__
+    py_vers = sys.version.replace('\n', ' ')
     vers_msg = f"""Macsyfinder {version}
-Python {sys.version}
+using:
+- Python {py_vers}
+- NetworkX {macsypy.solution.nx.__version__}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
 See the COPYING file for details.
