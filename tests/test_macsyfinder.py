@@ -190,16 +190,16 @@ neutral genes:
 # {' '.join(sys.argv)}
 # Systems found:
 """
-            system_tsv += "\t".join(["hit_id", "replicon", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
+            system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
                                      "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
                                      "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
                                      "hit_begin_match", "hit_end_match", "used_in"])
             system_tsv += "\n"
-            system_tsv += "\t".join(["hit_1", "replicon_id", "gspD", "1", "foo/T2SS", system_1.id,
+            system_tsv += "\t".join([ "replicon_id", "hit_1", "gspD", "1", "foo/T2SS", system_1.id,
                                      "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000", "1.000",
                                      "1.000", "10", "20", ""])
             system_tsv += "\n"
-            system_tsv += "\t".join(["hit_2", "replicon_id", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.000",
+            system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.000",
                                      "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000", "1.000", "1.000", "10",
                                      "20", ""])
             system_tsv += "\n\n"
