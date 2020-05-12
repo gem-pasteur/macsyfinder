@@ -591,9 +591,7 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         print(sol_serializer.header, file=sys_file)
         for sol_id, solution in enumerate(solutions, 1):
             solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-            print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file)
-    else:
-        print("# No Systems found", file=sys_file)
+            print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file, end='')
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
