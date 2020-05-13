@@ -22,53 +22,38 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-import contextlib
-import os
-import sys
-
-from .registries import DefinitionLocation
+import itertools
+import networkx as nx
 
 
-def get_def_to_detect(models, model_registry):
+def find_best_solutions(systems):
     """
-    :param models: the list of models to detect as returned by config.models.
-    :type models: list of tuple with the following structure:
-                  [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
-    :param model_registry: the models registry for this run.
-    :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
-    :return: the definitions to parse
-    :rtype: list of :class:`macsypy.registries.DefinitionLocation` objects
-    :raise ValueError: if a model name provided in models is not in model_registry.
+    Among the systems choose the combination of systems which does not share :class:`macsypy.hit.Hit`
+    and maximize the sum of systems scores
+
+    :param systems: the systems to analyse
+    :type systems: list of :class:`macsypy.system.System` object
+    :return: the list of list of systems which represent one best solution and the it's score
+    :rtype: tuple of 2 elements
+            ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
+            The inner list represent a best solution
     """
-    def_to_detect = []
-    for group_of_model in models:
-        root, def_name = group_of_model
-        model_family = DefinitionLocation.root_name(root)
-        model_loc = model_registry[model_family]
-        if 'all' in [d.lower() for d in def_name]:
-            if root == model_loc.name:
-                root = None
-            def_loc = model_loc.get_all_definitions(root_def_name=root)
-            def_to_detect += def_loc
-        else:
-            def_to_detect += [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_name]
-    return def_to_detect
+    G = nx.Graph()
+    # add nodes (vertices)
+    G.add_nodes_from(systems)
+    # let's create an edges between compatible nodes
+    for sys_i, sys_j in itertools.combinations(systems, 2):
+        if sys_i.is_compatible(sys_j):
+            G.add_edge(sys_i, sys_j)
 
-
-@contextlib.contextmanager
-def no_stdout():
-    """
-    supress message write on stdout inside the context
-    for instance::
-
-        print('after context')
-
-        before context
-        after context
-
-    :return:
-    """
-    save_stdout = sys.stdout
-    sys.stdout = open(os.devnull, 'w')
-    yield
-    sys.stdout = save_stdout
+    cliques = nx.algorithms.clique.find_cliques(G)
+    max_score = 0
+    max_cliques = []
+    for c in cliques:
+        current_score = sum([s.score for s in c])
+        if current_score > max_score:
+            max_score = current_score
+            max_cliques = [c]
+        elif current_score == max_score:
+            max_cliques.append(c)
+    return max_cliques, max_score

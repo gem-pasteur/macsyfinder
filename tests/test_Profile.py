@@ -112,11 +112,28 @@ class TestProfile(MacsyTest):
                 for i in range(5):
                     # skip 4 lines
                     l = hmmer_raw_out_file.readline()
-                # a hmmsearch used the abc profile line should become with: "# query HMM file:"
+                # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
                 self.assertTrue(l.find(profile_path) != -1)
-
+                for i in range(3):
+                    # skip 2 lines
+                    l = hmmer_raw_out_file.readline()
+                self.assertEqual("# model-specific thresholding:     GA cutoffs",
+                                 l.strip())
+            # test if profile is executed only once per run
             report_bis = profile.execute()
             self.assertIs(report, report_bis)
+
+        e_value_search = 0.1
+        self.cfg._set_e_value_search(e_value_search)
+        self.cfg._set_db_type("gembase")
+        profile = Profile(gene, self.cfg, profile_path)
+        report = profile.execute()
+        hmmer_raw_out = profile.hmm_raw_output
+        with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
+            for i in range(9):
+                l = hmmer_raw_out_file.readline()
+            self.assertEqual("# sequence reporting threshold:    E-value <= 0.1",
+                                 l.strip())
 
 
     def test_execute_unknown_binary(self):
@@ -157,6 +174,7 @@ sys.exit(127)
                                             "an error occurred during Hmmer "
                                             "execution: command = .* : return code = 127 .*") as ctx:
                     profile.execute()
+
         finally:
             try:
                 os.unlink(fake_hmmer)

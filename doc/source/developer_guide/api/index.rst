@@ -23,6 +23,7 @@ MacSyFinder API documentation
     system
     report
     search_genes
+    solution
     database
     error
     utils

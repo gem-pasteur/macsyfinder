@@ -92,7 +92,6 @@ def search_genes(genes, cfg):
         :return: the list of all HMMReports (derived class depending on the input dataset type)
         :rtype: list of `macsypy.report.HMMReport` object
         """
-
         hmm_old_path = os.path.join(cfg.previous_run(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
         _log.info(f"recover hmm {hmm_old_path}")
         hmm_new_path = os.path.join(cfg.working_dir(), cfg.hmmer_dir(), gene.name + cfg.res_search_suffix())
