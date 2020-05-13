@@ -49,7 +49,7 @@ from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-
+from macsypy.solution import find_best_solutions
 
 
 def get_version_message():
@@ -58,8 +58,11 @@ def get_version_message():
     :rtype: str
     """
     version = macsypy.__version__
+    py_vers = sys.version.replace('\n', ' ')
     vers_msg = f"""Macsyfinder {version}
-Python {sys.version}
+using:
+- Python {py_vers}
+- NetworkX {macsypy.solution.nx.__version__}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
 See the COPYING file for details.
@@ -461,7 +464,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
         if db_type in ('ordered_replicon', 'gembase'):
             rep_db = RepliconDB(config)
             for rep_name in hits_by_replicon:
-                logger.info(f"Hits analysis for replicon {rep_name}")
+                logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
                 rep_info = rep_db[rep_name]
                 for model in models_to_detect:
                     logger.info(f"Check model {model.fqn}")
@@ -500,7 +503,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
         elif db_type in ("unordered_replicon", "unordered"):
             for rep_name in hits_by_replicon:
-                logger.info(f"Hits analysis for replicon {rep_name}")
+                logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
                 for model in models_to_detect:
                     logger.info(f"Check model {model.fqn}")
                     hits_related_one_model = model.filter(hits_by_replicon[rep_name])
@@ -657,26 +660,58 @@ def main(args=None, loglevel=None):
         genes = GeneBank()
         profile_factory = ProfileFactory(config)
 
-        systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+        logger.info("\n{:#^70}".format(" Searching systems "))
+        all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+
+        track_multi_systems_hit = HitSystemTracker(all_systems)
+
+        ###########################
+        # select the best systems #
+        ###########################
+        logger.info("\n{:#^70}".format(" Computing best solutions "))
+        best_systems = []
+        # group systems found by replicon
+        # before to search best system combination
+
+        import time
+        for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
+            syst_group = list(syst_group)
+            logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
+            t0 = time.time()
+            best_sol_4_1_replicon, score = find_best_solutions(syst_group)
+            t1 = time.time()
+            logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score}) for replicon {rep_name}")
+            best_systems.extend(best_sol_4_1_replicon)
+        # flattern the list
+        # TODO in waiting to found how to represents best solutions
+        # when several solutions for one replicon are equivalent
+        best_systems = [syst for sol in best_systems for syst in sol]
+        best_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+
 
         ##############################
         # Write the results in files #
         ##############################
-        system_filename = os.path.join(config.working_dir(), "systems.txt")
-        tsv_filename = os.path.join(config.working_dir(), "systems.tsv")
-        track_multi_systems_hit = HitSystemTracker(systems)
+        logger.info("\n{:#^70}".format(" Writing down results "))
+        system_filename = os.path.join(config.working_dir(), "all_systems.txt")
+        tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
 
         with open(system_filename, "w") as sys_file:
-            systems_to_txt(systems, track_multi_systems_hit, sys_file)
+            systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
 
         with open(tsv_filename, "w") as tsv_file:
-            systems_to_tsv(systems, track_multi_systems_hit, tsv_file)
+            systems_to_tsv(all_systems, track_multi_systems_hit, tsv_file)
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
         with open(cluster_filename, "w") as clst_file:
             rejected_clst_to_txt(rejected_clusters, clst_file)
-        if not (systems or rejected_clusters):
+        if not (all_systems or rejected_clusters):
             logger.info("No Systems found in this dataset.")
+
+        tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(best_systems, track_multi_systems_hit, tsv_file)
+
     logger.info("END")
 
 

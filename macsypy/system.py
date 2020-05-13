@@ -350,7 +350,7 @@ class System:
     @property
     def loci(self):
         """
-        :return: The number of loci of this system
+        :return: The number of loci of this system (loners are not considered)
         :rtype: int > 0
         """
         # we do not take loners in account
@@ -375,6 +375,22 @@ class System:
         hits = [h.position for h in self.hits if not h.gene_ref.loner]
         hits.sort()
         return hits[0], hits[-1]
+
+
+    def is_compatible(self, other):
+        """
+        :param other: the other systems to test compatibility
+        :type other: :class:`macsypy.system.System` object
+        :return: True if other system is compatible with this one. False otherwise.
+                 Two systems are compatible if they do not share :class:`macsypy.hit.Hit`
+                 except hit corresponding to a multi_system gene in the model.
+
+                 .. note::
+                    This method is used to compute the best combination of systems.
+        """
+        other_hits = {vh.hit for vh in other.hits if not vh.multi_system}
+        my_hits = {vh.hit for vh in self.hits if not vh.multi_system}
+        return not (my_hits & other_hits)
 
 
 class SystemSerializer(metaclass=abc.ABCMeta):
@@ -446,7 +462,7 @@ class TsvSystemSerializer(SystemSerializer):
     """
     header = "hit_id\treplicon\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
-             "hit_begin_match\thit_end_match"
+             "hit_begin_match\thit_end_match\tused_in"
 
     def serialize(self):
         r"""
@@ -462,10 +478,12 @@ class TsvSystemSerializer(SystemSerializer):
         tsv = ''
         for cluster in self.system.clusters:
             for vh in cluster.hits:
+                used_in_systems = [s.id for s in self.hit_system_tracker[vh.hit] if s.model.fqn != self.system.model.fqn]
                 tsv += f"{vh.id}\t{self.system.replicon_name}\t{vh.gene.name}\t{vh.position}\t{self.system.model.fqn}\t" \
                        f"{self.system.id}\t{self.system.loci}\t{self.system.wholeness:.3f}\t{self.system.score:.3f}\t" \
                        f"{self.system.occurrence()}\t{vh.gene_ref.alternate_of().name}\t{vh.status}\t{vh.seq_length}\t{vh.i_eval:.3}\t" \
-                       f"{vh.score:.3f}\t{vh.profile_coverage:.3f}\t{vh.sequence_coverage:.3f}\t{vh.begin_match}\t{vh.end_match}\n"
+                       f"{vh.score:.3f}\t{vh.profile_coverage:.3f}\t{vh.sequence_coverage:.3f}\t{vh.begin_match}" \
+                       f"\t{vh.end_match}\t{','.join(used_in_systems)}\n"
 
         return tsv
 

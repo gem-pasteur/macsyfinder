@@ -177,6 +177,9 @@ class ValidHit:
         self.gene_ref = gene_ref
         self.status = gene_status
 
+    @property
+    def multi_system(self):
+        return self.gene_ref.multi_system
 
     def __getattr__(self, item):
         return getattr(self.hit, item)

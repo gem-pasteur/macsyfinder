@@ -127,8 +127,30 @@ class TestMacsydata(MacsyTest):
                 macsydata.do_available(self.args)
                 get_pack = sys.stdout.getvalue().strip()
             pack_name_vers = f"{pack_name} ({pack_vers})"
+            # use same formatting as in do_available
             expected_pack = f"{pack_name_vers:26.25} - {pack_meta['short_desc']}"
             self.assertEqual(get_pack, expected_pack)
+        finally:
+            macsydata.RemoteModelIndex.list_packages = list_pack
+            macsydata.RemoteModelIndex.list_package_vers = list_pack_vers
+            macsydata.RemoteModelIndex.get_metadata = meta
+
+        # test package with no version available
+        # no version = no tags
+        list_pack = macsydata.RemoteModelIndex.list_packages
+        list_pack_vers = macsydata.RemoteModelIndex.list_package_vers
+        meta = macsydata.RemoteModelIndex.get_metadata
+        pack_name = 'fake_model_no_vers'
+        pack_meta = {'short_desc': 'desc about fake_model'}
+        macsydata.RemoteModelIndex.list_packages = lambda x: [pack_name]
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack: []
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pack, vers: pack_meta
+        self.create_fake_package('fake_model_no_vers')
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_available(self.args)
+                get_pack = sys.stdout.getvalue().strip()
+            self.assertEqual(get_pack, '')
         finally:
             macsydata.RemoteModelIndex.list_packages = list_pack
             macsydata.RemoteModelIndex.list_package_vers = list_pack_vers
@@ -401,6 +423,7 @@ Please fix issues above, before publishing these models."""
             os.mkdir(path)
             return path
 
+        # The package requested exists download it
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
                                                                         'fake_2': ['0.0b2']}[name]
@@ -419,6 +442,7 @@ Please fix issues above, before publishing these models."""
 Successfully downloaded packaging fake_1 in {os.path.join(self.tmpdir, 'fake_1-1.0.tar.gz')}"""
         self.assertEqual(log_msg, expected_msg)
 
+        # The package requested does NOT exists
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
                                                                         'fake_2': ['0.0b2']}[name]
@@ -438,7 +462,25 @@ Successfully downloaded packaging fake_1 in {os.path.join(self.tmpdir, 'fake_1-1
 Available versions: 1.0"""
         self.assertEqual(log_msg, expected_msg)
 
+        # The package requested is NOT versioned
+        remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': [],
+                                                                        'fake_2': ['0.0b2']}[name]
+        remote_download = macsydata.RemoteModelIndex.download
+        macsydata.RemoteModelIndex.download = fake_download
+        self.args.package = 'fake_1>2.0'
+        self.args.dest = None
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_download(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_packages_vers
+            macsydata.RemoteModelIndex.download = remote_download
 
+        self.assertEqual(log_msg, '')
+
+        # Github has been requested over the limit
         def fake_download_limit(_, pack_name, vers, dest=None):
             raise MacsyDataLimitError('github limit error')
 
@@ -928,7 +970,6 @@ Maybe you can use --user option to install in your HOME.""")
 
 
     def test_search_in_pack_name(self):
-
         self.args.pattern = 'Foo'
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = False
@@ -956,9 +997,35 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
             macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
 
+        # case where package is not versioned
+        self.args.pattern = 'Foo'
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = False
+        self.args.match_case = False
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: []
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout, '')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
 
     def test_search_in_pack_name_match_case(self):
-
         self.args.pattern = 'Foo'.lower()
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = False
@@ -988,7 +1055,6 @@ Maybe you can use --user option to install in your HOME.""")
 
 
     def test_search_in_pack_desc(self):
-
         self.args.pattern = 'sc_pat'
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
@@ -1016,9 +1082,35 @@ Maybe you can use --user option to install in your HOME.""")
             macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
             macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
 
+        # test when package is not versioned
+        self.args.pattern = 'sc_pat'
+        self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.careful = True
+        self.args.match_case = False
+
+        # functions which do net operations
+        # so we need to mock them
+        remote_exists = macsydata.RemoteModelIndex.remote_exists
+        macsydata.RemoteModelIndex.remote_exists = lambda x: True
+        remote_list_packages = macsydata.RemoteModelIndex.list_packages
+        macsydata.RemoteModelIndex.list_packages = lambda x: ['FOO']
+        remote_list_package_vers = macsydata.RemoteModelIndex.list_package_vers
+        macsydata.RemoteModelIndex.list_package_vers = lambda x, pack_nam: []
+        remote_get_metadata = macsydata.RemoteModelIndex.get_metadata
+        macsydata.RemoteModelIndex.get_metadata = lambda x, pac_nam: {'short_desc': 'this is a foo desc_pattern'}
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_search(self.args)
+                stdout = sys.stdout.getvalue().strip()
+            self.assertEqual(stdout, '')
+        finally:
+            macsydata.RemoteModelIndex.remote_exists = remote_exists
+            macsydata.RemoteModelIndex.list_packages = remote_list_packages
+            macsydata.RemoteModelIndex.get_metadata = remote_get_metadata
+            macsydata.RemoteModelIndex.list_package_vers = remote_list_package_vers
+
 
     def test_search_in_pack_desc_match_case(self):
-
         self.args.pattern = 'sc_pat'.upper()
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
@@ -1048,7 +1140,6 @@ Maybe you can use --user option to install in your HOME.""")
 
 
     def test_search_reach_limit(self):
-
         self.args.pattern = 'sc_pat'.upper()
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = True
