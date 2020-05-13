@@ -53,13 +53,14 @@ Systems detection results
 
 Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
 
-  * systems.txt - all potential systems detected with their components in human readable format.
-  * systems.tsv - all potential systems detected with their components in a tabulate separated value format.
+  * all_systems.txt - all potential systems detected with their components in human readable format.
+  * all_systems.tsv - all potential systems detected with their components in a tabulate separated value format.
+  * best_systems.tsv - Best combination of systems with their components in a tabulate separated value format.
   * rejected_clusters.txt - contains the lists of clusters that are not passed the quorum.
 
 
-systems.txt
-***********
+all_systems.txt
+***************
 start with some comments
     - the version of macsyfinder used
     - the command line used to produce this file
@@ -165,13 +166,13 @@ macsyfinder.txt example ::
 
 
 
-systems.tsv
-***********
+all_systems.tsv
+***************
 
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
-    * **hit_id** - the unique identifier of the hit
     * **replicon** - the name of the replicon it belongs to
+    * **hit_id** - the unique identifier of the hit
     * **hit_pos** - the position of the sequence in the replicon
     * **model_fqn** - the model fully qualified name
     * **system_id** - the unique identifier attributed to the detected system
@@ -197,6 +198,16 @@ This file can be easily parsed python `pandas <https://pandas.pydata.org/>`_ lib
     each system reported is separated form the others with a blank line, theses lines are ignored during pandas parsing.
 
 
+best_systems.tsv
+****************
+
+These file has the same structure as all_systems.tsv except that there is an extra column **sol_id** which is an
+solution identifier. So the systems which have the same sol_id belong to the same solution
+(we call solution, the best combination of systems).
+
+As the file has the same structure as all_systems.tsv it can be parsed also with pandas
+
+
 Logs and configuration files
 ----------------------------
 
@@ -204,13 +215,3 @@ Three specific output files are built to store information on the MacSyFinder ex
 
  * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run.
  * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
-  
-
-File for MacSyview: results.macsyfinder.json
---------------------------------------------
-
-This file in JSON format is used by MacSyView, for graphical output purpose.
-It must be loaded through MacSyView to graphically visualize detected systems.
-For more details, see :ref:`MacSyView's description <macsyview>`.
-
-
