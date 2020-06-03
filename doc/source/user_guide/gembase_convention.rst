@@ -13,8 +13,9 @@ Gembase format
 **************
 
 
-In order to allow the users to run MacSyFinder on a bunch of genomes at once,
+In order to allow the users to run MacSyFinder on **several genomes at once**,
 we propose to adopt the following convention to fulfill the requirements for the "gembase db_type".
+
 It consists in providing for each protein, both the replicon name and a protein identifier separated by
 a "_" in the first field of fasta headers. "_" are accepted in the replicon name, but not in the protein identifier.
 Hence, the last "_" is the separator between the replicon name and the protein identifier.
@@ -81,5 +82,5 @@ For example::
   ChromosomeB : circular
   
 .. note::
-    A topology file can be specified on the command-line with the "``--topology-file``" parameter.
+    A topology file can be specified on the command-line with the ``--topology-file`` parameter.
     
