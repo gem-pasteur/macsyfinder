@@ -57,16 +57,16 @@ Command-line options
 
 Positional arguments::
 
-  --models              The models to search. The --models option can be set several times.'
-                        For each --models options the first element must be the name of family models,
-                        followed by the name of the models.
-                        If the name 'all' is in the list all models from the family will be searched.'
+  --models              The models to search. The --models option can be set several times.
+                        For each --models options the first element must be the name of the models family,
+                        followed by the name of the model(s) to be searched for.
+                        If the name 'all' is in the list, all models from the family will be searched.
                         '--models TXSS Flagellum T2SS'
-                                  means MSF will search for models TXSS/Flagellum and TXSS/T2SS
+                                  means that MacSyFinder will search for the two models "TXSS/Flagellum" and "TXSS/T2SS"
                         '--models TXSS all'
-                                  means for all models found in model package TXSS
-                        '--models CRIPRcas/subtyping all'
-                                 means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
+                                  means that MacSyFinder will search for all models found in the model directory TXSS
+                        '--models CRISPRcas/subtyping all'
+                                 means that MacSyFinder will search for all models described in the CRISPRCas/subtyping subfamily.
                         (required unless --previous-run is set)
 
 Optional arguments::
