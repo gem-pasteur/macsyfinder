@@ -134,7 +134,7 @@ If you install it in a virtualenv, just delete the virtual environment.
 
 .. _macsydata:
 ===================
-Models installation with macsydata
+Models installation with `macsydata`
 ===================
 
 Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`

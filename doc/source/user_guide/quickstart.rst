@@ -22,7 +22,7 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
 * On a "metagenomic" dataset for example: 
 
   "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all``"
-  will detect all systems modelled in .xml files placed in the model_family definitions folder located in the models default location
+  will detect all systems modelled in .xml files placed in the *"model_family"* definitions folder located in the models default location
   in a metagenomic dataset.
 
   "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models/ --models model_family all``"
@@ -31,7 +31,7 @@ In order to run MacSyFinder on your favorite dataset as soon as you have install
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 
   "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models/ --models model_family ModelA ModelB``"
-  will detect the models *"ModelA"* and *"ModelB"* in a complete genome from *"ModelA.xml"* and *"ModelB.xml"*
+  will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"* in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
   definition files placed in the folder *"my-models/model_family/mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input datasets. 
@@ -78,9 +78,9 @@ This classification was previously described in `Makarova et al. 2011 <http://ww
 and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_
 (release 13 of August 15 2012) and some of them were specifically designed for
 CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_).
-The definitions are detailed in the MacSyFinder's paper.
+The definitions are detailed in the `MacSyFinder's paper <https://dx.doi.org/10.1371%2Fjournal.pone.0110726>`_.
 
-As a sequence dataset, we propose three replicons in /share/macsyfinder/sequence_data/datatest_gembase.fasta: 
+As a test sequence dataset, we propose three replicons in /share/macsyfinder/sequence_data/datatest_gembase.fasta: 
     - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a).
       Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
     - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a).
