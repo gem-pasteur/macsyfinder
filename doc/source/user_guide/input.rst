@@ -94,7 +94,7 @@ Input dataset options::
   --replicon-topology {linear,circular}
                         The topology of the replicons (this option is
                         meaningful only if the db_type is 'ordered_replicon'
-                        or 'gembase'
+                        or 'gembase')
                         
   --topology-file TOPOLOGY-FILE
                         Topology file path. The topology file allows to
@@ -104,9 +104,10 @@ Input dataset options::
                         file is a tabular file with two columns: the 1st is
                         the replicon name, and the 2nd the corresponding
                         topology: "RepliconA linear"
+			(default = circular)
                         
   --idx                 Forces to build the indexes for the sequence dataset
-                        even if they were presviously computed and present at
+                        even if they were previously computed and present at
                         the dataset location.
                         (default = False)
 
@@ -126,13 +127,13 @@ Systems detection options::
                         
   --min-mandatory-genes-required SYSTEM VALUE
                         The minimal number of mandatory genes required for
-                        system assessment. The first value must correspond to
+                        complete system assessment. The first value must correspond to
                         a system name, the second value to an integer. This
                         option can be repeated several times: 
                         "--min-mandatory-genes-required TXSS/T2SS 15 --min-mandatory-genes-required TXSS/Flagellum 10"
                         
   --min-genes-required SYSTEM VALUE
-                        The minimal number of genes required for system
+                        The minimal number of genes required for complete system
                         assessment (includes both 'mandatory' and 'accessory'
                         components). The first value must correspond to a
                         system name, the second value to an integer. This
@@ -140,8 +141,11 @@ Systems detection options::
                         "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10"
 
   --multi-loci SYSTEM 
-                        Specifies if the system can be detected as a 'scattered' system.
-                        The models are specified as a comma separated list of fully qualified name
+                        Specifies if the system can be detected as a 'scattered' 
+			system - i.e., made of distinct clusters physically 
+			spread on the replicon. Option only meaningful for 'ordered' datasets. 
+                        The models are specified as a comma separated list of their 
+			fully qualified names (i.e., folder location and name of model):
                         "--multi-loci model_familyA/model_1,model_familyB/model_2"
 
 .. _hmmer-options:
@@ -149,14 +153,16 @@ Systems detection options::
 Options for Hmmer execution and hits filtering::
 
   --hmmer HMMER_EXE     Path to the hmmsearch program.
-                        If it is not specify rely on the PATH.
+                        If not specified, the program will search in the configuration file, 
+			and then in the PATH.
                         (default: None)
                         
   --e-value-search E_VALUE_RES
                         Maximal e-value for hits to be reported during hmmsearch search.
-                        By default MF set per profile threshold for hmmsearch run (--cut_ga option)
-                        If --e-value-search is set the --cut-ga option is disabled and the new threshold
-                        (-E in hmmsearch) is applied to all profiles.)
+                        By default MacSyFinder sets per-profile thresholds for hmmsearch searches 
+			using the "--cut_ga" option of HMMER.
+                        If --e-value-search is set, the --cut-ga option is disabled and the new 
+			threshold (-E in hmmsearch) is applied to all profiles.
                         (default: None)
                         
   --i-evalue-select I_EVALUE_SEL
@@ -171,16 +177,18 @@ Options for Hmmer execution and hits filtering::
 Path options::
 
   --models-dir MODELS_DIR
-                        specify the path to the models if the models are not installed in the canonical place.
-                        It gather definitions (xml files) and hmm profiles in a specific
-                        structure. A directory with the name of the model with at least two directories
-                        profiles" which contains all hmm profile for gene describe in definitions and
-                        models" which contains either xml file of definitions or subdirectories
-                        to organize the model in subsystems.
+                        Specifies the path to the models if the models are not installed in the 
+			canonical place.
+                        Designated directory should gather definitions (xml files) and hmm profiles 
+			in a specific structure. A directory with the name of the model with 
+			at least two directories profiles which contains all hmm profile for genes 
+			described in definitions and models which contain either xml file 
+			of definitions or subdirectories to organize the model into subsystems.
   
   -o OUT_DIR, --out-dir OUT_DIR
-                        Path to the directory where to store results. 
-                        If out-dir is specified res-search-dir will be ignored.                      
+                        Path to the directory where to store MacSyFinder search
+                        results. 
+                        If "out-dir" is specified, "res-search-dir" will be ignored.                      
                         
   -r RES_SEARCH_DIR, --res-search-dir RES_SEARCH_DIR
                         Path to the directory where to store MacSyFinder search
@@ -215,21 +223,23 @@ General options::
                         Error messages (default), Warning (-v), Info (-vv) and
                         Debug(-vvv).
 
-  --mute                mute the log on stdout.
-                        (continue to log on macsyfinder.log)
+  --mute                Mutes the log on the standard output.
+                        (continues to log into the log file 'macsyfinder.log')
                         (default: False)
 
-  --version             show program's version number and exit.
+  --version             Shows program's version number and exit.
 
   --log LOG_FILE        Path to the directory where to store the 'macsyfinder.log'
                         log file.
+                        (default: 'out-dir')
                         
-  --config CFG_FILE     Path to a putative MacSyFinder configuration file to be
-                        used.
+  --config CFG_FILE     Path to a MacSyFinder configuration file to be used.
+                        (default: None, the configuration file corresponding
+			to the run will be created upon execution in 'out-dir')
                         
   --previous-run PREVIOUS_RUN
                         Path to a previous MacSyFinder run directory. It allows to
-                        skip the Hmmer search step on same dataset, as it uses
+                        skip the Hmmer search step on a same dataset, as it uses
                         previous run results and thus parameters regarding
                         Hmmer detection. The configuration file from this
                         previous run will be used. 
@@ -250,7 +260,7 @@ Configuration file
 ==================
 
 Options to run MacSyFinder can be specified in a configuration file.
-The :ref:`Config <config>` handles all configuration options for MacSyFinder.
+The :ref:`Config object <config>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/macsyfinder/macsyfinder.conf
@@ -259,10 +269,10 @@ Three locations are parsed to find configuration files:
  
 Moreover these three locations options can be passed on the command-line.
  
-Each file can define options, at the end all options are added. If an option is specified several times:
+Each file can define options, and in the end all options are integrated. If an option is specified several times:
  
 .. note::
-    The precedence rules from the less important to the more important are:
+    The precedence rules from the least to the most important priority are:
  
     $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < ./macsyfinder.conf < "command-line" options
    
@@ -271,10 +281,10 @@ options altering the definition of systems found in the command-line or the conf
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
-The Config object provides some default values and performs some validations of the values, for instance:
+The :ref:`Config object <config>` provides some default values and performs some validations of the values.
  
  
-In MacSyFinder, five sections are defined:
+In MacSyFinder, five sections are defined and stored by default in the configuration file:
  
  .. _config-base-label:
  
@@ -293,16 +303,16 @@ In MacSyFinder, five sections are defined:
       (*no default value*)
       
     * *replicon_topology* : the topology of the replicon under study.
-      Two topologies are supported: 'linear' and 'circular' (*default* = 'circular')
+      Two topologies are supported: 'linear' and 'circular' (*default* = 'circular').
       This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
   
   * **model**
   
-    * *inter_gene_max_space* = list of models fully qualified name and integer separated by spaces.
+    * *inter_gene_max_space* = list of models' fully qualified names and integer separated by spaces (see example below).
       These values will supersede the values found in the model definition file.
-    * *min_mandatory_genes_required* = list of models fully qualified name and integer separated by spaces.
+    * *min_mandatory_genes_required* = list of models' fully qualified name and integer separated by spaces.
       These values will supersede the values found in the model definition file.
-    * *min_genes_required* = list of models fully qualified name and integer separated by spaces.
+    * *min_genes_required* = list of models' fully qualified name and integer separated by spaces.
       These values will supersede the values found in the model definition file.
     
   * **hmmer**
@@ -320,7 +330,7 @@ In MacSyFinder, five sections are defined:
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
 
   * **general**
-  
+    
     * *log_level*: (default= *debug* ) This corresponds to an integer code:
         ========    ========== 
         Level 	    Numeric value
