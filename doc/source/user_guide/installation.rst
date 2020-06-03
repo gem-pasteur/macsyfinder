@@ -21,12 +21,21 @@ MacSyFinder dependencies
 ========================
 **Python version >=3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
 
-MacSyFinder has one dependency:
+MacSyFinder has one program dependency:
  - the *Hmmer* program, version 3.1 (http://hmmer.janelia.org/).
 
 The *hmmsearch* program should be installed (*e.g.*, in the PATH) in order to use MacSyFinder.
 Otherwise, the paths to this executable must be specified in the command-line:
 see the :ref:`command-line options <hmmer-options>`.
+ 
+ 
+MacSyFinder also relies on four Python library dependencies:
+ - colorlog
+ - pyyaml
+ - packaging
+ - networkx
+
+These dependencies will be automatically retrieved and installed when using `pip` for installation (see below). 
  
 
 ==================================
@@ -57,8 +66,9 @@ Installation steps:
 Make sure every required dependency/software is present.
 --------------------------------------------------------
 
-By default MacSyFinder will try to use `hmmsearch` in your PATH, if `hmmsearch` is not in the PATH,
-you have to set the absolute path to `hmmsearch` :ref:`during configuration <hmmer-options>`.
+By default MacSyFinder will try to use `hmmsearch` in your PATH. If `hmmsearch` is not in the PATH,
+you have to set the absolute path to `hmmsearch` in a :ref:`configuration file <config-definition-label>` 
+or in the :ref:`command-line <hmmer-options>` upon execution.
 If the tools are not in the path, some test will be skipped and a warning will be raised.
 
 
