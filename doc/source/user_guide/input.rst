@@ -174,6 +174,8 @@ Options for Hmmer execution and hits filtering::
                         to allow the hit selection for system detection.
                         (default = 0.5)
 
+.. _path-options:
+
 Path options::
 
   --models-dir MODELS_DIR

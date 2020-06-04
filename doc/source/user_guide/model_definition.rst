@@ -15,22 +15,24 @@ Macromolecular models
 Principles
 ==========
 
-MacSyFinder relies on the definition of models of macromolecular systems with an **XML grammar**
-that is described :ref:`below<model-definition-grammar-label>`.
+MacSyFinder relies on the definition of models of macromolecular systems as a **set of models' components** 
+to be searched by similarity search, and a **set of rules** regarding their genomic organization and 
+their requirement level to make a complete system (mandatory, accessory components, number of components required). 
+See :ref:`section on Functioning <functioning>` for more details on MacSyFinder's modelling scheme and search engine.
 
-MacSyFinder relies on models of macromolecular systems.
 
-A model is the association of several elements:
-    * a definition which describe the systems to capture.
-      the definitions use a xml grammar. for more information about definition see :ref:`below<model-definition-grammar-label>`.
-    * a set of profile, one for each gene belonging the models.
+A **MacSyFinder model** (macsy-model for short) is thus the association of several elements:
 
-The models are grouped by family and eventually subfamily, for instance *secretion* or *cas protein*, ...
-A model family are a model package.
+    * a definition which describes the system to detect with a specific **XML grammar** that is described :ref:`below<model-definition-grammar-label>`.
+    
+    * a set of **HMM profiles** (one per component/gene in the model) to enable the similarity search of the systems' components with the HMMER program.
+
+The models are grouped by *family* possibly gathering *sub-families* (multiple levels allowed), for instance *Secretion*, *Cas-proteins*...
+A set of models from a same family (coherent set) of systems to detect is called hereafter a **macsy-model package**.
 
 .. _package_structure:
 
-A package model follow the structure below ::
+A macsy-model package follows the following structure ::
 
     family_name
         |_______ metadata.yml
@@ -46,7 +48,7 @@ A package model follow the structure below ::
                      |________ geneB.hmm
 
 
-If the package contains sub-family ::
+If the package contains sub-families ::
 
     family_name
         |_______ metadata.yml
@@ -68,86 +70,96 @@ If the package contains sub-family ::
                      |________ geneB.hmm
 
 
-for concrete examples of macsy-models package visit https://github.com/macsy-models
+For examples of macsy-model packages, please visit https://github.com/macsy-models
 
 
 How to install new models
 =========================
 
-MacSyFinder does not provide models. You must install Models before to use MacSyFinder.
-There is a small utility tool shipped with `MacSyFinder` to deal with macsy-models: ``macsydata``.
+MacSyFinder does not provide models. You must install models before using it.
+The ``macsydata`` utility tool is shipped with `MacSyFinder` to deal with macsy-models:
 
 
 macsydata <subcommand> [options]
 
-The main sub-command are
+The main sub-commands are
 
-* ``macsydata available`` to get the models family available
-* ``macsydata search`` to search a model given its name or a pattern or in description
-* ``macsydata install`` to install a package (the installed version can be set see --help)
-* ``macsydata cite`` how to cite the model
-* ``macsydata --help`` will give you the extended list of available subcommand
-
-and macsydata subcommand --help to have specific help about the subcommand
+* ``macsydata available`` to get the list of macsy-models available
+* ``macsydata search`` to search a model given its name or a pattern in its description
+* ``macsydata install`` to install a macsy-model package (the installed version can be set see --help)
+* ``macsydata cite`` to retrieve information on how to cite the model
+* ``macsydata --help`` to get the extended list of available subcommands
+* ``macsydata <subcommand> --help`` to get help about the specified subcommand
 
 
 Where the models are located
 ============================
 
-MacSyFinder look at several locations to find macsy-models.
+MacSyFinder looks at several locations to find macsy-models.
 
-system wide
------------
+system-wide installation
+------------------------
 
-By default macsydata installed models in shared location (set by --install-data option)
-By default in `/usr/share/macsyfinder/` or `/usr/local/share/macsyfinder` depending on your distribution.
-If you use a virtualenv the shared resources are located in the `<virtualenv>/share/macsyfinder` directory.
+By default *macsydata* installs models in a shared location (set by --install-data option) that is
+`/usr/share/macsyfinder/` or `/usr/local/share/macsyfinder` depending on your Operating System distribution.
+If you use a *virtualenv*, the shared resources are located in the `<virtualenv>/share/macsyfinder` directory.
 
 
-user wide
----------
+user-wide installation
+----------------------
 
-If you have not rights to installed in system wide you can installed models in the macsyfinder cache
-located in your home `$HOME/.macsyfinder/data/`.
-macsydata install packages in this location when you use the `--user` option.
-The packages installed in user land is added to the system wide packages.
-If two packages have the same name the package in user land superseded the system wide package.
+If you don't own rights to install system-wide, you can install models in the MacSyFinder's cache
+located in your home: `$HOME/.macsyfinder/data/`.
+*macsydata* installs packages in this location when you use the `--user` option.
+The packages installed in user land is added to the system-wide packages.
 
-project wide
-------------
 
-If you cannot install macsy_models package in system or user land locations you can specify a
-specific location with the ``--models-dir`` command line option. The path must point a directory
-that contains models packages.
+.. note::
+	If two packages have the same name, the package in the user land supersedes the system-wide package.
+
+
+project-wide installation
+-------------------------
+
+If you cannot install macsy-model packages in system or user land locations, you can specify a
+specific location with the ``--models-dir`` :ref:`command-line option <path-options>`. The path must point at a directory
+that contains macsy-model packages as described :ref:`above <package_structure>`.
+
 
  .. _model_package:
 
-Write my own model-package
-==========================
+Writing my own macsy-model package
+==================================
 
-The whole package structure is described `above <package_structure>`_
+The whole package structure is described :ref:`above <package_structure>` and requires five different types of files described below to be complete:
+
+* a metadata file
+* a README.md file
+* a LICENCE file
+* macsy-models definition(s)
+* HMM profiles
+
 
 metadata file
 -------------
 
 This file contains some meta information about the package itself.
-This file is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format.
-This file must have the following structure:
+It is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format and must have the following structure:
 
 .. code-block:: yaml
 
     ---
     maintainer:
-      name: The name of the person who maintain/to contact for further informations. (required)
+      name: The name of the person who maintains/to contact for further information. (required)
       email: The email of the maintainer (required)
-    short_desc: A one line description of the package (can be used with macsydata search) (required)
-    vers: the package version (required)
-    cite: The list of publication to mentioned when the user have to cite the package (optional used by `macsydata cite`)
-    doc: where to find extended documentation (optional)
+    short_desc: A one line description of the package (can e.g. be used for *macsydata* searches) (required)
+    vers: The package version (required)
+    cite: The publication(s) to cite by the user when the package is used (optional, used by `macsydata cite`)
+    doc: Where to find extended documentation (optional)
     licence: The licence under the package is released (optional but highly recommended)
     copyright: The copyright of the package (optional)
 
-for example
+For example:
 
 .. code-block:: yaml
 
@@ -168,30 +180,28 @@ for example
     copyright: 2014-2020, Institut Pasteur, CNRS
 
 .. warning::
-    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not considered as a package.
+    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not be considered as a *macsy-model package*.
 
 .. note::
 
     * *-* specify an item of yaml list
-    * *|* is used to specify a single item but over multi lines.
+    * *|* is used to specify a single item but over multiple lines.
 
 
 README.md
 ---------
 
-A description of the package, what kind of systems the package models.
-How to use it, ... in `markdown <https://guides.github.com/features/mastering-markdown/>`_ format.
+A description of the package: what kind of systems the package models, how to use it etc... in `markdown <https://guides.github.com/features/mastering-markdown/>`_ format.
 
 LICENCE
 -------
 
 The licence use to protect and share your work.
-If you don't know which licence to choose.
-Have a look on `CreativeCommons <https://creativecommons.org/share-your-work/>`_
+If you don't know which licence to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
 *This file is optional, but highly recommended.*
 
-Write my definitions
---------------------
+Writing my own macsy-models definitions
+---------------------------------------
 
 
 (*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components**
@@ -199,14 +209,14 @@ Write my definitions
 for **content description**.
 Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
 
-Three distinct types of components can be used to model a given system content,
+Four distinct types of components can be used to model a given system content,
 and which corresponds to Gene objects, and the corresponding HMM protein profiles.
 
 * **mandatory** components represent essential components to be found to infer the System presence.
 * **accessory** components correspond to components that can be found in some systems occurrence,
   or quickly evolving components that are hard to detect with a single profile.
-* **neutral** components used to build the clusters but not take in account to build the system.
-* **forbidden** components are components which presence is eliminatory for the System assessment.
+* **neutral** components are used to build the clusters (genetically close components) but not taken into account to assess the system's presence. ``NEW in V2``
+* **forbidden** components are components which presence is eliminatory for the system's assessment.
 
 
 .. image:: ../_static/MSF_modelling.svg
