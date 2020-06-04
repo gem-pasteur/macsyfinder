@@ -28,7 +28,7 @@ A **MacSyFinder model** (macsy-model for short) is thus the association of sever
     * a set of **HMM profiles** (one per component/gene in the model) to enable the similarity search of the systems' components with the HMMER program.
 
 The models are grouped by *family* possibly gathering *sub-families* (multiple levels allowed), for instance *Secretion*, *Cas-proteins*...
-A set of models from a same family (coherent set) of systems to detect is called hereafter a **macsy-model package**.
+A set of models from a same family (coherent set) of systems to detect is called hereafter a **macsy-model package** ``NEW in V2``.
 
 .. _package_structure:
 
@@ -90,6 +90,8 @@ The main sub-commands are
 * ``macsydata cite`` to retrieve information on how to cite the model
 * ``macsydata --help`` to get the extended list of available subcommands
 * ``macsydata <subcommand> --help`` to get help about the specified subcommand
+
+*macsydata* is ``NEW in V2``
 
 
 Where the models are located
@@ -203,20 +205,24 @@ If you don't know which licence to choose, have a look at `CreativeCommons <http
 Writing my own macsy-models definitions
 ---------------------------------------
 
+Macsy-models are written as XML files, and should be named with the name of the system to detect as a prefix, 
+and the XML file extension as a suffix. For example, 'T1SS.xml' for T1SS (Type I Secretion System). 
 
-(*e.g.*, 'T1SS.xml' for T1SS, the Type 1 Secretion System) by a set of **components**
-(*i.e.* proteins, or protein-coding genes given the context) with different attributes and that are used
-for **content description**.
-Features regarding **co-localization** parameters for system detection are also defined in this system-specific file.
+A macsy-model defines a macromolecular systems as: 
 
-Four distinct types of components can be used to model a given system content,
-and which corresponds to Gene objects, and the corresponding HMM protein profiles.
+* A set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes that are used for system's **content description**.
+* Features regarding **co-localization** parameters of the systems' components for system detection.
+* Rules for **quorum** specifying how many components are required to infer the presence of a complete system.
 
-* **mandatory** components represent essential components to be found to infer the System presence.
-* **accessory** components correspond to components that can be found in some systems occurrence,
-  or quickly evolving components that are hard to detect with a single profile.
-* **neutral** components are used to build the clusters (genetically close components) but not taken into account to assess the system's presence. ``NEW in V2``
-* **forbidden** components are components which presence is eliminatory for the system's assessment.
+
+Four distinct **types of components** can be used to model the system's content.
+Components correspond to Gene objects in MacSyFinder's implementation, and point to corresponding HMM protein profiles.
+
+* **mandatory** components represent components that are essential to be found to infer the system's presence.
+* **accessory** components correspond to components that can be found in some systems' occurrence
+  (or quickly evolving components that are hard to detect with a single HMM profile and thus can be missed along similarity search).
+* **neutral** components are used to build/extend clusters of proximal genes/components on the replicon analysed, but are not part of the quorum (i.e., not taken into account to assess the system's presence). ``NEW in V2``
+* **forbidden** components are components which presence is eliminatory for the system's presence assessment.
 
 
 .. image:: ../_static/MSF_modelling.svg
@@ -232,40 +238,39 @@ The XML hierarchy
 * The element root is "model".
 
   * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
-    without a match between two components with a match for a component profile.
-  * the version of the xml grammar (the actual version is "2.0")
+    without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *cluster*).
+  * The version of the XML grammar (the actual version is "2.0")
   * The element "model" may have attributes:
   
-     * **min_mandatory_genes_required**: an integer representing the minimal number of mandatory genes required
-       to infer the system presence.
-     * **min_genes_required**: an integer representing the minimal number of mandatory or accessory genes
-       (whose corresponding proteins match a profile of the model) required to infer the system presence.
-     * **max_nb_genes**: an integer representing the maximal number of mandatory or accessory genes in the system.
-     * **multi_loci**: a boolean set to True ("1", "true" or "True") to allow the definition of "scattered" systems
-       (systems encoded by different loci). If not specified, *default value is false*.
+     * **min_mandatory_genes_required**: an *integer* representing the minimal number of mandatory genes required
+       to infer the system's presence.
+     * **min_genes_required**: an *integer* representing the minimal number of mandatory or accessory genes
+       (whose corresponding proteins match a profile of the model) required to infer the system's presence.
+     * **max_nb_genes**: an *integer* representing the maximal number of mandatory or accessory genes allowed in the system.
+     * **multi_loci**: a *boolean* set to True ("1", "true" or "True") to allow the definition of "scattered" systems
+       (i.e., systems encoded at different genomic loci or by different gene *clusters*). If not specified, *default value is false*.
      
-  * The model contains one or more element "gene".
+  * The model contains one or more element "gene" that corresponds to genetic components making the macromolecular system whole.
   
 * The element "gene" has several mandatory attributes: 
 
-   * **name**: which must match to a profile in the profile directory.
-   * **presence**: which can take three values "mandatory", "accessory", "neutral", "forbidden".
+   * **name**: a *string* representing the name of the component/gene which must match that of a profile enclosed in the profile directory of the macsy-model package (see :ref:`below <provide-hmm_label>`).
+   * **presence**: a *string* representing the status of the gene's presence in the system. It can take four values among "mandatory", "accessory", "neutral", "forbidden" (see above).
 
  The element "gene" may have other attributes: 
 
-   * **loner**: which is a boolean. If a gene is loner that means this gene can be isolated on the genome ( *default false* ).
-   * **exchangeable**: which is a boolean. If a gene is exchangeable (value set to "1", "true" or "True") that
-     means this gene or one of its homologs or analogs can be interchanged for the assessment of the presence
-     of the macromolecular system ( *default false* ).
-   * **multi_system**: which is a boolean. If a gene is "multi_system" (value set to "1", "true" or "True"),
-     it means that it can be used to fill by multiple systems occurrences. ( *default false* ).
-   * **inter_gene_max_space**: an integer that defines gene-wise value of system's "inter_gene_max_space" parameter (see above).
+   * **loner**: a *boolean*. A *loner* gene can be isolated on the genome and does not have to be part of a cluster of genes to be considered for system's assessment ( *default false* ).
+   * **exchangeable**: a *boolean*. If a gene is exchangeable (value set to "1", "true" or "True") that
+     means this gene or one of its homologs or analogs can be *interchanged to be counted in the quorum* as part of the macromolecular system ( *default false* ).
+   * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
+     it means that it can be used to fill multiple systems' occurrences - and thus be considered part of several systems. ( *default false* ).
+   * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter. 
 
  The element "gene" may have one "exchangeables" child element:
 
-* The element "exchangeables" can contains one or more elements "gene".
+   * The element "exchangeables" can contain one or more elements "gene".
 
-Example of a model definition in XML:
+Example of a macsy-model definition in XML:
 
 .. code-block:: xml
   
@@ -289,25 +294,35 @@ Example of a model definition in XML:
     * a gene is identified by its name.
     * this name is case sensitive.
     * this name must be unique inside a family of models.
-    * a hmm profile with the same name must be exists in the `profiles` directory
+    * a HMM profile with a gene-based name must exist in the `profiles` directory of the macsy-model package (see :ref:`below <provide-hmm_label>`).
 
 
-Provide hmm profiles
---------------------
+.. _provide-hmm_label:
 
-For each gene mentioned in each model you have to provide a hmm profile
-that capture this gene. The hmm profile must be created from specific alignment with `hmmbuild`
-from `HMMER package <http://hmmer.org/>`_.
+Providing HMM profiles
+----------------------
+
+For each gene mentioned in each model you have to provide **a HMM profile**
+to enable the similarity search of this gene. The HMM profile must have been created by the user from a curated multiple sequence alignment with the `hmmbuild` program
+from the `HMMER package <http://hmmer.org/>`_, or can have been obtained from HMM profiles' databases such as `TIGRFAM <https://dx.doi.org/10.1093%2Fnar%2Fgkg128>`_ or `PFAM <https://pfam.xfam.org/>`_ .  
+
 This profile *MUST* have the same name as the name of the gene mentioned in the definition.
-The names are Case sensitive. All the profile must be placed in the `profiles` directory.
+For instance, a component named "GeneA" in the macsy-model would correspond by default to a HMM profile "GeneA.hmm" enclosed in the macsy-model package. 
+The names are **case-sensitive**. All HMM profiles must be placed in the `profiles` directory of the macsy-model package.
+
+
+.. note::
+	For a detailed tutorial on how to define your macsy-model's features, parameters and HMM profiles, you can have a look at our cookbook in `this book chapter <https://link.springer.com/protocol/10.1007/978-1-4939-7033-9_1>`_ . 
 
 
 Share your models
 =================
 
-If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository
-check the validity of your package with the ``macsydata check`` command
-create a tag and the submit a pull request to https://github.com/macsy-models organization.
-So once your PR will be accepted the model package will be automatically available through the macsydata tool.
+If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository.
+
+1. check the validity of your package with the ``macsydata check`` command.
+2. create a tag, and submit a pull request to https://github.com/macsy-models organization.
+3. when your pull request (PR) is accepted, the model package becomes automatically available to the community through the *macsydata* tool.
+
 If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
-The archive is also usable with the `macsydata` tool.
+This archive will also be usable with the `macsydata` tool.
