@@ -133,6 +133,7 @@ If you install it in a virtualenv, just delete the virtual environment.
 
 
 .. _macsydata:
+
 ===================
 Models installation with `macsydata`
 ===================
