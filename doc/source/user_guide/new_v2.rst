@@ -26,3 +26,31 @@ Several **new features** were added, including:
 - more flexibility was introduced in the search for systems' components using HMMER. It is now possible to use the `cut_ga` threshold when provided in the HMM profiles used for components' similarity search. This enables to have a search tailored for each HMM profile, and thus component. :ref:`See here <hmmer-options>` for more details.
 - a new file structure was created to better organize MacSyFinder's packages (i.e. that include systems' models and corresponding HMME profiles). :ref:`See here <package_structure>` for details.
 - a tool to easily install and distribute MacSyFinder's packages was created. :ref:`See here <macsydata>` for more details on *macsydata*.
+- the format for MacSyFinder has slightly changed, in order to offer more possibilities, and more readibility. To see how to carry models from V1 to V2, :ref:`see below <models_v1_v2>`. 
+
+
+.. _models_v1_v2:
+
+Carrying models from V1 to V2 
+=============================
+
+Models from V1 are not compatible straight away with V2.
+For those who had designed MacSyFinder's models for Version 1 and would like to carry them for Version 2, here are the changes to consider:
+
+
+* the keyword "system" was changed:
+<system> => <model>
+
+* the keyword `<system_ref>` was removed. 
+For a given systems' package, each gene has to be defined only once in a macsy-model. There is no need anymore to reference which model it is from, when used as a component in another system's model. 
+
+* now the version of the macsy-models' type have to be documented as a feature of the "model" keyword, like this: `BLBLBLA="V2"` 
+
+
+* the following keywords have been replaced:
+homologs => exchangeables
+analogs => exchangeables
+
+.. note::
+ 
+ "exchangeable" is not a feature anymore, but is replaced by the keyword "exchangeables". 
