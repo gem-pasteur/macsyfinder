@@ -12,6 +12,8 @@
 Welcome to MacSyFinder's documentation!
 =======================================
 
+A new version of MacSyFinder is available, see :ref:`here for an overview of the novelties<new_v2>`.
+
 
 MacSyFinder is a program to model and detect macromolecular systems, genetic pathways... in protein datasets.
 In prokaryotes, these systems have often evolutionarily conserved properties:
