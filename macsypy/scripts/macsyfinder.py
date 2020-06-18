@@ -693,9 +693,10 @@ def main(args=None, loglevel=None):
         ###########################
         logger.info("\n{:#^70}".format(" Computing best solutions "))
         best_solutions = []
+        one_best_solution = []
+
         # group systems found by replicon
         # before to search best system combination
-
         import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
@@ -705,6 +706,7 @@ def main(args=None, loglevel=None):
             t1 = time.time()
             logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score}) for replicon {rep_name}")
             best_solutions.extend(best_sol_4_1_replicon)
+            one_best_solution.append(best_sol_4_1_replicon[0])
 
         ##############################
         # Write the results in files #
@@ -725,10 +727,16 @@ def main(args=None, loglevel=None):
         if not (all_systems or rejected_clusters):
             logger.info("No Systems found in this dataset.")
 
-        tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
+        tsv_filename = os.path.join(config.working_dir(), "all_best_systems.tsv")
         with open(tsv_filename, "w") as tsv_file:
             solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
 
+        tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
+        with open(tsv_filename, "w") as tsv_file:
+            # flattern the list and sort it
+            one_best_solution = [syst for sol in one_best_solution for syst in sol]
+            one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+            systems_to_tsv(one_best_solution, track_multi_systems_hit, tsv_file)
     logger.info("END")
 
 

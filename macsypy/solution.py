@@ -56,4 +56,5 @@ def find_best_solutions(systems):
             max_cliques = [c]
         elif current_score == max_score:
             max_cliques.append(c)
+    max_cliques.sort(key=len, reverse=True)
     return max_cliques, max_score
