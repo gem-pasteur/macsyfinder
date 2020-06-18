@@ -13,15 +13,17 @@ Gembase format
 **************
 
 
-In order to allow the users running MacSyFinder on a bunch of genomes in a single run,
+In order to allow the users to run MacSyFinder on **several genomes at once**,
 we propose to adopt the following convention to fulfill the requirements for the "gembase db_type".
+
 It consists in providing for each protein, both the replicon name and a protein identifier separated by
 a "_" in the first field of fasta headers. "_" are accepted in the replicon name, but not in the protein identifier.
 Hence, the last "_" is the separator between the replicon name and the protein identifier.
+As such, MacSyFinder will be able to treat each replicon separately to assess macromolecular systems' presence. 
 
 For instance::
 
-  >PlasmidA_0001 YP_003225072.1_ | putative stcE protein 
+  >PlasmidA_0001 YP_003225072.1 | putative stcE protein 
   MKLKYLSCMILASLAMGAFAATAADNNSAIYFNTTQPVNDLQGGLAAEVK
   FAQSQILSAHPKEGESQQHLTSLRKSLLLVRLVKADDKTPVQVEARDAND
   KILGTLTLSPPSSLPDTVYHLDGVPADGIDFTPQNGTKKIINTVAEVNKL
@@ -29,7 +31,7 @@ For instance::
   GYNSTVFYGDRKVTLSVGNTLLFKYVNGQWFRSGELENNRIAYAQHTWSA
   ELPAHWIVPGLNLVIKQGNLSGSLNDINVGAPGELLLHTIDIGMLTTPRG
   RFDFAKDKEAHREYFQTIPVSRMIVNNYAPLHLKEVMLPTGTLLTDADPG
-  >PlasmidA_0002 YP_003225073.1_ | type II secretion protein EtpC
+  >PlasmidA_0002 YP_003225073.1 | type II secretion protein EtpC
   MLFFLSSRRDRNLFIKDIALKMLTPNWVLCVILLIAGYQLVSVIRHFWLT
   PATSASDLSHVSVSETAVTDEHTEENFVFTLFGTASPPLSEGKVQKTTSS
   LSDDLLSGGDLDVRGILYSSVTEHSVAIFAHNNRQFSLGIGEKVPGYDAT
@@ -37,7 +39,7 @@ For instance::
   VKNIFDIMSLSPVTVNNTLSGYRLSPGKASSLFYNAGLHDNDLAVLLNGS
   ELRDTRQAKQIMKQLTELKEIKITVERDGQLYDAFIAVGEN
   ....
-  >ChromosomeA_0001 _YP_003573410.1_ | adhesin-like protein
+  >ChromosomeA_0001 YP_003573410.1 | adhesin-like protein
   MKKLFLFAALLMTGFAFYSCEDVVDNPAQDPAQSWNYSVSVKFADFDFNG
   AVDENSVPYTYKAPTTLYVLNEENTLMGTITTDAAPAIGDYGTYAGTLTG
   SIGNNLIITTKIGNDLTKQDGTLKSAIENGIVQTAEVPIKIYNANSGTLT
@@ -46,13 +48,13 @@ For instance::
   IPFIQTGVDLTKWDAYMRTDPNNTWYMNNINNGWPATFSQEVEDGKSFIV
   TQSGPTLDSLNVVVGGVTGKEVNVTLNNIRLGKDRSINIGDKHGWVEYDG
   THDIYGWGAKANVTLIGENECETLYIQCPATKKGEGTLNYKNLSIDSYGS
-  >ChromosomeA_0020 _YP_003573411.1_ | hypothetical protein
+  >ChromosomeA_0020 YP_003573411.1 | hypothetical protein
   MKRIVLITLVSILTTFQAIAQVANGFYRVQNNASSRYITLRDNAVGTVDY
   SSTNVDLSNIVTWSGFDKVKSNPASIIYVEQHDSKYDLKVQGTGIYAITG
   GRTYLELRPKDSGYILAVTYNGMEGRLYDSEEDVDGEGYVKRSGNSAYQY
   WSFIPVDTENNYIGLQPTVQVGDNYYGTLYASYPFKAASSGIKFYYVDAI
   ....
-  >NC_001548_0015 _YP_003225080.1_ | type II secretion protein EtpJ  (translation)
+  >NC_001548_0015 YP_003225080.1 | type II secretion protein EtpJ  (translation)
   MSQQRVKGFTLLEMLLALAVFAALSISAFQVLQSGIRAHELSQDKVRRLA
   ELQRGGSQIERDLMQMIPRHSRGSEGLLLAAPHLLKSDDWGISFTRNSWL
   NPAGMLPRPELQWVGYRLRQQKLERLSYFYVDHPSGIAPDVRVVLEGVHA
@@ -60,6 +62,7 @@ For instance::
 
 This input file contains 3 replicons: PlasmidA (which 2 first protein identifiers are 0001 and 0002),
 ChromosomeA (which 2 first protein identifiers are 0001 and 0020) and NC_001548 (which first protein identifier is 0015).
+MacSyFinder search results will thus be reported for each of these three replicons. 
 
 .. _topology-files:
 
@@ -79,5 +82,5 @@ For example::
   ChromosomeB : circular
   
 .. note::
-    A topology file can be specified on the command-line with the "``--topology-file``" parameter.
+    A topology file can be specified on the command-line with the ``--topology-file`` parameter.
     

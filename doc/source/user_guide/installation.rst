@@ -13,33 +13,43 @@
 Installation
 ************
 
-MacSyFinder works with models, the models are not shipped with MacSyFinder.
-So you have to install them separately.
+MacSyFinder works with models for macromolecular systems that are not shipped with it, 
+you have to install them separately. See the :ref:` macsydata section <macsydata>` below.
 
 ========================
 MacSyFinder dependencies
 ========================
-MacSyFinder has two dependencies:
- - the program *Hmmer* version 3.1 (http://hmmer.janelia.org/).
+**Python version >=3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
 
-*hmmsearch* programs should be installed (*e.g.*, in the PATH) in order to use MacSyFinder.
-Otherwise, the paths to these executables must be specified in the command-line:
+MacSyFinder has one program dependency:
+ - the *Hmmer* program, version 3.1 (http://hmmer.janelia.org/).
+
+The *hmmsearch* program should be installed (*e.g.*, in the PATH) in order to use MacSyFinder.
+Otherwise, the paths to this executable must be specified in the command-line:
 see the :ref:`command-line options <hmmer-options>`.
  
-**Python version >=3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
+ 
+MacSyFinder also relies on four Python library dependencies:
+ - colorlog
+ - pyyaml
+ - packaging
+ - networkx
+
+These dependencies will be automatically retrieved and installed when using `pip` for installation (see below). 
+ 
 
 ==================================
 MacSyFinder Installation procedure
 ==================================
 
-It is recommended to use pip to install MacSyFinder package.
+It is recommended to use `pip` to install the MacSyFinder package.
 
 Archive overview
 ================
 
 * **doc** => the documentation in html and pdf
 * **etc** => a template of macsyfinder configuration file
-* **test** => all needed for unit tests
+* **test** => all what is needed for unitary tests
 * **macsypy** => the macsyfinder python library
 * **setup.py** => the installation script
 * **requirements.txt** => the python dependencies
@@ -47,17 +57,18 @@ Archive overview
 * **COPYING** => the licensing
 * **COPYRIGHT** => the copyright
 * **README.md** => very brief macsyfinder overview
-* **CONTRIBUTORS** => list of people who contribute to the code
+* **CONTRIBUTORS** => list of people who contributed to the code
 
 
 Installation steps:
 =======================
 
-Make sure every required dependence/software is present.
+Make sure every required dependency/software is present.
 --------------------------------------------------------
 
-By default MacSyFinder will try to use `hmmsearch` in your PATH, if `hmmsearch` is not in the PATH,
-you have to set the absolute path to the `hmmsearch` in configuration.
+By default MacSyFinder will try to use `hmmsearch` in your PATH. If `hmmsearch` is not in the PATH,
+you have to set the absolute path to `hmmsearch` in a :ref:`configuration file <config-definition-label>` 
+or in the :ref:`command-line <hmmer-options>` upon execution.
 If the tools are not in the path, some test will be skipped and a warning will be raised.
 
 
@@ -69,12 +80,12 @@ Perform the installation.
     pip install --no-binary macsyfinder macsyfinder
 
 
-If you have not the privileges to perform a system wide installation,
-you can use either install it in your home or
+If you do not have the privileges to perform a system-wide installation,
+you can either install it in your home directory or
 use a [virtual environment](https://virtualenv.pypa.io/en/stable/).
 
-installation in your home
-"""""""""""""""""""""""""
+installation in your home directory
+"""""""""""""""""""""""""""""""""""
 
 ::
 
@@ -96,7 +107,7 @@ To run `macsyfinder`, you need to activate the virtualenv: ::
 
     source macsyfinder/bin/activate
 
-Then run macsyfinder/macsydata
+Then run `macsyfinder` or `macsydata`.
 
   
 .. note::
@@ -118,26 +129,28 @@ To uninstall MacSyFinder (the last version installed), run::
 
   (sudo) pip uninstall macsyfinder
 
-If you install it in a virtualenv just delete the virtualenv
+If you install it in a virtualenv, just delete the virtual environment. 
 
+
+.. _macsydata:
 
 ===================
-Models installation
+Models installation with `macsydata`
 ===================
 
-Once MacSyFinder is installed you have access to an utility program to manage the models `macsydata`
+Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`
 
-this script allow to search, download, install get information from models store on github or from you locally
-instaled models. The general syntax for `macsypy` is::
+This script allows to search, download, install and get information from MacSyFinder models stored on github or locally
+installed. The general syntax for `macsydata` is::
 
     macsydata <general options> <subcommand> <sub command options> <arguments>
 
 
-for instance to list all models available::
+To list all models available::
 
     macsydata available
 
-to search models::
+To search for models::
 
     macsydata search TXSS
 
@@ -149,7 +162,7 @@ To install a model package::
 
     macsydata install <model name>
 
-To install a model when you have not the right to install in system wide::
+To install a model when you have not the right to install it system-wide::
 
     macsydata install --user <model name>
 
@@ -157,10 +170,10 @@ To know how to cite a model package::
 
     macsydata cite <model name>
 
-to have the list of all macsydata subcommand::
+To list all `macsydata` subcommands::
 
     macsydata --help
 
-to have the all options available for a subcommand::
+To list all available options for a subcommand::
 
     macsydata <subcommand> --help
