@@ -373,8 +373,23 @@ class System:
         :rtype: tuple (start: int, end:int)
         """
         hits = [h.position for h in self.hits if not h.gene_ref.loner]
+        if hits:
+            hits.sort()
+            pos = hits[0], hits[-1]
+        else:
+            # there are only loners
+            # take them
+            pos = self.hits[0].position, self.hits[-1].position
+
+        _log.debug("####################### START DEBUG ##################")
+        _log.debug(self.replicon_name)
+        _log.debug(self.id)
+        _log.debug(self.hits)
+        _log.debug([h.gene_ref.name for h in self.hits])
+        _log.debug(hits)
+        _log.debug("####################### END   DEBUG ##################")
         hits.sort()
-        return hits[0], hits[-1]
+        return pos
 
 
     def is_compatible(self, other):
