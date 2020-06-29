@@ -51,8 +51,24 @@ hits filtering and relevant information on the matches, as for instance::
 Systems detection results
 -------------------------
 
-Different types of tabular outputs are provided. Headers are provided with the content of the lines in the file.
+Different types of output files are provided, human-readable files ".txt", and tabulated files ".tsv". For the latter, headers are provided with the content of the lines in the file.
 
+
+  * `best_solution_report.tsv` - This file contains the best solution found by MacSyFinder in terms of systems detected, under the form of a per-component, tabulated report file. If multiple solutions showed a maximal score, the solution maximizing 1) the number of components in systems and 2) the number of systems detected is proposed. To see potential other best solutions, see file "all_best_solutions.tsv". This file is the most similar to former V1 file `macsyfinder.report`. 
+
+  * `best_solution_summary.tsv` - This file consists in a table describing the content in detected systems for each replicon analysed. 
+
+  * `all_best_solutions.tsv` - This file contains all possible best solutions under the form of a per-component, tabulated report file. To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`. 
+
+  * `all_eligible_systems.tsv` - This file contains all possible candidate systems given the definitions - without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. 
+
+  * `systems_search.txt` - This file describes the search process of all possible candidate systems given the definitions - without processing of the potential overlaps between candidate systems. 
+
+  * `rejected_clusters.txt` - This file lists candidate clusters of systems' components that were rejected by MacSyFinder during the search process, and were thus not assigned to a candidate system. 
+
+
+
+To be amended/removed:
   * systems.txt - all potential systems detected with their components in human readable format.
   * systems.tsv - all potential systems detected with their components in a tabulate separated value format.
   * rejected_clusters.txt - contains the lists of clusters that are not passed the quorum.
