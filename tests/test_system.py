@@ -32,7 +32,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster, RejectedClusters
-from macsypy.system import System, match, HitSystemTracker, ClusterSystemTracker
+from macsypy.system import System, PotentialSystem, match, HitSystemTracker, ClusterSystemTracker
 
 from tests import MacsyTest
 
@@ -96,7 +96,7 @@ class SystemTest(MacsyTest):
 
 
     def test_position(self):
-        model = Model("foo/T2SS", 10)
+        model = Model("foo/mod1", 10)
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
         model.add_mandatory_gene(gene_gspd)
@@ -115,8 +115,29 @@ class SystemTest(MacsyTest):
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
                                   Cluster([v_hit_3], model)])
-        # loner are to take in account to compute position
+        # loner are not to take in account to compute position if system contains none loner hit
         self.assertEqual(system_1.position, (10, 20))
+
+        model = Model("foo/mod2", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model, loner=True)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model, loner=True)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
+        model.add_accessory_gene(gene_sctn)
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
+                                  Cluster([v_hit_3], model)])
+        # loner are not to take in account to compute position if system contains none loner hit
+        self.assertEqual(system_1.position, (1, 20))
 
 
     def test_multi_loci(self):
@@ -703,8 +724,8 @@ class SystemTest(MacsyTest):
 
 
     def test_ClusteSystemTracker(self):
-        model_1 = Model("foo/T2SS", 10)
-        model_2 = Model("foo/T3SS", 10)
+        model_1 = Model("foo/mod1", 10)
+        model_2 = Model("foo/mod2", 10)
 
         c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_2)
@@ -866,3 +887,211 @@ class SystemTest(MacsyTest):
         self.assertDictEqual(s1.mandatory_occ, {'sctJ': [v_h_sctj], 'sctN': [v_h_sctn]})
         self.assertDictEqual(s1.accessory_occ, {'gspD': [v_h_gspd]})
         self.assertDictEqual(s1.neutral_occ, {'toto': [v_h_toto]})
+
+
+    def test_multi_loci(self):
+        model = Model("foo/T2SS", 10)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+        gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
+        gene_sctn.add_exchangeable(gene_sctn_flg)
+
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+        gene_sctj_flg = Exchangeable(c_gene_sctj_flg, gene_sctj)
+        gene_sctj.add_exchangeable(gene_sctj_flg)
+
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd.add_exchangeable(gene_gspd_an)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc.add_exchangeable(gene_abc_ho)
+
+        c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
+        gene_toto = ModelGene(c_gene_toto, model)
+        c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
+        gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
+        gene_toto.add_exchangeable(gene_toto_ho)
+
+        model.add_mandatory_gene(gene_sctn)
+        model.add_mandatory_gene(gene_sctj)
+        model.add_accessory_gene(gene_gspd)
+        model.add_neutral_gene(gene_toto)
+        model.add_forbidden_gene(gene_abc)
+
+        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn_flg = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd_an = Hit(c_gene_flgB, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc_ho = Hit(c_gene_tadZ, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_toto = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_toto_ho = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+
+        v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
+        v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+        c1 = Cluster([v_h_sctj,
+                      v_h_sctn,
+                      v_h_gspd,
+                      v_h_toto], model)
+        s1 = System(model, [c1])
+
+        self.assertFalse(s1.multi_loci)
+        c2 = Cluster([v_h_sctj,
+                      v_h_sctn], model)
+        c3 = Cluster([v_h_gspd,
+                      v_h_toto], model)
+        s2 = System(model, [c2, c3])
+        self.assertTrue(s2.multi_loci)
+
+
+class PotentialSystemTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        self.cfg = Config(MacsyDefaults(), args)
+
+        self.model_name = 'foo'
+        self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        self.profile_factory = ProfileFactory(self.cfg)
+
+
+    def test_init(self):
+        model = Model("foo/mod1", 10)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+        gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
+        gene_sctn.add_exchangeable(gene_sctn_flg)
+
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+        gene_sctj_flg = Exchangeable(c_gene_sctj_flg, gene_sctj)
+        gene_sctj.add_exchangeable(gene_sctj_flg)
+
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd.add_exchangeable(gene_gspd_an)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc.add_exchangeable(gene_abc_ho)
+
+        c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
+        gene_toto = ModelGene(c_gene_toto, model)
+        c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
+        gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
+        gene_toto.add_exchangeable(gene_toto_ho)
+
+        model.add_mandatory_gene(gene_sctn)
+        model.add_mandatory_gene(gene_sctj)
+        model.add_accessory_gene(gene_gspd)
+        model.add_neutral_gene(gene_toto)
+        model.add_forbidden_gene(gene_abc)
+
+        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn_flg = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd_an = Hit(c_gene_flgB, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc_ho = Hit(c_gene_tadZ, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_toto = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_toto_ho = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+
+        v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
+        v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
+        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+        s1 = PotentialSystem(model, [v_h_sctj, v_h_sctn, v_h_gspd, v_h_toto])
+
+        self.assertTrue(s1.id.startswith('replicon_id_mod1_'))
+
+    def test_hits(self):
+        def test_init(self):
+            model = Model("foo/mod1", 10)
+            c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+            gene_sctn = ModelGene(c_gene_sctn, model)
+            c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+            gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
+            gene_sctn.add_exchangeable(gene_sctn_flg)
+
+            c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+            gene_sctj = ModelGene(c_gene_sctj, model)
+            c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+            gene_sctj_flg = Exchangeable(c_gene_sctj_flg, gene_sctj)
+            gene_sctj.add_exchangeable(gene_sctj_flg)
+
+            c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+            gene_gspd = ModelGene(c_gene_gspd, model)
+            c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
+            gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+            gene_gspd.add_exchangeable(gene_gspd_an)
+
+            c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+            gene_abc = ModelGene(c_gene_abc, model)
+            c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
+            gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+            gene_abc.add_exchangeable(gene_abc_ho)
+
+            c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
+            gene_toto = ModelGene(c_gene_toto, model)
+            c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
+            gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
+            gene_toto.add_exchangeable(gene_toto_ho)
+
+            model.add_mandatory_gene(gene_sctn)
+            model.add_mandatory_gene(gene_sctj)
+            model.add_accessory_gene(gene_gspd)
+            model.add_neutral_gene(gene_toto)
+            model.add_forbidden_gene(gene_abc)
+
+            h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_sctn_flg = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_gspd_an = Hit(c_gene_flgB, "hit_gspd_an", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_abc_ho = Hit(c_gene_tadZ, "hit_abc_ho", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_toto = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 9, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            h_toto_ho = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+            model._min_mandatory_genes_required = 2
+            model._min_genes_required = 1
+
+            v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
+            v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
+            v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+            v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+            hits = [v_h_sctj, v_h_sctn, v_h_gspd, v_h_toto]
+            s1 = PotentialSystem(model, hits)
+
+            self.assertListEqual(s1.hits, hits)
