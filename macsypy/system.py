@@ -615,7 +615,6 @@ class PotentialSystem(AbstractSetOfHits):
         return self._hits
 
 
-
 class NotPotentialSystem(AbstractSetOfHits):
 
     _supported_status = (GeneStatus.MANDATORY,
@@ -638,7 +637,7 @@ class NotPotentialSystem(AbstractSetOfHits):
         super().__init__(model, self._replicon_name)
 
 
-   def __str__(self):
+    def __str__(self):
         """
 
         :return: a string representation of this RejectedCluster
