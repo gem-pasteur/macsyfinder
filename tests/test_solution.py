@@ -165,24 +165,24 @@ def _build_systems(cfg, profile_factory):
 
     systems = {}
 
-    systems['A'] = System(model_A, [c1, c2])
+    systems['A'] = System(model_A, [c1, c2])  # 5 hits
     # we need to tweek the replicon_id to have stable ressults
     # whatever the number of tests ran
     # or the tests order
     systems['A'].id = "replicon_id_A"
-    systems['B'] = System(model_B, [c3])
+    systems['B'] = System(model_B, [c3])  # 3 hits
     systems['B'].id = "replicon_id_B"
-    systems['C'] = System(model_C, [c4])
+    systems['C'] = System(model_C, [c4])  # 4 hits
     systems['C'].id = "replicon_id_C"
-    systems['D'] = System(model_D, [c5])
+    systems['D'] = System(model_D, [c5])  # 2 hits
     systems['D'].id = "replicon_id_D"
-    systems['E'] = System(model_E, [c6])
+    systems['E'] = System(model_E, [c6])  # 1 hit
     systems['E'].id = "replicon_id_E"
-    systems['F'] = System(model_F, [c7])
+    systems['F'] = System(model_F, [c7])  # 1 hit
     systems['F'].id = "replicon_id_F"
-    systems['G'] = System(model_G, [c4])
+    systems['G'] = System(model_G, [c4])  # 4 hits
     systems['G'].id = "replicon_id_G"
-    systems['H'] = System(model_H, [c5])
+    systems['H'] = System(model_H, [c5])  # 2 hits
     systems['H'].id = "replicon_id_H"
 
     return systems
@@ -305,12 +305,17 @@ class SolutionExplorerTest(MacsyTest):
         systems = [self.systems[k] for k in 'ABCDEF']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'BAF'],
-                        [self.systems[k] for k in 'CD']]
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [[self.systems[k] for k in 'BAF'],  # 3 + 5 + 1 = 9 hits
+                        [self.systems[k] for k in 'CD']]   # 4 + 2 = 7 hits
+        best_sol_unordered = {frozenset(sol) for sol in best_sol}
+        expected_sol_unordered = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(best_sol, expected_sol)
+        # test if the composition is right
+        self.assertSetEqual(best_sol_unordered, expected_sol_unordered)
+        # test if solution order is right
+        best_sol_ordered = [frozenset(sol) for sol in best_sol]
+        expected_sol_ordered = [frozenset(sol) for sol in expected_sol]
+        self.assertListEqual(best_sol_ordered, expected_sol_ordered)
 
         systems = [self.systems[k] for k in 'ABCDGH']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -330,10 +335,10 @@ class SolutionExplorerTest(MacsyTest):
         # So the best Solution expected are C D / C H / G D / G H with score 4.5
 
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'CD'],
-                        [self.systems[k] for k in 'CH'],
-                        [self.systems[k] for k in 'GD'],
-                        [self.systems[k] for k in 'GH']]
+        expected_sol = [[self.systems[k] for k in 'CD'],  # 4 + 2 hits
+                        [self.systems[k] for k in 'CH'],  # 4 + 2
+                        [self.systems[k] for k in 'GD'],  # 4 + 2
+                        [self.systems[k] for k in 'GH']]  # 4 + 2
         best_sol = {frozenset(sol) for sol in best_sol}
         expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)

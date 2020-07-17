@@ -12,7 +12,8 @@
 Solution
 ********
 
-MacSyFinder find lot of potential systems for the same model, all these systems are saved in "all_systems.xxx" files.
+MacSyFinder find lot of potential systems for the same model,
+all these systems are saved in "all_systems.xxx" files.
 This module allow to explore among of all systems which combination seems to be more probable.
 
 
@@ -20,17 +21,9 @@ Solution
 ========
 
 
-.. autoclass:: macsypy.solution.Solution
+.. automodule:: macsypy.solution
    :members:
    :private-members:
    :special-members:
 
-
-SolutionExplorer
-================
-
-.. autoclass:: macsypy.solution.SolutionExplorer
-   :members:
-   :private-members:
-   :special-members:
 

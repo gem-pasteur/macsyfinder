@@ -93,7 +93,7 @@ For *ordered* datasets:
    min_genes_required, min_mandatory_genes_required.
    In the case of single loci (default) each clusters + loners are evaluated for quorum separately.
    In the case of multi loci (``multi_loci=True``) each clusters and all clusters combination are evaluated for the quorum.
-   The clusters which fill the quorum are reported the the `systems.txt` and `systems.tsv` files see :ref:`outputs`.
+   The clusters which fill the quorum are reported the the `all_systems.txt` and `all_systems.tsv` files see :ref:`outputs`.
    The clusters which not fulfill the quorum are reported in the `rejected_clusters.txt` file.
    
 Then the :ref:`next step of the search <combinatorial-exploration>` is performed to compute global solutions for the replicon(s) analysed (sets of compatible systems). 
@@ -143,5 +143,23 @@ A scoring system also enables to separate between sets of Solution. It is basica
 The overall procedure of exploring the space of possible Solutions while finding the optimal one, i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the networkx package. 
 This allows to provide the user with one, or multiple Solutions that have the best score possible among all combinations of compatible Systems. 
 
+******************************
+C. Selecting the best solution
+******************************
 
-The results are outputted in a tabular and graphical form (see :ref:`outputs`).
+1. At the end of the previous step MacSyFinder has computed all potential systems present in the replicon.
+   But all this systems does not exists at the same time.
+   Sometimes for a given model MacSyFinder found several potential systems. But these systems share lot of components.
+   So only ones of these systems is really present. So to choose the most system probable system, we compute for each one
+   a score, based on the model wholeness, the number of loci, if each function is coded by a gene or it's exchangeable, ...
+
+
+2. So Model also share some components for instance let's consider a Model B with a gene G4 as in Model A
+   and the cluster C5 contains the same hit H4 than in cluster C2.
+   So we had to choose to attribute the hit H4 to systems A or B.
+   To do that we consider all systems combination, the systems which share components are considering incompatible.
+   For instance SA_1 and SB_1 share the Hit H4 (respectively in cluster C2 and C5) so these two systems cannot exists together
+   Then we choose the largest systems combination which maximize the score.
+   So in our example the system SA_2 and SB_3
+   The results of this step are reported in `best_systems.tsv` file see :ref:`outputs`.
+

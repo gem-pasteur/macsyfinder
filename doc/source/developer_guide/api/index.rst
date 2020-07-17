@@ -24,6 +24,7 @@ MacSyFinder API documentation
     report
     search_genes
     solution
+    serialization
     database
     error
     utils
