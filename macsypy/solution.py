@@ -56,4 +56,11 @@ def find_best_solutions(systems):
             max_cliques = [c]
         elif current_score == max_score:
             max_cliques.append(c)
+    # sort the solutions (cliques)
+    # first by the sum of hits of system composing the solution, most hits in first
+    # second by the number of hits, most system in first
+
+    max_cliques.sort(key=lambda cl: (sum([len(sys.hits) for sys in cl]),
+                                     len(cl)),
+                     reverse=True)
     return max_cliques, max_score

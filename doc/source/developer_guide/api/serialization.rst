@@ -6,19 +6,24 @@
    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
    See the COPYING file for details.
     
-.. _system:
+.. _serialization:
 
-******
-System
-******
+*************
+Serialization
+*************
 
-It represents an occurrence of a model in a replicon.
+This module is a technical module where we can find the different way
+to serialize the results:
+
+   * the Systems found
+   * The best solutions (best combination of systems)
+   * The rejected clusters
 
 
-System
-=======
-.. autoclass:: macsypy.system.System
-   :members:
+
+.. automodule:: macsypy.serialization
+   :members: SystemSerializer, TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer
    :private-members:
    :special-members:
+
 

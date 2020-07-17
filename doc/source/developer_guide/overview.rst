@@ -42,6 +42,12 @@ Below a short glossary to fix the vocabulary used in MacSyFinder
         It's an occurrence of a specific Model on a replicon.
         Basically, it's a cluster or set of clusters which satisfy the Model quorum.
 
+    Solution
+
+        It's a systems combination for one replicon.
+        Technically it's a list of Systems. The best solution for a replicon,
+        is the combination of all systems found in this replicon which maximize the score.
+
 MacSyFinder project structure
 -----------------------------
 
@@ -163,6 +169,11 @@ The Systems from the same replicon are sort against their position, score.
 
 .. note::
     The neutral genes are used to build clusters. But not to fulfill the quorum.
+
+Among all this potential systems, MSF compute the best combination. :func:`macsypy.solution.find_best_solutions`.
+The best combination is the set of compatible systems (do not share common hits) which maximize the score.
+It's possible to have several equivalent "best solutions".
+The results of this step is reported in the `best_systems.tsv` file.
 
 
 .. _system-implementation:
