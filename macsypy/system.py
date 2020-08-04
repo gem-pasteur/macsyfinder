@@ -638,7 +638,7 @@ class NotPotentialSystem(AbstractSetOfHits):
         super().__init__(model, self._replicon_name)
 
 
-   def __str__(self):
+    def __str__(self):
         """
 
         :return: a string representation of this RejectedCluster
