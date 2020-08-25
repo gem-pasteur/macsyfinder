@@ -17,6 +17,7 @@ Running MacSyFinder
 .. toctree::
    :maxdepth: 2
 
+   new_v2
    installation
    quickstart
    input
