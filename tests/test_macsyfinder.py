@@ -30,6 +30,7 @@ import argparse
 from io import StringIO
 import logging
 import unittest
+import itertools
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
@@ -37,8 +38,8 @@ from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model, ModelBank
-from macsypy.system import System, HitSystemTracker
-from macsypy.cluster import Cluster, RejectedClusters
+from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractSetOfHits
+from macsypy.cluster import Cluster
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
@@ -51,7 +52,7 @@ class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
-
+        AbstractSetOfHits._id = itertools.count(1)
 
     def tearDown(self):
         try:
@@ -438,6 +439,8 @@ neutral genes:
         gene_name = "sctC"
         c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
         gene_2 = ModelGene(c_gene_sctc, model)
+        model.add_mandatory_gene(gene_1)
+        model.add_accessory_gene(gene_2)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -550,17 +553,17 @@ The reasons to reject this clusters
         model_bank = ModelBank()
         gene_bank = GeneBank()
         profile_factory = ProfileFactory(config)
-        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
-        expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
-                           'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_12',
-                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_11',
-                           'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
-                           'VICH001.B.00001.C001_T4bP_15', 'VICH001.B.00001.C001_T4P_13',
-                           'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
-                           'VICH001.B.00001.C001_T4P_9',
-                           'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3'
-                           ]
 
+        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        expected_sys_id = ['VICH001.B.00001.C001_MSH_5', 'VICH001.B.00001.C001_MSH_7',
+                           'VICH001.B.00001.C001_T4P_25', 'VICH001.B.00001.C001_T4P_23',
+                           'VICH001.B.00001.C001_T4P_21', 'VICH001.B.00001.C001_T4P_22',
+                           'VICH001.B.00001.C001_T4P_17', 'VICH001.B.00001.C001_T4P_16',
+                           'VICH001.B.00001.C001_T4bP_26', 'VICH001.B.00001.C001_T4P_24',
+                           'VICH001.B.00001.C001_T4P_18', 'VICH001.B.00001.C001_T4P_19',
+                           'VICH001.B.00001.C001_T4P_20',
+                           'VICH001.B.00001.C001_T2SS_10', 'VICH001.B.00001.C001_T2SS_9'
+                           ]
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
         expected_scores = [10.5, 10.0, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.25, 7.5]
@@ -588,6 +591,7 @@ The reasons to reject this clusters
         systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
+
 
     def test_search_systems_model_unknown(self):
         logger = logging.getLogger('macsypy.macsyfinder')

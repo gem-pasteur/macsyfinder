@@ -89,30 +89,20 @@ class MatchMakerTest(MacsyTest):
         self.model.add_neutral_gene(gene_toto)
         self.model.add_forbidden_gene(gene_abc)
 
-        self.hits = {}
-        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_sctj'] = ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
-        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_sctj_flg'] = ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY)
-        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_sctn'] = ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
-        h_sctn_flg = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_sctn_flg'] = ValidHit(h_sctn_flg, gene_sctn_flg, GeneStatus.MANDATORY)
-        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_gspd'] = ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
-        h_gspd_an = Hit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_gspd_an'] = ValidHit(h_gspd_an, gene_gspd_an, GeneStatus.ACCESSORY)
-        h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_abc'] = ValidHit(h_abc, gene_abc, GeneStatus.FORBIDDEN)
-        h_abc_ho = Hit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_abc_ho'] = ValidHit(h_abc_ho, gene_abc_ho, GeneStatus.FORBIDDEN)
-        h_toto = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_toto'] = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
-        h_toto_ho = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hits['h_toto_ho'] = ValidHit(h_toto_ho, gene_toto_ho, GeneStatus.NEUTRAL)
+        self.c_hits = {}
+        self.c_hits['h_sctj'] = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_sctj_flg'] = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_sctn'] = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_sctn_flg'] = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_gspd'] = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_gspd_an'] = Hit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_abc'] = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_abc_ho'] = Hit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_toto'] = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.c_hits['h_toto_ho'] = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
 
-    def bla_test_ordered_match(self):
+    def test_ordered_match(self):
 
         #####################
         # test single locus #
@@ -121,7 +111,7 @@ class MatchMakerTest(MacsyTest):
         # it lack one mandatory gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 3
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -132,7 +122,7 @@ class MatchMakerTest(MacsyTest):
         # all quorum are reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -140,7 +130,7 @@ class MatchMakerTest(MacsyTest):
         # with one mandatory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj_flg'], self.hits['h_sctn'], self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn'], self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -148,7 +138,7 @@ class MatchMakerTest(MacsyTest):
         # with one accessory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd_an']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd_an']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -156,7 +146,7 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -166,7 +156,8 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached even there is a neutral
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd'], self.hits['h_toto']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto']],
+                     self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -175,7 +166,8 @@ class MatchMakerTest(MacsyTest):
 
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd'], self.hits['h_toto_ho']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto_ho']],
+                     self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -185,7 +177,8 @@ class MatchMakerTest(MacsyTest):
         # the cluster contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd'], self.hits['h_abc']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc']],
+                     self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -194,7 +187,8 @@ class MatchMakerTest(MacsyTest):
         # the cluster contain a forbidden gene homolog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd'], self.hits['h_abc_ho']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc_ho']],
+                     self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -205,8 +199,8 @@ class MatchMakerTest(MacsyTest):
         #####################
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn']], self.model)
-        c2 = Cluster([self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn']], self.model)
+        c2 = Cluster([self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1, c2])
         self.assertIsInstance(res, System)
@@ -214,8 +208,8 @@ class MatchMakerTest(MacsyTest):
         # with one analog an one homolog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj_flg'], self.hits['h_sctn_flg']], self.model)
-        c2 = Cluster([self.hits['h_gspd']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn_flg']], self.model)
+        c2 = Cluster([self.c_hits['h_gspd']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1, c2])
         self.assertIsInstance(res, System)
@@ -223,94 +217,99 @@ class MatchMakerTest(MacsyTest):
         # with one analog an one homolog and one forbidden in 3 clusters
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.hits['h_sctj_flg'], self.hits['h_sctn_flg']], self.model)
-        c2 = Cluster([self.hits['h_gspd']], self.model)
-        c3 = Cluster([self.hits['h_abc']], self.model)
+        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn_flg']], self.model)
+        c2 = Cluster([self.c_hits['h_gspd']], self.model)
+        c3 = Cluster([self.c_hits['h_abc']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1, c2, c3])
         self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
 
     def test_unordered_match(self):
 
-        # # it lack one mandatory gene
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 3
-        # hits = [self.hits['h_sctj'], self.hits['h_gspd']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, UnlikelySystem)
-        # self.assertEqual(res.reason,
-        #                  "The quorum of mandatory genes required (2) is not reached: 1\n"
-        #                  "The quorum of genes required (3) is not reached: 2")
-        #
-        # # all quorum are reached
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 1
-        # hits = [self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, LikelySystem)
-        #
-        # # with one mandatory analog
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 1
-        # hits = [self.hits['h_sctj_flg'], self.hits['h_sctn'], self.hits['h_gspd']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, LikelySystem)
-        #
-        # # with one accessory analog
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 1
-        # hits = [self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd_an']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, LikelySystem)
-        #
-        # # the min_gene_required quorum is not reached
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 4
-        # hits = [self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, UnlikelySystem)
-        # self.assertEqual(res.reason,
-        #                  "The quorum of genes required (4) is not reached: 3")
-        #
-        # # the min_gene_required quorum is not reached even there is a neutral
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 4
-        # hits = [self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd'], self.hits['h_toto']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, UnlikelySystem)
-        # self.assertEqual(res.reason,
-        #                  "The quorum of genes required (4) is not reached: 3")
-        #
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 4
-        # hits = [self.hits['h_sctj'], self.hits['h_sctn_flg'], self.hits['h_gspd'], self.hits['h_toto_ho']]
-        # unordered_match_maker = UnorderedMatchMaker(self.model)
-        # res = unordered_match_maker.match(hits)
-        # self.assertIsInstance(res, UnlikelySystem)
-        # self.assertEqual(res.reason,
-        #                  "The quorum of genes required (4) is not reached: 3")
+        # it lack one mandatory gene
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 3
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_gspd']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, UnlikelySystem)
+        self.assertEqual(res.reason,
+                         "The quorum of mandatory genes required (2) is not reached: 1\n"
+                         "The quorum of genes required (3) is not reached: 2")
+
+        # all quorum are reached
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 1
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, LikelySystem)
+
+        # with one mandatory analog
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 1
+        hits = [self.c_hits['h_sctj_flg'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, LikelySystem)
+
+        # with one accessory analog
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 1
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd_an']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, LikelySystem)
+
+        # the min_gene_required quorum is not reached
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 4
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, UnlikelySystem)
+        self.assertEqual(res.reason,
+                         "The quorum of genes required (4) is not reached: 3")
+
+        # the min_gene_required quorum is not reached even there is a neutral
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 4
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, UnlikelySystem)
+        self.assertEqual(res.reason,
+                         "The quorum of genes required (4) is not reached: 3")
+
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 4
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto_ho']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(hits)
+        self.assertIsInstance(res, UnlikelySystem)
+        self.assertEqual(res.reason,
+                         "The quorum of genes required (4) is not reached: 3")
 
         # the hits contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        hits = [self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd'], self.hits['h_abc']]
+        allowed_hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
+        forbidden_hits = [self.c_hits['h_abc']]
+        unordered_match_maker = UnorderedMatchMaker(self.model)
+        res = unordered_match_maker.match(allowed_hits + forbidden_hits)
+        self.assertIsInstance(res, LikelySystem)
+        self.maxDiff = None
+        self.assertListEqual([(h.id, h.position) for h in res.hits],
+                             [(h.id, h.position) for h in allowed_hits + forbidden_hits])
+        self.assertListEqual(res._forbiden_hits, [self.c_hits['h_abc']])
+
+        # the cluster contain a forbidden gene homolog
+        self.model._min_mandatory_genes_required = 2
+        self.model._min_genes_required = 1
+        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc_ho']]
+
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
-        self.assertIsInstance(res, UnlikelySystem)
-        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
-
-        # # the cluster contain a forbidden gene homolog
-        # self.model._min_mandatory_genes_required = 2
-        # self.model._min_genes_required = 1
-        # c1 = Cluster([self.hits['h_sctj'], self.hits['h_sctn'], self.hits['h_gspd'], self.hits['h_abc_ho']], self.model)
-        # ordered_match_maker = OrderedMatchMaker(self.model)
-        # res = ordered_match_maker.match([c1])
-        # self.assertIsInstance(res, RejectedClusters)
-        # self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): tadZ")
+        self.assertIsInstance(res, LikelySystem)
+        self.assertListEqual(res._forbiden_hits, [self.c_hits['h_abc_ho']])
 

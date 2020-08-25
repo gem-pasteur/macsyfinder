@@ -27,7 +27,7 @@ import argparse
 
 from macsypy.hit import Hit, ValidHit
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation

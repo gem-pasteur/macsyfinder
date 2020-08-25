@@ -64,10 +64,10 @@ class LikelySystemTest(MacsyTest):
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2])
+        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2], [])
         self.assertTrue(ls_1.id.startswith('replicon_id_model_A_'))
 
-        ls_2 = LikelySystem(model, [v_hit_1, v_hit_2])
+        ls_2 = LikelySystem(model, [v_hit_1, v_hit_2], [])
         self.assertEqual(int(ls_2.id.split('_')[-1]), int(ls_1.id.split('_')[-1]) + 1)
 
     def test_hits(self):
@@ -88,7 +88,7 @@ class LikelySystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2, v_hit_3])
+        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [])
 
         self.assertListEqual(ls_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
@@ -120,10 +120,10 @@ class UnlikelySystemTest(MacsyTest):
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2], "reason")
+        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2], [], "reason")
         self.assertTrue(uls_1.id.startswith('replicon_id_model_A_'))
 
-        uls_2 = UnlikelySystem(model, [v_hit_1, v_hit_2], "reason")
+        uls_2 = UnlikelySystem(model, [v_hit_1, v_hit_2], [], "reason")
         self.assertEqual(int(uls_2.id.split('_')[-1]), int(uls_1.id.split('_')[-1]) + 1)
 
     def test_reason(self):
@@ -141,7 +141,7 @@ class UnlikelySystemTest(MacsyTest):
         hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         reason_2 = "forbidden gene"
-        uls_2 = UnlikelySystem(model, [v_hit_1, v_hit_2], reason_2)
+        uls_2 = UnlikelySystem(model, [v_hit_1], [v_hit_2], reason_2)
         self.assertEqual(uls_2.reason, reason_2)
 
 
@@ -163,7 +163,7 @@ class UnlikelySystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], "reason")
+        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [], "reason")
 
         self.assertListEqual(uls_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
@@ -186,7 +186,7 @@ class UnlikelySystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], "reason")
+        uls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [], "reason")
 
         expected_str = """(hit_1, gspD, 1), (hit_2, sctJ, 2), (hit_3, sctN, 3): These hits does not probably constitute a system because:
 reason"""
