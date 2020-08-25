@@ -34,7 +34,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters, RejectedClusters, get_loners, filter_loners
+from macsypy.cluster import Cluster, build_clusters, get_loners, filter_loners
 from tests import MacsyTest
 
 
@@ -556,64 +556,3 @@ class TestCluster(MacsyTest):
     - model: T2SS
     - hits: (h10, gspD, 10), (h20, sctC, 20)"""
         self.assertEqual(str(c1), s)
-
-
-class TestRejectedCluster(MacsyTest):
-
-    def setUp(self) -> None:
-        self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_base.fa")
-        self.args.db_type = 'gembase'
-        self.args.models_dir = self.find_data('models')
-        self.args.res_search_dir = "blabla"
-
-        self.cfg = Config(MacsyDefaults(), self.args)
-        self.model_name = 'foo'
-        self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
-        self.profile_factory = ProfileFactory(self.cfg)
-
-
-    def test_init(self):
-        model = Model("foo/T2SS", 11)
-
-        c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
-        gene_1 = ModelGene(c_gene_1, model)
-        c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
-        gene_2 = ModelGene(c_gene_2, model)
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
-        #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20], model)
-        r_c = RejectedClusters(model, c1, "bla")
-        self.assertListEqual(r_c.clusters, [c1])
-        self.assertEqual(r_c.reason, 'bla')
-
-
-    def test_str(self):
-        model = Model("foo/T2SS", 11)
-
-        c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
-        c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
-
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
-        #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h40 = Hit(c_gene_1, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h50 = Hit(c_gene_2, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        c1 = Cluster([h10, h20], model)
-        c2 = Cluster([h40, h50], model)
-        r_c = RejectedClusters(model, [c1, c2], "bla")
-
-        expected_str = """Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 10), (h20, sctC, 20)
-Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 40), (h20, sctC, 50)
-These clusters has been rejected because:
-bla"""
-        self.assertEqual(expected_str, str(r_c))

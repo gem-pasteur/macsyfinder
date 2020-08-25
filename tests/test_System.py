@@ -471,7 +471,7 @@ class SystemTest(MacsyTest):
                      model_D)
 
         sys_A = System(model_A, [c1, c2])
-        # we need to tweek the replicon_id to have stable ressults
+        # we need to tweek the replicon_id to have stable results
         # whatever the number of tests ran
         # or the tests order
         sys_A.id = "replicon_id_A"
