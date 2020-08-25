@@ -8,11 +8,15 @@
     
 .. _new_v2:
 
-
+*****************************
 What's new in MacSyFinder V2? 
-=============================
+*****************************
 
 For Version 2, MacSyFinder was carried under **Python 3** https://www.python.org/download/releases/3.0/
+
+==============================
+New features and search engine 
+==============================
 
 The **search engine** was changed for a more intuitive and comprehensive exploration of putative systems. 
 The search is now more thorough and avoid undesirable side-effects of the previous search engine. Being more thorough, it now also 
@@ -31,6 +35,7 @@ Several **new features** were added, including:
 
 .. _models_v1_v2:
 
+=============================
 Carrying models from V1 to V2 
 =============================
 

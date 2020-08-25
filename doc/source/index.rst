@@ -12,17 +12,18 @@
 Welcome to MacSyFinder's documentation!
 =======================================
 
-A new version of MacSyFinder is available, see :ref:`here for an overview of the novelties<new_v2>`.
+A **new version of MacSyFinder (v2)** is available, see :ref:`here for an overview of the novelties<new_v2>`. The search engine was improved, and some bugs/unwanted behaviors corrected. 
+MacSyFinder's models for V2 are very similar, yet not compatible with those from V1. See here for details on :ref:`how to carry your models to V2<models_v1_v2>`.
 
 
-MacSyFinder is a program to model and detect macromolecular systems, genetic pathways... in protein datasets.
+MacSyFinder is a program to **model and detect macromolecular systems, genetic pathways**... in protein datasets.
 In prokaryotes, these systems have often evolutionarily conserved properties:
-they are made of conserved components, and are encoded in compact loci (conserved genetic architecture).
+they are made of **conserved components**, and are encoded in **compact loci** (conserved genetic architecture).
 The user models these systems with MacSyFinder to reflect these conserved features, and to allow their efficient detection.
 
 Criteria for systems detection include **component content (quorum)**, and **genomic co-localization**.
 Each component corresponds to a hidden Markov model (HMM) protein profile to
-perform homology searches with the program Hmmer.
+perform sequence similarity searches with the program Hmmer.
 
 In order to model macromolecular systems, the user:
 
@@ -31,7 +32,7 @@ In order to model macromolecular systems, the user:
 
 
     .. figure:: _static/figure_main-2.*
-        :height: 600px
+        :height: 800px
         :align: center
 
 
