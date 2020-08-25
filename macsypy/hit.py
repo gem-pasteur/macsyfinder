@@ -159,7 +159,7 @@ class ValidHit:
         """
         :param hit: a match between a hmm profile and a replicon
         :type hit: :class:`macsypy.hit.Hit` object
-        :param gene_ref: The ModelGene to attache to this hit
+        :param gene_ref: The ModelGene link to this hit
                          The ModeleGene have the same name than the CoreGene
                          But one hit can be link to several ModelGene (several Model)
                          To know for what gene this hit play role use the
