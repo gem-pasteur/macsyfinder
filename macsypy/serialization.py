@@ -206,3 +206,78 @@ class TsvSolutionSerializer:
             sol_temp = Template(sys_ser.serialize(system, hit_system_tracker))
             tsv += f"{sol_temp.substitute(sol_id=sol_id)}\n"
         return tsv
+
+
+class TxtUnorderedSerializer(SystemSerializer):
+    """
+    abstract class to handle results from unordered replicon
+    """
+
+
+    @abc.abstractmethod
+    def serialize(self, likely_system, hit_system_tracker):
+        """
+        :return: a string representation of system readable by human
+        """
+
+        s = f"""system id = {likely_system.id}
+    model = {likely_system.model.fqn}
+    replicon = {likely_system.replicon_name}
+    hits = {likely_system.hits}
+    wholeness = {likely_system.wholeness:.3f}
+    """
+        for title, genes in (("mandatory", likely_system.mandatory_occ),
+                             ("accessory", likely_system.accessory_occ),
+                             ("neutral", likely_system.neutral_occ),
+                             ("forbidden", likely_system.forbidden_oc)):
+            s += f"\n{title} genes:\n"
+            for g_name, hits in genes.items():
+                s += f"\t- {g_name}: {len(hits)} "
+                all_hits_str = []
+                for h in hits:
+                    used_in_systems = [s.id for s in hit_system_tracker[h.hit]
+                                       if s.model.fqn != likely_system.model.fqn]
+                    used_in_systems.sort()
+                    if used_in_systems:
+                        hit_str = f"{h.gene.name} [{', '.join(used_in_systems)}]"
+                    else:
+                        hit_str = f"{h.gene.name}"
+                    all_hits_str.append(hit_str)
+                s += f'({", ".join(all_hits_str)})\n'
+
+        return s
+
+
+class TxtLikelySystemSerializer(TxtUnorderedSerializer):
+    """
+    Handle System serialization in text
+    """
+
+
+    def serialize(self, likely_system, hit_system_tracker):
+        """
+        :return: a string representation of system readable by human
+        """
+        s = f"This replicon contains material to contains a system {likely_system.model.fqn}\n"
+        s += super().serialize(likely_system, hit_system_tracker)
+        s += "Use ordered replicon to have better prediction."
+        return s
+
+
+class TxtUnikelySystemSerializer(TxtUnorderedSerializer):
+    """
+    Handle System serialization in text
+    """
+
+
+    def serialize(self, likely_system, hit_system_tracker):
+        """
+        :return: a string representation of system readable by human
+        """
+        s = f"""This replicon probably not contains a system {likely_system.model.fqn}
+{likely_system.reason}
+"""
+
+        s += super().serialize(likely_system, hit_system_tracker)
+        s += "Use ordered replicon to have better prediction."
+        return s
