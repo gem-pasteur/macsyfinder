@@ -298,10 +298,9 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(allowed_hits + forbidden_hits)
         self.assertIsInstance(res, LikelySystem)
-        self.maxDiff = None
         self.assertListEqual([(h.id, h.position) for h in res.hits],
                              [(h.id, h.position) for h in allowed_hits + forbidden_hits])
-        self.assertListEqual(res._forbiden_hits, [self.c_hits['h_abc']])
+        self.assertListEqual(res._forbidden_hits, [self.c_hits['h_abc']])
 
         # the cluster contain a forbidden gene homolog
         self.model._min_mandatory_genes_required = 2
@@ -311,5 +310,5 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, LikelySystem)
-        self.assertListEqual(res._forbiden_hits, [self.c_hits['h_abc_ho']])
+        self.assertListEqual(res._forbidden_hits, [self.c_hits['h_abc_ho']])
 
