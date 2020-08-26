@@ -24,6 +24,7 @@
 
 import os
 import argparse
+import itertools
 
 from macsypy.hit import Hit, ValidHit
 from macsypy.config import Config, MacsyDefaults
@@ -32,8 +33,9 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker
-from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits
+from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
+    TxtLikelySystemSerializer, TxtUnikelySystemSerializer
 
 from tests import MacsyTest
 
@@ -50,7 +52,9 @@ class SerializationTest(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
-
+        # reset the uniq id number for AbstractSetOfHits
+        # to have predictable results
+        AbstractSetOfHits._id = itertools.count(1)
 
     def test_SystemSerializer_str(self):
         model_name = 'foo'
@@ -311,3 +315,110 @@ neutral genes:
         sol_tsv += "\n"
         ser = system_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
         self.assertEqual(ser, sol_tsv)
+
+    def test_LikelySystemSerializer_txt(self):
+        model = Model("foo/FOO", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        model.add_accessory_gene(gene_sctn)
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+        model.add_forbidden_gene(gene_abc)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        hit_4 = Hit(c_gene_abc, "hit_4", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_abc, GeneStatus.FORBIDDEN)
+
+        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [v_hit_4])
+        hit_multi_sys_tracker = HitSystemTracker([ls_1])
+        ser = TxtLikelySystemSerializer()
+
+        txt = ser.serialize(ls_1, hit_multi_sys_tracker)
+        expected_txt = """This replicon contains genetic materials needed for system foo/FOO
+WARNING there quorum is reached but there is also some forbidden genes.
+
+system id = replicon_id_FOO_1
+model = foo/FOO
+replicon = replicon_id
+hits = [('hit_1', 'gspD', 1), ('hit_2', 'sctJ', 2), ('hit_3', 'sctN', 3), ('hit_4', 'abc', 4)]
+wholeness = 1.000
+
+mandatory genes:
+\t- gspD: 1 (gspD)
+
+accessory genes:
+\t- sctJ: 1 (sctJ)
+\t- sctN: 1 (sctN)
+
+neutral genes:
+
+forbidden genes:
+\t- abc: 1 (abc)
+
+Use ordered replicon to have better prediction.
+"""
+        self.assertEqual(txt, expected_txt)
+
+
+    def test_UnlikelySystemSerializer_txt(self):
+        model = Model("foo/FOO", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        model.add_accessory_gene(gene_sctn)
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+        model.add_forbidden_gene(gene_abc)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        hit_4 = Hit(c_gene_abc, "hit_4", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_abc, GeneStatus.FORBIDDEN)
+        ser = TxtUnikelySystemSerializer()
+
+        ls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [v_hit_4], "the reason why")
+        txt = ser.serialize(ls_1)
+        expected_txt = """This replicon probably not contains a system foo/FOO:
+the reason why
+
+system id = replicon_id_FOO_1
+model = foo/FOO
+replicon = replicon_id
+hits = [('hit_1', 'gspD', 1), ('hit_2', 'sctJ', 2), ('hit_3', 'sctN', 3), ('hit_4', 'abc', 4)]
+wholeness = 1.000
+
+mandatory genes:
+\t- gspD: 1 (gspD)
+
+accessory genes:
+\t- sctJ: 1 (sctJ)
+\t- sctN: 1 (sctN)
+
+neutral genes:
+
+forbidden genes:
+\t- abc: 1 (abc)
+
+Use ordered replicon to have better prediction.
+"""
+        self.assertEqual(txt, expected_txt)
