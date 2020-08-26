@@ -79,46 +79,6 @@ score = {system.score:.3f}
         return s
 
 
-class TxtPotentialSystemSerializer(SystemSerializer):
-    """
-    Handle System serialization in text
-    """
-
-
-    def serialize(self, system, hit_system_tracker):
-        """
-        :return: a string representation of system readable by human
-        """
-        s = f"""system id = {system.id}
-model = {system.model.fqn}
-replicon = {system.replicon_name}
-occ = {system.occurrence()}
-wholeness = {system.wholeness:.3f}
-"""
-        for title, genes in (("mandatory", system.mandatory_occ),
-                             ("accessory", system.accessory_occ),
-                             ("neutral", system.neutral_occ),
-                             ("forbidden", system.forbidden_occ)):
-            s += f"\n{title} genes:\n"
-            for g_name, hits in genes.items():
-                s += f"\t- {g_name}: {len(hits)} "
-                all_hits_str = []
-                for h in hits:
-                    used_in_systems = [s.id for s in hit_system_tracker[h.hit]
-                                       if s.model.fqn != system.model.fqn]
-                    used_in_systems.sort()
-                    if used_in_systems:
-                        hit_str = f"{h.gene.name} [{', '.join(used_in_systems)}]"
-                    else:
-                        hit_str = f"{h.gene.name}"
-                    all_hits_str.append(hit_str)
-                s += f'({", ".join(all_hits_str)})\n'
-        if system.forbidden_occ:
-            s += 'WARNING there is forbidden gene.'
-
-        return s
-
-
 class TsvSystemSerializer(SystemSerializer):
     """
     Handle System serialization in tsv format
@@ -208,28 +168,34 @@ class TsvSolutionSerializer:
         return tsv
 
 
-class TxtUnorderedSerializer(SystemSerializer):
+class TxtLikelySystemSerializer(SystemSerializer):
     """
-    abstract class to handle results from unordered replicon
+    Handle System serialization in text
     """
 
 
-    @abc.abstractmethod
     def serialize(self, likely_system, hit_system_tracker):
         """
         :return: a string representation of system readable by human
         """
+        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in likely_system.hits])
+        if likely_system.forbidden_hits:
+            warning = "WARNING there quorum is reached but there is also some forbidden genes.\n"
+        else:
+            warning = '\n'
 
-        s = f"""system id = {likely_system.id}
-    model = {likely_system.model.fqn}
-    replicon = {likely_system.replicon_name}
-    hits = {likely_system.hits}
-    wholeness = {likely_system.wholeness:.3f}
-    """
+        s = f"""This replicon contains genetic materials needed for system {likely_system.model.fqn}
+{warning}
+system id = {likely_system.id}
+model = {likely_system.model.fqn}
+replicon = {likely_system.replicon_name}
+hits = [{hits}]
+wholeness = {likely_system.wholeness:.3f}
+"""
         for title, genes in (("mandatory", likely_system.mandatory_occ),
                              ("accessory", likely_system.accessory_occ),
                              ("neutral", likely_system.neutral_occ),
-                             ("forbidden", likely_system.forbidden_oc)):
+                             ("forbidden", likely_system.forbidden_occ)):
             s += f"\n{title} genes:\n"
             for g_name, hits in genes.items():
                 s += f"\t- {g_name}: {len(hits)} "
@@ -245,39 +211,39 @@ class TxtUnorderedSerializer(SystemSerializer):
                     all_hits_str.append(hit_str)
                 s += f'({", ".join(all_hits_str)})\n'
 
+        s += "\nUse ordered replicon to have better prediction.\n"
         return s
 
 
-class TxtLikelySystemSerializer(TxtUnorderedSerializer):
+class TxtUnikelySystemSerializer(SystemSerializer):
     """
     Handle System serialization in text
     """
 
 
-    def serialize(self, likely_system, hit_system_tracker):
+    def serialize(self, likely_system):
         """
         :return: a string representation of system readable by human
         """
-        s = f"This replicon contains material to contains a system {likely_system.model.fqn}\n"
-        s += super().serialize(likely_system, hit_system_tracker)
-        s += "Use ordered replicon to have better prediction."
-        return s
-
-
-class TxtUnikelySystemSerializer(TxtUnorderedSerializer):
-    """
-    Handle System serialization in text
-    """
-
-
-    def serialize(self, likely_system, hit_system_tracker):
-        """
-        :return: a string representation of system readable by human
-        """
-        s = f"""This replicon probably not contains a system {likely_system.model.fqn}
+        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in likely_system.hits])
+        s = f"""This replicon probably not contains a system {likely_system.model.fqn}:
 {likely_system.reason}
-"""
 
-        s += super().serialize(likely_system, hit_system_tracker)
-        s += "Use ordered replicon to have better prediction."
+system id = {likely_system.id}
+model = {likely_system.model.fqn}
+replicon = {likely_system.replicon_name}
+hits = [{hits}]
+wholeness = {likely_system.wholeness:.3f}
+"""
+        for title, genes in (("mandatory", likely_system.mandatory_occ),
+                             ("accessory", likely_system.accessory_occ),
+                             ("neutral", likely_system.neutral_occ),
+                             ("forbidden", likely_system.forbidden_occ)):
+            s += f"\n{title} genes:\n"
+            for g_name, hits in genes.items():
+                s += f"\t- {g_name}: {len(hits)} "
+                all_hits_str = [f"{h.gene.name}" for h in hits]
+                s += f'({", ".join(all_hits_str)})\n'
+
+        s += "\nUse ordered replicon to have better prediction.\n"
         return s
