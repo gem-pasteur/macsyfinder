@@ -92,6 +92,28 @@ class LikelySystemTest(MacsyTest):
 
         self.assertListEqual(ls_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
+    def test_str(self):
+        model = Model("foo/T2SS", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        ls_1 = LikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [])
+        expected_str = ', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in (v_hit_1, v_hit_2, v_hit_3)])
+        self.assertEqual(str(ls_1), expected_str)
+
 
 class UnlikelySystemTest(MacsyTest):
 
