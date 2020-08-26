@@ -289,10 +289,10 @@ class Config:
         set value for 'db_type' option
 
         :param str value: the value for db_type, allowed values are :
-                          'unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'
+                          'ordered_replicon', 'gembase', 'unordered'
         :raise ValueError: if value is not allowed
         """
-        auth_values = ('unordered_replicon', 'ordered_replicon', 'gembase', 'unordered')
+        auth_values = ('ordered_replicon', 'gembase', 'unordered')
         if value in auth_values:
             self._options['db_type'] = value
         else:

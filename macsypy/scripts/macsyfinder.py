@@ -50,7 +50,8 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions
-from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSystemSerializer, TsvSolutionSerializer
+from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
+    TsvSystemSerializer, TsvSolutionSerializer
 
 
 def get_version_message():
@@ -156,10 +157,10 @@ If the name 'all' is in the list all models from the family will be searched.'
 """)
 
     genome_options.add_argument("--db-type",
-                                choices=['unordered_replicon', 'ordered_replicon', 'gembase', 'unordered'],
+                                choices=['ordered_replicon', 'gembase', 'unordered'],
                                 default=None,
-                                help='''The type of dataset to deal with. "unordered_replicon" corresponds
-to a non-assembled genome,"unordered" to a metagenomic dataset,
+                                help='''The type of dataset to deal with. "unordered" corresponds
+to a non-assembled genome,
 "ordered_replicon" to an assembled genome,
 and "gembase" to a set of replicons where sequence identifiers
 follow this convention: ">RepliconName SequenceID".
@@ -464,7 +465,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
             systems, rejected_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
                                                                      config, logger)
             return systems, rejected_clusters
-        elif db_type in ("unordered_replicon", "unordered"):
+        elif db_type == "unordered":
             likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
                                                                           logger)
             return likely_systems, rejected_hits
