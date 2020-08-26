@@ -330,6 +330,35 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         pass
 
 
+    @property
+    def replicon_name(self):
+        """
+        :return: The name of the replicon
+        :rtype: str
+        """
+        return self._replicon_name
+
+
+    @property
+    def position(self):
+        """
+        :return: The position of the first and last hit,
+                 excluded the hit coding for loners.
+                 If the system is composed only by loners, used loners to compute position
+        :rtype: tuple (start: int, end:int)
+        """
+        # hits are sorted by their positions
+        hits = [h.position for h in self.hits if not h.gene_ref.loner]
+        if hits:
+            hits.sort()
+            pos = hits[0], hits[-1]
+        else:
+            # there are only loners
+            # take them
+            pos = self.hits[0].position, self.hits[-1].position
+        return pos
+
+
     def count(self):
         """
         fill 3 structures one for mandatory, accessory and neutral
@@ -388,16 +417,6 @@ class System(AbstractSetOfHits):
         self._replicon_name = clusters[0].replicon_name
         self.clusters = clusters
         super().__init__(model, self._replicon_name)
-
-
-    @property
-    def replicon_name(self):
-        """
-        :return: The name of the replicon
-        :rtype: str
-        """
-        return self._replicon_name
-
 
     @property
     def score(self):
@@ -465,25 +484,6 @@ class System(AbstractSetOfHits):
         :rtype: bool
         """
         return self.loci > 1
-
-    @property
-    def position(self):
-        """
-        :return: The position of the first and last hit,
-                 excluded the hit coding for loners.
-                 If the system is composed only by loners, used loners to compute position
-        :rtype: tuple (start: int, end:int)
-        """
-        # hits are sorted by their positions
-        hits = [h.position for h in self.hits if not h.gene_ref.loner]
-        if hits:
-            hits.sort()
-            pos = hits[0], hits[-1]
-        else:
-            # there are only loners
-            # take them
-            pos = self.hits[0].position, self.hits[-1].position
-        return pos
 
 
     def is_compatible(self, other):
@@ -553,7 +553,38 @@ class RejectedClusters(AbstractSetOfHits):
         return hits
 
 
-class LikelySystem(AbstractSetOfHits):
+class AbstractUnordered(AbstractSetOfHits):
+    """
+    Technical abstract class to factorize code share between
+    LikelySystem and UnlikelySystem
+    """
+
+    @property
+    def hits(self):
+        """
+        :return: The list of all hits sorted by their position
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._sort_hits(self._allowed_hits + self._forbidden_hits)
+
+    @property
+    def forbidden_hits(self):
+        """
+        :return: The list of forbidden hits
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._forbidden_hits
+
+    @property
+    def allowed_hits(self):
+        """
+        :return: The list of allowed (mandatory, accessory, neutral) hits
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._allowed_hits
+
+
+class LikelySystem(AbstractUnordered):
     """"
     Handle component that fill the quorum requirements with no idea about
     genetic organization (gene cluster)
@@ -584,13 +615,9 @@ class LikelySystem(AbstractSetOfHits):
         """
         self._replicon_name = allowed_hits[0].replicon_name
         self._allowed_hits = allowed_hits
-        self._forbiden_hits = forbidden_hits
+        self._forbidden_hits = forbidden_hits
         super().__init__(model, self._replicon_name)
 
-
-    @property
-    def hits(self):
-        return self._sort_hits(self._allowed_hits + self._forbiden_hits)
 
     def __str__(self):
         """
@@ -600,7 +627,7 @@ class LikelySystem(AbstractSetOfHits):
         return ', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits])
 
 
-class UnlikelySystem(AbstractSetOfHits):
+class UnlikelySystem(AbstractUnordered):
 
     _supported_status = (GeneStatus.MANDATORY,
                          GeneStatus.ACCESSORY,
@@ -622,7 +649,7 @@ class UnlikelySystem(AbstractSetOfHits):
         """
         self._replicon_name = allowed_hits[0].replicon_name
         self._allowed_hits = allowed_hits
-        self._forbiden_hits = forbidden_hits
+        self._forbidden_hits = forbidden_hits
         self._reason = reason
         super().__init__(model, self._replicon_name)
 
@@ -636,10 +663,6 @@ class UnlikelySystem(AbstractSetOfHits):
         s += f': These hits does not probably constitute a system because:\n{self.reason}'
         return s
 
-
-    @property
-    def hits(self):
-        return self._sort_hits(self._allowed_hits + self._forbiden_hits)
 
     @property
     def reason(self):
