@@ -41,7 +41,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
     after having applied a hit filtering.
     This class is an **abstract class**. There are two implementations of this abstract class
     depending on whether the input sequence dataset is "ordered" ("gembase" or "ordered_replicon" db_type)
-    or not ("unordered" or "unordered_replicon" db_type).
+    or not ("unordered" db_type).
     """
 
     def __init__(self, gene, hmmer_output, cfg):
