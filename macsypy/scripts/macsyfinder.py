@@ -651,17 +651,16 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
         print("# No LikelySystems found", file=sys_file)
 
 
-def unlikely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
+def unlikely_systems_to_txt(likely_systems, sys_file):
     print(_outfile_header(), file=sys_file)
     if likely_systems:
         print("# Unlikely Systems found:\n", file=sys_file)
         for system in likely_systems:
             sys_serializer = TxtUnikelySystemSerializer()
-            print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
+            print(sys_serializer.serialize(system), file=sys_file)
             print("=" * 60, file=sys_file)
     else:
         print("# No LikelySystems found", file=sys_file)
-
 
 
 def main(args=None, loglevel=None):
@@ -792,17 +791,19 @@ def main(args=None, loglevel=None):
             # Write the results in files #
             ##############################
             logger.info("\n{:#^70}".format(" Writing down results "))
-            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
 
+            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
             with open(system_filename, "w") as sys_file:
-                if all_systems and not rejected_clusters:
-                    likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
-                elif rejected_clusters and not all_systems:
-                    unlikely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
-                elif not all_systems and not rejected_clusters:
-                    logger.info("No Systems found in this dataset.")
-                else:
-                    raise MacsypyError()
+                likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
+
+            cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
+            with open(cluster_filename, "w") as clst_file:
+                print("### track_multi_systems_hit", {h.id: [s.id for s in v] for h, v in track_multi_systems_hit.items()})
+                unlikely_systems_to_txt(rejected_clusters, clst_file)
+
+            if not (all_systems or rejected_clusters):
+                logger.info("No Systems found in this dataset.")
+
     logger.info("END")
 
 
