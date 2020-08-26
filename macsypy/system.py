@@ -230,7 +230,7 @@ class UnorderedMatchMaker(MatchMaker):
                   f" {', '.join(h.gene.name for h in forbidden_hits)}"
             _log.debug(msg)
         if len(mandatory_genes) < self._model.min_mandatory_genes_required:
-
+            is_a_potential_system = False
             msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) is not reached: ' \
                   f'{len(mandatory_genes)}'
             reasons.append(msg)
