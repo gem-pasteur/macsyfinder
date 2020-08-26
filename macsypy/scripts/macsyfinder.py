@@ -799,7 +799,6 @@ def main(args=None, loglevel=None):
 
             cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
             with open(cluster_filename, "w") as clst_file:
-                print("### track_multi_systems_hit", {h.id: [s.id for s in v] for h, v in track_multi_systems_hit.items()})
                 unlikely_systems_to_txt(rejected_clusters, clst_file)
 
             if not (all_systems or rejected_clusters):
