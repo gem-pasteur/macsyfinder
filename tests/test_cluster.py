@@ -553,6 +553,7 @@ class TestCluster(MacsyTest):
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
         c1 = Cluster([v_h10, v_h20], model)
         s ="""Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 10), (h20, sctC, 20)"""
+- model = T2SS
+- replicon = replicon_1
+- hits = (h10, gspD, 10), (h20, sctC, 20)"""
         self.assertEqual(str(c1), s)
