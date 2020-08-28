@@ -113,14 +113,14 @@ def _build_systems(cfg, profile_factory):
     model_H.add_accessory_gene(gene_sctn)
 
     h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
     model_A._min_mandatory_genes_required = 2
     model_A._min_genes_required = 2
