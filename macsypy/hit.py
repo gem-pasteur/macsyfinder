@@ -184,6 +184,15 @@ class ValidHit:
     def __getattr__(self, item):
         return getattr(self.hit, item)
 
+    def __gt__(self, other):
+        return self.hit > other
+
+    def __eq__(self, other):
+        return self.hit == other and self.gene_ref.name == self.gene_ref.name
+
+    def __lt__(self, other):
+        return self.hit < other
+
 
 @dataclass(frozen=True)
 class HitWeight:
