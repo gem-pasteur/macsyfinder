@@ -1,0 +1,30 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="4" min_genes_required="5" multi_loci="1" vers="2.0">
+    <gene name="T4P_pilA" presence="accessory" loner="1"/>
+    <gene name="T4P_pilV" presence="accessory"/>
+    <gene name="T4P_pilY" presence="accessory"/>
+    <gene name="T4P_pilW" presence="accessory"/>
+    <gene name="T4P_pilX" presence="accessory"/>
+    <gene name="T4P_pilE" presence="mandatory"/>
+    <gene name="T4P_fimT" presence="accessory"/>
+    <gene name="T4P_pilB" presence="mandatory"/>
+    <gene name="T4P_pilC" presence="mandatory"/>
+    <gene name="T4P_pilO" presence="mandatory"/>
+    <gene name="T4P_pilQ" presence="mandatory"/>
+    <gene name="T4P_pilM" presence="accessory"/>
+    <gene name="T4P_pilN" presence="mandatory"/>
+    <gene name="T4P_pilP" presence="accessory"/>
+    <gene name="T4P_pilT" presence="mandatory" loner="1"/>
+    <gene name="T4P_pilU" presence="accessory"/>
+
+    <gene name="T4P_pilD" presence="mandatory" loner="1">
+    	<exchangeables>
+            <gene name="T2SS_gspO"/>
+            <gene name="ComM_comC"/>
+        </exchangeables>
+    </gene>
+    
+    <gene name="MSH_mshM" presence="accessory"/>
+
+    # tadV could be in the exchangeable peptidase
+
+</model>

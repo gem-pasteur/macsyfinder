@@ -1,0 +1,3 @@
+# macsyfinder 20200828.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/MOBP1_twice.fasta --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models -m test_loners MOB_cf_T5SS
+# No Rejected clusters

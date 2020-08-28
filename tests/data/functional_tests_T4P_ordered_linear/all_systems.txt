@@ -1,0 +1,72 @@
+# macsyfinder 20200828.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models -m TFF-SF T4P_single_locus
+# Systems found:
+
+system id = UserReplicon_T4P_single_locus_1
+model = TFF-SF/T4P_single_locus
+replicon = UserReplicon
+clusters = [('GCF_000006845_001030', 'T4P_pilQ', 103), ('GCF_000006845_001040', 'T4P_pilP', 104), ('GCF_000006845_001050', 'T4P_pilO', 105), ('GCF_000006845_001060', 'T4P_pilN', 106), ('GCF_000006845_001070', 'T4P_pilM', 107)], [('GCF_000006845_004230', 'T4P_pilA', 423)], [('GCF_000006845_010160', 'T4P_pilA', 1016)], [('GCF_000006845_012440', 'T4P_pilA', 1244)], [('GCF_000006845_014280', 'T4P_pilD', 1428)], [('GCF_000006845_016430', 'T4P_pilT', 1643)]
+occ = 1
+wholeness = 0.444
+loci nb = 1
+score = 4.500
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 0 ()
+	- T4P_pilC: 0 ()
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD)
+
+accessory genes:
+	- T4P_pilA: 3 (T4P_pilA, T4P_pilA, T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = UserReplicon_T4P_single_locus_5
+model = TFF-SF/T4P_single_locus
+replicon = UserReplicon
+clusters = [('GCF_000006845_014270', 'T4P_pilC', 1427), ('GCF_000006845_014280', 'T4P_pilD', 1428), ('GCF_000006845_014310', 'T4P_pilB', 1431)], [('GCF_000006845_004230', 'T4P_pilA', 423)], [('GCF_000006845_010160', 'T4P_pilA', 1016)], [('GCF_000006845_012440', 'T4P_pilA', 1244)], [('GCF_000006845_016430', 'T4P_pilT', 1643)]
+occ = 1
+wholeness = 0.278
+loci nb = 1
+score = 2.500
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 0 ()
+	- T4P_pilN: 0 ()
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD)
+
+accessory genes:
+	- T4P_pilA: 3 (T4P_pilA, T4P_pilA, T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 0 ()
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================

@@ -1,0 +1,11 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="4" min_genes_required="4" multi_loci="1" vers="2.0">
+    <gene name="T4bP_pilA" presence="mandatory"/>
+    <gene name="T4bP_pilB" presence="mandatory"/>
+    <gene name="T4bP_pilC" presence="mandatory"/>
+    <gene name="T4bP_pilD" presence="mandatory" loner="1"/>
+    <gene name="T4bP_pilE" presence="accessory"/>
+    <gene name="T4bP_pilQ" presence="mandatory"/>
+    <gene name="T4bP_pilT" presence="mandatory" loner="1"/>
+    <gene name="T4bP_pilP" presence="accessory"/>
+
+</model>

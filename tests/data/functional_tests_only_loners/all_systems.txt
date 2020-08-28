@@ -1,0 +1,38 @@
+# macsyfinder 20200828.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/MOBP1_twice.fasta --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models -m test_loners MOB_cf_T5SS
+# Systems found:
+
+system id = UserReplicon_MOB_cf_T5SS_1
+model = test_loners/MOB_cf_T5SS
+replicon = UserReplicon
+clusters = [('ESCO001.D.00252.P004_0000832', 'MOBP1', 8)]
+occ = 1
+wholeness = 1.000
+loci nb = 0
+score = 1.000
+
+mandatory genes:
+	- MOBP1: 1 (MOBP1)
+
+accessory genes:
+
+neutral genes:
+
+============================================================
+system id = UserReplicon_MOB_cf_T5SS_2
+model = test_loners/MOB_cf_T5SS
+replicon = UserReplicon
+clusters = [('ESCO001.D.00252.P004_0000885', 'MOBP1', 19)]
+occ = 1
+wholeness = 1.000
+loci nb = 0
+score = 1.000
+
+mandatory genes:
+	- MOBP1: 1 (MOBP1)
+
+accessory genes:
+
+neutral genes:
+
+============================================================
