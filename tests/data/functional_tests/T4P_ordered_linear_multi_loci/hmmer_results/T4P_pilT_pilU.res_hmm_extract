@@ -1,9 +1,0 @@
-# gene: T4P_pilT_pilU extract from T4P_ordered_linear_multi_loci/hmmer_results/T4P_pilT_pilU.search_hmm.out hmm output
-# profile length= 333
-# i_evalue threshold= 0.001
-# coverage threshold= 0.500
-# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
-ACAV001.B.00001.C001_00587	UserReplicon	20	378	T4P_pilT_pilU	T4P-single-locus	1.600e-148	487.000	1.000	0.881	10	342
-ACAV001.B.00001.C001_00589	UserReplicon	22	347	T4P_pilT_pilU	T4P-single-locus	4.700e-161	528.200	1.000	0.960	3	335
-ACAV001.B.00001.C001_00845	UserReplicon	2	453	T4P_pilT_pilU	T4P-single-locus	1.600e-54	178.000	0.994	0.740	112	446
-ACAV001.B.00001.C001_03560	UserReplicon	99	578	T4P_pilT_pilU	T4P-single-locus	3.700e-43	140.700	0.721	0.427	199	445
