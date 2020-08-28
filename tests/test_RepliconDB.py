@@ -127,7 +127,7 @@ class Test(MacsyTest):
 
 
     def test_fill_ordered_replicon_min_max(self):
-        seq_ori = self.find_data("base", "ordered_replicon_base")
+        seq_ori = self.find_data("base", "ordered_replicon_base.fasta")
         shutil.copy(seq_ori, self.args.out_dir)
         self.args.sequence_db = os.path.join(self.args.out_dir, os.path.basename(seq_ori))
         cfg = Config(MacsyDefaults(), self.args)
