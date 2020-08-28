@@ -153,18 +153,20 @@ class ValidHitTest(MacsyTest):
 
         model = Model("foo/T2SS", 10)
         profile_factory = ProfileFactory(cfg)
+
         gene_name = "gspD"
         self.c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
         self.gene_gspd = ModelGene(self.c_gene_gspd, model)
 
-        model.add_mandatory_gene(self.gene_gspd)
         gene_name = "sctJ"
         self.c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
         self.gene_sctj = ModelGene(self.c_gene_sctj, model)
+
+        model.add_mandatory_gene(self.gene_gspd)
         model.add_accessory_gene(self.gene_sctj)
 
-        self.hit_1 = Hit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hit_2 = Hit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_1 = Hit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_2 = Hit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
 
     def test_init(self):
@@ -186,7 +188,15 @@ class ValidHitTest(MacsyTest):
 
     def test_delegation(self):
         v_hit_1 = ValidHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
-        self.assertEqual(v_hit_1.get_position(), 1)
+        self.assertEqual(v_hit_1.get_position(), 2)
+
+    def test_eq(self):
+        v_hit_0 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
+
+        self.assertEqual(v_hit_0, v_hit_1)
+        self.assertNotEqual(v_hit_0, v_hit_2)
 
 
 class GetBestHitTest(MacsyTest):
