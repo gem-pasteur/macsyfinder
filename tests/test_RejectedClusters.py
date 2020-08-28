@@ -69,9 +69,9 @@ class TestRejectedCluster(MacsyTest):
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h10, v_h20], model)
-        r_c = RejectedClusters(model, c1, "bla")
+        r_c = RejectedClusters(model, c1, ["bla"])
         self.assertListEqual(r_c.clusters, [c1])
-        self.assertEqual(r_c.reason, 'bla')
+        self.assertEqual(r_c.reasons, ['bla'])
 
 
     def test_str(self):
@@ -96,16 +96,19 @@ class TestRejectedCluster(MacsyTest):
         v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h10, v_h20], model)
         c2 = Cluster([v_h40, v_h50], model)
-        r_c = RejectedClusters(model, [c1, c2], "bla")
+        r_c = RejectedClusters(model, [c1, c2], ["bla"])
 
         expected_str = """Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 10), (h20, sctC, 20)
+- model = T2SS
+- replicon = replicon_1
+- hits = (h10, gspD, 10), (h20, sctC, 20)
 Cluster:
-    - model: T2SS
-    - hits: (h40, gspD, 40), (h50, sctC, 50)
-These clusters has been rejected because:
-bla"""
+- model = T2SS
+- replicon = replicon_1
+- hits = (h40, gspD, 40), (h50, sctC, 50)
+These clusters have been rejected because:
+\t- bla
+"""
         self.assertEqual(expected_str, str(r_c))
 
 
@@ -128,8 +131,8 @@ bla"""
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         rc = RejectedClusters(model, [Cluster([v_hit_1, v_hit_2], model),
-                                    Cluster([v_hit_3], model)],
-                                    "bla bla")
+                                      Cluster([v_hit_3], model)],
+                                      ["bla bla"])
 
         self.assertEqual(rc.hits, [v_hit_1, v_hit_2, v_hit_3])
-        self.assertEqual(rc.reason, "bla bla")
+        self.assertEqual(rc.reasons, ["bla bla"])

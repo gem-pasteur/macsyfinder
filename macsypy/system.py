@@ -197,8 +197,7 @@ class OrderedMatchMaker(MatchMaker):
             res = System(self._model, valid_clusters)
             _log.debug("is a system")
         else:
-            reason = '\n'.join(reasons)
-            res = RejectedClusters(self._model, valid_clusters, reason)
+            res = RejectedClusters(self._model, valid_clusters, reasons)
         _log.debug("#" * 50)
         return res
 
@@ -246,8 +245,7 @@ class UnorderedMatchMaker(MatchMaker):
             res = LikelySystem(self._model, allowed_hits, forbidden_hits)
             _log.debug("There is a genetic potential for a system")
         else:
-            reason = '\n'.join(reasons)
-            res = UnlikelySystem(self._model, allowed_hits, forbidden_hits, reason)
+            res = UnlikelySystem(self._model, allowed_hits, forbidden_hits, reasons)
         _log.debug("#" * 50)
         return res
 
@@ -512,21 +510,22 @@ class RejectedClusters(AbstractSetOfHits):
                          GeneStatus.NEUTRAL,
                          GeneStatus.FORBIDDEN)
 
-    def __init__(self, model, clusters, reason):
+    def __init__(self, model, clusters, reasons):
         """
         :param model:
         :type model: :class:`macsypy.model.Model` object
         :param clusters: list of clusters. These Clusters should be created with
                          :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ValidHit` objects
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :param str reason: the reason why these clusters have been rejected
+        :param reason: the reason why these clusters have been rejected
+        :type reason: list of string
         """
         if isinstance(clusters, Cluster):
             self.clusters = [clusters]
         else:
             self.clusters = clusters
         self._replicon_name = self.clusters[0].replicon_name
-        self.reason = reason
+        self._reasons = reasons if isinstance(reasons, list) else [reasons]
         super().__init__(model, self._replicon_name)
 
 
@@ -539,7 +538,9 @@ class RejectedClusters(AbstractSetOfHits):
         for c in self.clusters:
             s += str(c)
             s += '\n'
-        s += f'These clusters has been rejected because:\n{self.reason}'
+        s += "These clusters have been rejected because:\n"
+        for r in self.reasons:
+            s += f"\t- {r}\n"
         return s
 
 
@@ -551,6 +552,11 @@ class RejectedClusters(AbstractSetOfHits):
         """
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
+
+
+    @property
+    def reasons(self):
+        return self._reasons
 
 
 class AbstractUnordered(AbstractSetOfHits):
@@ -635,7 +641,7 @@ class UnlikelySystem(AbstractUnordered):
                          GeneStatus.FORBIDDEN)
 
 
-    def __init__(self, model, allowed_hits, forbidden_hits, reason):
+    def __init__(self, model, allowed_hits, forbidden_hits, reasons):
         """
 
         :param model:  The model which has ben used to build this system
@@ -645,12 +651,13 @@ class UnlikelySystem(AbstractUnordered):
         :type allowed_hits: list of :class:`macsypy.hit.ValidHit` objects
         :param forbidden_hits: The list of hits that are forbidden
         :type forbidden_hits: list of :class:`macsypy.hit.ValidHit` objects
-        :param str reason: the reason why this set of hits has been rejected
+        :param reasons: the reasons why this set of hits has been rejected
+        :type reasons: List of str
         """
         self._replicon_name = allowed_hits[0].replicon_name
         self._allowed_hits = allowed_hits
         self._forbidden_hits = forbidden_hits
-        self._reason = reason
+        self._reasons = reasons if isinstance(reasons, list) else [reasons]
         super().__init__(model, self._replicon_name)
 
 
@@ -660,11 +667,12 @@ class UnlikelySystem(AbstractUnordered):
         :return: a string representation of this UnlikelySystem
         """
         s = ', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits])
-        s += f': These hits does not probably constitute a system because:\n{self.reason}'
+        s += ': These hits does not probably constitute a system because:\n'
+        s += '\n'.join(self.reasons)
         return s
 
 
     @property
-    def reason(self):
-        return self._reason
+    def reasons(self):
+        return self._reasons
 
