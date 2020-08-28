@@ -396,7 +396,7 @@ Use ordered replicon to have better prediction.
         v_hit_4 = ValidHit(hit_4, gene_abc, GeneStatus.FORBIDDEN)
         ser = TxtUnikelySystemSerializer()
 
-        ls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [v_hit_4], "the reason why")
+        ls_1 = UnlikelySystem(model, [v_hit_1, v_hit_2, v_hit_3], [v_hit_4], ["the reason why"])
         txt = ser.serialize(ls_1)
         expected_txt = """This replicon probably not contains a system foo/FOO:
 the reason why
