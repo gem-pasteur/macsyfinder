@@ -634,7 +634,7 @@ def rejected_clst_to_txt(rejected_clusters, clst_file):
     if rejected_clusters:
         print("# Rejected clusters:\n", file=clst_file)
         for rej_clst in rejected_clusters:
-            print(rej_clst, file=clst_file)
+            print(rej_clst, file=clst_file, end='')
             print("=" * 60, file=clst_file)
     else:
         print("# No Rejected clusters", file=clst_file)
@@ -773,6 +773,7 @@ def main(args=None, loglevel=None):
 
             cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
             with open(cluster_filename, "w") as clst_file:
+                rejected_clusters.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
                 rejected_clst_to_txt(rejected_clusters, clst_file)
             if not (all_systems or rejected_clusters):
                 logger.info("No Systems found in this dataset.")
