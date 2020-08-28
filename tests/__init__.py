@@ -122,12 +122,54 @@ class MacsyTest(unittest.TestCase):
             return res
         return wrapper
 
-    def assertFileEqual(self, f1, f2, msg=None):
+    def assertFileEqual(self, f1, f2, comment=None, msg=None):
         self.maxDiff = None
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
+        from itertools import zip_longest
         with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
-            self.assertMultiLineEqual(fh1.read(), fh2.read(), msg=msg)
+            for l1, l2 in zip_longest(fh1, fh2):
+                if comment and l1.startswith(comment) and l2.startswith(comment):
+                    continue
+                self.assertEqual(l1, l2, msg)
+
+
+    def assertTsvEqual(self, f1, f2, comment="#", msg=None):
+        # the StringIO does not support context in python2.7
+        # so we can use the following statement only in python3
+        from itertools import zip_longest
+        with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
+            header = True
+            for i, grp in enumerate(zip_longest(fh1, fh2), 1):
+                l1, l2 = grp
+                if l1.startswith(comment) and l2.startswith(comment):
+                    continue
+                fields_1 = l1.split()
+                fields_2 = l2.split()
+                if not fields_1 and not fields_2:
+                    # skip empty line
+                    continue
+
+                # the system_id may change from one run to another
+                # So I have to remove them before to compare each row
+                if header:
+                    fields_nb = len(fields_1)
+                    header = False
+                if fields_nb == 20:  # all_systems.tsv
+                    fields_1.pop(5)
+                    fields_2.pop(5)
+                elif fields_nb == 21:  # all_best_systems best_systems
+                    fields_1.pop(6)
+                    fields_2.pop(6)
+                else:
+                    raise RuntimeError(f"{fh1.name} {len(fields_1)}")
+
+                if len(fields_1) == fields_nb - 1:
+                    # remove used_in field if present
+                    fields_1.pop(-1)
+                    fields_2.pop(-1)
+                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name}:\n{l1}{l2}")
+
 
     def assertSeqRecordEqual(self, s1, s2):
         for attr in ('id', 'name', 'seq'):
