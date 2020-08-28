@@ -1,0 +1,122 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="3" min_genes_required="3" vers="2.0">
+	<gene name="Archaeal-T4P_arCOG02298_PP" presence="mandatory" loner="1" multi_system="1">
+		<exchangeables>
+			<gene name="Archaeal-T4P_arCOG02300" />
+		</exchangeables>
+	</gene>
+	<gene name="Archaeal-T4P_arCOG01817_ATP" presence="mandatory">
+		<exchangeables>
+			<gene name="Archaeal-T4P_arCOG01818" />
+			<gene name="Archaeal-T4P_arCOG05609" />
+		</exchangeables>
+	</gene>
+	<gene name="Archaeal-T4P_arCOG01809_IM" presence="mandatory">
+		<exchangeables>
+			<gene name="Archaeal-T4P_arCOG05611" />
+			<gene name="Archaeal-T4P_arCOG01815" />
+			<gene name="Archaeal-T4P_arCOG01814" />
+			<gene name="Archaeal-T4P_arCOG01812" />
+			<gene name="Archaeal-T4P_arCOG01811" />
+			<gene name="Archaeal-T4P_arCOG01810" />
+			<gene name="Archaeal-T4P_arCOG01808" />
+		</exchangeables>
+	</gene>
+	<gene name="Archaeal-T4P_arCOG01829_Pil" presence="mandatory">
+		<exchangeables>
+			<gene name="Archaeal-T4P_arCOG11520" />
+			<gene name="Archaeal-T4P_arCOG11238" />
+			<gene name="Archaeal-T4P_arCOG10216" />
+			<gene name="Archaeal-T4P_arCOG09683" />
+			<gene name="Archaeal-T4P_arCOG09549" />
+			<gene name="Archaeal-T4P_arCOG08836" />
+			<gene name="Archaeal-T4P_arCOG08521" />
+			<gene name="Archaeal-T4P_arCOG07613" />
+			<gene name="Archaeal-T4P_arCOG07276" />
+			<gene name="Archaeal-T4P_arCOG06620" />
+			<gene name="Archaeal-T4P_arCOG06584" />
+			<gene name="Archaeal-T4P_arCOG06296" />
+			<gene name="Archaeal-T4P_arCOG06117" />
+			<gene name="Archaeal-T4P_arCOG05987" />
+			<gene name="Archaeal-T4P_arCOG05612" />
+			<gene name="Archaeal-T4P_arCOG05475" />
+			<gene name="Archaeal-T4P_arCOG05166" />
+			<gene name="Archaeal-T4P_arCOG05085" />
+			<gene name="Archaeal-T4P_arCOG04680" />
+			<gene name="Archaeal-T4P_arCOG04652" />
+			<gene name="Archaeal-T4P_arCOG03933" />
+			<gene name="Archaeal-T4P_arCOG03926" />
+			<gene name="Archaeal-T4P_arCOG03872" />
+			<gene name="Archaeal-T4P_arCOG03871" />
+			<gene name="Archaeal-T4P_arCOG03870" />
+			<gene name="Archaeal-T4P_arCOG03360" />
+			<gene name="Archaeal-T4P_arCOG02916" />
+			<gene name="Archaeal-T4P_arCOG02911" />
+			<gene name="Archaeal-T4P_arCOG02421" />
+			<gene name="Archaeal-T4P_arCOG02420" />
+			<gene name="Archaeal-T4P_arCOG02419" />
+			<gene name="Archaeal-T4P_arCOG02416" />
+			<gene name="Archaeal-T4P_arCOG01824" />
+			<gene name="Archaeal-T4P_arCOG01822" />
+		</exchangeables>
+	</gene>
+<gene name="Archaeal-T4P_arCOG02964" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG02963" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG02396" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05119" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG04148" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG00589" presence="accessory"/>	
+<gene name="Archaeal-T4P_arCOG05608" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG02394" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG02900" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG02981" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG03422" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG03511" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG04673" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG04679" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05057" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05610" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05613" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05614" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05615" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05616" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05617" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05618" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05619" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG05986" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06141" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06291" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06335" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06517" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06518" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06552" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06599" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG06912" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG07037" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG07206" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG07478" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG07564" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG07777" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08058" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08268" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08269" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08270" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08271" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08272" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08273" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08522" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08524" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG08837" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG09150" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG10426" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG10477" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG11777" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG11778" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG11936" presence="accessory"/>
+<gene name="Archaeal-T4P_arCOG14515" presence="accessory"/>
+
+
+<gene name="T2SS_gspD" presence="forbidden"/>
+<gene name="T4P_pilQ" presence="forbidden"/>
+<gene name="Tad_rcpA" presence="forbidden"/>
+
+</model>

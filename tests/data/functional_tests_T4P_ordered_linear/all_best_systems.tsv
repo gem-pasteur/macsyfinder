@@ -1,0 +1,15 @@
+# macsyfinder 20200828.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models -m TFF-SF T4P_single_locus
+# Systems found:
+sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in
+1	UserReplicon	GCF_000006845_001030	T4P_pilQ	103	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilQ	mandatory	723	1.9e-62	206.600	0.935	0.238	548	719	
+1	UserReplicon	GCF_000006845_001040	T4P_pilP	104	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilP	accessory	181	2.7e-34	115.600	1.000	0.735	13	145	
+1	UserReplicon	GCF_000006845_001050	T4P_pilO	105	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilO	mandatory	215	2.9e-37	124.800	0.980	0.693	23	171	
+1	UserReplicon	GCF_000006845_001060	T4P_pilN	106	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilN	mandatory	199	2.3e-33	112.200	0.986	0.714	7	148	
+1	UserReplicon	GCF_000006845_001070	T4P_pilM	107	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilM	accessory	371	3.3e-43	144.300	0.988	0.429	30	188	
+1	UserReplicon	GCF_000006845_004230	T4P_pilA	423	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilA	accessory	162	8.6e-20	67.800	0.744	0.389	9	71	
+1	UserReplicon	GCF_000006845_010160	T4P_pilA	1016	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilA	accessory	149	1.3e-15	54.300	0.821	0.430	5	68	
+1	UserReplicon	GCF_000006845_012440	T4P_pilA	1244	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilA	accessory	129	1.5e-19	67.000	0.859	0.519	6	72	
+1	UserReplicon	GCF_000006845_014280	T4P_pilD	1428	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilD	mandatory	286	2.8e-82	272.300	1.000	0.829	28	264	
+1	UserReplicon	GCF_000006845_016430	T4P_pilT	1643	TFF-SF/T4P_single_locus	UserReplicon_T4P_single_locus_1	1	0.444	4.500	1	T4P_pilT	mandatory	347	6.9e-167	551.400	0.997	0.983	2	342	
+

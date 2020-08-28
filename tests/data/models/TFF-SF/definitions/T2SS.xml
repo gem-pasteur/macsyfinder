@@ -1,0 +1,29 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="4" min_genes_required="6" multi_loci="1" vers="2.0">
+    <gene name="T2SS_gspD" presence="mandatory" loner="1"/>
+    <gene name="T2SS_gspE" presence="mandatory" loner="1"/>
+    <gene name="T2SS_gspF" presence="mandatory"/>
+    <gene name="T2SS_gspM" presence="accessory"/>
+    <gene name="T2SS_gspG" presence="mandatory"/>
+    <gene name="T2SS_gspH" presence="accessory"/>
+    <gene name="T2SS_gspI" presence="accessory"/>
+    <gene name="T2SS_gspJ" presence="accessory"/>
+    <gene name="T2SS_gspK" presence="accessory"/>
+    <gene name="T2SS_gspC" presence="mandatory"/> 
+    <gene name="T2SS_gspN" presence="accessory"/>
+    <gene name="T2SS_gspL" presence="accessory"/>
+    <gene name="T2SS_gspO" presence="mandatory" loner="1">
+	<exchangeables>
+            <gene name="T4P_pilD"/>
+	    <gene name="ComM_comC"/>
+	</exchangeables>
+    </gene>
+    
+
+    <gene name="T4P_pilT" presence="forbidden"/>
+
+    #Bug macsyfinder => Remi to check if now with v2 of MacSyFinder, it can be removed?
+    <gene name="Tad_tadD" presence="accessory"/>
+
+    # tadV could be in the exchangeable of the peptidase
+
+</model>

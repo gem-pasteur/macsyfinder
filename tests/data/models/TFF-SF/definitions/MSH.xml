@@ -1,0 +1,22 @@
+<model inter_gene_max_space="5" min_mandatory_genes_required="3" min_genes_required="4" multi_loci="1" vers="2.0">
+    <gene name="MSH_mshA" presence="mandatory" loner="1"/>
+    <gene name="MSH_mshE" presence="mandatory"/>
+    <gene name="MSH_mshG" presence="mandatory"/>
+    <gene name="MSH_mshL" presence="mandatory"/>
+    <gene name="MSH_mshM" presence="mandatory"/>
+    
+    <gene name="MSH_mshB" presence="accessory"/>
+    <gene name="MSH_mshC" presence="accessory"/>
+
+    <gene name="MSH_mshD" presence="accessory"/>
+    <gene name="MSH_mshF" presence="accessory"/>
+    <gene name="MSH_mshI" presence="accessory"/>
+    <gene name="MSH_mshI2" presence="accessory"/>
+    <gene name="MSH_mshJ" presence="accessory"/>
+    <gene name="MSH_mshK" presence="accessory"/>
+    <gene name="MSH_mshN" presence="accessory"/>
+    <gene name="MSH_mshO" presence="accessory"/>
+    <gene name="MSH_mshQ" presence="accessory"/>
+    <gene name="MSH_mshP" presence="accessory"/>
+
+</model>
