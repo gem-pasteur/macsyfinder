@@ -265,8 +265,8 @@ class Cluster:
 
         :return: a string representation of this cluster
         """
-        s = """Cluster:
-    - model: {}
-    - hits: {}""".format(self.model.name,
-                         ', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits]))
+        s = f"""Cluster:
+- model = {self.model.name}
+- replicon = {self.replicon_name}
+- hits = {', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits])}"""
         return s
