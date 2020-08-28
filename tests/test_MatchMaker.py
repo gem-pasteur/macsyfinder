@@ -115,9 +115,9 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason,
-                         "The quorum of mandatory genes required (2) is not reached: 1\n"
-                         "The quorum of genes required (3) is not reached: 2")
+        self.assertEqual(res.reasons,
+                         ["The quorum of mandatory genes required (2) is not reached: 1",
+                          "The quorum of genes required (3) is not reached: 2"])
 
         # all quorum are reached
         self.model._min_mandatory_genes_required = 2
@@ -150,8 +150,8 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertListEqual(res.reasons,
+                             ["The quorum of genes required (4) is not reached: 3"])
 
         # the min_gene_required quorum is not reached even there is a neutral
         self.model._min_mandatory_genes_required = 2
@@ -161,8 +161,8 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertEqual(res.reasons,
+                         ["The quorum of genes required (4) is not reached: 3"])
 
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
@@ -171,8 +171,8 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertEqual(res.reasons,
+                         ["The quorum of genes required (4) is not reached: 3"])
 
         # the cluster contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
@@ -182,7 +182,7 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
+        self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): abc"])
 
         # the cluster contain a forbidden gene homolog
         self.model._min_mandatory_genes_required = 2
@@ -192,7 +192,7 @@ class MatchMakerTest(MacsyTest):
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
-        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): tadZ")
+        self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): tadZ"])
 
         #####################
         # test multi loci   #
@@ -222,7 +222,7 @@ class MatchMakerTest(MacsyTest):
         c3 = Cluster([self.c_hits['h_abc']], self.model)
         ordered_match_maker = OrderedMatchMaker(self.model)
         res = ordered_match_maker.match([c1, c2, c3])
-        self.assertEqual(res.reason, "There is 1 forbidden genes occurrence(s): abc")
+        self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): abc"])
 
     def test_unordered_match(self):
 
@@ -233,9 +233,9 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
-        self.assertEqual(res.reason,
-                         "The quorum of mandatory genes required (2) is not reached: 1\n"
-                         "The quorum of genes required (3) is not reached: 2")
+        self.assertEqual(res.reasons,
+                         ["The quorum of mandatory genes required (2) is not reached: 1",
+                          "The quorum of genes required (3) is not reached: 2"])
 
         # all quorum are reached
         self.model._min_mandatory_genes_required = 2
@@ -268,8 +268,8 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertEqual(res.reasons,
+                         ["The quorum of genes required (4) is not reached: 3"])
 
         # the min_gene_required quorum is not reached even there is a neutral
         self.model._min_mandatory_genes_required = 2
@@ -278,8 +278,8 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertEqual(res.reasons,
+                         ["The quorum of genes required (4) is not reached: 3"])
 
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
@@ -287,8 +287,8 @@ class MatchMakerTest(MacsyTest):
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
-        self.assertEqual(res.reason,
-                         "The quorum of genes required (4) is not reached: 3")
+        self.assertEqual(res.reasons,
+                         ["The quorum of genes required (4) is not reached: 3"])
 
         # the hits contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
