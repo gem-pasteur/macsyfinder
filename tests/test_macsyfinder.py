@@ -336,47 +336,47 @@ neutral genes:
 # Systems found:
 """
         sol_tsv += "\t".join(["sol_id", "replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
-                                 "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
-                                 "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
-                                 "hit_begin_match", "hit_end_match", "used_in"])
+                              "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
+                              "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
+                              "hit_begin_match", "hit_end_match", "used_in"])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                            '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                            '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'gspD', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'flgB', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
                               '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
@@ -454,20 +454,22 @@ neutral genes:
         v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h10, v_h20], model)
         c2 = Cluster([v_h40, v_h50], model)
-        r_c = RejectedClusters(model, [c1, c2], "The reasons to reject this clusters")
+        r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
 
         rej_clst_str = f"""# macsyfinder {macsypy.__version__}
 # {' '.join(sys.argv)}
 # Rejected clusters:
 
 Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 10), (h20, sctC, 20)
+- model = T2SS
+- replicon = replicon_1
+- hits = (h10, gspD, 10), (h20, sctC, 20)
 Cluster:
-    - model: T2SS
-    - hits: (h10, gspD, 40), (h20, sctC, 50)
-These clusters has been rejected because:
-The reasons to reject this clusters
+- model = T2SS
+- replicon = replicon_1
+- hits = (h10, gspD, 40), (h20, sctC, 50)
+These clusters have been rejected because:
+\t- The reasons to reject this clusters
 ============================================================
 """
 
