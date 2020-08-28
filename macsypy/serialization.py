@@ -110,6 +110,7 @@ class TsvSystemSerializer(SystemSerializer):
         for cluster in system.clusters:
             for vh in cluster.hits:
                 used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
+                used_in_systems.sort()
                 tsv += self.template.substitute(
                     sys_replicon_name=system.replicon_name,
                     vh_id=vh.id,
@@ -226,8 +227,9 @@ class TxtUnikelySystemSerializer(SystemSerializer):
         :return: a string representation of system readable by human
         """
         hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in likely_system.hits])
+        reasons = '\n'.join(likely_system.reasons)
         s = f"""This replicon probably not contains a system {likely_system.model.fqn}:
-{likely_system.reason}
+{reasons}
 
 system id = {likely_system.id}
 model = {likely_system.model.fqn}
