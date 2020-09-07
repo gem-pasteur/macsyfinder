@@ -34,6 +34,8 @@ Several **new features** were added, including:
 - the **format for MacSyFinder's models** has slightly changed, in order to offer more possibilities, and more readibility. To see how to carry models from V1 to V2, :ref:`see below <models_v1_v2>`. 
 
 
+Also, the search modes corresponding to "unordered" and "unordered_replicon" were merged - as they basically correspond to the same behaviour. 
+
 .. note::
  
  In v2, output files were also re-defined. See :ref:`here for more details <outputs>`.
