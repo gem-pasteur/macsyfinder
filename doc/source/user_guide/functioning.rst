@@ -93,15 +93,8 @@ For *ordered* datasets: building clusters of components
     from the two genes with hits (system-wise, or gene-specific parameter).
     The `loner` components may form a cluster on their own.
 
-3. Clusters are used to "fill up" systems according to the quorum (see function :func:`macsypy.system.match`).
-   In this step, the **quorum** criteria for the system's assessment are checked according to the model's definition:
-   the `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.
-   In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners are evaluated for system assessment separately.
-   In the case of the `multiple-loci system` search mode (``multi_loci=True``), each cluster and all possible combinations of clusters are confronted to the quorum of the system being examined.
-   The clusters that fulfill the quorum are reported in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`).
-   The clusters that do not fulfill the quorum are reported in the `rejected_clusters.txt` output file.
    
-The above three steps are reiterated for each system being searched. Once done, the :ref:`next step <combinatorial-exploration>` is performed. 
+The above two steps are reiterated for each system being searched. Once done, the :ref:`next step <combinatorial-exploration>` is performed. 
 
 For *unordered* datasets: 
 -------------------------
@@ -126,12 +119,21 @@ C. Computing candidate Systems' scores (ordered mode)
 
 This step only applies to the most powerful search mode, i.e., on **ordered datasets**. ``NEW in V2``
 
-The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of systems in replicons analysed. 
-It creates clusters of hits for systems' components separately for each system searched, and therefore might find candidate occurrences of systems that overlap. 
-Moreover, if a system is possibly encoded at several locations on the replicon analysed (option `multi_loci` set to "True" in the model), this calls for a combinatorial analysis of the different clusters to assemble them into coherent systems regarding the macsy-models.
-We therefore introduced a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily more similar to a system's model than others.  
+1. Clusters are used to "fill up" systems according to the quorum (see function :func:`macsypy.system.match`).
+   In this step, the **quorum** criteria for the system's assessment are checked according to the model's definition:
+   the `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.
+   In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners are evaluated for System's assessment separately.
+   In the case of the `multiple-loci system` search mode (``multi_loci=True``), each cluster and all possible combinations of clusters are confronted to the quorum of the System being examined.
+   The clusters that fulfill the quorum are reported in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`).
+   The clusters that do not fulfill the quorum are reported in the `rejected_clusters.txt` output file.
+   
 
-The assumptions behind this scoring scheme are the following:
+2. The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of systems in replicons analysed. 
+   It creates clusters of hits for systems' components separately for each system searched, and therefore might find candidate occurrences of systems that overlap. 
+   Moreover, if a system is possibly encoded at several locations on the replicon analysed (option `multi_loci` set to "True" in the model), this calls for a combinatorial analysis of the different clusters to assemble them into coherent systems regarding the macsy-models.
+   We therefore introduced a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily more similar to a system's model than others.  
+
+   The assumptions behind this scoring scheme are the following:
 	* we set a score for the different types of genes/components when defining a **cluster's score**:
 		- +1.0 is added when a mandatory gene is present 
 		- +0.5 is added when a accessory gene is present 
@@ -143,7 +145,7 @@ The assumptions behind this scoring scheme are the following:
 
 	* overall, only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
-This search for candidate `Systems` results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
+   This search for candidate `Systems` results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
 
 
 *********************************************************************
