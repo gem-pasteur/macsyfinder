@@ -536,12 +536,15 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
             logger.debug("#" * 80)
             logger.info("Searching systems")
             hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-            unordered_matcher = UnorderedMatchMaker(model)
-            res = unordered_matcher.match(hits_related_one_model)
-            if isinstance(res, LikelySystem):
-                systems.append(res)
+            if hits_related_one_model:
+                unordered_matcher = UnorderedMatchMaker(model)
+                res = unordered_matcher.match(hits_related_one_model)
+                if isinstance(res, LikelySystem):
+                    systems.append(res)
+                else:
+                    rejected_hits.append(res)
             else:
-                rejected_hits.append(res)
+                logger.info(f"No hits found for model {model.fqn}")
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn))
     return systems, rejected_hits
