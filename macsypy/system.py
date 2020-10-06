@@ -400,7 +400,7 @@ class System(AbstractSetOfHits):
     Modelize as system. a system is an occurrence of a given model on a replicon.
     """
 
-    _supported_status = _supported_status = (GeneStatus.MANDATORY,
+    _supported_status = (GeneStatus.MANDATORY,
                          GeneStatus.ACCESSORY,
                          GeneStatus.NEUTRAL)
 
