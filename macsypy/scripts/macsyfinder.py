@@ -51,7 +51,7 @@ from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer
+    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer
 
 
 def get_version_message():
@@ -524,7 +524,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
-    systems = []
+    likely_systems = []
     rejected_hits = []
     for rep_name in hits_by_replicon:
         logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
@@ -540,14 +540,14 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
                 unordered_matcher = UnorderedMatchMaker(model)
                 res = unordered_matcher.match(hits_related_one_model)
                 if isinstance(res, LikelySystem):
-                    systems.append(res)
+                    likely_systems.append(res)
                 else:
                     rejected_hits.append(res)
             else:
                 logger.info(f"No hits found for model {model.fqn}")
-    if systems:
-        systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn))
-    return systems, rejected_hits
+    if likely_systems:
+        likely_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn))
+    return likely_systems, rejected_hits
 
 
 def _outfile_header():
@@ -650,16 +650,48 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
         for system in likely_systems:
             sys_serializer = TxtLikelySystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
-            print("=" * 60, file=sys_file)
     else:
         print("# No LikelySystems found", file=sys_file)
 
 
-def unlikely_systems_to_txt(likely_systems, sys_file):
+def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
+    """
+    print likely systems occurrences (from unordered replicon)
+    in a file in human readable format
+
+    :param likely_systems: list of systems found
+    :type likely_systems: list of :class:`macsypy.system.LikelySystem` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
+    :return: None
+    """
     print(_outfile_header(), file=sys_file)
     if likely_systems:
+        print("# Likely Systems found:\n", file=sys_file)
+        print(TsvLikelySystemSerializer.header, file=sys_file)
+        for l_system in likely_systems:
+            sys_serializer = TsvLikelySystemSerializer()
+            print(sys_serializer.serialize(l_system, hit_system_tracker), file=sys_file)
+    else:
+        print("# No Systems found", file=sys_file)
+
+
+def unlikely_systems_to_txt(unlikely_systems, sys_file):
+    """
+    print hits (from unordered replicon) which probably does not make a system occurrences
+    in a file in human readable format
+
+    :param unlikely_systems: list of :class:`macsypy.system.UnLikelySystem` objects
+    :param sys_file: The file where to write down the systems occurrences
+    :type sys_file: file object
+    :return: None
+    """
+    print(_outfile_header(), file=sys_file)
+    if unlikely_systems:
         print("# Unlikely Systems found:\n", file=sys_file)
-        for system in likely_systems:
+        for system in unlikely_systems:
             sys_serializer = TxtUnikelySystemSerializer()
             print(sys_serializer.serialize(system), file=sys_file)
             print("=" * 60, file=sys_file)
@@ -797,9 +829,18 @@ def main(args=None, loglevel=None):
             ##############################
             logger.info("\n{:#^70}".format(" Writing down results "))
 
-            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
+            system_filename = os.path.join(config.working_dir(), "all_possible_systems.txt")
             with open(system_filename, "w") as sys_file:
                 likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
+
+            forbidden = [s for s in all_systems if s.forbidden_occ]
+            system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
+            with open(system_filename, "w") as sys_file:
+                likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
+
+            system_filename = os.path.join(config.working_dir(), "all_possible_systems.tsv")
+            with open(system_filename, "w") as sys_file:
+                likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
 
             cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
             with open(cluster_filename, "w") as clst_file:
