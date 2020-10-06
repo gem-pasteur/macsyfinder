@@ -216,6 +216,61 @@ wholeness = {likely_system.wholeness:.3f}
         return s
 
 
+class TsvLikelySystemSerializer(SystemSerializer):
+    """
+    Handle potential System from unordered replicon
+    serialization in tsv format
+    """
+
+    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_wholeness" \
+             "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
+             "hit_begin_match\thit_end_match\tused_in"
+
+    template = Template("$sys_replicon_name\t$vh_id\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
+                        "$sys_id\t$sys_wholeness\t"
+                        "$vh_gene_role\t$vh_status\t$vh_seq_length\t$vh_i_eval\t"
+                        "$vh_score\t$vh_profile_coverage\t$vh_sequence_coverage\t$vh_begin_match"
+                        "\t$vh_end_match\t$used_in_systems\n")
+
+
+    def serialize(self, likely_system, hit_system_tracker):
+        r"""
+
+        :return: a serialisation of this system in tabulated separated value format
+                 each line represent a hit and have the following structure:
+                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_wholeness
+                     \\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
+                     \\thit_seq_cov\\tit_begin_match\\thit_end_match
+
+        :rtype: str
+        """
+        tsv = ''
+        for vh in likely_system.hits:
+            used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != likely_system.model.fqn]
+            used_in_systems.sort()
+            tsv += self.template.substitute(
+                sys_replicon_name=likely_system.replicon_name,
+                vh_id=vh.id,
+                vh_gene_name=vh.gene.name,
+                vh_position=vh.position,
+                sys_model_fqn=likely_system.model.fqn,
+                sys_id=likely_system.id,
+                sys_wholeness=f"{likely_system.wholeness:.3f}",
+                vh_gene_role=vh.gene_ref.alternate_of().name,
+                vh_status=vh.status,
+                vh_seq_length=vh.seq_length,
+                vh_i_eval=vh.i_eval,
+                vh_score=f"{vh.score:.3f}",
+                vh_profile_coverage=f"{vh.profile_coverage:.3f}",
+                vh_sequence_coverage=f"{vh.sequence_coverage:.3f}",
+                vh_begin_match=vh.begin_match,
+                vh_end_match=vh.end_match,
+                used_in_systems=','.join(used_in_systems)
+            )
+
+        return tsv
+
+
 class TxtUnikelySystemSerializer(SystemSerializer):
     """
     Handle System serialization in text
