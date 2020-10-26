@@ -119,13 +119,16 @@ This step only applies to the most powerful search mode, i.e., on **ordered data
 
 The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of Systems in replicons analysed. 
 It creates clusters of hits for Systems' components separately for each System searched, and therefore might find **candidate occurrences of Systems that overlap** in terms of components. 
-Moreover, if a System is possibly encoded at several locations on the replicon analysed (option `multi_loci` set to "True" in the model), this calls for a **combinatorial screening** of the different clusters to assemble them into coherent systems regarding the macsy-models. 
+Moreover, if a System is possibly encoded at several locations on the replicon analysed (option `multi_loci` set to "True" in the model),
+this calls for a **combinatorial screening** of the different clusters to assemble them into coherent systems regarding the macsy-models.
 
 * For a given model, clusters are used to "fill up" Systems' occurrence(s) according to the **quorum criteria** defined in the System's model (see function :func:`macsypy.system.match`):
    the `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.  
       * In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners are evaluated for System's assessment separately.  
-      * In the case of the `multiple-loci system` search mode (``multi_loci=True``), each possible combination of clusters is confronted to the quorum of the System being examined.  
-   The sets of clusters that fulfill the quorum are reported as candidate Systems in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`), and they obtain a **System's score** (see below).  
+      * In the case of the `multiple-loci system` search mode (``multi_loci=True``), each possible combination of clusters is confronted to the quorum of the System being examined.
+
+   The sets of clusters that fulfill the quorum are reported as candidate Systems in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`),
+   and they obtain a **System's score** (see below).
    The clusters that do not allow to form a candidate System are reported in the `rejected_clusters.txt` output file.
    
 
