@@ -144,9 +144,9 @@ To delete it, remove the directory::
 
 .. _macsydata:
 
-===================
+====================================
 Models installation with `macsydata`
-===================
+====================================
 
 Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`
 
