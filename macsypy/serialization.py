@@ -25,6 +25,7 @@
 import abc
 from string import Template
 
+from macsypy.gene import GeneStatus
 
 class SystemSerializer(metaclass=abc.ABCMeta):
     """
@@ -108,7 +109,7 @@ class TsvSystemSerializer(SystemSerializer):
         """
         tsv = ''
         for cluster in system.clusters:
-            for vh in cluster.hits:
+            for vh in sorted(cluster.hits, key=lambda vh: vh.position):
                 used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
                 used_in_systems.sort()
                 tsv += self.template.substitute(
@@ -245,28 +246,34 @@ class TsvLikelySystemSerializer(SystemSerializer):
         :rtype: str
         """
         tsv = ''
-        for vh in likely_system.hits:
-            used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != likely_system.model.fqn]
-            used_in_systems.sort()
-            tsv += self.template.substitute(
-                sys_replicon_name=likely_system.replicon_name,
-                vh_id=vh.id,
-                vh_gene_name=vh.gene.name,
-                vh_position=vh.position,
-                sys_model_fqn=likely_system.model.fqn,
-                sys_id=likely_system.id,
-                sys_wholeness=f"{likely_system.wholeness:.3f}",
-                vh_gene_role=vh.gene_ref.alternate_of().name,
-                vh_status=vh.status,
-                vh_seq_length=vh.seq_length,
-                vh_i_eval=vh.i_eval,
-                vh_score=f"{vh.score:.3f}",
-                vh_profile_coverage=f"{vh.profile_coverage:.3f}",
-                vh_sequence_coverage=f"{vh.sequence_coverage:.3f}",
-                vh_begin_match=vh.begin_match,
-                vh_end_match=vh.end_match,
-                used_in_systems=','.join(used_in_systems)
-            )
+        for status in (s.lower() for s in GeneStatus.__members__.keys()):
+            try:
+                hits = getattr(likely_system, f"{status}_hits")
+                hits = sorted(hits, key=lambda vh: vh.gene.name)
+            except AttributeError:
+                continue
+            for vh in hits:
+                used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != likely_system.model.fqn]
+                used_in_systems.sort()
+                tsv += self.template.substitute(
+                    sys_replicon_name=likely_system.replicon_name,
+                    vh_id=vh.id,
+                    vh_gene_name=vh.gene.name,
+                    vh_position=vh.position,
+                    sys_model_fqn=likely_system.model.fqn,
+                    sys_id=likely_system.id,
+                    sys_wholeness=f"{likely_system.wholeness:.3f}",
+                    vh_gene_role=vh.gene_ref.alternate_of().name,
+                    vh_status=vh.status,
+                    vh_seq_length=vh.seq_length,
+                    vh_i_eval=vh.i_eval,
+                    vh_score=f"{vh.score:.3f}",
+                    vh_profile_coverage=f"{vh.profile_coverage:.3f}",
+                    vh_sequence_coverage=f"{vh.sequence_coverage:.3f}",
+                    vh_begin_match=vh.begin_match,
+                    vh_end_match=vh.end_match,
+                    used_in_systems=','.join(used_in_systems)
+                )
 
         return tsv
 
