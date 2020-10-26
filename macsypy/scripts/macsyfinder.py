@@ -833,10 +833,10 @@ def main(args=None, loglevel=None):
             with open(system_filename, "w") as sys_file:
                 likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
 
-            forbidden = [s for s in all_systems if s.forbidden_occ]
-            system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
-            with open(system_filename, "w") as sys_file:
-                likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
+            # forbidden = [s for s in all_systems if s.forbidden_occ]
+            # system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
+            # with open(system_filename, "w") as sys_file:
+            #     likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
 
             system_filename = os.path.join(config.working_dir(), "all_possible_systems.tsv")
             with open(system_filename, "w") as sys_file:
