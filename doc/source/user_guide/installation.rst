@@ -132,7 +132,14 @@ To uninstall MacSyFinder (the last version installed), run::
 
   (sudo) pip uninstall macsyfinder
 
-If you install it in a virtualenv, just delete the virtual environment. 
+If you install it in a virtualenv, just delete the virtual environment.
+For instance if you create a virtualenv name macsyfinder::
+
+    python3.7 -m venv macsyfinder
+
+To delete it, remove the directory::
+
+    rm -R macsyfinder
 
 
 .. _macsydata:
