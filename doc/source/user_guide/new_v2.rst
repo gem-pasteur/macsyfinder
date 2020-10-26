@@ -12,7 +12,7 @@
 What's new in MacSyFinder v2? 
 *****************************
 
-For Version 2, MacSyFinder was carried under **Python 3** https://www.python.org/download/releases/3.0/
+For Version 2, MacSyFinder was carried under `Python 3 <https://www.python.org/download/releases/3.0/>`_
 
 ==============================
 New features and search engine 
@@ -60,17 +60,15 @@ Models from v1 are not compatible straight away with v2.
 For those who had designed MacSyFinder's models for Version 1 and would like to carry them for Version 2, here are the changes to consider:  
 
 - the keyword "system" was changed:
-`<system>` ::arrow: `<model>`
-
+  `<system>` ::arrow:: `<model>`
 - the keyword `<system_ref>` was removed.
-For a given systems' package, each gene has to be defined only once in a macsy-model. There is no need anymore to reference which model it is from, when used as a component in another system's model.
-
+  For a given systems' package, each gene has to be defined only once in a macsy-model.
+  There is no need anymore to reference which model it is from, when used as a component in another system's model.
 - now the version of the macsy-models' type has to be documented as a feature of the "model" keyword, like this: `vers = "2.0"`
-
 - the following keywords have been replaced (but see :ref:`below<ex2>` for more details):
-homologs => exchangeables
-  
-analogs => exchangeables
+
+  * homologs => exchangeables
+  * analogs => exchangeables
 
 .. note::
  
