@@ -85,7 +85,7 @@ Perform the installation.
 
 If you do not have the privileges to perform a system-wide installation,
 you can either install it in your home directory or
-use a [virtual environment](https://virtualenv.pypa.io/en/stable/).
+use a `virtual environment <https://virtualenv.pypa.io/en/stable/>`_.
 
 installation in your home directory
 """""""""""""""""""""""""""""""""""
