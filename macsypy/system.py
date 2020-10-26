@@ -81,7 +81,9 @@ class MatchMaker(metaclass=abc.ABCMeta):
         return map
 
     def sort_hits_by_status(self, hits):
-        allowed_hits = []
+        mandatory_hits = []
+        accessory_hits = []
+        neutral_hits = []
         forbidden_hits = []
         for hit in hits:
             gene_name = hit.gene.name
@@ -90,25 +92,25 @@ class MatchMaker(metaclass=abc.ABCMeta):
             gene = self._model.get_gene(gene_name)
             if gene_name in self.mandatory_counter:
                 self.mandatory_counter[hit.gene.name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
             elif gene_name in self.exchangeable_mandatory:
                 gene_ref = self.exchangeable_mandatory[gene_name]
                 self.mandatory_counter[gene_ref.name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
             elif gene_name in self.accessory_counter:
                 self.accessory_counter[gene_name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in self.exchangeable_accessory:
                 gene_ref = self.exchangeable_accessory[gene_name]
                 self.accessory_counter[gene_ref.name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in self.neutral_counter:
                 self.neutral_counter[gene_name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in self.exchangeable_neutral:
                 gene_ref = self.exchangeable_neutral[gene_name]
                 self.neutral_counter[gene_ref.name] += 1
-                allowed_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in self.forbidden_counter:
                 self.forbidden_counter[gene_name] += 1
                 forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
@@ -116,14 +118,21 @@ class MatchMaker(metaclass=abc.ABCMeta):
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
                 forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
-        return allowed_hits, forbidden_hits
+        return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
-    def count(self):
-        mandatory_genes = [g for g, occ in self.mandatory_counter.items() if occ > 0]
-        accessory_genes = [g for g, occ in self.accessory_counter.items() if occ > 0]
-        neutral_genes = [g for g, occ in self.neutral_counter.items() if occ > 0]
-        forbidden_genes = [g for g, occ in self.forbidden_counter.items() if occ > 0]
+
+    def present_genes(self):
+        """
+        :return: the lists of genes name in model which are present replicon (included exchangeable)
+        :rtype: tuple of 4 lists for mandatory, accessory, neutral and forbidden
+                ([str gene_name, ...], [str gene_name], [str gene_name], [str gene_name])
+        """
+        mandatory_genes = [g_name for g_name, occ in self.mandatory_counter.items() if occ > 0]
+        accessory_genes = [g_name for g_name, occ in self.accessory_counter.items() if occ > 0]
+        neutral_genes = [g_name for g_name, occ in self.neutral_counter.items() if occ > 0]
+        forbidden_genes = [g_name for g_name, occ in self.forbidden_counter.items() if occ > 0]
         return mandatory_genes, accessory_genes, neutral_genes, forbidden_genes
+
 
     @abc.abstractmethod
     def match(self):
@@ -153,13 +162,15 @@ class OrderedMatchMaker(MatchMaker):
         for cluster in clusters:
             # sort hits between forbidden and the other
             # and transform hit in ValidHit
-            one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
+            *one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
             if one_clst_forbidden_hits:
                 forbidden_hits.extend(one_clst_forbidden_hits)
             # create cluster of ValidHit
+            one_clst_allowed_hits = [vh for st_hits in one_clst_allowed_hits for vh in st_hits]
+            one_clst_allowed_hits.sort(key=attrgetter('position'))
             valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits, self._model))
 
-        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.count()
+        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
         # the count is finished
         # check if the quorum is reached
         # count how many different genes are represented in the clusters
@@ -208,13 +219,13 @@ class UnorderedMatchMaker(MatchMaker):
 
         # count the hits
         # and track for each hit for which gene it counts for
-        allowed_hits, forbidden_hits = self.sort_hits_by_status(hits)
+        mandatory_hits, accessory_hits, neutral_hits, forbidden_hits = self.sort_hits_by_status(hits)
         # the count is finished
         # check if the quorum is reached
         # count how many different genes are represented in the clusters
         # the neutral genes belong to the cluster
         # but they do not count for the quorum
-        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.count()
+        mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
 
         _log.debug("#" * 50)
         _log.debug(f"mandatory_genes: {mandatory_genes}")
@@ -242,10 +253,10 @@ class UnorderedMatchMaker(MatchMaker):
             _log.debug(msg)
 
         if is_a_potential_system:
-            res = LikelySystem(self._model, allowed_hits, forbidden_hits)
+            res = LikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
             _log.debug("There is a genetic potential for a system")
         else:
-            res = UnlikelySystem(self._model, allowed_hits, forbidden_hits, reasons)
+            res = UnlikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons)
         _log.debug("#" * 50)
         return res
 
@@ -305,6 +316,7 @@ class MetaSetOfHits(abc.ABCMeta):
             setattr(new_system_inst, f"_{status}_occ", {})
             # set the public property in the Model class
             setattr(cls, f"{status}_occ", property(MetaSetOfHits.getter_maker(status)))
+        # count fill _mandatory_occ, accessory_occ, ... attributes
         new_system_inst.count()
         return new_system_inst
 
@@ -359,8 +371,9 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
 
     def count(self):
         """
-        fill 3 structures one for mandatory, accessory and neutral
-        each structure count how many hit for each gene
+        fill structures one for supported status mandatory, accessory, ...
+        each structure count how many hit for each gene of the model
+        mandatory_occ = { gene_name : [ValidHit, ...]
         :return: None
         """
         for status in [str(s) for s in self._supported_status]:
@@ -564,6 +577,13 @@ class AbstractUnordered(AbstractSetOfHits):
     Technical abstract class to factorize code share between
     LikelySystem and UnlikelySystem
     """
+    def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits):
+        self._mandatory_hits = mandatory_hits
+        self._accessory_hits = accessory_hits
+        self._neutral_hits = neutral_hits
+        self._forbidden_hits = forbidden_hits
+        self._replicon_name = self.allowed_hits[0].replicon_name
+        super().__init__(model, self._replicon_name)
 
     @property
     def hits(self):
@@ -571,7 +591,31 @@ class AbstractUnordered(AbstractSetOfHits):
         :return: The list of all hits sorted by their position
         :rtype: list of :class:`macsypy.hit.ValidHit` objects
         """
-        return self._sort_hits(self._allowed_hits + self._forbidden_hits)
+        return self._sort_hits(self._mandatory_hits + self._accessory_hits + self._neutral_hits + self.forbidden_hits)
+
+    @property
+    def mandatory_hits(self):
+        """
+        :return: The list of mandatory hits
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._mandatory_hits[:]
+
+    @property
+    def accessory_hits(self):
+        """
+        :return: The list of accesory hits
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._accessory_hits[:]
+
+    @property
+    def neutral_hits(self):
+        """
+        :return: The list of neutral hits
+        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        """
+        return self._neutral_hits[:]
 
     @property
     def forbidden_hits(self):
@@ -579,7 +623,7 @@ class AbstractUnordered(AbstractSetOfHits):
         :return: The list of forbidden hits
         :rtype: list of :class:`macsypy.hit.ValidHit` objects
         """
-        return self._forbidden_hits
+        return self._forbidden_hits[:]
 
     @property
     def allowed_hits(self):
@@ -587,7 +631,8 @@ class AbstractUnordered(AbstractSetOfHits):
         :return: The list of allowed (mandatory, accessory, neutral) hits
         :rtype: list of :class:`macsypy.hit.ValidHit` objects
         """
-        return self._allowed_hits
+
+        return self._mandatory_hits + self._accessory_hits + self._neutral_hits
 
 
 class LikelySystem(AbstractUnordered):
@@ -608,23 +653,6 @@ class LikelySystem(AbstractUnordered):
                          GeneStatus.FORBIDDEN)
 
 
-    def __init__(self, model, allowed_hits, forbidden_hits):
-        """
-
-        :param model:  The model which has ben used to build this system
-        :type model: :class:`macsypy.model.Model` object
-        :param allowed_hits: The list of hits that form this potential system
-                             this hits status must be MANDATORY, ACCESSORY or NEUTRAL
-        :type allowed_hits: list of :class:`macsypy.hit.ValidHit` objects
-        :param forbidden_hits: The list of hits that are forbidden
-        :type forbidden_hits: list of :class:`macsypy.hit.ValidHit` objects
-        """
-        self._replicon_name = allowed_hits[0].replicon_name
-        self._allowed_hits = allowed_hits
-        self._forbidden_hits = forbidden_hits
-        super().__init__(model, self._replicon_name)
-
-
     def __str__(self):
         """
 
@@ -641,7 +669,7 @@ class UnlikelySystem(AbstractUnordered):
                          GeneStatus.FORBIDDEN)
 
 
-    def __init__(self, model, allowed_hits, forbidden_hits, reasons):
+    def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons):
         """
 
         :param model:  The model which has ben used to build this system
@@ -654,11 +682,8 @@ class UnlikelySystem(AbstractUnordered):
         :param reasons: the reasons why this set of hits has been rejected
         :type reasons: List of str
         """
-        self._replicon_name = allowed_hits[0].replicon_name
-        self._allowed_hits = allowed_hits
-        self._forbidden_hits = forbidden_hits
+        super().__init__(model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
-        super().__init__(model, self._replicon_name)
 
 
     def __str__(self):
