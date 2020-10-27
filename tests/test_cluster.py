@@ -74,7 +74,7 @@ class TestBuildCluster(MacsyTest):
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
 
-        #     Hit(gene, it_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     Hit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
         h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
         h11 = Hit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
@@ -130,7 +130,7 @@ class TestBuildCluster(MacsyTest):
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h51, h61, h11, h21, h31])
 
-        # relicon is circular the last hit is incorporate to the first cluster
+        # replicon is circular the last hit is incorporate to the first cluster
         rep_info = RepliconInfo('circular', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
         h80 = Hit(core_genes[3], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
@@ -162,6 +162,15 @@ class TestBuildCluster(MacsyTest):
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h10, h11, h12])
         self.assertListEqual(clusters[1].hits, [h50, h51])
+
+        # case replicon is linear
+        # one cluster with one hit loner
+        h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        hits = [h80]
+        random.shuffle(hits)
+        clusters = build_clusters(hits, rep_info, model)
+        self.assertEqual(len(clusters), 1)
+        self.assertListEqual(clusters[0].hits, [h80])
 
         # case replicon is linear, no hits
         clusters = build_clusters([], rep_info, model)

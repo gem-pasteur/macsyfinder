@@ -202,6 +202,9 @@ The licence use to protect and share your work.
 If you don't know which licence to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
 *This file is optional, but highly recommended.*
 
+
+.. _writing-models:
+
 Writing my own macsy-models definitions
 ---------------------------------------
 
