@@ -1,5 +1,5 @@
-# macsyfinder 20200828.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db=/home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta --db-type=gembase --models-dir=/home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad -v
+# macsyfinder 20201027.dev
+# tests/run_tests.py -vv tests/test_functional_test.py
 # Rejected clusters:
 
 Cluster:
@@ -483,6 +483,14 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 2
 	- The quorum of genes required (5) is not reached: 3
+============================================================
+Cluster:
+- model = ComM
+- replicon = GCF_000006725
+- hits = (GCF_000006725_019920, ComM_comEC, 6234)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (4) is not reached: 1
 ============================================================
 Cluster:
 - model = T2SS
@@ -2902,6 +2910,14 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (5) is not reached: 2
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006905
+- hits = (GCF_000006905_001830, T2SS_gspO, 17713)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
