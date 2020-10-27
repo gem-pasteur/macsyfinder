@@ -48,6 +48,8 @@ class Test(MacsyTest):
 
     def tearDown(self):
         try:
+            pass
+            # self.out_dir is set in self._macsyfinder_run
             shutil.rmtree(self.out_dir)
         except:
             pass
@@ -57,152 +59,92 @@ class Test(MacsyTest):
         """
 
         """
-        args = f"--sequence-db={self.find_data('base', 'gembase.fasta')} " \
-               "--db-type=gembase " \
+        expected_result_dir = self.find_data("functional_tests_gembase")
+        args = "--db-type=gembase " \
                f"--models-dir={self.find_data('models')} " \
                "--models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad " \
-               "--out-dir={out_dir}"
+               "--out-dir={out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
 
         self._macsyfinder_run(args)
-        expected_result_dir = self.find_data("functional_tests_gembase")
         for file_name in ('all_systems.tsv',
                           'all_best_systems.tsv',
                           'best_systems.tsv'):
-            print(f"\n##################################### {file_name} ##########################################\n")
-            expected_result = self.find_data(expected_result_dir, file_name)
-            get_results = os.path.join(self.out_dir, file_name)
-            self.assertTsvEqual(expected_result, get_results, comment="#")
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#")
         file_name = 'rejected_clusters.txt'
         expected_result = self.find_data(expected_result_dir, file_name)
         get_results = os.path.join(self.out_dir, file_name)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
 
-    # @unittest.skip("skipping until macsyfinder api is not stable")
-    # def test_T2SS_ordered_circular(self):
-    #     args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
-    #            "--models-dir {models_dir} " \
-    #            "-m {models} -o {{out_dir}}".format(
-    #                                                models_dir=self.find_data('functional_tests', 'models'),
-    #                                                seq_db=self.find_data('functional_tests',
-    #                                                                    'acav001_T2SS-Ori_T4P-multi.fasta'),
-    #                                                models="TXSS_ori T2SS",
-    #                                                topology="circular"
-    #                                                )
-    #     self._test_macsyfinder_run(args)
-    #
-    # @unittest.skip("skipping until macsyfinder api is not stable")
-    # def test_T2SS_ordered_circular_single_locus(self):
-    #     args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
-    #            "--models-dir {models_dir} " \
-    #            "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
-    #                                                seq_db=self.find_data('functional_tests',
-    #                                                                      'acav001_T2SS-Ori_T4P-multi.fasta'),
-    #                                                models="TXSS_modified T2SS-single-locus",
-    #                                                topology="circular"
-    #                                                )
-    #     self._test_macsyfinder_run(args)
-    #
-    # @unittest.skip("skipping until macsyfinder api is not stable")
-    # def test_T2SS_ordered_linear(self):
-    #     args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
-    #            "--models-dir {models_dir} " \
-    #            "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
-    #                                                seq_db=self.find_data('functional_tests',
-    #                                                                      'acav001_T2SS-Ori_T4P-multi.fasta'),
-    #                                                models="TXSS_ori T2SS",
-    #                                                topology="linear"
-    #                                                )
-    #     self._test_macsyfinder_run(args)
-    #
-    # @unittest.skip("skipping until macsyfinder api is not stable")
-    # def test_T2SS_ordered_linear_multi_loci(self):
-    #     args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
-    #            "--models-dir {models_dir} " \
-    #            "-m {models} -o {{out_dir}} " \
-    #            "--multi-loci TXSS_modified/T2SS-single-locus".format(
-    #                                              models_dir=self.find_data('functional_tests', 'models'),
-    #                                              seq_db=self.find_data('functional_tests',
-    #                                                                    'acav001_T2SS-Ori_T4P-multi.fasta'),
-    #                                              models="TXSS_modified T2SS-single-locus",
-    #                                              topology="linear"
-    #                                              )
-    #     self._test_macsyfinder_run(args)
-    #
-    # @unittest.skip("skipping until macsyfinder api is not stable")
-    # def test_T2SS_ordered_linear_single_locus(self):
-    #     args = "--sequence-db {seq_db} --db-type ordered_replicon --replicon-topology {topology}  " \
-    #            "--models-dir {models_dir} " \
-    #            "-m {models} -o {{out_dir}}".format(models_dir=self.find_data('functional_tests', 'models'),
-    #                                                seq_db=self.find_data('functional_tests',
-    #                                                                      'acav001_T2SS-Ori_T4P-multi.fasta'),
-    #                                                models="TXSS_modified T2SS-single-locus",
-    #                                                topology="linear"
-    #                                                )
-    #     self._test_macsyfinder_run(args)
-
-
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_only_loners(self):
-        args = f"--sequence-db {self.find_data('base', 'MOBP1_twice.fasta')} " \
-               "--db-type ordered_replicon " \
+        expected_result_dir = self.find_data("functional_tests_only_loners")
+        args = "--db-type ordered_replicon " \
                "--replicon-topology linear  " \
                f"--models-dir {self.find_data('models')} " \
                "-m test_loners MOB_cf_T5SS " \
-               "-o {out_dir}"
+               "-o {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
         self._macsyfinder_run(args)
 
-        expected_result_dir = self.find_data("functional_tests_only_loners")
         for file_name in ('all_systems.tsv',
                           'all_best_systems.tsv',
                           'best_systems.tsv',
                           'rejected_clusters.txt'):
-            expected_result = self.find_data(expected_result_dir, file_name)
-            get_results = os.path.join(self.out_dir, file_name)
-            self.assertFileEqual(expected_result, get_results, comment="#")
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_T4P_ordered_linear(self):
+        expected_result_dir = self.find_data("functional_tests_T4P_ordered_linear")
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
-        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-               "--db-type ordered_replicon " \
+        args = "--db-type ordered_replicon " \
                "--replicon-topology linear  " \
                f"--models-dir {self.find_data('models')} " \
                "-m TFF-SF T4P_single_locus " \
-               "-o {out_dir}"
+               "-o {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
         self._macsyfinder_run(args)
 
-        expected_result_dir = self.find_data("functional_tests_T4P_ordered_linear")
         for file_name in ('all_systems.tsv',
                           'all_best_systems.tsv',
                           'best_systems.tsv',
                           'rejected_clusters.txt'):
-            expected_result = self.find_data(expected_result_dir, file_name)
-            get_results = os.path.join(self.out_dir, file_name)
-            self.assertFileEqual(expected_result, get_results, comment="#")
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
 
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_T4P_ordered_linear_multi_loci(self):
-        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-               "--db-type ordered_replicon " \
+        expected_result_dir = self.find_data("functional_tests_T4P_ordered_linear_multi_loci")
+        args = "--db-type ordered_replicon " \
                "--replicon-topology linear  " \
                f"--models-dir {self.find_data('models')} " \
                "-m TFF-SF T4P " \
                "-o {out_dir} " \
-               "--multi-loci TFF-SF/T4P"
+               "--multi-loci TFF-SF/T4P " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
 
         self._macsyfinder_run(args)
 
-        expected_result_dir = self.find_data("functional_tests_T4P_ordered_linear_multi_loci")
         for file_name in ('all_systems.tsv',
                           'all_best_systems.tsv',
                           'best_systems.tsv',
                           'rejected_clusters.txt'):
-            expected_result = self.find_data(expected_result_dir, file_name)
-            get_results = os.path.join(self.out_dir, file_name)
-            self.assertFileEqual(expected_result, get_results, comment="#")
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
 
 
     def test_working_dir_exists(self):
@@ -308,9 +250,9 @@ class Test(MacsyTest):
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_{}'.format(test_name))
         os.makedirs(self.out_dir)
         args = args_tpl.format(out_dir=self.out_dir)
-        print("\n############################################3")
-        print(args)
-        print("############################################3")
+        # print("\n############################################")
+        # print(args)
+        # print("##############################################")
         macsyfinder.main(args=args.split(),
                          loglevel='ERROR'
                          )

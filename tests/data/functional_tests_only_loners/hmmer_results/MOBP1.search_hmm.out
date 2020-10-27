@@ -1,0 +1,82 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/test_loners/profiles/MOBP1.hmm
+# target sequence database:        tests/data/base/MOBP1_twice.fasta
+# output directed to file:         /tmp/macsyfinder_test_only_loners/hmmer_results/MOBP1.search_hmm.out
+# model-specific thresholding:     GA cutoffs
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MOBP1  [M=233]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                     Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                     -----------
+    6.4e-45  144.4   0.1    2.9e-44  142.2   0.0    2.1  1  ESCO001.D.00252.P004_0000832  
+    6.4e-45  144.4   0.1    2.9e-44  142.2   0.0    2.1  1  ESCO001.D.00252.P004_0000885  
+
+
+Domain annotation for each sequence (and alignments):
+>> ESCO001.D.00252.P004_0000832  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  142.2   0.0   2.6e-45   2.9e-44       1     232 [.       1     224 [.       1     225 [. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 142.2 bits;  conditional E-value: 2.6e-45
+                         MOBP1   1 mivk.rakggssfaglvdYlerkgkaeledkdgreggvvegddvaelagalaemkavaeknkrkkpvyhiilSfppgeeps 80 
+                                   mivk +a+g+++++g vdYl++              ++ +++ + +l+g+++e+++++++++++k++++++lSf+++ e+ 
+  ESCO001.D.00252.P004_0000832   1 MIVKfHARGKGGGSGPVDYLLG--------------RERNREGATVLQGNPEEVRELIDATPFAKKYTSGVLSFAEK-ELP 66 
+                                   9*******************99..............7889999*******************************999.*** PP
+
+                         MOBP1  81 deqlraiarefleel..glgd..hqyvaavHtdtdhlHlHivvnrvn.etGkklnpsydd..ykllraaaeelelkyglss 154
+                                   +   ++++ +f++ l  gl++  + +++++H+d+++l+l++v+++++ +tGk+l+p+yd+  + +++a++ ++++ ygl++
+  ESCO001.D.00252.P004_0000832  67 PGGREKVMASFERVLmpGLEKnqYSILWVEHQDKGRLELNFVIPNMElQTGKRLQPYYDRadRPRIDAWQTLVNHHYGLHD 147
+                                   ***************888888**************************666*******87777******************* PP
+
+                         MOBP1 155 pngprrergrnererkskekgerkrtwreelrraieaai...eakswedfhrrLekglevrergqgkaieikdgeekarsk 232
+                                   pn+p+++r+ +   +++++k    ++  e ++r+i+a++   e+k ++d++++L +++++++r ++ +i+i d++++++++
+  ESCO001.D.00252.P004_0000832 148 PNAPENRRTLTLPDNLPETK----QALAEGVTRGIDALYhagEIKGRQDVIQALTEAGLEVVRVTRSSISIADPNGGKNIR 224
+                                   ********************....9**************************************************999876 PP
+
+>> ESCO001.D.00252.P004_0000885  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  142.2   0.0   2.6e-45   2.9e-44       1     232 [.       1     224 [.       1     225 [. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 142.2 bits;  conditional E-value: 2.6e-45
+                         MOBP1   1 mivk.rakggssfaglvdYlerkgkaeledkdgreggvvegddvaelagalaemkavaeknkrkkpvyhiilSfppgeeps 80 
+                                   mivk +a+g+++++g vdYl++              ++ +++ + +l+g+++e+++++++++++k++++++lSf+++ e+ 
+  ESCO001.D.00252.P004_0000885   1 MIVKfHARGKGGGSGPVDYLLG--------------RERNREGATVLQGNPEEVRELIDATPFAKKYTSGVLSFAEK-ELP 66 
+                                   9*******************99..............7889999*******************************999.*** PP
+
+                         MOBP1  81 deqlraiarefleel..glgd..hqyvaavHtdtdhlHlHivvnrvn.etGkklnpsydd..ykllraaaeelelkyglss 154
+                                   +   ++++ +f++ l  gl++  + +++++H+d+++l+l++v+++++ +tGk+l+p+yd+  + +++a++ ++++ ygl++
+  ESCO001.D.00252.P004_0000885  67 PGGREKVMASFERVLmpGLEKnqYSILWVEHQDKGRLELNFVIPNMElQTGKRLQPYYDRadRPRIDAWQTLVNHHYGLHD 147
+                                   ***************888888**************************666*******87777******************* PP
+
+                         MOBP1 155 pngprrergrnererkskekgerkrtwreelrraieaai...eakswedfhrrLekglevrergqgkaieikdgeekarsk 232
+                                   pn+p+++r+ +   +++++k    ++  e ++r+i+a++   e+k ++d++++L +++++++r ++ +i+i d++++++++
+  ESCO001.D.00252.P004_0000885 148 PNAPENRRTLTLPDNLPETK----QALAEGVTRGIDALYhagEIKGRQDVIQALTEAGLEVVRVTRSSISIADPNGGKNIR 224
+                                   ********************....9**************************************************999876 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (233 nodes)
+Target sequences:                           22  (3598 residues searched)
+Passed MSV filter:                         6  (0.272727); expected 0.4 (0.02)
+Passed bias filter:                        2  (0.0909091); expected 0.4 (0.02)
+Passed Vit filter:                         2  (0.0909091); expected 0.0 (0.001)
+Passed Fwd filter:                         2  (0.0909091); expected 0.0 (1e-05)
+Initial search space (Z):                 22  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]
