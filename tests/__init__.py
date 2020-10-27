@@ -168,7 +168,7 @@ class MacsyTest(unittest.TestCase):
                     # remove used_in field if present
                     fields_1.pop(-1)
                     fields_2.pop(-1)
-                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name}:\n{l1}{l2}")
+                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
 
 
     def assertSeqRecordEqual(self, s1, s2):
