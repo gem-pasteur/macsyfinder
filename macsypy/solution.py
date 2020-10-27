@@ -38,6 +38,34 @@ def find_best_solutions(systems):
             ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
             The inner list represent a best solution
     """
+    def sort_cliques(clique):
+        """
+        sort cliques
+
+         - first by the sum of hits of system composing the solution, most hits in first
+         - second by the number of hits, most system in first
+         - and finally by hits position. This criteria is to produce predictable results
+           between two runs and to be testable (functional_test gembase)
+
+        :param clique: the solutions to sort
+        :type clique: List of :class:`macsypy.system.System` objects
+        :return: the clique ordered
+        """
+        l = []
+        for solution in clique:
+            hits_pos = {hit.position for syst in solution for hit in syst.hits}
+            hits_pos = sorted(list(hits_pos))
+            l.append((sorted(solution, key=lambda sys: sys.id), hits_pos))
+
+        sorted_cliques = sorted(l, key=lambda item: (sum([len(sys.hits) for sys in item[0]]),
+                                                     len(item[0]),
+                                                     item[1],
+                                                     '_'.join([sys.id for sys in item[0]])
+                                                     ),
+                                reverse=True)
+        sorted_cliques = [item[0] for item in sorted_cliques]
+        return sorted_cliques
+
     G = nx.Graph()
     # add nodes (vertices)
     G.add_nodes_from(systems)
@@ -57,10 +85,5 @@ def find_best_solutions(systems):
         elif current_score == max_score:
             max_cliques.append(c)
     # sort the solutions (cliques)
-    # first by the sum of hits of system composing the solution, most hits in first
-    # second by the number of hits, most system in first
-
-    max_cliques.sort(key=lambda cl: (sum([len(sys.hits) for sys in cl]),
-                                     len(cl)),
-                     reverse=True)
-    return max_cliques, max_score
+    solutions = sort_cliques(max_cliques)
+    return solutions, max_score
