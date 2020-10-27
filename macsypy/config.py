@@ -148,7 +148,7 @@ class Config:
         config_files_values = self._config_file_2_dict(defaults, config_files, previous_run=previous_run)
         args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
-            if 'sequence_db' in args_dict:
+            if 'sequence_db' in args_dict and args_dict['sequence_db']:
                 _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db "
                              f"from previous_run '{args_dict['previous_run']}'.")
                 del args_dict['sequence_db']
