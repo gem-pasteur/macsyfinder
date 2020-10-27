@@ -16,6 +16,9 @@ Installation
 MacSyFinder works with models for macromolecular systems that are not shipped with it, 
 you have to install them separately. See the :ref:` macsydata section <macsydata>` below.
 
+
+.. _dependencies:
+
 ========================
 MacSyFinder dependencies
 ========================
@@ -82,7 +85,7 @@ Perform the installation.
 
 If you do not have the privileges to perform a system-wide installation,
 you can either install it in your home directory or
-use a [virtual environment](https://virtualenv.pypa.io/en/stable/).
+use a `virtual environment <https://virtualenv.pypa.io/en/stable/>`_.
 
 installation in your home directory
 """""""""""""""""""""""""""""""""""
@@ -129,14 +132,21 @@ To uninstall MacSyFinder (the last version installed), run::
 
   (sudo) pip uninstall macsyfinder
 
-If you install it in a virtualenv, just delete the virtual environment. 
+If you install it in a virtualenv, just delete the virtual environment.
+For instance if you create a virtualenv name macsyfinder::
+
+    python3.7 -m venv macsyfinder
+
+To delete it, remove the directory::
+
+    rm -R macsyfinder
 
 
 .. _macsydata:
 
-===================
+====================================
 Models installation with `macsydata`
-===================
+====================================
 
 Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`
 
