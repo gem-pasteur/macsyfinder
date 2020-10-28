@@ -38,10 +38,11 @@ from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation
 from macsypy.hit import Hit, ValidHit
 from macsypy.model import Model, ModelBank
-from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractSetOfHits
+from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractSetOfHits, LikelySystem, UnlikelySystem
 from macsypy.cluster import Cluster
 
-from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv
+from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
+    likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -487,6 +488,266 @@ These clusters have been rejected because:
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
 
+    def test_likely_systems_to_txt(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'unordered'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model("foo/T2SS", 10)
+        # test if id is well incremented
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        gene_name = "sctJ"
+        c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctc = ModelGene(c_gene_sctc, model)
+        model.add_neutral_gene(gene_sctc)
+        gene_name = "tadZ"
+        c_gene_tadz = CoreGene(models_location, gene_name, profile_factory)
+        gene_tadz = ModelGene(c_gene_tadz, model)
+        model.add_forbidden_gene(gene_tadz)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+
+        system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
+
+        system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Systems found:
+
+This replicon contains genetic materials needed for system foo/T2SS
+WARNING there quorum is reached but there is also some forbidden genes.
+
+system id = replicon_id_T2SS_1
+model = foo/T2SS
+replicon = replicon_id
+hits = [('hit_1', 'gspD', 1), ('hit_2', 'sctJ', 1), ('hit_3', 'sctC', 1), ('hit_4', 'tadZ', 1)]
+wholeness = 1.000
+
+mandatory genes:
+\t- gspD: 1 (gspD)
+
+accessory genes:
+\t- sctJ: 1 (sctJ)
+
+neutral genes:
+\t- sctC: 1 (sctC)
+
+forbidden genes:
+\t- tadZ: 1 (tadZ)
+
+Use ordered replicon to have better prediction.
+
+"""
+
+        f_out = StringIO()
+        track_multi_systems_hit = HitSystemTracker([system_1])
+        likely_systems_to_txt([system_1], track_multi_systems_hit, f_out)
+        self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+        f_out = StringIO()
+        likely_systems_to_txt([], track_multi_systems_hit, f_out)
+        expected_out = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Likely Systems found
+"""
+        self.assertEqual(expected_out, f_out.getvalue())
+
+
+    def test_likely_systems_to_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'unordered'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model("foo/T2SS", 10)
+        # test if id is well incremented
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        gene_name = "sctJ"
+        c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctc = ModelGene(c_gene_sctc, model)
+        model.add_neutral_gene(gene_sctc)
+        gene_name = "tadZ"
+        c_gene_tadz = CoreGene(models_location, gene_name, profile_factory)
+        gene_tadz = ModelGene(c_gene_tadz, model)
+        model.add_forbidden_gene(gene_tadz)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+
+        system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
+
+        sol_tsv = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Likely Systems found:"""
+        sol_tsv += "\n\n"
+        sol_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_wholeness",
+                              "hit_gene_ref", "hit_status", "hit_seq_len", "hit_i_eval", "hit_score",
+                              "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "used_in"])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join(["replicon_id", "hit_1", "gspD", "1", "foo/T2SS", "replicon_id_T2SS_1", "1.000",
+                              "gspD", "mandatory", "803", "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", "replicon_id_T2SS_1", "1.000",
+                              "sctJ", "accessory", "804", "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join(["replicon_id", "hit_4", "tadZ", "1", "foo/T2SS", "replicon_id_T2SS_1", "1.000",
+                              "tadZ", "forbidden", "806", "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join(["replicon_id", "hit_3", "sctC", "1", "foo/T2SS", "replicon_id_T2SS_1", "1.000",
+                              "sctC", "neutral", "805", "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
+        sol_tsv += "\n"
+        sol_tsv += "\n"
+
+        f_out = StringIO()
+        track_multi_systems_hit = HitSystemTracker([system_1])
+        likely_systems_to_tsv([system_1], track_multi_systems_hit, f_out)
+        self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
+
+        f_out = StringIO()
+        likely_systems_to_tsv([], track_multi_systems_hit, f_out)
+        expected_out = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Likely Systems found
+"""
+        self.assertEqual(expected_out, f_out.getvalue())
+
+
+    def test_unnlikely_systems_to_txt(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'unordered'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model("foo/T2SS", 10)
+        # test if id is well incremented
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        gene_name = "sctJ"
+        c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_sctc = ModelGene(c_gene_sctc, model)
+        model.add_neutral_gene(gene_sctc)
+        gene_name = "tadZ"
+        c_gene_tadz = CoreGene(models_location, gene_name, profile_factory)
+        gene_tadz = ModelGene(c_gene_tadz, model)
+        model.add_forbidden_gene(gene_tadz)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        reason = "why it not a system"
+        system_1 = UnlikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4], reason)
+
+        exp_txt = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Unlikely Systems found:
+
+This replicon probably not contains a system foo/T2SS:
+{reason}
+
+system id = replicon_id_T2SS_1
+model = foo/T2SS
+replicon = replicon_id
+hits = [('hit_1', 'gspD', 1), ('hit_2', 'sctJ', 1), ('hit_3', 'sctC', 1), ('hit_4', 'tadZ', 1)]
+wholeness = 1.000
+
+mandatory genes:
+\t- gspD: 1 (gspD)
+
+accessory genes:
+\t- sctJ: 1 (sctJ)
+
+neutral genes:
+\t- sctC: 1 (sctC)
+
+forbidden genes:
+\t- tadZ: 1 (tadZ)
+
+Use ordered replicon to have better prediction.
+
+============================================================
+"""
+
+        f_out = StringIO()
+        unlikely_systems_to_txt([system_1], f_out)
+        self.assertMultiLineEqual(exp_txt, f_out.getvalue())
+
+        f_out = StringIO()
+        unlikely_systems_to_txt([], f_out)
+        expected_out = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Unlikely Systems found
+"""
+        self.assertEqual(expected_out, f_out.getvalue())
+
+
     def test_parse_args(self):
         command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt --db-type=gembase --models-dir data/models/ " \
                        "--models TFF-SF_final all -w 4 --out VICH001-all"
@@ -546,6 +807,8 @@ These clusters have been rejected because:
 
         out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
         os.mkdir(out_dir)
+
+        # test gembase replicon
         seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
         model_dir = self.find_data('data_set', 'models')
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
@@ -593,6 +856,32 @@ These clusters have been rejected because:
         systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
+
+
+    def test_search_systems_unordered(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='ERROR')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+        seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
+        model_dir = self.find_data('data_set', 'models')
+        # test unordered replicon
+        args = f"--sequence-db {seq_db} --db-type=unordered --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+
+        systems, uncomplete_sys = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
+        self.assertListEqual([s.id for s in systems], expected_sys_id)
+
+        expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
+        self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)
 
 
     def test_search_systems_model_unknown(self):
