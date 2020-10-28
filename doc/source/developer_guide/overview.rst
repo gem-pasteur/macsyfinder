@@ -123,6 +123,10 @@ An overview of the main classes.
     * in red the abstract classes
     * in blue the enumeration
     * in purple the dataclass
+    * in purple/pink functions
+
+.. note::
+    use *view image* of your browser to  zoom in the diagram
 
 
 MacSyFinder functioning overview
