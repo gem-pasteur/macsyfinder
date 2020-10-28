@@ -35,20 +35,12 @@ from .cluster import Cluster
 from .hit import ValidHit
 from .error import MacsypyError
 
-# la liste des clusters a fournir est a generer avant match
-# si len(clusters) = 1 single_loci
-# si len(clusters) > 1 multi_loci
-# il faut genegerer la liste de toutes les combinaisons
-# et appeler cette fonction pour chaqu'une entre elles
-# from itertools import combinations
-
-# combinations('ABCD', 1) => inutile mais generique => single_loucs
-# combinations('ABCD', 2) => multi_locus a ne faire que si model.multi_locus= True
-# combinations('ABCD', 3)
-# combinations('ABCD', len("ABCD")) => inutile mais generique => recheche parmis tous les clusters
-
 
 class MatchMaker(metaclass=abc.ABCMeta):
+    """
+    Is an abstract class for (Odered/Unordered)MatchMaker
+    the `match` class method must be implemented in concrete classes
+    """
 
     def __init__(self, model):
         self._model = model
@@ -80,7 +72,22 @@ class MatchMaker(metaclass=abc.ABCMeta):
                 map[ex_gene.name] = gene
         return map
 
+
     def sort_hits_by_status(self, hits):
+        """
+        sort :class:`macsypy.hit.Hit` according the
+        the status of the gene the hit code for.
+
+        :param hits: list of :class:`macsypy.hit.Hit` object
+        :return: the valid hits according their status
+        :rtype: a tuple of 4 lists
+
+              * :class:`macsypy.hit.ValidHit` for MANDATORY genes
+              * :class:`macsypy.hit.ValidHit` for ACCESSORY genes
+              * :class:`macsypy.hit.ValidHit` for NEUTRAL genes
+              * :class:`macsypy.hit.ValidHit` for FORBIDDEN genes
+
+        """
         mandatory_hits = []
         accessory_hits = []
         neutral_hits = []
@@ -140,6 +147,9 @@ class MatchMaker(metaclass=abc.ABCMeta):
 
 
 class OrderedMatchMaker(MatchMaker):
+    """
+    check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)
+    """
 
     def match(self, clusters):
         """
@@ -149,8 +159,6 @@ class OrderedMatchMaker(MatchMaker):
 
         :param clusters: The list of cluster to check if fit the model
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :param model:  The model to consider
-        :type model: :class:`macsypy.model.Model` object
         :return: either a System or a RejectedClusters
         :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
         """
@@ -292,6 +300,30 @@ class ClusterSystemTracker(dict):
 
 
 class MetaSetOfHits(abc.ABCMeta):
+    """
+    This metaclass control the AbstractSetOfHits class creation.
+    In this metaclass we inject on the fly several attributes and properties
+    two private attributes and one public property corresponding to each value
+    of _supported_status class attribute defined in the concrete classes.
+    for instance for System class
+    the attributes
+        * self._mandatory
+        * self._mandatory_occ
+        * self._accessory
+        * self._accessory_occ
+        * self._neutral
+        * self._neutral_occ
+
+    and the properties
+        * mandatory
+        * accessory
+        * neutral
+
+    are automatically injected
+
+    The value for attributes _<status>_occ are filled in count method
+    which is defined in AbstractSetOfHits
+    """
 
     def getter_maker(status):
         """
@@ -322,6 +354,9 @@ class MetaSetOfHits(abc.ABCMeta):
 
 
 class AbstractSetOfHits(metaclass=MetaSetOfHits):
+    """
+    Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
+    """
 
     _id = itertools.count(1)
 
@@ -561,7 +596,8 @@ class RejectedClusters(AbstractSetOfHits):
     def hits(self):
         """
 
-        :return:
+        :return: The list of all hits that compose this system
+        :rtype: [:class:`macsypy.hit.ValidHits` , ... ]
         """
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
@@ -637,8 +673,8 @@ class AbstractUnordered(AbstractSetOfHits):
 
 class LikelySystem(AbstractUnordered):
     """"
-    Handle component that fill the quorum requirements with no idea about
-    genetic organization (gene cluster)
+    Handle components that fill the quorum requirements defined in model.
+    with no idea about genetic organization (gene cluster)
     so we cannot take in account forbidden genes
 
     .. note:
@@ -662,6 +698,9 @@ class LikelySystem(AbstractUnordered):
 
 
 class UnlikelySystem(AbstractUnordered):
+    """
+    Handle components that not fill the quorum requirements defined in model.
+    """
 
     _supported_status = (GeneStatus.MANDATORY,
                          GeneStatus.ACCESSORY,
@@ -699,5 +738,9 @@ class UnlikelySystem(AbstractUnordered):
 
     @property
     def reasons(self):
+        """
+        :return: The reasons why it probably not a system
+        :rtype: list of string
+        """
         return self._reasons
 
