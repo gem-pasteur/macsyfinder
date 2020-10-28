@@ -19,6 +19,3 @@ include NEWS
 include CITATION.yml
 include requirements.txt
 include requirements_dev.txt
-
-recursive-include macsyview/app *
-recursive-include macsyview/bin *
