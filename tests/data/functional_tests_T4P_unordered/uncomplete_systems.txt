@@ -1,0 +1,3 @@
+# macsyfinder 20201028.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
+# No Unlikely Systems found

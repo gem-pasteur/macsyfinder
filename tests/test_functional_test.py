@@ -147,6 +147,25 @@ class Test(MacsyTest):
                 self.assertFileEqual(expected_result, get_results, comment="#")
 
 
+    def test_T4P_unordered(self):
+        expected_result_dir = self.find_data("functional_tests_T4P_unordered")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m TFF-SF T4P_single_locus " \
+               "-o {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in ('all_possible_systems.tsv',
+                          'all_possible_systems.txt',
+                          'uncomplete_systems.txt'):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+
     def test_working_dir_exists(self):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                "--db-type ordered_replicon " \
