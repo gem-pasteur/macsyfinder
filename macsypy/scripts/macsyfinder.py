@@ -773,6 +773,10 @@ def main(args=None, loglevel=None):
 
         track_multi_systems_hit = HitSystemTracker(all_systems)
         if config.db_type() in ('gembase', 'ordered_replicon'):
+            #############################
+            # Ordered/Gembase replicons #
+            #############################
+
             ###########################
             # select the best systems #
             ###########################
@@ -827,6 +831,10 @@ def main(args=None, loglevel=None):
                 one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
                 systems_to_tsv(one_best_solution, track_multi_systems_hit, tsv_file)
         else:
+            #######################
+            # Unordered replicons #
+            #######################
+
             ##############################
             # Write the results in files #
             ##############################
