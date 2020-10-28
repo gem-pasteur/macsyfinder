@@ -1,6 +1,6 @@
-MacSyFinder/MacSyView - Detection of macromolecular systems 
+MacSyFinder - Detection of macromolecular systems
 in protein datasets using systems modelling and similarity search.
-Copyright © 2014 Institut Pasteur (Paris) and CNRS.
+Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
 ------------------------------------------------------------------
 
 Citation: 
@@ -13,49 +13,16 @@ The code includes contributions and input from:
 
    Sophie Abby          Microbial Evolutionary Genomics Unit, UMR CNRS 3525,
                                            Institut Pasteur, Paris.
-   Bertrand Néron    	Biology IT Center, Institut Pasteur, Paris.
-   Hervé Ménager       	Biology IT Center, Institut Pasteur, Paris.
+   Bertrand Néron    	Bioinformatic and Biostatistic Hub, Institut Pasteur, Paris.
 
    
-MacSyView also includes contributions from others, including 
-copyrighted and licensed code and technology:
-
-- JQuery
-  Url: http://jquery.com/
-  Author:
-  License:  MIT (see website for details)
-
-- JQuery-mousewheel
-  Url: https://github.com/brandonaaron/jquery-mousewheel
-  Author: Brandon Aaron
-  License:  MIT (see website for details)
-
-- Raphael
-  Url: http://raphaeljs.com/
-  Author: Dmitry Baranovskiy
-  License: MIT (see website for details)
-
-- Bootstrap
-  Url: http://getbootstrap.com/
-  Author: Mark Otto, Jacob Thornton
-  License:  MIT (see website for details)
-
-- Mustache
-  Url: http://github.com/janl/mustache.js
-  Author: Jan Lehnardt
-  License:  MIT (see website for details)
-  
-- Raphael.export
-  Url: https://github.com/ElbertF/Raphael.Export
-  Author: ElbertF
-  License:  MIT (see website for details)  
 
 -----------------------------------------------------------------
-The source code of MacSyFinder and MacSyView is distributed 
-under the terms of the GNU GeneralPublic License. 
+The source code of MacSyFinder is distributed
+under the terms of the GNU GeneralPublic License v3.
 See the file COPYING for details.
 
-Thess programs are free software: you can redistribute it and/or modify
+These programs are free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation version 3 of the License.
 
