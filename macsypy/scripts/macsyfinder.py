@@ -853,7 +853,7 @@ def main(args=None, loglevel=None):
             with open(system_filename, "w") as sys_file:
                 likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
 
-            cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
+            cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
             with open(cluster_filename, "w") as clst_file:
                 unlikely_systems_to_txt(rejected_clusters, clst_file)
 
