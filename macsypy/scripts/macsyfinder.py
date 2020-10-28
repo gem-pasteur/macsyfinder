@@ -470,7 +470,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
                                                                           logger)
             return likely_systems, rejected_hits
         else:
-            raise MacsypyError(f"dbtype have an invalid value {db_type}")
+            assert False, f"dbtype have an invalid value {db_type}"
     else:
         # No hits detected
         return [], []
