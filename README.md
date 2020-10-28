@@ -78,7 +78,7 @@ for public version on readthedocs
 
 ## Licence:
 
-MacSyFinder is developed and released under [open source licence GPLv3](https://opensource.org/licenses/GPL-3.0)
+MacSyFinder is developed and released under [![Open Source License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 
 ## Contributing 
 
