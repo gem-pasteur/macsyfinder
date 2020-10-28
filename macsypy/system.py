@@ -306,22 +306,22 @@ class MetaSetOfHits(abc.ABCMeta):
     two private attributes and one public property corresponding to each value
     of _supported_status class attribute defined in the concrete classes.
     for instance for System class
-    the attributes
+
+     * the attributes
         * self._mandatory
         * self._mandatory_occ
         * self._accessory
         * self._accessory_occ
         * self._neutral
         * self._neutral_occ
-
-    and the properties
+     * and the properties
         * mandatory
         * accessory
         * neutral
 
     are automatically injected
 
-    The value for attributes _<status>_occ are filled in count method
+    The value for attributes `_<status>_occ` are filled by the `count` method
     which is defined in AbstractSetOfHits
     """
 
