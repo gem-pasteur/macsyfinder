@@ -9,7 +9,7 @@
 .. _config:
 
 *************
-Configuration
+configuration
 *************
 
 Options to run MacSyFinder can be specified in a :ref:`Configuration file <config-definition-label>`.

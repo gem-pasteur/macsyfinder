@@ -9,7 +9,7 @@
 .. _system:
 
 ******
-System
+system
 ******
 
 This module classes and functions which a given set of hits and a model

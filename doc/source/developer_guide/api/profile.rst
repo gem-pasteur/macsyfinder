@@ -9,7 +9,7 @@
 .. _profile:
 
 *******
-Profile
+profile
 *******
 
 The :ref:`Profile object <profile-implementation>` is used for the search of the gene with Hmmer.

@@ -10,7 +10,7 @@
 
 
 ***
-Hit
+hit
 ***
 
 A Hit is created when `hmmsearch` find similarities between a profile and protein of the input dataset
