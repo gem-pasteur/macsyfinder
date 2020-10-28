@@ -1,0 +1,41 @@
+# macsyfinder 20201028.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
+# Systems found:
+
+This replicon contains genetic materials needed for system TFF-SF/T4P_single_locus
+
+
+system id = Unordered_T4P_single_locus_1
+model = TFF-SF/T4P_single_locus
+replicon = Unordered
+hits = [('GCF_000006845_000250', 'T4P_pilY', 25), ('GCF_000006845_000700', 'T4P_pilY', 70), ('GCF_000006845_001030', 'T4P_pilQ', 103), ('GCF_000006845_001040', 'T4P_pilP', 104), ('GCF_000006845_001050', 'T4P_pilO', 105), ('GCF_000006845_001060', 'T4P_pilN', 106), ('GCF_000006845_001070', 'T4P_pilM', 107), ('GCF_000006845_003200', 'T4P_pilU', 320), ('GCF_000006845_004190', 'T4P_fimT', 419), ('GCF_000006845_004200', 'T4P_pilV', 420), ('GCF_000006845_004210', 'T4P_pilW', 421), ('GCF_000006845_004220', 'T4P_pilX', 422), ('GCF_000006845_004230', 'T4P_pilA', 423), ('GCF_000006845_010160', 'T4P_pilA', 1016), ('GCF_000006845_012440', 'T4P_pilA', 1244), ('GCF_000006845_014270', 'T4P_pilC', 1427), ('GCF_000006845_014280', 'T4P_pilD', 1428), ('GCF_000006845_014310', 'T4P_pilB', 1431), ('GCF_000006845_016430', 'T4P_pilT', 1643), ('GCF_000006845_016440', 'T4P_pilU', 1644)]
+wholeness = 0.889
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD)
+
+accessory genes:
+	- T4P_pilA: 3 (T4P_pilA, T4P_pilA, T4P_pilA)
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 2 (T4P_pilY, T4P_pilY)
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 2 (T4P_pilU, T4P_pilU)
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+forbidden genes:
+
+Use ordered replicon to have better prediction.
+
