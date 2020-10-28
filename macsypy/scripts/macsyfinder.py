@@ -651,7 +651,7 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
             sys_serializer = TxtLikelySystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
     else:
-        print("# No LikelySystems found", file=sys_file)
+        print("# No Likely Systems found", file=sys_file)
 
 
 def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
@@ -675,7 +675,7 @@ def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
             sys_serializer = TsvLikelySystemSerializer()
             print(sys_serializer.serialize(l_system, hit_system_tracker), file=sys_file)
     else:
-        print("# No Systems found", file=sys_file)
+        print("# No Likely Systems found", file=sys_file)
 
 
 def unlikely_systems_to_txt(unlikely_systems, sys_file):
@@ -696,7 +696,7 @@ def unlikely_systems_to_txt(unlikely_systems, sys_file):
             print(sys_serializer.serialize(system), file=sys_file)
             print("=" * 60, file=sys_file)
     else:
-        print("# No LikelySystems found", file=sys_file)
+        print("# No Unlikely Systems found", file=sys_file)
 
 
 def main(args=None, loglevel=None):
