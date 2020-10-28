@@ -10,7 +10,7 @@
 
 
 ************
-search genes
+search_genes
 ************
 
 manage the paralelization of code which execute *in fine* `hmmsearch` to find the genes constituting the models

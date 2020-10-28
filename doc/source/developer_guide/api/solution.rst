@@ -9,7 +9,7 @@
 .. _solution:
 
 ********
-Solution
+solution
 ********
 
 MacSyFinder find lot of potential systems for the same model,

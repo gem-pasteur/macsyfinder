@@ -8,9 +8,9 @@
     
 .. _definition_parser:
 
-****************
-DefinitionParser
-****************
+*****************
+definition_parser
+*****************
 
 The model definition parser object "DefinitionParser" instantiates Models and Genes objects from
 XML model definitions (see :ref:`model_definition`).

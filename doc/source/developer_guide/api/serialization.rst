@@ -9,7 +9,7 @@
 .. _serialization:
 
 *************
-Serialization
+serialization
 *************
 
 This module is a technical module where we can find the different way
