@@ -475,6 +475,8 @@ class System(AbstractSetOfHits):
         """
         score = sum([clst.score for clst in self.clusters])
         for gene in self.model.mandatory_genes + self.model.accessory_genes:
+            # it cannot be forbidden gene in System instance
+            # the neutral genes do not play a role in score (only to build clusters)
             clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
             if clst_having_hit:
                 clst_penalty = (clst_having_hit - 1) * 1.5
