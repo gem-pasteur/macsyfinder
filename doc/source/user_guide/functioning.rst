@@ -16,10 +16,6 @@ MacSyFinder's functioning
 Functioning overview
 ********************
 
-    .. image:: ../_static/MSF_functioning.svg
-     :height: 500px
-     :align: left
-
 .. A. MacSyFinder is run from the command-line using a variety of input files and options.
    See :ref:`input-dataset-label` for more details.
 
@@ -36,6 +32,10 @@ See :ref:`input-dataset-label` for more details. Below follows a description of 
 A. Searching for Systems' components
 ************************************
 
+   .. image:: ../_static/msf_functionning_step1.svg
+     :height: 500px
+     :align: left
+
 Initially, MacSyFinder **searches for the components** of the `System(s)` to detect by sequence similarity search.
 
 From the list of `System(s)` to detect, a **non-redundant list of components to search** is built.
@@ -45,7 +45,8 @@ For each system, the list can include:
     - accessory components
     - neutral components
     - forbidden components
-    - exchangeable components that can be functionally replaced by other components (usually by analogs or homologs). These other components are thus also added to the list of components to search.
+    - exchangeable components that can be functionally replaced by other components (usually by analogs or homologs).
+      These other components are thus also added to the list of components to search.
 
 
 See :ref:`here for more details on writing MacSyFinder's models. <writing-models>`
@@ -61,10 +62,15 @@ See the :ref:`command-line-label`, and the :ref:`search_genes API <search_genes>
 B. Hits browsing
 ****************
 
+   .. image:: ../_static/msf_functionning_step2.svg
+     :height: 500px
+     :align: left
+
 The following steps depend on whether the input dataset is **ordered** (complete or nearly complete genome(s)),
 or **unordered**  (metagenomes, or unassembled genome(s)) (see :ref:`input-dataset-label`).
 
-In the case of **ordered datasets** (`ordered_replicon` or `gembase` search mode), the hits are filtered to keep only hits related to the system's model we are looking for.
+In the case of **ordered datasets** (`ordered_replicon` or `gembase` search mode),
+the hits are filtered to keep only hits related to the system's model we are looking for.
 These hits are used to build **clusters of co-localized genes** as defined in the macsy-model files.
 These clusters are then screened to check for the model specifications such as the minimal quorum of
 "Mandatory" or "Accessory" genes, or the absence of "Forbidden" components.
@@ -115,6 +121,10 @@ For unordered datasets, the **search so ends**, and MacSyFinder generates the fi
 C. Computing candidate Systems' scores (ordered mode)
 *****************************************************
 
+   .. image:: ../_static/msf_functionning_step3.svg
+     :height: 500px
+     :align: left
+
 This step only applies to the most powerful search mode, i.e., on **ordered datasets**. ``NEW in V2``
 
 The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of Systems in replicons analysed. 
@@ -148,18 +158,35 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 
    This search for candidate `Systems` results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
 
+*********************************************************************
+D. Repeat operation B and C with the next model
+*********************************************************************
+
+.. image:: ../_static/msf_functionning_step4.svg
+     :height: 500px
+     :align: left
 
 *********************************************************************
-D. Computing possible Solutions, defining the best one (ordered mode)
+E. Computing possible Solutions, defining the best one (ordered mode)
 *********************************************************************
 
-At the end of the previous step MacSyFinder has computed all potential `Systems` present in the replicon, made of combinations of Clusters and `loner` components that fulfill the model's requirements, which are themselves made of a subset of Hits (remember, Hits are at 1st filtered and treated separately for each model of System to be detected). Candidate `Systems` may thus overlap by being partly made of the same components, or even partly being made of the same Clusters. 
+   .. image:: ../_static/msf_functionning_step5.svg
+     :height: 500px
+     :align: left
+
+At the end of the previous step MacSyFinder has computed all potential `Systems` present in the replicon,
+made of combinations of Clusters and `loner` components that fulfill the model's requirements,
+which are themselves made of a subset of Hits (remember, Hits are at 1st filtered and treated separately for each model of System to be detected).
+Candidate `Systems` may thus overlap by being partly made of the same components, or even partly being made of the same Clusters.
 
 We define a `Solution` as being **a set of compatible Systems**, i.e. that do not have any overlaps between their components.
 All possible `Solutions` are combinatorially explored and consist in all possible sets of compatible `Systems`. 
 
 A scoring scheme enables to separate between sets of `Solution`. A **Solution's score** is basically the **sum of its Systems' scores**.  
-The overall procedure of exploring the space of all possible `Solutions` while finding the optimal one, i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``. 
+The overall procedure of exploring the space of all possible `Solutions` while finding the optimal one,
+i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
+We create a graph where each potential systems are vertex we create an edge between two vertex if they do not share any components.
+Once the graph is created we looking for the maximal clique which maximize the score.
 This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible Systems. 
 
 
