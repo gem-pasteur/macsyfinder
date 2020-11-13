@@ -110,13 +110,4 @@ To run the detection using the topology file, type::
     macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta \
     --topology-file /share/macsyfinder/sequence_data/datatest_gembase.topology all
 
-Visualizing expected results with MacSyView
-*******************************************
-
-To have an idea of what should be detected with the above test dataset, run :ref:`MacSyView <macsyview>`,
-the web-browser application for MacSyFinder's results visualization.
-To do that, open the expected JSON result file with MacSyView: /share/macsyfinder/sequence_data/results.macsyfinder.json.
-
-A screenshot of MacSyView is included :ref:`here <screenshot>`.
-
 
