@@ -98,14 +98,19 @@ For *ordered* datasets: building clusters of components
     The `loner` components may form a cluster on their own.
 
    
-The above two steps are reiterated for each system being searched. Once done, the :ref:`next step <combinatorial-exploration>` is performed. 
+The above two steps are reiterated for each models being searched. Once done, the :ref:`next step <combinatorial-exploration>` is performed.
+
+.. note::
+    The clusters which not fulfill the quorum requirements are stored in :ref:`rejected_clusters.txt <rejected_clusters_file>` file.
+
 
 For *unordered* datasets: 
 -------------------------
 
 1. The Hits are filtered by model.
 2. They are used to check if they reach the quorum (i.e., the clustering step is skipped as there is no notion of genetic distance in this search mode).
-3. For each system, if the quorum is reached, hits are reported in the ***XXXX output file XXXX***. It has to be noted that forbidden components are listed too, as they can also be informative for the user. 
+3. For each system, if the quorum is reached, hits are reported in the ***XXXX output file XXXX***.
+   It has to be noted that forbidden components are listed too, as they can also be informative for the user.
 
 .. note::
     The "unordered" mode of detection is less powerful, as a single occurrence of a given model is filled for
