@@ -25,7 +25,9 @@ specified by the user. For instance, the Hmmer search for SctC homologs with the
 will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract".
 
 The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for
-hits filtering and relevant information on the matches, as for instance::
+hits filtering and relevant information on the matches, as for instance
+
+.. code-block:: text
 
   # gene: sctC extract from /Users/bob/macsyfinder_results/
         macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
@@ -99,7 +101,9 @@ Then for each replicon, a list of systems detected each systems is described wit
       in parenthesis the name of profile that match
       in square bracket the name of other putative systems where this gene is involved.
 
-macsyfinder.txt example ::
+macsyfinder.txt example
+
+.. code-block:: text
 
     # macsyfinder 20200217.dev
     # macsyfinder --sequence-db DATA_TEST/sequences.prt --db-type=gembase --models-dir data/models/ --models TFF-SF_final all -w 4
@@ -179,6 +183,44 @@ macsyfinder.txt example ::
 
     neutral genes:
 
+.. _rejected_clusters_file:
+
+rejected_clusters.txt
+*********************
+
+This file record all clusters or cluster combination (if  multi_loci is true) which have been discarded and the reason
+why they do not are systems.
+
+The header is composed of the MacSyFinder version and the command line used
+following by the description of the cluster(s). The list of hits composing the cluster.
+at the end of the cluster or clusters combination the reason why it  has been discarded.
+
+.. code-block:: text
+
+    # macsyfinder 20200511.dev
+    # /macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
+    # Rejected clusters:
+
+    Cluster:
+        - model: T4P
+        - hits: (GCF_000005845_025680, T4P_pilW, 2568), (GCF_000005845_025690, T4P_fimT, 2569)
+    Cluster:
+        - model: T4P
+        - hits: (GCF_000005845_026930, T2SS_gspO, 2693)
+    Cluster:
+        - model: T4P
+        - hits: (GCF_000005845_030080, T2SS_gspO, 3008)
+    These clusters has been rejected because:
+    The quorum of mandatory genes required (4) is not reached: 1
+    The quorum of genes required (5) is not reached: 3
+    ============================================================
+    Cluster:
+        - model: Archaeal-T4P
+        - hits: (GCF_000005845_019260, Archaeal-T4P_arCOG00589, 1926), (GCF_000005845_019310, Archaeal-T4P_arCOG02900, 1931)
+    These clusters has been rejected because:
+    The quorum of mandatory genes required (3) is not reached: 0
+    The quorum of genes required (3) is not reached: 2
+    ============================================================
 
 
 systems.tsv
