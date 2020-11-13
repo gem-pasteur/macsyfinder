@@ -50,24 +50,42 @@ hits filtering and relevant information on the matches, as for instance
     Each tabular output file contains a header line describing each column in the output.
 
 
+.. _ordered_outputs:
+
+Outputs file for ordered replicon
+*********************************
+
+-------------------------
 Systems detection results
 -------------------------
 
-Different types of output files are provided, human-readable files ".txt", and tabulated files ".tsv". For the latter, headers are provided with the content of the lines in the file.
+Different types of output files are provided, human-readable files ".txt", and tabulated files ".tsv". For the latter,
+headers are provided with the content of the lines in the file.
 
 
-  * `best_solution_report.tsv` - This file contains the best solution found by MacSyFinder in terms of systems detected, under the form of a per-component, tabulated report file. If multiple solutions showed a maximal score, the solution maximizing 1) the number of components in systems and 2) the number of systems detected is proposed. To see potential other best solutions, see file "all_best_solutions.tsv". This file is the most similar to former V1 file `macsyfinder.report`. 
+  * **`best_solution_report.tsv`** - This file contains the best solution found by MacSyFinder in terms of systems detected,
+    under the form of a per-component, tabulated report file.
+    If multiple solutions showed a maximal score, the solution maximizing
 
-  * `best_solution_summary.tsv` - This file consists in a table describing the content in detected systems for each replicon analysed. 
+        1. the number of components in systems and
+        2. the number of systems detected is proposed.
 
-  * `all_best_solutions.tsv` - This file contains all possible best solutions under the form of a per-component, tabulated report file. To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`. 
+    To see potential other best solutions, see file "all_best_solutions.tsv".
+    This file is the most similar to former V1 file `macsyfinder.report`.
 
-  * `all_eligible_systems.tsv` - This file contains all possible candidate systems given the definitions - without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. 
+  * **`best_solution_summary.tsv`** - This file consists in a table describing the content in detected systems for each replicon analysed.
 
-  * `systems_search.txt` - This file describes the search process of all possible candidate systems given the definitions - without processing of the potential overlaps between candidate systems. 
+  * **`all_best_solutions.tsv`** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
+    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
-  * `rejected_clusters.txt` - This file lists candidate clusters of systems' components that were rejected by MacSyFinder during the search process, and were thus not assigned to a candidate system. 
+  * **`all_eligible_systems.tsv`** - This file contains all possible candidate systems given the definitions -
+    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file.
 
+  * **`systems_search.txt`** - This file describes the search process of all possible candidate systems given the definitions -
+    without processing of the potential overlaps between candidate systems.
+
+  * **`rejected_clusters.txt`** - This file lists candidate clusters of systems' components that were rejected by
+    MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
 
 To be amended/removed:
@@ -77,7 +95,8 @@ To be amended/removed:
 
 
 systems.txt
-***********
+-----------
+
 start with some comments
     - the version of macsyfinder used
     - the command line used to produce this file
@@ -183,10 +202,11 @@ macsyfinder.txt example
 
     neutral genes:
 
+
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
-*********************
+---------------------
 
 This file record all clusters or cluster combination (if  multi_loci is true) which have been discarded and the reason
 why they do not are systems.
@@ -224,7 +244,7 @@ at the end of the cluster or clusters combination the reason why it  has been di
 
 
 systems.tsv
-***********
+-----------
 
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
@@ -256,13 +276,179 @@ This file can be easily parsed python `pandas <https://pandas.pydata.org/>`_ lib
 
 
 best_systems.tsv
-****************
+----------------
 
 This file has the same structure as all_systems.tsv except that there is an extra column **sol_id** which is an
 solution identifier. So the systems which have the same sol_id belong to the same solution
 (we call solution, the best combination of systems).
 
 As the file has the same structure as all_systems.tsv it can be parsed also with pandas
+
+
+.. _unordered_outputs:
+
+Outputs file for unordered replicon
+***********************************
+
+-------------------------
+Systems detection results
+-------------------------
+
+As for ordered replicons, several output files are provided.
+
+    * **`all_possible_systems.txt`** - This file contains putative systems found.
+    * **`all_possible_systems.tsv`** - The same information as `all_possible_systems.txt` but in tsv format.
+    * **`uncomplete_systems.txt`** - This file contains models which definitions are not complete to form systems.
+
+
+
+all_possible_systems.txt
+------------------------
+
+This file contains potential systems for unordered replicon in human readable format . As there is no notion of distance we skip the clustering step
+is skiped. We only check if the genetics contents is compatible with the model definitions
+In this file for each searched model we report for each gen of the model if one or several hits has been found
+
+.. warning::
+    in this mode the forbidden gene a re report here. As we do not know if tey clusterize with the other genes they can
+    be present in the replicon far away the potential system.
+
+.. code-block:: text
+
+    # macsyfinder 20201028.dev
+    # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
+    # Systems found:
+
+    This replicon contains genetic materials needed for system TFF-SF/T4P_single_locus
+
+
+    system id = Unordered_T4P_single_locus_1
+    model = TFF-SF/T4P_single_locus
+    replicon = Unordered
+    hits = [('GCF_000006845_000250', 'T4P_pilY', 25), ('GCF_000006845_000700', 'T4P_pilY', 70), ('GCF_000006845_001030', 'T4P_pilQ', 103), ('GCF_000006845_001040', 'T4P_pilP', 104), ('GCF_000006845_001050', 'T4P_pilO', 105), ('GCF_000006845_001060', 'T4P_pilN', 106), ('GCF_000006845_001070', 'T4P_pilM', 107), ('GCF_000006845_003200', 'T4P_pilU', 320), ('GCF_000006845_004190', 'T4P_fimT', 419), ('GCF_000006845_004200', 'T4P_pilV', 420), ('GCF_000006845_004210', 'T4P_pilW', 421), ('GCF_000006845_004220', 'T4P_pilX', 422), ('GCF_000006845_004230', 'T4P_pilA', 423), ('GCF_000006845_010160', 'T4P_pilA', 1016), ('GCF_000006845_012440', 'T4P_pilA', 1244), ('GCF_000006845_014270', 'T4P_pilC', 1427), ('GCF_000006845_014280', 'T4P_pilD', 1428), ('GCF_000006845_014310', 'T4P_pilB', 1431), ('GCF_000006845_016430', 'T4P_pilT', 1643), ('GCF_000006845_016440', 'T4P_pilU', 1644)]
+    wholeness = 0.889
+
+    mandatory genes:
+        - T4P_pilE: 0 ()
+        - T4P_pilB: 1 (T4P_pilB)
+        - T4P_pilC: 1 (T4P_pilC)
+        - T4P_pilO: 1 (T4P_pilO)
+        - T4P_pilQ: 1 (T4P_pilQ)
+        - T4P_pilN: 1 (T4P_pilN)
+        - T4P_pilT: 1 (T4P_pilT)
+        - T4P_pilD: 1 (T4P_pilD)
+
+    accessory genes:
+        - T4P_pilA: 3 (T4P_pilA, T4P_pilA, T4P_pilA)
+        - T4P_pilV: 1 (T4P_pilV)
+        - T4P_pilY: 2 (T4P_pilY, T4P_pilY)
+        - T4P_pilW: 1 (T4P_pilW)
+        - T4P_pilX: 1 (T4P_pilX)
+        - T4P_fimT: 1 (T4P_fimT)
+        - T4P_pilM: 1 (T4P_pilM)
+        - T4P_pilP: 1 (T4P_pilP)
+        - T4P_pilU: 2 (T4P_pilU, T4P_pilU)
+        - MSH_mshM: 0 ()
+
+    neutral genes:
+
+    forbidden genes:
+
+    Use ordered replicon to have better prediction.
+
+
+all_possible_systems.tsv
+------------------------
+
+This file contains the same informations as `all_possible_systems.txt` but in `tsv` format.
+
+.. note::
+
+    This file can be easily parsed with pandas.::
+
+        import pandas as pd
+        pot_systems = pd.read_csv('allpossible_systems.tsv', sep='\t', comment='#')
+
+
+.. code-block:: text
+
+    # macsyfinder 20201028.dev
+    # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
+    # Likely Systems found:
+
+    replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_wholeness	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in
+    Unordered	GCF_000006845_014310	T4P_pilB	1431	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilB	mandatory	558	3.8e-178	589.000	0.964	0.731	146	553
+    Unordered	GCF_000006845_014270	T4P_pilC	1427	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilC	mandatory	410	1.9e-131	434.800	0.997	0.817	72	406
+    Unordered	GCF_000006845_014280	T4P_pilD	1428	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilD	mandatory	286	2.8e-82	272.300	1.000	0.829	28	264
+    Unordered	GCF_000006845_001060	T4P_pilN	106	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilN	mandatory	199	2.3e-33	112.200	0.986	0.714	7	148
+    Unordered	GCF_000006845_001050	T4P_pilO	105	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilO	mandatory	215	2.9e-37	124.800	0.980	0.693	23	171
+    Unordered	GCF_000006845_001030	T4P_pilQ	103	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilQ	mandatory	723	1.9e-62	206.600	0.935	0.238	548	719
+    Unordered	GCF_000006845_016430	T4P_pilT	1643	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilT	mandatory	347	6.9e-167	551.400	0.997	0.983	2	342
+    Unordered	GCF_000006845_004190	T4P_fimT	419	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_fimT	accessory	221	2.7e-23	78.900	0.985	0.294	7	71
+    Unordered	GCF_000006845_004230	T4P_pilA	423	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilA	accessory	162	8.6e-20	67.800	0.744	0.389	9	71
+    Unordered	GCF_000006845_010160	T4P_pilA	1016	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilA	accessory	149	1.3e-15	54.300	0.821	0.430	5	68
+    Unordered	GCF_000006845_012440	T4P_pilA	1244	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilA	accessory	129	1.5e-19	67.000	0.859	0.519	6	72
+    Unordered	GCF_000006845_001070	T4P_pilM	107	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilM	accessory	371	3.3e-43	144.300	0.988	0.429	30	188
+    Unordered	GCF_000006845_001040	T4P_pilP	104	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilP	accessory	181	2.7e-34	115.600	1.000	0.735	13	145
+    Unordered	GCF_000006845_003200	T4P_pilU	320	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilU	accessory	376	2.2e-170	562.600	0.985	0.896	16	352
+    Unordered	GCF_000006845_016440	T4P_pilU	1644	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilU	accessory	408	1.5e-127	421.800	0.994	0.833	40	379
+    Unordered	GCF_000006845_004200	T4P_pilV	420	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilV	accessory	203	9.6e-16	54.600	1.000	0.276	14	69
+    Unordered	GCF_000006845_004210	T4P_pilW	421	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilW	accessory	326	1.7e-10	38.000	0.517	0.190	17	78
+    Unordered	GCF_000006845_004220	T4P_pilX	422	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilX	accessory	203	2.8e-18	62.600	0.983	0.286	17	74
+    Unordered	GCF_000006845_000250	T4P_pilY	25	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilY	accessory	1006	2.2e-57	191.700	0.728	0.389	463	853
+    Unordered	GCF_000006845_000700	T4P_pilY	70	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilY	accessory	1047	1.9e-57	191.900	0.721	0.362	516	894
+
+
+uncomplete_systems.txt
+----------------------
+
+This file is created when a search in ordered replicon is performed.
+This file list models which have probably not systems in the replicon.
+For each models there reason why these components does not fulfill the model description is write.
+followed by the model description and the components found.
+
+.. code-block:: text
+
+    # macsyfinder 20201113.dev
+    # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF all
+    # Unlikely Systems found:
+
+    This replicon probably not contains a system TFF-SF/T2SS:
+    The quorum of mandatory genes required (4) is not reached: 1
+    The quorum of genes required (6) is not reached: 2
+
+    system id = Unordered_T2SS_3
+    model = TFF-SF/T2SS
+    replicon = Unordered
+    hits = [('GCF_000006845_002600', 'Tad_tadD', 260), ('GCF_000006845_014280', 'T4P_pilD', 1428), ('GCF_000006845_016430', 'T4P_pilT', 1643)]
+    wholeness = 0.143
+
+    mandatory genes:
+            - T2SS_gspD: 0 ()
+            - T2SS_gspE: 0 ()
+            - T2SS_gspF: 0 ()
+            - T2SS_gspG: 0 ()
+            - T2SS_gspC: 0 ()
+            - T2SS_gspO: 1 (T4P_pilD)
+
+    accessory genes:
+            - T2SS_gspM: 0 ()
+            - T2SS_gspH: 0 ()
+            - T2SS_gspI: 0 ()
+            - T2SS_gspJ: 0 ()
+            - T2SS_gspK: 0 ()
+            - T2SS_gspN: 0 ()
+            - T2SS_gspL: 0 ()
+            - Tad_tadD: 1 (Tad_tadD)
+
+    neutral genes:
+
+    forbidden genes:
+            - T4P_pilT: 1 (T4P_pilT)
+
+    Use ordered replicon to have better prediction.
+
+    ============================================================
 
 
 Logs and configuration files
