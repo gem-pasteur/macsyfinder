@@ -53,8 +53,13 @@ hits filtering and relevant information on the matches, as in this example:
 
 .. _ordered_outputs:
 
-Output files for ordered replicon
-*********************************
+Output files for the "ordered replicon(s)" search modes
+-------------------------------------------------------
+
+
+These output files are provided when MacSyFinder search proceeds on a set of proteins that are deemed to follow the order of their genes on replicons. 
+This corresponds to the two search modes "gembase" and "ordered_replicon". 
+
 
 -------------------------
 Systems detection results
@@ -98,30 +103,30 @@ To be amended/removed:
 systems.txt
 -----------
 
-start with some comments
-    - the version of macsyfinder used
+The file starts with some comments:
+    - the version of MacSyFinder used
     - the command line used to produce this file
 
-Then for each replicon, a list of systems detected each systems is described with
-    - **system_id** the unique identifier of a systems
-    - **model** the model used to assigned this systems
-    - **replicon** the name of the replicon
-    - **clusters** the clusters composition of this system.
-        - each clusters is a list of tuple.
+Then for each replicon, the systems detected are listed along with their description:
+    - **system_id** the unique identifier of a system
+    - **model** the model assigned to this system
+    - **replicon** the name of the replicon harbouring the system
+    - **clusters** the clusters composition of this system
+        - each clusters is a list of tuple
         - each tuple is composed of:
-            - the name of the matching gene in the replicon
-            - the name of the gene profile
-            - the position of the sequence in the replicon
+            - the name of the matching gene(s) in the replicon
+            - the name of the corresponding gene profile(s)
+            - the position of the corresponding sequence(s) along the replicon
 
-    - **occurrence** the estimated number of occurrence
-    - **wholeness** The % of model
-    - **loci nb** The number of loci
-    - **score** The system score
-    - **systems components** the number of occurrence of each model components.
-      in parenthesis the name of profile that match
-      in square bracket the name of other putative systems where this gene is involved.
+    - **occurrence** the average number of occurrences of each components of the system (as a potential proxy to estimate whether there's the genetic potential for multiple systems in one)
+    - **wholeness** the percentage of the model's components that were found in this system
+    - **loci nb** the number of different loci constituting this system
+    - **score** the score of the system. See `here <XXXX>` for more details
+    - **systems components** the number of occurrences of each model components
+      in parenthesis the name of the matching profile 
+      in square brackets the name of other putative systems that would involve this gene
 
-macsyfinder.txt example
+Here is an example of a "systems.txt" file:
 
 .. code-block:: text
 
@@ -209,12 +214,12 @@ macsyfinder.txt example
 rejected_clusters.txt
 ---------------------
 
-This file record all clusters or cluster combination (if  multi_loci is true) which have been discarded and the reason
-why they do not are systems.
+This file records all clusters or cluster combinations (if the "multi_loci" search mode is on) which have been discarded and the reason
+why they were not selected as systems.
 
 The header is composed of the MacSyFinder version and the command line used
-following by the description of the cluster(s). The list of hits composing the cluster.
-at the end of the cluster or clusters combination the reason why it  has been discarded.
+followed by the description of the cluster(s). The list of the hits composing the cluster is presented
+at the end of the cluster or clusters' combination, followed by the reason why it has been discarded.
 
 .. code-block:: text
 
@@ -231,14 +236,14 @@ at the end of the cluster or clusters combination the reason why it  has been di
     Cluster:
         - model: T4P
         - hits: (GCF_000005845_030080, T2SS_gspO, 3008)
-    These clusters has been rejected because:
+    These clusters have been rejected because:
     The quorum of mandatory genes required (4) is not reached: 1
     The quorum of genes required (5) is not reached: 3
     ============================================================
     Cluster:
         - model: Archaeal-T4P
         - hits: (GCF_000005845_019260, Archaeal-T4P_arCOG00589, 1926), (GCF_000005845_019310, Archaeal-T4P_arCOG02900, 1931)
-    These clusters has been rejected because:
+    These clusters have been rejected because:
     The quorum of mandatory genes required (3) is not reached: 0
     The quorum of genes required (3) is not reached: 2
     ============================================================
@@ -252,44 +257,47 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **hit_id** - the unique identifier of the hit
     * **replicon** - the name of the replicon it belongs to
     * **hit_pos** - the position of the sequence in the replicon
-    * **model_fqn** - the model fully qualified name
+    * **model_fqn** - the model fully-qualified name
     * **system_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
-    * **hit_gene_ref** - the gene in the model for which this hit play the role
+    * **hit_gene_ref** - the gene in the model for which this hit plays the role
     * **hit_status** - the status of the component in the assigned system's definition
-    * **hit_seq_len** - the length of the proteiq sequence match by this hit
-    * **hit_i_evalue** - Hmmer statistics, the indepent-evalue
+    * **hit_seq_len** - the length of the protein sequence matched by this hit
+    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
     * **hit_score** - Hmmer score
     * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
 
-This file can be easily parsed python `pandas <https://pandas.pydata.org/>`_ library. ::
+This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
 
     import pandas as pd
 
     systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
 
 .. note::
-    each system reported is separated form the others with a blank line, theses lines are ignored during pandas parsing.
+    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
 
 
 best_systems.tsv
 ----------------
 
-This file has the same structure as all_systems.tsv except that there is an extra column **sol_id** which is an
-solution identifier. So the systems which have the same sol_id belong to the same solution
-(we call solution, the best combination of systems).
+Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
 
-As the file has the same structure as all_systems.tsv it can be parsed also with pandas
+The "best_systems.tsv" file has the same structure as the file "all_systems.tsv", except that there is an extra column **sol_id** which is a
+solution identifier. The systems that have the same "sol_id" belong to a same solution. 
+
+As the file has the same structure as all_systems.tsv it can also be parsed with pandas as shown above. 
 
 
 .. _unordered_outputs:
 
-Outputs file for unordered replicon
-***********************************
+
+Outputs file for the "unordered replicon" search mode
+-----------------------------------------------------
+
 
 -------------------------
 Systems detection results
