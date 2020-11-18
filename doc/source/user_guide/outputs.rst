@@ -12,20 +12,21 @@
 Output format
 *************
 
-MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder,
+MacSyFinder provides different types of output files. At each run, MacSyFinder creates a new folder,
 whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46".
-MacSyFinder outputs are stored in this run-specific folder.
+MacSyFinder output files are stored in this run-specific folder.
 
 .. _hmmer-outputs-label:
 
-Hmmer results outputs 
----------------------
-Raw Hmmer outputs are provided, as long with processed tabular outputs that includes hits filtered as
+Hmmer results' output files 
+---------------------------
+Raw Hmmer outputs are provided, as long with processed tabular outputs that include hits filtered as
 specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
-will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract".
+will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and 
+"sctC.res_hmm_extract" for the output file after processing/filtering of the HMMER results by MacSyFinder.
 
-The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for
-hits filtering and relevant information on the matches, as for instance
+The processed output file "sctC.res_hmm_extract" recalls on the first lines the parameters used for
+hits filtering and relevant information on the matches, as in this example:
 
 .. code-block:: text
 
@@ -52,7 +53,7 @@ hits filtering and relevant information on the matches, as for instance
 
 .. _ordered_outputs:
 
-Outputs file for ordered replicon
+Output files for ordered replicon
 *********************************
 
 -------------------------
