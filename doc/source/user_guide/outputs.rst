@@ -99,7 +99,7 @@ headers are provided with the content of the lines in the file.
 
 
 all_systems.txt
----------------
+~~~~~~~~~~~~~~~
 
 ..
 	systems.txt
@@ -216,7 +216,7 @@ Here is an example of the `all_systems.txt` file:
 .. _all_systems_tsv:
 
 all_systems.tsv
----------------
+~~~~~~~~~~~~~~~
 
 ..
 	systems.tsv
@@ -252,7 +252,7 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 
 
 best_solution_report.tsv and all_best_solutions.tsv
----------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ..
 	best_systems.tsv
@@ -292,7 +292,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 This file records all clusters or cluster combinations (if the "multi_loci" search mode is on) which have been discarded and the reason
 why they were not selected as systems.
@@ -336,7 +336,7 @@ at the end of the cluster or clusters' combination, followed by the reason why i
 .. _unordered_outputs:
 
 
-Outputs file for the "unordered replicon" search mode
+Output files for the "unordered replicon" search mode
 -----------------------------------------------------
 
 
@@ -346,22 +346,25 @@ Systems detection results
 
 As for ordered replicons, several output files are provided.
 
-    * **`all_possible_systems.txt`** - This file contains putative systems found.
-    * **`all_possible_systems.tsv`** - The same information as `all_possible_systems.txt` but in tsv format.
-    * **`uncomplete_systems.txt`** - This file contains models which definitions are not complete to form systems.
+    * **all_possible_systems.txt** - This file contains the description of candidate systems found.
+    * **all_possible_systems.tsv** - The same information as in `all_possible_systems.txt` but in the tabulated tsv format.
+    * **uncomplete_systems.txt** - This file contains occurrences for systems that did not complete models' definitions and that were therefore not kept as candidate systems.
 
+
+In this `unordered` search mode, there is no notion of order or distance of the components along the replicon. The clustering step
+is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
 
 
 all_possible_systems.txt
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-This file contains potential systems for unordered replicon in human readable format . As there is no notion of distance we skip the clustering step
-is skiped. We only check if the genetics contents is compatible with the model definitions
-In this file for each searched model we report for each gen of the model if one or several hits has been found
+This file contains potential systems for unordered replicon in human readable format. 
+
+In this file, for each component of each searched system's model, we report the number of hits found.
 
 .. warning::
-    in this mode the forbidden gene a re report here. As we do not know if tey clusterize with the other genes they can
-    be present in the replicon far away the potential system.
+    In this mode the `forbidden` genes are reported here to the user. As we do not know if they co-localize (cluster) with the other genes they could
+    be present in the replicon, yet far away - or very close on the contrary - to the potential system.
 
 .. code-block:: text
 
@@ -408,9 +411,9 @@ In this file for each searched model we report for each gen of the model if one 
 
 
 all_possible_systems.tsv
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-This file contains the same informations as `all_possible_systems.txt` but in `tsv` format.
+This file contains the same information as in `all_possible_systems.txt` but in `tsv` format.
 
 .. note::
 
@@ -450,11 +453,11 @@ This file contains the same informations as `all_possible_systems.txt` but in `t
 
 
 uncomplete_systems.txt
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
-This file is created when a search in ordered replicon is performed.
-This file list models which have probably not systems in the replicon.
-For each models there reason why these components does not fulfill the model description is write.
+This file is created when a search is performed in the `unordered replicon` mode.
+This file list models that probably do not have not full systems in the replicon(s).
+For each model, the reason why it is not fulfilled is reported, 
 followed by the model description and the components found.
 
 .. code-block:: text
@@ -504,8 +507,8 @@ followed by the model description and the components found.
 Logs and configuration files
 ----------------------------
 
-Three specific output files are built to store information on the MacSyFinder execution: 
+Three specific output files are systematically built, whatever the search mode, to store information on MacSyFinder's execution: 
 
- * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run.
- * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
+ * macsyfinder.conf - contains the configuration information of the run. It is useful to recover all the parameters used for the run.
+ * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any **bug report**. 
 
