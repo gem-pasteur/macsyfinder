@@ -78,14 +78,14 @@ headers are provided with the content of the lines in the file.
 
     To see potential other best solutions (in case several obtained the same highest score), see file `all_best_solutions.tsv`. 
 
-    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_eligible_systems.tsv`. 
+    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
     
     The `best_solution_report.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
 
   * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
-    under the form of a tabulated file in `all_eligible_systems.tsv`.
+    under the form of a tabulated file in `all_systems.tsv`.
 
   * **rejected_clusters.txt** - This file lists candidate clusters of systems' components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
@@ -93,13 +93,9 @@ headers are provided with the content of the lines in the file.
   * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
-  * **all_eligible_systems.tsv** - This file contains all possible candidate systems given the definitions -
+  * **all_systems.tsv** - This file contains all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
     to the tabulated version of the `all_systems.txt` file.  
-
-
-best_solution_report.tsv
-------------------------
 
 
 all_systems.txt
@@ -131,7 +127,7 @@ Then for each replicon, the systems detected are listed along with their descrip
       in parenthesis the name of the matching profile 
       in square brackets the name of other putative systems that would involve this gene
 
-Here is an example of the "all_systems.txt" file:
+Here is an example of the `all_systems.txt` file:
 
 ..
 	Here is an example of a "systems.txt" file:
@@ -217,6 +213,82 @@ Here is an example of the "all_systems.txt" file:
     neutral genes:
 
 
+.. _all_systems_tsv:
+
+all_systems.tsv
+---------------
+
+..
+	systems.tsv
+
+This corresponds to the tabulated version of the systems listed in `all_systems.txt`. 
+Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
+
+    * **replicon** - the name of the replicon it belongs to
+    * **hit_id** - the unique identifier of the hit
+    * **hit_pos** - the position of the sequence in the replicon
+    * **model_fqn** - the model fully-qualified name
+    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_loci** - the number of loci
+    * **sys_wholeness** - the wholeness of the system
+    * **sys_score** - the system score
+    * **hit_gene_ref** - the gene in the model whose this hit plays the role of
+    * **hit_status** - the status of the component in the assigned system's definition
+    * **hit_seq_len** - the length of the protein sequence matched by this hit
+    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_score** - Hmmer score
+    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_begin_match** - the position in the sequence where the profile match begins
+    * **hit_end_match** - the position in the sequence where the profile match ends
+
+This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
+
+    import pandas as pd
+
+    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
+
+.. note::
+    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
+
+
+best_solution_report.tsv and all_best_solutions.tsv
+---------------------------------------------------
+
+..
+	best_systems.tsv
+	
+Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
+
+The `best_solution_report.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
+solution identifier in the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
+
+As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above. 
+
+For the description of the fields of `best_solution_report.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
+
+For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
+
+    * **sol_id** - the name of the solution it is part of
+    * **replicon** - the name of the replicon it belongs to
+    * **hit_id** - the unique identifier of the hit
+    * **hit_pos** - the position of the sequence in the replicon
+    * **model_fqn** - the model fully-qualified name
+    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_loci** - the number of loci
+    * **sys_wholeness** - the wholeness of the system
+    * **sys_score** - the system score
+    * **hit_gene_ref** - the gene in the model whose this hit plays the role of
+    * **hit_status** - the status of the component in the assigned system's definition
+    * **hit_seq_len** - the length of the protein sequence matched by this hit
+    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_score** - Hmmer score
+    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_begin_match** - the position in the sequence where the profile match begins
+    * **hit_end_match** - the position in the sequence where the profile match ends
+
+
+
+
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
@@ -257,47 +329,8 @@ at the end of the cluster or clusters' combination, followed by the reason why i
     ============================================================
 
 
-systems.tsv
------------
-
-Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
-
-    * **hit_id** - the unique identifier of the hit
-    * **replicon** - the name of the replicon it belongs to
-    * **hit_pos** - the position of the sequence in the replicon
-    * **model_fqn** - the model fully-qualified name
-    * **system_id** - the unique identifier attributed to the detected system
-    * **sys_loci** - the number of loci
-    * **sys_wholeness** - the wholeness of the system
-    * **sys_score** - the system score
-    * **hit_gene_ref** - the gene in the model for which this hit plays the role
-    * **hit_status** - the status of the component in the assigned system's definition
-    * **hit_seq_len** - the length of the protein sequence matched by this hit
-    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
-    * **hit_score** - Hmmer score
-    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
-    * **hit_begin_match** - the position in the sequence where the profile match begins
-    * **hit_end_match** - the position in the sequence where the profile match ends
-
-This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
-
-    import pandas as pd
-
-    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
-
-.. note::
-    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
 
 
-best_systems.tsv
-----------------
-
-Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
-
-The "best_systems.tsv" file has the same structure as the file "all_systems.tsv", except that there is an extra column **sol_id** which is a
-solution identifier. The systems that have the same "sol_id" belong to a same solution. 
-
-As the file has the same structure as all_systems.tsv it can also be parsed with pandas as shown above. 
 
 
 .. _unordered_outputs:
