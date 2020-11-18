@@ -32,13 +32,9 @@ See :ref:`input-dataset-label` for more details. Below follows a description of 
 A. Searching for Systems' components
 ************************************
 
-   .. image:: ../_static/msf_functionning_step1.svg
-     :height: 500px
-     :align: left
-
 Initially, MacSyFinder **searches for the components** of the `System(s)` to detect by sequence similarity search.
 
-From the list of `System(s)` to detect, a **non-redundant list of components to search** is built.
+1. From the list of `System(s)` to detect, a **non-redundant list of components to search** is built.
 For each system, the list can include:
 
     - mandatory components
@@ -51,10 +47,19 @@ For each system, the list can include:
 
 See :ref:`here for more details on writing MacSyFinder's models. <writing-models>`
 
-HMMER is run on the corresponding set of components' HMM profiles, and the hits are filtered according to the criteria defined
-by the user or by default (see :ref:`Hmmer options <hmmer-options>` and :ref:`HMMReport`).
+2. HMMER is run on the corresponding set of components' HMM profiles, and the hits are filtered according to the criteria defined
+by the user or by default (see :ref:`Hmmer options <hmmer-options>` and for more, the API :ref:`HMMReport` object page).
 This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option).
 See the :ref:`command-line-label`, and the :ref:`search_genes API <search_genes>` for more details.
+
+
+
+   .. image:: ../_static/msf_functionning_step1.svg
+     :height: 500px
+     :align: left
+
+
+
 
 .. _system_assessment:
 
@@ -62,12 +67,8 @@ See the :ref:`command-line-label`, and the :ref:`search_genes API <search_genes>
 B. Hits browsing
 ****************
 
-   .. image:: ../_static/msf_functionning_step2.svg
-     :height: 500px
-     :align: left
-
 The following steps depend on whether the input dataset is **ordered** (complete or nearly complete genome(s)),
-or **unordered**  (metagenomes, or unassembled genome(s)) (see :ref:`input-dataset-label`).
+or **unordered**  (metagenomes, or unassembled genome(s)) (see the :ref:`input-dataset-label` section).
 
 In the case of **ordered datasets** (`ordered_replicon` or `gembase` search mode),
 the hits are filtered to keep only hits related to the system's model we are looking for.
@@ -75,9 +76,10 @@ These hits are used to build **clusters of co-localized genes** as defined in th
 These clusters are then screened to check for the model specifications such as the minimal quorum of
 "Mandatory" or "Accessory" genes, or the absence of "Forbidden" components.
 
+
 When the **gene order is unknown** (`unordered` search mode) the power of the analysis is more **limited**.
 In this case, the presence of systems can only be suggested on the basis of
-the quorum of genes - and not based on genomic context information. 
+the **quorum** of components - and not based on genomic context information. 
 
 .. _note:
     The `neutral` components are used to build clusters of co-localized genes.
@@ -87,7 +89,9 @@ the quorum of genes - and not based on genomic context information.
 For *ordered* datasets: building clusters of components
 -------------------------------------------------------
 
-1. The search starts first with the hits filtering to only keep the **hits that are listed in a given model** (mandatory, accessory, neutral,
+The following two steps are reiterated for each model being searched. 
+
+1. The search starts with the filtering of hits to only keep the **hits that are listed in the model** (mandatory, accessory, neutral,
    forbidden, exchangeable).
 
 2.  MacSyFinder searches for sets of contiguous hits to build **clusters**, following the 
@@ -97,26 +101,35 @@ For *ordered* datasets: building clusters of components
     from the two genes with hits (system-wise, or gene-specific parameter).
     The `loner` components may form a cluster on their own.
 
+
+
+   .. image:: ../_static/msf_functionning_step2.svg
+     :height: 500px
+     :align: left
+
+
    
-The above two steps are reiterated for each models being searched. Once done, the :ref:`next step <combinatorial-exploration>` is performed.
+Once performed for each model searched, the :ref:`next step <combinatorial-exploration>` is performed.
 
 .. note::
-    The clusters which not fulfill the quorum requirements are stored in :ref:`rejected_clusters.txt <rejected_clusters_file>` file.
+    The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_clusters.txt <rejected_clusters_file>` file.
 
 
 For *unordered* datasets: 
 -------------------------
 
+For each model being searched:
+
 1. The Hits are filtered by model.
 2. They are used to check if they reach the quorum (i.e., the clustering step is skipped as there is no notion of genetic distance in this search mode).
-3. For each system, if the quorum is reached, hits are reported in the ***XXXX output file XXXX***.
+3. For each system, if the quorum is reached, hits are reported in the :ref:`all_possible_systems.tsv <all_possible_systems_tsv_unordered>` output file.
    It has to be noted that forbidden components are listed too, as they can also be informative for the user.
 
 .. note::
     The "unordered" mode of detection is less powerful, as a single occurrence of a given model is filled for
     an entire dataset with hits that origin is unknown. Please consider the assessment of systems with caution in this mode.
 
-For unordered datasets, the **search so ends**, and MacSyFinder generates the final :ref:`output files <outputs>`. 
+For unordered datasets, the **search so ends**, and MacSyFinder generates the final :ref:`output files <unordered_outputs>`. 
 
 
 .. _combinatorial-exploration:
@@ -126,11 +139,7 @@ For unordered datasets, the **search so ends**, and MacSyFinder generates the fi
 C. Computing candidate Systems' scores (ordered mode)
 *****************************************************
 
-   .. image:: ../_static/msf_functionning_step3.svg
-     :height: 500px
-     :align: left
-
-This step only applies to the most powerful search mode, i.e., on **ordered datasets**. ``NEW in V2``
+This step only applies to the most powerful search mode, i.e., on **ordered datasets**. The whole step is ``NEW in V2``
 
 The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of Systems in replicons analysed. 
 It creates clusters of hits for Systems' components separately for each System searched, and therefore might find **candidate occurrences of Systems that overlap** in terms of components. 
@@ -150,34 +159,44 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 *  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily more similar to a system's model than others.  
 
    The assumptions behind this scoring scheme are the following:
-	* we set a score for the different types of genes/components when defining a **cluster's score**:
-		- +1.0 is added when a mandatory gene is present 
-		- +0.5 is added when a accessory gene is present 
-		- +0.0 is added when a neutral gene is present 
+	* We set a score for the different types of genes/components when defining a **cluster's score**:
+		- +1.0 is added when a `mandatory` gene is present 
+		- +0.5 is added when an `accessory` gene is present 
+		- +0.0 is added when a `neutral` gene is present 
 		
-	* when combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
-		- -1.5 is added when a redundant mandatory gene is added when adjuncting the cluster to a candidate `System`
-		- -1.5 is added when a redundant accessory gene is added when adjuncting the cluster to a candidate `System`
+	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
+		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
 
 	* only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
-   This search for candidate `Systems` results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
+
+The systems' scoring is exemplified in this figure:
+
+
+   .. image:: ../_static/msf_functionning_step3.svg
+     :height: 500px
+     :align: left
+
+
+
 
 *********************************************************************
-D. Repeat operation B and C with the next model
+D. Repeat operations B and C for the other models being searched
 *********************************************************************
 
 .. image:: ../_static/msf_functionning_step4.svg
      :height: 500px
      :align: left
 
+
+
+This search for candidate `Systems` from different models results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
+
+
 *********************************************************************
 E. Computing possible Solutions, defining the best one (ordered mode)
 *********************************************************************
-
-   .. image:: ../_static/msf_functionning_step5.svg
-     :height: 500px
-     :align: left
 
 At the end of the previous step MacSyFinder has computed all potential `Systems` present in the replicon,
 made of combinations of Clusters and `loner` components that fulfill the model's requirements,
@@ -194,6 +213,10 @@ We create a graph where each potential systems are vertex we create an edge betw
 Once the graph is created we looking for the maximal clique which maximize the score.
 This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible Systems. 
 
+
+   .. image:: ../_static/msf_functionning_step5.svg
+     :height: 500px
+     :align: left
 
 
 OLD
