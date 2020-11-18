@@ -58,7 +58,7 @@ Output files for the "ordered replicon(s)" search modes
 
 
 These output files are provided when MacSyFinder search proceeds on a set of proteins that are deemed to follow the order of their genes on replicons. 
-This corresponds to the two search modes "gembase" and "ordered_replicon". 
+This corresponds to the two search modes *gembase* and *ordered_replicon*. 
 
 
 -------------------------
@@ -79,29 +79,30 @@ headers are provided with the content of the lines in the file.
     To see potential other best solutions, see file "all_best_solutions.tsv".
     This file is the most similar to former V1 file `macsyfinder.report`.
 
-  * **`best_solution_summary.tsv`** - This file consists in a table describing the content in detected systems for each replicon analysed.
-
   * **`all_best_solutions.tsv`** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
   * **`all_eligible_systems.tsv`** - This file contains all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file.
 
-  * **`systems_search.txt`** - This file describes the search process of all possible candidate systems given the definitions -
+  * **`all_systems.txt`** - This file describes the search process of all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems.
 
   * **`rejected_clusters.txt`** - This file lists candidate clusters of systems' components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
 
-To be amended/removed:
+To be amended/removed: UPON CODE MODIFICATON TO CHANGE OUTPUT FILENAMES?
   * systems.txt - all potential systems detected with their components in human readable format. (REPLACED BY "systems_search.txt"?)
   * systems.tsv - all potential systems detected with their components in a tabulate separated value format. (REPLACED BY "all_eligible_systems.tsv"?)
   * best_systems.tsv - Best combination of systems with their components in a tabulate separated value format. (REPLACED BY "best_solution_report.tsv"?)
+  * best_solution_summary.tsv => to be removed from above list. 
 
+all_systems.txt
+---------------
 
-systems.txt
------------
+..
+	systems.txt
 
 The file starts with some comments:
     - the version of MacSyFinder used
@@ -126,7 +127,10 @@ Then for each replicon, the systems detected are listed along with their descrip
       in parenthesis the name of the matching profile 
       in square brackets the name of other putative systems that would involve this gene
 
-Here is an example of a "systems.txt" file:
+Here is an example of the "all_systems.txt" file:
+
+..
+	Here is an example of a "systems.txt" file:
 
 .. code-block:: text
 
