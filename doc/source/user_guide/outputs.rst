@@ -69,34 +69,38 @@ Different types of output files are provided, human-readable files ".txt", and t
 headers are provided with the content of the lines in the file.
 
 
-  * **`best_solution_report.tsv`** - This file contains the best solution found by MacSyFinder in terms of systems detected,
-    under the form of a per-component, tabulated report file.
+  * **best_solution_report.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
+    under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
     If multiple solutions showed a maximal score, the solution maximizing
 
         1. the number of components in systems and
         2. the number of systems detected is proposed.
 
-    To see potential other best solutions, see file "all_best_solutions.tsv".
-    This file is the most similar to former V1 file `macsyfinder.report`.
+    To see potential other best solutions (in case several obtained the same highest score), see file `all_best_solutions.tsv`. 
 
-  * **`all_best_solutions.tsv`** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
-    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
+    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_eligible_systems.tsv`. 
+    
+    The `best_solution_report.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
-  * **`all_eligible_systems.tsv`** - This file contains all possible candidate systems given the definitions -
-    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file.
 
-  * **`all_systems.txt`** - This file describes the search process of all possible candidate systems given the definitions -
-    without processing of the potential overlaps between candidate systems.
+  * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
+    without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
+    under the form of a tabulated file in `all_eligible_systems.tsv`.
 
-  * **`rejected_clusters.txt`** - This file lists candidate clusters of systems' components that were rejected by
+  * **rejected_clusters.txt** - This file lists candidate clusters of systems' components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
+  * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
+    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
-To be amended/removed: UPON CODE MODIFICATON TO CHANGE OUTPUT FILENAMES?
-  * systems.txt - all potential systems detected with their components in human readable format. (REPLACED BY "systems_search.txt"?)
-  * systems.tsv - all potential systems detected with their components in a tabulate separated value format. (REPLACED BY "all_eligible_systems.tsv"?)
-  * best_systems.tsv - Best combination of systems with their components in a tabulate separated value format. (REPLACED BY "best_solution_report.tsv"?)
-  * best_solution_summary.tsv => to be removed from above list. 
+  * **all_eligible_systems.tsv** - This file contains all possible candidate systems given the definitions -
+    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
+    to the tabulated version of the `all_systems.txt` file.  
+
+
+best_solution_report.tsv
+------------------------
+
 
 all_systems.txt
 ---------------
