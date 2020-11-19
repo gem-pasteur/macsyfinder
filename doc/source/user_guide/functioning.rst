@@ -164,14 +164,17 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 		- +0.5 is added when an `accessory` gene is present 
 		- +0.0 is added when a `neutral` gene is present 
 		
-	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score. 
+	In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
 		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
 		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
 
 	* only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
 
-The systems' scoring is exemplified in this figure:
+
+	In summary, a Systems's score is made of two parts: the **sum of the scores** of the Clusters it is made of, plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.  
+	The systems' scoring step is exemplified in this figure:
 
 
    .. image:: ../_static/msf_functionning_step3.svg
@@ -206,12 +209,13 @@ Candidate `Systems` may thus overlap by being partly made of the same components
 We define a `Solution` as being **a set of compatible Systems**, i.e. that do not have any overlaps between their components.
 All possible `Solutions` are combinatorially explored and consist in all possible sets of compatible `Systems`. 
 
-A scoring scheme enables to separate between sets of `Solution`. A **Solution's score** is basically the **sum of its Systems' scores**.  
+A scoring scheme enables to separate between sets of `Solutions`. A **Solution's score** is basically the **sum of its Systems' scores**.  
 The overall procedure of exploring the space of all possible `Solutions` while finding the optimal one,
 i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
-We create a graph where each potential systems are vertex we create an edge between two vertex if they do not share any components.
-Once the graph is created we looking for the maximal clique which maximize the score.
-This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible Systems. 
+
+We create a graph where each potential system is a vertex, and we create an edge between all possible pairs of vertices if they do not share any components.
+Once the graph is created we looking for the maximal clique which maximizes the score.
+This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible `Systems`. 
 
 
    .. image:: ../_static/msf_functionning_step5.svg
