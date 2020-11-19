@@ -820,11 +820,11 @@ def main(args=None, loglevel=None):
             if not (all_systems or rejected_clusters):
                 logger.info("No Systems found in this dataset.")
 
-            tsv_filename = os.path.join(config.working_dir(), "all_best_systems.tsv")
+            tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
             with open(tsv_filename, "w") as tsv_file:
                 solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
 
-            tsv_filename = os.path.join(config.working_dir(), "best_systems.tsv")
+            tsv_filename = os.path.join(config.working_dir(), "best_solution.tsv")
             with open(tsv_filename, "w") as tsv_file:
                 # flattern the list and sort it
                 one_best_solution = [syst for sol in one_best_solution for syst in sol]
@@ -840,7 +840,7 @@ def main(args=None, loglevel=None):
             ##############################
             logger.info("\n{:#^70}".format(" Writing down results "))
 
-            system_filename = os.path.join(config.working_dir(), "all_possible_systems.txt")
+            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
             with open(system_filename, "w") as sys_file:
                 likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
 
@@ -849,7 +849,7 @@ def main(args=None, loglevel=None):
             # with open(system_filename, "w") as sys_file:
             #     likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
 
-            system_filename = os.path.join(config.working_dir(), "all_possible_systems.tsv")
+            system_filename = os.path.join(config.working_dir(), "all_systems.tsv")
             with open(system_filename, "w") as sys_file:
                 likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
 
