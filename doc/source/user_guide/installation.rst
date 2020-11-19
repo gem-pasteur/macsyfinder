@@ -14,7 +14,7 @@ Installation
 ************
 
 MacSyFinder works with models for macromolecular systems that are not shipped with it, 
-you have to install them separately. See the :ref:` macsydata section <macsydata>` below.
+you have to install them separately. See the :ref:`macsydata section <macsydata>` below.
 
 
 .. _dependencies:

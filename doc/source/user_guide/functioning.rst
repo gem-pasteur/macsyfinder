@@ -214,7 +214,7 @@ The overall procedure of exploring the space of all possible `Solutions` while f
 i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
 
 We create a graph where each potential system is a vertex, and we create an edge between all possible pairs of vertices if they do not share any components.
-Once the graph is created we looking for the maximal clique which maximizes the score.
+Once the graph is created we look for the clique which maximizes the score.
 This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible `Systems`. 
 
 
@@ -223,20 +223,16 @@ This allows to provide the user with one, or multiple `Solutions` that have the 
      :align: left
 
 
-OLD
-===
-
-1. We thus need a way to **select the most likely Systems**. Therefore, we compute for each candidate System
-   a score, based on the candidate System's **wholeness** according to the System's model and the **number of loci**, in addition to the criteria taken above to compute the System's score. 
-   Again, we made the choice here to favor candidate Systems that **maximize the macsy-model's requirement** in terms of components, while **minimizing the number of loci and components' redundancy**. 
+OLD / TO UPDATE WITH EXAMPLE OF THE NEW FIGURE?
+===============================================
 
 
-2. So Model also share some components for instance let's consider a Model B with a gene G4 as in Model A
+   Let's consider for instance a Model B with a gene G4 as in Model A
    and the cluster C5 contains the same hit H4 than in cluster C2.
    So we had to choose to attribute the hit H4 to systems A or B.
-   To do that we consider all systems combination, the systems which share components are considering incompatible.
-   For instance SA_1 and SB_1 share the Hit H4 (respectively in cluster C2 and C5) so these two systems cannot exists together
-   Then we choose the largest systems combination which maximizes the Solution's score.
+   To do that we consider all systems combination, the systems which share components are considered incompatible.
+   For instance SA_1 and SB_1 share the Hit H4 (respectively in clusters C2 and C5) so these two systems cannot exists together
+   Then we choose the largest systems' combination which maximizes the Solution's score.
    So in our example the system SA_2 and SB_3
-   The results of this step are reported in `best_systems.tsv` file see :ref:`outputs`.
+   The results of this step are reported in the `best_solution_report.tsv` and `all_best_solutions.tsv` files, see :ref:`outputs`.
 
