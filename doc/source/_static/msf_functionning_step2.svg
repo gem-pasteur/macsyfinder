@@ -253,7 +253,7 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="272.10756"
-     inkscape:cx="567.49662"
+     inkscape:cx="555.56245"
      inkscape:zoom="1.4663779"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -663,12 +663,16 @@
          x="-14.918245"
          y="223.6777"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
-         id="tspan2152-9">C1 C2       =&gt; System</tspan><tspan
+         id="tspan2152-9">C1 C2       =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3716">(System A #1: &quot;SA_1&quot;)</tspan></tspan><tspan
          sodipodi:role="line"
          x="-14.918245"
          y="229.8513"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
-         id="tspan2154-7">C1 C3       =&gt; System</tspan><tspan
+         id="tspan2154-7">C1 C3       =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3718">(&quot;SA_2&quot;)</tspan></tspan><tspan
          sodipodi:role="line"
          x="-14.918245"
          y="236.02492"
@@ -680,7 +684,9 @@
          x="-14.918245"
          y="242.19853"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
-         id="tspan2158-6">C1 C2 C3  =&gt; System</tspan></text>
+         id="tspan2158-6">C1 C2 C3  =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3720">(&quot;SA_3&quot;)</tspan></tspan></text>
     <text
        xml:space="preserve"
        id="text4563"
@@ -2028,24 +2034,24 @@
     <text
        id="text1202"
        y="228.06511"
-       x="150.05914"
+       x="137.07695"
        style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
          y="228.06511"
-         x="150.05914"
+         x="137.07695"
          id="tspan1200"
-         sodipodi:role="line">C1 C2 </tspan><tspan
+         sodipodi:role="line">SA_1: C1 C2 </tspan><tspan
          id="tspan1204"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
          y="234.23872"
-         x="150.05914"
-         sodipodi:role="line">C1 C3</tspan><tspan
+         x="137.07695"
+         sodipodi:role="line">SA_2: C1 C3</tspan><tspan
          id="tspan1206"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
          y="240.41234"
-         x="150.05914"
-         sodipodi:role="line">C1 C2 C3</tspan></text>
+         x="137.07695"
+         sodipodi:role="line">SA_3: C1 C2 C3</tspan></text>
     <text
        transform="scale(0.74503007,1.3422277)"
        id="text1234"
