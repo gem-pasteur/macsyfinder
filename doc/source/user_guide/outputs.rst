@@ -101,8 +101,6 @@ headers are provided with the content of the lines in the file.
 all_systems.txt
 ~~~~~~~~~~~~~~~
 
-..
-	systems.txt
 
 The file starts with some comments:
     - the version of MacSyFinder used
@@ -129,8 +127,6 @@ Then for each replicon, the systems detected are listed along with their descrip
 
 Here is an example of the `all_systems.txt` file:
 
-..
-	Here is an example of a "systems.txt" file:
 
 .. code-block:: text
 
@@ -218,8 +214,6 @@ Here is an example of the `all_systems.txt` file:
 all_systems.tsv
 ~~~~~~~~~~~~~~~
 
-..
-	systems.tsv
 
 This corresponds to the tabulated version of the systems listed in `all_systems.txt`. 
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
@@ -254,8 +248,6 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 best_solution_report.tsv and all_best_solutions.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-..
-	best_systems.tsv
 	
 Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
 
