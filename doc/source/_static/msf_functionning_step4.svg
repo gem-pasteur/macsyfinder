@@ -12,7 +12,7 @@
    viewBox="0 0 320 176.36761"
    version="1.1"
    id="svg8"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="msf_functionning_step4.svg">
   <defs
      id="defs2">
@@ -51,16 +51,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.02"
-     inkscape:cx="695.65641"
-     inkscape:cy="321.81068"
+     inkscape:cx="678.49955"
+     inkscape:cy="313.28382"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="false"
      inkscape:window-width="1634"
      inkscape:window-height="1108"
-     inkscape:window-x="2445"
-     inkscape:window-y="574"
+     inkscape:window-x="721"
+     inkscape:window-y="68"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -75,7 +75,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -234,7 +234,7 @@
          sodipodi:role="line">C6</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="3.7117133"
        y="406.0213"
        id="text5196"><tspan
@@ -242,37 +242,43 @@
          id="tspan5194"
          x="3.7117133"
          y="406.0213"
-         style="font-size:4.23333px;stroke-width:0.264583">C4             =&gt; Rejected (min_mandatory_genes / min_genes_required) </tspan><tspan
+         style="font-size:4.23332977px;stroke-width:0.26458299">C4             =&gt; Rejected <tspan
+   style="font-size:3.52777863px"
+   id="tspan3813">(min_mandatory_genes_required / min_genes_required) </tspan></tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="411.31296"
-         style="font-size:4.23333px;stroke-width:0.264583"
-         id="tspan5198">C5             =&gt; Rejected (min_mandatory_genes / min_genes_required)</tspan><tspan
+         style="font-size:4.23332977px;stroke-width:0.26458299"
+         id="tspan5198">C5             =&gt; Rejected <tspan
+   style="font-size:3.52777863px"
+   id="tspan3811">(min_mandatory_genes_required / min_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="416.60461"
-         style="font-size:4.23333px;stroke-width:0.264583"
-         id="tspan5200">C6             =&gt; Rejected (min_mandatory_genes / min_genes_required)</tspan><tspan
+         style="font-size:4.23332977px;stroke-width:0.26458299"
+         id="tspan5200">C6             =&gt; Rejected <tspan
+   style="font-size:3.52777863px"
+   id="tspan3809">(min_mandatory_genes_required / min_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="421.8963"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan5202">C4 C5        =&gt; System</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23332977px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
+         id="tspan5202">C4 C5        =&gt; System &quot;SB_1&quot;</tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="427.18796"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan5208">C4 C6        =&gt; System</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23332977px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
+         id="tspan5208">C4 C6        =&gt; System &quot;SB_2&quot;</tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="432.47961"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan5204">C5 C6        =&gt; System</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23332977px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
+         id="tspan5204">C5 C6        =&gt; System &quot;SB_3&quot;</tspan><tspan
          sodipodi:role="line"
          x="3.7117133"
          y="437.77127"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan5206">C4 C5 C6  =&gt; System</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23332977px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
+         id="tspan5206">C4 C5 C6  =&gt; System &quot;SB_4&quot;</tspan></text>
     <g
        transform="translate(-14.415407,226.15244)"
        id="g9631-6">
@@ -1298,9 +1304,9 @@
        id="text8743-7-0-4-9"
        y="452.93036"
        x="5.1741323"
-       style="font-style:normal;font-weight:normal;font-size:3.43958px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.198437"
+       style="font-style:normal;font-weight:normal;font-size:3.43958px;line-height:1.25;font-family:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.198437;-inkscape-font-specification:Arial;font-stretch:normal;font-variant:normal;"
        xml:space="preserve"><tspan
-         style="font-size:3.43958px;stroke-width:0.198437"
+         style="font-size:3.43958px;stroke-width:0.198437;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;"
          y="452.93036"
          x="5.1741323"
          id="tspan8741-7-9-5-5"
@@ -1534,15 +1540,15 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:3.43958px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.198437"
-       x="5.1454735"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19843701"
+       x="5.1741323"
        y="466.65411"
        id="text8743-7-0-4-4-4"><tspan
          sodipodi:role="line"
          id="tspan8741-7-9-5-2-6"
-         x="5.1454735"
+         x="5.1741323"
          y="466.65411"
-         style="font-size:3.43958px;stroke-width:0.198437">SB_2</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.19843701">SB_2</tspan></text>
     <g
        transform="matrix(0.71557447,0,0,0.73154644,1.0711063,108.83444)"
        id="g5780-1">
@@ -1704,12 +1710,12 @@
     <text
        id="text8743-7-0-4-4-2-6"
        y="479.72858"
-       x="5.4388175"
-       style="font-style:normal;font-weight:normal;font-size:3.43958px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.198437"
+       x="5.1741323"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19843701"
        xml:space="preserve"><tspan
-         style="font-size:3.43958px;stroke-width:0.198437"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.19843701"
          y="479.72858"
-         x="5.4388175"
+         x="5.1741323"
          id="tspan8741-7-9-5-2-3-8"
          sodipodi:role="line">SB_3</tspan></text>
     <g
@@ -2625,103 +2631,103 @@
          inkscape:transform-center-x="32.692351"
          id="text8743-7-0-4-4-2-9-8"
          y="533.97125"
-         x="8.5234966"
-         style="font-style:normal;font-weight:normal;font-size:3.43958px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.198437"
+         x="8.3491325"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.19843701"
          xml:space="preserve"><tspan
-           style="font-size:3.43958px;stroke-width:0.198437"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.43957996px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.19843701"
            y="533.97125"
-           x="8.5234966"
+           x="8.3491325"
            id="tspan8741-7-9-5-2-3-6-0"
            sodipodi:role="line">SB_4</tspan></text>
     </g>
     <text
        id="text8913-6-5"
-       y="451.10321"
-       x="75.517776"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       y="453.62756"
+       x="81.162224"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;line-height:1.25;font-family:arial;-inkscape-font-specification:arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-size:5.64444px;stroke-width:0.264583"
-         y="451.10321"
-         x="75.517776"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;font-family:arial;-inkscape-font-specification:arial;stroke-width:0.26458299"
+         y="453.62756"
+         x="81.162224"
          id="tspan8911-02-2"
          sodipodi:role="line">(1 + 1) + (1 + 0.5) - (1 * 1.5) = 2.0</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="75.517776"
-       y="466.96039"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;line-height:1.25;font-family:arial;-inkscape-font-specification:arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="81.162224"
+       y="466.86179"
        id="text8913-6-5-5"><tspan
          sodipodi:role="line"
          id="tspan8911-02-2-1"
-         x="75.517776"
-         y="466.96039"
-         style="font-size:5.64444px;stroke-width:0.264583">(1 + 1) + (0.5 + 1) - (0 * 1.5) = 3.5</tspan></text>
+         x="81.162224"
+         y="466.86179"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;font-family:arial;-inkscape-font-specification:arial;stroke-width:0.26458299">(1 + 1) + (0.5 + 1) - (0 * 1.5) = 3.5</tspan></text>
     <text
        id="text8913-6-5-5-5"
-       y="479.41327"
-       x="75.517776"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       y="480.09601"
+       x="81.162224"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;line-height:1.25;font-family:arial;-inkscape-font-specification:arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-size:5.64444px;stroke-width:0.264583"
-         y="479.41327"
-         x="75.517776"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;font-family:arial;-inkscape-font-specification:arial;stroke-width:0.26458299"
+         y="480.09601"
+         x="81.162224"
          id="tspan8911-02-2-1-1"
          sodipodi:role="line">(1 + 0.5) + (0.5 + 1) - (0 * 1.5) = 3.0</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:5.64444px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="75.517776"
-       y="492.13831"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;line-height:1.25;font-family:arial;-inkscape-font-specification:arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="81.162224"
+       y="493.33035"
        id="text8913-6-5-5-5-1"><tspan
          sodipodi:role="line"
          id="tspan8911-02-2-1-1-5"
-         x="75.517776"
-         y="492.13831"
-         style="font-size:5.64444px;stroke-width:0.264583">(1 + 1) + (1 + 0.5) + (0.5 + 1) - (1 * 1.5) = 3.5</tspan></text>
+         x="81.162224"
+         y="493.33035"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444017px;font-family:arial;-inkscape-font-specification:arial;stroke-width:0.26458299">(1 + 1) + (1 + 0.5) + (0.5 + 1) - (1 * 1.5) = 3.5</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-87.082504"
-       y="354.07648"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-76.447472"
+       y="350.12531"
        id="text6226-9-0"><tspan
          sodipodi:role="line"
          id="tspan6224-1-6"
-         x="-87.082504"
-         y="354.07648"
-         style="font-size:4.9389px;stroke-width:0.264583">Considering Next Model (B) filter hits</tspan></text>
+         x="-76.447472"
+         y="350.12531"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Consider next Model (B) to filter hits</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-70.326714"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-76.563225"
        y="377.2298"
        id="text6226-2-2"><tspan
          sodipodi:role="line"
          id="tspan6224-7-6"
-         x="-70.326714"
+         x="-76.563225"
          y="377.2298"
-         style="font-size:4.9389px;stroke-width:0.264583">Build clusters</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Build clusters</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-67.782318"
-       y="410.34738"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-76.447472"
+       y="405.83185"
        id="text6226-0-1"><tspan
          sodipodi:role="line"
          id="tspan6224-9-8"
-         x="-67.782318"
-         y="410.34738"
-         style="font-size:4.9389px;stroke-width:0.264583">Check quorum</tspan></text>
+         x="-76.447472"
+         y="405.83185"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Check quorum</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-75.347748"
-       y="466.08051"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-76.447472"
+       y="449.14719"
        id="text6226-3-7"><tspan
          sodipodi:role="line"
          id="tspan6224-6-9"
-         x="-75.347748"
-         y="466.08051"
-         style="font-size:4.9389px;stroke-width:0.264583">Compute System score</tspan></text>
+         x="-76.447472"
+         y="449.14719"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Compute Systems' scores</tspan></text>
     <text
        xml:space="preserve"
        id="text6378"

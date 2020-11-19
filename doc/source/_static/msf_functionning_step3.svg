@@ -339,7 +339,7 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="94.125792"
-     inkscape:cx="549.91923"
+     inkscape:cx="532.454"
      inkscape:zoom="1.0019906"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -355,7 +355,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1126,7 +1126,7 @@
          id="tspan6224-6"
          x="-75.760696"
          y="244.71858"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Compute Systems' scores given model (A):</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93889999px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299">Compute Systems' scores given Model (A):</tspan></text>
     <text
        style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;white-space:pre;fill:#000000;fill-opacity:1;stroke:none"
        id="text6378"
