@@ -162,9 +162,11 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 	* We set a score for the different types of genes/components when defining a **cluster's score**:
 		- +1.0 is added when a `mandatory` gene is present 
 		- +0.5 is added when an `accessory` gene is present 
-		- +0.0 is added when a `neutral` gene is present 
+		- +0.0 is added when a `neutral` gene is present
+		- \*0.75 (a factor of 0.75) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene 
 		
-	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score. 
+	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
+	 
 	In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
 		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
 		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
@@ -222,10 +224,9 @@ This allows to provide the user with one, or multiple `Solutions` that have the 
      :height: 500px
      :align: left
 
-
+***********************************************
 OLD / TO UPDATE WITH EXAMPLE OF THE NEW FIGURE?
-===============================================
-
+***********************************************
 
    Let's consider for instance a Model B with a gene G4 as in Model A
    and the cluster C5 contains the same hit H4 than in cluster C2.
