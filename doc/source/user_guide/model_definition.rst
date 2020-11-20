@@ -89,14 +89,17 @@ Principles, and how to write macsy-models definitions
 Macsy-models are written as XML files, and should be named with the name of the system to detect as a prefix, 
 and the XML file extension as a suffix. For example, 'T1SS.xml' for T1SS (Type I Secretion System). 
 
-A macsy-model defines a macromolecular systems as: 
+A macsy-model defines a macromolecular System as: 
 
 * A set of **components** (*i.e.* proteins, or protein-coding genes given the context) with different attributes that are used for system's **content description**.
-* Features regarding **co-localization** parameters of the systems' components for system detection.
+* Features regarding the **genomic architecture** of the systems' components for system detection.
 * Rules for **quorum** specifying how many components are required to infer the presence of a complete system.
 
 
-Four distinct **types of components** can be used to model the system's content.
+Macsy-model Components
+----------------------
+
+Four distinct **types of components** can be used to model the System's content.
 Components correspond to Gene objects in MacSyFinder's implementation, and point to corresponding HMM protein profiles.
 
 * **mandatory** components represent components that are essential to be found to infer the system's presence.
@@ -106,9 +109,21 @@ Components correspond to Gene objects in MacSyFinder's implementation, and point
 * **forbidden** components are components which presence is eliminatory for the system's presence assessment.
 
 
-.. image:: ../_static/MSF_modelling.svg
-    :height: 1000px
-    :align: left
+
+Specifying a genomic organization
+---------------------------------
+
+Beyond its list of Components, a MacSyFinder's model of a System is defined by the genomic organization of its components. 
+This genomic organization can be defined in several ways: 
+
+* the general System's architecture, whether it is `single-locus` or `multi-loci` (encoded at one or several loci)
+* the co-localization criteria defined either at the System level or at the Gene (component) level:
+
+    * the `inter-gene-max-space` parameter (system- or gene- wise)
+    * the `loner` parameter (gene- wise)
+
+
+See :ref:`below<model-definition-grammar-label>` for more details on how to specify these parameters in a macsy-model. 
 
 
 .. _model-definition-grammar-label:
@@ -116,7 +131,20 @@ Components correspond to Gene objects in MacSyFinder's implementation, and point
 The XML hierarchy
 -----------------
 
-* The element root is "model".
+A System's model is defined using a specific XML grammar that is hereby described. 
+It consists in a hierarchic view of a Model that has specific features described through parameters, and is made of a set of Genes that have specific features themselves. 
+All these elements and corresponding parameters will parametrize the search of Systems matching the search by MacSyFinder, in terms of Gene content and genomic architecture criteria. 
+
+
+
+.. image:: ../_static/MSF_modelling.svg
+    :height: 1000px
+    :align: left
+
+
+
+
+* The element root of a System's model is "model".
 
   * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
     without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *cluster*).
@@ -130,7 +158,7 @@ The XML hierarchy
      * **multi_loci**: a *boolean* set to True ("1", "true" or "True") to allow the definition of "scattered" systems
        (i.e., systems encoded at different genomic loci or by different gene *clusters*). If not specified, *default value is false*.
      
-  * The model contains one or more element "gene" that corresponds to genetic components making the macromolecular system whole.
+  * The model contains one or more element(s) "gene" that correspond(s) to the genetic components of the macromolecular system.
   
 * The element "gene" has several mandatory attributes: 
 
