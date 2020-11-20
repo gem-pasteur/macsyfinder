@@ -81,6 +81,7 @@ CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubme
 The definitions are detailed in the `MacSyFinder's paper <https://dx.doi.org/10.1371%2Fjournal.pone.0110726>`_.
 
 As a test sequence dataset, we propose three replicons in /share/macsyfinder/sequence_data/datatest_gembase.fasta: 
+
     - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a).
       Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
     - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a).
