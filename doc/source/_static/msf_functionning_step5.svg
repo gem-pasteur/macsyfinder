@@ -134,8 +134,8 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="408.69329"
-     inkscape:cx="647.89113"
+     inkscape:cy="253.35348"
+     inkscape:cx="630.90084"
      inkscape:zoom="1.03"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -151,7 +151,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -5001,7 +5001,7 @@
          y="663.43909"
          x="-75.345764"
          id="tspan6224-6-0-2-1"
-         sodipodi:role="line">Compute the clique of maximal score</tspan></text>
+         sodipodi:role="line">Compute the scores of maximal cliques</tspan></text>
     <text
        id="text33613"
        y="537.47028"
