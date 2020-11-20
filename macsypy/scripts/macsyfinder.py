@@ -233,15 +233,15 @@ This option can be repeated several times:
                                 nargs=2,
                                 default=None,
                                 help=argparse.SUPPRESS
-#                               the max-nb-genes is implemented untli config
-#                               but not used in quorum
-#                               so disable it until we found a biological use case
-#                               help="""The maximal number of genes required for model assessment.
-# The first value must correspond to a model name, the second value to an integer.
-# This option can be repeated several times:
-#     "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
-# """
                                 )
+    # the max-nb-genes is implemented untli config
+    # but not used in quorum
+    # so disable it until we found a biological use case
+    # help="""The maximal number of genes required for model assessment.
+    # The first value must correspond to a model name, the second value to an integer.
+    # This option can be repeated several times:
+    #     "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
+    # """
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
@@ -562,6 +562,8 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
 
     :param systems: list of systems found
     :type systems: list of :class:`macsypy.system.System` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
     :return: None
@@ -609,6 +611,8 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
 
     :param solutions: list of systems found
     :type solutions: list of list of :class:`macsypy.system.System` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
     :param sys_file: The file where to write down the systems occurrences
     :type sys_file: file object
     :return: None
