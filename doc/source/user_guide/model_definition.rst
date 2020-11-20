@@ -147,7 +147,7 @@ All these elements and corresponding parameters will parametrize the search of S
 * The element root of a System's model is "model".
 
   * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
-    without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *cluster*).
+    without a match between two components with a match for a component profile in order to consider them contiguous (part of a same *Cluster*).
   * The version of the XML grammar (the actual version is "2.0")
   * The element "model" may have attributes:
   
@@ -168,8 +168,6 @@ All these elements and corresponding parameters will parametrize the search of S
  The element "gene" may have other attributes: 
 
    * **loner**: a *boolean*. A *loner* gene can be isolated on the genome and does not have to be part of a cluster of genes to be considered for system's assessment ( *default false* ).
-   * **exchangeable**: a *boolean*. If a gene is exchangeable (value set to "1", "true" or "True") that
-     means this gene or one of its homologs or analogs can be *interchanged to be counted in the quorum* as part of the macromolecular system ( *default false* ).
    * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
      it means that it can be used to fill multiple systems' occurrences - and thus be considered part of several systems. ( *default false* ).
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter. 
@@ -177,6 +175,20 @@ All these elements and corresponding parameters will parametrize the search of S
  The element "gene" may have one "exchangeables" child element:
 
    * The element "exchangeables" can contain one or more elements "gene".
+   
+   For a Gene to have "exchangeables" Genes listed, means that this Gene can be replaced *in the quorum* by the listed child Genes. 
+
+
+
+.. note::
+
+  If not specified by the user, several features will have their values assigned **by default**:  
+  
+  * the **genomic architecture** of the System being searched will consist in a **single locus**. If a System may be made of Genes from multiple loci, consider setting the `multi_loci` parameter to `True`.
+  * the **quorum parameters** `min_mandatory_genes_required` and `min_genes_required` will be set to the number of mandatory Genes listed - the `accessory` Genes being deemed not required to infer a complete System.
+
+
+
 
 Example of a macsy-model definition in XML:
 
@@ -196,6 +208,15 @@ Example of a macsy-model definition in XML:
     <gene name="sctV_FLG" presence="mandatory"/>
     <gene name="flp" presence="accessory"/>
   </model>
+
+
+
+In this example, the described System consists of three mandatory and one accessory components: 
+
+  * Two components, the Gene "GspD" and the Gene "sctN_FLG" can respectively be replaced by sctC, and gspE and pilT genes in the quorum. 
+  * To be considered as part of such System, the components should be co-localized in loci (Clusters of Genes), which in this case would amount to being located from each other at a distance of 5-Genes maximum, except for the Gene "sctN_FLG" that is allowed to be located "alone" in the genome being investigated, by a `loner` parameter being set to True. As the `multi_loci` parameter is not set, by default the System should be made of a single locus (Cluster of co-localized Genes - except for the ones listed as `loners`).
+  * To be considered a complete System, the quorum of Genes should be reached. In this case, the `min_genes_required` and `min_mandatory_genes_required` are not specified and therefore assigned to their default values: `min_mandatory_genes_required` is set to the number of mandatory Genes listed as well as the `min_genes_required` parameter (see above).
+
 
 .. warning::
   
