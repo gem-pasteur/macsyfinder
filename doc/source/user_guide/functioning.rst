@@ -147,19 +147,24 @@ Moreover, if a System is possibly encoded at several locations on the replicon a
 this calls for a **combinatorial screening** of the different clusters to assemble them into coherent systems regarding the macsy-models.
 
 * For a given model, clusters are used to "fill up" Systems' occurrence(s) according to the **quorum criteria** defined in the System's model (see function :func:`macsypy.system.match`):
-   the `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.  
+
+   The `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.  
+
       * In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners are evaluated for System's assessment separately.  
-      * In the case of the `multiple-loci system` search mode (``multi_loci=True``), each possible combination of clusters is confronted to the quorum of the System being examined.
+      * In the case of the `multi-loci system` search mode (``multi_loci=True``), each possible combination of clusters is confronted to the quorum of the System being examined.
 
    The sets of clusters that fulfill the quorum are reported as candidate Systems in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`),
    and they obtain a **System's score** (see below).
+
    The clusters that do not allow to form a candidate System are reported in the `rejected_clusters.txt` output file.
    
 
 *  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily more similar to a system's model than others.  
 
    The assumptions behind this scoring scheme are the following:
+
 	* We set a score for the different types of genes/components when defining a **cluster's score**:
+
 		- +1.0 is added when a `mandatory` gene is present 
 		- +0.5 is added when an `accessory` gene is present 
 		- +0.0 is added when a `neutral` gene is present
@@ -167,16 +172,18 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 		
 	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
 	 
-	In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+	
+	* In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+	
 		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
 		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
 
-	* only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
+	* Only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
 
 
-	In summary, a Systems's score is made of two parts: the **sum of the scores** of the Clusters it is made of, plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.  
-	The systems' scoring step is exemplified in this figure:
+   In summary, a Systems's score is made of two parts: the **sum of the scores** of the Clusters it is made of, plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.  
+   The systems' scoring step is exemplified in this figure:
 
 
    .. image:: ../_static/msf_functionning_step3.svg
