@@ -72,7 +72,7 @@ or **unordered**  (metagenomes, or unassembled genome(s)) (see the :ref:`input-d
 
 In the case of **ordered datasets** (`ordered_replicon` or `gembase` search mode),
 the hits are filtered to keep only hits related to the system's model we are looking for.
-These hits are used to build **clusters of co-localized genes** as defined in the macsy-model files.
+These hits are used to build **clusters of co-localized genes** as defined :ref:`in the macsy-model files <model-definition-genomic-orga>`.
 These clusters are then screened to check for the model specifications such as the minimal quorum of
 "Mandatory" or "Accessory" genes, or the absence of "Forbidden" components.
 
