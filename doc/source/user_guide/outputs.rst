@@ -103,25 +103,29 @@ all_systems.txt
 
 
 The file starts with some comments:
+
     - the version of MacSyFinder used
     - the command line used to produce this file
 
 Then for each replicon, the systems detected are listed along with their description:
-    - **system_id** the unique identifier of a system
-    - **model** the model assigned to this system
-    - **replicon** the name of the replicon harbouring the system
-    - **clusters** the clusters composition of this system
+
+    - **system_id** - the unique identifier of a system
+    - **model** - the model assigned to this system
+    - **replicon** - the name of the replicon harbouring the system
+    - **clusters** - the clusters composition of this system
+
         - each clusters is a list of tuple
         - each tuple is composed of:
+
             - the name of the matching gene(s) in the replicon
             - the name of the corresponding gene profile(s)
             - the position of the corresponding sequence(s) along the replicon
 
-    - **occurrence** the average number of occurrences of each components of the system (as a potential proxy to estimate whether there's the genetic potential for multiple systems in one)
-    - **wholeness** the percentage of the model's components that were found in this system
-    - **loci nb** the number of different loci constituting this system
-    - **score** the score of the system. See `here <XXXX>` for more details
-    - **systems components** the number of occurrences of each model components
+    - **occurrence** - the average number of occurrences of each components of the system (as a potential proxy to estimate whether there's the genetic potential for multiple systems in one)
+    - **wholeness** - the percentage of the model's components that were found in this system
+    - **loci nb** - the number of different loci constituting this system
+    - **score** - the score of the system. See :ref:`here <combinatorial-exploration>` for more details
+    - **systems components** - the number of occurrences of each model components
       in parenthesis the name of the matching profile 
       in square brackets the name of other putative systems that would involve this gene
 
@@ -504,6 +508,6 @@ Logs and configuration files
 
 Three specific output files are systematically built, whatever the search mode, to store information on MacSyFinder's execution: 
 
- * macsyfinder.conf - contains the configuration information of the run. It is useful to recover all the parameters used for the run.
- * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any **bug report**. 
+ * **macsyfinder.conf** - contains the configuration information of the run. It is useful to recover all the parameters used for the run.
+ * **macsyfinder.log** - the log file, contains raw information on the run. Please send it to us with any **bug report**. 
 

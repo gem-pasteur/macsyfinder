@@ -109,6 +109,7 @@ Components correspond to Gene objects in MacSyFinder's implementation, and point
 * **forbidden** components are components which presence is eliminatory for the system's presence assessment.
 
 
+.. _model-definition-genomic-orga:
 
 Specifying a genomic organization
 ---------------------------------
