@@ -181,10 +181,10 @@ class RepliconDB:
         """
         topo_dict = {}
         with open(self.topology_file) as topo_f:
-            for l in topo_f:
-                if l.startswith('#'): 
+            for line in topo_f:
+                if line.startswith('#'):
                     continue
-                replicon_name, topo = l.split(':')
+                replicon_name, topo = line.split(':')
                 replicon_name = replicon_name.strip()
                 topo = topo.strip().lower()
                 topo_dict[replicon_name] = topo
@@ -202,8 +202,8 @@ class RepliconDB:
         with open(self.sequence_idx) as idx_f:
             _max = 0
             genes = []
-            for l in idx_f:
-                seq_id, length, _rank = l.split(";")
+            for line in idx_f:
+                seq_id, length, _rank = line.split(";")
                 genes.append((seq_id, length))
                 _max += 1
             self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
