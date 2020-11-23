@@ -223,7 +223,7 @@ The overall procedure of exploring the space of all possible `Solutions` while f
 i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
 
 We create a graph where each potential `System` is a vertex, and we create an edge between pairs of vertices if they do not share any components (compatible `Systems`).
-Once the graph is created we look for the clique which maximizes the score.
+Once the graph is created we look for the `maximum clique <https://en.wikipedia.org/wiki/Clique_problem#Definitions>`_ which maximizes the score.
 This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible `Systems`. 
 
 
