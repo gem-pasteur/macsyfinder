@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit, get_best_hits, hit_weight
+from macsypy.hit import Hit, ValidHit, get_best_hits, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -268,8 +268,33 @@ class GetBestHitTest(MacsyTest):
 
 class HitWeightTest(MacsyTest):
 
-    def test_hit_weight(self):
+    def test_hit_weight_default(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+        hit_weight = HitWeight(**cfg.hit_weights())
         self.assertEqual(hit_weight.mandatory, 1)
         self.assertEqual(hit_weight.accessory, 0.5)
         self.assertEqual(hit_weight.itself, 1)
         self.assertEqual(hit_weight.exchangeable, 0.75)
+
+
+    def test_hit_weight_not_default(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.mandatory_weight = 2.0
+        args.accessory_weight = 3.0
+        args.neutral_weight = 4.0
+        args.exchangeable_weight = 5.0
+        args.itself_weight = 6.0
+        cfg = Config(MacsyDefaults(), args)
+        hit_weight = HitWeight(**cfg.hit_weights())
+        self.assertEqual(hit_weight.mandatory, 2.0)
+        self.assertEqual(hit_weight.accessory, 3.0)
+        self.assertEqual(hit_weight.neutral, 4.0)
+        self.assertEqual(hit_weight.exchangeable, 5.0)
+        self.assertEqual(hit_weight.itself, 6.0)

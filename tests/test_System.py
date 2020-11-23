@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -49,6 +49,7 @@ class SystemTest(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
+        self.hit_weights = HitWeight(**self.cfg.hit_weights())
 
 
     def test_init(self):
@@ -65,10 +66,14 @@ class SystemTest(MacsyTest):
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
+        system_1 = System(model,
+                          [Cluster([v_hit_1, v_hit_2], model, self.hit_weights)],
+                          self.cfg.redundancy_penalty())
         self.assertTrue(system_1.id.startswith('replicon_id_T2SS_'))
 
-        system_2 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
+        system_2 = System(model,
+                          [Cluster([v_hit_1, v_hit_2], model, self.hit_weights)],
+                          self.cfg.redundancy_penalty())
         self.assertEqual(int(system_2.id.split('_')[-1]), int(system_1.id.split('_')[-1]) + 1)
 
     def test_hits(self):
@@ -89,8 +94,9 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
-                                  Cluster([v_hit_3], model)])
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model, self.hit_weights),
+                                  Cluster([v_hit_3], model, self.hit_weights)],
+                          self.cfg.redundancy_penalty())
 
         self.assertEqual(system_1.hits, [v_hit_1, v_hit_2, v_hit_3])
 
@@ -113,8 +119,9 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
-                                  Cluster([v_hit_3], model)])
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model, self.hit_weights),
+                                  Cluster([v_hit_3], model, self.hit_weights)],
+                          self.cfg.redundancy_penalty())
         # loner are not to take in account to compute position if system contains none loner hit
         self.assertEqual(system_1.position, (10, 20))
 
@@ -134,8 +141,9 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model),
-                                  Cluster([v_hit_3], model)])
+        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model, self.hit_weights),
+                                  Cluster([v_hit_3], model, self.hit_weights)],
+                          self.cfg.redundancy_penalty())
         # loner are not to take in account to compute position if system contains none loner hit
         self.assertEqual(system_1.position, (1, 20))
 
@@ -158,15 +166,15 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_1, v_hit_3], model)
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
         sys_single_locus = System(model, [c1])
         self.assertFalse(sys_single_locus.multi_loci)
         sys_multi_loci = System(model, [c1, c2])
         self.assertTrue(sys_multi_loci.multi_loci)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c3 = Cluster([v_hit_3], model)
-        sys_single_locus_plus_loner = System(model, [c1, c3])
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c3 = Cluster([v_hit_3], model, self.hit_weights)
+        sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
         self.assertFalse(sys_single_locus_plus_loner.multi_loci)
 
     def test_loci(self):
@@ -187,15 +195,15 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_1, v_hit_3], model)
-        sys_single_locus = System(model, [c1])
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
+        sys_single_locus = System(model, [c1], self.cfg.redundancy_penalty())
         self.assertEqual(sys_single_locus.loci, 1)
-        sys_multi_loci = System(model, [c1, c2])
+        sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
         self.assertEqual(sys_multi_loci.loci, 2)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c3 = Cluster([v_hit_3], model)
-        sys_single_locus_plus_loner = System(model, [c1, c3])
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c3 = Cluster([v_hit_3], model, self.hit_weights)
+        sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
         self.assertEqual(sys_single_locus_plus_loner.loci, 1)
 
     def test_wholeness(self):
@@ -216,8 +224,8 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_hit_1, v_hit_2], model)
-        c2 = Cluster([v_hit_1, v_hit_3], model)
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
         s = System(model, [c1])
         self.assertEqual(s.wholeness, 2 / 3)
         s = System(model, [c1, c2])
@@ -241,17 +249,17 @@ class SystemTest(MacsyTest):
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        c = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
+        c = Cluster([v_hit_1, v_hit_2, v_hit_3], model, self.hit_weights)
         s = System(model, [c])
         self.assertEqual(s.occurrence(), 1)
-        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
-        c2 = Cluster([v_hit_2, v_hit_3], model)
-        s = System(model, [c1, c2])
+        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model, self.hit_weights)
+        c2 = Cluster([v_hit_2, v_hit_3], model, self.hit_weights)
+        s = System(model, [c1, c2], self.cfg.redundancy_penalty())
         # The estimation of occurrence number is based on mandatory only
         self.assertEqual(s.occurrence(), 1)
-        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model)
-        c2 = Cluster([v_hit_1, v_hit_3], model)
-        s = System(model, [c1, c2])
+        c1 = Cluster([v_hit_1, v_hit_2, v_hit_3], model, self.hit_weights)
+        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
+        s = System(model, [c1, c2], self.cfg.redundancy_penalty())
         self.assertEqual(s.occurrence(), 2)
 
         ##########################
@@ -287,8 +295,8 @@ class SystemTest(MacsyTest):
         hit_4_3 = Hit(c_gene_sctn, "hit_4_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_4_3 = ValidHit(hit_4_3, gene_sctn, GeneStatus.MANDATORY)
 
-        c = Cluster([v_hit_1, v_hit_2, v_hit_3_1, v_hit_3_2, v_hit_4_1, v_hit_4_2, v_hit_4_3], model)
-        s = System(model, [c])
+        c = Cluster([v_hit_1, v_hit_2, v_hit_3_1, v_hit_3_2, v_hit_4_1, v_hit_4_2, v_hit_4_3], model, self.hit_weights)
+        s = System(model, [c], self.cfg.redundancy_penalty())
         self.assertEqual(s.occurrence(), 1)
 
     def test_score(self):
@@ -332,14 +340,17 @@ class SystemTest(MacsyTest):
         # system with
         # 1 cluster
         # 2 mandatory, 2 accessory no analog/homolog
-        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model)])
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 3)
 
         # system with
         # 2 clusters
         # 2 mandatory, 2 accessory no analog/homolog no duplicates
-        s = System(model, [Cluster([v_h_gspd, v_h_tadz], model),
-                           Cluster([v_h_sctj, v_h_sctn], model)])
+        s = System(model, [Cluster([v_h_gspd, v_h_tadz], model, self.hit_weights),
+                           Cluster([v_h_sctj, v_h_sctn], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 3)
 
         # system with
@@ -347,7 +358,9 @@ class SystemTest(MacsyTest):
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
-        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model)])
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 3)
 
         # system with 2 clusters
@@ -356,13 +369,18 @@ class SystemTest(MacsyTest):
         # 2nd cluster 1 mandatory + 1 accessory already in first cluster
         #                  1      +    0.5
         # 3 - (2 - 1) * 1.5 = 1.5
-        s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj], model)])
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_sctj], model, self.hit_weights),
+                    Cluster([v_h_tadz, v_h_sctj], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 1.5)
 
         # system with 1 cluster
         # 2 mandatory
         # 1 accessory + 1 accessory exchangeable
-        s = System(model, [Cluster([v_h_gspd, v_h_tadz, v_h_sctj_an, v_h_sctn], model)])
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_tadz, v_h_sctj_an, v_h_sctn], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 2.875)
 
         # system with 2 cluster
@@ -372,7 +390,10 @@ class SystemTest(MacsyTest):
         #    1        +      0.375
         # system penalty due to 2 genes with same role in 2 clusters: -1.5
         #    2.875 - 1.5 = 1.375
-        s = System(model, [Cluster([v_h_gspd, v_h_sctj], model), Cluster([v_h_tadz, v_h_sctj_an], model)])
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_sctj], model, self.hit_weights),
+                    Cluster([v_h_tadz, v_h_sctj_an], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 1.375)
 
     def test_is_compatible(self):
@@ -445,41 +466,41 @@ class SystemTest(MacsyTest):
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_A)
+                     model_A, self.hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                     model_A)
+                     model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_B)
+                     model_B, self.hit_weights)
         model_C._min_mandatory_genes_required = 1
         model_C._min_genes_required = 2
         c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                     model_C)
+                     model_C, self.hit_weights)
         model_D._min_mandatory_genes_required = 1
         model_D._min_genes_required = 1
         c5 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
-                     model_D)
+                     model_D, self.hit_weights)
 
-        sys_A = System(model_A, [c1, c2])
+        sys_A = System(model_A, [c1, c2], self.cfg.redundancy_penalty())
         # we need to tweek the replicon_id to have stable results
         # whatever the number of tests ran
         # or the tests order
         sys_A.id = "replicon_id_A"
-        sys_B = System(model_B, [c3])
+        sys_B = System(model_B, [c3], self.cfg.redundancy_penalty())
         sys_B.id = "replicon_id_B"
-        sys_C = System(model_C, [c4])
+        sys_C = System(model_C, [c4], self.cfg.redundancy_penalty())
         sys_C.id = "replicon_id_C"
-        sys_D = System(model_D, [c5])
+        sys_D = System(model_D, [c5], self.cfg.redundancy_penalty())
         sys_D.id = "replicon_id_D"
 
         self.assertTrue(sys_A.is_compatible(sys_B))
@@ -544,22 +565,25 @@ class SystemTest(MacsyTest):
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_1)
+                     model_1,
+                     self.hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_flgB, gene_gspd, GeneStatus.ACCESSORY)],
-                     model_1)
+                     model_1,
+                     self.hit_weights)
 
         model_2._min_mandatory_genes_required = 1
         model_2._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_2)
-        s1 = System(model_1, [c1])
-        s2 = System(model_1, [c1, c2])
-        s3 = System(model_2, [c3])
+                     model_2,
+                     self.hit_weights)
+        s1 = System(model_1, [c1], self.cfg.redundancy_penalty())
+        s2 = System(model_1, [c1, c2], self.cfg.redundancy_penalty())
+        s3 = System(model_2, [c3], self.cfg.redundancy_penalty())
 
         track_multi_systems_hit = HitSystemTracker([s1, s2, s3])
         self.assertSetEqual({s1, s2}, track_multi_systems_hit[h_sctj])
@@ -625,22 +649,22 @@ class SystemTest(MacsyTest):
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_1)
+                     model_1, self.hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_flgB, gene_gspd, GeneStatus.ACCESSORY)],
-                     model_1)
+                     model_1, self.hit_weights)
 
         model_2._min_mandatory_genes_required = 1
         model_2._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_2)
-        s1 = System(model_1, [c1])
-        s2 = System(model_1, [c1, c2])
-        s3 = System(model_2, [c3])
+                     model_2, self.hit_weights)
+        s1 = System(model_1, [c1], self.cfg.redundancy_penalty())
+        s2 = System(model_1, [c1, c2], self.cfg.redundancy_penalty())
+        s3 = System(model_2, [c3], self.cfg.redundancy_penalty())
 
         track_multi_systems_cluster = ClusterSystemTracker([s1, s2, s3])
         self.assertSetEqual({s1, s2}, track_multi_systems_cluster[c1])
@@ -709,8 +733,9 @@ class SystemTest(MacsyTest):
                       v_h_sctn,
                       v_h_gspd,
                       v_h_abc,
-                      v_h_toto], model)
-        s1 = System(model, [c1])
+                      v_h_toto],
+                     model, self.hit_weights)
+        s1 = System(model, [c1], self.cfg.redundancy_penalty())
 
         self.assertDictEqual(s1.mandatory_occ, {'sctJ': [v_h_sctj], 'sctN': [v_h_sctn]})
         self.assertDictEqual(s1.accessory_occ, {'gspD': [v_h_gspd]})
@@ -726,8 +751,9 @@ class SystemTest(MacsyTest):
                       v_h_sctn,
                       v_h_gspd,
                       v_h_abc,
-                      v_h_toto], model)
-        s1 = System(model, [c1])
+                      v_h_toto],
+                     model, self.hit_weights)
+        s1 = System(model, [c1], self.cfg.redundancy_penalty())
 
         self.assertDictEqual(s1.mandatory_occ, {'sctJ': [v_h_sctj], 'sctN': [v_h_sctn]})
         self.assertDictEqual(s1.accessory_occ, {'gspD': [v_h_gspd]})
@@ -793,13 +819,16 @@ class SystemTest(MacsyTest):
         c1 = Cluster([v_h_sctj,
                       v_h_sctn,
                       v_h_gspd,
-                      v_h_toto], model)
-        s1 = System(model, [c1])
+                      v_h_toto],
+                     model, self.hit_weights)
+        s1 = System(model, [c1], self.cfg.redundancy_penalty())
 
         self.assertFalse(s1.multi_loci)
         c2 = Cluster([v_h_sctj,
-                      v_h_sctn], model)
+                      v_h_sctn],
+                     model, self.hit_weights)
         c3 = Cluster([v_h_gspd,
-                      v_h_toto], model)
-        s2 = System(model, [c2, c3])
+                      v_h_toto],
+                     model, self.hit_weights)
+        s2 = System(model, [c2, c3], self.cfg.redundancy_penalty())
         self.assertTrue(s2.multi_loci)

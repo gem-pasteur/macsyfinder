@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -50,6 +50,7 @@ class TestRejectedCluster(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
+        self.hit_weights = HitWeight(self.cfg.hit_weights())
 
 
     def test_init(self):
@@ -68,7 +69,7 @@ class TestRejectedCluster(MacsyTest):
         v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         r_c = RejectedClusters(model, c1, ["bla"])
         self.assertListEqual(r_c.clusters, [c1])
         self.assertEqual(r_c.reasons, ['bla'])
@@ -94,8 +95,8 @@ class TestRejectedCluster(MacsyTest):
         v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
         h50 = Hit(c_gene_2, "h50", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20], model)
-        c2 = Cluster([v_h40, v_h50], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c2 = Cluster([v_h40, v_h50], model, self.hit_weights)
         r_c = RejectedClusters(model, [c1, c2], ["bla"])
 
         expected_str = """Cluster:
@@ -130,8 +131,8 @@ These clusters have been rejected because:
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
-        rc = RejectedClusters(model, [Cluster([v_hit_1, v_hit_2], model),
-                                      Cluster([v_hit_3], model)],
+        rc = RejectedClusters(model, [Cluster([v_hit_1, v_hit_2], model, self.hit_weights),
+                                      Cluster([v_hit_3], model, self.hit_weights)],
                                       ["bla bla"])
 
         self.assertEqual(rc.hits, [v_hit_1, v_hit_2, v_hit_3])

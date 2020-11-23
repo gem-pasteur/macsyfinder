@@ -31,7 +31,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
 from macsypy.cluster import Cluster, build_clusters, get_loners, filter_loners
@@ -51,6 +51,7 @@ class TestBuildCluster(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
+        self.hit_weights = HitWeight(**self.cfg.hit_weights())
 
 
     def test_build_clusters(self):
@@ -90,7 +91,7 @@ class TestBuildCluster(MacsyTest):
         # case replicon is linear, 2 clusters
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h11, h21, h31])
         self.assertListEqual(clusters[1].hits, [h51, h61])
@@ -100,7 +101,7 @@ class TestBuildCluster(MacsyTest):
         h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h50, h51, h70, h80]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h11, h21])
         self.assertListEqual(clusters[1].hits, [h70, h80])
@@ -110,7 +111,7 @@ class TestBuildCluster(MacsyTest):
         h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 3)
         self.assertListEqual(clusters[0].hits, [h11, h21, h31])
         self.assertListEqual(clusters[1].hits, [h51, h61])
@@ -119,14 +120,14 @@ class TestBuildCluster(MacsyTest):
         # replicon is circular contains only one cluster
         rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i*10) for i in range(1, 7)])
         hits = [h10, h20, h30]
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h10, h20, h30])
 
         # replicon is circular the last cluster is merge  with the first So we have only one cluster
         rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i*10) for i in range(1, 7)])
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61]
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h51, h61, h11, h21, h31])
 
@@ -135,7 +136,7 @@ class TestBuildCluster(MacsyTest):
         h80 = Hit(core_genes[3], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h80, h11, h21, h31])
         self.assertListEqual(clusters[1].hits, [h51, h61])
@@ -144,7 +145,7 @@ class TestBuildCluster(MacsyTest):
         rep_info = RepliconInfo('linear', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 2)
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h11, h21, h31])
@@ -158,7 +159,7 @@ class TestBuildCluster(MacsyTest):
         h51 = Hit(core_genes[3], "h51", 10, "replicon_1", 51, 1.0, 61.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h12, h50, h51]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 2)
         self.assertListEqual(clusters[0].hits, [h10, h11, h12])
         self.assertListEqual(clusters[1].hits, [h50, h51])
@@ -168,12 +169,12 @@ class TestBuildCluster(MacsyTest):
         h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h80]
         random.shuffle(hits)
-        clusters = build_clusters(hits, rep_info, model)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h80])
 
         # case replicon is linear, no hits
-        clusters = build_clusters([], rep_info, model)
+        clusters = build_clusters([], rep_info, model, self.hit_weights)
         self.assertListEqual(clusters, [])
 
 
@@ -190,7 +191,7 @@ class TestHitFunc(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
-
+        self.hit_weights = HitWeight(**self.cfg.hit_weights())
 
     def test_get_loners(self):
         model = Model("foo/T2SS", 11)
@@ -222,7 +223,7 @@ class TestHitFunc(MacsyTest):
         h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
 
         # loners are clusters of one hit
-        loners = get_loners([h10, h20, h30, h61, h80], model)
+        loners = get_loners([h10, h20, h30, h61, h80], model, self.hit_weights)
         hit_from_clusters = [h.hits[0] for h in loners]
         self.assertListEqual(hit_from_clusters, [h61, h80])
 
@@ -254,16 +255,16 @@ class TestHitFunc(MacsyTest):
         h40 = Hit(core_genes[3], "h40", 10, "replicon_1", 40, 1.0, 61.0, 1.0, 1.0, 10, 20)
         h50 = Hit(core_genes[4], "h50", 10, "replicon_1", 50, 1.0, 80.0, 1.0, 1.0, 10, 20)
 
-        c1 = Cluster([h10, h20, h30, h40, h50], model)
-        filtered_loners = filter_loners(c1, [Cluster([h30], model),
-                                             Cluster([h40], model),
-                                             Cluster([h50], model)]
+        c1 = Cluster([h10, h20, h30, h40, h50], model, self.hit_weights)
+        filtered_loners = filter_loners(c1, [Cluster([h30], model, self.hit_weights),
+                                             Cluster([h40], model, self.hit_weights),
+                                             Cluster([h50], model, self.hit_weights)]
                                         )
         self.assertListEqual(filtered_loners, [])
-        c1 = Cluster([h10, h20, h40], model)
-        c30 = Cluster([h30], model)
-        c40 = Cluster([h40], model)
-        c50 = Cluster([h50], model)
+        c1 = Cluster([h10, h20, h40], model, self.hit_weights)
+        c30 = Cluster([h30], model, self.hit_weights)
+        c40 = Cluster([h40], model, self.hit_weights)
+        c50 = Cluster([h50], model, self.hit_weights)
         filtered_loners = filter_loners(c1, [c30, c40, c50])
         self.assertListEqual(filtered_loners, [c30, c50])
 
@@ -281,6 +282,8 @@ class TestCluster(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
+        self.hit_weights = HitWeight(**self.cfg.hit_weights())
+
 
     def test_init(self):
         model_1 = Model("foo/T2SS", 11)
@@ -302,7 +305,7 @@ class TestCluster(MacsyTest):
 
         with self.assertRaises(MacsypyError) as ctx:
             with self.catch_log():
-                Cluster([v_h10, v_h20, v_h30, v_h50], model_1)
+                Cluster([v_h10, v_h20, v_h30, v_h50], model_1, self.hit_weights)
         msg = "Cannot build a cluster from hits coming from different replicons"
         self.assertEqual(str(ctx.exception), msg)
 
@@ -324,7 +327,7 @@ class TestCluster(MacsyTest):
         h20 = Hit(c_gene_2, "h20", 10, replicon_name, 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c1 = Cluster([v_h10, v_h20], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         self.assertEqual(c1.replicon_name, replicon_name)
 
 
@@ -344,7 +347,7 @@ class TestCluster(MacsyTest):
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c1 = Cluster([v_h10, v_h20], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         self.assertEqual(len(c1), 2)
 
 
@@ -369,7 +372,7 @@ class TestCluster(MacsyTest):
         v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
         h50 = Hit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20, v_h50], model)
+        c1 = Cluster([v_h10, v_h20, v_h50], model, self.hit_weights)
 
         self.assertTrue(v_h10 in c1)
         self.assertFalse(v_h30 in c1)
@@ -396,14 +399,14 @@ class TestCluster(MacsyTest):
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c = Cluster([v_h10, v_h20], model)
+        c = Cluster([v_h10, v_h20], model, self.hit_weights)
 
         self.assertTrue(c.fulfilled_function(gene_1))
         self.assertFalse(c.fulfilled_function(gene_3))
 
         h50 = Hit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_4, GeneStatus.ACCESSORY)
-        c = Cluster([v_h10, v_h50], model)
+        c = Cluster([v_h10, v_h50], model, self.hit_weights)
         self.assertTrue(c.fulfilled_function(gene_3))
 
     def test_score(self):
@@ -455,39 +458,39 @@ class TestCluster(MacsyTest):
         v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
 
         # 2 mandatory, 2 accessory no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model)
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 2 mandatory, 2 accessory 1 neutral, no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_toto], model)
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_toto], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model)
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 2 mandatory
         # 1 accessory + 1 accessory homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model)
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model, self.hit_weights)
         self.assertEqual(c1.score, 2.875)
 
         # 2 mandatory
         # 1 accessory + 1 accessory analog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctn, v_h_sctj_an], model)
+        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctn, v_h_sctj_an], model, self.hit_weights)
         self.assertEqual(c1.score, 2.875)
 
         # # 2 mandatory
         # # 1 accessory + 1 accessory analog of the 1rst accessory
-        # c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model)
+        # c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model, self.hit_weights)
         # self.assertEqual(c1.score, 2.5)
 
         # test the cache score
         self.assertEqual(c1.score, 2.875)
 
         non_valid_hit = ValidHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)
-        c1 = Cluster([v_h_gspd, non_valid_hit, v_h_tadz], model)
+        c1 = Cluster([v_h_gspd, non_valid_hit, v_h_tadz], model, self.hit_weights)
         with self.assertRaises(MacsypyError) as ctx:
             c1.score
         self.assertEqual(str(ctx.exception),
@@ -516,18 +519,18 @@ class TestCluster(MacsyTest):
         h50 = Hit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
 
-        c1 = Cluster([v_h10, v_h20], model)
-        c2 = Cluster([v_h30, v_h50], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
         c1.merge(c2)
         self.assertListEqual(c1.hits, [v_h10, v_h20, v_h30, v_h50])
 
-        c1 = Cluster([v_h10, v_h20], model)
-        c2 = Cluster([v_h30, v_h50], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
         c2.merge(c1)
         self.assertListEqual(c2.hits, [v_h30, v_h50, v_h10, v_h20])
 
-        c1 = Cluster([v_h10, v_h20], model)
-        c2 = Cluster([v_h30, v_h50], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
         c1.merge(c2, before=True)
         self.assertListEqual(c1.hits, [v_h30, v_h50, v_h10, v_h20])
 
@@ -539,7 +542,7 @@ class TestCluster(MacsyTest):
         v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
         h50 = Hit(c_gene_3, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
-        c3 = Cluster([v_h30, v_h50], model_2)
+        c3 = Cluster([v_h30, v_h50], model_2, self.hit_weights)
         with self.assertRaises(MacsypyError) as ctx:
             c1.merge(c3)
         self.assertEqual(str(ctx.exception), "Try to merge Clusters from different model")
@@ -560,7 +563,7 @@ class TestCluster(MacsyTest):
         v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
         h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
-        c1 = Cluster([v_h10, v_h20], model)
+        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         s ="""Cluster:
 - model = T2SS
 - replicon = replicon_1

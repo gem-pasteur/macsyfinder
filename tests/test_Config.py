@@ -349,7 +349,7 @@ class TestConfig(MacsyTest):
         self.parsed_args.multi_loci = 'Set_1/T2SS,set_1/Flagelum'
         self.parsed_args.models = [['Set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
         cfg = Config(self.defaults, self.parsed_args)
-        expected = {k: v for k, v in cfg._options.items() if v}
+        expected = {k: v for k, v in cfg._options.items() if v is not None}
         expected['max_nb_genes'] = 'Set_1/T2SS 5 set_1/Flagelum 12'
         expected['models'] = [('models_1', 'Set_1 T9SS T3SS T4SS_typeI')]
         with tempfile.TemporaryDirectory() as tmpdirname:

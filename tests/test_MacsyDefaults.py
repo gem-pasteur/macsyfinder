@@ -65,6 +65,12 @@ class TestMacsyDefaults(MacsyTest):
                          'topology_file': None,
                          'verbosity': 0,
                          'worker': 1,
+                         'mandatory_weight': 1.0,
+                         'accessory_weight': .5,
+                         'neutral_weight': 0.0,
+                         'exchangeable_weight': .75,
+                         'itself_weight': 1.0,
+                         'redundancy_penalty': 1.5,
                          }
 
     def test_MacsyDefaults(self):

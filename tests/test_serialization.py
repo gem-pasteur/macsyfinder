@@ -26,7 +26,7 @@ import os
 import argparse
 import itertools
 
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -52,6 +52,7 @@ class SerializationTest(MacsyTest):
         self.model_name = 'foo'
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
+        self.hit_weights = HitWeight(**self.cfg.hit_weights())
         # reset the uniq id number for AbstractSetOfHits
         # to have predictable results
         AbstractSetOfHits._id = itertools.count(1)
@@ -113,22 +114,22 @@ class SerializationTest(MacsyTest):
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_A)
+                     model_A, self.hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                     model_A)
+                     model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                     model_B)
+                     model_B, self.hit_weights)
 
-        sys_A = System(model_A, [c1, c2])
+        sys_A = System(model_A, [c1, c2], self.cfg.redundancy_penalty())
         sys_A.id = "sys_id_A"
-        sys_B = System(model_B, [c3])
+        sys_B = System(model_B, [c3], self.cfg.redundancy_penalty())
         sys_B.id = "sys_id_B"
         hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B])
         system_serializer = TxtSystemSerializer()
@@ -175,9 +176,9 @@ neutral genes:
         v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
         h_sctn_flg = Hit(c_gene_sctn_flg, "h_sctn_flg", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 30, 40)
         v_h_sctn_flg = ValidHit(h_sctn_flg, gene_sctn_flg, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h_gspd, v_h_sctj], model)
-        c2 = Cluster([v_h_sctn_flg], model)
-        sys_multi_loci = System(model, [c1, c2])
+        c1 = Cluster([v_h_gspd, v_h_sctj], model, self.hit_weights)
+        c2 = Cluster([v_h_sctn_flg], model, self.hit_weights)
+        sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
         system_serializer = TsvSystemSerializer()
 
@@ -255,22 +256,22 @@ neutral genes:
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_A)
+                     model_A, self.hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                     model_A)
+                     model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_B)
+                     model_B, self.hit_weights)
 
-        sys_A = System(model_A, [c1, c2])
+        sys_A = System(model_A, [c1, c2], self.cfg.redundancy_penalty())
         sys_A.id = "sys_id_A"
-        sys_B = System(model_B, [c3])
+        sys_B = System(model_B, [c3], self.cfg.redundancy_penalty())
         sys_B.id = "sys_id_B"
 
         sol = [sys_A, sys_B]
