@@ -43,7 +43,7 @@ from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
 from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
-from macsypy.hit import get_best_hits
+from macsypy.hit import get_best_hits, HitWeight
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, HitSystemTracker
 from macsypy.utils import get_def_to_detect
 from macsypy.profile import ProfileFactory
@@ -279,7 +279,47 @@ If --e-value-search is set the --cut-ga option is disabled and the new threshold
                                help=f"""Minimal profile coverage required in the hit alignment to allow
 the hit selection for system detection. 
 (default: {msf_def['coverage_profile']})""")
+    score_options = parser.add_argument_group(title="score options",
+                                              description="Options for cluster and systems scoring")
+    score_options.add_argument('--mandatory-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight of a mandatory component in cluster scoring
+(default:{msf_def['mandatory_weight']})""")
+    score_options.add_argument('--accessory-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight of a mandatory component in cluster scoring
+(default:{msf_def['accessory_weight']})""")
+    score_options.add_argument('--neutral-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight of a mandatory component in cluster scoring
+(default:{msf_def['neutral_weight']})""")
 
+    score_options.add_argument('--itself-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight modifier for a component which code for itself cluster scoring
+(default:{msf_def['itself_weight']})""")
+
+    score_options.add_argument('--exchangeable-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight modifier for a component which code for exchangeable cluster scoring
+    (default:{msf_def['exchangeable_weight']})""")
+    score_options.add_argument('--redundancy-penalty',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight modifier for cluster which bring a component already presents in other 
+clusters (default:{msf_def['redundancy_penalty']})""")
+    
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
@@ -490,7 +530,8 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.debug("".join([str(h) for h in hits_related_one_model]))
             logger.debug("#" * 80)
             logger.info("Building clusters")
-            clusters = cluster.build_clusters(hits_related_one_model, rep_info, model)
+            hit_weights = HitWeight(**config.hit_weights())
+            clusters = cluster.build_clusters(hits_related_one_model, rep_info, model, hit_weights)
             logger.debug("{:#^80}".format("CLUSTERS"))
             logger.debug("\n" + "\n".join([str(c) for c in clusters]))
             logger.debug("#" * 80)
@@ -502,7 +543,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             else:
                 # we must add loners manually
                 # but only if the cluster does not already contains them
-                loners = cluster.get_loners(hits_related_one_model, model)
+                loners = cluster.get_loners(hits_related_one_model, model, hit_weights)
                 clusters_combination = []
                 for one_cluster in clusters:
                     one_clust_combination = [one_cluster]
@@ -512,7 +553,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
 
             for one_combination_set in clusters_combination:
                 for one_clust_combination in one_combination_set:
-                    ordered_matcher = OrderedMatchMaker(model)
+                    ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=1.5)
                     res = ordered_matcher.match(one_clust_combination)
                     if isinstance(res, System):
                         systems.append(res)
@@ -771,6 +812,7 @@ def main(args=None, loglevel=None):
         models = ModelBank()
         genes = GeneBank()
         profile_factory = ProfileFactory(config)
+        macsypy.hit.hit_weight = macsypy.hit.HitWeight(itself=3, exchangeable=.75, mandatory=2, accessory=.25, neutral=1.5)
 
         logger.info("\n{:#^70}".format(" Searching systems "))
         all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)

@@ -26,13 +26,13 @@ import itertools
 import logging
 
 from .error import MacsypyError
-from .hit import hit_weight
+from .hit import HitWeight
 from .gene import GeneStatus
 
 _log = logging.getLogger(__name__)
 
 
-def build_clusters(hits, rep_info, model):
+def build_clusters(hits, rep_info, model, hit_weights):
     """
     From a list of filtered hits, and replicon information (topology, length),
     build all lists of hits that satisfied the constraints:
@@ -87,7 +87,7 @@ def build_clusters(hits, rep_info, model):
                 if len(cluster_scaffold) > 1 or is_a_loner:
                     # close the current scaffold if it contains at least 2 hits
                     # or one loner
-                    cluster = Cluster(cluster_scaffold, model)
+                    cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 # open new scaffold
                 cluster_scaffold = [hit]
@@ -100,15 +100,15 @@ def build_clusters(hits, rep_info, model):
             # if there are clusters
             # may be the hit collocate with the first hit of the first cluster
             if clusters and collocates(cluster_scaffold[0], clusters[0].hits[0], model):
-                new_cluster = Cluster(cluster_scaffold, model)
+                new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters[0].merge(new_cluster, before=True)
             elif model.get_gene(cluster_scaffold[0].gene.name).loner:
                 # the hit does not collocate but it's a loner
                 # handle clusters containing only one loner
-                new_cluster = Cluster(cluster_scaffold, model)
+                new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters.append(new_cluster)
         elif len_scaffold > 1:
-            new_cluster = Cluster(cluster_scaffold, model)
+            new_cluster = Cluster(cluster_scaffold, model, hit_weights)
             clusters.append(new_cluster)
 
         # handle circularity
@@ -119,7 +119,7 @@ def build_clusters(hits, rep_info, model):
     return clusters
 
 
-def get_loners(hits, model):
+def get_loners(hits, model, hit_weights):
     """
     Create a list of Clusters each cluster is build with one hit matching a loner
 
@@ -131,7 +131,7 @@ def get_loners(hits, model):
     """
     gene_loners = {g.name for g in model.genes if g.loner}
     loners = [hit for hit in hits if hit.gene.name in gene_loners]
-    loners = [Cluster([hit], model) for hit in loners]
+    loners = [Cluster([hit], model, hit_weights) for hit in loners]
     return loners
 
 
@@ -160,7 +160,7 @@ class Cluster:
     """
 
 
-    def __init__(self, hits, model):
+    def __init__(self, hits, model, hit_wheights):
         """
 
         :param hits: the hits constituting this cluster
@@ -173,6 +173,7 @@ class Cluster:
         self._check_replicon_consistency()
         self._score = None
         self._genes_roles = None
+        self._hit_weights = hit_wheights
 
 
     def __len__(self):
@@ -250,19 +251,19 @@ class Cluster:
                 # attribute a score for this hit
                 # according to status of the gene_ref in the model: mandatory/accessory
                 if v_hit.status == GeneStatus.MANDATORY:
-                    hit_score = hit_weight.mandatory
+                    hit_score = self._hit_weights.mandatory
                 elif v_hit.status == GeneStatus.ACCESSORY:
-                    hit_score = hit_weight.accessory
+                    hit_score = self._hit_weights.accessory
                 elif v_hit.status == GeneStatus.NEUTRAL:
-                    hit_score = hit_weight.neutral
+                    hit_score = self._hit_weights.neutral
                 else:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
                 # weighted the hit score according to the hit match the gene or
                 # is an exchangeable
                 if v_hit.gene_ref.is_exchangeable:
-                    hit_score *= hit_weight.exchangeable
+                    hit_score *= self._hit_weights.exchangeable
                 else:
-                    hit_score *= hit_weight.itself
+                    hit_score *= self._hit_weights.itself
                 score += hit_score
                 seen_hits.add(v_hit.gene_ref)
         self._score = score
