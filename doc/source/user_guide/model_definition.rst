@@ -96,6 +96,8 @@ A macsy-model defines a macromolecular System as:
 * Rules for **quorum** specifying how many components are required to infer the presence of a complete system.
 
 
+.. _components:
+
 Macsy-model Components
 ----------------------
 
