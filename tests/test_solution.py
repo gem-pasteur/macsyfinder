@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -124,65 +124,66 @@ def _build_systems(cfg, profile_factory):
 
     model_A._min_mandatory_genes_required = 2
     model_A._min_genes_required = 2
+    hit_weights = HitWeight(**cfg.hit_weights())
     c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                   ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                   ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                   ],
-                 model_A)
+                 model_A, hit_weights)
 
     c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                   ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                 model_A)
+                 model_A, hit_weights)
 
     model_B._min_mandatory_genes_required = 1
     model_B._min_genes_required = 2
     c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                   ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                   ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                 model_B)
+                 model_B, hit_weights)
     model_C._min_mandatory_genes_required = 1
     model_C._min_genes_required = 2
     c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                   ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                   ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
                   ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                 model_C)
+                 model_C, hit_weights)
     model_D._min_mandatory_genes_required = 1
     model_D._min_genes_required = 1
     c5 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
                   ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
-                 model_D)
+                 model_D, hit_weights)
 
     model_E._min_mandatory_genes_required = 0
     model_E._min_genes_required = 1
     c6 = Cluster([ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                 model_E)
+                 model_E, hit_weights)
 
     model_F._min_mandatory_genes_required = 1
     model_F._min_genes_required = 1
     c7 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY)],
-                 model_F)
+                 model_F, hit_weights)
 
     systems = {}
 
-    systems['A'] = System(model_A, [c1, c2])  # 5 hits
+    systems['A'] = System(model_A, [c1, c2], cfg.redundancy_penalty())  # 5 hits
     # we need to tweek the replicon_id to have stable ressults
     # whatever the number of tests ran
     # or the tests order
     systems['A'].id = "replicon_id_A"
-    systems['B'] = System(model_B, [c3])  # 3 hits
+    systems['B'] = System(model_B, [c3], cfg.redundancy_penalty())  # 3 hits
     systems['B'].id = "replicon_id_B"
-    systems['C'] = System(model_C, [c4])  # 4 hits
+    systems['C'] = System(model_C, [c4], cfg.redundancy_penalty())  # 4 hits
     systems['C'].id = "replicon_id_C"
-    systems['D'] = System(model_D, [c5])  # 2 hits
+    systems['D'] = System(model_D, [c5], cfg.redundancy_penalty())  # 2 hits
     systems['D'].id = "replicon_id_D"
-    systems['E'] = System(model_E, [c6])  # 1 hit
+    systems['E'] = System(model_E, [c6], cfg.redundancy_penalty())  # 1 hit
     systems['E'].id = "replicon_id_E"
-    systems['F'] = System(model_F, [c7])  # 1 hit
+    systems['F'] = System(model_F, [c7], cfg.redundancy_penalty())  # 1 hit
     systems['F'].id = "replicon_id_F"
-    systems['G'] = System(model_G, [c4])  # 4 hits
+    systems['G'] = System(model_G, [c4], cfg.redundancy_penalty())  # 4 hits
     systems['G'].id = "replicon_id_G"
-    systems['H'] = System(model_H, [c5])  # 2 hits
+    systems['H'] = System(model_H, [c5], cfg.redundancy_penalty())  # 2 hits
     systems['H'].id = "replicon_id_H"
 
     return systems

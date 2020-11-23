@@ -36,7 +36,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation
-from macsypy.hit import Hit, ValidHit
+from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.model import Model, ModelBank
 from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractSetOfHits, LikelySystem, UnlikelySystem
 from macsypy.cluster import Cluster
@@ -123,7 +123,9 @@ set_2
         v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
         hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
+        system_1 = System(model,
+                          [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
+                          cfg.redundancy_penalty())
 
         system_str = f"""# macsyfinder {macsypy.__version__}
 # {' '.join(sys.argv)}
@@ -185,7 +187,9 @@ neutral genes:
             v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
             hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
             v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-            system_1 = System(model, [Cluster([v_hit_1, v_hit_2], model)])
+            system_1 = System(model,
+                              [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
+                              cfg.redundancy_penalty())
 
             system_tsv = f"""# macsyfinder {macsypy.__version__}
 # {' '.join(sys.argv)}
@@ -295,22 +299,23 @@ neutral genes:
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
+        hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
-                     model_A)
+                     model_A, hit_weights)
 
         c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                     model_A)
+                     model_A, hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
         c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_B)
+                     model_B, hit_weights)
 
         model_C._min_mandatory_genes_required = 1
         model_C._min_genes_required = 2
@@ -318,13 +323,13 @@ neutral genes:
                       ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
                       ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                     model_C)
+                     model_C, hit_weights)
 
-        sys_A = System(model_A, [c1, c2])
+        sys_A = System(model_A, [c1, c2], cfg.redundancy_penalty())
         sys_A.id = "sys_id_A"
-        sys_B = System(model_B, [c3])
+        sys_B = System(model_B, [c3], cfg.redundancy_penalty())
         sys_B.id = "sys_id_B"
-        sys_C = System(model_C, [c4])
+        sys_C = System(model_C, [c4], cfg.redundancy_penalty())
         sys_C.id = "sys_id_C"
 
         sol_1 = [sys_A, sys_B]
@@ -453,8 +458,9 @@ neutral genes:
         v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
         h50 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
         v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20], model)
-        c2 = Cluster([v_h40, v_h50], model)
+        hit_weights = HitWeight(**cfg.hit_weights())
+        c1 = Cluster([v_h10, v_h20], model, hit_weights)
+        c2 = Cluster([v_h40, v_h50], model, hit_weights)
         r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
 
         rej_clst_str = f"""# macsyfinder {macsypy.__version__}
