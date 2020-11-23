@@ -118,10 +118,10 @@ def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[
                          match_case: bool = False) -> List[Tuple[str, str, Dict]]:
     """
 
-    :param pattern:
-    :param remote:
-    :param packages:
-    :param match_case:
+    :param pattern: the substring to search packages names
+    :param remote: the uri of the macsy-models index
+    :param packages: list of packages to search in
+    :param match_case: True if the search is case sensitive, False otherwise
     :return:
     """
     results = []
@@ -142,6 +142,14 @@ def _search_in_pack_name(pattern: str, remote: RemoteModelIndex, packages: List[
 
 
 def _search_in_desc(pattern: str, remote: RemoteModelIndex, packages: List[str], match_case: bool = False):
+    """
+
+    :param pattern: the substring to search packages descriptions
+    :param remote: the uri of the macsy-models index
+    :param packages: list of packages to search in
+    :param match_case: True if the search is case sensitive, False otherwise
+    :return:
+    """
     results = []
     for pack_name in packages:
         all_versions = remote.list_package_vers(pack_name)
