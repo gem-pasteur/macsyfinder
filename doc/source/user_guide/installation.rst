@@ -14,7 +14,7 @@ Installation
 ************
 
 MacSyFinder works with models for macromolecular systems that are not shipped with it, 
-you have to install them separately. See the :ref:` macsydata section <macsydata>` below.
+you have to install them separately. See the :ref:`macsydata section <macsydata>` below.
 
 
 .. _dependencies:
@@ -25,6 +25,7 @@ MacSyFinder dependencies
 **Python version >=3.7** is required to run MacSyFinder: https://docs.python.org/3.7/index.html
 
 MacSyFinder has one program dependency:
+
  - the *Hmmer* program, version 3.1 (http://hmmer.janelia.org/).
 
 The *hmmsearch* program should be installed (*e.g.*, in the PATH) in order to use MacSyFinder.
@@ -33,6 +34,7 @@ see the :ref:`command-line options <hmmer-options>`.
  
  
 MacSyFinder also relies on four Python library dependencies:
+
  - colorlog
  - pyyaml
  - packaging

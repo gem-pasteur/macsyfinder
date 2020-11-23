@@ -8,12 +8,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="msf_functionning_step2.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:version="0.91 r13725"
    id="svg8"
    version="1.1"
-   viewBox="0 0 320.257 146.37193"
-   height="14.637193cm"
-   width="32.0257cm">
+   viewBox="0 0 320.28866 152.04804"
+   height="15.204803cm"
+   width="32.028866cm">
   <defs
      id="defs2">
     <marker
@@ -28,7 +28,8 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path3454" />
+         id="path3454"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lend"
@@ -43,7 +44,8 @@
          id="path3376"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lstart"
@@ -57,7 +59,8 @@
          id="path2911"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(0.8,0,0,0.8,10,0)" />
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lend"
@@ -71,7 +74,8 @@
          id="path2761"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <rect
        id="rect6380"
@@ -91,7 +95,8 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path5771" />
+         id="path5771"
+         inkscape:connector-curvature="0" />
     </marker>
     <rect
        id="rect4565"
@@ -111,7 +116,8 @@
          id="path6044-6"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Lend"
@@ -125,7 +131,110 @@
          id="path2871-6"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
-         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3456-4"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3454-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="Arrow1Lstart-5"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2911-0"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker2763-4"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2761-6"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <rect
+       x="-79.571266"
+       y="261.63272"
+       width="307.06079"
+       height="71.78347"
+       id="rect6380-6" />
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend-2"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path5771-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <rect
+       x="153.77928"
+       y="48.769775"
+       width="54.191216"
+       height="47.98946"
+       id="rect4565-2" />
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker6046-3-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path6044-6-0"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker2873-3-1"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path2871-6-0"
+         inkscape:connector-curvature="0" />
     </marker>
   </defs>
   <sodipodi:namedview
@@ -134,18 +243,18 @@
      fit-margin-right="0"
      fit-margin-left="0"
      fit-margin-top="0"
-     inkscape:window-maximized="0"
-     inkscape:window-y="423"
-     inkscape:window-x="5166"
-     inkscape:window-height="1408"
-     inkscape:window-width="1927"
+     inkscape:window-maximized="1"
+     inkscape:window-y="1"
+     inkscape:window-x="0"
+     inkscape:window-height="1395"
+     inkscape:window-width="2560"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="368.91122"
-     inkscape:cx="660.24126"
-     inkscape:zoom="1.02"
+     inkscape:cy="272.10756"
+     inkscape:cx="555.56245"
+     inkscape:zoom="1.4663779"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -161,31 +270,31 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(78.468657,-96.469225)"
+     transform="translate(78.500316,-96.469225)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
     <rect
-       style="fill:#d6ffdc;fill-opacity:1;stroke:#000000;stroke-width:0.19366;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#d6ffdc;fill-opacity:1;stroke:#000000;stroke-width:0.19366001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect22460-5"
        width="320.06335"
        height="52.935101"
        x="-78.403503"
-       y="189.8409" />
+       y="195.48534" />
     <rect
        y="96.597725"
        x="-78.340157"
-       height="93.243172"
+       height="98.632111"
        width="320"
        id="rect22460"
        style="fill:#f0ffd6;fill-opacity:1;stroke:#000000;stroke-width:0.257;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <g
-       transform="translate(0,-18.520839)"
+       transform="translate(0,-12.876394)"
        id="g7407">
       <rect
          y="193.01295"
@@ -193,14 +302,14 @@
          height="13.018911"
          width="35.342052"
          id="rect1768-60"
-         style="fill:#7aacad;fill-opacity:0.534338;stroke:#7e7e7e;stroke-width:0.109963;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="fill:#7aacad;fill-opacity:0.53433802;stroke:#7e7e7e;stroke-width:0.109963;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          id="text1772-84"
          y="204.95865"
          x="46.022724"
-         style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
          xml:space="preserve"><tspan
-           style="font-size:4.23333px;stroke-width:0.264583"
+           style="font-size:4.23332977px;stroke-width:0.26458299"
            y="204.95865"
            x="46.022724"
            id="tspan1770-4"
@@ -211,21 +320,21 @@
         <g
            id="g842-0"
            transform="matrix(0.7647164,0,0,0.69233829,4.2209488,49.267183)"
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
           <rect
              y="28.623526"
              x="10.587445"
              height="8.0769234"
              width="14.071193"
              id="rect10-4"
-             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           <text
              id="text837-43"
              y="34.059544"
              x="14.521811"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              xml:space="preserve"><tspan
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
                y="34.059544"
                x="14.521811"
                id="tspan835-55"
@@ -233,7 +342,7 @@
         </g>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-4"
          transform="matrix(0.76472105,0,0,0.69233132,34.269554,174.30598)">
         <rect
@@ -242,21 +351,21 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-1"
-           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-68"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-0"
              sodipodi:role="line">H2</tspan></text>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-2-3-3"
          transform="matrix(0.76461885,0,0,0.69248946,45.924556,174.30225)">
         <rect
@@ -265,14 +374,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-3-5"
-           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-2-9"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2-9-8"
@@ -280,10 +389,10 @@
       </g>
     </g>
     <g
-       transform="translate(8.4481175,67.752477)"
+       transform="translate(8.4481175,73.396922)"
        id="g1777">
       <rect
-         style="fill:#7aacad;fill-opacity:0.534338;stroke:#7e7e7e;stroke-width:0.125094;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="fill:#7aacad;fill-opacity:0.53433802;stroke:#7e7e7e;stroke-width:0.125094;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect1768"
          width="45.790928"
          height="13.00378"
@@ -291,7 +400,7 @@
          y="82.143669" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
          x="29.760933"
          y="94.081902"
          id="text1772"><tspan
@@ -299,21 +408,21 @@
            id="tspan1770"
            x="29.760933"
            y="94.081902"
-           style="font-size:4.23333px;stroke-width:0.264583">C1</tspan></text>
+           style="font-size:4.23332977px;stroke-width:0.26458299">C1</tspan></text>
     </g>
     <rect
-       style="fill:#62ad4d;fill-opacity:0.390158;stroke:#7e7e7e;stroke-width:0.0628492;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:#62ad4d;fill-opacity:0.39015802;stroke:#7e7e7e;stroke-width:0.0628492;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect1768-6-4"
        width="11.526713"
        height="13.039795"
        x="225.78923"
-       y="150.39177" />
+       y="156.03621" />
     <g
        id="g1777-4-0"
-       transform="translate(187.88387,70.737045)">
+       transform="translate(187.88387,76.38149)">
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
          x="41.322708"
          y="91.934601"
          id="text1772-8-0"><tspan
@@ -321,13 +430,13 @@
            id="tspan1770-6-1"
            x="41.322708"
            y="91.934601"
-           style="font-size:4.23333px;stroke-width:0.264583">C3</tspan></text>
+           style="font-size:4.23332977px;stroke-width:0.26458299">C3</tspan></text>
     </g>
     <g
-       transform="translate(-21.176882,-13.893667)"
+       transform="translate(-21.176882,-8.2492221)"
        id="g10014">
       <rect
-         style="fill:#e3e8a3;fill-opacity:0.534338;stroke:#7e7e7e;stroke-width:0.140594;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="fill:#e3e8a3;fill-opacity:0.53433802;stroke:#7e7e7e;stroke-width:0.14059401;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect1768-6"
          width="57.909492"
          height="12.988693"
@@ -338,7 +447,7 @@
          transform="translate(98.841857,84.029922)">
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
            x="34.523438"
            y="91.965233"
            id="text1772-8"><tspan
@@ -346,11 +455,11 @@
              id="tspan1770-6"
              x="34.523438"
              y="91.965233"
-             style="font-size:4.23333px;stroke-width:0.264583">C2</tspan></text>
+             style="font-size:4.23332977px;stroke-width:0.26458299">C2</tspan></text>
       </g>
     </g>
     <g
-       transform="translate(0,-18.520839)"
+       transform="translate(0,-12.876394)"
        id="g7389">
       <rect
          y="193.02914"
@@ -358,25 +467,25 @@
          height="13.002764"
          width="46.307087"
          id="rect1768-6-7"
-         style="fill:#e3e8a3;fill-opacity:0.534338;stroke:#7e7e7e;stroke-width:0.125792;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+         style="fill:#e3e8a3;fill-opacity:0.53433802;stroke:#7e7e7e;stroke-width:0.125792;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <g
          transform="matrix(0.76546776,0,0,0.6924331,85.494314,174.2753)"
          id="g1104-2"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
            y="28.623526"
            x="10.587445"
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-0-5"
-           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-0-7"
            y="34.059544"
            x="12.934312"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="12.934312"
              id="tspan835-0-2-0-0"
@@ -385,9 +494,9 @@
       <g
          transform="matrix(0.76551274,0,0,0.69276926,96.684694,174.23824)"
          id="g1148-1"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5-0-0-9-96"
            width="14.071193"
            height="8.0769234"
@@ -395,7 +504,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="12.934312"
            y="34.059544"
            id="text837-8-6-0-5-3"><tspan
@@ -403,11 +512,11 @@
              id="tspan835-0-2-0-8-0"
              x="12.934312"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
       </g>
       <g
          transform="matrix(0.76562744,0,0,0.69223768,107.86163,174.19406)"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g1148-5-2">
         <rect
            y="28.623526"
@@ -415,14 +524,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-0-9-5-0"
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-0-5-6-0"
            y="34.059544"
            x="12.934312"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="12.934312"
              id="tspan835-0-2-0-8-9-36"
@@ -441,7 +550,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.162338;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.162338;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.303605"
            y="34.059544"
            id="text837-8-6-0-5-6-2-6"><tspan
@@ -449,7 +558,7 @@
              id="tspan835-0-2-0-8-9-0-0"
              x="14.303605"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.162338;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.162338;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
       </g>
       <g
          transform="translate(79.779086,112.82768)"
@@ -458,9 +567,9 @@
            id="text1772-8-7"
            y="91.965233"
            x="34.523438"
-           style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
            xml:space="preserve"><tspan
-             style="font-size:4.23333px;stroke-width:0.264583"
+             style="font-size:4.23332977px;stroke-width:0.26458299"
              y="91.965233"
              x="34.523438"
              id="tspan1770-6-2"
@@ -468,24 +577,24 @@
       </g>
     </g>
     <g
-       transform="translate(0,-18.520839)"
+       transform="translate(0,-12.876394)"
        id="g7367">
       <rect
-         style="fill:#62ad4d;fill-opacity:0.390158;stroke:#7e7e7e;stroke-width:0.0628491;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="fill:#62ad4d;fill-opacity:0.39015802;stroke:#7e7e7e;stroke-width:0.0628491;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          id="rect1768-6-4-2"
          width="11.526714"
          height="13.039795"
          x="164.01334"
          y="193.18922" />
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-2-3-1-3-2"
          transform="matrix(0.76558008,0,0,0.69229579,146.27161,162.18957)">
         <g
            id="g1432-0-5"
            transform="translate(13.229085,17.809752)">
           <rect
-             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-0-3-1-0-2"
              width="14.071193"
              height="8.0769234"
@@ -493,7 +602,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="14.521811"
              y="34.059544"
              id="text837-8-6-2-0-0-7"><tspan
@@ -501,7 +610,7 @@
                id="tspan835-0-2-9-7-2-4"
                x="14.521811"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
         </g>
       </g>
       <g
@@ -509,7 +618,7 @@
          transform="translate(125.9114,112.70616)">
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+           style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
            x="41.322708"
            y="91.934601"
            id="text1772-8-0-3"><tspan
@@ -517,7 +626,7 @@
              id="tspan1770-6-1-0"
              x="41.322708"
              y="91.934601"
-             style="font-size:4.23333px;stroke-width:0.264583">C3</tspan></text>
+             style="font-size:4.23332977px;stroke-width:0.26458299">C3</tspan></text>
       </g>
     </g>
     <g
@@ -525,53 +634,67 @@
        id="g3310" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-33.544914"
-       y="199.51242"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-14.918245"
+       y="205.15686"
        id="text2146-2"><tspan
          sodipodi:role="line"
          id="tspan2144-2"
-         x="-33.544914"
-         y="199.51242"
-         style="font-size:4.93889px;stroke-width:0.264583">C1             =&gt; Rejected (min_genes_required)</tspan><tspan
+         x="-14.918245"
+         y="205.15686"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299">C1             =&gt; Rejected <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:'Arial Bold'"
+   id="tspan3665">(min_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="205.68604"
-         style="font-size:4.93889px;stroke-width:0.264583"
-         id="tspan2148-3">C2             =&gt; Rejected (min_mandatory_required / min_genes_required)</tspan><tspan
+         x="-14.918245"
+         y="211.33047"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2148-3">C2             =&gt; Rejected <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:'Arial Bold'"
+   id="tspan3667">(min_mandatory_genes_required / min_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="211.85965"
-         style="font-size:4.93889px;stroke-width:0.264583"
-         id="tspan2150-8">C3             =&gt; Rejected (min_mandatory_required / min_genes_required)</tspan><tspan
+         x="-14.918245"
+         y="217.50409"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2150-8">C3             =&gt; Rejected <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:'Arial Bold'"
+   id="tspan3669">(min_mandatory_genes_required / min_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="218.03325"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan2152-9">C1 C2       =&gt; System</tspan><tspan
+         x="-14.918245"
+         y="223.6777"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2152-9">C1 C2       =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3716">(System A #1: &quot;SA_1&quot;)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="224.20686"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan2154-7">C1 C3       =&gt; System</tspan><tspan
+         x="-14.918245"
+         y="229.8513"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2154-7">C1 C3       =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3718">(&quot;SA_2&quot;)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="230.38048"
-         style="font-size:4.93889px;stroke-width:0.264583"
-         id="tspan2156-6">C2 C3       =&gt; Rejected (min_mandatory_required)</tspan><tspan
+         x="-14.918245"
+         y="236.02492"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2156-6">C2 C3        =&gt; Rejected <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:'Arial Bold'"
+   id="tspan3671">(min_mandatory_genes_required)</tspan></tspan><tspan
          sodipodi:role="line"
-         x="-33.544914"
-         y="236.55409"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         id="tspan2158-6">C1 C2 C3  =&gt; System</tspan></text>
+         x="-14.918245"
+         y="242.19853"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         id="tspan2158-6">C1 C2 C3  =&gt; System <tspan
+   style="font-size:3.52777791px"
+   id="tspan3720">(&quot;SA_3&quot;)</tspan></tspan></text>
     <text
        xml:space="preserve"
        id="text4563"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect4565);fill:#000000;fill-opacity:1;stroke:none;"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;white-space:pre;fill:#000000;fill-opacity:1;stroke:none"
        transform="translate(48.683352,4.7625002)" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="46.489994"
        y="55.977627"
        id="text3649"><tspan
@@ -579,15 +702,15 @@
          id="tspan3647"
          x="46.489994"
          y="55.977627"
-         style="stroke-width:0.264583" /></text>
+         style="stroke-width:0.26458299" /></text>
     <g
-       transform="translate(-0.4455775)"
+       transform="translate(-0.4455775,0)"
        id="g9631">
       <g
          id="g8792-1-7"
          transform="translate(99.878356,-0.05554425)">
         <rect
-           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.218;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.21799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-36-9-4"
            width="10.760511"
            height="5.5919213"
@@ -596,7 +719,7 @@
         <text
            transform="scale(1.0509776,0.95149507)"
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.59367px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.59366989px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none"
            x="33.741714"
            y="118.1244"
            id="text837-8-6-7-6-7"><tspan
@@ -604,7 +727,7 @@
              id="tspan835-0-2-40-05-3"
              x="33.741714"
              y="118.1244"
-             style="font-size:3.59367px;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
+             style="font-size:3.59366989px;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
       </g>
       <g
          transform="translate(8.3682157,63.648103)"
@@ -613,11 +736,11 @@
            id="g1504-4-8-4"
            transform="translate(-2.6816727,-24.366259)">
           <g
-             style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              transform="matrix(0.7647164,0,0,0.69233829,4.2209488,49.267183)"
              id="g842-53-9-3">
             <rect
-               style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+               style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
                id="rect10-48-8-4"
                width="14.071193"
                height="8.0769234"
@@ -625,7 +748,7 @@
                y="28.623526" />
             <text
                xml:space="preserve"
-               style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
                x="14.521811"
                y="34.059544"
                id="text837-81-1-5"><tspan
@@ -633,7 +756,7 @@
                  id="tspan835-4-6-8"
                  x="14.521811"
                  y="34.059544"
-                 style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H1</tspan></text>
+                 style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H1</tspan></text>
           </g>
         </g>
       </g>
@@ -643,9 +766,9 @@
         <g
            transform="matrix(0.76472105,0,0,0.69233132,12.942835,24.900975)"
            id="g842-5-9-9-3"
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
           <rect
-             style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-97-3-8"
              width="14.071193"
              height="8.0769234"
@@ -653,7 +776,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="14.521811"
              y="34.059544"
              id="text837-8-9-5-6"><tspan
@@ -661,14 +784,14 @@
                id="tspan835-0-9-4-3"
                x="14.521811"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H2</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H2</tspan></text>
         </g>
       </g>
       <g
          transform="translate(19.834116,63.647886)"
          id="g3349-5">
         <rect
-           style="fill:#9f18a2;fill-opacity:0.65375;fill-rule:evenodd;stroke:#000000;stroke-width:0.218;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#9f18a2;fill-opacity:0.65375001;fill-rule:evenodd;stroke:#000000;stroke-width:0.21799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-36-6-6"
            width="10.760511"
            height="5.5919213"
@@ -677,7 +800,7 @@
         <text
            transform="scale(1.0509776,0.95149507)"
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.59368px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.5936799px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none"
            x="33.755795"
            y="50.953377"
            id="text837-8-6-7-5-0"><tspan
@@ -685,7 +808,7 @@
              id="tspan835-0-2-40-4-2"
              x="33.755795"
              y="50.953377"
-             style="font-size:3.59368px;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none">H7</tspan></text>
+             style="font-size:3.5936799px;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none">H7</tspan></text>
       </g>
       <g
          transform="translate(-2.9353543,63.646843)"
@@ -693,9 +816,9 @@
         <g
            transform="matrix(0.76461885,0,0,0.69248946,35.710086,24.897247)"
            id="g842-5-2-3-9-5-1"
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
           <rect
-             style="fill:#29b9a6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#29b9a6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-0-3-10-1-5"
              width="14.071193"
              height="8.0769234"
@@ -703,7 +826,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="14.521811"
              y="34.059544"
              id="text837-8-6-2-3-2-7"><tspan
@@ -711,18 +834,18 @@
                id="tspan835-0-2-9-6-7-5"
                x="14.521811"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
         </g>
       </g>
       <g
          transform="translate(19.718726,63.655686)"
          id="g3333-7">
         <g
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            id="g1104-31-2-0"
            transform="matrix(0.76546776,0,0,0.6924331,58.772074,24.890246)">
           <rect
-             style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-0-0-0-5-2"
              width="14.071193"
              height="8.0769234"
@@ -730,7 +853,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="12.934312"
              y="34.059544"
              id="text837-8-6-0-74-8-8"><tspan
@@ -738,14 +861,14 @@
                id="tspan835-0-2-0-5-4-2"
                x="12.934312"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H10</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H10</tspan></text>
         </g>
       </g>
       <g
          transform="translate(19.960436,63.681766)"
          id="g3327-3">
         <g
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            id="g1148-8-4-2"
            transform="matrix(0.76551274,0,0,0.69276926,69.962331,24.853186)">
           <rect
@@ -754,14 +877,14 @@
              height="8.0769234"
              width="14.071193"
              id="rect10-5-0-0-9-8-7-2"
-             style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+             style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           <text
              id="text837-8-6-0-5-0-0-9"
              y="34.059544"
              x="12.934312"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              xml:space="preserve"><tspan
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
                y="34.059544"
                x="12.934312"
                id="tspan835-0-2-0-8-3-0-1"
@@ -773,10 +896,10 @@
          id="g3321-7">
         <g
            id="g1148-5-301-9-2"
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            transform="matrix(0.76562744,0,0,0.69223768,81.139118,24.809006)">
           <rect
-             style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-0-0-9-5-6-0-7"
              width="14.071193"
              height="8.0769234"
@@ -784,7 +907,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="12.934312"
              y="34.059544"
              id="text837-8-6-0-5-6-5-1-1"><tspan
@@ -792,7 +915,7 @@
                id="tspan835-0-2-0-8-9-2-1-7"
                x="12.934312"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
         </g>
       </g>
       <g
@@ -815,7 +938,7 @@
                y="28.623526" />
             <text
                xml:space="preserve"
-               style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.162084;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.162084;stroke-miterlimit:4;stroke-dasharray:none"
                x="14.521811"
                y="34.059544"
                id="text837-8-6-2-0-6-6-9"><tspan
@@ -823,7 +946,7 @@
                  id="tspan835-0-2-9-7-8-8-1"
                  x="14.521811"
                  y="34.059544"
-                 style="font-size:4.93889px;stroke-width:0.162084;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
+                 style="font-size:4.93888998px;stroke-width:0.162084;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
           </g>
         </g>
       </g>
@@ -836,15 +959,15 @@
            height="5.5940585"
            width="10.759944"
            id="rect10-5-0-9-7-2-6"
-           style="fill:#a65961;fill-opacity:0.768398;fill-rule:evenodd;stroke:#000000;stroke-width:0.164;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#a65961;fill-opacity:0.76839797;fill-rule:evenodd;stroke:#000000;stroke-width:0.164;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            transform="scale(1.050749,0.95170207)"
            id="text837-8-6-1-2-2-9"
            y="50.906525"
            x="55.035355"
-           style="font-style:normal;font-weight:normal;font-size:3.59426px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.364;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.59425998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36399999;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:3.59426px;stroke-width:0.364;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:3.59425998px;stroke-width:0.36399999;stroke-miterlimit:4;stroke-dasharray:none"
              y="50.906525"
              x="55.035355"
              id="tspan835-0-2-1-5-6-5"
@@ -865,9 +988,9 @@
            id="text837-8-6-3-7-4-6"
            y="50.845085"
            x="98.385559"
-           style="font-style:normal;font-weight:normal;font-size:3.59347px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.5934701px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:3.59347px;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:3.5934701px;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
              y="50.845085"
              x="98.385559"
              id="tspan835-0-2-5-7-8-8"
@@ -886,7 +1009,7 @@
         <text
            transform="scale(1.0509183,0.95154876)"
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.59347px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.364;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.5934701px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36399999;stroke-miterlimit:4;stroke-dasharray:none"
            x="120.34875"
            y="50.845085"
            id="text837-8-6-3-4-4-1-7"><tspan
@@ -894,7 +1017,7 @@
              id="tspan835-0-2-5-0-1-0-8"
              x="120.34875"
              y="50.845085"
-             style="font-size:3.59347px;stroke-width:0.364;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
+             style="font-size:3.5934701px;stroke-width:0.36399999;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
       </g>
       <g
          transform="translate(43.256926,63.748168)"
@@ -911,9 +1034,9 @@
            id="text837-8-6-3-4-1-0-0-3"
            y="50.845085"
            x="131.13651"
-           style="font-style:normal;font-weight:normal;font-size:3.59347px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.5934701px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:3.59347px;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:3.5934701px;stroke-width:0.363794;stroke-miterlimit:4;stroke-dasharray:none"
              y="50.845085"
              x="131.13651"
              id="tspan835-0-2-5-0-8-5-1-2"
@@ -937,7 +1060,7 @@
          height="5.6601362"
          width="10.838617"
          id="rect10-5-0-3-2-1-1-8-1"
-         style="fill:#b3b4b4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.146941;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         style="fill:#b3b4b4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.14694101;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
       <g
          style="stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-2-3-7-1-3-3-00-0-1"
@@ -988,17 +1111,17 @@
       </g>
     </g>
     <g
-       transform="translate(-1.5004316)"
+       transform="translate(-1.5004316,3.3866669)"
        id="g9557">
       <g
          id="g1504"
          transform="translate(6.7413971,57.617257)">
         <g
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            transform="matrix(0.7647164,0,0,0.69233829,4.2209488,49.267183)"
            id="g842">
           <rect
-             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10"
              width="14.071193"
              height="8.0769234"
@@ -1006,7 +1129,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="14.521811"
              y="34.059544"
              id="text837"><tspan
@@ -1014,15 +1137,15 @@
                id="tspan835"
                x="14.521811"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H1</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H1</tspan></text>
         </g>
       </g>
       <g
          transform="matrix(0.76472105,0,0,0.69233133,22.480846,106.88466)"
          id="g842-5"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
-           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5"
            width="14.071193"
            height="8.0769234"
@@ -1030,7 +1153,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8"><tspan
@@ -1038,7 +1161,7 @@
              id="tspan835-0"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H2</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H2</tspan></text>
       </g>
       <g
          id="g842-5-2"
@@ -1050,14 +1173,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0"
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2"
@@ -1066,9 +1189,9 @@
       <g
          transform="matrix(0.76461885,0,0,0.69248947,45.519814,106.8795)"
          id="g842-5-2-3"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
-           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5-0-3"
            width="14.071193"
            height="8.0769234"
@@ -1076,7 +1199,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8-6-2"><tspan
@@ -1084,14 +1207,14 @@
              id="tspan835-0-2-9"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H7</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H7</tspan></text>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g1104"
          transform="matrix(0.76546777,0,0,0.69243311,80.060602,106.88134)">
         <rect
-           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5-0-0"
            width="14.071193"
            height="8.0769234"
@@ -1099,7 +1222,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="12.934312"
            y="34.059544"
            id="text837-8-6-0"><tspan
@@ -1107,10 +1230,10 @@
              id="tspan835-0-2-0"
              x="12.934312"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H10</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H10</tspan></text>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g1148"
          transform="matrix(0.76551273,0,0,0.69276926,91.578389,106.87036)">
         <rect
@@ -1119,14 +1242,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-0-9"
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-0-5"
            y="34.059544"
            x="12.934312"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="12.934312"
              id="tspan835-0-2-0-8"
@@ -1134,10 +1257,10 @@
       </g>
       <g
          id="g1148-5"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          transform="matrix(0.76562744,0,0,0.69223768,103.09496,106.88772)">
         <rect
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5-0-0-9-5"
            width="14.071193"
            height="8.0769234"
@@ -1145,7 +1268,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="12.934312"
            y="34.059544"
            id="text837-8-6-0-5-6"><tspan
@@ -1153,17 +1276,17 @@
              id="tspan835-0-2-0-8-9"
              x="12.934312"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-2-3-1"
          transform="matrix(0.76558007,0,0,0.69229578,208.15371,94.556212)">
         <g
            id="g1432"
            transform="translate(13.229085,17.809752)">
           <rect
-             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
              id="rect10-5-0-3-1"
              width="14.071193"
              height="8.0769234"
@@ -1171,7 +1294,7 @@
              y="28.623526" />
           <text
              xml:space="preserve"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              x="14.521811"
              y="34.059544"
              id="text837-8-6-2-0"><tspan
@@ -1179,7 +1302,7 @@
                id="tspan835-0-2-9-7"
                x="14.521811"
                y="34.059544"
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H5</tspan></text>
         </g>
       </g>
       <g
@@ -1223,7 +1346,7 @@
          transform="matrix(0.76463298,0,0,0.69233317,114.63107,106.8846)"
          id="g842-5-2-9">
         <rect
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-4"
            width="14.071193"
            height="8.0769234"
@@ -1231,7 +1354,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8-6-3"><tspan
@@ -1239,7 +1362,7 @@
              id="tspan835-0-2-5"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
       </g>
       <g
          style="stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
@@ -1263,14 +1386,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-4-1"
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6-3-4"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2-5-0"
@@ -1281,7 +1404,7 @@
          transform="matrix(0.76463298,0,0,0.69233317,183.74255,106.8846)"
          id="g842-5-2-9-0-4">
         <rect
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-4-1-7"
            width="14.071193"
            height="8.0769234"
@@ -1289,7 +1412,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8-6-3-4-1"><tspan
@@ -1297,7 +1420,7 @@
              id="tspan835-0-2-5-0-8"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H8</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H8</tspan></text>
       </g>
       <g
          style="stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
@@ -1332,15 +1455,15 @@
            height="5.5919213"
            width="10.760511"
            id="rect10-5-0-36-9-4-0"
-           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.218;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.21799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6-7-6-7-5"
            y="118.1244"
            x="33.741714"
-           style="font-style:normal;font-weight:normal;font-size:3.59367px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.59366989px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"
            transform="scale(1.0509776,0.95149507)"><tspan
-             style="font-size:3.59367px;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:3.59366989px;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none"
              y="118.1244"
              x="33.741714"
              id="tspan835-0-2-40-05-3-1"
@@ -1356,14 +1479,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-4-29"
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6-3-0"
            y="34.059544"
            x="13.137705"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="13.137705"
              id="tspan835-0-2-5-8"
@@ -1372,28 +1495,28 @@
     </g>
     <g
        id="g9557-2"
-       transform="translate(-0.41836255,24.25349)">
+       transform="translate(-0.41836255,29.897935)">
       <g
          transform="translate(6.7413971,57.617257)"
          id="g1504-2">
         <g
            id="g842-9"
            transform="matrix(0.7647164,0,0,0.69233829,4.2209488,49.267183)"
-           style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+           style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
           <rect
              y="28.623526"
              x="10.587445"
              height="8.0769234"
              width="14.071193"
              id="rect10-9"
-             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+             style="fill:#ffa700;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           <text
              id="text837-6"
              y="34.059544"
              x="14.521811"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              xml:space="preserve"><tspan
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
                y="34.059544"
                x="14.521811"
                id="tspan835-02"
@@ -1401,7 +1524,7 @@
         </g>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-21"
          transform="matrix(0.76472105,0,0,0.69233133,22.480846,106.88466)">
         <rect
@@ -1410,14 +1533,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-9"
-           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#f9ff00;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-5"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-8"
@@ -1428,7 +1551,7 @@
          transform="matrix(0.76471921,0,0,0.6923331,33.99946,106.8846)"
          id="g842-5-2-6">
         <rect
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-5"
            width="14.071193"
            height="8.0769234"
@@ -1436,7 +1559,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8-6-1"><tspan
@@ -1444,10 +1567,10 @@
              id="tspan835-0-2-6"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H6</tspan></text>
       </g>
       <g
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g842-5-2-3-9"
          transform="matrix(0.76461885,0,0,0.69248947,45.519814,106.8795)">
         <rect
@@ -1456,14 +1579,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-3-9"
-           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#a0c3ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-2-2"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2-9-3"
@@ -1472,21 +1595,21 @@
       <g
          transform="matrix(0.76546777,0,0,0.69243311,80.060602,106.88134)"
          id="g1104-29"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
            y="28.623526"
            x="10.587445"
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-0-7"
-           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#90db81;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-0-2"
            y="34.059544"
            x="12.934312"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="12.934312"
              id="tspan835-0-2-0-4"
@@ -1495,9 +1618,9 @@
       <g
          transform="matrix(0.76551273,0,0,0.69276926,91.578389,106.87036)"
          id="g1148-8"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <rect
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="rect10-5-0-0-9-6"
            width="14.071193"
            height="8.0769234"
@@ -1505,7 +1628,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            x="12.934312"
            y="34.059544"
            id="text837-8-6-0-5-9"><tspan
@@ -1513,11 +1636,11 @@
              id="tspan835-0-2-0-8-09"
              x="12.934312"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">H13</tspan></text>
       </g>
       <g
          transform="matrix(0.76562744,0,0,0.69223768,103.09496,106.88772)"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
          id="g1148-5-9">
         <rect
            y="28.623526"
@@ -1525,14 +1648,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-0-9-5-2"
-           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+           style="fill:#efc7e7;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <text
            id="text837-8-6-0-5-6-1"
            y="34.059544"
            x="12.934312"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="12.934312"
              id="tspan835-0-2-0-8-9-8"
@@ -1541,7 +1664,7 @@
       <g
          transform="matrix(0.76558007,0,0,0.69229578,208.15371,94.556212)"
          id="g842-5-2-3-1-2"
-         style="stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none">
+         style="stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none">
         <g
            transform="translate(13.229085,17.809752)"
            id="g1432-9">
@@ -1551,14 +1674,14 @@
              height="8.0769234"
              width="14.071193"
              id="rect10-5-0-3-1-1"
-             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+             style="fill:#00acef;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
           <text
              id="text837-8-6-2-0-6"
              y="34.059544"
              x="14.521811"
-             style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
              xml:space="preserve"><tspan
-               style="font-size:4.93889px;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:none"
+               style="font-size:4.93888998px;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:none"
                y="34.059544"
                x="14.521811"
                id="tspan835-0-2-9-7-1"
@@ -1611,14 +1734,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-4-9"
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6-3-5"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2-5-4"
@@ -1641,7 +1764,7 @@
          transform="matrix(0.76463298,0,0,0.69233317,172.22398,106.8846)"
          id="g842-5-2-9-0-6">
         <rect
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-4-1-3"
            width="14.071193"
            height="8.0769234"
@@ -1649,7 +1772,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            x="14.521811"
            y="34.059544"
            id="text837-8-6-3-4-8"><tspan
@@ -1657,7 +1780,7 @@
              id="tspan835-0-2-5-0-1"
              x="14.521811"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H9</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H9</tspan></text>
       </g>
       <g
          id="g842-5-2-9-0-4-0"
@@ -1669,14 +1792,14 @@
            height="8.0769234"
            width="14.071193"
            id="rect10-5-0-4-1-7-6"
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1" />
         <text
            id="text837-8-6-3-4-1-7"
            y="34.059544"
            x="14.521811"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            xml:space="preserve"><tspan
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
              y="34.059544"
              x="14.521811"
              id="tspan835-0-2-5-0-8-9"
@@ -1710,7 +1833,7 @@
          id="g8792-1-7-2-2"
          transform="translate(101.79145,18.279865)">
         <rect
-           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.218;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c66cc6;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.21799999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-36-9-4-0-8"
            width="10.760511"
            height="5.5919213"
@@ -1719,7 +1842,7 @@
         <text
            transform="scale(1.0509776,0.95149507)"
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:3.59367px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:3.59366989px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none"
            x="33.741714"
            y="118.1244"
            id="text837-8-6-7-6-7-5-5"><tspan
@@ -1727,14 +1850,14 @@
              id="tspan835-0-2-40-05-3-1-1"
              x="33.741714"
              y="118.1244"
-             style="font-size:3.59367px;stroke-width:0.363813;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
+             style="font-size:3.59366989px;stroke-width:0.36381301;stroke-miterlimit:4;stroke-dasharray:none">H3</tspan></text>
       </g>
       <g
          style="stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
          transform="matrix(0.76463297,0,0,0.69233317,137.66822,106.91874)"
          id="g842-5-2-9-4-1">
         <rect
-           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.3;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
+           style="fill:#c6c6c6;fill-opacity:1;fill-rule:evenodd;stroke:#7e7e7e;stroke-width:0.30000001;stroke-miterlimit:4;stroke-dasharray:0.9, 0.3;stroke-dashoffset:0;stroke-opacity:1"
            id="rect10-5-0-4-29-3"
            width="14.071193"
            height="8.0769234"
@@ -1742,7 +1865,7 @@
            y="28.623526" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+           style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
            x="13.137705"
            y="34.059544"
            id="text837-8-6-3-0-3"><tspan
@@ -1750,86 +1873,124 @@
              id="tspan835-0-2-5-8-5"
              x="13.137705"
              y="34.059544"
-             style="font-size:4.93889px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H11</tspan></text>
+             style="font-size:4.93888998px;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none">H11</tspan></text>
       </g>
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="-75.071716"
+       style="font-style:normal;font-weight:normal;font-size:4.93889999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="-75.230881"
        y="121.38146"
        id="text6226-9"><tspan
          sodipodi:role="line"
          id="tspan6224-1"
-         x="-75.071716"
+         x="-75.230881"
          y="121.38146"
-         style="font-size:4.9389px;stroke-width:0.264583">Considering First Model (A) filter hits</tspan></text>
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Consider the first Model (A) to filter hits</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.93889999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="-75.226059"
-       y="143.71205"
+       y="142.58318"
        id="text6226-2"><tspan
          sodipodi:role="line"
          id="tspan6224-7"
          x="-75.226059"
-         y="143.71205"
-         style="font-size:4.9389px;stroke-width:0.264583">Build clusters</tspan></text>
+         y="142.58318"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Build clusters &quot;C&quot; with </tspan><tspan
+         sodipodi:role="line"
+         x="-75.226059"
+         y="148.75681"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3685">co-localizing sets of Hits </tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.9389px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.93889999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="-75.071716"
-       y="207.6059"
+       y="213.25034"
        id="text6226-0"><tspan
          sodipodi:role="line"
          id="tspan6224-9"
          x="-75.071716"
-         y="207.6059"
-         style="font-size:4.9389px;stroke-width:0.264583">Check quorum</tspan></text>
+         y="213.25034"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">Check quorum:</tspan><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="219.42397"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3673">- from clusters only</tspan><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="224.19106"
+         style="font-size:3.52777815px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3677">(&quot;single_locus&quot; search mode)</tspan><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="228.60077"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3675" /><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="234.41704"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3683">+ from combinations </tspan><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="240.59065"
+         style="font-size:4.93889999px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3681">of clusters </tspan><tspan
+         sodipodi:role="line"
+         x="-75.071716"
+         y="245.35774"
+         style="font-size:3.52777815px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         id="tspan3679">(&quot;multi_loci&quot; search mode)</tspan></text>
     <text
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect6380);fill:#000000;fill-opacity:1;stroke:none;"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;white-space:pre;fill:#000000;fill-opacity:1;stroke:none"
        id="text6378"
        xml:space="preserve" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-end:url(#marker2763)"
-       d="m 57.324863,132.86316 c 0,0 5.549675,5.47185 17.220808,5.55761 11.671133,0.0858 17.615236,-5.38558 17.615236,-5.38558"
+       style="fill:none;stroke:#000000;stroke-width:0.26499999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Lstart);marker-end:url(#marker2763)"
+       d="m 57.324863,136.24984 c 0,0 5.549675,5.47185 17.220808,5.55761 11.671133,0.0858 17.615236,-5.38558 17.615236,-5.38558"
        id="path2759"
-       sodipodi:nodetypes="czc" />
+       sodipodi:nodetypes="czc"
+       inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="35.455456"
-       y="144.19362"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+       x="33.762119"
+       y="147.58031"
        id="text3243"><tspan
          sodipodi:role="line"
          id="tspan3241"
-         x="35.455456"
-         y="144.19362"
-         style="font-size:4.93889px;stroke-width:0.264583">d(H7, H10)&gt; intergenes_max_space</tspan></text>
+         x="33.762119"
+         y="147.58031"
+         style="font-size:4.23333359px;stroke-width:0.26458299;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">distance(H7, H10) &gt; inter_gene_max_space</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker3378)"
-       d="m 127.71359,114.75235 -0.0122,11.53906"
+       style="fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker3378)"
+       d="m 127.71359,114.53334 -0.0122,14.86943"
        id="path3374"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker3456)"
-       d="m 127.76793,132.86526 -0.0831,16.57901"
+       style="fill:none;stroke:#000000;stroke-width:0.26458299px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker3456)"
+       d="m 127.76793,136.16148 -0.0831,18.81345"
        id="path3452"
-       sodipodi:nodetypes="cc" />
+       sodipodi:nodetypes="cc"
+       inkscape:connector-curvature="0" />
     <text
        id="text22494"
        y="105.05176"
        x="233.28661"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
          y="105.05176"
          x="233.28661"
          id="tspan22492"
          sodipodi:role="line">B</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="-75.239662"
        y="106.06908"
        id="text33613"><tspan
@@ -1837,105 +1998,184 @@
          id="tspan33611"
          x="-75.239662"
          y="106.06908"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.46667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583">Step 1</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.46667004px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299">Step 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        x="-75.239662"
-       y="198.67229"
+       y="204.31673"
        id="text33613-0"><tspan
          sodipodi:role="line"
          id="tspan33611-9"
          x="-75.239662"
-         y="198.67229"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.46667px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583">Step 2</tspan></text>
+         y="204.31673"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.46667004px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299">Step 2</tspan></text>
     <text
        id="text1198"
-       y="200.00174"
-       x="146.93152"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       y="204.87634"
+       x="154.05261"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-size:4.93889px;stroke-width:0.264583"
-         y="200.00174"
-         x="146.93152"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299"
+         y="204.87634"
+         x="154.05261"
          id="tspan1196"
-         sodipodi:role="line">C1 ,C2, C3, </tspan><tspan
+         sodipodi:role="line">C1; C2; C3</tspan><tspan
          id="tspan1236"
-         style="font-size:4.93889px;stroke-width:0.264583"
-         y="206.17535"
-         x="146.93152"
-         sodipodi:role="line">C1 C2 , </tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299"
+         y="211.04996"
+         x="154.05261"
+         sodipodi:role="line">C1 C2  </tspan><tspan
          id="tspan1240"
-         style="font-size:4.93889px;stroke-width:0.264583"
-         y="212.34897"
-         x="146.93152"
-         sodipodi:role="line">C2C3</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299"
+         y="217.22357"
+         x="154.05261"
+         sodipodi:role="line">C2 C3</tspan></text>
     <text
        id="text1202"
-       y="223.38298"
-       x="146.97975"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       y="228.06511"
+       x="137.07695"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         y="223.38298"
-         x="146.97975"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         y="228.06511"
+         x="137.07695"
          id="tspan1200"
-         sodipodi:role="line">C1C2, </tspan><tspan
+         sodipodi:role="line">SA_1: C1 C2 </tspan><tspan
          id="tspan1204"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         y="229.55659"
-         x="146.97975"
-         sodipodi:role="line">C1C3,</tspan><tspan
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         y="234.23872"
+         x="137.07695"
+         sodipodi:role="line">SA_2: C1 C3</tspan><tspan
          id="tspan1206"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         y="235.73021"
-         x="146.97975"
-         sodipodi:role="line">C1C2C3</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         y="240.41234"
+         x="137.07695"
+         sodipodi:role="line">SA_3: C1 C2 C3</tspan></text>
     <text
        transform="scale(0.74503007,1.3422277)"
        id="text1234"
-       y="173.43529"
+       y="177.64056"
        x="233.55234"
-       style="font-style:normal;font-weight:normal;font-size:14.2052px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.355131"
+       style="font-style:normal;font-weight:normal;font-size:14.2052002px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.355131"
        xml:space="preserve"><tspan
          style="stroke-width:0.355131"
-         y="173.43529"
+         y="177.64056"
          x="233.55234"
          id="tspan1232"
          sodipodi:role="line">}</tspan></text>
     <text
        id="text1246"
-       y="229.13699"
+       y="234.217"
        x="182.80283"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93889px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.264583"
-         y="229.13699"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:'Arial Bold';stroke-width:0.26458299"
+         y="234.217"
          x="182.80283"
          id="tspan1244"
          sodipodi:role="line">all_systems.txt/tsv</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:14.2052px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.355132"
+       style="font-style:normal;font-weight:normal;font-size:14.2052002px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.35513201;"
        x="241.99399"
-       y="156.01286"
+       y="160.21814"
        id="text1234-3"
        transform="scale(0.74503007,1.3422277)"><tspan
          sodipodi:role="line"
          id="tspan1232-6"
          x="241.99399"
-         y="156.01286"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.355132">}</tspan></text>
+         y="160.21814"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.35513201;fill:#000000;fill-opacity:1;">}</tspan></text>
     <text
        id="text1268"
-       y="205.75214"
+       y="210.2677"
        x="187.14465"
-       style="font-style:normal;font-weight:normal;font-size:4.93889px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.93888998px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
-         style="font-size:4.93889px;stroke-width:0.264583"
-         y="205.75214"
+         style="font-size:4.93888998px;stroke-width:0.26458299;-inkscape-font-specification:arial;font-family:arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+         y="210.2677"
          x="187.14465"
          id="tspan1266"
          sodipodi:role="line">rejected_clusters.txt</tspan></text>
+    <g
+       inkscape:label="Layer 1"
+       id="layer1-1"
+       transform="translate(63.867184,-46.573859)">
+      <g
+         id="g3310-6"
+         transform="translate(77.212497,48.771907)" />
+      <text
+         transform="translate(48.683352,4.7625002)"
+         style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;white-space:pre;fill:#000000;fill-opacity:1;stroke:none"
+         id="text4563-8"
+         xml:space="preserve" />
+      <text
+         id="text3649-3"
+         y="55.977627"
+         x="46.489994"
+         style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458299"
+           y="55.977627"
+           x="46.489994"
+           id="tspan3647-8"
+           sodipodi:role="line" /></text>
+      <g
+         id="g4519"
+         transform="translate(104.31449,48.500462)">
+        <g
+           id="g4561"
+           transform="translate(3.9511115,0)">
+          <text
+             id="text3653"
+             y="123.92281"
+             x="-246.9913"
+             style="font-style:normal;font-weight:normal;font-size:4.23332977px;line-height:1.25;font-family:sans-serif;fill:#dbe200;fill-opacity:1;stroke:none;stroke-width:0.26458299"
+             xml:space="preserve"><tspan
+               id="tspan4538"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:Arial;fill:#dbe200;fill-opacity:1;stroke-width:0.26458299"
+               y="123.92281"
+               x="-246.9913"
+               sodipodi:role="line"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777815px;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000;fill-opacity:1"
+                 id="tspan3672">(Genes of model (A): </tspan><tspan
+                 id="tspan4540"
+                 style="font-size:3.52777815px;fill:#e29f00;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">G1</tspan><tspan
+                 id="tspan4524"
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"> ,</tspan><tspan
+                 style="font-weight:bold"
+                 id="tspan5468">G2</tspan><tspan
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
+                 id="tspan4510">,</tspan><tspan
+                 style="font-size:3.52777815px;fill:#b543e2;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
+                 id="tspan3702">G3</tspan><tspan
+                 id="tspan4500"
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">,G4,</tspan><tspan
+                 style="font-size:3.52777815px;fill:#00acef;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
+                 id="tspan3904">G5</tspan><tspan
+                 id="tspan4486"
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">,</tspan><tspan
+                 id="tspan9022"
+                 style="font-size:3.52777815px;fill:#bc52ff;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">G7</tspan><tspan
+                 id="tspan9024"
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">,</tspan><tspan
+                 style="font-size:3.52777815px;fill:#5b00e2;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal"
+                 id="tspan4262">G10</tspan><tspan
+                 id="tspan4460"
+                 style="font-size:3.52777815px;fill:#000000;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:bold;font-style:normal;font-stretch:normal;font-variant:normal">,</tspan><tspan
+                 style="font-size:3.52777815px;fill:#ff69e9;fill-opacity:1;-inkscape-font-specification:Arial;font-family:Arial;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+                 id="tspan4414"><tspan
+                   style="font-weight:bold"
+                   id="tspan5470">G13</tspan><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#000000"
+                   id="tspan4588">)</tspan></tspan></tspan></text>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         id="text6378-5"
+         style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;white-space:pre;fill:#000000;fill-opacity:1;stroke:none" />
+    </g>
   </g>
 </svg>

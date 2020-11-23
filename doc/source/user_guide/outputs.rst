@@ -12,20 +12,21 @@
 Output format
 *************
 
-MacSyFinder provides different types of outputs. At each run, MacSyFinder creates a new folder,
+MacSyFinder provides different types of output files. At each run, MacSyFinder creates a new folder,
 whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46".
-MacSyFinder outputs are stored in this run-specific folder.
+MacSyFinder output files are stored in this run-specific folder.
 
 .. _hmmer-outputs-label:
 
-Hmmer results outputs 
----------------------
-Raw Hmmer outputs are provided, as long with processed tabular outputs that includes hits filtered as
+Hmmer results' output files 
+---------------------------
+Raw Hmmer outputs are provided, as long with processed tabular outputs that include hits filtered as
 specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
-will produce as a result two files: "sctC.search_hmm.out" and "sctC.res_hmm_extract".
+will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and 
+"sctC.res_hmm_extract" for the output file after processing/filtering of the HMMER results by MacSyFinder.
 
-The processed output "sctC.res_hmm_extract" recalls on the first lines the parameters used for
-hits filtering and relevant information on the matches, as for instance
+The processed output file "sctC.res_hmm_extract" recalls on the first lines the parameters used for
+hits filtering and relevant information on the matches, as in this example:
 
 .. code-block:: text
 
@@ -52,8 +53,13 @@ hits filtering and relevant information on the matches, as for instance
 
 .. _ordered_outputs:
 
-Outputs file for ordered replicon
-*********************************
+Output files for the "ordered replicon(s)" search modes
+-------------------------------------------------------
+
+
+These output files are provided when MacSyFinder search proceeds on a set of proteins that are deemed to follow the order of their genes on replicons. 
+This corresponds to the two search modes *gembase* and *ordered_replicon*. 
+
 
 -------------------------
 Systems detection results
@@ -63,64 +69,68 @@ Different types of output files are provided, human-readable files ".txt", and t
 headers are provided with the content of the lines in the file.
 
 
-  * **`best_solution_report.tsv`** - This file contains the best solution found by MacSyFinder in terms of systems detected,
-    under the form of a per-component, tabulated report file.
+  * **best_solution_report.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
+    under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
     If multiple solutions showed a maximal score, the solution maximizing
 
         1. the number of components in systems and
         2. the number of systems detected is proposed.
 
-    To see potential other best solutions, see file "all_best_solutions.tsv".
-    This file is the most similar to former V1 file `macsyfinder.report`.
+    To see potential other best solutions (in case several obtained the same highest score), see file `all_best_solutions.tsv`. 
 
-  * **`best_solution_summary.tsv`** - This file consists in a table describing the content in detected systems for each replicon analysed.
+    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
+    
+    The `best_solution_report.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
-  * **`all_best_solutions.tsv`** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
-    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
-  * **`all_eligible_systems.tsv`** - This file contains all possible candidate systems given the definitions -
-    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file.
+  * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
+    without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
+    under the form of a tabulated file in `all_systems.tsv`.
 
-  * **`systems_search.txt`** - This file describes the search process of all possible candidate systems given the definitions -
-    without processing of the potential overlaps between candidate systems.
-
-  * **`rejected_clusters.txt`** - This file lists candidate clusters of systems' components that were rejected by
+  * **rejected_clusters.txt** - This file lists candidate clusters of systems' components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
+  * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
+    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
 
-To be amended/removed:
-  * systems.txt - all potential systems detected with their components in human readable format. (REPLACED BY "systems_search.txt"?)
-  * systems.tsv - all potential systems detected with their components in a tabulate separated value format. (REPLACED BY "all_eligible_systems.tsv"?)
-  * best_systems.tsv - Best combination of systems with their components in a tabulate separated value format. (REPLACED BY "best_solution_report.tsv"?)
+  * **all_systems.tsv** - This file contains all possible candidate systems given the definitions -
+    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
+    to the tabulated version of the `all_systems.txt` file.  
 
 
-systems.txt
------------
+all_systems.txt
+~~~~~~~~~~~~~~~
 
-start with some comments
-    - the version of macsyfinder used
+
+The file starts with some comments:
+
+    - the version of MacSyFinder used
     - the command line used to produce this file
 
-Then for each replicon, a list of systems detected each systems is described with
-    - **system_id** the unique identifier of a systems
-    - **model** the model used to assigned this systems
-    - **replicon** the name of the replicon
-    - **clusters** the clusters composition of this system.
-        - each clusters is a list of tuple.
+Then for each replicon, the systems detected are listed along with their description:
+
+    - **system_id** - the unique identifier of a system
+    - **model** - the model assigned to this system
+    - **replicon** - the name of the replicon harbouring the system
+    - **clusters** - the clusters composition of this system
+
+        - each clusters is a list of tuple
         - each tuple is composed of:
-            - the name of the matching gene in the replicon
-            - the name of the gene profile
-            - the position of the sequence in the replicon
 
-    - **occurrence** the estimated number of occurrence
-    - **wholeness** The % of model
-    - **loci nb** The number of loci
-    - **score** The system score
-    - **systems components** the number of occurrence of each model components.
-      in parenthesis the name of profile that match
-      in square bracket the name of other putative systems where this gene is involved.
+            - the name of the matching gene(s) in the replicon
+            - the name of the corresponding gene profile(s)
+            - the position of the corresponding sequence(s) along the replicon
 
-macsyfinder.txt example
+    - **occurrence** - the average number of occurrences of each components of the system (as a potential proxy to estimate whether there's the genetic potential for multiple systems in one)
+    - **wholeness** - the percentage of the model's components that were found in this system
+    - **loci nb** - the number of different loci constituting this system
+    - **score** - the score of the system. See :ref:`here <combinatorial-exploration>` for more details
+    - **systems components** - the number of occurrences of each model components
+      in parenthesis the name of the matching profile 
+      in square brackets the name of other putative systems that would involve this gene
+
+Here is an example of the `all_systems.txt` file:
+
 
 .. code-block:: text
 
@@ -203,17 +213,89 @@ macsyfinder.txt example
     neutral genes:
 
 
+.. _all_systems_tsv:
+
+all_systems.tsv
+~~~~~~~~~~~~~~~
+
+
+This corresponds to the tabulated version of the systems listed in `all_systems.txt`. 
+Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
+
+    * **replicon** - the name of the replicon it belongs to
+    * **hit_id** - the unique identifier of the hit
+    * **hit_pos** - the position of the sequence in the replicon
+    * **model_fqn** - the model fully-qualified name
+    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_loci** - the number of loci
+    * **sys_wholeness** - the wholeness of the system
+    * **sys_score** - the system score
+    * **hit_gene_ref** - the gene in the model whose this hit plays the role of
+    * **hit_status** - the status of the component in the assigned system's definition
+    * **hit_seq_len** - the length of the protein sequence matched by this hit
+    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_score** - Hmmer score
+    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_begin_match** - the position in the sequence where the profile match begins
+    * **hit_end_match** - the position in the sequence where the profile match ends
+
+This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
+
+    import pandas as pd
+
+    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
+
+.. note::
+    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
+
+
+best_solution_report.tsv and all_best_solutions.tsv
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	
+Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
+
+The `best_solution_report.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
+solution identifier in the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
+
+As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above. 
+
+For the description of the fields of `best_solution_report.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
+
+For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
+
+    * **sol_id** - the name of the solution it is part of
+    * **replicon** - the name of the replicon it belongs to
+    * **hit_id** - the unique identifier of the hit
+    * **hit_pos** - the position of the sequence in the replicon
+    * **model_fqn** - the model fully-qualified name
+    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_loci** - the number of loci
+    * **sys_wholeness** - the wholeness of the system
+    * **sys_score** - the system score
+    * **hit_gene_ref** - the gene in the model whose this hit plays the role of
+    * **hit_status** - the status of the component in the assigned system's definition
+    * **hit_seq_len** - the length of the protein sequence matched by this hit
+    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_score** - Hmmer score
+    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_begin_match** - the position in the sequence where the profile match begins
+    * **hit_end_match** - the position in the sequence where the profile match ends
+
+
+
+
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
-This file record all clusters or cluster combination (if  multi_loci is true) which have been discarded and the reason
-why they do not are systems.
+This file records all clusters or cluster combinations (if the "multi_loci" search mode is on) which have been discarded and the reason
+why they were not selected as systems.
 
 The header is composed of the MacSyFinder version and the command line used
-following by the description of the cluster(s). The list of hits composing the cluster.
-at the end of the cluster or clusters combination the reason why it  has been discarded.
+followed by the description of the cluster(s). The list of the hits composing the cluster is presented
+at the end of the cluster or clusters' combination, followed by the reason why it has been discarded.
 
 .. code-block:: text
 
@@ -230,65 +312,29 @@ at the end of the cluster or clusters combination the reason why it  has been di
     Cluster:
         - model: T4P
         - hits: (GCF_000005845_030080, T2SS_gspO, 3008)
-    These clusters has been rejected because:
+    These clusters have been rejected because:
     The quorum of mandatory genes required (4) is not reached: 1
     The quorum of genes required (5) is not reached: 3
     ============================================================
     Cluster:
         - model: Archaeal-T4P
         - hits: (GCF_000005845_019260, Archaeal-T4P_arCOG00589, 1926), (GCF_000005845_019310, Archaeal-T4P_arCOG02900, 1931)
-    These clusters has been rejected because:
+    These clusters have been rejected because:
     The quorum of mandatory genes required (3) is not reached: 0
     The quorum of genes required (3) is not reached: 2
     ============================================================
 
 
-systems.tsv
------------
-
-Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
-
-    * **hit_id** - the unique identifier of the hit
-    * **replicon** - the name of the replicon it belongs to
-    * **hit_pos** - the position of the sequence in the replicon
-    * **model_fqn** - the model fully qualified name
-    * **system_id** - the unique identifier attributed to the detected system
-    * **sys_loci** - the number of loci
-    * **sys_wholeness** - the wholeness of the system
-    * **sys_score** - the system score
-    * **hit_gene_ref** - the gene in the model for which this hit play the role
-    * **hit_status** - the status of the component in the assigned system's definition
-    * **hit_seq_len** - the length of the proteiq sequence match by this hit
-    * **hit_i_evalue** - Hmmer statistics, the indepent-evalue
-    * **hit_score** - Hmmer score
-    * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
-    * **hit_begin_match** - the position in the sequence where the profile match begins
-    * **hit_end_match** - the position in the sequence where the profile match ends
-
-This file can be easily parsed python `pandas <https://pandas.pydata.org/>`_ library. ::
-
-    import pandas as pd
-
-    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
-
-.. note::
-    each system reported is separated form the others with a blank line, theses lines are ignored during pandas parsing.
 
 
-best_systems.tsv
-----------------
-
-This file has the same structure as all_systems.tsv except that there is an extra column **sol_id** which is an
-solution identifier. So the systems which have the same sol_id belong to the same solution
-(we call solution, the best combination of systems).
-
-As the file has the same structure as all_systems.tsv it can be parsed also with pandas
 
 
 .. _unordered_outputs:
 
-Outputs file for unordered replicon
-***********************************
+
+Output files for the "unordered replicon" search mode
+-----------------------------------------------------
+
 
 -------------------------
 Systems detection results
@@ -296,22 +342,25 @@ Systems detection results
 
 As for ordered replicons, several output files are provided.
 
-    * **`all_possible_systems.txt`** - This file contains putative systems found.
-    * **`all_possible_systems.tsv`** - The same information as `all_possible_systems.txt` but in tsv format.
-    * **`uncomplete_systems.txt`** - This file contains models which definitions are not complete to form systems.
+    * **all_possible_systems.txt** - This file contains the description of candidate systems found.
+    * **all_possible_systems.tsv** - The same information as in `all_possible_systems.txt` but in the tabulated tsv format.
+    * **uncomplete_systems.txt** - This file contains occurrences for systems that did not complete models' definitions and that were therefore not kept as candidate systems.
 
+
+In this `unordered` search mode, there is no notion of order or distance of the components along the replicon. The clustering step
+is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
 
 
 all_possible_systems.txt
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-This file contains potential systems for unordered replicon in human readable format . As there is no notion of distance we skip the clustering step
-is skiped. We only check if the genetics contents is compatible with the model definitions
-In this file for each searched model we report for each gen of the model if one or several hits has been found
+This file contains potential systems for unordered replicon in human readable format. 
+
+In this file, for each component of each searched system's model, we report the number of hits found.
 
 .. warning::
-    in this mode the forbidden gene a re report here. As we do not know if tey clusterize with the other genes they can
-    be present in the replicon far away the potential system.
+    In this mode the `forbidden` genes are reported here to the user. As we do not know if they co-localize (cluster) with the other genes they could
+    be present in the replicon, yet far away - or very close on the contrary - to the potential system.
 
 .. code-block:: text
 
@@ -357,14 +406,17 @@ In this file for each searched model we report for each gen of the model if one 
     Use ordered replicon to have better prediction.
 
 
-all_possible_systems.tsv
-------------------------
 
-This file contains the same informations as `all_possible_systems.txt` but in `tsv` format.
+.. _all_possible_systems_tsv_unordered:
+
+all_possible_systems.tsv
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file contains the same information as in `all_possible_systems.txt` but in `tsv` format.
 
 .. note::
 
-    This file can be easily parsed with pandas.::
+    This file can be easily parsed with pandas::
 
         import pandas as pd
         pot_systems = pd.read_csv('allpossible_systems.tsv', sep='\t', comment='#')
@@ -400,11 +452,11 @@ This file contains the same informations as `all_possible_systems.txt` but in `t
 
 
 uncomplete_systems.txt
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
-This file is created when a search in ordered replicon is performed.
-This file list models which have probably not systems in the replicon.
-For each models there reason why these components does not fulfill the model description is write.
+This file is created when a search is performed in the `unordered replicon` mode.
+This file list models that probably do not have not full systems in the replicon(s).
+For each model, the reason why it is not fulfilled is reported, 
 followed by the model description and the components found.
 
 .. code-block:: text
@@ -454,8 +506,8 @@ followed by the model description and the components found.
 Logs and configuration files
 ----------------------------
 
-Three specific output files are built to store information on the MacSyFinder execution: 
+Three specific output files are systematically built, whatever the search mode, to store information on MacSyFinder's execution: 
 
- * macsyfinder.conf - contains the configuration information of the run. It is useful to recover the parameters used for the run.
- * macsyfinder.log - the log file, contains raw information on the run. Please send it to us with any bug report. 
+ * **macsyfinder.conf** - contains the configuration information of the run. It is useful to recover all the parameters used for the run.
+ * **macsyfinder.log** - the log file, contains raw information on the run. Please send it to us with any **bug report**. 
 
