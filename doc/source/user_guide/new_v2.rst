@@ -27,7 +27,7 @@ See :ref:`here for more details <functioning>`.
 
 Several **new features** were added, including:
 
-- a **new type of gene component** "neutral" was added in order to provide more possibilities for systems' modelling in macsy-models. :ref:`See here <hmmer-options>` for more details.
+- a **new type of gene component** "neutral" was added in order to provide more possibilities for systems' modelling in macsy-models. :ref:`See here <components>` for more details.
 - more flexibility was introduced in the **search for systems' components using HMMER**. It is now possible to use the `cut_ga` threshold when provided in the HMM profiles used for components' similarity search. This enables to have a search tailored for each HMM profile, and thus component. :ref:`See here <hmmer-options>` for more details.
 - a **new file structure** was created to better organize MacSyFinder's packages (i.e. that include systems' models and corresponding HMMER profiles). :ref:`See here <package_structure>` for details.
 - a **tool** to easily install and distribute MacSyFinder's packages was created. :ref:`See here <macsydata>` for more details on *macsydata*.
