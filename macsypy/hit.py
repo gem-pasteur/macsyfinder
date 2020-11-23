@@ -198,15 +198,21 @@ class ValidHit:
 class HitWeight:
     """
     The weight to compute the cluster and system score
+    see user documentation macsyfinder functionning for further details
+    by default
+
+        * itself = 1
+        * exchangeable = 0.75
+
+        * mandatory = 1
+        * accessory = 0.5
+        * neutral = 0
     """
     itself: float = 1
     exchangeable: float = 0.75
     mandatory: float = 1
     accessory: float = 0.5
     neutral: float = 0
-
-
-hit_weight = HitWeight()
 
 
 def get_best_hits(hits, key='score'):

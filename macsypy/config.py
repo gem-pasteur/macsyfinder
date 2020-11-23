@@ -83,6 +83,12 @@ class MacsyDefaults(dict):
         self.topology_file = kwargs.get('topology_file', None)
         self.verbosity = kwargs.get('verbosity', 0)
         self.worker = kwargs.get('worker', 1)
+        self.mandatory_weight = kwargs.get('mandatory_weight', 1.0)
+        self.accessory_weight = kwargs.get('accessory_weight', .5)
+        self.neutral_weight = kwargs.get('neutral_weight', 0.0)
+        self.exchangeable_weight = kwargs.get('exchangeable_weight', .75)
+        self.itself_weight = kwargs.get('itself_weight', 1.0)
+        self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
 
 
 class Config:
@@ -99,7 +105,8 @@ class Config:
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
-                             'verbosity', 'worker'))
+                             'verbosity', 'quiet', 'mute', 'worker')),
+                ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight', 'itself_weight', 'redundancy_penalty')),
                 ]
 
     def __init__(self, defaults, parsed_args):
@@ -263,7 +270,7 @@ class Config:
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
-                        if not opt_value:
+                        if opt_value is None:
                             continue
                         elif isinstance(opt_value, dict):
                             value = ""
@@ -559,6 +566,14 @@ class Config:
         """
         return 'hmmer_results'
 
+
+    def hit_weights(self):
+        return {'mandatory': self._options['mandatory_weight'],
+                'accessory': self._options['accessory_weight'],
+                'neutral': self._options['neutral_weight'],
+                'itself': self._options['itself_weight'],
+                'exchangeable': self._options['exchangeable_weight']
+                }
 
     def log_level(self):
         """

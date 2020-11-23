@@ -151,6 +151,11 @@ class OrderedMatchMaker(MatchMaker):
     check if a set of hits match the quorum for ordered replicons (ordered_replicon or gembase)
     """
 
+    def __init__(self, model, redundancy_penalty):
+        self._redundancy_penalty = redundancy_penalty
+        super().__init__(model)
+
+
     def match(self, clusters):
         """
         Check a set of clusters fill model constraints.
@@ -176,7 +181,8 @@ class OrderedMatchMaker(MatchMaker):
             # create cluster of ValidHit
             one_clst_allowed_hits = [vh for st_hits in one_clst_allowed_hits for vh in st_hits]
             one_clst_allowed_hits.sort(key=attrgetter('position'))
-            valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits, self._model))
+            valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
+                                          self._model, cluster._hit_weights))
 
         mandatory_genes, accessory_genes, neutral_genes, forbidden_genes = self.present_genes()
         # the count is finished
@@ -213,7 +219,7 @@ class OrderedMatchMaker(MatchMaker):
             _log.debug(msg)
 
         if is_a_system:
-            res = System(self._model, valid_clusters)
+            res = System(self._model, valid_clusters, self._redundancy_penalty)
             _log.debug("is a system")
         else:
             res = RejectedClusters(self._model, valid_clusters, reasons)
@@ -452,7 +458,7 @@ class System(AbstractSetOfHits):
                          GeneStatus.ACCESSORY,
                          GeneStatus.NEUTRAL)
 
-    def __init__(self, model, clusters):
+    def __init__(self, model, clusters, redundancy_penalty=1.5):
         """
 
         :param model:  The model which has ben used to build this system
@@ -462,6 +468,7 @@ class System(AbstractSetOfHits):
         """
         self._replicon_name = clusters[0].replicon_name
         self.clusters = clusters
+        self.redundancy_penalty = redundancy_penalty
         super().__init__(model, self._replicon_name)
 
     @property
@@ -479,7 +486,7 @@ class System(AbstractSetOfHits):
             # the neutral genes do not play a role in score (only to build clusters)
             clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
             if clst_having_hit:
-                clst_penalty = (clst_having_hit - 1) * 1.5
+                clst_penalty = (clst_having_hit - 1) * self.redundancy_penalty
                 score -= clst_penalty
         return score
 
