@@ -122,7 +122,7 @@ For each model being searched:
 
 1. The Hits are filtered by model.
 2. They are used to check if they reach the quorum (i.e., the clustering step is skipped as there is no notion of genetic distance in this search mode).
-3. For each system, if the quorum is reached, hits are reported in the :ref:`all_possible_systems.tsv <all_possible_systems_tsv_unordered>` output file.
+3. For each system, if the quorum is reached, hits are reported in the :ref:`all_systems.tsv <all_systems_tsv_unordered>` output file.
    It has to be noted that forbidden components are listed too, as they can also be informative for the user.
 
 .. note::
