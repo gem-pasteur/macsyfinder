@@ -45,6 +45,13 @@ class Test(MacsyTest):
         # for gembase the order is not guarantee
 
         AbstractSetOfHits._id = itertools.count(1)
+        self.all_systems_tsv = "all_systems.tsv"
+        self.all_systems_txt = "all_systems.txt"
+        self.all_best_solutions = "all_best_solutions.tsv"
+        self.best_solution = "best_solution.tsv"
+        self.rejected_clusters = "rejected_clusters.txt"
+        self.uncomplete_systems = "uncomplete_systems.txt"
+
 
     def tearDown(self):
         try:
@@ -68,16 +75,15 @@ class Test(MacsyTest):
                "--relative-path"
 
         self._macsyfinder_run(args)
-        for file_name in ('all_systems.tsv',
-                          'all_best_systems.tsv',
-                          'best_systems.tsv'):
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#")
-        file_name = 'rejected_clusters.txt'
-        expected_result = self.find_data(expected_result_dir, file_name)
-        get_results = os.path.join(self.out_dir, file_name)
+        expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
+        get_results = os.path.join(self.out_dir, self.rejected_clusters)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
 
@@ -92,10 +98,10 @@ class Test(MacsyTest):
                "--relative-path"
         self._macsyfinder_run(args)
 
-        for file_name in ('all_systems.tsv',
-                          'all_best_systems.tsv',
-                          'best_systems.tsv',
-                          'rejected_clusters.txt'):
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.rejected_clusters):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
@@ -114,10 +120,10 @@ class Test(MacsyTest):
                "--relative-path"
         self._macsyfinder_run(args)
 
-        for file_name in ('all_systems.tsv',
-                          'all_best_systems.tsv',
-                          'best_systems.tsv',
-                          'rejected_clusters.txt'):
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.rejected_clusters):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
@@ -137,10 +143,10 @@ class Test(MacsyTest):
 
         self._macsyfinder_run(args)
 
-        for file_name in ('all_systems.tsv',
-                          'all_best_systems.tsv',
-                          'best_systems.tsv',
-                          'rejected_clusters.txt'):
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.rejected_clusters):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
@@ -157,9 +163,9 @@ class Test(MacsyTest):
                "--relative-path"
         self._macsyfinder_run(args)
 
-        for file_name in ('all_possible_systems.tsv',
-                          'all_possible_systems.txt',
-                          'uncomplete_systems.txt'):
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
