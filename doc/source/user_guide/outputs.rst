@@ -351,8 +351,8 @@ In this `unordered` search mode, there is no notion of order or distance of the 
 is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
 
 
-all_possible_systems.txt
-~~~~~~~~~~~~~~~~~~~~~~~~
+all_systems.txt
+~~~~~~~~~~~~~~~
 
 This file contains potential systems for unordered replicon in human readable format. 
 
@@ -407,12 +407,12 @@ In this file, for each component of each searched system's model, we report the 
 
 
 
-.. _all_possible_systems_tsv_unordered:
+.. _all_systems_tsv_unordered:
 
-all_possible_systems.tsv
-~~~~~~~~~~~~~~~~~~~~~~~~
+all_systems.tsv
+~~~~~~~~~~~~~~~
 
-This file contains the same information as in `all_possible_systems.txt` but in `tsv` format.
+This file contains the same information as in `all_systems.txt` but in `tsv` format.
 
 .. note::
 
