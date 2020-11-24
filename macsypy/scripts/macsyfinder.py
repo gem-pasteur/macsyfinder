@@ -319,7 +319,7 @@ the hit selection for system detection.
                                default=None,
                                help=f"""the weight modifier for cluster which bring a component already presents in other 
 clusters (default:{msf_def['redundancy_penalty']})""")
-    
+
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
