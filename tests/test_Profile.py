@@ -47,7 +47,7 @@ class TestProfile(MacsyTest):
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
-        args.log_level = 30
+        args.log_level = 0
         self.cfg = Config(MacsyDefaults(), args)
 
         if os.path.exists(self.cfg.working_dir()):
@@ -78,6 +78,24 @@ class TestProfile(MacsyTest):
         self.assertEqual(len(profile), 501)
 
 
+    def test_ga_threshold(self):
+        model = Model("foo/T2SS", 10)
+        gene_name = 'abc'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+
+        path = self.model_location.get_profile("abc")
+        profile = Profile(gene, self.cfg, path)
+        self.assertFalse(profile.ga_threshold)
+
+        gene_name = 'T5aSS_PF03797'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+
+        path = self.model_location.get_profile("T5aSS_PF03797")
+        profile = Profile(gene, self.cfg, path)
+        self.assertTrue(profile.ga_threshold)
+
     def test_str(self):
         model = Model("foo/T2SS", 10)
 
@@ -85,7 +103,7 @@ class TestProfile(MacsyTest):
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
 
-        path = self.model_location.get_profile("abc", )
+        path = self.model_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         s = "{0} : {1}".format(gene.name, path)
         self.assertEqual(str(profile), s)
@@ -97,11 +115,12 @@ class TestProfile(MacsyTest):
             self.cfg._set_db_type(db_type)
             model = Model("foo/T2SS", 10)
 
-            gene_name = 'abc'
+            gene_name = 'T5aSS_PF03797'
             c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
             gene = ModelGene(c_gene, model)
 
-            profile_path = self.model_location.get_profile("abc")
+            # case -cut-ga and GA threshold in profile
+            profile_path = self.model_location.get_profile("T5aSS_PF03797")
             profile = Profile(gene, self.cfg, profile_path)
             report = profile.execute()
             hmmer_raw_out = profile.hmm_raw_output
@@ -117,12 +136,12 @@ class TestProfile(MacsyTest):
                 for i in range(3):
                     # skip 2 lines
                     l = hmmer_raw_out_file.readline()
-                self.assertEqual("# model-specific thresholding:     GA cutoffs",
-                                 l.strip())
+                self.assertEqual("# model-specific thresholding:     GA cutoffs", l.strip())
             # test if profile is executed only once per run
             report_bis = profile.execute()
             self.assertIs(report, report_bis)
 
+        # case GA threshold in profile but e_value_search ask by options
         e_value_search = 0.1
         self.cfg._set_e_value_search(e_value_search)
         self.cfg._set_db_type("gembase")
@@ -132,8 +151,31 @@ class TestProfile(MacsyTest):
         with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
             for i in range(9):
                 l = hmmer_raw_out_file.readline()
-            self.assertEqual("# sequence reporting threshold:    E-value <= 0.1",
-                                 l.strip())
+            self.assertEqual("# sequence reporting threshold:    E-value <= 0.1", l.strip())
+
+        # case --cut-ga but no GA threshold in hmmprofile
+        gene_name = 'abc'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+
+        # case -cut-ga and GA threshold in profile
+        profile_path = self.model_location.get_profile("abc")
+        profile = Profile(gene, self.cfg, profile_path)
+        report = profile.execute()
+        hmmer_raw_out = profile.hmm_raw_output
+        with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
+            first_l = hmmer_raw_out_file.readline()
+            # a hmmsearch output file has been produced
+            self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
+            for i in range(5):
+                # skip 4 lines
+                l = hmmer_raw_out_file.readline()
+            # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
+            self.assertTrue(l.find(profile_path) != -1)
+            for i in range(3):
+                # skip 2 lines
+                l = hmmer_raw_out_file.readline()
+            self.assertEqual('# sequence reporting threshold:    E-value <= 0.1', l.strip())
 
 
     def test_execute_unknown_binary(self):
