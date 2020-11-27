@@ -54,7 +54,7 @@ class MacsyDefaults(dict):
             prefix_data = os.path.join(__MACSY_DATA__, 'data')
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
-        self.e_value_search = kwargs.get('e_value_search', None)
+        self.e_value_search = kwargs.get('e_value_search', 0.1)
         self.cut_ga = kwargs.get('cut_ga', True)
         self.db_type = kwargs.get('db_type', None)
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
