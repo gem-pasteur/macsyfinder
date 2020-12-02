@@ -98,6 +98,8 @@ headers are provided with the content of the lines in the file.
     to the tabulated version of the `all_systems.txt` file.  
 
 
+.. _all_systems_txt:
+
 all_systems.txt
 ~~~~~~~~~~~~~~~
 
@@ -364,7 +366,7 @@ all_systems.txt
 
 This file contains potential systems for unordered replicon in human readable format. 
 
-In this file, for each component of each searched system's model, we report the number of hits found.
+In this file, for each component of each searched system's model, we report the number of hits found. For the description of the fields, see :ref:`above <all_systems_txt>`. 
 
 .. warning::
     In this mode the `forbidden` genes are reported here to the user. As we do not know if they co-localize (cluster) with the other genes they could
@@ -420,7 +422,7 @@ In this file, for each component of each searched system's model, we report the 
 all_systems.tsv
 ~~~~~~~~~~~~~~~
 
-This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields , see :ref:`above <all_systems_tsv>`. 
+This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields, see :ref:`above <all_systems_tsv>`. 
 
 
 .. note::
