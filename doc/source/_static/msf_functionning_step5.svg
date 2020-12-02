@@ -135,7 +135,7 @@
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
      inkscape:cy="253.35348"
-     inkscape:cx="630.90084"
+     inkscape:cx="460.51249"
      inkscape:zoom="1.03"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -5045,7 +5045,7 @@
          y="673.64606"
          x="170.26738"
          id="tspan1757"
-         sodipodi:role="line">best_solution_report.tsv</tspan><tspan
+         sodipodi:role="line">best_solution.tsv</tspan><tspan
          id="tspan1761"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888998px;font-family:Arial;-inkscape-font-specification:Arial;stroke-width:0.26458299"
          y="679.81964"
