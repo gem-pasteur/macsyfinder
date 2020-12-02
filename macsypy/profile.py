@@ -88,7 +88,7 @@ class Profile:
         """
         self.gene = gene
         self.path = path
-        self.len = self._len()
+        self.len, self.ga_threshold = self._profile_features()
         self.cfg = cfg 
         self.hmm_raw_output = None
         self._report = None
@@ -102,19 +102,31 @@ class Profile:
         """
         return self.len
 
-
-    def _len(self):
+    def _profile_features(self):
         """
-        Parse the HMM profile file to get and store the length.
-        This private method is called at the Profile init.
+        Parse the HMM profile to extract the length and the presence of GA bit threshold
+
+        :return: the lentgh, presence of ga bit threshold
+        :rtype: tuple(int length, bool ga_threshold)
         """
         length = None
+        ga_threshold = False
         with open(self.path) as f:
             for l in f:
-                if l.startswith("LENG"):
+                if l.startswith('LENG'):
                     length = int(l.split()[1])
+                elif l.startswith('GA'):
+                    header, t1, t2 = l.split()
+                    if t2.endswith(';'):
+                        try:
+                            t1 = float(t1)
+                            t2 = float(t2[:-1])
+                            ga_threshold = True
+                        except ValueError:
+                            continue
+                elif l.startswith('STATS LOCAL'):
                     break
-        return length
+        return length, ga_threshold
 
 
     def __str__(self):
@@ -147,10 +159,16 @@ class Profile:
                                     self.gene.name + os.path.splitext(self.cfg.res_search_suffix())[0] + ".err")
 
             with open(err_path, 'w') as err_file:
-                if self.cfg.cut_ga():
+                if self.cfg.no_cut_ga():
+                    hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
+                elif not self.cfg.no_cut_ga() and self.ga_threshold:
                     hmmer_threshold = f"--cut_ga"
                 else:
+                    # no_cut_ga is not set but there is not self.ga_threshold:
                     hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
+                    _log.warning(f"GA bit thresholds unavailable on profile {self.gene.name}. "
+                                 f"Switch to e-value threshold ({hmmer_threshold})")
+
                 command = f"{self.cfg.hmmer()} --cpu 0 -o {output_path} {hmmer_threshold} " \
                           f"{self.path} {self.cfg.sequence_db()} "
                 _log.debug(f"{self.gene.name} Hmmer command line : {command}")

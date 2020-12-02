@@ -36,8 +36,8 @@ class TestMacsyDefaults(MacsyTest):
     def setUp(self):
         self.defaults = {'cfg_file': None,
                          'coverage_profile': 0.5,
-                         'e_value_search': None,
-                         'cut_ga': True,
+                         'e_value_search': 0.1,
+                         'no_cut_ga': False,
                          'db_type': None,
                          'hmmer': 'hmmsearch',
                          'i_evalue_sel': 0.001,
