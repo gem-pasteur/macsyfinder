@@ -69,7 +69,7 @@ Different types of output files are provided, human-readable files ".txt", and t
 headers are provided with the content of the lines in the file.
 
 
-  * **best_solution_report.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
+  * **best_solution.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
     under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
     If multiple solutions showed a maximal score, the solution maximizing
 
@@ -80,7 +80,7 @@ headers are provided with the content of the lines in the file.
 
     To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
     
-    The `best_solution_report.tsv` file is the most similar to former V1 file `macsyfinder.report`.
+    The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
 
   * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
@@ -91,7 +91,7 @@ headers are provided with the content of the lines in the file.
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
   * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
-    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
+    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
 
   * **all_systems.tsv** - This file contains all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
@@ -249,18 +249,18 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
     each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
 
 
-best_solution_report.tsv and all_best_solutions.tsv
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+best_solution.tsv and all_best_solutions.tsv
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	
 Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
 
-The `best_solution_report.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
+The `best_solution.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
 solution identifier in the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
 
 As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above. 
 
-For the description of the fields of `best_solution_report.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
+For the description of the fields of `best_solution.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
 
 For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
