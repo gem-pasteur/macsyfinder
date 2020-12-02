@@ -430,7 +430,7 @@ This file contains the same information as in `all_systems.txt` but in `tsv` for
     This file can be easily parsed with pandas::
 
         import pandas as pd
-        pot_systems = pd.read_csv('allpossible_systems.tsv', sep='\t', comment='#')
+        pot_systems = pd.read_csv('all_possible_systems.tsv', sep='\t', comment='#')
 
 
 .. code-block:: text
