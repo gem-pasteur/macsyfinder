@@ -55,7 +55,8 @@ class MacsyDefaults(dict):
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
         self.e_value_search = kwargs.get('e_value_search', 0.1)
-        self.cut_ga = kwargs.get('cut_ga', True)
+        #self.cut_ga = kwargs.get('cut_ga', True)
+        self.no_cut_ga = kwargs.get('no_cut_ga', False)
         self.db_type = kwargs.get('db_type', None)
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
@@ -95,7 +96,7 @@ class Config:
                 ('models_opt', ('inter_gene_max_space', 'max_nb_genes', 'min_mandatory_genes_required',
                                 'min_genes_required', 'multi_loci')),
                 ('models', tuple()),
-                ('hmmer', ('coverage_profile', 'e_value_search', 'cut_ga', 'i_evalue_sel', 'hmmer')),
+                ('hmmer', ('coverage_profile', 'e_value_search', 'no_cut_ga', 'i_evalue_sel', 'hmmer')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
@@ -572,7 +573,7 @@ class Config:
 
     def _set_e_value_search(self, value):
         """
-        set the value for the -E hmmsearch option and disable cut_ga option
+        set the value for the -E hmmsearch option
 
         :param float value: the value of -E hmmsearch
         :return: None
@@ -582,7 +583,6 @@ class Config:
         except ValueError:
             raise ValueError(f"'e_value_search' must be a float: Not '{value}'") from None
         self._options['e_value_search'] = value
-        self._options['cut_ga'] = False
 
 
 class NoneConfig:

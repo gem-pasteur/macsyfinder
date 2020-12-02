@@ -261,11 +261,22 @@ If it is not specify rely on the PATH
                                type=float,
                                default=None,
                                help=f"""Maximal e-value for hits to be reported during hmmsearch search.
-By default MF set per profile threshold for hmmsearch run (--cut_ga option)
-If --e-value-search is set the --cut-ga option is disabled and the new threshold
-(-E in hmmsearch) is applied to all profiles.)
+By default MF set per profile threshold for hmmsearch run (--cut_ga option) 
+for profiles containing the GA bit score threshold.
+If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
+To applied the --e-value-search to all profiles use the --no-cut-ga option. 
 (default: {msf_def['e_value_search']})
 """)
+    hmmer_options.add_argument('--no-cut-ga',
+                               action='store_true',
+                               default=False,
+                               help=f"""By default the Mf try to applied a threshold per profile by using the 
+hmmer -cut-ga option. This is possible only if the Ga bit score is present in the profile otherwise MF switch to use the
+the --e-value-search (-E in hmmsearch). 
+If this option is set the --e-value-search option is used for all profiles regardless 
+the presence of the a GA bit score in the profiles.
+(default: {msf_def['no_cut_ga']})""")
+
     hmmer_options.add_argument('--i-evalue-sel',
                                action='store',
                                type=float,
