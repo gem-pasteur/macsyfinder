@@ -224,20 +224,24 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
 
     * **replicon** - the name of the replicon it belongs to
     * **hit_id** - the unique identifier of the hit
+    * **gene_name** - the name of the component identified by the hit
     * **hit_pos** - the position of the sequence in the replicon
     * **model_fqn** - the model fully-qualified name
-    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
+    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
     * **hit_gene_ref** - the gene in the model whose this hit plays the role of
     * **hit_status** - the status of the component in the assigned system's definition
     * **hit_seq_len** - the length of the protein sequence matched by this hit
-    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_i_eval** - Hmmer statistics, the independent-evalue
     * **hit_score** - Hmmer score
     * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
+    * **used_in** - whether the hit could be used in another system's occurrence
 
 This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
 
