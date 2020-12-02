@@ -124,7 +124,7 @@ def parse_args(args):
                  *                           *  *           *     *
 
 
-    MacSyFinder - Detection of macromolecular systems in protein datasets 
+    MacSyFinder (MSF) - Detection of macromolecular systems in protein datasets 
     using systems modelling and similarity search.  
     '''))
 
@@ -135,16 +135,16 @@ def parse_args(args):
                         action='append',
                         nargs='*',
                         default=None,
-                        help="""The models to search. The --models option can be set several times.'
+                        help="""The models to search. The --models option can be set several times.
 For each --models options the first element must be the name of family models, 
 followed by the name of the models.
-If the name 'all' is in the list all models from the family will be searched.'
+If the name 'all' is in the list, all models from the family will be searched.
 '--models TXSS Flagellum T2SS' 
-          means MSF will search for models TXSS/Flagellum and TXSS/T2SS
+          means MSF will search for the models TXSS/Flagellum and TXSS/T2SS
 '--models TXSS all' 
-          means for all models found in model package TXSS
-'--models CRIPRcas/subtyping all' 
-         means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
+          means MSF will search for all models found in the model package TXSS
+'--models CRISPRcas/subtyping all' 
+          means MSF will search for all models described in the CRISPRCas/subtyping subfamily.
 (required unless --previous-run is set)
 """)
 
@@ -159,11 +159,11 @@ If the name 'all' is in the list all models from the family will be searched.'
     genome_options.add_argument("--db-type",
                                 choices=['ordered_replicon', 'gembase', 'unordered'],
                                 default=None,
-                                help='''The type of dataset to deal with. "unordered" corresponds
-to a non-assembled genome,
+                                help='''The type of dataset to deal with. 
+"unordered" corresponds to a non-assembled genome or set of unassembled genes,
 "ordered_replicon" to an assembled genome,
-and "gembase" to a set of replicons where sequence identifiers
-follow this convention: ">RepliconName SequenceID".
+"gembase" to a set of replicons where sequence identifiers
+	follow this convention: ">RepliconName_SequenceID".
 (required unless --previous-run is set)
 ''')
 
@@ -178,11 +178,11 @@ follow this convention: ">RepliconName SequenceID".
     genome_options.add_argument("--topology-file",
                                 default=None,
                                 help="""Topology file path. The topology file allows to specify a topology
-(linear or circular) for each replicon (this option is meaningful only if
-the db_type is 'ordered_replicon' or 'gembase'.
+(linear or circular) for each replicon (this option is meaningful only if the db_type is 
+'ordered_replicon' or 'gembase'.
 A topology file is a tabular file with two columns:
-the 1st is the replicon name, and the 2nd the corresponding topology:
-\"RepliconA\tlinear\"
+	the 1st is the replicon name, and the 2nd the corresponding topology:
+	\"RepliconA\tlinear\"
 """)
 
     genome_options.add_argument("--idx",
@@ -199,10 +199,9 @@ if they were previously computed and present at the dataset location.
                                 nargs=2,
                                 default=None,
                                 help="""Co-localization criterion: maximum number of components non-matched by a
-profile allowed between two matched components
-for them to be considered contiguous.
+	profile allowed between two matched components for them to be considered contiguous.
 Option only meaningful for 'ordered' datasets.
-The first value must match to a model, the second to a number of components.
+The first value must name a model, the second a number of components.
 This option can be repeated several times:
     "--inter-gene-max-space TXSS/T2SS 12 --inter-gene-max-space TXSS/Flagellum 20
 """
@@ -221,7 +220,7 @@ This option can be repeated several times:
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="""The minimal number of genes required for model assessment "
+                                help="""The minimal number of genes required for model assessment 
 (includes both 'mandatory' and 'accessory' components).
 The first value must correspond to a model fully qualified name, the second value to an integer.
 This option can be repeated several times:
@@ -245,8 +244,8 @@ This option can be repeated several times:
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
-                                help="""Specifies if the system can be detected as a 'scattered' system.
-The models are specified as a comma separated list of fully qualified name
+                                help="""Specifies if the system can be detected as a 'scattered' (or multiple-loci-encoded) system.
+The models are specified as a comma separated list of fully qualified name(s)
     "--multi-loci model_familyA/model_1,model_familyB/model_2"
 """)
     hmmer_options = parser.add_argument_group(title="Options for Hmmer execution and hits filtering")
@@ -254,7 +253,7 @@ The models are specified as a comma separated list of fully qualified name
                                action='store',
                                default=None,
                                help=f"""Path to the hmmsearch program.
-If it is not specify rely on the PATH
+If not specified, rely on the environment variable PATH
 (default: {msf_def['hmmer']})""")
     hmmer_options.add_argument('--e-value-search',
                                action='store',
@@ -281,31 +280,31 @@ the presence of the a GA bit score in the profiles.
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""Maximal independent e-value for Hmmer hits to be selected for system detection.
+                               help=f"""Maximal independent e-value for Hmmer hits to be selected for systems detection.
 (default:{msf_def['i_evalue_sel']})""")
     hmmer_options.add_argument('--coverage-profile',
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""Minimal profile coverage required in the hit alignment to allow
-the hit selection for system detection. 
+                               help=f"""Minimal profile coverage required for the hit alignment  with the profile to allow
+the hit selection for systems detection. 
 (default: {msf_def['coverage_profile']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
                              action='store',
                              default=None,
-                             help="""specify the path to the models if the models are not installed in the canonical place.
-It gather definitions (xml files) and hmm profiles in a specific
-structure. A directory with the name of the model with at least two directories
-profiles" which contains all hmm profile for gene describe in definitions and
-models" which contains either xml file of definitions or subdirectories
-to organize the model in subsystems.""")
+                             help="""Specifies the path to the models if the models are not installed in the canonical place.
+It gathers definitions (xml files) and HMM profiles arranged in a specific
+file structure. A directory with the name of the model with at least two directories
+	'profiles' - which contains HMM profiles for each gene components described in the systems' models
+	'models' - which contains either the XML files of models' definitions or subdirectories
+to organize the models in subsystems.""")
     dir_options.add_argument('-o', '--out-dir',
                              action='store',
                              default=None,
-                             help="""Path to the directory where to store results.
-if out-dir is specified res-search-dir will be ignored.""")
+                             help="""Path to the directory where to store output results.
+if out-dir is specified, res-search-dir will be ignored.""")
     dir_options.add_argument('--res-search-suffix',
                              action='store',
                              default=None,
@@ -324,7 +323,7 @@ searched in the 'profile_dir', in a file which name is based on the
 Gene name + the profile suffix.
 For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
 then the profile should be placed at the specified location 
-and be named 'gspG.hmm3'
+under the name 'gspG.hmm3'
 (default: {msf_def['profile_suffix']})"""
                              )
 
@@ -346,7 +345,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     general_options.add_argument("--mute",
                                  action="store_true",
                                  default=False,
-                                 help=f"""mute the log on stdout.
+                                 help=f"""Mute the log on stdout.
 (continue to log on macsyfinder.log)
 (default: {msf_def['mute']})""")
     general_options.add_argument("--version",
@@ -355,7 +354,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     general_options.add_argument("-l", "--list-models",
                                  action="store_true",
                                  default=False,
-                                 help="display the all models installed in generic location and quit.")
+                                 help="Displays all models installed at generic location and quit.")
     general_options.add_argument("--cfg-file",
                                  action='store',
                                  help="Path to a MacSyFinder configuration file to be used.")
@@ -363,10 +362,10 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
                                  action='store',
                                  default=None,
                                  help="""Path to a previous MacSyFinder run directory.
-It allows to skip the Hmmer search step on same dataset,
+It allows to skip the Hmmer search step on a same dataset,
 as it uses previous run results and thus parameters regarding Hmmer detection.
 The configuration file from this previous run will be used.
-Conflict with options  
+Conflicts with options:  
     --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',

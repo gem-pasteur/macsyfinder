@@ -69,7 +69,7 @@ Different types of output files are provided, human-readable files ".txt", and t
 headers are provided with the content of the lines in the file.
 
 
-  * **best_solution_report.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
+  * **best_solution.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
     under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
     If multiple solutions showed a maximal score, the solution maximizing
 
@@ -80,7 +80,7 @@ headers are provided with the content of the lines in the file.
 
     To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
     
-    The `best_solution_report.tsv` file is the most similar to former V1 file `macsyfinder.report`.
+    The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
 
   * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
@@ -91,12 +91,14 @@ headers are provided with the content of the lines in the file.
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
   * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
-    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution_report.tsv`.
+    To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
 
   * **all_systems.tsv** - This file contains all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
     to the tabulated version of the `all_systems.txt` file.  
 
+
+.. _all_systems_txt:
 
 all_systems.txt
 ~~~~~~~~~~~~~~~
@@ -224,20 +226,24 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
 
     * **replicon** - the name of the replicon it belongs to
     * **hit_id** - the unique identifier of the hit
+    * **gene_name** - the name of the component identified by the hit
     * **hit_pos** - the position of the sequence in the replicon
     * **model_fqn** - the model fully-qualified name
-    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
+    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
     * **hit_gene_ref** - the gene in the model whose this hit plays the role of
     * **hit_status** - the status of the component in the assigned system's definition
     * **hit_seq_len** - the length of the protein sequence matched by this hit
-    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_i_eval** - Hmmer statistics, the independent-evalue
     * **hit_score** - Hmmer score
     * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
+    * **used_in** - whether the hit could be used in another system's occurrence
 
 This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
 
@@ -249,38 +255,42 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
     each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
 
 
-best_solution_report.tsv and all_best_solutions.tsv
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+best_solution.tsv and all_best_solutions.tsv
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	
 Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
 
-The `best_solution_report.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
-solution identifier in the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
+The `best_solution.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
+solution identifier added to the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
 
 As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above. 
 
-For the description of the fields of `best_solution_report.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
+For the description of the fields of `best_solution.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
 
 For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
     * **sol_id** - the name of the solution it is part of
     * **replicon** - the name of the replicon it belongs to
     * **hit_id** - the unique identifier of the hit
+    * **gene_name** - the name of the component identified by the hit
     * **hit_pos** - the position of the sequence in the replicon
     * **model_fqn** - the model fully-qualified name
-    * **system_id** - the unique identifier attributed to the detected system
+    * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
+    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
     * **hit_gene_ref** - the gene in the model whose this hit plays the role of
     * **hit_status** - the status of the component in the assigned system's definition
     * **hit_seq_len** - the length of the protein sequence matched by this hit
-    * **hit_i_evalue** - Hmmer statistics, the independent-evalue
+    * **hit_i_eval** - Hmmer statistics, the independent-evalue
     * **hit_score** - Hmmer score
     * **hit_profile_cov** - the percentage of the profile covered by the alignment with the sequence
+    * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
+    * **used_in** - whether the hit could be used in another system's occurrence
 
 
 
@@ -356,7 +366,7 @@ all_systems.txt
 
 This file contains potential systems for unordered replicon in human readable format. 
 
-In this file, for each component of each searched system's model, we report the number of hits found.
+In this file, for each component of each searched system's model, we report the number of hits found. For the description of the fields, see :ref:`above <all_systems_txt>`. 
 
 .. warning::
     In this mode the `forbidden` genes are reported here to the user. As we do not know if they co-localize (cluster) with the other genes they could
@@ -412,14 +422,15 @@ In this file, for each component of each searched system's model, we report the 
 all_systems.tsv
 ~~~~~~~~~~~~~~~
 
-This file contains the same information as in `all_systems.txt` but in `tsv` format.
+This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields, see :ref:`above <all_systems_tsv>`. 
+
 
 .. note::
 
     This file can be easily parsed with pandas::
 
         import pandas as pd
-        pot_systems = pd.read_csv('allpossible_systems.tsv', sep='\t', comment='#')
+        pot_systems = pd.read_csv('all_possible_systems.tsv', sep='\t', comment='#')
 
 
 .. code-block:: text

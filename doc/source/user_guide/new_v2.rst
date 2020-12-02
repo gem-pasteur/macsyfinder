@@ -242,5 +242,5 @@ Here follow some examples of updates from v1 to v2.
 .. note::
 
 	- As only the secretin component 'T3SS_sctC' was exchangeable in its role within T3SS with its homologs T2SS_gspD, T4P_pilQ and Tad_rcpA, these three components are now set as `exchangeables` (they can functionally *replace* the component 'T3SS_sctC'), and all other `homologs` do not need to be listed anymore.  
-	- The keyword `system_reference` is not needed anymore. Therefore, the **v2** definition of T3SS is way more compact than that for **v1**.
+	- The keyword `system_ref` is not needed anymore. Therefore, the **v2** definition of T3SS is way more compact than that for **v1**.
 
