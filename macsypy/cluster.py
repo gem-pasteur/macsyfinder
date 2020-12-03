@@ -206,6 +206,7 @@ class Cluster:
         :param gene: The gene which must be tested.
         :type gene: :class:`macsypy.gene.Gene` object
         :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
+                 (the gene hitself or an exchageable)
         """
         if self._genes_roles is None:
             self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
