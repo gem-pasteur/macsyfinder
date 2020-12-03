@@ -303,19 +303,22 @@ the hit selection for systems detection.
                                default=None,
                                help=f"""the weight of a mandatory component in cluster scoring
 (default:{msf_def['accessory_weight']})""")
+
+    # the weight of a mandatory component in cluster scoring
+    # (default:{msf_def['neutral_weight']})
     score_options.add_argument('--neutral-weight',
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight of a mandatory component in cluster scoring
-(default:{msf_def['neutral_weight']})""")
+                               help=argparse.SUPPRESS)
 
+    # the weight modifier for a component which code for itself cluster scoring
+    # (default:{msf_def['itself_weight']})"""
     score_options.add_argument('--itself-weight',
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight modifier for a component which code for itself cluster scoring
-(default:{msf_def['itself_weight']})""")
+                               help=argparse.SUPPRESS)
 
     score_options.add_argument('--exchangeable-weight',
                                action='store',
