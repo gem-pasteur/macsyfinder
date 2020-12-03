@@ -107,7 +107,8 @@ class Config:
                                  'res_search_suffix', 'res_extract_suffix')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
                              'verbosity', 'quiet', 'mute', 'worker')),
-                ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight', 'itself_weight', 'redundancy_penalty')),
+                ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
+                               'itself_weight', 'redundancy_penalty')),
                 ]
 
     def __init__(self, defaults, parsed_args):
