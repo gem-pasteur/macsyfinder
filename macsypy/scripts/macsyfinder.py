@@ -563,7 +563,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
 
             for one_combination_set in clusters_combination:
                 for one_clust_combination in one_combination_set:
-                    ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=1.5)
+                    ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                     res = ordered_matcher.match(one_clust_combination)
                     if isinstance(res, System):
                         systems.append(res)
