@@ -469,7 +469,9 @@ class System(AbstractSetOfHits):
         self._replicon_name = clusters[0].replicon_name
         self.clusters = clusters
         self.redundancy_penalty = redundancy_penalty
+        self._score = None
         super().__init__(model, self._replicon_name)
+
 
     @property
     def score(self):
@@ -480,14 +482,26 @@ class System(AbstractSetOfHits):
             * if a hit match for mandatory/accessory gene of the model
         :rtype: float
         """
-        score = sum([clst.score for clst in self.clusters])
+        if self._score is not None:
+            # The score of the system is called for each clique
+            # So to avoid computation we cached it
+            return self._score
+
+        clst_scores = [clst.score for clst in self.clusters]
+        score = sum(clst_scores)
+        _log.debug(f"score computation for system {self.id}:")
+        _log.debug(f"clusters scores sum({clst_scores}) = {score}")
         for gene in self.model.mandatory_genes + self.model.accessory_genes:
             # it cannot be forbidden gene in System instance
             # the neutral genes do not play a role in score (only to build clusters)
             clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
+            _log.debug(f"nb of clusters which fulfill function of {gene.name} = {clst_having_hit}")
             if clst_having_hit:
                 clst_penalty = (clst_having_hit - 1) * self.redundancy_penalty
+                _log.debug(f"clst_penalty {- clst_penalty}")
                 score -= clst_penalty
+        self._score = score
+        _log.debug(f"score of system {self.id} = {score}")
         return score
 
 
