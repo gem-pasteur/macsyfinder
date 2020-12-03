@@ -75,11 +75,11 @@ def find_best_solutions(systems):
             G.add_edge(sys_i, sys_j)
 
     cliques = nx.algorithms.clique.find_cliques(G)
-    max_score = 0
+    max_score = None
     max_cliques = []
     for c in cliques:
         current_score = sum([s.score for s in c])
-        if current_score > max_score:
+        if max_score is None or (current_score > max_score):
             max_score = current_score
             max_cliques = [c]
         elif current_score == max_score:
