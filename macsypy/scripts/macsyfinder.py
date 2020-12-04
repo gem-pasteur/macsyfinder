@@ -332,6 +332,12 @@ the hit selection for systems detection.
                                default=None,
                                help=f"""the weight modifier for cluster which bring a component already presents in other 
 clusters (default:{msf_def['redundancy_penalty']})""")
+    score_options.add_argument('--loner-multi-system-weight',
+                               action='store',
+                               type=float,
+                               default=None,
+                               help=f"""the weight modifier for a hit which is a loner and multi-system 
+(default:{msf_def['loner_multi_system_weight']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
