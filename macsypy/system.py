@@ -487,19 +487,65 @@ class System(AbstractSetOfHits):
             # So to avoid computation we cached it
             return self._score
 
-        clst_scores = [clst.score for clst in self.clusters]
-        score = sum(clst_scores)
+        def clst_func(clsts):
+            """
+
+            :param clsts: list of clusters
+            :return: return the list of functions which are represented in these clusters.
+            :rtype: set of str
+            """
+            func_in_clst = {}
+            for clst in clsts:
+                for v_hit in clst.hits:
+                    func = v_hit.gene_ref.alternate_of().name
+                    if func in func_in_clst:
+                        func_in_clst[func].append(clst)
+                    else:
+                        func_in_clst[func] = [clst]
+            return func_in_clst
+
         _log.debug(f"score computation for system {self.id}:")
-        _log.debug(f"clusters scores sum({clst_scores}) = {score}")
+        # split clusters in 2
+        # the clusters loners  multi systems
+        # and the others (regular)
+        regular_clsts = []
+        loner_multi_syst_clsts = []
+        for clst in self.clusters:
+            if clst.loner() and clst.hits[0].multi_system:
+                loner_multi_syst_clsts.append(clst)
+            else:
+                regular_clsts.append(clst)
+
+        # Compute score of regular clusters
+        clst_scores = [clst.score for clst in regular_clsts]
+        score = sum(clst_scores)
+        _log.debug(f"regular clusters scores sum({clst_scores}) = {score}")
         for gene in self.model.mandatory_genes + self.model.accessory_genes:
+            _log.debug("compute penalty redundancy")
             # it cannot be forbidden gene in System instance
             # the neutral genes do not play a role in score (only to build clusters)
-            clst_having_hit = sum([1 for clst in self.clusters if clst.fulfilled_function(gene)])
+            clst_having_hit = sum([1 for clst in regular_clsts if clst.fulfilled_function(gene)])
             _log.debug(f"nb of clusters which fulfill function of {gene.name} = {clst_having_hit}")
             if clst_having_hit:
                 clst_penalty = (clst_having_hit - 1) * self.redundancy_penalty
                 _log.debug(f"clst_penalty {- clst_penalty}")
                 score -= clst_penalty
+
+        # compute score of loners multi systems
+        loners_multi_syst_functions = clst_func(loner_multi_syst_clsts)
+        regular_functions = set(clst_func(regular_clsts))
+        _log.debug("compute score of loner multi systems")
+        for funct in loners_multi_syst_functions:
+            if not funct in regular_functions:
+                loners_score = max(c.score for c in loners_multi_syst_functions[funct])
+                _log.debug(f"score for {funct} = {loners_score}")
+                score += loners_score
+            else:
+                # if the biological funct is already encoded by regular clusters
+                # we do not count increase the score
+                _log.debug(f"{funct} is already in regular clusters")
+                pass
+
         self._score = score
         _log.debug(f"score of system {self.id} = {score}")
         return score
