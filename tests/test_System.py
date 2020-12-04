@@ -33,7 +33,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System, HitSystemTracker, ClusterSystemTracker
-
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
@@ -756,6 +756,9 @@ class SystemTest(MacsyTest):
         gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
         gene_toto.add_exchangeable(gene_toto_ho)
 
+        c_gene_not_in_model = CoreGene(self.model_location, "toto", self.profile_factory)
+        gene_not_in_model = ModelGene(c_gene_not_in_model, model)
+
         model.add_mandatory_gene(gene_sctn)
         model.add_mandatory_gene(gene_sctj)
         model.add_accessory_gene(gene_gspd)
@@ -772,6 +775,8 @@ class SystemTest(MacsyTest):
         h_abc_ho = Hit(c_gene_tadZ, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_toto = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_toto_ho = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_not_in_model = Hit(c_gene_not_in_model, "hit_not_in_model", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         model._min_mandatory_genes_required = 2
         model._min_genes_required = 1
@@ -811,6 +816,13 @@ class SystemTest(MacsyTest):
         self.assertDictEqual(s1.accessory_occ, {'gspD': [v_h_gspd]})
         self.assertDictEqual(s1.neutral_occ, {'toto': [v_h_toto]})
 
+        v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
+        v_h_not_in_model = ValidHit(h_not_in_model, gene_not_in_model, GeneStatus.MANDATORY)
+        c1 = Cluster([v_h_sctj, v_h_not_in_model], model, self.hit_weights)
+        with self.assertRaises(MacsypyError) as ctx:
+            s1 = System(model, [c1], self.cfg.redundancy_penalty())
+        self.assertEqual(str(ctx.exception),
+                         "gene 'toto' does not belong to 'mandatory' genes in model 'T2SS'")
 
     def test_multi_loci(self):
         model = Model("foo/T2SS", 10)
