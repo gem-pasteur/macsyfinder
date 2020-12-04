@@ -26,7 +26,6 @@ import itertools
 import logging
 
 from .error import MacsypyError
-from .hit import HitWeight
 from .gene import GeneStatus
 
 _log = logging.getLogger(__name__)
@@ -179,6 +178,8 @@ class Cluster:
     def __len__(self):
         return len(self.hits)
 
+    def loner(self):
+        return len(self) == 1
 
     def _check_replicon_consistency(self):
         """
@@ -222,7 +223,7 @@ class Cluster:
         :param bool before: If False the hits of the cluster will be add at the end of this one,
                             Otherwise the cluster hits will be inserted before the hits of this one.
         :return: None
-        :raise MasypyError: if the two clusters have not the same model
+        :raise MacsypyError: if the two clusters have not the same model
         """
         if cluster.model != self.model:
             raise MacsypyError("Try to merge Clusters from different model")
@@ -259,12 +260,20 @@ class Cluster:
                     hit_score = self._hit_weights.neutral
                 else:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
+                _log.debug(f"{v_hit.id} is {v_hit.status} score = {hit_score}")
+
                 # weighted the hit score according to the hit match the gene or
                 # is an exchangeable
                 if v_hit.gene_ref.is_exchangeable:
                     hit_score *= self._hit_weights.exchangeable
+                    _log.debug(f"{v_hit.id} is exchangeable score = {hit_score}")
                 else:
                     hit_score *= self._hit_weights.itself
+
+                if self.loner() and v_hit.multi_system:
+                    _log.debug(f"{v_hit.id} is loner and multi_system")
+                    hit_score *= self._hit_weights.loner_multi_system
+                    _log.debug(f"{v_hit.id} = {hit_score}")
                 score += hit_score
                 seen_hits.add(v_hit.gene_ref)
         self._score = score
