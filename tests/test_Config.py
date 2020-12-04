@@ -406,11 +406,24 @@ class TestConfig(MacsyTest):
         cfg = Config(self.defaults, self.parsed_args)
         self.assertEqual(cfg.e_value_search(), 1.0)
 
-        self.parsed_args.e_value_search = "toto"
-        with self.assertRaises(ValueError) as ctx:
-            Config(self.defaults, self.parsed_args)
-        self.assertEqual(str(ctx.exception),
-                         "'e_value_search' must be a float: Not 'toto'")
+    def test_hit_weights(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        default = {k: self.defaults[f"{k}_weight"] for k in ('mandatory', 'accessory', 'neutral', 'itself',
+                                                             'exchangeable', 'loner_multi_system')}
+        self.assertDictEqual(default, cfg.hit_weights())
 
+        self.parsed_args.mandatory_weight = 2
+        self.parsed_args.accessory_weight = 1
+        self.parsed_args.exchangeable_weight = 0.5
+        self.parsed_args.loner_multi_system_weight = 0.2
 
+        cfg = Config(self.defaults, self.parsed_args)
+        expected = {'mandatory': 2,
+                'accessory': 1,
+                'neutral': self.defaults.neutral_weight,
+                'itself': self.defaults.itself_weight,
+                'exchangeable': .5,
+                'loner_multi_system': .2
+                }
+        self.assertDictEqual(cfg.hit_weights(), expected)
 

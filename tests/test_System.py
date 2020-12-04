@@ -44,6 +44,7 @@ class SystemTest(MacsyTest):
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
+        args.verbosity = 3
         self.cfg = Config(MacsyDefaults(), args)
 
         self.model_name = 'foo'
@@ -299,6 +300,7 @@ class SystemTest(MacsyTest):
         s = System(model, [c], self.cfg.redundancy_penalty())
         self.assertEqual(s.occurrence(), 1)
 
+
     def test_score(self):
         model = Model("foo/T2SS", 10)
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
@@ -322,8 +324,17 @@ class SystemTest(MacsyTest):
         gene_sctn.add_exchangeable(sctn_FLG)
         model.add_accessory_gene(gene_sctn)
 
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+        model.add_neutral_gene(gene_abc)
+
+        c_gene_flie = CoreGene(self.model_location, "fliE", self.profile_factory)
+        gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
+        model.add_mandatory_gene(gene_flie)
+
         h_gspd = Hit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+
         h_tadz = Hit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_tadz = ValidHit(h_tadz, gene_tadZ, GeneStatus.MANDATORY)
 
@@ -336,6 +347,18 @@ class SystemTest(MacsyTest):
         v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
         h_sctn_hom = Hit(c_gene_sctn_FLG, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_sctn_hom = ValidHit(h_sctn_hom, sctn_FLG, GeneStatus.ACCESSORY)
+
+        h_abc = Hit(c_gene_abc, "h_abc", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_abc = ValidHit(h_abc, gene_abc, GeneStatus.NEUTRAL)
+
+        h_flie_1 = Hit(c_gene_flie, "h_flie_1", 150, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_flie_1 = ValidHit(h_flie_1, gene_flie, GeneStatus.MANDATORY)
+
+        h_flie_2 = Hit(c_gene_flie, "h_flie_2", 300, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_flie_2 = ValidHit(h_flie_2, gene_flie, GeneStatus.MANDATORY)
+
+        h_flie_3 = Hit(c_gene_flie, "h_flie_3", 25, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_flie_3 = ValidHit(h_flie_3, gene_flie, GeneStatus.MANDATORY)
 
         # system with
         # 1 cluster
@@ -381,20 +404,49 @@ class SystemTest(MacsyTest):
         s = System(model,
                    [Cluster([v_h_gspd, v_h_tadz, v_h_sctj_an, v_h_sctn], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
-        self.assertEqual(s.score, 2.875)
+        self.assertEqual(s.score, 2.9)
 
         # system with 2 cluster
         # 1 mandatory + 1 accessory
         #    1        +      0.5
         # 1 mandatory + 1 accessory exchangeable same role as cluster_1 accessory
-        #    1        +      0.375
+        #    1        +      0.4
         # system penalty due to 2 genes with same role in 2 clusters: -1.5
-        #    2.875 - 1.5 = 1.375
+        #    2.9 - 1.5 = 1.8
         s = System(model,
                    [Cluster([v_h_gspd, v_h_sctj], model, self.hit_weights),
                     Cluster([v_h_tadz, v_h_sctj_an], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
-        self.assertEqual(s.score, 1.375)
+        self.assertEqual(s.score, 1.4)
+
+        # system with 2 cluster
+        # 1 mandatory + 1 accessory + 1 neutral + same gene as accessory
+        #    1        +      0.5        0             0
+        # 2 clusters of loner multi systems
+        #    + 0.7
+        # system penalty: 0
+        #    2.2
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_sctj, v_h_abc, v_h_sctj], model, self.hit_weights),
+                    Cluster([v_h_flie_1], model, self.hit_weights),
+                    Cluster([v_h_flie_2], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
+        self.assertEqual(s.score, 2.2)
+
+        # system with 2 cluster
+        # 1 mandatory + 1 accessory + 1 neutral + same gene as accessory + mandatory loner
+        #    1        +      0.5        0             0                  +   1
+        # 2 clusters of loner multi systems one is already in first cluster
+        #    + 0
+        # system penalty: 0
+        #    2.5
+        s = System(model,
+                   [Cluster([v_h_gspd, v_h_sctj, v_h_abc, v_h_sctj, v_h_flie_1], model, self.hit_weights),
+                    Cluster([v_h_flie_2], model, self.hit_weights),
+                    Cluster([v_h_flie_3], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
+        self.assertEqual(s.score, 2.5)
+
 
     def test_is_compatible(self):
         model_A = Model("foo/A", 10)

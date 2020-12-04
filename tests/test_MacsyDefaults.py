@@ -68,9 +68,10 @@ class TestMacsyDefaults(MacsyTest):
                          'mandatory_weight': 1.0,
                          'accessory_weight': .5,
                          'neutral_weight': 0.0,
-                         'exchangeable_weight': .75,
+                         'exchangeable_weight': .8,
                          'itself_weight': 1.0,
                          'redundancy_penalty': 1.5,
+                         'loner_multi_system_weight': 0.7
                          }
 
     def test_MacsyDefaults(self):
@@ -80,8 +81,7 @@ class TestMacsyDefaults(MacsyTest):
         new_defaults = {k: v for k, v in self.defaults.items()}
         new_defaults['previous_run'] = True
         new_defaults['worker'] = 5
-        defaults = MacsyDefaults(previous_run=True,
-                                 worker=5)
+        defaults = MacsyDefaults(previous_run=True, worker=5)
         self.assertDictEqual(defaults, new_defaults)
 
 
