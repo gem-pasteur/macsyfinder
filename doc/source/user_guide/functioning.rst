@@ -178,6 +178,8 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 	
 		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
 		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
+        - for the loner multi system the score of loner is added only if the function is not fulfilled in the others culsters.
+          In this case, even there is several occurrences the score is added only once (but no penaltiy is applied).
 
 	* Only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
