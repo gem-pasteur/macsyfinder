@@ -102,12 +102,12 @@ class Config:
                                 'min_genes_required', 'multi_loci')),
                 ('models', tuple()),
                 ('hmmer', ('coverage_profile', 'e_value_search', 'no_cut_ga', 'i_evalue_sel', 'hmmer')),
+                ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
+                               'itself_weight', 'redundancy_penalty')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
                              'verbosity', 'quiet', 'mute', 'worker')),
-                ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
-                               'itself_weight', 'redundancy_penalty')),
                 ]
 
     def __init__(self, defaults, parsed_args):
