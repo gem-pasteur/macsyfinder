@@ -163,25 +163,26 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 
    The assumptions behind this scoring scheme are the following:
 
-	* We set a score for the different types of genes/components when defining a **cluster's score**:
+    * We set a score for the different types of genes/components when defining a **cluster's score**:
 
-		- +1.0 is added when a `mandatory` gene is present 
-		- +0.5 is added when an `accessory` gene is present 
-		- +0.0 is added when a `neutral` gene is present
-		- \*0.8 (a factor of 0.8) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene
+        - +1.0 is added when a `mandatory` gene is present
+        - +0.5 is added when an `accessory` gene is present
+        - +0.0 is added when a `neutral` gene is present
+        - \*0.8 (a factor of 0.8) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene
         - \*0.7 (a factor of 0.7) is applied to the above scores if the hit is a `loner` `multi system`.
-		
-	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
+
+
+    * When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
 	 
 	
-	* In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+    * In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
 	
-		- -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
-		- -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
+        - -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
+        - -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
         - for the loner multi system the score of loner is added only if the function is not fulfilled in the others culsters.
           In this case, even there is several occurrences the score is added only once (but no penaltiy is applied).
 
-	* Only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
+    * Only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 
 
 
