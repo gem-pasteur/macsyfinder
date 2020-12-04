@@ -168,7 +168,8 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 		- +1.0 is added when a `mandatory` gene is present 
 		- +0.5 is added when an `accessory` gene is present 
 		- +0.0 is added when a `neutral` gene is present
-		- \*0.75 (a factor of 0.75) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene 
+		- \*0.8 (a factor of 0.8) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene
+        - \*0.7 (a factor of 0.7) is applied to the above scores if the hit is a `loner` `multi system`.
 		
 	* When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
 	 
