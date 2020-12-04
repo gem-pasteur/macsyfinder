@@ -289,7 +289,7 @@ the presence of the a GA bit score in the profiles.
                                help=f"""Minimal profile coverage required for the hit alignment  with the profile to allow
 the hit selection for systems detection. 
 (default: {msf_def['coverage_profile']})""")
-    score_options = parser.add_argument_group(title="score options",
+    score_options = parser.add_argument_group(title="Score options",
                                               description="Options for cluster and systems scoring")
     score_options.add_argument('--mandatory-weight',
                                action='store',
