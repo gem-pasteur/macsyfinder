@@ -15,23 +15,25 @@ MacSyFinder Quick Start
 In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
 
 * Type: 
-  "``macsyfinder -h``"
+  :code:`macsyfinder -h`
+
   to see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
 
 
-* On a "metagenomic" dataset for example: 
+* On a "metagenomic" dataset for example:
+  :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all`
 
-  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all``"
   will detect all systems modelled in .xml files placed in the *"model_family"* definitions folder located in the models default location
   in a metagenomic dataset.
 
-  "``macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models/ --models model_family all``"
+  :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models/ --models model_family all`
   will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder.
 
 * On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
 
-  "``macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models/ --models model_family ModelA ModelB``"
-  will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"* in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
+  :code:`macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models/ --models model_family ModelA ModelB`
+  will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"*
+  in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
   definition files placed in the folder *"my-models/model_family/mydefinitions"*.
 
 See :ref:`input-dataset-label` for more on input datasets. 
@@ -92,11 +94,15 @@ As a test sequence dataset, we propose three replicons in /share/macsyfinder/seq
 They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`,
 and thus MacSyfinder will treat the three different replicons separately for systems inference.
 
-To run the detection and classification of all subtypes, type::
+To run the detection and classification of all subtypes, type
+
+.. code-block:: bash
 
     macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta all
 
-To run the detection of the Type-IE subtype only, type::
+To run the detection of the Type-IE subtype only, type
+
+.. code-block:: bash
 
     macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE
 
@@ -106,7 +112,9 @@ It allows to specify a different topology "linear" or "circular" for each replic
 Otherwise, by default the topology is set to "circular".
 It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
 
-To run the detection using the topology file, type::
+To run the detection using the topology file, type
+
+.. code-block:: bash
 
     macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta \
     --topology-file /share/macsyfinder/sequence_data/datatest_gembase.topology all
