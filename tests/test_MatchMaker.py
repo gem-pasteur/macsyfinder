@@ -67,7 +67,8 @@ class MatchMakerTest(MacsyTest):
 
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, self.model)
-        c_gene_flgb = CoreGene(self.model_location, "gspD", self.profile_factory)
+
+        c_gene_flgb = CoreGene(self.model_location, "flgB", self.profile_factory)
         gene_gspd_an = Exchangeable(c_gene_flgb, gene_gspd)
         gene_gspd.add_exchangeable(gene_gspd_an)
 
@@ -209,7 +210,7 @@ class MatchMakerTest(MacsyTest):
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
         c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn_flg']], self.model, self.cfg.hit_weights())
-        c2 = Cluster([self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c2 = Cluster([self.c_hits['h_gspd_an']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty)
         res = ordered_match_maker.match([c1, c2])
         self.assertIsInstance(res, System)

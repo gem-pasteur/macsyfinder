@@ -143,12 +143,20 @@ Options for Hmmer execution and hits filtering:
   --hmmer HMMER         Path to the hmmsearch program.
                         If it is not specify rely on the PATH
                         (default: hmmsearch)
-  --e-value-search E_VALUE_SEARCH
+ --e-value-search E_VALUE_SEARCH
                         Maximal e-value for hits to be reported during hmmsearch search.
                         By default MF set per profile threshold for hmmsearch run (--cut_ga option)
-                        If --e-value-search is set the --cut-ga option is disabled and the new threshold
-                        (-E in hmmsearch) is applied to all profiles.)
-                        (default: None)
+                        for profiles containing the GA bit score threshold.
+                        If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch)
+                        is applied to this profile.
+                        To applied the --e-value-search to all profiles use the --no-cut-ga option.
+                        (default: 0.1)
+  --no-cut-ga           By default the Mf try to applied a threshold per profile by using the
+                        hmmer -cut-ga option. This is possible only if the Ga bit score is present in the profile otherwise MF switch to use the
+                        the --e-value-search (-E in hmmsearch).
+                        If this option is set the --e-value-search option is used for all profiles regardless
+                        the presence of the a GA bit score in the profiles.
+                        (default: False)
   --i-evalue-sel I_EVALUE_SEL
                         Maximal independent e-value for Hmmer hits to be selected for system detection.
                         (default:0.001)
@@ -156,6 +164,25 @@ Options for Hmmer execution and hits filtering:
                         Minimal profile coverage required in the hit alignment to allow
                         the hit selection for system detection.
                         (default: 0.5)
+
+.. _score-options:
+
+Options for cluster and systems scoring:
+
+.. code-block:: text
+
+  --mandatory-weight MANDATORY_WEIGHT
+                        the weight of a mandatory component in cluster scoring
+                        (default:1.0)
+  --accessory-weight ACCESSORY_WEIGHT
+                        the weight of a mandatory component in cluster scoring
+                        (default:0.5)
+  --exchangeable-weight EXCHANGEABLE_WEIGHT
+                        the weight modifier for a component which code for exchangeable cluster scoring
+                            (default:0.75)
+  --redundancy-penalty REDUNDANCY_PENALTY
+                        the weight modifier for cluster which bring a component already presents in other
+                        clusters (default:1.5)
 
 
 .. _path-options:
@@ -244,7 +271,7 @@ The configuration files must follow the Python "ini" file syntax.
 The :ref:`Config object <config>` provides some default values and performs some validations of the values.
  
  
-In MacSyFinder, five sections are defined and stored by default in the configuration file:
+In MacSyFinder, six sections are defined and stored by default in the configuration file:
  
  .. _config-base-label:
  
@@ -264,8 +291,11 @@ In MacSyFinder, five sections are defined and stored by default in the configura
     * *replicon_topology* : the topology of the replicon under study.
       Two topologies are supported: 'linear' and 'circular' (*default* = 'circular').
       This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
-  
-  * **model**
+
+  * **models**
+    * list of models to search in replicon
+
+  * **models_opt**
   
     * *inter_gene_max_space* = list of models' fully qualified names and integer separated by spaces (see example below).
       These values will supersede the values found in the model definition file.
@@ -280,6 +310,15 @@ In MacSyFinder, five sections are defined and stored by default in the configura
     * *e_value_res* = (default= *1* )
     * *i_evalue_sel* = (default= *0.5* )
     * *coverage_profile* = (default= *0.5* )
+
+  * **score_opt**
+
+    * *mandatory_weight* (default= *1.0*)
+    * *accessory_weight* (default= *0.5*)
+    * *exchangeable_weight* (default= *0.8*)
+    * *redundancy_penalty* (default= *1.5*)
+    * *loner_multi_system_weight* (default= *0.7*)
+
   
   * **directories**
     
@@ -326,6 +365,13 @@ Example of a configuration file
     e_value_res = 1
     i_evalue_sel = 0.5
     coverage_profile = 0.5
+
+    [score_opt]
+    mandatory_weight = 1.0
+    accessory_weight = 0.5
+    exchangeable_weight = 0.8
+    redundancy_penalty = 1.5
+    loner_multi_system_weight = 0.7
 
     [directories]
     prefix = /path/to/macsyfinder/home/
