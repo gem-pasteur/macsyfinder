@@ -1,5 +1,5 @@
-# macsyfinder 20201027.dev
-# tests/run_tests.py -vv tests/test_functional_test.py
+# macsyfinder 20201204.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --sequence-db=tests/data/base/gembase.fasta --models-dir=tests/data/models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path
 # Rejected clusters:
 
 Cluster:

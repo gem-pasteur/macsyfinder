@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02963.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/Archaeal-T4P_arCOG02963.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG02963.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/Archaeal-T4P_arCOG02963.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -16,19 +16,16 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
      0.0062   17.0   1.1     0.0076   16.7   1.1    1.1  1  GCF_000006905_023440  
-       0.53   10.6   3.2       0.29   11.4   0.6    1.7  2  GCF_000006845_017460  
-        0.8   10.0   4.1        0.8   10.0   4.1    1.1  1  GCF_000005845_034990  
-        0.8   10.0   4.1        0.8   10.0   4.1    1.1  1  GCF_000006925_035790  
 
 
 Domain annotation for each sequence (and alignments):
 >> GCF_000006905_023440  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   16.7   1.1     1e-06    0.0076      40     182 ..      33     208 ..       9     238 .. 0.75
+   1 !   16.7   1.1   2.5e-07    0.0076      40     182 ..      33     208 ..       9     238 .. 0.75
 
   Alignments for each domain:
-  == domain 1  score: 16.7 bits;  conditional E-value: 1e-06
+  == domain 1  score: 16.7 bits;  conditional E-value: 2.5e-07
             arCOG02963  40 DdlgdesgasGgkesDee.....rtggfDde...atD.....dfgdadd......adgggkeseelegrvdelEnevgslsstvntves 109
                             + +d ++a G+ ++De      r+   ++e   +tD     +     +      ++g+++   e+ +r+ +lE++ g+ s+++   + 
   GCF_000006905_023440  33 QEIRDADSAQGK-ARDELaklvaRRRALETEvaqLTDqsrkyE-----SsaraamNKGDQALALEVAQRIADLEKDAGQKSTQMTELRA 115
@@ -44,49 +41,6 @@ Domain annotation for each sequence (and alignments):
   GCF_000006905_023440 203 AKLAAA 208
                            888873 PP
 
->> GCF_000006845_017460  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   11.4   0.6   3.9e-05      0.29      87     123 ..       2      38 ..       1      42 [. 0.94
-   2 !    0.3   0.3     0.092   6.9e+02     251     269 ..      48      77 ..      34     106 .. 0.47
-
-  Alignments for each domain:
-  == domain 1  score: 11.4 bits;  conditional E-value: 3.9e-05
-            arCOG02963  87 egrvdelEnevgslsstvntvesEneeisesveevee 123
-                           ++ +++lE  v  l ++++t +sEn  + e+v e+e+
-  GCF_000006845_017460   2 KQNIEKLESSVYTLVQKFETLVSENRRLKETVAELER 38 
-                           789*******************************997 PP
-
-  == domain 2  score: 0.3 bits;  conditional E-value: 0.092
-            arCOG02963 251 eeevdd...........dsddlavdddele 269
-                           e+ vd+           +++dl+++ d+l 
-  GCF_000006845_017460  48 ETAVDElseallvqvgkLKEDLQNKIDSLT 77 
-                           333333111122222223333333333333 PP
-
->> GCF_000005845_034990  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   10.0   4.1   0.00011       0.8      80     135 ..      26      81 .]       6      81 .] 0.93
-
-  Alignments for each domain:
-  == domain 1  score: 10.0 bits;  conditional E-value: 0.00011
-            arCOG02963  80 gkeseelegrvdelEnevgslsstvntvesEneeisesveeveenvrklldiYemV 135
-                           ++e+eel+++ ++l +ev++ + +++  e+En+++ e+ +  +e+++ ll  +e V
-  GCF_000005845_034990  26 QMEIEELKEKNNSLSQEVQNAQHQREELERENNHLKEQQNGWQERLQALLGRMEEV 81 
-                           58999*********************************************999866 PP
-
->> GCF_000006925_035790  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   10.0   4.1   0.00011       0.8      80     135 ..      26      81 .]       6      81 .] 0.93
-
-  Alignments for each domain:
-  == domain 1  score: 10.0 bits;  conditional E-value: 0.00011
-            arCOG02963  80 gkeseelegrvdelEnevgslsstvntvesEneeisesveeveenvrklldiYemV 135
-                           ++e+eel+++ ++l +ev++ + +++  e+En+++ e+ +  +e+++ ll  +e V
-  GCF_000006925_035790  26 QMEIEELKEKNNSLSQEVQNAQHQREELERENNHLKEQQNGWQERLQALLGRMEEV 81 
-                           58999*********************************************999866 PP
-
 
 
 Internal pipeline statistics summary:
@@ -98,8 +52,8 @@ Passed bias filter:                      605  (0.020081); expected 602.6 (0.02)
 Passed Vit filter:                        62  (0.00205789); expected 30.1 (0.001)
 Passed Fwd filter:                         4  (0.000132767); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
-Domain search space  (domZ):               4  [number of targets reported over threshold]
-# CPU time: 0.14u 0.00s 00:00:00.14 Elapsed: 00:00:00.15
-# Mc/sec: 25047.01
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.14u 0.00s 00:00:00.14 Elapsed: 00:00:00.14
+# Mc/sec: 26836.09
 //
 [ok]

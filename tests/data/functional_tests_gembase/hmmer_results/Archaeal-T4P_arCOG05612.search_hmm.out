@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05612.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/Archaeal-T4P_arCOG05612.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG05612.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/Archaeal-T4P_arCOG05612.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -15,68 +15,13 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
-       0.21   12.0   0.2       0.35   11.3   0.2    1.3  1  GCF_000005845_006580  
-       0.21   12.0   0.2       0.35   11.3   0.2    1.3  1  GCF_000006925_005120  
-       0.21   12.0   0.2       0.35   11.3   0.2    1.3  1  GCF_000006945_007730  
-       0.32   11.4   5.1        3.9    7.9   1.5    2.2  2  GCF_000005845_002620  
+
+   [No hits detected that satisfy reporting thresholds]
 
 
 Domain annotation for each sequence (and alignments):
->> GCF_000005845_006580  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   11.3   0.2   4.6e-05      0.35      13      75 ..     149     211 ..     145     229 .. 0.88
 
-  Alignments for each domain:
-  == domain 1  score: 11.3 bits;  conditional E-value: 4.6e-05
-            arCOG05612  13 iaaafiivgvigvltlqgiGksaaealranaivtadrggldvtvevLnGkleglalryaesgg 75 
-                           i+ afi+ g++   tlq +    aeal a+ai        ++  + Ln +++ l+l+y +  +
-  GCF_000005845_006580 149 IMHAFIALGAVKQATLQMVAPGIAEALIATAIGLFAAIPAVMAYNRLNQRVNKLELNYDNFME 211
-                           7789****************************9999999999999***********9987555 PP
-
->> GCF_000006925_005120  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   11.3   0.2   4.6e-05      0.35      13      75 ..     149     211 ..     145     229 .. 0.88
-
-  Alignments for each domain:
-  == domain 1  score: 11.3 bits;  conditional E-value: 4.6e-05
-            arCOG05612  13 iaaafiivgvigvltlqgiGksaaealranaivtadrggldvtvevLnGkleglalryaesgg 75 
-                           i+ afi+ g++   tlq +    aeal a+ai        ++  + Ln +++ l+l+y +  +
-  GCF_000006925_005120 149 IMHAFIALGAVKQATLQMVAPGIAEALIATAIGLFAAIPAVMAYNRLNQRVNKLELNYDNFME 211
-                           7789****************************9999999999999***********9987555 PP
-
->> GCF_000006945_007730  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   11.3   0.2   4.6e-05      0.35      13      75 ..     149     211 ..     145     229 .. 0.88
-
-  Alignments for each domain:
-  == domain 1  score: 11.3 bits;  conditional E-value: 4.6e-05
-            arCOG05612  13 iaaafiivgvigvltlqgiGksaaealranaivtadrggldvtvevLnGkleglalryaesgg 75 
-                           i+ afi+ g++   tlq +    aeal a+ai        ++  + Ln +++ l+l+y +  +
-  GCF_000006945_007730 149 IMHAFIALGAVKQATLQMVAPGIAEALIATAIGLFAAIPAVMAYNRLNQRVNKLELNYDNFME 211
-                           7789****************************9999999999999***********9987555 PP
-
->> GCF_000005845_002620  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !    7.9   1.5   0.00051       3.9      21      70 ..       7      57 ..       3      92 .. 0.75
-   2 !    5.1   0.1    0.0036        27      41      96 ..     114     170 ..     106     193 .. 0.73
-
-  Alignments for each domain:
-  == domain 1  score: 7.9 bits;  conditional E-value: 0.00051
-            arCOG05612 21 gvigvltlqgiGksaaealranaivtadrg.gldvtvevLnGkleglalry 70
-                          ++  v ++ g+G++ a+ + a+a++t       d t + +   l +la++y
-  GCF_000005845_002620  7 AIALVTVFTGMGVAQAADVTAQAVATWSATaKKDTTSKLVVTPLGSLAFQY 57
-                          56678899*****************97643044555555555555555555 PP
-
-  == domain 2  score: 5.1 bits;  conditional E-value: 0.0036
-            arCOG05612  41 anaivtadrggldvtvevLnGkleglalryaesggslsea.tsgsClkaststtves 96 
-                           a +  t d+ ++d    vL G+l+ la  y +s+ ++++   + s +  +t++t+ +
-  GCF_000005845_002620 114 AAVEKTGDTVMIDTANGVLGGNLSPLANGYNASNRTTAQDgFTFSIISGTTNGTTAV 170
-                           55667889999999999****************996665514444444444444443 PP
-
+   [No targets detected that satisfy reporting thresholds]
 
 
 Internal pipeline statistics summary:
@@ -88,8 +33,8 @@ Passed bias filter:                      808  (0.0268189); expected 602.6 (0.02)
 Passed Vit filter:                        58  (0.00192512); expected 30.1 (0.001)
 Passed Fwd filter:                         4  (0.000132767); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
-Domain search space  (domZ):               4  [number of targets reported over threshold]
-# CPU time: 0.08u 0.00s 00:00:00.08 Elapsed: 00:00:00.08
+Domain search space  (domZ):               0  [number of targets reported over threshold]
+# CPU time: 0.07u 0.00s 00:00:00.07 Elapsed: 00:00:00.08
 # Mc/sec: 17507.67
 //
 [ok]

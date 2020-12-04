@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01815.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/Archaeal-T4P_arCOG01815.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG01815.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/Archaeal-T4P_arCOG01815.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -16,7 +16,7 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
     6.3e-08   32.6   4.8    2.9e-07   30.5   0.3    2.2  2  GCF_000006845_014270  
-    5.4e-05   23.0  10.8    5.4e-05   23.0  10.8    1.9  1  GCF_000006765_042470  
+    5.4e-05   23.0  10.8    5.4e-05   23.0  10.8    1.9  2  GCF_000006765_042470  
       7e-05   22.6   4.6    0.00027   20.7   0.1    2.9  2  GCF_000006905_029140  
 
 
@@ -48,10 +48,17 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006765_042470  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   23.0  10.8   5.4e-09   5.4e-05       3     199 ..      87     287 ..      85     300 .. 0.69
+   1 ?   -2.9   0.0      0.37   3.7e+03      34      90 ..       6      24 ..       3      36 .. 0.47
+   2 !   23.0  10.8   5.4e-09   5.4e-05       3     199 ..      87     287 ..      85     300 .. 0.69
 
   Alignments for each domain:
-  == domain 1  score: 23.0 bits;  conditional E-value: 5.4e-09
+  == domain 1  score: -2.9 bits;  conditional E-value: 0.37
+            arCOG01815 34 lllllllapvliyflpvlitksrarevrkgiedElpfFlvllyvisatgknlyelfe 90
+                          l++++ll++v                                      g  l+ l++
+  GCF_000006765_042470  6 LIFAALLMAV--------------------------------------GGALLLLLQ 24
+                          3333333333......................................333333333 PP
+
+  == domain 2  score: 23.0 bits;  conditional E-value: 5.4e-09
             arCOG01815   3 dplsrirlaslllllliaplslilllals.....sllllllllapvliyflpvlitksrarevrkgiedElpfFlvllyvisatgknly 86 
                            ++ ++ +l s +l++l+++l+++l+  l      s+ ++ll  a+ + ++lp++  k  a+ +r  i dE+ +F++l+ ++++ g+++ 
   GCF_000006765_042470  87 SRYRTLYLISVFLTPLLFVLLVLLVKLLRaeseaSYAVPLLF-AAGIGFLLPKQVLKHFAKARRALIADEMILFVQLIRILFDAGLTVE 174
@@ -71,7 +78,7 @@ Domain annotation for each sequence (and alignments):
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
    1 !   20.7   0.1   2.7e-08   0.00027     252     414 ..     106     271 ..      91     274 .. 0.78
-   2 !    1.2   2.7     0.021   2.1e+02     207     264 ..     265     321 ..     257     325 .] 0.82
+   2 ?    1.2   2.7     0.021   2.1e+02     207     264 ..     265     321 ..     257     325 .] 0.82
 
   Alignments for each domain:
   == domain 1  score: 20.7 bits;  conditional E-value: 2.7e-08

@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/ComM_comGG.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/ComM_comGG.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/ComM_comGG.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/ComM_comGG.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -15,54 +15,22 @@ Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
       0.051   14.6   0.1      0.085   13.9   0.1    1.5  1  GCF_000005845_008970  
-       0.11   13.5   0.1       0.18   12.8   0.1    1.4  1  GCF_000006925_009050  
-       0.22   12.6   0.5        5.4    8.1   0.0    2.5  2  GCF_000006765_053220  
 
 
 Domain annotation for each sequence (and alignments):
 >> GCF_000005845_008970  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   13.9   0.1   8.5e-06     0.085       9      65 ..       4      60 ..       3      83 .. 0.87
+   1 ?   13.9   0.1   2.8e-06     0.085       9      65 ..       4      60 ..       3      83 .. 0.87
 
   Alignments for each domain:
-  == domain 1  score: 13.9 bits;  conditional E-value: 8.5e-06
+  == domain 1  score: 13.9 bits;  conditional E-value: 2.8e-06
             ComM_comGG  9 lmaaifslllqfylnrvvaterqyakeleeyqavllaeltkdkakeetgelkfnkGt 65
                           l+++if+l+l + +++++ +  ++++ l   q +++a+ + +     t  l+ n+G+
   GCF_000005845_008970  4 LILSIFALFLAGCTHSQQSMVDTFRASLFDNQDITVADQQIQALPYSTMYLRLNEGQ 60
                           799*************************99999999998876666666666666665 PP
-
->> GCF_000006925_009050  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   12.8   0.1   1.8e-05      0.18       9      57 ..       4      52 ..       3      82 .. 0.83
-
-  Alignments for each domain:
-  == domain 1  score: 12.8 bits;  conditional E-value: 1.8e-05
-            ComM_comGG  9 lmaaifslllqfylnrvvaterqyakeleeyqavllaeltkdkakeetg 57
-                          l+++if+l+l + +++++ +  ++++ l   q +++a  + +     t 
-  GCF_000006925_009050  4 LILSIFALFLAGCTHSQQSMVDTFRASLFDNQDITVAAQQIQALPYSTM 52
-                          799***********************99999888888776555555555 PP
-
->> GCF_000006765_053220  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !    2.0   0.2     0.044   4.4e+02       2      16 ..     107     121 ..     106     127 .. 0.89
-   2 !    8.1   0.0   0.00054       5.4       8      33 ..     241     266 ..     236     282 .. 0.92
-
-  Alignments for each domain:
-  == domain 1  score: 2.0 bits;  conditional E-value: 0.044
-            ComM_comGG   2 gvllyAvlmaaifsl 16 
-                           gvll A+++a++f l
-  GCF_000006765_053220 107 GVLLDALMLASTFGL 121
-                           9***********987 PP
-
-  == domain 2  score: 8.1 bits;  conditional E-value: 0.00054
-            ComM_comGG   8 vlmaaifslllqfylnrvvaterqya 33 
-                           v+m+a f +ll  +l r+ a++rq+ 
-  GCF_000006765_053220 241 VMMLAPFLILLSAWLARDKAHRRQHS 266
-                           89**********************96 PP
 
 
 
@@ -75,7 +43,7 @@ Passed bias filter:                      912  (0.0302708); expected 602.6 (0.02)
 Passed Vit filter:                        62  (0.00205789); expected 30.1 (0.001)
 Passed Fwd filter:                         3  (9.95751e-05); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
-Domain search space  (domZ):               3  [number of targets reported over threshold]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
 # CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.07
 # Mc/sec: 12978.66
 //

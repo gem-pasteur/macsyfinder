@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/MSH_mshF.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/MSH_mshF.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/MSH_mshF.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/MSH_mshF.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -16,7 +16,8 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
     ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
     8.6e-39  132.3   0.9    1.2e-38  131.9   0.9    1.2  1  GCF_000006745_003710  
-      0.078   13.7   0.1       0.23   12.2   0.1    1.8  1  GCF_000006765_026360  
+  ------ inclusion threshold ------
+      0.078   13.7   0.1       0.23   12.2   0.1    1.8  2  GCF_000006765_026360  
 
 
 Domain annotation for each sequence (and alignments):
@@ -40,7 +41,8 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006765_026360  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   12.2   0.1   1.5e-05      0.23       1      55 [.      23      77 ..      23      94 .. 0.94
+   1 ?   12.2   0.1   1.5e-05      0.23       1      55 [.      23      77 ..      23      94 .. 0.94
+   2 ?   -3.4   0.0       1.1   1.7e+04      50      75 ..     223     248 ..     214     254 .. 0.63
 
   Alignments for each domain:
   == domain 1  score: 12.2 bits;  conditional E-value: 1.5e-05
@@ -48,6 +50,12 @@ Domain annotation for each sequence (and alignments):
                           vvw+l+i+ ll + ++ +     da++   ++   +l e a l + qWl+  +  
   GCF_000006765_026360 23 VVWFLAIMTLLASAAVLWVGRSLDATENRRKVLLRELEEHALLARVQWLVATQRY 77
                           8*************************************************87765 PP
+
+  == domain 2  score: -3.4 bits;  conditional E-value: 1.1
+              MSH_mshF  50 lkGkpsllkveeakltmsktGwvlPe 75 
+                           +    + l+++ a+ ++    w lPe
+  GCF_000006765_026360 223 VAADEAALNINTADARILSLAWGLPE 248
+                           44455566666666666666666665 PP
 
 
 

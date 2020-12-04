@@ -1,5 +1,5 @@
-# macsyfinder 20201027.dev
-# tests/run_tests.py -vv tests/test_functional_test.py
+# macsyfinder 20201204.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --sequence-db=tests/data/base/gembase.fasta --models-dir=tests/data/models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path
 # Systems found:
 
 system id = GCF_000005845_T4P_63
@@ -9,7 +9,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.750
+score = 7.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -43,7 +43,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.750
+score = 7.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -54,6 +54,40 @@ mandatory genes:
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
 	- T4P_pilD: 1 (T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000005845_T4P_68
+model = TFF-SF/T4P
+replicon = GCF_000005845
+clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690', 'T4P_fimT', 2569)], [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
+occ = 1
+wholeness = 0.556
+loci nb = 3
+score = 7.100
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -104,40 +138,6 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000005845_T4P_68
-model = TFF-SF/T4P
-replicon = GCF_000005845
-clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690', 'T4P_fimT', 2569)], [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
-occ = 1
-wholeness = 0.556
-loci nb = 3
-score = 7.000
-
-mandatory genes:
-	- T4P_pilE: 0 ()
-	- T4P_pilB: 1 (T4P_pilB)
-	- T4P_pilC: 1 (T4P_pilC)
-	- T4P_pilO: 0 ()
-	- T4P_pilQ: 1 (T4P_pilQ)
-	- T4P_pilN: 1 (T4P_pilN)
-	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
-
-accessory genes:
-	- T4P_pilA: 1 (T4P_pilA)
-	- T4P_pilV: 0 ()
-	- T4P_pilY: 0 ()
-	- T4P_pilW: 1 (T4P_pilW)
-	- T4P_pilX: 0 ()
-	- T4P_fimT: 1 (T4P_fimT)
-	- T4P_pilM: 1 (T4P_pilM)
-	- T4P_pilP: 0 ()
-	- T4P_pilU: 0 ()
-	- MSH_mshM: 0 ()
-
-neutral genes:
-
-============================================================
 system id = GCF_000005845_T4P_51
 model = TFF-SF/T4P
 replicon = GCF_000005845
@@ -145,7 +145,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -179,7 +179,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -213,7 +213,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -247,7 +247,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -258,6 +258,74 @@ mandatory genes:
 	- T4P_pilN: 1 (T4P_pilN)
 	- T4P_pilT: 1 (T4P_pilT)
 	- T4P_pilD: 1 (T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000005845_T4P_65
+model = TFF-SF/T4P
+replicon = GCF_000005845
+clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690', 'T4P_fimT', 2569)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
+occ = 1
+wholeness = 0.500
+loci nb = 3
+score = 6.100
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000005845_T4P_66
+model = TFF-SF/T4P
+replicon = GCF_000005845
+clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
+occ = 1
+wholeness = 0.444
+loci nb = 2
+score = 6.100
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
 
 accessory genes:
 	- T4P_pilA: 1 (T4P_pilA)
@@ -342,74 +410,6 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000005845_T4P_65
-model = TFF-SF/T4P
-replicon = GCF_000005845
-clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690', 'T4P_fimT', 2569)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
-occ = 1
-wholeness = 0.500
-loci nb = 3
-score = 6.000
-
-mandatory genes:
-	- T4P_pilE: 0 ()
-	- T4P_pilB: 1 (T4P_pilB)
-	- T4P_pilC: 1 (T4P_pilC)
-	- T4P_pilO: 0 ()
-	- T4P_pilQ: 1 (T4P_pilQ)
-	- T4P_pilN: 1 (T4P_pilN)
-	- T4P_pilT: 0 ()
-	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
-
-accessory genes:
-	- T4P_pilA: 1 (T4P_pilA)
-	- T4P_pilV: 0 ()
-	- T4P_pilY: 0 ()
-	- T4P_pilW: 1 (T4P_pilW)
-	- T4P_pilX: 0 ()
-	- T4P_fimT: 1 (T4P_fimT)
-	- T4P_pilM: 1 (T4P_pilM)
-	- T4P_pilP: 0 ()
-	- T4P_pilU: 0 ()
-	- MSH_mshM: 0 ()
-
-neutral genes:
-
-============================================================
-system id = GCF_000005845_T4P_66
-model = TFF-SF/T4P
-replicon = GCF_000005845
-clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
-occ = 1
-wholeness = 0.444
-loci nb = 2
-score = 6.000
-
-mandatory genes:
-	- T4P_pilE: 0 ()
-	- T4P_pilB: 1 (T4P_pilB)
-	- T4P_pilC: 1 (T4P_pilC)
-	- T4P_pilO: 0 ()
-	- T4P_pilQ: 1 (T4P_pilQ)
-	- T4P_pilN: 1 (T4P_pilN)
-	- T4P_pilT: 1 (T4P_pilT)
-	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
-
-accessory genes:
-	- T4P_pilA: 1 (T4P_pilA)
-	- T4P_pilV: 0 ()
-	- T4P_pilY: 0 ()
-	- T4P_pilW: 0 ()
-	- T4P_pilX: 0 ()
-	- T4P_fimT: 0 ()
-	- T4P_pilM: 1 (T4P_pilM)
-	- T4P_pilP: 0 ()
-	- T4P_pilU: 0 ()
-	- MSH_mshM: 0 ()
-
-neutral genes:
-
-============================================================
 system id = GCF_000005845_T4P_35
 model = TFF-SF/T4P
 replicon = GCF_000005845
@@ -417,7 +417,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.750
+score = 5.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -451,7 +451,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.750
+score = 5.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -485,7 +485,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -519,7 +519,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -539,6 +539,40 @@ accessory genes:
 	- T4P_pilX: 0 ()
 	- T4P_fimT: 1 (T4P_fimT)
 	- T4P_pilM: 0 ()
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000005845_T4P_56
+model = TFF-SF/T4P
+replicon = GCF_000005845
+clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
+occ = 1
+wholeness = 0.389
+loci nb = 2
+score = 5.100
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
 	- T4P_pilP: 0 ()
 	- T4P_pilU: 0 ()
 	- MSH_mshM: 0 ()
@@ -580,40 +614,6 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000005845_T4P_56
-model = TFF-SF/T4P
-replicon = GCF_000005845
-clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', 'T4P_pilB', 98), ('GCF_000005845_000990', 'T4P_pilA', 99)], [('GCF_000005845_026930', 'T2SS_gspO', 2693)], [('GCF_000005845_030080', 'T2SS_gspO', 3008)], [('GCF_000005845_030590', 'T4P_pilQ', 3059), ('GCF_000005845_030620', 'T4P_pilN', 3062), ('GCF_000005845_030630', 'T4P_pilM', 3063)]
-occ = 1
-wholeness = 0.389
-loci nb = 2
-score = 5.000
-
-mandatory genes:
-	- T4P_pilE: 0 ()
-	- T4P_pilB: 1 (T4P_pilB)
-	- T4P_pilC: 1 (T4P_pilC)
-	- T4P_pilO: 0 ()
-	- T4P_pilQ: 1 (T4P_pilQ)
-	- T4P_pilN: 1 (T4P_pilN)
-	- T4P_pilT: 0 ()
-	- T4P_pilD: 2 (T2SS_gspO [GCF_000005845_T2SS_5], T2SS_gspO [GCF_000005845_T2SS_4, GCF_000005845_T2SS_5])
-
-accessory genes:
-	- T4P_pilA: 1 (T4P_pilA)
-	- T4P_pilV: 0 ()
-	- T4P_pilY: 0 ()
-	- T4P_pilW: 0 ()
-	- T4P_pilX: 0 ()
-	- T4P_fimT: 0 ()
-	- T4P_pilM: 1 (T4P_pilM)
-	- T4P_pilP: 0 ()
-	- T4P_pilU: 0 ()
-	- MSH_mshM: 0 ()
-
-neutral genes:
-
-============================================================
 system id = GCF_000005845_T4P_62
 model = TFF-SF/T4P
 replicon = GCF_000005845
@@ -621,7 +621,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 4.500
+score = 4.600
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -655,7 +655,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -689,7 +689,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -723,7 +723,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 3.500
+score = 3.600
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -757,7 +757,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -791,7 +791,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -825,7 +825,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 4.500
+score = 4.600
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -919,7 +919,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -953,7 +953,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_030080
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -987,7 +987,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 3.500
+score = 3.600
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -5917,7 +5917,7 @@ clusters = [('GCF_000006725_008990', 'T2SS_gspF', 5141), ('GCF_000006725_009000'
 occ = 1
 wholeness = 0.714
 loci nb = 1
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -6649,7 +6649,7 @@ clusters = [('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_024730
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.250
+score = 8.300
 
 mandatory genes:
 	- T2SS_gspD: 0 ()
@@ -6879,7 +6879,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 1
-score = 8.250
+score = 8.300
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -6909,7 +6909,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 1
-score = 7.750
+score = 7.800
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -6969,7 +6969,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 2
-score = 7.250
+score = 7.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7029,7 +7029,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 2
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7119,7 +7119,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 2
-score = 4.750
+score = 4.800
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -7149,7 +7149,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 2
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7209,7 +7209,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 3
-score = 3.750
+score = 3.800
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7269,7 +7269,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 3
-score = 3.250
+score = 3.300
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7359,7 +7359,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 1.250
+score = 1.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7389,7 +7389,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 0.750
+score = 0.800
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7449,7 +7449,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 0.250
+score = 0.300
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7509,7 +7509,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = -0.250
+score = -0.200
 
 mandatory genes:
 	- T2SS_gspD: 4 (T2SS_gspD, T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7599,7 +7599,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = -2.250
+score = -2.200
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7629,7 +7629,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 3
-score = -2.750
+score = -2.700
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7689,7 +7689,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 4
-score = -3.250
+score = -3.200
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7749,7 +7749,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 4
-score = -3.750
+score = -3.700
 
 mandatory genes:
 	- T2SS_gspD: 4 (T2SS_gspD, T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7839,7 +7839,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 1
 wholeness = 0.857
 loci nb = 2
-score = 7.750
+score = 7.800
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7869,7 +7869,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 1
 wholeness = 0.857
 loci nb = 2
-score = 7.250
+score = 7.300
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7929,7 +7929,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 1
 wholeness = 0.571
 loci nb = 2
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -7989,7 +7989,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 1
 wholeness = 0.571
 loci nb = 2
-score = 6.250
+score = 6.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -8079,7 +8079,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -8109,7 +8109,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 3.750
+score = 3.800
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -8199,7 +8199,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0263
 occ = 1
 wholeness = 0.500
 loci nb = 1
-score = 5.750
+score = 5.800
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8229,7 +8229,7 @@ clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8282,36 +8282,6 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_383
-model = TFF-SF/T2SS
-replicon = GCF_000006765
-clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
-occ = 1
-wholeness = 0.429
-loci nb = 1
-score = 4.750
-
-mandatory genes:
-	- T2SS_gspD: 0 ()
-	- T2SS_gspE: 1 (T2SS_gspE)
-	- T2SS_gspF: 1 (T2SS_gspF)
-	- T2SS_gspG: 1 (T2SS_gspG)
-	- T2SS_gspC: 0 ()
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_435, GCF_000006765_T4P_437, GCF_000006765_T4P_438, GCF_000006765_T4P_440, GCF_000006765_T4P_441])
-
-accessory genes:
-	- T2SS_gspM: 0 ()
-	- T2SS_gspH: 2 (T2SS_gspH, T2SS_gspH)
-	- T2SS_gspI: 1 (T2SS_gspI)
-	- T2SS_gspJ: 0 ()
-	- T2SS_gspK: 0 ()
-	- T2SS_gspN: 0 ()
-	- T2SS_gspL: 0 ()
-	- Tad_tadD: 0 ()
-
-neutral genes:
-
-============================================================
 system id = GCF_000006765_T2SS_418
 model = TFF-SF/T2SS
 replicon = GCF_000006765
@@ -8319,7 +8289,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0263
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 4.750
+score = 4.800
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -8337,6 +8307,36 @@ accessory genes:
 	- T2SS_gspK: 1 (T2SS_gspK)
 	- T2SS_gspN: 0 ()
 	- T2SS_gspL: 1 (T2SS_gspL)
+	- Tad_tadD: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000006765_T2SS_383
+model = TFF-SF/T2SS
+replicon = GCF_000006765
+clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
+occ = 1
+wholeness = 0.429
+loci nb = 1
+score = 4.800
+
+mandatory genes:
+	- T2SS_gspD: 0 ()
+	- T2SS_gspE: 1 (T2SS_gspE)
+	- T2SS_gspF: 1 (T2SS_gspF)
+	- T2SS_gspG: 1 (T2SS_gspG)
+	- T2SS_gspC: 0 ()
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_435, GCF_000006765_T4P_437, GCF_000006765_T4P_438, GCF_000006765_T4P_440, GCF_000006765_T4P_441])
+
+accessory genes:
+	- T2SS_gspM: 0 ()
+	- T2SS_gspH: 2 (T2SS_gspH, T2SS_gspH)
+	- T2SS_gspI: 1 (T2SS_gspI)
+	- T2SS_gspJ: 0 ()
+	- T2SS_gspK: 0 ()
+	- T2SS_gspN: 0 ()
+	- T2SS_gspL: 0 ()
 	- Tad_tadD: 0 ()
 
 neutral genes:
@@ -8409,7 +8409,7 @@ clusters = [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.750
+score = 8.800
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8439,7 +8439,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0305
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.250
+score = 8.300
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -9798,7 +9798,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006925_T4P_554
+system id = GCF_000006925_T4P_519
 model = TFF-SF/T4P
 replicon = GCF_000006925
 clusters = [('GCF_000006925_001000', 'T4P_pilC', 21367), ('GCF_000006925_001010', 'T4P_pilA', 21368)], [('GCF_000006925_026070', 'T4P_pilT', 23874)], [('GCF_000006925_030310', 'T4P_pilQ', 24298), ('GCF_000006925_030330', 'T4P_pilN', 24300), ('GCF_000006925_030340', 'T4P_pilM', 24301)]
@@ -9832,14 +9832,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_547
+system id = GCF_000006945_T4P_555
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.750
+score = 7.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -9866,7 +9866,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_543
+system id = GCF_000006945_T4P_551
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -9900,14 +9900,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_544
+system id = GCF_000006945_T4P_552
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -9934,14 +9934,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_545
+system id = GCF_000006945_T4P_553
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.750
+score = 6.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -9968,7 +9968,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_534
+system id = GCF_000006945_T4P_542
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -10002,7 +10002,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_536
+system id = GCF_000006945_T4P_544
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -10036,14 +10036,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_537
+system id = GCF_000006945_T4P_545
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.750
+score = 5.800
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10070,14 +10070,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_542
+system id = GCF_000006945_T4P_550
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10104,7 +10104,7 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_525
+system id = GCF_000006945_T4P_533
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
@@ -10138,14 +10138,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_535
+system id = GCF_000006945_T4P_543
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010', 'T4P_pilB', 25781), ('GCF_000006945_002020', 'T4P_pilA', 25782)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)]
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10172,14 +10172,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_546
+system id = GCF_000006945_T4P_554
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200', 'T4P_fimT', 28500)], [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.250
+score = 5.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10206,14 +10206,14 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006945_T4P_541
+system id = GCF_000006945_T4P_549
 model = TFF-SF/T4P
 replicon = GCF_000006945
 clusters = [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_033450', 'T2SS_gspO', 28925)], [('GCF_000006945_033900', 'T4P_pilQ', 28970), ('GCF_000006945_033930', 'T4P_pilN', 28973), ('GCF_000006945_033940', 'T4P_pilM', 28974)]
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.250
+score = 4.300
 
 mandatory genes:
 	- T4P_pilE: 0 ()

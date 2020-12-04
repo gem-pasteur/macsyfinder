@@ -3,10 +3,10 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/T4bP_pilC.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/T4bP_pilC.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/T4bP_pilC.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/T4bP_pilC.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -30,6 +30,7 @@ Scores for complete sequences (score includes all domains):
     1.7e-46  159.3   0.0    1.2e-43  149.9   0.0    2.0  2  GCF_000006925_001000  
     1.2e-43  149.9   0.0    1.3e-40  140.0   0.0    2.0  2  GCF_000006945_002000  
     1.1e-35  123.8   0.0    2.5e-33  116.1   0.0    2.0  2  GCF_000006765_026410  
+  ------ inclusion threshold ------
        0.03   14.1   0.0      0.085   12.6   0.0    1.7  1  GCF_000006905_029140  
 
 
@@ -37,7 +38,7 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006745_007620  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !    4.4   0.4     0.015        28     145     205 ..       2      65 ..       1      66 [. 0.74
+   1 ?    4.4   0.4     0.015        28     145     205 ..       2      65 ..       1      66 [. 0.74
    2 !  296.4  11.3   1.5e-91   2.8e-88       1     283 []      61     334 ..      61     334 .. 1.00
 
   Alignments for each domain:
@@ -547,7 +548,7 @@ Domain annotation for each sequence (and alignments):
 >> GCF_000006905_029140  
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !   12.6   0.0   4.5e-05     0.085     163     243 ..     165     250 ..     154     271 .. 0.80
+   1 ?   12.6   0.0   4.5e-05     0.085     163     243 ..     165     250 ..     154     271 .. 0.80
 
   Alignments for each domain:
   == domain 1  score: 12.6 bits;  conditional E-value: 4.5e-05
