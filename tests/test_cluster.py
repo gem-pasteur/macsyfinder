@@ -350,6 +350,26 @@ class TestCluster(MacsyTest):
         c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         self.assertEqual(len(c1), 2)
 
+    def test_loner(self):
+        model = Model("foo/bar", 11)
+
+        c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
+        c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
+
+        gene_1 = ModelGene(c_gene_1, model)
+        gene_2 = ModelGene(c_gene_2, model)
+
+        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
+
+        c1 = Cluster([v_h10], model, self.hit_weights)
+        c2 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        self.assertTrue(c1.loner())
+        self.assertFalse(c2.loner())
 
     def test_contains(self):
         model = Model("foo/T2SS", 11)
@@ -439,6 +459,10 @@ class TestCluster(MacsyTest):
         gene_toto = ModelGene(c_gene_toto, model)
         model.add_neutral_gene(gene_toto)
 
+        c_gene_flie = CoreGene(self.model_location, "fliE", self.profile_factory)
+        gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
+        model.add_mandatory_gene(gene_flie)
+
         h_gspd = Hit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
         h_tadz = Hit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -457,6 +481,9 @@ class TestCluster(MacsyTest):
         h_toto = Hit(c_gene_sctn, "toto", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
 
+        h_flie = Hit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_h_flie = ValidHit(h_flie, gene_flie, GeneStatus.MANDATORY)
+
         # 2 mandatory, 2 accessory no analog/homolog
         c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
@@ -474,20 +501,19 @@ class TestCluster(MacsyTest):
         # 2 mandatory
         # 1 accessory + 1 accessory homolog
         c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model, self.hit_weights)
-        self.assertEqual(c1.score, 2.875)
-
-        # 2 mandatory
-        # 1 accessory + 1 accessory analog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctn, v_h_sctj_an], model, self.hit_weights)
-        self.assertEqual(c1.score, 2.875)
+        self.assertEqual(c1.score, 2.9)
 
         # # 2 mandatory
         # # 1 accessory + 1 accessory analog of the 1rst accessory
         # c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model, self.hit_weights)
         # self.assertEqual(c1.score, 2.5)
 
+        # test loners multi system
+        c1 = Cluster([v_h_flie], model, self.hit_weights)
+        self.assertEqual(c1.score, 0.7)
+
         # test the cache score
-        self.assertEqual(c1.score, 2.875)
+        self.assertEqual(c1.score, 0.7)
 
         non_valid_hit = ValidHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)
         c1 = Cluster([v_h_gspd, non_valid_hit, v_h_tadz], model, self.hit_weights)

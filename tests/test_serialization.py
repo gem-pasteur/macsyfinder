@@ -183,15 +183,15 @@ neutral genes:
         system_serializer = TsvSystemSerializer()
 
         sys_tsv = "\t".join(["replicon_id", "h_gspd", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1",
-                             "1.000", "1.875", "1", "gspD", "mandatory", "803",
+                             "1.000", "1.900", "1", "gspD", "mandatory", "803",
                              "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["replicon_id", "h_sctj", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.000", "1.875", "1", "sctJ", "accessory", "803",
+                              "1.000", "1.900", "1", "sctJ", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "20", "30", ""])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["replicon_id", "h_sctn_flg", "sctN_FLG", "30", "foo/T2SS", sys_multi_loci.id, "1",
-                              "1.000", "1.875", "1", "sctN", "accessory", "803",
+                              "1.000", "1.900", "1", "sctN", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "30", "40", ""])
         sys_tsv += "\n"
         self.assertEqual(sys_tsv, system_serializer.serialize(sys_multi_loci, hit_multi_sys_tracker))
