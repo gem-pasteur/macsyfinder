@@ -3,41 +3,25 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG08058.hmm
-# target sequence database:        /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/base/gembase.fasta
-# output directed to file:         /tmp/macsyfinder_test_gembase/hmmer_results/Archaeal-T4P_arCOG08058.search_hmm.out
-# model-specific thresholding:     GA cutoffs
+# query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG08058.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201204_10-03-16/hmmer_results/Archaeal-T4P_arCOG08058.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Query:       arCOG08058  [M=211]
 Scores for complete sequences (score includes all domains):
    --- full sequence ---   --- best 1 domain ---    -#dom-
-    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
-    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
-       0.69   10.5   2.5         92    3.6   0.0    2.2  2  GCF_000006945_040700  
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+
+   [No hits detected that satisfy reporting thresholds]
 
 
 Domain annotation for each sequence (and alignments):
->> GCF_000006945_040700  
-   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
- ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !    3.6   0.0    0.0031        92      94     126 ..      67      98 ..      39     120 .. 0.78
-   2 !    2.8   4.2    0.0051   1.5e+02      21      86 ..     676     736 ..     657     752 .. 0.71
 
-  Alignments for each domain:
-  == domain 1  score: 3.6 bits;  conditional E-value: 0.0031
-            arCOG08058  94 sqtqsfnynatalavnvkkpPLyieYeVepknv 126
-                           ++tq+f ++  ++ +nv++p++ + Ye++ ++v
-  GCF_000006945_040700  67 EKTQTFAGQ-LGKLLNVETPDWKLPYEFQGNMV 98 
-                           567777765.6899*****************99 PP
-
-  == domain 2  score: 2.8 bits;  conditional E-value: 0.0051
-            arCOG08058  21 qkespsssasrvsesgetsavspe.statPapvqeietvtevtPvikgp.seesdplatPdesissde 86 
-                           q++s++       +sg++++ +++ + a P pv++ +  t  tP +  p ++  +p+ +P   +s+ +
-  GCF_000006945_040700 676 QQASAPL------ASGAKAVTTSAkTMASPQPVKTKSAATPPTP-AALPgKSGGKPYTLPSRAQSNVQ 736
-                           2222222......5777777666689999***99**********.88888899999999966444444 PP
-
+   [No targets detected that satisfy reporting thresholds]
 
 
 Internal pipeline statistics summary:
@@ -49,7 +33,7 @@ Passed bias filter:                      642  (0.0213091); expected 602.6 (0.02)
 Passed Vit filter:                        83  (0.00275491); expected 30.1 (0.001)
 Passed Fwd filter:                         2  (6.63834e-05); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
-Domain search space  (domZ):               1  [number of targets reported over threshold]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
 # CPU time: 0.09u 0.00s 00:00:00.09 Elapsed: 00:00:00.09
 # Mc/sec: 22186.90
 //
