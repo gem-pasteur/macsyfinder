@@ -141,25 +141,32 @@ C. Computing candidate Systems' scores (ordered mode)
 
 This step only applies to the most powerful search mode, i.e., on **ordered datasets**. The whole step is ``NEW in V2``
 
-The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions regarding the presence of Systems in replicons analysed. 
-It creates clusters of hits for Systems' components separately for each System searched, and therefore might find **candidate occurrences of Systems that overlap** in terms of components. 
+The **new search engine** implemented since version 2.0 of MacSyFinder better explores the space of possible Solutions
+regarding the presence of Systems in replicons analysed.
+It creates clusters of hits for Systems' components separately for each System searched, and therefore might find
+**candidate occurrences of Systems that overlap** in terms of components.
 Moreover, if a System is possibly encoded at several locations on the replicon analysed (option `multi_loci` set to "True" in the model),
 this calls for a **combinatorial screening** of the different clusters to assemble them into coherent systems regarding the macsy-models.
 
-* For a given model, clusters are used to "fill up" Systems' occurrence(s) according to the **quorum criteria** defined in the System's model (see function :func:`macsypy.system.match`):
+* For a given model, clusters are used to "fill up" Systems' occurrence(s) according to the **quorum criteria**
+  defined in the System's model (see function :func:`macsypy.system.match`):
 
    The `min_genes_required` and `min_mandatory_genes_required` thresholds must be reached.  
 
-      * In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners are evaluated for System's assessment separately.  
-      * In the case of the `multi-loci system` search mode (``multi_loci=True``), each possible combination of clusters is confronted to the quorum of the System being examined.
+      * In the case of the `single-locus system` search mode (default), each cluster in addition to potential loners
+        are evaluated for System's assessment separately.
+      * In the case of the `multi-loci system` search mode (``multi_loci=True``), each possible combination of clusters
+        is confronted to the quorum of the System being examined.
 
-   The sets of clusters that fulfill the quorum are reported as candidate Systems in the `all_systems.txt` and `all_systems.tsv` output files (see :ref:`outputs`),
+   The sets of clusters that fulfill the quorum are reported as candidate Systems in the `all_systems.txt` and
+   `all_systems.tsv` output files (see :ref:`outputs`),
    and they obtain a **System's score** (see below).
 
    The clusters that do not allow to form a candidate System are reported in the `rejected_clusters.txt` output file.
    
 
-*  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily more similar to a system's model than others.  
+*  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily
+   more similar to a system's model than others.
 
    The assumptions behind this scoring scheme are the following:
 
@@ -172,10 +179,12 @@ this calls for a **combinatorial screening** of the different clusters to assemb
         - \*0.7 (a factor of 0.7) is applied to the above scores if the hit is a `loner` `multi system`.
 
 
-    * When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
-	 
+    * When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems
+      ("multi_loci" mode, several clusters can make a complete `System`), we sum the score of clusters to assign a `System`'s score.
 	
-    * In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model. We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
+    * In addition, we want to **favor concise sets of clusters** to fulfill a `System`'s model.
+      We thus **penalize the adjunction of a cluster** to a candidate `System` when this cluster does not bring
+      any new components to the `System`'s quorum, or when it brings **redundant components**. Thus:
 	
         - -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
         - -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
@@ -186,15 +195,14 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 
 
 
-   In summary, a Systems's score is made of two parts: the **sum of the scores** of the Clusters it is made of, plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.  
+   In summary, a Systems's score is made of two parts: the **sum of the scores** of the Clusters it is made of,
+   plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.
    The systems' scoring step is exemplified in this figure:
 
 
    .. image:: ../_static/msf_functionning_step3.svg
      :height: 500px
      :align: left
-
-
 
 
 *********************************************************************
@@ -207,7 +215,8 @@ D. Repeat operations B and C for the other models being searched
 
 
 
-This search for candidate `Systems` from different models results in a number of possible `Solutions` representing combinations of putative sets of `Systems` in the analysed dataset. 
+This search for candidate `Systems` from different models results in a number of possible `Solutions`
+representing combinations of putative sets of `Systems` in the analysed dataset.
 
 
 *********************************************************************
@@ -226,9 +235,11 @@ A scoring scheme enables to separate between sets of `Solutions`. A **Solution's
 The overall procedure of exploring the space of all possible `Solutions` while finding the optimal one,
 i.e. that with the maximal score, is performed at once using a graph solution to this problem, implemented in the ``networkx package``.
 
-We create a graph where each potential `System` is a vertex, and we create an edge between pairs of vertices if they do not share any components (compatible `Systems`).
-Once the graph is created we look for the `maximum clique <https://en.wikipedia.org/wiki/Clique_problem#Definitions>`_ which maximizes the score.
-This allows to provide the user with one, or multiple `Solutions` that have the **best score possible** among all combinations of compatible `Systems`. 
+We create a graph where each potential `System` is a vertex, and we create an edge between pairs of vertices
+if they do not share any components (compatible `Systems`).
+Once the graph is created we look for the `maximum clique <https://en.wikipedia.org/wiki/Clique_problem#Definitions>`_
+which maximizes the score. This allows to provide the user with one, or multiple `Solutions`
+that have the **best score possible** among all combinations of compatible `Systems`.
 
 
    .. image:: ../_static/msf_functionning_step5.svg
