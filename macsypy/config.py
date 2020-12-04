@@ -86,7 +86,8 @@ class MacsyDefaults(dict):
         self.mandatory_weight = kwargs.get('mandatory_weight', 1.0)
         self.accessory_weight = kwargs.get('accessory_weight', .5)
         self.neutral_weight = kwargs.get('neutral_weight', 0.0)
-        self.exchangeable_weight = kwargs.get('exchangeable_weight', .75)
+        self.exchangeable_weight = kwargs.get('exchangeable_weight', .8)
+        self.loner_multi_system_weight = kwargs.get('loner_multi_system_weight', .7)
         self.itself_weight = kwargs.get('itself_weight', 1.0)
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
 
@@ -107,7 +108,7 @@ class Config:
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
                              'verbosity', 'quiet', 'mute', 'worker')),
                 ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
-                               'itself_weight', 'redundancy_penalty')),
+                               'itself_weight', 'redundancy_penalty', 'loner_multi_system_weight')),
                 ]
 
     def __init__(self, defaults, parsed_args):
@@ -573,7 +574,8 @@ class Config:
                 'accessory': self._options['accessory_weight'],
                 'neutral': self._options['neutral_weight'],
                 'itself': self._options['itself_weight'],
-                'exchangeable': self._options['exchangeable_weight']
+                'exchangeable': self._options['exchangeable_weight'],
+                'loner_multi_system': self._options['loner_multi_system_weight']
                 }
 
     def log_level(self):
@@ -584,20 +586,6 @@ class Config:
         level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
         level = min(50, max(10, level))
         return level
-
-
-    def _set_e_value_search(self, value):
-        """
-        set the value for the -E hmmsearch option
-
-        :param float value: the value of -E hmmsearch
-        :return: None
-        """
-        try:
-            value = float(value)
-        except ValueError:
-            raise ValueError(f"'e_value_search' must be a float: Not '{value}'") from None
-        self._options['e_value_search'] = value
 
 
 class NoneConfig:
