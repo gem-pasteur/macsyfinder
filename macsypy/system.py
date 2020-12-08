@@ -103,28 +103,32 @@ class MatchMaker(metaclass=abc.ABCMeta):
             elif gene_name in self.exchangeable_mandatory:
                 gene_ref = self.exchangeable_mandatory[gene_name]
                 self.mandatory_counter[gene_ref.name] += 1
-                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(ValidHit(hit, gene_ref, GeneStatus.MANDATORY))
+
             elif gene_name in self.accessory_counter:
                 self.accessory_counter[gene_name] += 1
                 accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in self.exchangeable_accessory:
                 gene_ref = self.exchangeable_accessory[gene_name]
                 self.accessory_counter[gene_ref.name] += 1
-                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(ValidHit(hit, gene_ref, GeneStatus.ACCESSORY))
+
             elif gene_name in self.neutral_counter:
                 self.neutral_counter[gene_name] += 1
                 neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in self.exchangeable_neutral:
                 gene_ref = self.exchangeable_neutral[gene_name]
                 self.neutral_counter[gene_ref.name] += 1
-                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(ValidHit(hit, gene_ref, GeneStatus.NEUTRAL))
+
             elif gene_name in self.forbidden_counter:
                 self.forbidden_counter[gene_name] += 1
                 forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
             elif gene_name in self.exchangeable_forbidden:
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
-                forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(ValidHit(hit, gene_ref, GeneStatus.FORBIDDEN))
+
         return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
 
@@ -504,7 +508,7 @@ class System(AbstractSetOfHits):
                         func_in_clst[func] = [clst]
             return func_in_clst
 
-        _log.debug(f"score computation for system {self.id}:")
+        _log.debug(f"=================== score computation for system {self.id} ===================")
         # split clusters in 2
         # the clusters loners  multi systems
         # and the others (regular)
