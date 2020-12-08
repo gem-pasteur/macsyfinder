@@ -103,6 +103,41 @@ class MatchMakerTest(MacsyTest):
         self.c_hits['h_toto_ho'] = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
 
+    def test_sort_hits_by_status(self):
+        ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
+        mandatory_exp = [self.c_hits['h_sctn'], self.c_hits['h_sctj']]
+        accessory_exp = [self.c_hits['h_gspd']]
+        neutral_exp = [self.c_hits['h_toto']]
+        forbidden_exp = [self.c_hits['h_abc']]
+
+        mandatory, accessory, neutral, forbidden = ordered_match_maker.sort_hits_by_status(mandatory_exp + accessory_exp + neutral_exp + forbidden_exp)
+        self.assertListEqual([h.gene.name for h in mandatory_exp], [h.gene.name for h in mandatory])
+        self.assertListEqual([h.gene.name for h in accessory_exp], [h.gene.name for h in accessory])
+        self.assertListEqual([h.gene.name for h in neutral_exp], [h.gene.name for h in neutral])
+        self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene.name for h in forbidden])
+
+        # do the same but with exchangeable
+        mandatory_exp_exch = [self.c_hits['h_sctn_flg'], self.c_hits['h_sctj_flg']]
+        accessory_exp_exch = [self.c_hits['h_gspd_an']]
+        neutral_exp_exch = [self.c_hits['h_toto_ho']]
+        forbidden_exp_exch = [self.c_hits['h_abc_ho']]
+
+        mandatory, accessory, neutral, forbidden = ordered_match_maker.sort_hits_by_status(mandatory_exp_exch +
+                                                                                           accessory_exp_exch +
+                                                                                           neutral_exp_exch +
+                                                                                           forbidden_exp_exch)
+        self.assertListEqual([h.gene.name for h in mandatory_exp_exch], [h.gene.name for h in mandatory])
+        self.assertListEqual([h.gene.name for h in accessory_exp_exch], [h.gene.name for h in accessory])
+        self.assertListEqual([h.gene.name for h in neutral_exp_exch], [h.gene.name for h in neutral])
+        self.assertListEqual([h.gene.name for h in forbidden_exp_exch], [h.gene.name for h in forbidden])
+        # test if gene_ref are well specified
+
+        self.assertListEqual([h.gene.name for h in mandatory_exp], [h.gene_ref.name for h in mandatory])
+        self.assertListEqual([h.gene.name for h in accessory_exp], [h.gene_ref.name for h in accessory])
+        self.assertListEqual([h.gene.name for h in neutral_exp], [h.gene_ref.name for h in neutral])
+        self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene_ref.name for h in forbidden])
+
+
     def test_ordered_match(self):
 
         #####################
