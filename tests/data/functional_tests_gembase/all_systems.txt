@@ -1,5 +1,5 @@
-# macsyfinder 20201204.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --sequence-db=tests/data/base/gembase.fasta --models-dir=tests/data/models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path
+# macsyfinder 20201208.dev
+# macsyfinder --db-type=gembase --sequence-db=tests/data/base/gembase.fasta --models-dir=tests/data/models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path
 # Systems found:
 
 system id = GCF_000005845_T4P_63
@@ -9,7 +9,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.800
+score = 8.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -43,7 +43,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.800
+score = 8.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -77,7 +77,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.100
+score = 7.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -145,7 +145,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -179,7 +179,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -213,7 +213,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -247,7 +247,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -281,7 +281,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.100
+score = 6.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -315,7 +315,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.100
+score = 6.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -417,7 +417,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.800
+score = 6.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -451,7 +451,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.800
+score = 6.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -485,7 +485,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -519,7 +519,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -553,7 +553,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.100
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -621,7 +621,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 4.600
+score = 5.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -655,7 +655,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -689,7 +689,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -723,7 +723,7 @@ clusters = [('GCF_000005845_000970', 'T4P_pilC', 97), ('GCF_000005845_000980', '
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 3.600
+score = 4.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -757,7 +757,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -791,7 +791,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -825,7 +825,7 @@ clusters = [('GCF_000005845_025680', 'T4P_pilW', 2568), ('GCF_000005845_025690',
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 4.600
+score = 5.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -919,7 +919,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -953,7 +953,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_030080
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -987,7 +987,7 @@ clusters = [('GCF_000005845_026740', 'T4P_pilT', 2674)], [('GCF_000005845_026930
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 3.600
+score = 4.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -5917,7 +5917,7 @@ clusters = [('GCF_000006725_008990', 'T2SS_gspF', 5141), ('GCF_000006725_009000'
 occ = 1
 wholeness = 0.714
 loci nb = 1
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -6649,7 +6649,7 @@ clusters = [('GCF_000006745_021980', 'T4P_pilD', 8766)], [('GCF_000006745_024730
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.300
+score = 8.500
 
 mandatory genes:
 	- T2SS_gspD: 0 ()
@@ -6879,7 +6879,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 1
-score = 8.300
+score = 8.500
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -6909,7 +6909,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 1
-score = 7.800
+score = 8.000
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -6969,7 +6969,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 2
-score = 7.300
+score = 7.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7029,7 +7029,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 1
 wholeness = 0.786
 loci nb = 2
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7119,7 +7119,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 2
-score = 4.800
+score = 5.000
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -7149,7 +7149,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 2
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7209,7 +7209,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 3
-score = 3.800
+score = 4.000
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7269,7 +7269,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.786
 loci nb = 3
-score = 3.300
+score = 3.500
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7359,7 +7359,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 1.300
+score = 1.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7389,7 +7389,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 0.800
+score = 1.000
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7449,7 +7449,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 0.300
+score = 0.500
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7509,7 +7509,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = -0.200
+score = 0.000
 
 mandatory genes:
 	- T2SS_gspD: 4 (T2SS_gspD, T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7599,7 +7599,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = -2.200
+score = -2.000
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7629,7 +7629,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 3
-score = -2.700
+score = -2.500
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7689,7 +7689,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 4
-score = -3.200
+score = -3.000
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7749,7 +7749,7 @@ clusters = [('GCF_000006765_006700', 'T2SS_gspJ', 10742), ('GCF_000006765_006710
 occ = 3
 wholeness = 0.857
 loci nb = 4
-score = -3.700
+score = -3.500
 
 mandatory genes:
 	- T2SS_gspD: 4 (T2SS_gspD, T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7839,7 +7839,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 1
 wholeness = 0.857
 loci nb = 2
-score = 7.800
+score = 8.000
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -7869,7 +7869,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 1
 wholeness = 0.857
 loci nb = 2
-score = 7.300
+score = 7.500
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -7929,7 +7929,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 1
 wholeness = 0.571
 loci nb = 2
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -7989,7 +7989,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 1
 wholeness = 0.571
 loci nb = 2
-score = 6.300
+score = 6.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -8079,7 +8079,7 @@ clusters = [('GCF_000006765_018460', 'T2SS_gspC', 11918), ('GCF_000006765_018470
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -8109,7 +8109,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0184
 occ = 2
 wholeness = 0.857
 loci nb = 3
-score = 3.800
+score = 4.000
 
 mandatory genes:
 	- T2SS_gspD: 3 (T2SS_gspD, T2SS_gspD, T2SS_gspD)
@@ -8199,7 +8199,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0263
 occ = 1
 wholeness = 0.500
 loci nb = 1
-score = 5.800
+score = 6.000
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8229,7 +8229,7 @@ clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380
 occ = 2
 wholeness = 0.857
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8282,36 +8282,6 @@ accessory genes:
 neutral genes:
 
 ============================================================
-system id = GCF_000006765_T2SS_418
-model = TFF-SF/T2SS
-replicon = GCF_000006765
-clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
-occ = 2
-wholeness = 0.857
-loci nb = 2
-score = 4.800
-
-mandatory genes:
-	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
-	- T2SS_gspE: 2 (T2SS_gspE, T2SS_gspE)
-	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
-	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
-	- T2SS_gspC: 1 (T2SS_gspC)
-	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_435, GCF_000006765_T4P_437, GCF_000006765_T4P_438, GCF_000006765_T4P_440, GCF_000006765_T4P_441])
-
-accessory genes:
-	- T2SS_gspM: 1 (T2SS_gspM)
-	- T2SS_gspH: 3 (T2SS_gspH, T2SS_gspH, T2SS_gspH)
-	- T2SS_gspI: 2 (T2SS_gspI, T2SS_gspI)
-	- T2SS_gspJ: 1 (T2SS_gspJ)
-	- T2SS_gspK: 1 (T2SS_gspK)
-	- T2SS_gspN: 0 ()
-	- T2SS_gspL: 1 (T2SS_gspL)
-	- Tad_tadD: 0 ()
-
-neutral genes:
-
-============================================================
 system id = GCF_000006765_T2SS_383
 model = TFF-SF/T2SS
 replicon = GCF_000006765
@@ -8319,7 +8289,7 @@ clusters = [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380
 occ = 1
 wholeness = 0.429
 loci nb = 1
-score = 4.800
+score = 5.000
 
 mandatory genes:
 	- T2SS_gspD: 0 ()
@@ -8337,6 +8307,36 @@ accessory genes:
 	- T2SS_gspK: 0 ()
 	- T2SS_gspN: 0 ()
 	- T2SS_gspL: 0 ()
+	- Tad_tadD: 0 ()
+
+neutral genes:
+
+============================================================
+system id = GCF_000006765_T2SS_418
+model = TFF-SF/T2SS
+replicon = GCF_000006765
+clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_026370', 'T2SS_gspH', 12709), ('GCF_000006765_026380', 'T2SS_gspI', 12710), ('GCF_000006765_026390', 'T2SS_gspH', 12711), ('GCF_000006765_026400', 'T2SS_gspG', 12712), ('GCF_000006765_026410', 'T2SS_gspF', 12713), ('GCF_000006765_026420', 'T2SS_gspE', 12714)], [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550', 'T2SS_gspL', 13127), ('GCF_000006765_030560', 'T2SS_gspK', 13128), ('GCF_000006765_030570', 'T2SS_gspJ', 13129), ('GCF_000006765_030580', 'T2SS_gspI', 13130), ('GCF_000006765_030590', 'T2SS_gspH', 13131), ('GCF_000006765_030600', 'T2SS_gspG', 13132), ('GCF_000006765_030610', 'T2SS_gspF', 13133), ('GCF_000006765_030620', 'T2SS_gspE', 13134), ('GCF_000006765_030630', 'T2SS_gspC', 13135), ('GCF_000006765_030640', 'T2SS_gspD', 13136)], [('GCF_000006765_044730', 'T4P_pilD', 14545)]
+occ = 2
+wholeness = 0.857
+loci nb = 2
+score = 5.000
+
+mandatory genes:
+	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
+	- T2SS_gspE: 2 (T2SS_gspE, T2SS_gspE)
+	- T2SS_gspF: 2 (T2SS_gspF, T2SS_gspF)
+	- T2SS_gspG: 2 (T2SS_gspG, T2SS_gspG)
+	- T2SS_gspC: 1 (T2SS_gspC)
+	- T2SS_gspO: 1 (T4P_pilD [GCF_000006765_T4P_435, GCF_000006765_T4P_437, GCF_000006765_T4P_438, GCF_000006765_T4P_440, GCF_000006765_T4P_441])
+
+accessory genes:
+	- T2SS_gspM: 1 (T2SS_gspM)
+	- T2SS_gspH: 3 (T2SS_gspH, T2SS_gspH, T2SS_gspH)
+	- T2SS_gspI: 2 (T2SS_gspI, T2SS_gspI)
+	- T2SS_gspJ: 1 (T2SS_gspJ)
+	- T2SS_gspK: 1 (T2SS_gspK)
+	- T2SS_gspN: 0 ()
+	- T2SS_gspL: 1 (T2SS_gspL)
 	- Tad_tadD: 0 ()
 
 neutral genes:
@@ -8409,7 +8409,7 @@ clusters = [('GCF_000006765_030540', 'T2SS_gspM', 13126), ('GCF_000006765_030550
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.800
+score = 9.000
 
 mandatory genes:
 	- T2SS_gspD: 1 (T2SS_gspD)
@@ -8439,7 +8439,7 @@ clusters = [('GCF_000006765_013660', 'T2SS_gspD', 11438)], [('GCF_000006765_0305
 occ = 1
 wholeness = 0.857
 loci nb = 1
-score = 8.300
+score = 8.500
 
 mandatory genes:
 	- T2SS_gspD: 2 (T2SS_gspD, T2SS_gspD)
@@ -9839,7 +9839,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.556
 loci nb = 3
-score = 7.800
+score = 8.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -9907,7 +9907,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.500
 loci nb = 3
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -9941,7 +9941,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.444
 loci nb = 2
-score = 6.800
+score = 7.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10043,7 +10043,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.800
+score = 6.000
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10077,7 +10077,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10145,7 +10145,7 @@ clusters = [('GCF_000006945_002000', 'T4P_pilC', 25780), ('GCF_000006945_002010'
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10179,7 +10179,7 @@ clusters = [('GCF_000006945_029190', 'T4P_pilW', 28499), ('GCF_000006945_029200'
 occ = 1
 wholeness = 0.389
 loci nb = 2
-score = 5.300
+score = 5.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
@@ -10213,7 +10213,7 @@ clusters = [('GCF_000006945_030160', 'T4P_pilT', 28596)], [('GCF_000006945_03345
 occ = 1
 wholeness = 0.278
 loci nb = 1
-score = 4.300
+score = 4.500
 
 mandatory genes:
 	- T4P_pilE: 0 ()
