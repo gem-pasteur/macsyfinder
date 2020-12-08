@@ -245,9 +245,12 @@ class Cluster:
         else:
             seen_hits = set()
             score = 0
+            _log.debug(f"===================== compute score for cluster =====================")
             for v_hit in self.hits:
-                if v_hit.gene_ref in seen_hits:
+                _log.debug(f"-------------- test hit {v_hit.gene.name} --------------")
+                if v_hit.gene_ref.name in seen_hits:
                     # count only one occurrence of each hit per cluster
+                    _log.debug(f"{v_hit.id} code for {v_hit.gene_ref.name} which is already in cluster score = continue")
                     continue
 
                 # attribute a score for this hit
@@ -275,7 +278,8 @@ class Cluster:
                     hit_score *= self._hit_weights.loner_multi_system
                     _log.debug(f"{v_hit.id} = {hit_score}")
                 score += hit_score
-                seen_hits.add(v_hit.gene_ref)
+                seen_hits.add(v_hit.gene_ref.name)
+        _log.debug(f"===============================================================")
         self._score = score
         return score
 
