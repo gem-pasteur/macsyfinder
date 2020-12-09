@@ -103,7 +103,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
             elif gene_name in self.exchangeable_mandatory:
                 gene_ref = self.exchangeable_mandatory[gene_name]
                 self.mandatory_counter[gene_ref.name] += 1
-                mandatory_hits.append(ValidHit(hit, gene_ref, GeneStatus.MANDATORY))
+                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
 
             elif gene_name in self.accessory_counter:
                 self.accessory_counter[gene_name] += 1
@@ -111,7 +111,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
             elif gene_name in self.exchangeable_accessory:
                 gene_ref = self.exchangeable_accessory[gene_name]
                 self.accessory_counter[gene_ref.name] += 1
-                accessory_hits.append(ValidHit(hit, gene_ref, GeneStatus.ACCESSORY))
+                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
 
             elif gene_name in self.neutral_counter:
                 self.neutral_counter[gene_name] += 1
@@ -119,7 +119,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
             elif gene_name in self.exchangeable_neutral:
                 gene_ref = self.exchangeable_neutral[gene_name]
                 self.neutral_counter[gene_ref.name] += 1
-                neutral_hits.append(ValidHit(hit, gene_ref, GeneStatus.NEUTRAL))
+                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
 
             elif gene_name in self.forbidden_counter:
                 self.forbidden_counter[gene_name] += 1
@@ -127,7 +127,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
             elif gene_name in self.exchangeable_forbidden:
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
-                forbidden_hits.append(ValidHit(hit, gene_ref, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
 
         return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
@@ -546,7 +546,7 @@ class System(AbstractSetOfHits):
                 score += loners_score
             else:
                 # if the biological funct is already encoded by regular clusters
-                # we do not count increase the score
+                # we do not increase the score
                 _log.debug(f"{funct} is already in regular clusters")
                 pass
 
