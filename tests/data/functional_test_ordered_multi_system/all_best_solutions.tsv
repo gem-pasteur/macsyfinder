@@ -1,0 +1,13 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_1.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-multi-syst-exch --relative-path -w 8
+# Systems found:
+sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in
+1	UserReplicon	VICH001.B.00001.C001_01397	T1SS_abc	11	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_abc	mandatory	721	2.4e-157	516.300	0.996	0.698	175	677	
+1	UserReplicon	VICH001.B.00001.C001_01398	T1SS_mfp	12	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_mfp	mandatory	467	2.3e-72	235.600	1.000	0.797	85	456	
+1	UserReplicon	VICH001.B.00001.C001_01399	T1SS_abc	13	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_abc	mandatory	720	2.1e-158	519.700	1.000	0.699	167	669	
+1	UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	14	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_mfp	mandatory	559	2.2e-47	153.400	0.559	0.658	168	535	
+1	UserReplicon	VICH001.B.00001.C001_01360	T1SS_omf	2	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_omf	mandatory	484	3.3e-28	90.000	0.985	0.820	80	476	
+1	UserReplicon	VICH001.B.00001.C001_01506	T1SS_omf	23	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_omf	mandatory	419	9.3e-35	111.500	0.998	0.912	25	406	
+1	UserReplicon	VICH001.B.00001.C001_01548	T1SS_omf	32	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_omf	mandatory	476	1.4e-27	87.800	0.980	0.884	28	448	
+1	UserReplicon	VICH001.B.00001.C001_01562	T1SS_omf	46	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_2	1	1.000	2.700	2	T1SS_omf	mandatory	445	4.8e-53	171.700	1.000	0.892	31	427	
+

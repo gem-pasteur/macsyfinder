@@ -1,0 +1,40 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG06620.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG06620.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG06620  [M=71]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence Description
+    ------- ------ -----    ------- ------ -----   ---- --  -------- -----------
+
+   [No hits detected that satisfy reporting thresholds]
+
+
+Domain annotation for each sequence (and alignments):
+
+   [No targets detected that satisfy reporting thresholds]
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (71 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1604  (0.0532395); expected 602.6 (0.02)
+Passed bias filter:                     1470  (0.0487918); expected 602.6 (0.02)
+Passed Vit filter:                       193  (0.006406); expected 30.1 (0.001)
+Passed Fwd filter:                        11  (0.000365109); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               0  [number of targets reported over threshold]
+# CPU time: 0.08u 0.00s 00:00:00.08 Elapsed: 00:00:00.09
+# Mc/sec: 7465.73
+//
+[ok]

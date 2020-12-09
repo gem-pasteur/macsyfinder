@@ -1,0 +1,1475 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/T2SS_gspE.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/T2SS_gspE.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspE  [M=422]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+   9.6e-205  680.7   1.9   1.1e-204  680.5   1.9    1.0  1  GCF_000006745_024820  
+   1.8e-201  669.9   2.8   2.1e-201  669.7   2.8    1.0  1  GCF_000006765_030620  
+   3.5e-196  652.5   6.2     4e-196  652.3   6.2    1.0  1  GCF_000005845_029990  
+   4.5e-188  625.7   9.1   8.8e-187  621.5   9.1    2.0  1  GCF_000006765_006790  
+   8.8e-184  611.6   0.5     1e-183  611.4   0.5    1.0  1  GCF_000006905_001730  
+   2.2e-175  584.0   0.1   2.7e-175  583.7   0.1    1.0  1  GCF_000006765_026420  
+   1.5e-171  571.4   2.4   1.8e-171  571.0   2.4    1.0  1  GCF_000006725_018700  
+   2.1e-154  514.9   0.7   2.6e-154  514.5   0.7    1.1  1  GCF_000006745_021960  
+   3.4e-151  504.3   0.2   4.6e-151  503.8   0.2    1.2  1  GCF_000006725_014600  
+     1e-150  502.7   0.7   1.3e-150  502.3   0.7    1.1  1  GCF_000006745_003690  
+     4e-150  500.8   0.0     5e-150  500.4   0.0    1.0  1  GCF_000006845_014310  
+   5.8e-150  500.2   0.1   7.7e-150  499.8   0.1    1.1  1  GCF_000006765_044720  
+   5.3e-148  493.7   0.0   6.9e-148  493.4   0.0    1.1  1  GCF_000006765_051490  
+   1.1e-138  463.0   0.0   1.4e-138  462.8   0.0    1.0  1  GCF_000005845_000980  
+   3.1e-138  461.6   0.1   3.8e-138  461.3   0.1    1.0  1  GCF_000006945_002010  
+    8.6e-56  190.0   0.0    1.2e-55  189.5   0.0    1.1  1  GCF_000006745_007610  
+    1.3e-50  172.9   3.3    4.4e-46  158.0   0.2    2.6  2  GCF_000006745_004240  
+    6.1e-50  170.7   1.3    4.7e-48  164.5   0.2    2.4  2  GCF_000006725_000270  
+    2.6e-48  165.3   1.4    2.7e-47  162.0   0.4    2.4  2  GCF_000006765_003910  
+    8.7e-48  163.6   2.9      4e-45  154.9   0.4    2.3  2  GCF_000006845_016430  
+      3e-46  158.5   0.2    1.7e-44  152.7   0.1    2.4  3  GCF_000005845_026740  
+    1.1e-45  156.7   0.2    6.6e-44  150.8   0.0    2.5  3  GCF_000006925_026070  
+    2.6e-43  148.9   0.3    3.1e-42  145.3   0.1    2.2  2  GCF_000006945_030160  
+    1.8e-37  129.6   2.4    2.5e-35  122.5   1.1    2.5  2  GCF_000006745_004250  
+    2.9e-36  125.6   0.3    1.8e-31  109.9   0.1    2.2  2  GCF_000006845_016440  
+    6.2e-35  121.3   0.3    1.4e-32  113.5   0.0    2.1  2  GCF_000006845_003200  
+    1.9e-34  119.6   0.4    2.7e-34  119.2   0.4    1.2  1  GCF_000006725_009620  
+      6e-34  118.0   1.1    1.4e-32  113.5   0.4    2.1  2  GCF_000006765_003920  
+    6.3e-15   55.4   0.4    9.7e-15   54.7   0.4    1.2  1  GCF_000006765_042490  
+    3.1e-13   49.8   0.1    4.5e-13   49.2   0.1    1.2  1  GCF_000006905_029150  
+    5.1e-11   42.5   0.2    8.7e-11   41.7   0.2    1.3  1  GCF_000006905_024050  
+    1.8e-08   34.1   0.0      3e-08   33.4   0.0    1.2  1  GCF_000006725_015970  
+    2.5e-05   23.7   0.0    4.2e-05   23.0   0.0    1.3  1  GCF_000006765_023420  
+     0.0004   19.8   0.3       0.25   10.6   0.0    3.2  3  GCF_000006945_041130  
+    0.00049   19.5   0.0    0.00073   18.9   0.0    1.2  1  GCF_000006925_029370  
+    0.00054   19.3   0.0    0.00077   18.8   0.0    1.2  1  GCF_000005845_029540  
+    0.00054   19.3   0.3       0.25   10.6   0.0    3.1  3  GCF_000005845_036120  
+    0.00054   19.3   0.3       0.25   10.6   0.0    3.1  3  GCF_000006925_037070  
+     0.0038   16.6   0.2       0.69    9.1   0.0    2.9  3  GCF_000006845_010400  
+     0.0085   15.4   0.0      0.011   15.0   0.0    1.2  1  GCF_000006925_017460  
+     0.0085   15.4   0.0      0.011   15.0   0.0    1.2  1  GCF_000005845_017580  
+     0.0095   15.2   0.0      0.023   14.0   0.0    1.6  1  GCF_000006845_014540  
+  ------ inclusion threshold ------
+       0.01   15.1   0.5       0.02   14.2   0.0    1.6  2  GCF_000005845_028910  
+       0.01   15.1   0.5       0.02   14.2   0.0    1.6  2  GCF_000006925_028740  
+      0.013   14.8   0.0      0.037   13.3   0.0    1.7  1  GCF_000006945_003220  
+      0.018   14.3   0.1      0.036   13.3   0.1    1.4  1  GCF_000006745_018810  
+      0.023   14.0   0.4      0.038   13.2   0.0    1.5  2  GCF_000006945_032280  
+      0.023   14.0   1.0         12    5.1   0.1    3.6  4  GCF_000006745_003580  
+      0.026   13.8   0.0      0.039   13.2   0.0    1.2  1  GCF_000006745_016400  
+      0.037   13.3   0.3      0.072   12.3   0.0    1.5  2  GCF_000006745_022890  
+      0.037   13.3   0.1      0.048   12.9   0.1    1.1  1  GCF_000006945_005440  
+       0.05   12.9   0.0       0.08   12.2   0.0    1.3  1  GCF_000006745_012390  
+      0.064   12.5   0.5       0.36   10.0   0.0    2.0  2  GCF_000006765_050140  
+       0.08   12.2   0.0        0.3   10.3   0.0    1.8  2  GCF_000006925_004070  
+      0.084   12.1   0.2        0.3   10.3   0.0    1.9  2  GCF_000006905_021300  
+      0.092   12.0   0.0       0.19   10.9   0.0    1.5  2  GCF_000006945_008470  
+      0.092   12.0   0.0       0.14   11.4   0.0    1.2  1  GCF_000006945_019230  
+      0.095   11.9   0.1       0.14   11.4   0.1    1.2  1  GCF_000006725_003090  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006745_024820  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  680.5   1.9  2.1e-207  1.1e-204       2     422 .]      78     498 ..      77     498 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 680.5 bits;  conditional E-value: 2.1e-207
+             T2SS_gspE   2 elyeeksseaeevveeleeev.dlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevle 89 
+                           ++y+++ssea++++e+++ +  d++slaeel+++edll+sed+ap+i+l+na+l eaike+asDihie++ek+l++rfRvDGvlrevl+
+  GCF_000006745_024820  78 QVYQRDSSEARQLMEDIGADSdDFFSLAEELPQNEDLLESEDDAPIIKLINAMLGEAIKEGASDIHIETFEKTLSIRFRVDGVLREVLA 166
+                           789**************98875789**************************************************************** PP
+
+             T2SS_gspE  90 pkkklaaalvsRikvlakldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikk 178
+                           p++kl+++lvsR+kv+akldiaekR+pqDGri+lr+ggr+vDvRvst+Ps+hgervv+RlLdk++++ldl++lg+++++++++++lik+
+  GCF_000006745_024820 167 PSRKLSSLLVSRVKVMAKLDIAEKRVPQDGRISLRIGGRAVDVRVSTMPSSHGERVVMRLLDKNATRLDLHSLGMTAHNHDNFRRLIKR 255
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 179 phGiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeia 267
+                           phGiiLvtGPtGsGk+ttlya l+elns+erniltveDP+e++++gigq+qvn+++d+tFa+glRailRqDPDv++vGeiRD eta+ia
+  GCF_000006745_024820 256 PHGIILVTGPTGSGKSTTLYAGLQELNSSERNILTVEDPIEFDIDGIGQTQVNPRVDMTFARGLRAILRQDPDVVMVGEIRDLETAQIA 344
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 268 vqasltGhlvlstlhtndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekc 356
+                           vqasltGhlv+stlhtn+a++avtRl+dmg+epfl+sssllgvlaqRlvR+lcp+cke++ea++e+ + ++ +k+e   l+ra+gC+kc
+  GCF_000006745_024820 345 VQASLTGHLVMSTLHTNTAVGAVTRLRDMGIEPFLISSSLLGVLAQRLVRTLCPDCKEPYEADKEQRKLFDSKKKEPLILYRATGCPKC 433
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 357 aktGykgRtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           +++Gy+gRtgi+ell vdd+l+eli++ea+e+++ek++r++ + s+r+dgl+kv++g+t+leev+r
+  GCF_000006745_024820 434 NHKGYRGRTGIHELLLVDDALQELIHSEAGEQAMEKHIRAT-TPSIRDDGLDKVRQGITSLEEVMR 498
+                           **************************************999.9*********************98 PP
+
+>> GCF_000006765_030620  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  669.7   2.8  4.1e-204  2.1e-201       3     422 .]      79     497 ..      77     497 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 669.7 bits;  conditional E-value: 4.1e-204
+             T2SS_gspE   3 lyeeksseaeevveeleeevdlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepk 91 
+                           +y+++ss+a +++e+l+ + dla+la++++e+edl+++ed+ap+irl+nail eai+e+asDih+e++ek+l+vrfRvDGvlrevlepk
+  GCF_000006765_030620  79 SYQHDSSAAMQLAEDLGGSLDLAALADQVPETEDLMEQEDDAPIIRLINAILGEAIRENASDIHLETFEKRLVVRFRVDGVLREVLEPK 167
+                           6999999********************************************************************************** PP
+
+             T2SS_gspE  92 kklaaalvsRikvlakldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkph 180
+                           ++laa+lvsRikv+a+ldiaekR+pqDGri+lrvggrevD+RvstlPsa+gervvlRlLdk++ +l+l++lg+se+ ++ ++++++kph
+  GCF_000006765_030620 168 RELAALLVSRIKVMARLDIAEKRIPQDGRISLRVGGREVDIRVSTLPSANGERVVLRLLDKQAGRLNLQHLGMSERDRKLMDETVRKPH 256
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 181 GiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavq 269
+                           Gi+LvtGPtGsGktttlya+l++ln+++rniltveDP+ey+legigq+qvnak+d+tFa+glRailRqDPDv++vGeiRD+etaeiavq
+  GCF_000006765_030620 257 GILLVTGPTGSGKTTTLYASLTTLNDRTRNILTVEDPIEYHLEGIGQTQVNAKVDMTFARGLRAILRQDPDVVMVGEIRDRETAEIAVQ 345
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 270 asltGhlvlstlhtndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcak 358
+                           asltGhlvlstlhtn+a++a+tRl+dmg+epfllsss+lgvlaqRlvR lcp+cke+++a+e+e++ lg++ ++  +l+ra+gC +c++
+  GCF_000006765_030620 346 ASLTGHLVLSTLHTNSAIGAITRLVDMGIEPFLLSSSMLGVLAQRLVRVLCPACKEPYRADEAECALLGVDPAAPPTLHRARGCGECHQ 434
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 359 tGykgRtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           +Gy+gRtgiyel+v+dd++r+li++e++e+e++++ar++   s+r+dg++kvl+g+tt+eevlr
+  GCF_000006765_030620 435 HGYRGRTGIYELVVFDDHMRSLIHNESSEQEMTRHARTS-GPSIRDDGRRKVLEGVTTVEEVLR 497
+                           *************************************99.69********************98 PP
+
+>> GCF_000005845_029990  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  652.3   6.2  7.8e-199    4e-196       3     422 .]      65     483 ..      63     483 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 652.3 bits;  conditional E-value: 7.8e-199
+             T2SS_gspE   3 lyeeksseaeevveeleeevdlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepk 91 
+                           ++++++ e+++++++++++vdl sl+ee++++edll++++ apvirl+nail+eaike+asDihie++ek++++rfR+DGvlr++l+p+
+  GCF_000005845_029990  65 VFHQNTGESQQIAQDIDQSVDLLSLSEEMPANEDLLNEDSAAPVIRLINAILSEAIKETASDIHIETYEKTMSIRFRIDGVLRTILQPN 153
+                           78899999********************************************************************************* PP
+
+             T2SS_gspE  92 kklaaalvsRikvlakldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkph 180
+                           kklaa+l+sRikv+a+ldiaekR+pqDGri+lr+g+r++DvRvstlPs++ger+vlRlLdk++ +l+l++lg++++ +++le+li+ ph
+  GCF_000005845_029990 154 KKLAALLISRIKVMARLDIAEKRIPQDGRISLRIGRRNIDVRVSTLPSIYGERAVLRLLDKNSLQLSLNNLGMTAADKQDLENLIQLPH 242
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 181 GiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavq 269
+                           GiiLvtGPtGsGk+ttlya+ls ln++ rniltveDPveyelegigq+qvn+++d++Fa+glRailRqDPDv++vGeiRD+eta+iavq
+  GCF_000005845_029990 243 GIILVTGPTGSGKSTTLYAILSALNTPGRNILTVEDPVEYELEGIGQTQVNTRVDMSFARGLRAILRQDPDVVMVGEIRDTETAQIAVQ 331
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 270 asltGhlvlstlhtndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcak 358
+                           asltGhlvlstlhtn+a++avtRl+dmgve+fllsssl g++aqRlvR+lcp+c++ +  + ++++++++++ + +++ +++gC++c++
+  GCF_000005845_029990 332 ASLTGHLVLSTLHTNSASGAVTRLRDMGVESFLLSSSLAGIIAQRLVRRLCPQCRQFTPVSPQQAQMFKYHQLAVTTIGTPVGCPHCHQ 420
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 359 tGykgRtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           +Gy+gR++i+e++vv+ elr++i+++ de++le+l+r++ +++l ++gl+kv++g t+++ev+r
+  GCF_000005845_029990 421 SGYQGRMAIHEMMVVTPELRAAIHENVDEQALERLVRQQ-HKALIKNGLQKVISGDTSWDEVMR 483
+                           ************************************999.89********************98 PP
+
+>> GCF_000006765_006790  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  621.5   9.1  1.7e-189  8.8e-187       7     422 .]      66     464 ..      61     464 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 621.5 bits;  conditional E-value: 1.7e-189
+             T2SS_gspE   7 ksseaeevveeleeevdlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkkla 95 
+                           ++ +a++vv  +e+evdl++l+++++e++dlld++d apvir++na+l++a++++asDihiep+e++ +vr+RvDG lr+v++p+k+l+
+  GCF_000006765_006790  66 DTGSAAAVVGAAESEVDLDRLMDDIPEVTDLLDTQDGAPVIRMINALLTQAARDEASDIHIEPFETHSVVRYRVDGALRDVVAPRKALH 154
+                           4567889999******************************************************************************* PP
+
+             T2SS_gspE  96 aalvsRikvlakldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiL 184
+                           aalvsRik++a+ldiaekRlpqDGri+lrv+gr +D+Rvst+P+ hgervv+RlLdk++ +l+le+lg+++ +l+ l++li++phGi+L
+  GCF_000006765_006790 155 AALVSRIKIMAQLDIAEKRLPQDGRIALRVAGRPIDIRVSTVPTGHGERVVMRLLDKQAGRLRLETLGMAPGVLAPLDNLIRQPHGIVL 243
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 185 vtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqaslt 273
+                           vtGPtGsGktttlyaal++l+++++niltveDPvey+l+gi+qiqvna+id+tFa +lRailRqDPD+i++GeiRD eta+iavqaslt
+  GCF_000006765_006790 244 VTGPTGSGKTTTLYAALARLDASTSNILTVEDPVEYDLPGISQIQVNARIDMTFAVALRAILRQDPDIIMIGEIRDLETAQIAVQASLT 332
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 274 GhlvlstlhtndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGyk 362
+                           Ghlvl+tlhtnda+savtRl+dmgvepfll+ss+lgvlaqRlvR+lc++c+ ee+                   +ra+gC++c++tGy+
+  GCF_000006765_006790 333 GHLVLATLHTNDAVSAVTRLVDMGVEPFLLASSMLGVLAQRLVRRLCTHCRVEED-----------------GGWRAVGCPACNQTGYS 404
+                           **************************************************98654.................4599************* PP
+
+             T2SS_gspE 363 gRtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           gRtgi+el+v+dde+r+l+++++ e++l+++ar++g+rs+redg +++++g ttlee+lr
+  GCF_000006765_006790 405 GRTGIHELFVIDDEIRRLVHQGRAEQDLREAARAAGMRSMREDGERWIASGSTTLEEILR 464
+                           **********************************************************98 PP
+
+>> GCF_000006905_001730  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  611.4   0.5  1.9e-186    1e-183      14     422 .]      77     480 ..      64     480 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 611.4 bits;  conditional E-value: 1.9e-186
+             T2SS_gspE  14 vveeleeevdlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRi 102
+                            +++l+ e  l  l e++++a+dlld +d+apvirl+n ++aea++ +asDihiep+ek+l vr+R+DGvl+evl+++ ++aa+lvsR+
+  GCF_000006905_001730  77 SADSLDLEGGLGLLLEDMPAAADLLDPQDDAPVIRLINGLIAEAVRLGASDIHIEPFEKALIVRLRIDGVLTEVLSLSPRIAAMLVSRV 165
+                           55566666667778999************************************************************************ PP
+
+             T2SS_gspE 103 kvlakldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGs 191
+                           kv+akldiaekR+pqDGri+l +gg+++DvRvstlP+++gervv+R+Ldk++a l+l++lg+s+++l++le+++++phGiiLvtGPtGs
+  GCF_000006905_001730 166 KVMAKLDIAEKRVPQDGRISLALGGKSLDVRVSTLPARMGERVVMRILDKDQAGLRLSDLGMSPDVLSALETAVREPHGIILVTGPTGS 254
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 192 GktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlst 280
+                           Gktttlyaal+ ln+++rnilt+eDPvey ++gigq+qvn+k+++tFa+glRailRqDPDv++vGeiRD+eta+iavqasltGhlvlst
+  GCF_000006905_001730 255 GKTTTLYAALAVLNDNSRNILTIEDPVEYAVHGIGQTQVNTKVGMTFAAGLRAILRQDPDVVMVGEIRDSETAQIAVQASLTGHLVLST 343
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 281 lhtndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGykgRtgiye 369
+                           +htndaa+av Rl+dmgvepfll+s+l+ v+aqRlvR+lc++c+++e a++++++ +gl   e + l+r++gC++c +tGy+gR+g+ye
+  GCF_000006905_001730 344 VHTNDAAGAVVRLRDMGVEPFLLASTLRLVIAQRLVRRLCEHCRTPEPADAATAALVGLP--EGEILYRPVGCAHCGHTGYQGRIGVYE 430
+                           ***********************************************************9..7899*********************** PP
+
+             T2SS_gspE 370 llvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                            l vdd+lr+li  +a+e+e++++  ++   +l +++++ vlag tt+ee lr
+  GCF_000006905_001730 431 ALRVDDHLRRLIGGNASEQEITEAGLDR---RLGQEARNYVLAGLTTVEEALR 480
+                           **********************999887...9******************987 PP
+
+>> GCF_000006765_026420  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  583.7   0.1  5.2e-178  2.7e-175      26     422 .]     168     571 ..     149     571 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 583.7 bits;  conditional E-value: 5.2e-178
+             T2SS_gspE  26 slaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekR 114
+                           ++a  +e+++ l++ ++eapv++lvn+++++a+++++sDihiep e ++++rfRvDGvl+++l+++++  aa+vsRik+++ +diae+R
+  GCF_000006765_026420 168 RHAYGSEDIRYLRELAEEAPVVELVNNVMSQAMEKRSSDIHIEPREFDFRIRFRVDGVLHDQLSLPRERFAAVVSRIKLISAIDIAERR 256
+                           45667889999****************************************************************************** PP
+
+             T2SS_gspE 115 lpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalse 203
+                           lpqDGr+++rv+g e+DvRvstlP +hge+vv+RlL ke++ l+l++lg+ +++l+++++++++phGiiLvtGPtGsGk+ttly al+e
+  GCF_000006765_026420 257 LPQDGRMSIRVSGTELDVRVSTLPGVHGESVVMRLLPKEREGLRLDRLGMLPDHLRRMRAWVAEPHGIILVTGPTGSGKSTTLYGALEE 345
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 204 lnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtR 292
+                           +n+  r++++veDPvey++++i+q+qv+a+i+ltFa++lR+ilRqDPDvi++GeiRD etaeiavq+sltGhlvlstlhtnda+sa tR
+  GCF_000006765_026420 346 INDGVRKLISVEDPVEYQVPNITQVQVHADIGLTFAAALRSILRQDPDVIMIGEIRDLETAEIAVQSSLTGHLVLSTLHTNDAVSAFTR 434
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 293 lldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelgleke.......ekaellrakgCekcaktGykgRtgiyellvvd 374
+                           l+dmgvepfl++s ++gv aqRlvR+lc++c+e++e++ ++++  ++e++       ++a++  a+gC +c+ tGy+gR+giyel++++
+  GCF_000006765_026420 435 LIDMGVEPFLVASPVRGVQAQRLVRRLCAHCAEPCEPTLAAADLAATEAAtarlfpgQAAQWRVARGCGRCEGTGYSGRVGIYELVDLS 523
+                           *************************************999888877776677899989999999************************* PP
+
+             T2SS_gspE 375 delreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           +e+r+li+++a+ e++++la+++g r+lredgl k+  g+t+l+ev+r
+  GCF_000006765_026420 524 SEMRDLIVQRASLEQMHRLAASQGQRNLREDGLIKAWLGMTSLDEVHR 571
+                           **********************************************97 PP
+
+>> GCF_000006725_018700  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  571.0   2.4  3.5e-174  1.8e-171      28     422 .]     165     561 ..     144     561 .. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 571.0 bits;  conditional E-value: 3.5e-174
+             T2SS_gspE  28 aeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlp 116
+                           a   +++e l+d ++eapvirlvn ++++a++ +asDihiep+e++l+vr+RvDGvl ++++p++klaaa+vsR+k++akl+iae+Rlp
+  GCF_000006725_018700 165 AAPADDIEALRDLASEAPVIRLVNLVIQRAVELRASDIHIEPFENRLKVRYRVDGVLIDAESPPSKLAAAVVSRVKIMAKLNIAERRLP 253
+                           5567899********************************************************************************** PP
+
+             T2SS_gspE 117 qDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalseln 205
+                           qDGri+lrv+g+e+D+Rvs++P++hge+vv+RlLd+e++ +d+++lg+ +e l++++++++ phGi+LvtGPtGsGktttly++l++ln
+  GCF_000006725_018700 254 QDGRIMLRVQGKELDLRVSVVPTSHGESVVMRLLDRETVVFDFQKLGFIDELLNRFSRVLEMPHGILLVTGPTGSGKTTTLYTVLNRLN 342
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 206 seerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRll 294
+                           ++  +i+tveDPvey++egi+qiq +++i+l+Fa++lR+i+RqDPD+i++Ge+RD eta+ia+q++ltGhlvlstlhtn+aa+ +tRll
+  GCF_000006725_018700 343 TTGVKIITVEDPVEYQIEGINQIQAKPQIGLDFASALRSIVRQDPDIIMIGEMRDLETARIAIQSALTGHLVLSTLHTNSAAGGLTRLL 431
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 295 dmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelgleke...ekaellrakgCekcaktGykgRtgiyellvvddelrel 380
+                           dmgve++ll+s+++gvlaqRlvR+l p+ +e++ a+ e++++++l++     +  l+r+++ ++ a tGy gRt+i+e+l +dd+lr++
+  GCF_000006725_018700 432 DMGVEDYLLTSTINGVLAQRLVRRLEPTHAERYLASPEQVARFDLRRLqpeGDIYLYRPRA-SALAPTGYLGRTAIVEFLIMDDALRRA 519
+                           ***************************************9999988654446778899998.7899*********************** PP
+
+             T2SS_gspE 381 iakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           + ++++  ele++ar++g+r++ edgl k+lagett+eevlr
+  GCF_000006725_018700 520 VISRTGIGELEQIARQAGMRTMYEDGLIKALAGETTIEEVLR 561
+                           ****************************************98 PP
+
+>> GCF_000006745_021960  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  514.5   0.7    5e-157  2.6e-154      17     422 .]     152     558 ..     136     558 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 514.5 bits;  conditional E-value: 5e-157
+             T2SS_gspE  17 eleeevdlaslaeeleeaedlld.sedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikv 104
+                           e++++   + ++ + +e ++++d s+d++pv r++n++l +a++++asDih+ep+e++ ++r+R DG+l e+++p ++l++ l +Rik+
+  GCF_000006745_021960 152 EISQDELANLVKVSDDELQSIEDlSQDDSPVSRFINQVLLDAVRKGASDIHFEPYENQYRIRLRCDGILVETQQPASHLSRRLAARIKI 240
+                           4443321222222233444444425799************************************************************* PP
+
+             T2SS_gspE 105 lakldiaekRlpqDGriklrvgg.revDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsG 192
+                           l+kldiae+RlpqDGriklr+++  ++D+RvstlP+ +ge++vlRlLd ++a+ld+++lg ++++++ + +++k+p+G+iL+tGPtGsG
+  GCF_000006745_021960 241 LSKLDIAERRLPQDGRIKLRLSRdTAIDMRVSTLPTLWGEKIVLRLLDSSAANLDIDKLGYNPQQKQLYLNALKRPQGMILMTGPTGSG 329
+                           *********************86268*************************************************************** PP
+
+             T2SS_gspE 193 ktttlyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstl 281
+                           kt +ly+ l+ ln+++ ni t eDPve +l+gi+q+qv++ki++ Fa++lR++lRqDPDv++vGeiRD etaeiav+a+ tGhlvlstl
+  GCF_000006745_021960 330 KTVSLYTGLRILNTSQINISTAEDPVEINLSGINQVQVQPKIGFGFAEALRSFLRQDPDVVMVGEIRDLETAEIAVKAAQTGHLVLSTL 418
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 282 htndaasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGykgRtgiyel 370
+                           htn+aa +v Rl +mgvepf l+ssl  ++aqRl R+lc++ck ++++++  +++++ + +e     +a+gC++c+  Gy+gR+giye+
+  GCF_000006745_021960 419 HTNSAAETVIRLANMGVEPFNLASSLSLIIAQRLARRLCKHCKIAVRPSALLQSQFAFQPNEILYEANAAGCNECTG-GYSGRVGIYEV 506
+                           ***************************************************9*******999999999*******75.*********** PP
+
+             T2SS_gspE 371 lvvddelreliakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           + +++el e+i+++a+ +++e+la+++g+++l+e+glek+++g+t++ e+ r
+  GCF_000006745_021960 507 MAFNTELAEAIMQRASIHQIERLAKANGMQTLQESGLEKLREGITSFAELQR 558
+                           ************************************************9876 PP
+
+>> GCF_000006725_014600  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  503.8   0.2  8.9e-154  4.6e-151      36     422 .]     184     573 ..     148     573 .. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 503.8 bits;  conditional E-value: 8.9e-154
+             T2SS_gspE  36 dlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlpqDGriklr 124
+                            + +++d++pv+++vn++l +ai+++asDih+ep+e++ +vrfR+DG+l+ v ++++kl++ + +R+kv+++ldiaekR+pqDGrikl+
+  GCF_000006725_014600 184 GIDAKSDDTPVVKFVNKVLIDAIRRGASDIHFEPYEEDYRVRFRIDGLLKGVAKAPNKLNQRIAARLKVMSQLDIAEKRVPQDGRIKLN 272
+                           567889*********************************************************************************** PP
+
+             T2SS_gspE 125 vg.grevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnseernil 212
+                           v+ +++vD+RvstlP+ +ge+vvlR+Ld ++akl +++lg ++++++ + ++i+kp+G++LvtGPtGsGkt +ly+al  ln+e+rni 
+  GCF_000006725_014600 273 VSkTKQVDFRVSTLPTLFGEKVVLRILDGSAAKLGIDKLGYEADQQTLFMEAIHKPYGMVLVTGPTGSGKTVSLYTALGILNDETRNIS 361
+                           *73689*********************************************************************************** PP
+
+             T2SS_gspE 213 tveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmgvepf 301
+                           t eDPve +l+g++q+q n+k ++tFa++lR++lRqDPDvi+vGeiRD etaeia++a+ tGh+vlstlhtnda+ +++Rl++mg+ p+
+  GCF_000006725_014600 362 TAEDPVEIRLPGVNQVQQNNKRGMTFAAALRSFLRQDPDVIMVGEIRDLETAEIAIKAAQTGHMVLSTLHTNDAPQTIARLMNMGIAPY 450
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 302 llsssllgvlaqRlvRklcpeckeeeeaeeeeleelgleke...ekaellrakgCekcaktGykgRtgiyellvvddelreliakeade 387
+                            ++ss++ v+aqRl R+lc++ck++++  +++l + g ++e   +  el++++gC++c+ +GykgRtgiy+++ +++ + ++i ++ ++
+  GCF_000006725_014600 451 NITSSVTLVIAQRLARRLCNKCKRPVQLPTNALLAEGFTQEqidAGLELYEPVGCDECT-EGYKGRTGIYQVMPITEGISSIILAGGNA 538
+                           ***************************998886655555544557889**********7.6**************************** PP
+
+             T2SS_gspE 388 eeleklarkeglrslredglekvlagettleevlr 422
+                            ++++ a++ g++ lr+++l kv++g+t l e+ r
+  GCF_000006725_014600 539 LQIAEEAQRIGINDLRQSALLKVAQGITGLAEINR 573
+                           ********************************976 PP
+
+>> GCF_000006745_003690  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  502.3   0.7  2.6e-153  1.3e-150      19     421 ..     155     559 ..     141     560 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 502.3 bits;  conditional E-value: 2.6e-153
+             T2SS_gspE  19 eeevdlaslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlak 107
+                           +e+ + +++++++ + e   + +de  v++l+n+++++ai+ +asDihiep  + l++r R+DGvl+e+l  + ++a+alv R+k++a+
+  GCF_000006745_003690 155 AEQLHAEHKTNDSFDFEITDSDSDEVTVVKLINSLFEDAIQVGASDIHIEPDANVLRLRQRIDGVLHETLLHEVNIASALVLRLKLMAN 243
+                           3333444455666677777788999**************************************************************** PP
+
+             T2SS_gspE 108 ldiaekRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGkttt 196
+                           ldi+ekRlpqDGr+++rv+g++vD+R+st+P++hge+vv+RlL++++   +lee g++++ l +l++ +k+phG+iLvtGPtGsGkttt
+  GCF_000006745_003690 244 LDISEKRLPQDGRFNIRVKGQSVDIRMSTMPIQHGESVVMRLLNQSAGVRKLEESGIPPHLLLRLRHQLKRPHGMILVTGPTGSGKTTT 332
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 197 lyaalselnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtnd 285
+                           ly al+eln++ ++i+t eDPvey+++ i+q+qvn+ki+l+F++ lR++lRqDPD+ilvGe+RD+et ei ++a+ltGhlvlstlhtnd
+  GCF_000006745_003690 333 LYGALNELNTSGKKIITAEDPVEYRISRINQVQVNPKINLDFSTLLRTFLRQDPDIILVGEMRDQETVEIGLRAALTGHLVLSTLHTND 421
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 286 aasavtRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelgle..keekaellrakgCekcaktGykgRtgiyellv 372
+                           a+ +  Rl+dmg   +l++s++++v+aqRlvRk+cp+c+ + e +e+  + l ++  ++++a+++r++gC++c+ tGy+gR+g++e+l+
+  GCF_000006745_003690 422 AVDSALRLIDMGAPGYLVASAVRAVVAQRLVRKVCPDCSGHDEVDEARRQWLVTRfpNQAAAKFTRGRGCQNCNLTGYRGRIGVFEMLE 510
+                           ****************************************9999999888765542266999*************************** PP
+
+             T2SS_gspE 373 vddelreliakeadeeeleklarkeglrslredglekvlagettleevl 421
+                           +d+ + + +++++  +  +++ ++++++ l ++++e +l+g+ +l+ev+
+  GCF_000006745_003690 511 LDQPMMDCLRANDAVAFSKAARSNTDYKPLLASAMELALQGIVSLDEVM 559
+                           *******9988776666666667789**********************8 PP
+
+>> GCF_000006845_014310  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  500.4   0.0  9.7e-153    5e-150      33     421 ..     159     553 ..     137     554 .. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: 500.4 bits;  conditional E-value: 9.7e-153
+             T2SS_gspE  33 eaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlpqDGri 121
+                           +    ++++++ pv r++ + l++a++++asDih+e +e++ ++rfRvDG lrev++p+ +++ +l sRikv+++ldi+ekR+pqDGr+
+  GCF_000006845_014310 159 TLYIDNEEAEDGPVPRFIHKTLSDALRSGASDIHFEFYEHNARIRFRVDGQLREVVQPPIAVRGQLASRIKVMSRLDISEKRIPQDGRM 247
+                           22233477899****************************************************************************** PP
+
+             T2SS_gspE 122 klrv..ggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnsee 208
+                           +l+   gg+ vD+RvstlP+ +ge+vv+R+L+ ++a+l++++lg+++ +++ l ++i++p+G++LvtGPtGsGkt +ly+ l+ ln+e+
+  GCF_000006845_014310 248 QLTFqkGGKPVDFRVSTLPTLFGEKVVMRILNSDAASLNIDQLGFEPFQKKLLLEAIHRPYGMVLVTGPTGSGKTVSLYTCLNILNTES 336
+                           99763379********************************************************************************* PP
+
+             T2SS_gspE 209 rniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmg 297
+                            ni t eDP e +l+gi+q++vn k +ltFa++l+++lRqDPD+i+vGeiRD eta+ia++a+ tGh+v+stlhtn+a+++++R+l+mg
+  GCF_000006845_014310 337 VNIATAEDPAEINLPGINQVNVNDKQGLTFAAALKSFLRQDPDIIMVGEIRDLETADIAIKAAQTGHMVFSTLHTNNAPATLSRMLNMG 425
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 298 vepfllsssllgvlaqRlvRklcpeckeeeea.eeeeleelgleke...ekaellrakgCekcaktGykgRtgiyellvvddelrelia 382
+                           v pf ++ss+  ++aqRl+R+lc++ck+e+e  ++++l+e+g + e   ++ +l+ra+gC++c  +GykgR g+ye++ +++e++++i+
+  GCF_000006845_014310 426 VAPFNIASSVSLIMAQRLLRRLCSSCKQEVERpSASALKEVGFTDEdlaKDWKLYRAVGCDRCRGQGYKGRAGVYEVMPISEEMQRVIM 514
+                           ***************************99876156678999988777779999************************************ PP
+
+             T2SS_gspE 383 keadeeeleklarkeglrslredglekvlagettleevl 421
+                           ++  e  + ++a keg+  lr+ g+ k+++g+t+leev+
+  GCF_000006845_014310 515 NNGTEVGILDVAYKEGMVDLRRAGILKIMQGITSLEEVT 553
+                           *************************************96 PP
+
+>> GCF_000006765_044720  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  499.8   0.1  1.5e-152  7.7e-150      29     422 .]     167     562 ..     146     562 .. 0.96
+
+  Alignments for each domain:
+  == domain 1  score: 499.8 bits;  conditional E-value: 1.5e-152
+             T2SS_gspE  29 eeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlpq 117
+                            + +++ed  +++d+apv+r+vn++l +aik ++sD+h+ep+ek  +vrfR DG+l+ev +p+ +la+ + +R+kv+a ldi+e+R pq
+  GCF_000006765_044720 167 ADKSTQEDASAEADDAPVVRFVNKMLLDAIKGGSSDLHFEPYEKIYRVRFRTDGMLHEVAKPPIQLASRISARLKVMAGLDISERRKPQ 255
+                           45677899999****************************************************************************** PP
+
+             T2SS_gspE 118 DGriklrvg.grevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalseln 205
+                           DGrik+rv+ ++++D+Rv tlP+ +ge++v+R+Ld ++a++ +++lg +e+++e + +++k+p+G+iLvtGPtGsGkt +ly+ l+ ln
+  GCF_000006765_044720 256 DGRIKMRVSkTKSIDFRVNTLPTLWGEKIVMRILDSSSAQMGIDALGYEEDQKELYLAALKQPQGMILVTGPTGSGKTVSLYTGLNILN 344
+                           ********73589**************************************************************************** PP
+
+             T2SS_gspE 206 seerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRll 294
+                           +++ ni t eDPve +legi+q++vn++ +++F+++lRa+lRqDPDvi+vGeiRD etaeia++a+ tGh+v+stlhtn+aa ++tRll
+  GCF_000006765_044720 345 TTDINISTAEDPVEINLEGINQVNVNPRQGMDFSQALRAFLRQDPDVIMVGEIRDLETAEIAIKAAQTGHMVMSTLHTNSAAETLTRLL 433
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 295 dmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelgleke..ekaellrakgCekcaktGykgRtgiyellvvddelreli 381
+                           +mgv  f l++s++ ++aqRl Rklc++ck+e+e  +e+l + g  ++   + +l++++gC++c+ +GykgR+giye+++ + +l+++i
+  GCF_000006765_044720 434 NMGVPAFNLATSVNLIIAQRLARKLCSHCKKEHEVPRETLLHEGFPEDkiGTFKLYSPVGCDHCK-NGYKGRVGIYEVVKNTPALQRII 521
+                           *********************************999988666666555348899**********7.6********************** PP
+
+             T2SS_gspE 382 akeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           ++e ++ e++++arkeg++ lr++gl k+++g+t+leev r
+  GCF_000006765_044720 522 MEEGNSIEIAEQARKEGFNDLRTSGLLKAMQGITSLEEVNR 562
+                           ***************************************86 PP
+
+>> GCF_000006765_051490  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  493.4   0.0  1.3e-150  6.9e-148      39     422 .]     200     586 ..     176     586 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 493.4 bits;  conditional E-value: 1.3e-150
+             T2SS_gspE  39 dsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlpqDGriklrv.g 126
+                             +++a ++ +v+ +++ a +++asDihiep  ++ +vrfR+DGvl++v + + +++ a+vsR+k l ++++aekR pqDGr+k +   
+  GCF_000006765_051490 200 PDANDAHIVTIVDWLFQYAFQQRASDIHIEPRREQGTVRFRIDGVLHNVYQFPPQVTMAVVSRLKSLGRMNVAEKRKPQDGRVKTKTpD 288
+                           56789********************************************************************************9846 PP
+
+             T2SS_gspE 127 grevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltve 215
+                           g ev++R+stlP+a+ge++v+R+ d e    ++++lg+s++ l++ +++ ++p+GiiLvtGPtGsGktttly++l++l ++e n+ t+e
+  GCF_000006765_051490 289 GAEVELRLSTLPTAFGEKMVMRIFDPEVLLKSFDQLGFSADDLRRWQSMTSQPNGIILVTGPTGSGKTTTLYTTLKQLATDEVNVCTIE 377
+                           99*************************************************************************************** PP
+
+             T2SS_gspE 216 DPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmgvepflls 304
+                           DP+e   +  +q+qv+++idltFa+g+Ra+lRqDPD+i+vGeiRD etae+a+qa+ltGhlvlstlhtnd+++a+tRll++gv  +l+ 
+  GCF_000006765_051490 378 DPIEMIEPSFNQMQVQHNIDLTFASGVRALLRQDPDIIMVGEIRDLETAEMAIQAALTGHLVLSTLHTNDSPTAITRLLELGVPYYLIR 466
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 305 ssllgvlaqRlvRklcpeckeeeeaeeeeleelgleke..ekaellrakgCekcaktGykgRtgiyellvvddelreliakeadeeele 391
+                           +++lgv+aqRlvR+lcp+ck +++ +++  +el+   +    + +++a+gC +c  tGy+gR g+ye++ ++d+l+eli++++d  +l+
+  GCF_000006765_051490 467 ATVLGVMAQRLVRTLCPHCKAPMQLADSDWHELTRPWSapPPSGAHQAVGCLECRDTGYRGRAGVYEIMLLSDSLKELITADTDLVALR 555
+                           *****************************99999987756788999******************************************* PP
+
+             T2SS_gspE 392 klarkeglrslredglekvlagettleevlr 422
+                           ++a keg+rslr +g++kv+ag++tleevlr
+  GCF_000006765_051490 556 RQAYKEGTRSLRLSGAQKVAAGISTLEEVLR 586
+                           *****************************98 PP
+
+>> GCF_000005845_000980  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  462.8   0.0  2.6e-141  1.4e-138      24     422 .]      59     453 ..      42     453 .. 0.95
+
+  Alignments for each domain:
+  == domain 1  score: 462.8 bits;  conditional E-value: 2.6e-141
+             T2SS_gspE  24 laslaeeleeaedlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiae 112
+                           ++ +a++++++  +  +e++ p  +l+   l++a++++asDihiep +++ ++r+R+DGvl+   +++ +   al++R+kvl +ldiae
+  GCF_000005845_000980  59 MEGHASRTQQTLPVAVQEKHQPKAELLTRTLQSALEQRASDIHIEPADNAYRIRLRIDGVLHPLPDVSPDAGVALTARLKVLGNLDIAE 147
+                           455566677777788899999******************************************************************** PP
+
+             T2SS_gspE 113 kRlpqDGriklrvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaal 201
+                           +RlpqDG+++++++g++v +R++tlP++ ge+vvlRlL++  + ld+++lg+++ +l+++ +++++p+G++LvtGPtGsGkt tly+al
+  GCF_000005845_000980 148 HRLPQDGQFTVELAGNAVSFRIATLPCRGGEKVVLRLLQQVGQALDVNTLGMQPLQLADFAHALQQPQGLVLVTGPTGSGKTVTLYSAL 236
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 202 selnseerniltveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasav 290
+                           ++ln+++ ni +veDPve  ++g++q+q++++ +ltF   lRa+lRqDPDvi++GeiRD etaeia++a+ tGhlvlstlhtn++  ++
+  GCF_000005845_000980 237 QKLNTADINICSVEDPVEIPIAGLNQTQIHPRAGLTFQGVLRALLRQDPDVIMIGEIRDGETAEIAIKAAQTGHLVLSTLHTNSTCETL 325
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 291 tRlldmgvepfllsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGykgRtgiyellvvddelre 379
+                            Rl++mgv  ++lss+l+ v+aqRlvRklcp+c++++ +  +  +++     +    ++a gC +c + G+ gRt+++e+l ++  +r+
+  GCF_000005845_000980 326 VRLQQMGVARWMLSSALTLVIAQRLVRKLCPHCRRQQGEPIHIPDNVWP---SPLPHWQAPGCVHCYH-GFYGRTALFEVLPITPVIRQ 410
+                           **********************************988877665555544...57899*********85.9******************* PP
+
+             T2SS_gspE 380 liakeadeeeleklarkeglrslredglekvlagettleevlr 422
+                           li++++d e+le++ar++g+r+l e+g+  v +g tt+ee++r
+  GCF_000005845_000980 411 LISANTDVESLETHARQAGMRTLFENGCLAVEQGLTTFEELIR 453
+                           ****************************************987 PP
+
+>> GCF_000006945_002010  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  461.3   0.1  7.3e-141  3.8e-138      35     421 ..      70     452 ..      41     453 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 461.3 bits;  conditional E-value: 7.3e-141
+             T2SS_gspE  35 edlldsedeapvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldiaekRlpqDGrikl 123
+                            + ++++      +l+n+ l +a+ ++asDih+ep  ++ ++r+R+DGvl+  +++ k++  al++R+kvl +ldiae+RlpqDG++++
+  GCF_000006945_002010  70 PSANAAKGGETAAQLLNQTLRSAMAKRASDIHLEPGASRYRIRLRIDGVLHILQDIAKETGLALTARLKVLGNLDIAEHRLPQDGQFTV 158
+                           44444444556679*************************************************************************** PP
+
+             T2SS_gspE 124 rvggrevDvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnseernil 212
+                            ++g ++ +R++tlP++ ge+vvlRlL++ +++ldl++lg+  ++l+++++++++p+G++LvtGPtGsGkt tly+al++ n++  n+ 
+  GCF_000006945_002010 159 DLAGDSISFRIATLPCKEGEKVVLRLLHQVEQTLDLDTLGMYGAQLTAFRQALQQPQGLVLVTGPTGSGKTVTLYSALQTRNTPGINLC 247
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 213 tveDPveyelegigqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmgvepf 301
+                           +veDP+e  l+gi+q+q++++ +ltF + lRa+lRqDPD+i+vGeiRD +taeia++a+ tGhlvlstlhtn+++ ++ Rl++mgv  +
+  GCF_000006945_002010 248 SVEDPIEIPLDGINQTQIHPRAGLTFQNVLRALLRQDPDIIMVGEIRDGDTAEIAIKAAQTGHLVLSTLHTNSTSETLIRLQQMGVARW 336
+                           ***************************************************************************************** PP
+
+             T2SS_gspE 302 llsssllgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGykgRtgiyellvvddelreliakeadeeel 390
+                           ++ss+l+ v+aqRlvRklcp+ck++ +       +l     ++   ++a+gC++c + G+ gRt+++e+l+v+ +lr+lia++a++++l
+  GCF_000006945_002010 337 MISSALTLVVAQRLVRKLCPHCKQRLSDPVVLSPNLWP---SAIPRWQASGCQHCYH-GFYGRTALFEVLTVTPALRQLIASGASAQAL 421
+                           ************************98877554444443...477899********85.9****************************** PP
+
+             T2SS_gspE 391 eklarkeglrslredglekvlagettleevl 421
+                           e++++++g+ +l e+g++ v +g+t++ee+l
+  GCF_000006945_002010 422 EAHLQQTGTGTLFENGCRAVEQGMTSFEEIL 452
+                           *****************************97 PP
+
+>> GCF_000006745_007610  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  189.5   0.0   2.2e-58   1.2e-55      44     378 ..      84     428 ..      60     459 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 189.5 bits;  conditional E-value: 2.2e-58
+             T2SS_gspE  44 apvirlvnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalv.sRikvlakld..iaekRlpqDGriklrvggre 129
+                           + + + + +i ++a   +asDih+   ++ ++++fRv+G++ +++e+ ++ a+al+     v+a+      +++lpqD  i l ++ ++
+  GCF_000006745_007610  84 SFIEKDIMKIASSATAYGASDIHFIREDRICKIKFRVNGTMIDYREILSSEADALMfVLYNVMATTKetTWNRKLPQDANIILVINEKA 172
+                           44445678899999*****************************9998776666555166689998752255899*************** PP
+
+             T2SS_gspE 130 vDvRvstlPsahge.....rvvlRlLdkeka..kldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalsel..nseer 209
+                             +R + +P   ge     ++v+R++  +++   ++ +++g +e+ ++++ +++++++G+++v+G tGsGk+t+l   ++ l  n+ + 
+  GCF_000006745_007610 173 YRFRYAHMPLF-GEggknyHAVVRIIYPSNNfvCTNYQDIGYNEADTDAIARILNTSYGLFIVSGTTGSGKSTSLKKYIELLffNKYKG 260
+                           *********75.222223379*****87765115699**************************************77766652244333 PP
+
+             T2SS_gspE 210 n..iltveDPveyelegigqiqv....nakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtR 292
+                           +   +tveDPvey ++g +q  +    + k +  Fa ++R+ +R+DPDvi++GeiRDk t e    a   Gh  l+t+h+ + +s ++R
+  GCF_000006745_007610 261 KgcFVTVEDPVEYLISGAQQSSIvadnDDKTKNPFADAVRSAMRRDPDVIMIGEIRDKPTVEALSSAVESGHYCLTTIHAGSVVSVLQR 349
+                           34489***************98833323467788****************************9999999******************** PP
+
+             T2SS_gspE 293 lldmgvepfllsss..llgvlaqRlvRklcpeckeeeeaeeeeleelglekeekaellrakgCekcaktGykgRtgiyellvvddelr 378
+                           l  +g++   ++s   l g+ +q+l+ +lcp+ck +   e+ + + ++++          +gCe+c+++G+kgR  + e lv + e  
+  GCF_000006745_007610 350 LSGLGMKADKIASPgfLAGITSQKLIPELCPSCKVSFVDERYQRAVFSAN---------ENGCEACNHSGFKGRLLLLETLVPTVEDL 428
+                           ******99999985559******************998887766666555.........78*****************9987655444 PP
+
+>> GCF_000006745_004240  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  158.0   0.2   8.4e-49   4.4e-46      51     319 ..       4     272 ..       2     274 .. 0.79
+   2 !   15.0   0.2   2.2e-05     0.011     363     420 ..     275     334 ..     273     336 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 158.0 bits;  conditional E-value: 8.4e-49
+             T2SS_gspE  51 nailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldia..ekRlpqDGriklrvggrevDvRvstl 137
+                            ++l+ ++k++asD+h+ +        +R+DG +r+   p  + ++       ++ + + +  e++l  D  ++l   gr   +Rv   
+  GCF_000006745_004240   4 AELLEFSVKHNASDLHLSAGVPP---MVRIDGEVRKLGVPAFTHSDVHRLIFEIMNDAQRSeyEEKLEVDFSFELPNVGR---FRVNAF 86 
+                           56777888888888888765444...468888888876554433332222234554444431167777777777777776...799999 PP
+
+             T2SS_gspE 138 PsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPveyeleg. 224
+                             a g ++v+R +   ++  +le+l     a e ++k+ +  +G++LvtGPtGsGk+ttl a+++ +n++ +++ilt+eDP+e+  ++ 
+  GCF_000006745_004240  87 HQARGCSAVFRTIP--TVIPTLEQLD----APEIFSKIANYEKGLVLVTGPTGSGKSTTLAAMVNYVNAHhNKHILTIEDPIEFVHSNn 169
+                           99999999999875..5677788875....45678999999**************************9862578**********87654 PP
+
+             T2SS_gspE 225 ...igqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm......gvepflls 304
+                              i+q +v+++ + +F ++lR+ lR+DPDvilvGe+RD+et ++a+ a+ tGhlv+ tlht +aa ++ R++d+      ++   +ls
+  GCF_000006745_004240 170 kclINQREVHRDTH-SFKNALRSALREDPDVILVGELRDQETISLALTAAETGHLVFGTLHTSSAAKTIDRIIDVfpgsdkDMVRSMLS 257
+                           55689999998865.9********************************************************9875543335667899* PP
+
+             T2SS_gspE 305 ssllgvlaqRlvRkl 319
+                            sl++v+aq+l++++
+  GCF_000006745_004240 258 ESLRAVIAQKLLKRV 272
+                           ***********9986 PP
+
+  == domain 2  score: 15.0 bits;  conditional E-value: 2.2e-05
+             T2SS_gspE 363 gRtgiyellvvddelreliakeadee..eleklarkeglrslredglekvlagettleev 420
+                           gR++ +e++  + ++r+li++++ ++  ++ ++ +++g++++++++ + +++g+   +ev
+  GCF_000006745_004240 275 GRVACHEIMLATPAIRNLIREDKVAQmySIIQTGAAHGMQTMEQNAKQLIARGVVDAQEV 334
+                           9******************98865542278889999*******************99999 PP
+
+>> GCF_000006725_000270  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  164.5   0.2   9.1e-51   4.7e-48      50     319 ..       3     272 ..       2     274 .. 0.81
+   2 ?    4.8   0.1     0.026        14     363     414 ..     275     328 ..     273     334 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 164.5 bits;  conditional E-value: 9.1e-51
+             T2SS_gspE  50 vnailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRi.kvlakldia..ekRlpqDGriklrvggrevDvRvs 135
+                           + ++la ++k++asD+h+ +    l   +RvDG +r+++ p    ++++ s i  ++++ +    e+ l  D  +++   +r   +Rv 
+  GCF_000006725_000270   3 IAELLAFSVKNNASDLHLSAG---LPPMIRVDGDVRRINIPAF-DHKQVQSLIyDIMSDKQRRdyEEALETDFSFEIPSLSR---FRVN 84 
+                           567899999999****99765...5556799999998765544.44555555536888776651145555555555554444...8*** PP
+
+             T2SS_gspE 136 tlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnseer.niltveDPveyele 223
+                                 g  +v+R +    + ++l+elg        ++kli++p+G+iLvtGPtGsGk+ttl a++ ++n++ + +ilt+eDP+e+  +
+  GCF_000006725_000270  85 AFNQERGAGAVFRTIPN--KVMTLDELGCL----PVFRKLIEEPQGLILVTGPTGSGKSTTLAAMIDHINKNAHgHILTIEDPIEFVHT 167
+                           *************9975..578899**975....5799*******************************9876438*********9665 PP
+
+             T2SS_gspE 224 g....igqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm......gvepfl 302
+                                i+q +v+++ + +F k+l + lR+DPD+il+Ge+RD et ++a+ a+ tGhlv+ tlhtn+aa ++ R++d+       +   +
+  GCF_000006725_000270 168 SqkclINQREVHRDTH-DFNKALSSALREDPDIILIGELRDLETIRLALTAAETGHLVFGTLHTNSAAKSINRIIDVfpaaekPMVRSM 255
+                           4344489999998865.9**********************************************************8552222233568 PP
+
+             T2SS_gspE 303 lsssllgvlaqRlvRkl 319
+                           ls sl g+++q l++k+
+  GCF_000006725_000270 256 LSESLCGIISQMLLKKV 272
+                           999**********9986 PP
+
+  == domain 2  score: 4.8 bits;  conditional E-value: 0.026
+             T2SS_gspE 363 gRtgiyellvvddelreliakeadeeelekla..rkeglrslredglekvlage 414
+                           gRt+ +e++v + ++r+li++++ ++  +++   ++ g+++l ++ ++ +++  
+  GCF_000006725_000270 275 GRTAAWEIMVGTPAIRNLIREDKVAQMYSSIQtgQQYGMQTLDQHLQDLIKRNL 328
+                           9*******************99988887765533677999**999988887665 PP
+
+>> GCF_000006765_003910  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  162.0   0.4   5.1e-50   2.7e-47      52     319 ..       5     272 ..       2     274 .. 0.78
+   2 ?    1.2   0.0      0.33   1.7e+02     363     404 ..     275     318 ..     273     334 .. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 162.0 bits;  conditional E-value: 5.1e-50
+             T2SS_gspE  52 ailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvlakldia..ekRlpqDGriklrvggrevDvRvstlP 138
+                           ++la ++k++asD+h+ +    l   +RvDG +r+++ p+ + ++       ++ + +    e+ l  D  ++ +v g +  +Rv    
+  GCF_000006765_003910   5 ELLAFSAKQGASDLHLSAG---LPPMIRVDGDVRRINLPPLEHKQVHALIYDIMNDKQRKdfEEFLETD--FSFEVPGVA-RFRVNAFN 87 
+                           5677777888888887654...44456788888877776655444333333555544433113444444..455555543.58999999 PP
+
+             T2SS_gspE 139 sahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnsee.rniltveDPveyeleg.. 224
+                            + g  +v+R +   ++ l++eelg+ e     ++++ + p+G++LvtGPtGsGk+ttl a+l  ln+++ ++ilt+eDP+e+  e   
+  GCF_000006765_003910  88 QNRGAGAVFRTIP--SKVLTMEELGMGE----VFKRVSDVPRGLVLVTGPTGSGKSTTLAAMLDYLNNTKyHHILTIEDPIEFVHESkk 170
+                           9999999999886..568999****986....6889999***************************8765279**********877534 PP
+
+             T2SS_gspE 225 ..igqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm......gvepfllss 305
+                             ++q +v+++  l F+++lR+ lR+DPD+ilvGe+RD et ++a+ a+ tGhlv+ tlht +aa ++ R++d+       +   +ls 
+  GCF_000006765_003910 171 clVNQREVHRD-TLGFSEALRSALREDPDIILVGEMRDLETIRLALTAAETGHLVFGTLHTTSAAKTIDRVVDVfpaeekAMVRSMLSE 258
+                           44778787766.69***********************************************************85433334556799** PP
+
+             T2SS_gspE 306 sllgvlaqRlvRkl 319
+                           sl++v++q l++k+
+  GCF_000006765_003910 259 SLQSVISQTLIKKI 272
+                           ***********997 PP
+
+  == domain 2  score: 1.2 bits;  conditional E-value: 0.33
+             T2SS_gspE 363 gRtgiyellvvddelreliakeadeeelekla..rkeglrslre 404
+                           gR++ +e++  + ++r+li++++ ++  +++    + g+++l  
+  GCF_000006765_003910 275 GRVAAHEIMIGTPAIRNLIREDKVAQMYSAIQtgGSLGMQTLDM 318
+                           9******************9988776655544112334555544 PP
+
+>> GCF_000006845_016430  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  154.9   0.4   7.6e-48     4e-45      52     318 ..       5     271 ..       2     275 .. 0.76
+   2 !    9.2   0.1    0.0013      0.66     362     417 ..     275     332 ..     270     337 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 154.9 bits;  conditional E-value: 7.6e-48
+             T2SS_gspE  52 ailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikvla..kldiaekRlpqDGriklrvggrev.DvRvstl 137
+                           ++la  +k+kasD+h+ +  +     +Rv G +r+++ p+ + ++       v+   +  i  + l  D  ++l     +v  +Rv   
+  GCF_000006845_016430   5 DLLAFGAKNKASDLHLSSGIS---PMIRVHGDMRRINLPEMSAEEVGNMVTSVMNdhQRKIYQQNLEVDFSFEL----PNVaRFRVNAF 86 
+                           667777888888888876544...44677788877776665554433222233430033444444444444444....33314899999 PP
+
+             T2SS_gspE 138 PsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnsee.rniltveDPveyeleg. 224
+                            +  g  +v+R +   ++ l+leel       + ++k+ ++p+G++LvtGPtGsGk+ttl a+++ +n+++  +ilt+eDP+e+  +  
+  GCF_000006845_016430  87 NTGRGPAAVFRTIP--STVLSLEELKA----PSIFQKIAESPRGMVLVTGPTGSGKSTTLAAMINYINETQpAHILTIEDPIEFVHQSk 169
+                           99999999999886..56788888854....5679999*****************************9865379*********966542 PP
+
+             T2SS_gspE 225 ...igqiqvnakidltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm......gvepflls 304
+                              i+q +++++  l+Fa++l + lR+DPDvilvGe+RD et  +a+ a+ tGhlv+ tlht  aa +v R++d+      ++   +ls
+  GCF_000006845_016430 170 kslINQRELHQH-TLSFANALSSALREDPDVILVGEMRDPETIGLALTAAETGHLVFGTLHTTGAAKTVDRIVDVfpagekEMVRSMLS 257
+                           334788887765.7************************************************************86654334556799* PP
+
+             T2SS_gspE 305 ssllgvlaqRlvRk 318
+                            sl++v++q l+++
+  GCF_000006845_016430 258 ESLTAVISQNLLKT 271
+                           **********9976 PP
+
+  == domain 2  score: 9.2 bits;  conditional E-value: 0.0013
+             T2SS_gspE 362 kgRtgiyellvvddelreliakea..deeeleklarkeglrslredglekvlagettl 417
+                            gR++ +e+l  + ++r+li++++  + +++ ++ r++g++++ ++ ++ v++g  + 
+  GCF_000006845_016430 275 DGRVASHEILIANPAVRNLIRENKitQINSVLQTGRASGMQTMDQSLQSLVRQGLIAP 332
+                           69******************99872245678888899**************9998765 PP
+
+>> GCF_000005845_026740  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -2.1   0.0       3.4   1.8e+03      52      80 ..       5      34 ..       3      46 .. 0.74
+   2 !  152.7   0.1   3.3e-47   1.7e-44     131     315 ..      77     265 ..      60     269 .. 0.83
+   3 ?    3.3   0.0     0.075        39     362     413 ..     271     324 ..     258     325 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: -2.1 bits;  conditional E-value: 3.4
+             T2SS_gspE 52 ailaeaikekasDihiep.lekellvrfRv 80
+                          +i+a ++k++ sD+h+ +    + ++r R+
+  GCF_000005845_026740  5 EIVALSVKHNVSDLHLCSaWPARWRIRGRM 34
+                          67888999*******864145666666665 PP
+
+  == domain 2  score: 152.7 bits;  conditional E-value: 3.3e-47
+             T2SS_gspE 131 DvRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPv 218
+                            +R s    +hg ++ lRlL    +  +le+lg ++     l +l+k+ +G+iLvtG tGsGk+ttl a++  ln++ + +ilt+eDPv
+  GCF_000005845_026740  77 RLRGSAFAQRHGISLALRLLPS--HCPQLEQLGAPT----VLPELLKSENGLILVTGATGSGKSTTLAAMVGYLNQHaDAHILTLEDPV 159
+                           5788999999999999999975..567899999765....5788999***************************9862679******** PP
+
+             T2SS_gspE 219 eyelegigqiqvnakid...ltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm....gvep 300
+                           ey  +    +  +++i+   +tFa+glRa lR+DPDvil+Ge+RD+et ++a+ a+ tGhlvl+tlht  aa av Rl+d     + +p
+  GCF_000005845_026740 160 EYLYASQRCLIQQREIGlhcMTFASGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSfpaqEKDP 248
+                           **99887777777778744479*********************************************************9522222222 PP
+
+             T2SS_gspE 301 ..fllsssllgvlaqRl 315
+                               l+ sl++vl+q+l
+  GCF_000005845_026740 249 vrNQLAGSLRAVLSQKL 265
+                           21456777888888776 PP
+
+  == domain 3  score: 3.3 bits;  conditional E-value: 0.075
+             T2SS_gspE 362 kgRtgiyellvvddelreliakeadee..eleklarkeglrslredglekvlag 413
+                           +gR++++ell  + ++ +li++++ ++  ++ ++ ++ g+ +++++ +++v +g
+  GCF_000005845_026740 271 EGRVALFELLINTPAVGNLIREGKTHQlpHVIQTGQQVGMITFQQSYQHRVGEG 324
+                           7*******************9988765235666777778888888777777655 PP
+
+>> GCF_000006925_026070  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -2.0   0.0         3   1.6e+03      51      80 ..      19      49 ..      16      61 .. 0.75
+   2 !  150.8   0.0   1.3e-46   6.6e-44     132     315 ..      93     280 ..      75     284 .. 0.82
+   3 ?    3.5   0.0     0.067        35     361     413 ..     285     339 ..     271     340 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: -2.0 bits;  conditional E-value: 3
+             T2SS_gspE 51 nailaeaikekasDihiep.lekellvrfRv 80
+                          ++i+a ++k++ sD+h+ +    + ++r R+
+  GCF_000006925_026070 19 EEIVALSVKHNVSDLHLCSaWPARWRIRGRM 49
+                          56888899********864145666666665 PP
+
+  == domain 2  score: 150.8 bits;  conditional E-value: 1.3e-46
+             T2SS_gspE 132 vRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPve 219
+                           +R s    ++g ++ lRlL    +  +le+lg ++     l +l+k+ +G+iLvtG tGsGk+ttl a++  ln++ + +ilt+eDPve
+  GCF_000006925_026070  93 LRGSAFAQRQGISLALRLLPS--HCPQLEQLGAPP----VLPELLKSENGLILVTGATGSGKSTTLAAMVGYLNQHaDAHILTLEDPVE 175
+                           677777888888888899875..566788999776....46789999**************************9862679********* PP
+
+             T2SS_gspE 220 yelegigqiqvnakid...ltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm....gvep. 300
+                           y  +    +  +++i+   +tFa+glRa lR+DPDvil+Ge+RD+et ++a+ a+ tGhlvl+tlht  aa av Rl+d     + +p 
+  GCF_000006925_026070 176 YLYASQRCLIQQREIGlhcMTFASGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSfpaqEKDPv 264
+                           *99887777777778744479*********************************************************95222222222 PP
+
+             T2SS_gspE 301 .fllsssllgvlaqRl 315
+                              l+ sl++vl+q+l
+  GCF_000006925_026070 265 rNQLAGSLRAVLSQKL 280
+                           1456777888888776 PP
+
+  == domain 3  score: 3.5 bits;  conditional E-value: 0.067
+             T2SS_gspE 361 ykgRtgiyellvvddelreliakeadee..eleklarkeglrslredglekvlag 413
+                            +gR++++ell  + ++ +li++++ ++  ++ ++ +k g+ +++++ +++v +g
+  GCF_000006925_026070 285 QEGRVALFELLINTPAVGNLIREGKTHQlpHVIQTGQKVGMLTFQQSYQQRVGEG 339
+                           58*******************9988765335667777888888888877777665 PP
+
+>> GCF_000006945_030160  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  145.3   0.1     6e-45   3.1e-42     132     315 ..      78     265 ..      62     270 .. 0.79
+   2 ?    1.3   0.0      0.32   1.7e+02     362     408 ..     271     319 ..     266     325 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 145.3 bits;  conditional E-value: 6e-45
+             T2SS_gspE 132 vRvstlPsahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPve 219
+                           +R s    ++g ++ lRlL    +  dl+++  +      + +l+++ +G+iLvtG tG Gk+ttl a++  ln++ +++ilt+eDP+e
+  GCF_000006945_030160  78 LRASAFTHQQGTSLALRLLPE--RCPDLAKIQTP----PIVPALLASENGLILVTGATGCGKSTTLAAMVGYLNQHaDKHILTLEDPIE 160
+                           567777777777777777764..34566666444....3456788999*************************9862678********* PP
+
+             T2SS_gspE 220 yelegigqiqvnakid...ltFakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm....gvepf 301
+                           y+ +    +  +++i+    tFa+glRa lR+DPDvil+Ge+RD+et ++a+ a+ tGhlvl+tlht  aa av Rl+d     + ep 
+  GCF_000006945_030160 161 YRYTSKRCLIQQREIGqhcATFAAGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSfpaqEKEPV 249
+                           *99874444444444422259*********************************************************95332234443 PP
+
+             T2SS_gspE 302 ..llsssllgvlaqRl 315
+                              l+ sl++vl+q+l
+  GCF_000006945_030160 250 rsQLAGSLRAVLSQKL 265
+                           2257788888888876 PP
+
+  == domain 2  score: 1.3 bits;  conditional E-value: 0.32
+             T2SS_gspE 362 kgRtgiyellvvddelreliakeadee..eleklarkeglrslredgle 408
+                            gR++++ell  + +  +li++++ ++  ++ ++ +++g+++++++++ 
+  GCF_000006945_030160 271 DGRVALFELLINTPATGNLIREGKLHQlaHVIQTGQQQGMMTFAQSAQW 319
+                           69**************999998875431166677788899998887765 PP
+
+>> GCF_000006745_004250  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  122.5   1.1   4.9e-38   2.5e-35      52     318 ..       5     269 ..       2     273 .. 0.73
+   2 ?    6.2   0.0      0.01       5.3     362     416 ..     273     329 ..     268     335 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 122.5 bits;  conditional E-value: 4.9e-38
+             T2SS_gspE  52 ailaeaikekasDihieplekellvrfRvDGvlrevlepkkklaaalvsRikv.lakldiaekRlpqDGriklrvggrevDvRvstlPs 139
+                           + l   +++kasD++i        + +RvDG lr + e+ +   a +++ +   + +   ae    q    +  v + +  +Rvs    
+  GCF_000006745_004250   5 QYLDGMLTHKASDLYITV---GAPILYRVDGELRAQGEALS--VADVTALLHAmMDDARQAE--FKQTREANFAVVRDSGRFRVSAFFQ 86 
+                           555556666677776654...34566777777766544322..2233333332022233333..3444445555666666677777777 PP
+
+             T2SS_gspE 140 ahgervvlRlLdkekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPveyelegigq 227
+                           +    +v+R ++  ++  ++eel l+e     l++l    +G++Lv+G tGsGk+tt+ a+    n++ + +iltveDP+e+  e    
+  GCF_000006745_004250  87 RELPGAVIRRIE--TRIPTFEELKLPE----VLQNLAIAKRGLVLVVGATGSGKSTTMAAMTGYRNQHrTGHILTVEDPIEFVHEHKRC 169
+                           666666666554..3455666666654....5778888999*****************99987776651568**************999 PP
+
+             T2SS_gspE 228 iqvnakidlt...FakglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm....gvepfllsss..l 307
+                           i  +++++l+   +  +l++ lRq PD+il+GeiR +et e a+  + tGhl ++tlh+n+a  a+ R+l +      e+fll  s  l
+  GCF_000006745_004250 170 IVTQREVGLDtesYEVALKNSLRQAPDMILIGEIRSRETMEYAMTFAETGHLCMATLHANNANQALERILHLvpkeQREQFLLDLSlnL 258
+                           *********6444788*****************************************************99844445799**8665226 PP
+
+             T2SS_gspE 308 lgvlaqRlvRk 318
+                           +gv+aq l+R 
+  GCF_000006745_004250 259 KGVIAQQLLRD 269
+                           8********96 PP
+
+  == domain 2  score: 6.2 bits;  conditional E-value: 0.01
+             T2SS_gspE 362 kgRtgiyellvvddelreliakeadeeeleklarke..glrslredglekvlagett 416
+                           kgR g++e+l  + ++ +li++++ +e  +++ar++  g++++ +  ++ v++ + +
+  GCF_000006745_004250 273 KGRHGVFEVLLNSPRIADLIRRGELHELKATMARSQevGMQTFDQALYQLVVDDKIS 329
+                           8*******************9987655444445443227888888888888776655 PP
+
+>> GCF_000006845_016440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  109.9   0.1   3.4e-34   1.8e-31     154     315 ..     137     304 ..      99     311 .. 0.81
+   2 !   14.8   0.1   2.4e-05     0.012     358     422 .]     307     373 ..     282     373 .. 0.87
+
+  Alignments for each domain:
+  == domain 1  score: 109.9 bits;  conditional E-value: 3.4e-34
+             T2SS_gspE 154 kakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPveyelegigqiqvnakid...ltF 238
+                           ++  +++elgl+e    kl++l   p+G+++++GPtGsGk+tt+ ++l++ n++   +i+t+eDP+e+  +    i  +++i+   +++
+  GCF_000006845_016440 137 HVIPQMRELGLPE----KLKDLAVAPRGLLIIVGPTGSGKSTTMATMLEHRNKTlPGHIVTIEDPIEFIYKPRRCIFTQREIGvdtINW 221
+                           4556777777765....6889999*************************999872579*********9999988888888888223468 PP
+
+             T2SS_gspE 239 akglRailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm....gvepfll..sssllgvlaqRl 315
+                            +++ + +Rq PDv+ +Ge+R +e  e a+q + tGhl + tlh+n+a+ ++ R+l++      ++ l+  +  l+g++ qRl
+  GCF_000006845_016440 222 QTAVQNAMRQSPDVVCIGEVRSRESMEYAMQLAQTGHLCIFTLHANTAPQSLERILNFypkeQHNQILIdiALNLTGIICQRL 304
+                           99*****************************************************9873222234455422556778888888 PP
+
+  == domain 2  score: 14.8 bits;  conditional E-value: 2.4e-05
+             T2SS_gspE 358 ktGykgRtgiyellvvddelreliakea..deeeleklarkeglrslredglekvlagettleevlr 422
+                           k+  +gRt++++ll  + ++++ i k++  + +++ ++a+++g++++ ++ +e  ++g+ ++ee lr
+  GCF_000006845_016440 307 KKDKTGRTAVVDLLINTPAIQDFILKGDlmNISKIMETAKTDGMQTMDQNLFELYRHGIISYEEALR 373
+                           45568*******************9986337789******************************987 PP
+
+>> GCF_000006845_003200  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  113.5   0.0   2.8e-35   1.4e-32     171     316 ..     124     279 ..      38     283 .. 0.87
+   2 !    6.7   0.0    0.0074       3.8     359     421 ..     282     346 ..     280     347 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 113.5 bits;  conditional E-value: 2.8e-35
+             T2SS_gspE 171 kleklikkphGiiLvtGPtGsGktttlyaalselnsee.rniltveDPveyelegigqiqvnakidlt...FakglRailRqDPDvilv 255
+                           +l+++  k +G+++ +G tGsGk+t+l +++   n+++  +i+t+eDP+e+  e  + i  +++++++   + ++l++ lRq PDvil+
+  GCF_000006845_003200 124 ALKDVALKKRGLVIFVGGTGSGKSTSLASLIDYRNENSfGHIITIEDPIEFVHEHKNCIITQREVGVDtenWMAALKNTLRQAPDVILI 212
+                           5678888999*********************9887765279**********99999999999999886333778*************** PP
+
+             T2SS_gspE 256 GeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmgve....pfl..lsssllgvlaqRlv 316
+                           GeiRD+et + a+  + tGhl ++tlh+n++  a+ R++++  e    + l  ls  l++ ++qRlv
+  GCF_000006845_003200 213 GEIRDRETMDYAIAFAETGHLCMATLHANSTNQALDRIINFFPEerreQLLtdLSLNLQAFISQRLV 279
+                           ***************************************9865412214443345678999999999 PP
+
+  == domain 2  score: 6.7 bits;  conditional E-value: 0.0074
+             T2SS_gspE 359 tGykgRtgiyellvvddelreliakea..deeeleklarkeglrslredglekvlagettleevl 421
+                            G kgR++ +e+l  +  + eli++++  + +e+ k+ ++ g++++ ++ ++   +ge +l++ l
+  GCF_000006845_003200 282 DGGKGRVAAVEVLLNSPLISELIHNGNihEIKEVMKKSTTLGMQTFDQHLYQLYEKGEISLQDAL 346
+                           5889*******************987522556677777778999999*99999999999988765 PP
+
+>> GCF_000006725_009620  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  119.2   0.4   5.2e-37   2.7e-34     171     316 ..     117     272 ..      81     309 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 119.2 bits;  conditional E-value: 5.2e-37
+             T2SS_gspE 171 kleklikkphGiiLvtGPtGsGktttlyaalselnseer.niltveDPveyelegigqiqvnakidlt...FakglRailRqDPDvilv 255
+                             ++l+ + +Gii+++G tGsGk+t++ +++++ n++++ +i+t+eDP+e+  +    i  +++i+ +   + ++l++ lRq PDvi++
+  GCF_000006725_009620 117 VAKELVMEKRGIIIIVGATGSGKSTSMASMINHRNHNSTgHIVTIEDPIEFIHKHERCIITQREIGTDtdsWENALKNTLRQAPDVIVI 205
+                           3468999*************************999765538**********88876666666666654222889*************** PP
+
+             T2SS_gspE 256 GeiRDketaeiavqasltGhlvlstlhtndaasavtRlldmgvep...fl...lsssllgvlaqRlv 316
+                           Ge+R +et + a+  s tGhlv+ tlh+n+a  a+ R++++  e+    l   ls  l+g++aq l+
+  GCF_000006725_009620 206 GEVRTQETMDHAISFSETGHLVMCTLHANNANQAIDRIINFFPEErrsQLltdLSLNLKGIIAQQLI 272
+                           ***************************************9977642334513345578999999998 PP
+
+>> GCF_000006765_003920  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  113.5   0.4   2.7e-35   1.4e-32     158     316 ..     105     269 ..      46     273 .. 0.81
+   2 ?    3.2   0.0      0.08        41     362     420 ..     275     335 ..     271     337 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 113.5 bits;  conditional E-value: 2.7e-35
+             T2SS_gspE 158 dleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnse.erniltveDPveyelegigqiqvnakidlt...Fakgl 242
+                           +leel l+    e l+kl  + +G+++ +G tG+Gk+t+l a++   n++ + +i+++eDP+ey  +  g i  +++++l+   F  +l
+  GCF_000006765_003920 105 TLEELKLP----EILKKLALTKRGLVIFVGATGTGKSTSLAAMIGYRNKNsTGHIISIEDPIEYIHQHQGCIVTQREVGLDtdsFEVAL 189
+                           55555554....45788889999*********************9887661569*************9999999*****9555599*** PP
+
+             T2SS_gspE 243 RailRqDPDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRlldm.....gvepfl.lsssllgvlaqRlv 316
+                           ++ lRq PDvi++Ge+R +et + av  + tGhl l+tlh+n+a  a+ R++ +       + ++ ls  l++++aq lv
+  GCF_000006765_003920 190 KNTLRQAPDVIMIGEVRSRETMDHAVAFAETGHLCLATLHANNANQALERIIHFfpadrHGQVWMdLSLNLKAIVAQQLV 269
+                           **************************************************986421111333444477778888888887 PP
+
+  == domain 2  score: 3.2 bits;  conditional E-value: 0.08
+             T2SS_gspE 362 kgRtgiyellvvddelreliakea..deeeleklarkeglrslredglekvlagettleev 420
+                           kgR ++ e+l  +    +li+k++  + + l k  +++g++++ +  ++  ++ge t+e+ 
+  GCF_000006765_003920 275 KGRRAVIEVLLNTPLAADLIRKGEvhELKPLMKRSTEQGMQTFDQALYQLYTQGEITYEDA 335
+                           79*******99888888888876521445688888999*****************999976 PP
+
+>> GCF_000006765_042490  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   54.7   0.4   1.9e-17   9.7e-15     165     294 ..     202     336 ..     180     342 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 54.7 bits;  conditional E-value: 1.9e-17
+             T2SS_gspE 165 seealekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveyeleg..igqiqvnaki.....dltFakglRail 246
+                           +e+ le l++++++    iL++G tG+Gktt l  ++s + +e+++i+t+eD  e +l    +  ++ ++       ++t    +R+ l
+  GCF_000006765_042490 202 DEALLEFLRQAVSRR-CNILISGGTGTGKTT-LLNVISGFIDERERIVTIEDTAELQLGHdhVVRLETRPPNaegygEVTARDLIRNAL 288
+                           455556666666654.4589*********75.778999999****************9651155555544322222267777789**** PP
+
+             T2SS_gspE 247 RqDPDvilvGeiRDketaeiavqasltGhl.vlstlhtndaasavtRll 294
+                           R  PD i++GeiR  e  ++ +qa  tGh   +st+h+n+a+ ++ R+ 
+  GCF_000006765_042490 289 RMRPDRIILGEIRGVEVLDV-LQAMNTGHDgSMSTVHANSAMDSLLRME 336
+                           *****************998.8*******638*************9985 PP
+
+>> GCF_000006905_029150  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   49.2   0.1   8.7e-16   4.5e-13     168     296 ..     262     396 ..     223     413 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 49.2 bits;  conditional E-value: 8.7e-16
+             T2SS_gspE 168 alekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvna...kidltFakglRai....lRqD 249
+                           + +++  +i   +  ++++G tGsGktt l  +++ + +++++++t+eD  e +l++   +++++   +++ + a ++R +    lR  
+  GCF_000006905_029150 262 EGARVLGVIGACRCNLVISGGTGSGKTT-LLNTMTAFIDPTERVVTCEDAAELQLQQPHVVRLETrppNLEGSGAVTMRDLvkncLRMR 349
+                           455566677777778999********76.5677888999999*************987777766411256666666666542222899* PP
+
+             T2SS_gspE 250 PDvilvGeiRDketaeiavqasltGhl.vlstlhtndaasavtRlldm 296
+                           P+ i+vGe+R  e  ++ +qa  tGh   + tlh+n+   a++R+  m
+  GCF_000006905_029150 350 PERIIVGEVRGPEAFDL-LQAMNTGHDgSMGTLHANSPREAISRIESM 396
+                           *************9887.8*******6389**************9988 PP
+
+>> GCF_000006905_024050  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   41.7   0.2   1.7e-13   8.7e-11     153     293 ..     132     276 ..     127     282 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 41.7 bits;  conditional E-value: 1.7e-13
+             T2SS_gspE 153 ekakldleelglseealekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveyel...egigqiqvnakid... 235
+                            +a  +l++l  + +++  l+++i++ + i+L +G t sGktt l a+++e+ ++er ++ +eD  e +l   ++ig i+ +++ +   
+  GCF_000006905_024050 132 ADADAQLRALLSAGDVEGFLRTAIQRRKTIVL-SGGTSSGKTTLLNALVKEIPAHER-LVLIEDAPEIQLrheNAIGLIAARSDTGeaq 218
+                           5566778888888888889999****999998.688****************99887.5569*******93334688888887654222 PP
+
+             T2SS_gspE 236 ltFakglRailRqDPDvilvGeiRDketaeiavqasltGhl.vlstlhtndaasavtRl 293
+                           ++    l a lR  PD il+Ge+R +e     ++a  tGh   ++t+h+++ ++a+  +
+  GCF_000006905_024050 219 VDAEDLLQASLRMRPDRILLGELRGREA-FAFLRAVNTGHPgSITTVHADSPQGALDQI 276
+                           6777789*******************95.5679*******6379*******99998765 PP
+
+>> GCF_000006725_015970  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   33.4   0.0   5.7e-11     3e-08     169     293 ..     166     295 ..     150     303 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 33.4 bits;  conditional E-value: 5.7e-11
+             T2SS_gspE 169 lekleklikkphGiiLv.tGPtGsGktttlyaalselnseerniltveDPveyelegi.gqiqv......nakidltFakglRailRqD 249
+                            +++ kl +  hG+ Lv +G tGsGktt +  ++++   ++++++tveD  e  l+   +++++      + ++ ++  +++ + lR  
+  GCF_000006725_015970 166 IKEFLKL-AMQHGLTLViVGKTGSGKTT-IGKSITNCIPTDERLVTVEDVHEMFLNHHpNKVHLfysrdgEGSLSINPKQAIASCLRMK 252
+                           3344443.45689877537*******75.67778888888999*********887653144444222222457888899********** PP
+
+             T2SS_gspE 250 PDvilvGeiRDketaeiavqasltGhlvlstlhtndaasavtRl 293
+                           PD il+ e+R  e  e  v+a   Gh  +st h+  a+ a   +
+  GCF_000006725_015970 253 PDRILLTEMRGDEAWEF-VKAVGSGHPGISTAHAGGALEAFDQI 295
+                           ************98875.9***************9999987765 PP
+
+>> GCF_000006765_023420  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   23.0   0.0     8e-08   4.2e-05     177     232 ..     610     665 ..     573     698 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 23.0 bits;  conditional E-value: 8e-08
+             T2SS_gspE 177 kkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveye.legigqiqvna 232
+                           +kp G++L+ GPtG Gkt t ya+   l   ern+++++   ey+  + ++q++  +
+  GCF_000006765_023420 610 AKPVGVFLLPGPTGVGKTETAYALADALYGGERNLISINL-SEYQeAHTVSQLKGAP 665
+                           5799**********************************75.4665266788877655 PP
+
+>> GCF_000006945_041130  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    3.8   0.0     0.056        29     164     201 ..       9      45 ..       2      58 .. 0.71
+   2 ?    1.2   0.0      0.34   1.7e+02      67     108 ..     166     213 ..     147     220 .. 0.71
+   3 !   10.6   0.0   0.00048      0.25     176     225 ..     628     679 ..     610     690 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 3.8 bits;  conditional E-value: 0.056
+             T2SS_gspE 164 lseealekleklikkphGiiLvtGPtGsGktttlyaal 201
+                            ++++l++++ +i +   +i+vtG  GsGk++  + +l
+  GCF_000006945_041130   9 ARTHNLKNINLVIPRD-KLIVVTGLSGSGKSSLAFDTL 45 
+                           5556666666666655.5889**********8444433 PP
+
+  == domain 2  score: 1.2 bits;  conditional E-value: 0.34
+             T2SS_gspE  67 ieplekellvrfRvDGvlrevlepkk......klaaalvsRikvlakl 108
+                           +e+l ++  +r R+DG + +  +p+k      ++ + ++ R kv  +l
+  GCF_000006945_041130 166 LENLASQGYIRARIDGEVCDLSDPPKlelqkkHTIEVVIDRFKVRNDL 213
+                           577778889********9998876542111115566788888886655 PP
+
+  == domain 3  score: 10.6 bits;  conditional E-value: 0.00048
+             T2SS_gspE 176 ikkphGii.LvtGPtGsGktttlyaalselnseerniltveDPvey.elegi 225
+                           ++ p G++  +tG  GsGk+t +  +l  + +++ n  t+ +P  y +++g+
+  GCF_000006945_041130 628 LTLPVGLFtCITGVSGSGKSTLINDTLFPIAQRQLNGATIAEPAPYrDIQGL 679
+                           56688876369********************************999446665 PP
+
+>> GCF_000006925_029370  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   18.9   0.0   1.4e-06   0.00073     169     239 ..      28      95 ..       4      97 .. 0.69
+
+  Alignments for each domain:
+  == domain 1  score: 18.9 bits;  conditional E-value: 1.4e-06
+             T2SS_gspE 169 lekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFa 239
+                           l++++ +++  +  i++ GP GsGk+tt+   +++l+++++  + v D +e + +  +  +v++++++ F 
+  GCF_000006925_029370  28 LKNINLTVQPGER-IVLCGPSGSGKSTTIR-CINHLEEHQQGRIVV-DGIELNEDIRNIERVRQEVGMVFQ 95 
+                           4445445555555.5568**********95.689999888877755.89999854444457999***9995 PP
+
+>> GCF_000005845_029540  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   18.8   0.0   1.5e-06   0.00077     169     239 ..      28      95 ..       4      97 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 18.8 bits;  conditional E-value: 1.5e-06
+             T2SS_gspE 169 lekleklikkphGiiLvtGPtGsGktttlyaalselnseerniltveDPveyelegigqiqvnakidltFa 239
+                           l++++ +++  + i ++ GP GsGk+tt+   +++l+++++  + v D +e + +  +  +v++++++ F 
+  GCF_000005845_029540  28 LKNINLTVQPGERI-VLCGPSGSGKSTTIR-CINHLEEHQQGRIVV-DGIELNEDIRNIERVRQEVGMVFQ 95 
+                           44555455555555.558**********95.689999888877755.89999854444457999***9995 PP
+
+>> GCF_000005845_036120  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    3.8   0.0     0.056        29     164     201 ..       9      45 ..       2      58 .. 0.71
+   2 ?    0.7   0.0      0.47   2.4e+02      67     104 ..     166     209 ..     147     220 .. 0.71
+   3 !   10.6   0.0   0.00048      0.25     176     225 ..     628     679 ..     610     690 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 3.8 bits;  conditional E-value: 0.056
+             T2SS_gspE 164 lseealekleklikkphGiiLvtGPtGsGktttlyaal 201
+                            ++++l++++ +i +   +i+vtG  GsGk++  + +l
+  GCF_000005845_036120   9 ARTHNLKNINLVIPRD-KLIVVTGLSGSGKSSLAFDTL 45 
+                           5556666666666655.5889**********8444433 PP
+
+  == domain 2  score: 0.7 bits;  conditional E-value: 0.47
+             T2SS_gspE  67 ieplekellvrfRvDGvlrevlepkk......klaaalvsRikv 104
+                           +e+l ++  +r R+DG + +  +p+k      ++ + +v R kv
+  GCF_000005845_036120 166 LENLASQGYIRARIDGEVCDLSDPPKlelqkkHTIEVVVDRFKV 209
+                           577778889********999887754211111455667777777 PP
+
+  == domain 3  score: 10.6 bits;  conditional E-value: 0.00048
+             T2SS_gspE 176 ikkphGii.LvtGPtGsGktttlyaalselnseerniltveDPvey.elegi 225
+                           ++ p G++  +tG  GsGk+t +  +l  + +++ n  t+ +P  y +++g+
+  GCF_000005845_036120 628 LTLPVGLFtCITGVSGSGKSTLINDTLFPIAQRQLNGATIAEPAPYrDIQGL 679
+                           56688876369********************************999446665 PP
+
+>> GCF_000006925_037070  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    3.8   0.0     0.056        29     164     201 ..       9      45 ..       2      58 .. 0.71
+   2 ?    0.7   0.0      0.47   2.4e+02      67     104 ..     166     209 ..     147     220 .. 0.71
+   3 !   10.6   0.0   0.00048      0.25     176     225 ..     628     679 ..     610     690 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 3.8 bits;  conditional E-value: 0.056
+             T2SS_gspE 164 lseealekleklikkphGiiLvtGPtGsGktttlyaal 201
+                            ++++l++++ +i +   +i+vtG  GsGk++  + +l
+  GCF_000006925_037070   9 ARTHNLKNINLVIPRD-KLIVVTGLSGSGKSSLAFDTL 45 
+                           5556666666666655.5889**********8444433 PP
+
+  == domain 2  score: 0.7 bits;  conditional E-value: 0.47
+             T2SS_gspE  67 ieplekellvrfRvDGvlrevlepkk......klaaalvsRikv 104
+                           +e+l ++  +r R+DG + +  +p+k      ++ + +v R kv
+  GCF_000006925_037070 166 LENLASQGYIRARIDGEVCDLSDPPKlelqkkHTIEVVVDRFKV 209
+                           577778889********999887754211111455667777777 PP
+
+  == domain 3  score: 10.6 bits;  conditional E-value: 0.00048
+             T2SS_gspE 176 ikkphGii.LvtGPtGsGktttlyaalselnseerniltveDPvey.elegi 225
+                           ++ p G++  +tG  GsGk+t +  +l  + +++ n  t+ +P  y +++g+
+  GCF_000006925_037070 628 LTLPVGLFtCITGVSGSGKSTLINDTLFPIAQRQLNGATIAEPAPYrDIQGL 679
+                           56688876369********************************999446665 PP
+
+>> GCF_000006845_010400  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    2.9   0.0       0.1        54     179     201 ..      34      56 ..       9      70 .. 0.73
+   2 ?    0.3   0.0      0.64   3.3e+02      74     108 ..     184     224 ..     160     234 .. 0.68
+   3 !    9.1   0.0    0.0013      0.69     175     220 ..     636     681 ..     620     697 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 2.9 bits;  conditional E-value: 0.1
+             T2SS_gspE 179 phGiiLvtGPtGsGktttlyaal 201
+                            h +++vtG  GsGk++  + +l
+  GCF_000006845_010400  34 RHKLVVVTGLSGSGKSSLAFDTL 56 
+                           37799***********8444433 PP
+
+  == domain 2  score: 0.3 bits;  conditional E-value: 0.64
+             T2SS_gspE  74 llvrfRvDGv...lrevlepkkkla...aalvsRikvlakl 108
+                              r+RvDG    l ev +++k+++   + ++ R+kv a++
+  GCF_000006845_010400 184 GFARVRVDGEvyqLDEVPKLEKNIKhniDVVIDRVKVKADI 224
+                           55799****72224455555555541115689999998876 PP
+
+  == domain 3  score: 9.1 bits;  conditional E-value: 0.0013
+             T2SS_gspE 175 likkphGii.LvtGPtGsGktttlyaalselnseerniltveDPvey 220
+                           +++ p G+i  +tG  GsGk+t +  +l++++++e n    e+P  y
+  GCF_000006845_010400 636 TLELPLGLItCITGVSGSGKSTLINDTLAKITARELNRA-QEEPAPY 681
+                           457788977369********************9998853.4666666 PP
+
+>> GCF_000006925_017460  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.0   0.0   2.2e-05     0.011     178     217 ..      27      65 ..       8     123 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 15.0 bits;  conditional E-value: 2.2e-05
+             T2SS_gspE 178 kphGiiLvtGPtGsGktttlyaalselnseerniltveDP 217
+                           kp  ++ + GP GsGktt l  +++ l+++e   +tv D 
+  GCF_000006925_017460  27 KPGEVVAIIGPSGSGKTT-LLRSINLLEQPEAGTITVGDI 65 
+                           6777999*********76.66789*************995 PP
+
+>> GCF_000005845_017580  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.0   0.0   2.2e-05     0.011     178     217 ..      27      65 ..       8     123 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: 15.0 bits;  conditional E-value: 2.2e-05
+             T2SS_gspE 178 kphGiiLvtGPtGsGktttlyaalselnseerniltveDP 217
+                           kp  ++ + GP GsGktt l  +++ l+++e   +tv D 
+  GCF_000005845_017580  27 KPGEVVAIIGPSGSGKTT-LLRSINLLEQPEAGTITVGDI 65 
+                           6777999*********76.66789*************995 PP
+
+>> GCF_000006845_014540  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.0   0.0   4.3e-05     0.023     174     238 ..      94     159 ..      78     162 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 14.0 bits;  conditional E-value: 4.3e-05
+             T2SS_gspE 174 klikkphGiiLvtGPtGsGktttlyaalselns.eerniltveDPveyelegigqiqv.nakidltF 238
+                           +l  +p  iiL++G  G+Gkttt+  + + l++ +++++l v   v y+ ++i+q+++  ++++++F
+  GCF_000006845_014540  94 DLSVSPPAIILMAGLQGAGKTTTVGKLARLLKNdQKKKVLVVSADV-YRPAAIEQLRLlAEQVGVDF 159
+                           45567889***************98877777651556677776655.99999999986267788887 PP
+
+>> GCF_000005845_028910  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   14.2   0.0   3.8e-05      0.02     180     216 ..      29      65 ..       5      70 .. 0.82
+   2 ?   -1.9   0.1       2.9   1.5e+03     364     415 ..      92     143 ..      87     150 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 14.2 bits;  conditional E-value: 3.8e-05
+             T2SS_gspE 180 hGiiLvtGPtGsGktttlyaalselnseerniltveD 216
+                             i+ + GP G+Gkttt+y ++  + ++  ni+  +D
+  GCF_000005845_028910  29 GEIVGLLGPNGAGKTTTFYMVVGIVPRDAGNIIIDDD 65 
+                           4578889*****************9999999997666 PP
+
+  == domain 2  score: -1.9 bits;  conditional E-value: 2.9
+             T2SS_gspE 364 Rtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlaget 415
+                           R ++y+ l+   ++r+ +++e+ e++ ++l+++ ++++lr++  + +  ge 
+  GCF_000005845_028910  92 RLSVYDNLMAVLQIRDDLSAEQREDRANELMEEFHIEHLRDSMGQSLSGGER 143
+                           7788888888888899898888888888888888888888777666666655 PP
+
+>> GCF_000006925_028740  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   14.2   0.0   3.8e-05      0.02     180     216 ..      29      65 ..       5      70 .. 0.82
+   2 ?   -1.9   0.1       2.9   1.5e+03     364     415 ..      92     143 ..      87     150 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 14.2 bits;  conditional E-value: 3.8e-05
+             T2SS_gspE 180 hGiiLvtGPtGsGktttlyaalselnseerniltveD 216
+                             i+ + GP G+Gkttt+y ++  + ++  ni+  +D
+  GCF_000006925_028740  29 GEIVGLLGPNGAGKTTTFYMVVGIVPRDAGNIIIDDD 65 
+                           4578889*****************9999999997666 PP
+
+  == domain 2  score: -1.9 bits;  conditional E-value: 2.9
+             T2SS_gspE 364 Rtgiyellvvddelreliakeadeeeleklarkeglrslredglekvlaget 415
+                           R ++y+ l+   ++r+ +++e+ e++ ++l+++ ++++lr++  + +  ge 
+  GCF_000006925_028740  92 RLSVYDNLMAVLQIRDDLSAEQREDRANELMEEFHIEHLRDSMGQSLSGGER 143
+                           7788888888888899898888888888888888888888777666666655 PP
+
+>> GCF_000006945_003220  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.3   0.0   7.1e-05     0.037     177     215 ..     608     646 ..     579     662 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 13.3 bits;  conditional E-value: 7.1e-05
+             T2SS_gspE 177 kkphGiiLvtGPtGsGktttlyaalselnseerniltve 215
+                           +kp G+++++GP G Gkt t  a+ + +   e+n++t++
+  GCF_000006945_003220 608 RKPVGVFMLAGPSGVGKTETALALAEAIYGGEQNLVTIN 646
+                           689**********************************96 PP
+
+>> GCF_000006745_018810  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.3   0.1   6.9e-05     0.036     162     199 ..     264     301 ..     261     332 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 13.3 bits;  conditional E-value: 6.9e-05
+             T2SS_gspE 162 lglseealekleklikkphGiiLvtGPtGsGktttlya 199
+                           lgl +++   +++ i k  G++ + GPtG Gkttt+  
+  GCF_000006745_018810 264 LGLVSDQIPVVKHDILKRGGVVALLGPTGVGKTTTVAK 301
+                           78888899999999999******************854 PP
+
+>> GCF_000006945_032280  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.2   0.0   7.4e-05     0.038     180     212 ..      29      61 ..       5      68 .. 0.82
+   2 ?   -2.7   0.1       5.3   2.7e+03     364     412 ..      92     140 ..      90     150 .. 0.64
+
+  Alignments for each domain:
+  == domain 1  score: 13.2 bits;  conditional E-value: 7.4e-05
+             T2SS_gspE 180 hGiiLvtGPtGsGktttlyaalselnseernil 212
+                             i+ + GP G+Gkttt+y ++  + ++  ni+
+  GCF_000006945_032280  29 GEIVGLLGPNGAGKTTTFYMVVGIVPRDAGNII 61 
+                           4578889***************99999999987 PP
+
+  == domain 2  score: -2.7 bits;  conditional E-value: 5.3
+             T2SS_gspE 364 Rtgiyellvvddelreliakeadeeeleklarkeglrslredglekvla 412
+                           R ++++ l+   ++r+ +++e+ e++ ++l+++ ++++lr++  + +  
+  GCF_000006945_032280  92 RLSVFDNLMAVLQIRDDLTAEQREDRANELMEEFHIEHLRDSMGQALSG 140
+                           5566666666667777777777777777777777777776665555555 PP
+
+>> GCF_000006745_003580  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    2.5   0.0      0.14        72     165     201 ..      10      45 ..       2      57 .. 0.69
+   2 ?    1.9   0.0       0.2     1e+02      66     109 ..     162     214 ..     146     230 .. 0.67
+   3 ?   -1.0   0.0       1.5   7.9e+02      82     127 ..     574     616 ..     570     631 .. 0.81
+   4 ?    5.1   0.1     0.022        12     177     221 ..     628     673 ..     606     688 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 2.5 bits;  conditional E-value: 0.14
+             T2SS_gspE 165 seealekleklikkphGiiLvtGPtGsGktttlyaal 201
+                           ++++l++++ +i +   +i++tG  GsGk++  + +l
+  GCF_000006745_003580  10 RTHNLKNINLTIPRD-KLIVITGLSGSGKSSLAFDTL 45 
+                           555666666666654.47889*********8444433 PP
+
+  == domain 2  score: 1.9 bits;  conditional E-value: 0.2
+             T2SS_gspE  66 hieplek...ellvrfRvDGvlrevlepk......kklaaalvsRikvlakld 109
+                           h+ +le+   +  +r R+DG   + ++p+      k++ + +v R kv ++l+
+  GCF_000006745_003580 162 HVKTLENlaaQGFIRARIDGETCDLTDPPklelhkKHTIEVIVDRFKVRSDLQ 214
+                           5555554111678*******988887765111111456678999999999885 PP
+
+  == domain 3  score: -1.0 bits;  conditional E-value: 1.5
+             T2SS_gspE  82 GvlrevlepkkklaaalvsRikvlakldiaekRlpqDGriklrvgg 127
+                           G ++e+++ +++l+ + +s +k   k+ + e+R p+D + +++++g
+  GCF_000006745_003580 574 GNVEEIIANPNSLTGQYLSGVK---KIAVPEQRTPKDAKKTVELKG 616
+                           6777788888888888888887...6679**********9999876 PP
+
+  == domain 4  score: 5.1 bits;  conditional E-value: 0.022
+             T2SS_gspE 177 kkphGii.LvtGPtGsGktttlyaalselnseerniltveDPveye 221
+                           + p G++  vtG  GsGk+t +  ++ ++ ++  n  t   P  y+
+  GCF_000006745_003580 628 SIPVGLFtCVTGVSGSGKSTLINDTFFKIAHTALNGATTATPAPYR 673
+                           5577765369**************9999999999999888888885 PP
+
+>> GCF_000006745_016400  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.2   0.0   7.5e-05     0.039     174     202 ..      32      60 ..      10      67 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 13.2 bits;  conditional E-value: 7.5e-05
+             T2SS_gspE 174 klikkphGiiLvtGPtGsGktttlyaals 202
+                           +l++k++  iL+tG tGsGk++t+ a++ 
+  GCF_000006745_016400  32 SLLRKASLNILITGSTGSGKSSTINALFD 60 
+                           4667777789*************998765 PP
+
+>> GCF_000006745_022890  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.3   0.0   0.00014     0.072     179     216 ..      28      64 ..       3      69 .. 0.73
+   2 ?   -2.4   0.0         4   2.1e+03     378     402 ..     106     130 ..      78     149 .. 0.51
+
+  Alignments for each domain:
+  == domain 1  score: 12.3 bits;  conditional E-value: 0.00014
+             T2SS_gspE 179 phGiiLvtGPtGsGktttlyaalselnseerniltveD 216
+                           +  i+ + GP G+Gktt++y ++  l ++++  +t++D
+  GCF_000006745_022890  28 SGQIVGLLGPNGAGKTTSFYMIVG-LVARDEGTITIDD 64 
+                           33477889************8765.5566667789988 PP
+
+  == domain 2  score: -2.4 bits;  conditional E-value: 4
+             T2SS_gspE 378 reliakeadeeeleklarkeglrsl 402
+                           re +++e+ +++le+l+++ +++++
+  GCF_000006745_022890 106 REELTHEERQDKLEDLLEEFHIQHI 130
+                           2333333344444444444444444 PP
+
+>> GCF_000006945_005440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.9   0.1   9.3e-05     0.048     153     205 ..       4      57 ..       1      69 [. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 12.9 bits;  conditional E-value: 9.3e-05
+             T2SS_gspE 153 ekakldleelglseealeklekli.kkphG.iiLvtGPtGsGktttlyaalseln 205
+                           +++ l+l+++g ++++++ ++++  +  +G   L+tGP G Gk+t l  ++++l 
+  GCF_000006945_005440   4 RSMLLELKQVGYRTATTKIVNNISfTLQRGeFKLITGPSGCGKSTLLK-MVASLI 57 
+                           567899999999999998888764234455267***********8765.444444 PP
+
+>> GCF_000006745_012390  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.2   0.0   0.00015      0.08     172     238 ..      29      92 ..      11      95 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 12.2 bits;  conditional E-value: 0.00015
+             T2SS_gspE 172 leklikkphGiiLvtGPtGsGktttlyaalselnseer.niltveDPveyelegigqiqvnakidltF 238
+                           ++  +kk + i ++ GP GsGk+t +   +++l+++++ +i+   + +  +l++i+   v++++++ F
+  GCF_000006745_012390  29 INLNVKKGERI-VICGPSGSGKSTMI-RCINRLEEHQKgQIIVAGNELTEDLKNIEL--VRREVGMCF 92 
+                           55555555554.689*******9877.567777665542777777777777777764..567777777 PP
+
+>> GCF_000006765_050140  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.0   0.0   0.00069      0.36     179     201 ..      29      51 ..       8      89 .. 0.73
+   2 ?    1.2   0.2      0.32   1.7e+02     309     340 ..     102     131 ..      73     196 .. 0.73
+
+  Alignments for each domain:
+  == domain 1  score: 10.0 bits;  conditional E-value: 0.00069
+             T2SS_gspE 179 phG.iiLvtGPtGsGktttlyaal 201
+                           ++G +++v GP GsGk+t l   l
+  GCF_000006765_050140  29 ARGeVLVVIGPSGSGKSTFLRC-L 51 
+                           455255678********98853.3 PP
+
+  == domain 2  score: 1.2 bits;  conditional E-value: 0.32
+             T2SS_gspE 309 gvlaqRlvRklcpeckeeeeaeeeeleelgle 340
+                             laqR+vRk  ++ +e+++ +   l+++g+ 
+  GCF_000006765_050140 102 LCLAQRVVRKRGKAEREAKARA--LLAKVGIG 131
+                           4689*****9888777655443..34444444 PP
+
+>> GCF_000006925_004070  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.3   0.0   0.00057       0.3     144     194 ..     105     156 ..      95     162 .. 0.87
+   2 ?   -1.4   0.0       2.1   1.1e+03     208     226 ..     236     254 ..     229     268 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 10.3 bits;  conditional E-value: 0.00057
+             T2SS_gspE 144 rvvlRlLdkekakldleelglseealekleklikkp.hGiiLvtGPtGsGkt 194
+                           ++v R L+     + l e g ++  +++++++i+ + + i+L+ G tGsGkt
+  GCF_000006925_004070 105 HIVQRWLHEAGIDYPLVEGGYKALRQTAIQATIELAqKPIVLIGGCTGSGKT 156
+                           589999999999999999999999999999999976257************9 PP
+
+  == domain 2  score: -1.4 bits;  conditional E-value: 2.1
+             T2SS_gspE 208 erniltveDPveyelegig 226
+                           +  i  veDP e +le ++
+  GCF_000006925_004070 236 QAAIAVVEDPFEIRLERLN 254
+                           5678899*****9998775 PP
+
+>> GCF_000006905_021300  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.6   0.0       2.4   1.2e+03     184     198 ..      37      51 ..      32      60 .. 0.77
+   2 ?   10.3   0.0   0.00058       0.3     178     210 ..     347     378 ..     322     393 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: -1.6 bits;  conditional E-value: 2.4
+             T2SS_gspE 184 LvtGPtGsGktttly 198
+                            v+G  GsGk+t l 
+  GCF_000006905_021300  37 GVVGVNGSGKSTLLK 51 
+                           588999****99763 PP
+
+  == domain 2  score: 10.3 bits;  conditional E-value: 0.00058
+             T2SS_gspE 178 kphGiiLvtGPtGsGktttlyaalselnseern 210
+                            p+Gi+ v GP G+Gk+t l+ +++  ++++  
+  GCF_000006905_021300 347 PPNGIVGVIGPNGAGKST-LFKLITGREQPDAG 378
+                           59**************95.88888777766655 PP
+
+>> GCF_000006945_008470  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.9   0.0   0.00037      0.19     175     206 ..      23      52 ..       7      83 .. 0.69
+   2 ?   -2.3   0.0       3.8     2e+03     390     410 ..     171     190 ..     109     220 .. 0.60
+
+  Alignments for each domain:
+  == domain 1  score: 10.9 bits;  conditional E-value: 0.00037
+             T2SS_gspE 175 likkphGiiLvtGPtGsGktttlyaalselns 206
+                            i++ + ++++ GP GsGk+t l   +++l++
+  GCF_000006945_008470  23 NIRQGE-VVVIIGPSGSGKSTLLRC-INKLEE 52 
+                           454444.78899********97753.344333 PP
+
+  == domain 2  score: -2.3 bits;  conditional E-value: 3.8
+             T2SS_gspE 390 leklarkeglrslredglekv 410
+                           l++ + k  ++ l+e+g+++v
+  GCF_000006945_008470 171 LRHEVLKV-MQDLAEEGMTMV 190
+                           33333333.444444444444 PP
+
+>> GCF_000006945_019230  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.4   0.0   0.00026      0.14     178     217 ..      27      65 ..      10      92 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 11.4 bits;  conditional E-value: 0.00026
+             T2SS_gspE 178 kphGiiLvtGPtGsGktttlyaalselnseerniltveDP 217
+                           kp  ++ + GP GsGktt l   ++ l+++e   + v D 
+  GCF_000006945_019230  27 KPGEVVAIIGPSGSGKTT-LLRCINLLEQPEAGTIKVGDI 65 
+                           6777999*********76.667899999999888888775 PP
+
+>> GCF_000006725_003090  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.4   0.1   0.00026      0.14     165     205 ..      16      58 ..       5      70 .. 0.72
+
+  Alignments for each domain:
+  == domain 1  score: 11.4 bits;  conditional E-value: 0.00026
+             T2SS_gspE 165 seealeklekl.ikkphG.iiLvtGPtGsGktttlyaalseln 205
+                           ++  ++ l+++ ++ p+G i  v GP GsGk+t l a+  el+
+  GCF_000006725_003090  16 ERGGRTVLRNVaLQVPRGsITTVLGPSGSGKSTMLAALTGELR 58 
+                           55555556554267899846689**********9988877776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (422 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1673  (0.0555297); expected 602.6 (0.02)
+Passed bias filter:                     1405  (0.0466344); expected 602.6 (0.02)
+Passed Vit filter:                       328  (0.0108869); expected 30.1 (0.001)
+Passed Fwd filter:                        69  (0.00229023); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):              58  [number of targets reported over threshold]
+# CPU time: 0.41u 0.00s 00:00:00.41 Elapsed: 00:00:00.42
+# Mc/sec: 9508.67
+//
+[ok]

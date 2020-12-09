@@ -1,0 +1,55 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG02298_PP.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG02298_PP.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02298  [M=219]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.069   13.6   5.0       0.16   12.4   4.6    1.7  1  GCF_000006765_042420  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006765_042420  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.4   4.6   5.5e-06      0.16       2     115 ..      14     110 ..      13     148 .. 0.64
+
+  Alignments for each domain:
+  == domain 1  score: 12.4 bits;  conditional E-value: 5.5e-06
+            arCOG02298   2 sylDiktrrvcselWlplaalgaallaydalsledaassgisylvsallsllvvlalayllwelglfggaDakaliaiavlfPlfpval 90 
+                           +y+Dik+ rv+++l l    + +++l  +  sl +a+      +  a+  l++ + l +  + lg++g+aD+k l a+ ++      + 
+  GCF_000006765_042420  14 GYQDIKRLRVSNWLILGGFLISFVYLYVKESSLTGAT------VNMAMTALFIGVCLSLPGYLLGRLGAADVKYLAALGLAS-----D- 90 
+                           699********98888777777777754333442221......122233445556666667788*************99999.....3. PP
+
+            arCOG02298  91 Pllgatvfalsvllnalllalvfpl 115
+                           Pl       l +l+ ++ll +++ +
+  GCF_000006765_042420  91 PLT-----VLYSLAFGCLLCIALFI 110
+                           433.....34455555554443333 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (219 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1741  (0.0577868); expected 602.6 (0.02)
+Passed bias filter:                     1682  (0.0558285); expected 602.6 (0.02)
+Passed Vit filter:                       214  (0.00710303); expected 30.1 (0.001)
+Passed Fwd filter:                        72  (0.0023898); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.40u 0.00s 00:00:00.40 Elapsed: 00:00:00.41
+# Mc/sec: 5054.95
+//
+[ok]

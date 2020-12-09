@@ -1,0 +1,55 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG05166.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG05166.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG05166  [M=131]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.043   15.2   0.0      0.057   14.8   0.0    1.2  1  GCF_000006765_030580  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006765_030580  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   14.8   0.0   1.9e-06     0.057      16     116 ..      11     101 ..       7     114 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 14.8 bits;  conditional E-value: 1.9e-06
+            arCOG05166  16 lvvvGlvlYagvlsdalpstedralaeetldrvadalaenGvvsaekldelsapealpagynvnvevtaeddgerwtvgeeeveappse 104
+                            v v+l ++a+v +++l+    +a  +++++r++d+     + + ++l+el+  ++ p+  + + e++    g+rw ++++     +s+
+  GCF_000006765_030580  11 EVLVALAIFAMVAASVLS---ASARSLQNASRLEDKTLAMWI-ADNRLNELQLEQTPPSSGRNQGELEF--AGRRWEWRTQ----VDST 89 
+                           589***************...56666899*****99887765.55788888866666777778899999..8999999999....6666 PP
+
+            arCOG05166 105 aavasrpVsVel 116
+                           a+   r+V V +
+  GCF_000006765_030580  90 AEQDMRRVIVWV 101
+                           666666665544 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (131 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1474  (0.0489246); expected 602.6 (0.02)
+Passed bias filter:                     1112  (0.0369092); expected 602.6 (0.02)
+Passed Vit filter:                       118  (0.00391662); expected 30.1 (0.001)
+Passed Fwd filter:                         1  (3.31917e-05); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.09u 0.00s 00:00:00.09 Elapsed: 00:00:00.10
+# Mc/sec: 12397.33
+//
+[ok]

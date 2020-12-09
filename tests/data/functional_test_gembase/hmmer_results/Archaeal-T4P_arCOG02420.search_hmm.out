@@ -1,0 +1,57 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG02420.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG02420.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02420  [M=100]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.069   14.3   2.1      0.069   14.3   2.1    2.5  2  GCF_000006945_010970  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006945_010970  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?    0.7   0.9     0.043   1.3e+03       2      30 ..      36      67 ..      24      77 .. 0.62
+   2 ?   14.3   2.1   2.3e-06     0.069       7      43 ..     134     170 ..     131     201 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 0.7 bits;  conditional E-value: 0.043
+            arCOG02420  2 avseVvGeiLll...aivvilvaivavsvfsl 30
+                          a++   +++L+l    ++++lv++ +++ +++
+  GCF_000006945_010970 36 AITATASTVLMLpspGLILTLVGMYGLMFLTY 67
+                          44444556666644446666666666666655 PP
+
+  == domain 2  score: 14.3 bits;  conditional E-value: 2.3e-06
+            arCOG02420   7 vGeiLllaivvilvaivavsvfsllspeeeptvdvet 43 
+                           +G +L+  ivv+l+++va++ ++l+    + ++ + +
+  GCF_000006945_010970 134 LGGMLMAGIVVVLIGMVANIFLQLPALHLAISAVFIL 170
+                           799********************99987777777665 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (100 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      2011  (0.0667485); expected 602.6 (0.02)
+Passed bias filter:                     1682  (0.0558285); expected 602.6 (0.02)
+Passed Vit filter:                       209  (0.00693707); expected 30.1 (0.001)
+Passed Fwd filter:                        10  (0.000331917); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.13u 0.00s 00:00:00.13 Elapsed: 00:00:00.14
+# Mc/sec: 6759.72
+//
+[ok]

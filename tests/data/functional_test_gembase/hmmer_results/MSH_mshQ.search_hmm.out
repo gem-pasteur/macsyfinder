@@ -1,0 +1,109 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/MSH_mshQ.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/MSH_mshQ.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshQ  [M=1008]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+   2.5e-280  933.6  28.4   3.1e-280  933.3  28.4    1.1  1  GCF_000006745_003780  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006745_003780  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  933.3  28.4    1e-284  3.1e-280       1    1008 []     189    1250 ..     189    1250 .. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: 933.3 bits;  conditional E-value: 1e-284
+              MSH_mshQ    1 Gtvrlfvnsdvi.......pgneedlviiaYndinl.kqvkingllysdndleignkvniegriaagaltksqlsei..eeapdLlc 77  
+                            G vrlf+ ++             ++l i+ Yn+i l ++ +++++ly    l++ n + i+gr++++ l++++ +ei  +e    +c
+  GCF_000006745_003780  189 GDVRLFIRNNSDwnsaqinVSGSGNLTIVGYNNITLnQSNQVKAYLYVGGTLTLHNTSVINGRVTSRRLFMEANTEInqNEQQGYAC 275 
+                            7799999887777788887778899***********87889************************************9877889*** PP
+
+              MSH_mshQ   78 Fsd.fes....nlw..asssgsftpsvtngrlrltqavsnqatestsqrifpaannlvevefdeyaqk..gsnGadgvsvvlsdakv 155 
+                            F+d f+     ++w   +ssg+ftps++ +r+rlt+a++nqat+ t+qrifpaa+nlv+vefd+ya    ++nGadgvsv++sda+v
+  GCF_000006745_003780  276 FTDdFNRsslgQNWipYTSSGNFTPSIISNRMRLTEAITNQATAVTYQRIFPAAGNLVTVEFDYYAWAnlTGNGADGVSVIFSDATV 362 
+                            ****99789**99***9*************************************************99899**************** PP
+
+              MSH_mshQ  156 dPspgafggvlgaglkplv....qgfaggwlgvgldeygniss.....gtdegrrrqtvvvlGsgegqsgynylagecnngvletng 233 
+                            +P++g fgg lg++ ++      +gfaggwlgvglde+gn+s+        +g r+q+v+++Gs++ + +y    +++ n+ l+   
+  GCF_000006745_003780  363 TPRTGGFGGSLGYAQRTDTnpdtPGFAGGWLGVGLDEWGNYSNategrQGGPGFRQQAVAIRGSESANYQYLVGTAANLNPKLDVRR 449 
+                            *************98765544559*******************77743335899***********9955555555556667777777 PP
+
+              MSH_mshQ  234 dtlsprvfqdstknsfksgryrleidstdtsesletvsr...ggvkllvdglkvasqvgqaavpkdvllsltlstgsvlstnlyeid 317 
+                             +        s +     +ry+++ids+  +   ++v+r   g +++++d ++v s+ +q+a+p+d+llsl++stg++   n++ei+
+  GCF_000006745_003780  450 TCQWWGC---SFSGAGPGHRYFITIDSRSGGGVWVRVDRsvnGTMQTVIDWHNVLSNPNQGATPADFLLSLAGSTGAS--VNNHEIE 531 
+                            6666666...5556779*************************************************************..******* PP
+
+              MSH_mshQ  318 nfkitGcaltsariglqseieysaiidhyridhsgqglTCqaepvtikacadasctelftdpvnatL..ns.vsavngWvggntvtf 401 
+                            nfk+  cal+s+++g+         idh+r++++ qglTC+a++v ikaca+ +c++l+tdpv+atL  ns  sa++gW gg++v+f
+  GCF_000006745_003780  532 NFKV--CALKSRPVGQL--------IDHFRFTLPQQGLTCSASEVQIKACANDNCSQLYTDPVTATLspNSaPSATGGWLGGSQVNF 608 
+                            ****..***********........********************************************888*************** PP
+
+              MSH_mshQ  402 sgGkttaqLrnnqpgtvnvdvsgsvpkakel..tlck..angg.esaetctlnfadsGflldvpdkvagksetvtikAvrkddssqq 483 
+                             +G +taqLr+n++g+v+v+v gs+p++k++  +lc+   n    s+++ct+nfadsGf++dvp+ +a++++t tikAvrkd++sqq
+  GCF_000006745_003780  609 NNGIATAQLRRNSVGNVSVNVLGSTPASKPFqvNLCSytNNPNsYSTANCTVNFADSGFIVDVPNAYANQTVTGTIKAVRKDNASQQ 695 
+                            ************************************9855555799***************************************** PP
+
+              MSH_mshQ  484 CvpaftgvtksvnfwsdyidPatgv...yadkvavnsaaidkssge.tslsLtFdangeatlnvnYpDaGqlsLnaryegsgdeegl 566 
+                            C+p+f +v+ksv fws+y++P ++       +v vn++ i++s ++ ts+sL+F++ngea+++++Y+++G+l+L+ar++gsgde++l
+  GCF_000006745_003780  696 CLPSFGNVQKSVAFWSEYLNPTANNsgfQSVSVGVNGTPIGQSANNaTSISLNFNQNGEASFPISYREVGSLALHARFTGSGDEQDL 782 
+                            *********************99998666678899********9999**************************************** PP
+
+              MSH_mshQ  567 elaGssdfvsrPakLvisat........kglcasadascsvfkkAGedFnvsvkavaweanddkDlsnNavtpnFvretessitles 645 
+                             l+G++ f+++P++Lv+sa+        +g+c+++ +sc+vf++A+e+F + ++av++   +d+D++nN++  n++   +++i+l++
+  GCF_000006745_003780  783 LLEGQDSFIRVPRALVLSANnpynpthpNGQCSAENISCNVFARADENFDLIIRAVVAAPIEDNDFTNNLTAYNYQ---QQNIALQH 866 
+                            ****************************************************************************...******** PP
+
+              MSH_mshQ  646 slvaPsgGqaatlsavsydhtaiansvnavqqsvseVGvfrltatlaasgYlg.......ktiaaassntiGRFtParFsv.vsev. 723 
+                            +lv+Ps Gq ++l+  +y+h+  ++ ++++ q vseVGvf++ + +++  Ylg         ia +s++ iGRF+Pa+Fsv ++++ 
+  GCF_000006745_003780  867 TLVQPSAGQSGVLGVNEYTHL--LGGTTTIAQKVSEVGVFDFSLFAPTH-YLGldlasanLPIAVTSTGSIGRFIPAYFSVsPMSNv 950 
+                            ******************888..*************************7.******999999*******************977777 PP
+
+              MSH_mshQ  724 .llpac...ggfsYlgqplgvataPeltvqarnasgqvtkNYl.gdfarlseelvsrnsadasdgaaldlesgevepvtrswssgql 805 
+                             l +ac   + fsYlgqp++++++P l++q+++a+++ t+NYl  +++r+++++  r++ d  +g  l +++ +++p  r++ + ++
+  GCF_000006745_003780  951 tLDAACktgNAFSYLGQPFEYSNSPGLYLQPKSANNADTQNYLiDPWWRYNNQWNGRTYSDSANGVNLGFDNLQTSPISRQALNNSG 1037
+                            999*****99********************************************************************999998877 PP
+
+              MSH_mshQ  806 kv.n.eqltykreaapeaPFtaelelgldvsdledsdgisladangtecnavqldevsggldlryGRlvledayGpesaelrlevqv 890 
+                             v n e + y++  +p+  F+  ++l+l++s+l+d+dg++++++ +++c  +++ +++g + l++G lv++d+yGpe+++ ++++ v
+  GCF_000006745_003780 1038 IVlNgERVWYQKPLQPKPVFNSAFDLTLNASNLTDQDGVCYRQNASSPCLGYTFSHIDGAMPLYWGKLVIQDVYGPETQASEQPIYV 1124
+                            77645999******************************************************************************* PP
+
+              MSH_mshQ  891 eYydGakFetNteDnCtaisalsevvlsdadls....vskaGsttsvkvaadttkstlknGesalkfappgqgetglvkvtle...v 970 
+                            e+++ + F++  eD+Cta+ a+ +++l++   +    v++ G  +  +v a+ +++ l++G++a+ f +pg g  g ++  l+    
+  GCF_000006745_003780 1125 EHFTNNGFVRTIEDSCTALPAITGFTLQSDPNNngytVLTTGVAVPPQVLAEHSAANLNSGQRAIRFSAPGAGALGVIDSVLDlnaH 1211
+                            **************************987665556669999999999********************************99996652 PP
+
+              MSH_mshQ  971 P.tWLkddwqgdgalddspsaratFGvyrGnDRvIyrrE 1008
+                               WL++d +gd ++d+ +++ra+FG+yrG+DRvI++rE
+  GCF_000006745_003780 1212 NlLWLAEDKDGDNNFDQTTQGRAQFGLYRGSDRVIWWRE 1250
+                            258***********************************9 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (1008 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                       715  (0.0237321); expected 602.6 (0.02)
+Passed bias filter:                      568  (0.0188529); expected 602.6 (0.02)
+Passed Vit filter:                        42  (0.00139405); expected 30.1 (0.001)
+Passed Fwd filter:                         1  (3.31917e-05); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.40u 0.00s 00:00:00.40 Elapsed: 00:00:00.40
+# Mc/sec: 23848.29
+//
+[ok]

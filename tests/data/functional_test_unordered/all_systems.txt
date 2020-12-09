@@ -1,0 +1,26 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_4.fasta --db-type unordered --models-dir tests/data/models --models functional T12SS-simple-exch --relative-path -w 8
+# Systems found:
+
+This replicon contains genetic materials needed for system functional/T12SS-simple-exch
+
+
+system id = Unordered_T12SS-simple-exch_1
+model = functional/T12SS-simple-exch
+replicon = Unordered
+hits = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 6), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 7), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 14), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 15), ('VICH001.B.00001.C001_01548', 'T1SS_omf', 26), ('VICH001.B.00001.C001_01562', 'T1SS_omf', 40)]
+wholeness = 1.000
+
+mandatory genes:
+	- T1SS_abc: 2 (T1SS_abc, T1SS_abc)
+	- T1SS_omf: 3 (T2SS_gspD, T1SS_omf, T1SS_omf)
+
+accessory genes:
+	- T1SS_mfp: 1 (T1SS_mfp)
+
+neutral genes:
+
+forbidden genes:
+
+Use ordered replicon to have better prediction.
+

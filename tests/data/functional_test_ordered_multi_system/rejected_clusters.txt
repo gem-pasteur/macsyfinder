@@ -1,0 +1,27 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_1.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-multi-syst-exch --relative-path -w 8
+# Rejected clusters:
+
+Cluster:
+- model = T12SS-multi-syst-exch
+- replicon = UserReplicon
+- hits = (VICH001.B.00001.C001_01360, T1SS_omf, 2), (VICH001.B.00001.C001_01361, T1SS_mfp, 3), (VICH001.B.00001.C001_01562, T1SS_omf, 46)
+These clusters have been rejected because:
+	- The quorum of genes required (3) is not reached: 2
+============================================================
+Cluster:
+- model = T12SS-multi-syst-exch
+- replicon = UserReplicon
+- hits = (VICH001.B.00001.C001_01506, T1SS_omf, 23)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (2) is not reached: 1
+	- The quorum of genes required (3) is not reached: 1
+============================================================
+Cluster:
+- model = T12SS-multi-syst-exch
+- replicon = UserReplicon
+- hits = (VICH001.B.00001.C001_01548, T1SS_omf, 32)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (2) is not reached: 1
+	- The quorum of genes required (3) is not reached: 1
+============================================================

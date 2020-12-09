@@ -1,0 +1,13 @@
+# gene: T4bP_pilA extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/T4bP_pilA.search_hmm.out hmm output
+# profile length= 137
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000005845_030030	GCF_000005845	3003	125	T4bP_pilA	4.600e-04	21.500	0.555	0.584	6	78
+GCF_000006745_003730	GCF_000006745	6941	178	T4bP_pilA	4.300e-06	28.100	0.526	0.410	9	81
+GCF_000006745_007540	GCF_000006745	7322	224	T4bP_pilA	1.600e-40	139.600	0.985	0.741	24	189
+GCF_000006745_007820	GCF_000006745	7350	147	T4bP_pilA	5.800e-13	50.300	0.562	0.571	18	101
+GCF_000006745_024800	GCF_000006745	9048	146	T4bP_pilA	1.700e-12	48.800	0.511	0.486	9	79
+GCF_000006765_030600	GCF_000006765	13132	148	T4bP_pilA	6.100e-11	43.800	0.555	0.520	14	90
+GCF_000006845_004230	GCF_000006845	16067	162	T4bP_pilA	3.400e-13	51.000	0.832	0.685	9	119
+GCF_000006845_012440	GCF_000006845	16888	129	T4bP_pilA	1.800e-09	39.000	0.504	0.527	6	73

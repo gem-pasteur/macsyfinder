@@ -1,0 +1,10 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_2.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-multi-syst-exch --relative-path -w 8
+# Systems found:
+replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in
+UserReplicon	VICH001.B.00001.C001_01397	T1SS_abc	8	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_1	1	1.000	3.000	2	T1SS_abc	mandatory	721	2.2e-157	516.300	0.996	0.698	175	677	
+UserReplicon	VICH001.B.00001.C001_01398	T1SS_mfp	9	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_1	1	1.000	3.000	2	T1SS_mfp	mandatory	467	2.2e-72	235.600	1.000	0.797	85	456	
+UserReplicon	VICH001.B.00001.C001_01399	T1SS_abc	10	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_1	1	1.000	3.000	2	T1SS_abc	mandatory	720	2e-158	519.700	1.000	0.699	167	669	
+UserReplicon	VICH001.B.00001.C001_01400	T2SS_gspD	11	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_1	1	1.000	3.000	2	T1SS_mfp	mandatory	559	2e-47	153.400	0.559	0.658	168	535	
+UserReplicon	VICH001.B.00001.C001_01506	T1SS_omf	13	functional/T12SS-multi-syst-exch	UserReplicon_T12SS-multi-syst-exch_1	1	1.000	3.000	2	T1SS_omf	mandatory	419	8.8e-35	111.500	0.998	0.912	25	406	
+

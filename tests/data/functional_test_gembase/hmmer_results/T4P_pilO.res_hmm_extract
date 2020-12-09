@@ -1,0 +1,10 @@
+# gene: T4P_pilO extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/T4P_pilO.search_hmm.out hmm output
+# profile length= 152
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006725_002770	GCF_000006725	4519	222	T4P_pilO	3.400e-27	96.000	0.961	0.667	24	171
+GCF_000006745_003640	GCF_000006745	6932	216	T4P_pilO	9.300e-08	32.900	0.908	0.745	20	180
+GCF_000006745_023890	GCF_000006745	8957	199	T4P_pilO	1.000e-42	146.400	0.987	0.754	23	172
+GCF_000006765_049820	GCF_000006765	15054	207	T4P_pilO	3.900e-38	131.500	0.980	0.720	31	179
+GCF_000006845_001050	GCF_000006845	15749	215	T4P_pilO	4.600e-36	124.800	0.980	0.693	23	171
