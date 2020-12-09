@@ -170,9 +170,10 @@ If the name 'all' is in the list, all models from the family will be searched.
     genome_options.add_argument("--replicon-topology",
                                 choices=['linear', 'circular'],
                                 default=None,
-                                help="""The topology of the replicons
+                                help=f"""The topology of the replicons
 (this option is meaningful only if the db_type is
-'ordered_replicon' or 'gembase'.
+'ordered_replicon' or 'gembase'.)
+(default: {msf_def['e_value_search']})
 """)
 
     genome_options.add_argument("--topology-file",
