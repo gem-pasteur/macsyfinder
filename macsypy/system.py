@@ -551,7 +551,7 @@ class System(AbstractSetOfHits):
                 pass
 
         self._score = score
-        _log.debug(f"score of system {self.id} = {score}")
+        _log.debug(f"score of system {self.id} = {score:.2f}")
         return score
 
 

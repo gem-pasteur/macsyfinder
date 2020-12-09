@@ -859,7 +859,7 @@ def main(args=None, loglevel=None):
                 t0 = time.time()
                 best_sol_4_1_replicon, score = find_best_solutions(syst_group)
                 t1 = time.time()
-                logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score}) for replicon {rep_name}")
+                logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
                 # if several solutions are equivalent same number of system and score is same
                 # store all equivalent solution in best_solution => all_best_systems
                 # pick one in one_best_solution => best_systems
