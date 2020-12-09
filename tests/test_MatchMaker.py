@@ -130,12 +130,13 @@ class MatchMakerTest(MacsyTest):
         self.assertListEqual([h.gene.name for h in accessory_exp_exch], [h.gene.name for h in accessory])
         self.assertListEqual([h.gene.name for h in neutral_exp_exch], [h.gene.name for h in neutral])
         self.assertListEqual([h.gene.name for h in forbidden_exp_exch], [h.gene.name for h in forbidden])
-        # test if gene_ref are well specified
 
-        self.assertListEqual([h.gene.name for h in mandatory_exp], [h.gene_ref.name for h in mandatory])
-        self.assertListEqual([h.gene.name for h in accessory_exp], [h.gene_ref.name for h in accessory])
-        self.assertListEqual([h.gene.name for h in neutral_exp], [h.gene_ref.name for h in neutral])
-        self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene_ref.name for h in forbidden])
+        # test if gene_ref is the ModelGene
+        # alternate_of return the ModelGene of the function
+        self.assertListEqual([h.gene.name for h in mandatory_exp], [h.gene_ref.alternate_of().name for h in mandatory])
+        self.assertListEqual([h.gene.name for h in accessory_exp], [h.gene_ref.alternate_of().name for h in accessory])
+        self.assertListEqual([h.gene.name for h in neutral_exp], [h.gene_ref.alternate_of().name for h in neutral])
+        self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene_ref.alternate_of().name for h in forbidden])
 
 
     def test_ordered_match(self):
