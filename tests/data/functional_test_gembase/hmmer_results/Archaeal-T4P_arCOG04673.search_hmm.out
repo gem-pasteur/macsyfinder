@@ -1,0 +1,82 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG04673.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG04673.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG04673  [M=158]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.029   15.1   2.3      0.029   15.1   2.3    1.8  2  GCF_000006765_024590  
+      0.092   13.4   0.1      0.092   13.4   0.1    1.7  2  GCF_000006905_016170  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006765_024590  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.9   0.2      0.31   4.7e+03     113     137 ..     102     126 ..      97     147 .. 0.50
+   2 ?   15.1   2.3   1.9e-06     0.029      44     134 ..     148     234 ..     131     243 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: -1.9 bits;  conditional E-value: 0.31
+            arCOG04673 113 seanaiaafleavetareentgewr 137
+                           +e + ++a l+++++a++++ +e +
+  GCF_000006765_024590 102 AEVKRLEAQLQQARAAQARSVNEAQ 126
+                           4533344444444444444222222 PP
+
+  == domain 2  score: 15.1 bits;  conditional E-value: 1.9e-06
+            arCOG04673  44 eevaaseyeasatyehdAdavridgktvalrnehgtaraslaygqvvpvagderLervlaGespedvfeseanaiaafleavetareen 132
+                               a+   a+++ ++dA ++++   +++   ++ ++ra ++ g++v  +g++ L  +++ +++ + f+++     +fl+ ve ar++ 
+  GCF_000006765_024590 148 AAQEAKAAVAATQAQLDAARLNLSFTRITAPIDGRVSRAEVTAGNLV-NSGETLLTTLVSTDKVYAYFDAD---ERVFLKYVELARQAG 232
+                           2333444557788899******************************9.57888899999999999999998...799999999999884 PP
+
+            arCOG04673 133 tg 134
+                           ++
+  GCF_000006765_024590 233 RD 234
+                           33 PP
+
+>> GCF_000006905_016170  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.4   0.1   6.1e-06     0.092       9      41 ..     160     192 ..     154     196 .. 0.89
+   2 ?   -3.7   0.7       1.1   1.7e+04      13      42 ..     377     407 ..     372     411 .. 0.71
+
+  Alignments for each domain:
+  == domain 1  score: 13.4 bits;  conditional E-value: 6.1e-06
+            arCOG04673   9 YvwlgvsivsvalagvvlglptgpppdAeaaan 41 
+                           +++l ++ivs ++ag +l+lp +pp  A+ a +
+  GCF_000006905_016170 160 WIFLVAAIVSFVFAGYALTLPHTPPRKADDAVD 192
+                           578899********************9998865 PP
+
+  == domain 2  score: -3.7 bits;  conditional E-value: 1.1
+            arCOG04673  13 gvsivsvalagvvlglptg.pppdAeaaana 42 
+                           ++++++v l+++    pt+ p ++A++a  a
+  GCF_000006905_016170 377 AMALAAVCLLALFFRPPTRgPVSEADSASSA 407
+                           7788888888888888885255777777665 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (158 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1432  (0.0475305); expected 602.6 (0.02)
+Passed bias filter:                      945  (0.0313662); expected 602.6 (0.02)
+Passed Vit filter:                        84  (0.0027881); expected 30.1 (0.001)
+Passed Fwd filter:                         3  (9.95751e-05); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.09u 0.00s 00:00:00.09 Elapsed: 00:00:00.10
+# Mc/sec: 14952.50
+//
+[ok]

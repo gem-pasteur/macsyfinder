@@ -1,0 +1,11 @@
+# gene: T2SS_gspK extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/T2SS_gspK.search_hmm.out hmm output
+# profile length= 59
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000005845_030050	GCF_000005845	3005	327	T2SS_gspK	1.000e-16	61.500	1.000	0.180	6	64
+GCF_000006725_009030	GCF_000006725	5145	281	T2SS_gspK	8.900e-11	42.500	0.983	0.206	5	62
+GCF_000006745_024760	GCF_000006745	9044	336	T2SS_gspK	1.300e-21	77.200	1.000	0.176	6	64
+GCF_000006765_006750	GCF_000006765	10747	321	T2SS_gspK	9.100e-14	52.100	0.983	0.181	7	64
+GCF_000006765_030560	GCF_000006765	13128	333	T2SS_gspK	1.800e-18	67.200	0.983	0.174	7	64
+GCF_000006905_001790	GCF_000006905	17709	324	T2SS_gspK	2.300e-17	63.600	1.000	0.182	7	65

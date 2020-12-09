@@ -1,0 +1,23 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_3.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-simple-exch --relative-path -w 8
+# Systems found:
+
+system id = UserReplicon_T12SS-simple-exch_1
+model = functional/T12SS-simple-exch
+replicon = UserReplicon
+clusters = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 2), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 3), ('VICH001.B.00001.C001_01399', 'T1SS_abc', 37), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 38)]
+occ = 2
+wholeness = 1.000
+loci nb = 1
+score = 2.300
+
+mandatory genes:
+	- T1SS_abc: 2 (T1SS_abc, T1SS_abc)
+	- T1SS_omf: 1 (T2SS_gspD)
+
+accessory genes:
+	- T1SS_mfp: 1 (T1SS_mfp)
+
+neutral genes:
+
+============================================================

@@ -1,0 +1,6 @@
+# gene: MSH_mshK extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/MSH_mshK.search_hmm.out hmm output
+# profile length= 77
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006745_003650	GCF_000006745	6933	105	MSH_mshK	9.200e-27	93.500	0.974	0.724	14	89

@@ -1,0 +1,77 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Archaeal-T4P_arCOG01822.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG01822.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG01822  [M=154]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.018   15.4   0.0        0.4   11.1   0.0    2.0  2  GCF_000006845_018210  
+      0.078   13.4   0.1       0.33   11.3   0.0    2.2  2  GCF_000006765_038180  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_018210  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.0   0.1      0.14   2.1e+03      66      66 ..     461     461 ..      82     836 .. 0.70
+   2 ?   11.1   0.0   2.6e-05       0.4      62      87 ..     984    1009 ..     902    1012 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: -1.0 bits;  conditional E-value: 0.14
+            arCOG01822  66 v 66 
+                           +
+  GCF_000006845_018210 461 K 461
+                           0 PP
+
+  == domain 2  score: 11.1 bits;  conditional E-value: 2.6e-05
+            arCOG01822   62 lydsvggtitvyvkntGnatvtlevs 87  
+                            l +s++gt+t+ v ntGn+ v+le++
+  GCF_000006845_018210  984 LAESSEGTYTLAVNNTGNEPVSLEQL 1009
+                            335799****************9985 PP
+
+>> GCF_000006765_038180  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.9   0.1      0.26     4e+03      34      60 ..     203     229 ..     191     239 .. 0.85
+   2 ?   11.3   0.0   2.2e-05      0.33      18     104 ..     246     324 ..     242     581 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: -1.9 bits;  conditional E-value: 0.26
+            arCOG01822  34 qvsnstsgntsfegvatdfeiigeygs 60 
+                           + s++ + +++ +++  df+ i+++++
+  GCF_000006765_038180 203 ARSMEAQAQQVTQQLGADFNAITTPTA 229
+                           6799999************99998876 PP
+
+  == domain 2  score: 11.3 bits;  conditional E-value: 2.2e-05
+            arCOG01822  18 vvapvaalvesatvtvqvsnstsgntsfegvatdfeiigeygsilydsvggtitvyvkntGnatvtlevseaaklfvdrgGiyktin 104
+                           v+  v ++v+sat+ vqv  ++ +++ +++++ + + i+++         ++i +  +  G+a+vt+ + +++k +v++   + t +
+  GCF_000006765_038180 246 VSTQVSGAVASATQAVQVKTAQAQQQANSQISSSQNLISAAFR-------NQIALAAQASGEAQVTAFN-TQVKQIVNEATAFSTAR 324
+                           677899**********************************999.......89**************999.88888888555555544 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (154 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1186  (0.0393654); expected 602.6 (0.02)
+Passed bias filter:                     1088  (0.0361126); expected 602.6 (0.02)
+Passed Vit filter:                       128  (0.00424854); expected 30.1 (0.001)
+Passed Fwd filter:                         2  (6.63834e-05); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.12
+# Mc/sec: 12144.96
+//
+[ok]

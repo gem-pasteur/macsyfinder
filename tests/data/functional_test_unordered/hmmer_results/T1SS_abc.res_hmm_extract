@@ -1,0 +1,7 @@
+# gene: T1SS_abc extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-00-40/hmmer_results/T1SS_abc.search_hmm.out hmm output
+# profile length= 501
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_01397	Unordered	6	721	T1SS_abc	2.100e-157	516.300	0.996	0.698	175	677
+VICH001.B.00001.C001_01399	Unordered	14	720	T1SS_abc	1.900e-158	519.700	1.000	0.699	167	669

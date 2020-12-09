@@ -1,0 +1,3 @@
+# macsyfinder 20201209.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_4.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-simple-exch --relative-path -w 8
+# No Systems found

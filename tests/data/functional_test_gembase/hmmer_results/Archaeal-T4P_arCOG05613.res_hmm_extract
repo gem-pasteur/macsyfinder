@@ -1,0 +1,7 @@
+# gene: Archaeal-T4P_arCOG05613 extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG05613.search_hmm.out hmm output
+# profile length= 230
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006725_015570	GCF_000006725	5799	1144	Archaeal-T4P_arCOG05613	8.100e-04	20.200	0.504	0.123	308	448
+GCF_000006745_022100	GCF_000006745	8778	433	Archaeal-T4P_arCOG05613	3.300e-04	21.500	0.539	0.450	201	395

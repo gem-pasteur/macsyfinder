@@ -1,0 +1,94 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T1SS_mfp.hmm
+# target sequence database:        tests/data/base/test_2.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_18-01-21/hmmer_results/T1SS_mfp.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       mfp  [M=378]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.9e-72  235.9  16.7    2.2e-72  235.6  16.7    1.0  1  VICH001.B.00001.C001_01398  mfp
+      1e-05   16.3  11.8    0.00011   12.8  11.3    2.1  2  VICH001.B.00001.C001_01549  
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01398  mfp
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  235.6  16.7   9.5e-74   2.2e-72       1     378 []      85     456 ..      85     456 .. 0.90
+
+  Alignments for each domain:
+  == domain 1  score: 235.6 bits;  conditional E-value: 9.5e-74
+                         mfp   1 GkvvvsGnrkeiqhlegGivkrilVkegdrVkaGdvLlkLdavkaeaneeklrsqlaqleaqeaRlqaerrglesiklppllt 83 
+                                 G +vvsG+++ iq+ e++++  i V++g+rV++G +Ll+Ld++  + +   l sq+    ++  R++ + + +  ++  p+ t
+  VICH001.B.00001.C001_01398  85 GRLVVSGRSQVIQSYEQSRLLSIHVRDGQRVEKGAPLLTLDTLGVNQDITRLVSQAEFQTNELIRYRTLLNDQL-LTHDPMFT 166
+                                 899*****************************************************************998876.77777778 PP
+
+                         mfp  84 elrdepe..vaklialeqsllesrrqtlqsekkqieasidklraeleglqrqieglkdqlallkqeledlrklaakglvpkqr 164
+                                 +l++e +  + +    e++ ++s  +++ +e+k  + s ++ ++++++l + +         ++q+l + +kl++  ++    
+  VICH001.B.00001.C001_01398 167 ALPAEQQalIHENYLSEKNEFDSTLASITAEMKVNRTSQAARQSDIHALLQLT-------ENISQRLAARKKLNQVKVIGHVE 242
+                                 87776621123333344666666666666666666666665555555555333.......36779999999999999999999 PP
+
+                         mfp 165 lleqeraraelqgelrqlsgqleqaekqilelelqiqqraqdfkkevsskltqteaqaaeleeelakadaelgrivirApvdG 247
+                                 +leqe++  e+q +++q+ ++le +++q  +le+++   +++ ++e  +k +q+++q+a l++el k  ++ +  +ir+pvdG
+  VICH001.B.00001.C001_01398 243 YLEQEKELLEAQRQVAQQRAELEVLKSQYESLEERLTGFKAQKQREWLEKRRQARLQLASLNQELSKVREREQLEIIRSPVDG 325
+                                 9999999999999999999999999999999****************************************9*********** PP
+
+                         mfp 248 kVqqLsvfTeGgvvaagqtLmdvvPedeelvvearvqnkdidkvsvGlpvevrfeAFdqektpklsGtvklisadrvsderag 330
+                                 +VqqLsv+T G+v +++q+Lm +vPe++  + e ++ nkd+++v+ G++v+v++ AF++++++++ ++  +is+d  +de+ g
+  VICH001.B.00001.C001_01398 326 TVQQLSVYTLGAVLQPAQNLMIIVPENRVQQAEVQILNKDVGFVYPGQSVTVKVDAFPYTRYGTIDAELLSISRDSTTDEQLG 408
+                                 *********************************************************************************** PP
+
+                         mfp 331 lpYykvivkveeelirdekglelkpGMpvevfiktgeRsvisYLlsPl 378
+                                 l++   i    ++++ d ++ el+pGM v ++ikt++R+vi+YLlsP+
+  VICH001.B.00001.C001_01398 409 LVFPAQIQLKTNHIMIDGQTVELTPGMSVVAEIKTDKRRVIDYLLSPI 456
+                                 ***********************************************7 PP
+
+>> VICH001.B.00001.C001_01549  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.8  11.3   4.9e-06   0.00011       9     146 ..      43     187 ..      37     204 .. 0.61
+   2 ?    1.4   0.0     0.014      0.32      10      56 ..     204     250 ..     192     277 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 12.8 bits;  conditional E-value: 4.9e-06
+                         mfp   9 rkeiqhlegGivkrilVkegdrVkaGdvLlkL..davkaeaneeklrsqlaqleaqeaRlqaerrgle....siklpplltel 85 
+                                 +  i + + G+++++lV+ gd+V++G+ +++L     +a+ ++ +  +++a + aqea   a  ++++        ++  +el
+  VICH001.B.00001.C001_01549  43 QYSISSKVPGRIDQVLVRKGDQVEKGQLIFTLlsPEIDAKLEQAIAGQKAAGALAQEAENGAREQQIQaakdQWLKAQAAAEL 125
+                                 567899999*********************98333577888888888888888888875555555555000033333344444 PP
+
+                         mfp  86 rdepevakliale.....qsllesrrqtlqsekkqieasidklraeleglqrqieglkdqlallkq 146
+                                  +++++      +     ++  ++ ++++q+ k+   a+++ ++   eg + +++    q al k 
+  VICH001.B.00001.C001_01549 126 AEKTYLRVNNLYNdgvvsEQKRDEAQTQWQAAKYTESAALQMYQLAKEGAREETK----QAALEKA 187
+                                 5555433222222234444555555555666666555555555555555443333....3334444 PP
+
+  == domain 2  score: 1.4 bits;  conditional E-value: 0.014
+                         mfp  10 keiqhlegGivkrilVkegdrVkaGdvLlkLdavkaeaneeklrsql 56 
+                                  +iq+   G v+++l + g+    G +++++  ++ + +   +r+ l
+  VICH001.B.00001.C001_01549 204 TKIQSWFDGEVSQVLMHSGELAPQGFPVVTVVDTQDTWAVFNVREDL 250
+                                 68999999************999999888876666555555555555 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (378 nodes)
+Target sequences:                           46  (19704 residues searched)
+Passed MSV filter:                         5  (0.108696); expected 0.9 (0.02)
+Passed bias filter:                        3  (0.0652174); expected 0.9 (0.02)
+Passed Vit filter:                         2  (0.0434783); expected 0.0 (0.001)
+Passed Fwd filter:                         2  (0.0434783); expected 0.0 (1e-05)
+Initial search space (Z):                 46  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 744.81
+//
+[ok]

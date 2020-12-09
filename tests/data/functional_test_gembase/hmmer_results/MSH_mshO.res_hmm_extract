@@ -1,0 +1,10 @@
+# gene: MSH_mshO extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/MSH_mshO.search_hmm.out hmm output
+# profile length= 108
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006725_001070	GCF_000006725	4349	316	MSH_mshO	1.300e-09	38.600	0.593	0.203	12	75
+GCF_000006725_016530	GCF_000006725	5895	418	MSH_mshO	1.400e-07	32.100	0.556	0.144	14	73
+GCF_000006745_003760	GCF_000006745	6944	256	MSH_mshO	8.300e-35	119.600	0.981	0.391	3	102
+GCF_000006765_026380	GCF_000006765	12710	141	MSH_mshO	1.200e-04	22.600	0.500	0.383	7	60
+GCF_000006765_030570	GCF_000006765	13129	237	MSH_mshO	5.700e-06	26.900	0.602	0.274	5	69

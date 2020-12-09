@@ -1,0 +1,50 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/Tad_tadF.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Tad_tadF.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       Tad_tadF  [M=121]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.015   16.4   0.2      0.017   16.2   0.2    1.2  1  GCF_000006925_025100  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006925_025100  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   16.2   0.2   5.6e-07     0.017       9      67 ..      16      72 ..      11      99 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 16.2 bits;  conditional E-value: 5.6e-07
+              Tad_tadF  9 vfvllalivllyflydivillltqgkldras.ySlanilkersqlYdkkeeltqedvdqv 67
+                          v+v ++l+vl+++++ +v+++++ + ++r+s +Sla+   +++ql+     ++q+++  +
+  GCF_000006925_025100 16 VMVAMVLMVLMVLMVLMVMIVTALSGIQRTSmNSLAS-RNQYQQLWRHG--WQQTQLRAI 72
+                          79999999999999999999999999***98567776.58999999986..777776655 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (121 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1208  (0.0400956); expected 602.6 (0.02)
+Passed bias filter:                     1074  (0.0356479); expected 602.6 (0.02)
+Passed Vit filter:                       135  (0.00448088); expected 30.1 (0.001)
+Passed Fwd filter:                         7  (0.000232342); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.11
+# Mc/sec: 10409.97
+//
+[ok]

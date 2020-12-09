@@ -1,0 +1,9 @@
+# gene: Tad_tadE extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Tad_tadE.search_hmm.out hmm output
+# profile length= 142
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006905_001980	GCF_000006905	17728	626	Tad_tadE	1.300e-06	29.500	0.507	0.117	27	99
+GCF_000006905_027100	GCF_000006905	20240	629	Tad_tadE	3.200e-05	24.900	0.514	0.138	27	113
+GCF_000006905_029230	GCF_000006905	20453	183	Tad_tadE	7.000e-39	134.000	1.000	0.847	26	180
+GCF_000006905_029240	GCF_000006905	20454	183	Tad_tadE	4.600e-07	30.900	0.507	0.410	15	89

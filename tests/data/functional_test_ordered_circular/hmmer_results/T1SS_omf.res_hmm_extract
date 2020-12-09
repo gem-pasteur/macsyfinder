@@ -1,0 +1,7 @@
+# gene: T1SS_omf extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_17-47-41/hmmer_results/T1SS_omf.search_hmm.out hmm output
+# profile length= 400
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_01548	UserReplicon	19	476	T1SS_omf	1.100e-27	87.800	0.980	0.884	28	448
+VICH001.B.00001.C001_01562	UserReplicon	27	445	T1SS_omf	3.800e-53	171.700	1.000	0.892	31	427

@@ -1,0 +1,1129 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data//models/TFF-SF/profiles/T4P_pilU.hmm
+# target sequence database:        tests/data/base/gembase.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/T4P_pilU.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilU.mafft-edit  [M=342]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+   3.7e-196  651.3   0.1   4.3e-196  651.1   0.1    1.0  1  GCF_000006765_003920  
+   2.3e-178  592.8   1.8   2.6e-178  592.6   1.8    1.0  1  GCF_000006745_004250  
+     3e-169  562.8   0.1   3.6e-169  562.6   0.1    1.0  1  GCF_000006845_003200  
+     5e-164  545.7   1.8   5.8e-164  545.5   1.8    1.0  1  GCF_000006725_009620  
+   1.9e-126  422.1   0.1   2.4e-126  421.8   0.1    1.0  1  GCF_000006845_016440  
+   4.2e-104  348.7   1.0   4.9e-104  348.4   1.0    1.0  1  GCF_000006745_004240  
+   6.2e-102  341.5   0.2   6.9e-102  341.4   0.2    1.0  1  GCF_000006725_000270  
+   5.2e-101  338.5   0.2   6.4e-101  338.2   0.2    1.0  1  GCF_000006765_003910  
+    1.1e-94  317.7   0.8    1.3e-94  317.5   0.8    1.0  1  GCF_000006845_016430  
+    1.7e-86  290.8   0.0    1.9e-86  290.6   0.0    1.0  1  GCF_000006925_026070  
+    1.8e-86  290.7   0.0      2e-86  290.5   0.0    1.0  1  GCF_000005845_026740  
+    6.3e-81  272.5   0.0    7.6e-81  272.2   0.0    1.0  1  GCF_000006945_030160  
+    4.5e-32  111.9   1.0    9.5e-32  110.8   0.9    1.5  2  GCF_000006765_006790  
+    1.8e-31  109.8   0.6    2.6e-31  109.3   0.6    1.1  1  GCF_000006905_001730  
+    1.3e-30  107.0   1.8    2.4e-30  106.2   0.6    1.9  2  GCF_000005845_029990  
+    1.4e-30  106.9   0.1    2.8e-28   99.4   0.1    2.2  2  GCF_000005845_000980  
+    2.2e-30  106.3   1.7    3.4e-30  105.7   0.6    1.7  2  GCF_000006725_018700  
+    2.2e-30  106.3   0.7    3.3e-30  105.7   0.7    1.2  1  GCF_000006765_030620  
+    1.1e-29  104.0   0.1    1.8e-29  103.3   0.1    1.3  1  GCF_000006765_026420  
+    2.8e-29  102.7   0.3    4.7e-29  101.9   0.3    1.3  1  GCF_000006745_003690  
+    4.9e-29  101.8   0.1    1.2e-27   97.3   0.1    2.1  2  GCF_000006945_002010  
+    8.6e-29  101.0   0.5    3.8e-28   98.9   0.2    2.0  2  GCF_000006725_014600  
+    1.1e-28  100.7   0.3    5.1e-27   95.2   0.1    2.2  2  GCF_000006765_044720  
+    9.9e-28   97.6   0.0    1.6e-27   96.9   0.0    1.3  1  GCF_000006845_014310  
+    2.2e-27   96.4   0.7    3.5e-27   95.8   0.3    1.5  2  GCF_000006745_024820  
+    8.4e-27   94.5   0.2    6.5e-25   88.3   0.1    2.1  2  GCF_000006745_021960  
+    1.1e-25   90.8   0.0    4.1e-25   89.0   0.0    1.8  2  GCF_000006765_051490  
+      2e-23   83.4   0.0    3.6e-23   82.6   0.0    1.5  1  GCF_000006745_007610  
+    2.4e-13   50.2   0.3    4.7e-13   49.3   0.3    1.4  1  GCF_000006765_042490  
+    1.9e-12   47.3   0.0      3e-12   46.7   0.0    1.2  1  GCF_000006905_024050  
+    1.1e-10   41.6   0.0    1.6e-10   41.0   0.0    1.3  1  GCF_000006905_029150  
+    3.4e-10   39.9   0.0    4.9e-10   39.4   0.0    1.2  1  GCF_000006725_015970  
+     0.0018   17.8   0.0     0.0027   17.2   0.0    1.2  1  GCF_000005845_004500  
+     0.0018   17.8   0.0     0.0027   17.2   0.0    1.2  1  GCF_000006925_004060  
+     0.0036   16.8   0.0     0.0061   16.0   0.0    1.3  1  GCF_000005845_029540  
+     0.0057   16.2   0.0     0.0098   15.4   0.0    1.3  1  GCF_000006925_029370  
+      0.006   16.1   0.1      0.019   14.4   0.0    1.7  2  GCF_000006745_012390  
+     0.0075   15.8   0.0      0.011   15.2   0.0    1.2  1  GCF_000006945_005490  
+  ------ inclusion threshold ------
+      0.024   14.1   0.3      0.036   13.5   0.1    1.4  1  GCF_000006745_000080  
+      0.025   14.0   0.0      0.032   13.7   0.0    1.1  1  GCF_000006745_031910  
+       0.03   13.8   0.0      0.054   12.9   0.0    1.3  1  GCF_000006945_005040  
+      0.043   13.3   0.0      0.078   12.4   0.0    1.3  1  GCF_000006945_023080  
+      0.046   13.2   0.1       0.19   11.1   0.0    1.9  2  GCF_000006745_016400  
+      0.053   13.0   0.0      0.094   12.2   0.0    1.3  1  GCF_000006925_003620  
+      0.056   12.9   0.0        0.1   12.0   0.0    1.3  1  GCF_000005845_004050  
+      0.097   12.1   0.0       0.14   11.5   0.0    1.3  1  GCF_000006745_017110  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006765_003920  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  651.1   0.1  6.5e-199  4.3e-196       2     342 .]       3     343 ..       2     343 .. 1.00
+
+  Alignments for each domain:
+  == domain 1  score: 651.1 bits;  conditional E-value: 6.5e-199
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           +ekll+l+ve++gsdlfita+vpp++kv+G+v++v+k+pls+e+++++v ++++e+q++df++++ecnfaisa+giGrfrvsaf+q++l
+  GCF_000006765_003920   3 FEKLLRLMVEKGGSDLFITAGVPPSMKVNGRVMPVTKTPLSPEQTRETVLGVMNEQQRRDFAENHECNFAISARGIGRFRVSAFYQRNL 91 
+                           79*************************************************************************************** PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           vGmvlrriet+iptl+elklpe+lk++al+krGlv++vGatG+Gkst+laa++gyrn+ns+Ghi+++edp+e++h+h+ c+vtqrevGl
+  GCF_000006765_003920  92 VGMVLRRIETNIPTLEELKLPEILKKLALTKRGLVIFVGATGTGKSTSLAAMIGYRNKNSTGHIISIEDPIEYIHQHQGCIVTQREVGL 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dt+sfevalkn+lrqapdvi+iGe+r+retm++a+afaetGhlclatlhan+anqal+riih++p++r+ q+++dlslnl+a+vaq+l+
+  GCF_000006765_003920 181 DTDSFEVALKNTLRQAPDVIMIGEVRSRETMDHAVAFAETGHLCLATLHANNANQALERIIHFFPADRHGQVWMDLSLNLKAIVAQQLV 269
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsan 342
+                           p+ dgkgr+a++evllntpl++dlirkGevhelk +mk+s+e+Gmqtfdqal++ly++g+i+yedal++adsan
+  GCF_000006765_003920 270 PTPDGKGRRAVIEVLLNTPLAADLIRKGEVHELKPLMKRSTEQGMQTFDQALYQLYTQGEITYEDALAHADSAN 343
+                           ************************************************************************98 PP
+
+>> GCF_000006745_004250  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  592.6   1.8    4e-181  2.6e-178       2     342 .]       3     341 ..       2     341 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 592.6 bits;  conditional E-value: 4e-181
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           l++ l  ++++k+sdl+it+++p   +vdG+++ ++ e+ls ++++ l++a++++ + a+f++t+e+nfa+ ++++Grfrvsaf+q+el
+  GCF_000006745_004250   3 LNQYLDGMLTHKASDLYITVGAPILYRVDGELRAQG-EALSVADVTALLHAMMDDARQAEFKQTREANFAV-VRDSGRFRVSAFFQREL 89 
+                           8999*******************************9.9*********************************.99*************** PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           +G+v+rriet+ipt++elklpevl+++a+akrGlvl+vGatGsGkstt+aa++gyrn++++Ghiltvedp+efvhehkrc+vtqrevGl
+  GCF_000006745_004250  90 PGAVIRRIETRIPTFEELKLPEVLQNLAIAKRGLVLVVGATGSGKSTTMAAMTGYRNQHRTGHILTVEDPIEFVHEHKRCIVTQREVGL 178
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dtes+evalknslrqapd+iliGeir+retmeya++faetGhlc+atlhan+anqal+ri+hlvp+e+req+lldlslnl++++aq+l+
+  GCF_000006745_004250 179 DTESYEVALKNSLRQAPDMILIGEIRSRETMEYAMTFAETGHLCMATLHANNANQALERILHLVPKEQREQFLLDLSLNLKGVIAQQLL 267
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsan 342
+                           ++k+gkgr++++evlln+p+++dlir+Ge+helk +m++s+e+Gmqtfdqal++l++++kis++dal++adsan
+  GCF_000006745_004250 268 RDKNGKGRHGVFEVLLNSPRIADLIRRGELHELKATMARSQEVGMQTFDQALYQLVVDDKISEQDALHSADSAN 341
+                           ************************************************************************98 PP
+
+>> GCF_000006845_003200  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  562.6   0.1  5.5e-172  3.6e-169       5     341 ..      16     352 ..      12     353 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 562.6 bits;  conditional E-value: 5.5e-172
+       pilU.mafft-edit   5 llkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqelvGm 93 
+                            l+++ ++kgsdlf+t+ +ppa+k+dGk+t++++epl+ e++++++ +i+s kq ++f+ t+ecnfais  ++ rfrv+a++q++ + +
+  GCF_000006845_003200  16 WLRHMNKNKGSDLFVTTHFPPAMKLDGKITRITDEPLTAEKCMEIAFSIMSAKQAEEFSSTNECNFAISLPDTSRFRVNAMIQRGATAL 104
+                           6899************************************************************************************* PP
+
+       pilU.mafft-edit  94 vlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldte 182
+                           v+r i+ kip +++l+lp+ lk+val+krGlv++vG tGsGkst+la+l++yrnens+Ghi+t+edp+efvhehk+c++tqrevG+dte
+  GCF_000006845_003200 105 VFRAITSKIPKFESLNLPPALKDVALKKRGLVIFVGGTGSGKSTSLASLIDYRNENSFGHIITIEDPIEFVHEHKNCIITQREVGVDTE 193
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 183 sfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrlipkk 271
+                            + +alkn+lrqapdviliGeirdretm+yaiafaetGhlc+atlhans+nqaldrii+++peerreqll dlslnl+a+++qrl+p+ 
+  GCF_000006845_003200 194 NWMAALKNTLRQAPDVILIGEIRDRETMDYAIAFAETGHLCMATLHANSTNQALDRIINFFPEERREQLLTDLSLNLQAFISQRLVPRD 282
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 272 dgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsa 341
+                           +gkgr+aavevlln+pl+s+li++G++he+kevmkks+ lGmqtfdq l++lye+g+is +dal+nadsa
+  GCF_000006845_003200 283 GGKGRVAAVEVLLNSPLISELIHNGNIHEIKEVMKKSTTLGMQTFDQHLYQLYEKGEISLQDALKNADSA 352
+                           ********************************************************************97 PP
+
+>> GCF_000006725_009620  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  545.5   1.8  8.9e-167  5.8e-164       2     342 .]       6     346 ..       5     346 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 545.5 bits;  conditional E-value: 8.9e-167
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +llkl+ ++k+sdlfit+++pp++k++G++t++++ pl++e+++++v +i+se q+++fe+ +ecnfai  ++iGrfrv+af+q+++
+  GCF_000006725_009620   6 FTSLLKLMAHQKASDLFITCGMPPSMKIHGNITPITQVPLTSEQSRDIVFNIMSEAQREEFEKVHECNFAIDITNIGRFRVNAFYQRNQ 94 
+                           5789************************************************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           +Gmvlrrie+ ipt+++lklp+v ke+ ++krG++++vGatGsGkst++a+++++rn+ns+Ghi+t+edp+ef+h+h+rc++tqre+G 
+  GCF_000006725_009620  95 IGMVLRRIEMSIPTFEKLKLPQVAKELVMEKRGIIIIVGATGSGKSTSMASMINHRNHNSTGHIVTIEDPIEFIHKHERCIITQREIGT 183
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dt+s+e alkn+lrqapdvi+iGe+r +etm++ai+f+etGhl + tlhan+anqa+drii+++peerr+qll dlslnl++++aq+li
+  GCF_000006725_009620 184 DTDSWENALKNTLRQAPDVIVIGEVRTQETMDHAISFSETGHLVMCTLHANNANQAIDRIINFFPEERRSQLLTDLSLNLKGIIAQQLI 272
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsan 342
+                           p+ dgk r  a evl ++ lv d ir Ge+h+lkevm++ ++lGm tfdq+l ely+ g+i y++alr+ads n
+  GCF_000006725_009620 273 PSPDGKERCLAAEVLRDSRLVQDYIRVGEIHKLKEVMQNPNDLGMTTFDQSLVELYHSGAINYKEALRHADSQN 346
+                           ************************************************************************87 PP
+
+>> GCF_000006845_016440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  421.8   0.1  3.7e-129  2.4e-126       3     342 .]      40     379 ..      38     379 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 421.8 bits;  conditional E-value: 3.7e-129
+       pilU.mafft-edit   3 ekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqelv 91 
+                           + l ++  ++++sd+ i+ ++pp+lk++  +t++ +++l+ ee++ ++ ++++ +q + f+r  e n+++++++  r+r +a++ q+ +
+  GCF_000006845_016440  40 DRLCETAEAQNASDILISKGFPPSLKINSALTPQPQKALTGEETAAIAASTMNAEQSEIFRRDGEINYSVQSRSGTRYRANAYYSQGSA 128
+                           56666777899****************************************************************************** PP
+
+       pilU.mafft-edit  92 GmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGld 180
+                           G+vlrri+  ip + el lpe lk++a+a rGl+++vG tGsGkstt+a+++++rn+   Ghi+t+edp+ef+++ +rc+ tqre+G+d
+  GCF_000006845_016440 129 GLVLRRINHVIPQMRELGLPEKLKDLAVAPRGLLIIVGPTGSGKSTTMATMLEHRNKTLPGHIVTIEDPIEFIYKPRRCIFTQREIGVD 217
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 181 tesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrlip 269
+                           t  ++ a++n++rq+pdv+ iGe+r+re+meya++ a+tGhlc+ tlhan+a q+l+ri++++p+e+++q+l+d++lnl ++++qrl  
+  GCF_000006845_016440 218 TINWQTAVQNAMRQSPDVVCIGEVRSRESMEYAMQLAQTGHLCIFTLHANTAPQSLERILNFYPKEQHNQILIDIALNLTGIICQRLAL 306
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 270 kkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsan 342
+                           kkd+ gr+a+v++l+ntp + d+i kG++ ++ ++m+ ++  Gmqt+dq lfely +g isye+alr++ san
+  GCF_000006845_016440 307 KKDKTGRTAVVDLLINTPAIQDFILKGDLMNISKIMETAKTDGMQTMDQNLFELYRHGIISYEEALRQSVSAN 379
+                           ********************************************************************99988 PP
+
+>> GCF_000006745_004240  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  348.4   1.0  7.5e-107  4.9e-104       2     332 ..       3     332 ..       2     339 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 348.4 bits;  conditional E-value: 7.5e-107
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +ll+  v++++sdl+++a+vpp++++dG+v+k++  +++++++++l+ +i+++ q++++e++ e +f+ +  ++Grfrv+af q   
+  GCF_000006745_004240   3 IAELLEFSVKHNASDLHLSAGVPPMVRIDGEVRKLGVPAFTHSDVHRLIFEIMNDAQRSEYEEKLEVDFSFELPNVGRFRVNAFHQARG 91 
+                           789************************************************************************************** PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                             +v+r+i+t iptl++l+ pe++ ++a   +Glvl+ G tGsGksttlaa+v+y n++ + hilt+edp+efvh+ ++c++ qrev  
+  GCF_000006745_004240  92 CSAVFRTIPTVIPTLEQLDAPEIFSKIANYEKGLVLVTGPTGSGKSTTLAAMVNYVNAHHNKHILTIEDPIEFVHSNNKCLINQREVHR 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dt+sf+ al+++lr+ pdvil+Ge+rd+et+  a++ aetGhl + tlh+ sa +++drii+++p   +  +   ls  lra++aq+l+
+  GCF_000006745_004240 181 DTHSFKNALRSALREDPDVILVGELRDQETISLALTAAETGHLVFGTLHTSSAAKTIDRIIDVFPGSDKDMVRSMLSESLRAVIAQKLL 269
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisye 332
+                           ++  g gr+a+ e++l tp + +lir  +v+++ ++++     Gmqt++q   +l+ +g +  +
+  GCF_000006745_004240 270 KRV-GGGRVACHEIMLATPAIRNLIREDKVAQMYSIIQTGAAHGMQTMEQNAKQLIARGVVDAQ 332
+                           876.559********************************************9999988877655 PP
+
+>> GCF_000006725_000270  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  341.4   0.2  1.1e-104  6.9e-102       2     338 ..       3     338 ..       2     343 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 341.4 bits;  conditional E-value: 1.1e-104
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +ll+  v++++sdl+++a++pp+++vdG v++++  +++++++++l+ +i+s+kq++d+e++ e++f+ +  ++ rfrv+af q+  
+  GCF_000006725_000270   3 IAELLAFSVKNNASDLHLSAGLPPMIRVDGDVRRINIPAFDHKQVQSLIYDIMSDKQRRDYEEALETDFSFEIPSLSRFRVNAFNQERG 91 
+                           7899************************************************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           +G+v+r+i+ k+ tldel   +v++++  + +Gl+l+ G tGsGksttlaa++++ n+n++Ghilt+edp+efvh+ ++c++ qrev  
+  GCF_000006725_000270  92 AGAVFRTIPNKVMTLDELGCLPVFRKLIEEPQGLILVTGPTGSGKSTTLAAMIDHINKNAHGHILTIEDPIEFVHTSQKCLINQREVHR 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dt+ f+ al ++lr+ pd+iliGe+rd et+  a++ aetGhl + tlh+nsa ++++rii+++p+ ++  +   ls  l ++++q l+
+  GCF_000006725_000270 181 DTHDFNKALSSALREDPDIILIGELRDLETIRLALTAAETGHLVFGTLHTNSAAKSINRIIDVFPAAEKPMVRSMLSESLCGIISQMLL 269
+                           **************************************************************************************999 PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrna 338
+                           +k  g gr+aa e++++tp + +lir  +v+++ + ++  ++ Gmqt+dq l +l++++ i+ ++a + a
+  GCF_000006725_000270 270 KKV-GGGRTAAWEIMVGTPAIRNLIREDKVAQMYSSIQTGQQYGMQTLDQHLQDLIKRNLITRQQAREYA 338
+                           776.569********************************************************9997766 PP
+
+>> GCF_000006765_003910  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  338.2   0.2  9.8e-104  6.4e-101       2     338 ..       3     338 ..       2     340 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 338.2 bits;  conditional E-value: 9.8e-104
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +ll+   ++++sdl+++a++pp+++vdG v++++  pl++++++ l+ +i+++kq++dfe+  e++f+ ++ g+ rfrv+af q+  
+  GCF_000006765_003910   3 ITELLAFSAKQGASDLHLSAGLPPMIRVDGDVRRINLPPLEHKQVHALIYDIMNDKQRKDFEEFLETDFSFEVPGVARFRVNAFNQNRG 91 
+                           7789999999******************************************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           +G+v+r+i+ k+ t++el + ev+k v+   rGlvl+ G tGsGksttlaa+++y n+ ++ hilt+edp+efvhe k+c+v qrev  
+  GCF_000006765_003910  92 AGAVFRTIPSKVLTMEELGMGEVFKRVSDVPRGLVLVTGPTGSGKSTTLAAMLDYLNNTKYHHILTIEDPIEFVHESKKCLVNQREVHR 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                           dt  f  al+++lr+ pd+il+Ge+rd et+  a++ aetGhl + tlh+ sa +++dr+++++p+e+++ +   ls  l+++++q li
+  GCF_000006765_003910 181 DTLGFSEALRSALREDPDIILVGEMRDLETIRLALTAAETGHLVFGTLHTTSAAKTIDRVVDVFPAEEKAMVRSMLSESLQSVISQTLI 269
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrna 338
+                           +k +  gr+aa e++++tp + +lir  +v+++ + ++    lGmqt+d +l  l+ +g is e+a ++a
+  GCF_000006765_003910 270 KKIG-GGRVAAHEIMIGTPAIRNLIREDKVAQMYSAIQTGGSLGMQTLDMCLKGLVAKGLISRENAREKA 338
+                           8775.59**********************************************************98876 PP
+
+>> GCF_000006845_016430  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  317.5   0.8   1.9e-97   1.3e-94       2     338 ..       3     339 ..       2     343 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 317.5 bits;  conditional E-value: 1.9e-97
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +ll+   ++k+sdl+++ ++ p+++v+G +++++  ++s ee+ ++v+++++++q++ ++++ e +f+ +  ++ rfrv+af     
+  GCF_000006845_016430   3 ITDLLAFGAKNKASDLHLSSGISPMIRVHGDMRRINLPEMSAEEVGNMVTSVMNDHQRKIYQQNLEVDFSFELPNVARFRVNAFNTGRG 91 
+                           7789999999******************************************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           + +v+r+i+ ++ +l+elk p++++++a + rG+vl+ G tGsGksttlaa+++y ne +  hilt+edp+efvh+ k++++ qre+  
+  GCF_000006845_016430  92 PAAVFRTIPSTVLSLEELKAPSIFQKIAESPRGMVLVTGPTGSGKSTTLAAMINYINETQPAHILTIEDPIEFVHQSKKSLINQRELHQ 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                            t sf  al ++lr+ pdvil+Ge+rd et+  a++ aetGhl + tlh+  a +++dri++++p+ ++e +   ls  l a+++q+l+
+  GCF_000006845_016430 181 HTLSFANALSSALREDPDVILVGEMRDPETIGLALTAAETGHLVFGTLHTTGAAKTVDRIVDVFPAGEKEMVRSMLSESLTAVISQNLL 269
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrna 338
+                           +++dg gr+a  e+l+  p v +lir  +++++ +v++  r  Gmqt+dq+l +l+ +g i+ e + r+a
+  GCF_000006845_016430 270 KTHDGDGRVASHEILIANPAVRNLIRENKITQINSVLQTGRASGMQTMDQSLQSLVRQGLIAPEATRRRA 339
+                           *************************************************************998877776 PP
+
+>> GCF_000006925_026070  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  290.6   0.0   2.9e-89   1.9e-86       2     323 ..      18     335 ..      17     341 .] 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 290.6 bits;  conditional E-value: 2.9e-89
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           +e++++l v+++ sdl++    p+  ++ G++      p++  ++ +l+r+ l+++q+a   ++ + +fa+s ++  r+r saf q++ 
+  GCF_000006925_026070  18 MEEIVALSVKHNVSDLHLCSAWPARWRIRGRMEA---APFDAPDVEELLREWLDDDQRAILLENGQLDFAVSLAENQRLRGSAFAQRQG 103
+                           78999*************************9865...57999*********************************************** PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           + + lr ++ + p l++l  p+vl e+  +  Gl+l+ GatGsGksttlaa+vgy n++++ hilt+edpve++++ +rc++ qre+Gl
+  GCF_000006925_026070 104 ISLALRLLPSHCPQLEQLGAPPVLPELLKSENGLILVTGATGSGKSTTLAAMVGYLNQHADAHILTLEDPVEYLYASQRCLIQQREIGL 192
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                              +f   l+++lr+ pdvil+Ge+rd et+  a++ aetGhl latlh+  a qa++r+++ +p++++  +  +l+  lra+++q+l 
+  GCF_000006925_026070 193 HCMTFASGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSFPAQEKDPVRNQLAGSLRAVLSQKLE 281
+                           ***************************************************************************************96 PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfel 323
+                            +k + gr+a +e+l+ntp v +lir G+ h+l +v++  +++Gm tf+q+  + 
+  GCF_000006925_026070 282 VDK-QEGRVALFELLINTPAVGNLIREGKTHQLPHVIQTGQKVGMLTFQQSYQQR 335
+                           665.579*******************************************97765 PP
+
+>> GCF_000005845_026740  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  290.5   0.0     3e-89     2e-86       2     321 ..       3     318 ..       2     326 .] 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 290.5 bits;  conditional E-value: 3e-89
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           +e++++l v+++ sdl++    p+  ++ G++      p+++ ++ +l+r+ l+++q+a   ++ + +fa+s ++  r+r saf q++ 
+  GCF_000005845_026740   3 MEEIVALSVKHNVSDLHLCSAWPARWRIRGRMEA---APFDTPDVEELLREWLDDDQRAILLENGQLDFAVSLAENQRLRGSAFAQRHG 88 
+                           78999*************************9865...579************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           + + lr ++ + p l++l  p+vl e+  +  Gl+l+ GatGsGksttlaa+vgy n++++ hilt+edpve++++ +rc++ qre+Gl
+  GCF_000005845_026740  89 ISLALRLLPSHCPQLEQLGAPTVLPELLKSENGLILVTGATGSGKSTTLAAMVGYLNQHADAHILTLEDPVEYLYASQRCLIQQREIGL 177
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                              +f   l+++lr+ pdvil+Ge+rd et+  a++ aetGhl latlh+  a qa++r+++ +p++++  +  +l+  lra+++q+l 
+  GCF_000005845_026740 178 HCMTFASGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSFPAQEKDPVRNQLAGSLRAVLSQKLE 266
+                           ***************************************************************************************96 PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalf 321
+                            +k + gr+a +e+l+ntp v +lir G+ h+l +v++  +++Gm tf+q+  
+  GCF_000005845_026740 267 VDK-QEGRVALFELLINTPAVGNLIREGKTHQLPHVIQTGQQVGMITFQQSYQ 318
+                           665.579*******************************************975 PP
+
+>> GCF_000006945_030160  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  272.2   0.0   1.2e-83   7.6e-81       2     319 ..       3     316 ..       2     324 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 272.2 bits;  conditional E-value: 1.2e-83
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           +e+++ l v+++ sdl++    p+  + +G++ +    p++  ++ +l+ + l++ q  +++   + +fa+s +g+ r+r saf+ q+ 
+  GCF_000006945_030160   3 MEEIVTLSVKHNVSDLHLCNAWPARWRKQGRMEN---APFTAPDVDRLLLDWLNDAQQYQWRTHGQLDFAVSLSGTRRLRASAFTHQQG 88 
+                           78999*************************9875...57999*********************************************** PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           + + lr ++ + p l++++ p+++  +  +  Gl+l+ GatG+Gksttlaa+vgy n++++ hilt+edp+e+ ++ krc++ qre+G 
+  GCF_000006945_030160  89 TSLALRLLPERCPDLAKIQTPPIVPALLASENGLILVTGATGCGKSTTLAAMVGYLNQHADKHILTLEDPIEYRYTSKRCLIQQREIGQ 177
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                              +f + l+++lr+ pdvil+Ge+rd et+  a++ aetGhl latlh+  a qa++r+++ +p++++e +  +l+  lra+++q+l 
+  GCF_000006945_030160 178 HCATFAAGLRAALREDPDVILLGELRDSETIRLALTAAETGHLVLATLHTRGAAQAVERLVDSFPAQEKEPVRSQLAGSLRAVLSQKLE 266
+                           ***************************************************************************************95 PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqa 319
+                            ++ + gr+a +e+l+ntp   +lir G++h+l +v++  +++Gm tf q+
+  GCF_000006945_030160 267 VDR-QDGRVALFELLINTPATGNLIREGKLHQLAHVIQTGQQQGMMTFAQS 316
+                           554.4589*****************************************98 PP
+
+>> GCF_000006765_006790  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -2.5   0.0       4.2   2.8e+03     204     245 ..      51      92 ..      39      94 .. 0.74
+   2 !  110.8   0.9   1.5e-34   9.5e-32       2     270 ..     109     377 ..     108     385 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: -2.5 bits;  conditional E-value: 4.2
+       pilU.mafft-edit 204 irdretme.yaiafaetGhlclatlhansanqaldriihlvpe 245
+                           +rd e     a a+++tG    a + a +++  ldr+++ +pe
+  GCF_000006765_006790  51 VRDDELDTlLASAYSDTGSA-AAVVGAAESEVDLDRLMDDIPE 92 
+                           56555322157889999985.5888999999999999998886 PP
+
+  == domain 2  score: 110.8 bits;  conditional E-value: 1.5e-34
+       pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr...frvsa 84 
+                           +++ll +    ++sd++i    +   +  +vdG +++v   + + + al    +i+ +  +a+ +  +++  a+ ++g  r    rvs+
+  GCF_000006765_006790 109 INALLTQAARDEASDIHIEpfeTHSVVRYRVDGALRDVVAPRKALHAALVSRIKIMAQLDIAEKRLPQDGRIALRVAG--RpidIRVST 195
+                           7999999999*******9632234556779*******99655555555555568999999999999999999996665..43349**** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkipt..ldelkl.pevl...kevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                               +   +v+r ++ +     l+ l + p vl   +++  +  G+vl+ G tGsGk+ttl a +  r + s+  iltvedpve+    
+  GCF_000006765_006790 196 VPTGHGERVVMRLLDKQAGRlrLETLGMaPGVLaplDNLIRQPHGIVLVTGPTGSGKTTTLYAALA-RLDASTSNILTVEDPVEYDLPG 283
+                           *9999999999999988765126788765778722145666778****************988775.889999************7765 PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldls 256
+                            + +  q +  +d  +f val++ lrq pd+i+iGeird et + a++ + tGhl latlh+n+a  a+ r++++  e     +ll  s
+  GCF_000006765_006790 284 ISQI--QVNARIDM-TFAVALRAILRQDPDIIMIGEIRDLETAQIAVQASLTGHLVLATLHTNDAVSAVTRLVDMGVE----PFLLASS 365
+                           5444..44455664.7********************************************************987543....3444444 PP
+
+       pilU.mafft-edit 257 lnlralvaqrlipk 270
+                             + +++aqrl+++
+  GCF_000006765_006790 366 --MLGVLAQRLVRR 377
+                           ..356777777766 PP
+
+>> GCF_000006905_001730  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  109.3   0.6     4e-34   2.6e-31       2     276 ..     113     387 ..     112     392 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 109.3 bits;  conditional E-value: 4e-34
+       pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplskeealtlvra..ilsekqladfertkecnfaisaeg.iGrfrvsa 84 
+                           ++ l+++ v  ++sd++i      + + l++dG +t+v   +ls+  a+ lv+   ++ +  +a+ +  +++  +++  g +   rvs+
+  GCF_000006905_001730 113 INGLIAEAVRLGASDIHIEpfeKALIVRLRIDGVLTEVL--SLSPRIAAMLVSRvkVMAKLDIAEKRVPQDGRISLALGGkSLDVRVST 199
+                           68899999*********9732235667899******998..79999999998761156766777766667766665544313469**** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkiptl..delkl.pevlkevalakr...GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvef.vhe 166
+                           +  +    +v+r ++     l   +l + p+vl  +  a r   G++l+ G tGsGk+ttl a +   n+ns   ilt+edpve+ vh 
+  GCF_000006905_001730 200 LPARMGERVVMRILDKDQAGLrlSDLGMsPDVLSALETAVRephGIILVTGPTGSGKTTTLYAALAVLNDNSR-NILTIEDPVEYaVHG 287
+                           ****999999999999887651167765699**998777655559************************9987.7**********5666 PP
+
+       pilU.mafft-edit 167 hkrcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldl 255
+                             ++ v + +vG+   +f + l++ lrq pdv+++Geird et + a++ + tGhl l+t+h+n+a  a+ r+ ++  e     +l  l
+  GCF_000006905_001730 288 IGQTQV-NTKVGM---TFAAGLRAILRQDPDVVMVGEIRDSETAQIAVQASLTGHLVLSTVHTNDAAGAVVRLRDMGVE----PFL--L 366
+                           666555.456887...699***************************************************998776543....344..6 PP
+
+       pilU.mafft-edit 256 slnlralvaqrlipkkdgkgr 276
+                           +  lr ++aqrl+++  ++ r
+  GCF_000006905_001730 367 ASTLRLVIAQRLVRRLCEHCR 387
+                           677899999999998776666 PP
+
+>> GCF_000005845_029990  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  106.2   0.6   3.6e-33   2.4e-30       2     272 ..     112     382 ..     111     390 .. 0.77
+   2 ?   -0.9   0.0       1.4   8.9e+02     225     240 ..     441     456 ..     419     464 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 106.2 bits;  conditional E-value: 3.6e-33
+       pilU.mafft-edit   2 lekllkllverkgsdlfi.tae..vppalkvdGkvtkvskeplskeealtlvr.ailsekqladfertkecnfa..isaegiGrfrvsa 84 
+                           ++++l + +++ +sd++i t e  +   +++dG ++++  +p +k  al + r +++    +a+ +  +++  +  i +++i   rvs+
+  GCF_000005845_029990 112 INAILSEAIKETASDIHIeTYEktMSIRFRIDGVLRTIL-QPNKKLAALLISRiKVMARLDIAEKRIPQDGRISlrIGRRNI-DVRVST 198
+                           799**************944441145567899*999987.444444444333325677766666666666655511444444.489*** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkip..tldelklp....evlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +       +vlr ++ +    +l++l +     + l+++     G++l+ G tGsGksttl a++   n+     iltvedpve+  e 
+  GCF_000005845_029990 199 LPSIYGERAVLRLLDKNSLqlSLNNLGMTaadkQDLENLIQLPHGIILVTGPTGSGKSTTLYAILSALNTPGR-NILTVEDPVEYELE- 285
+                           9999999999999998865126788887622224578888899**********************99998654.7*********9655. PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldls 256
+                                tq +  +d  sf   l++ lrq pdv+++Geird et + a++ + tGhl l+tlh+nsa  a+ r+ ++  e       + ls
+  GCF_000005845_029990 286 -GIGQTQVNTRVDM-SFARGLRAILRQDPDVVMVGEIRDTETAQIAVQASLTGHLVLSTLHTNSASGAVTRLRDMGVE----S--FLLS 366
+                           .4446777777875.9*******************************************************9877544....3..4478 PP
+
+       pilU.mafft-edit 257 lnlralvaqrlipkkd 272
+                             l +++aqrl+++  
+  GCF_000005845_029990 367 SSLAGIIAQRLVRRLC 382
+                           8899********9865 PP
+
+  == domain 2  score: -0.9 bits;  conditional E-value: 1.4
+       pilU.mafft-edit 225 atlhansanqaldrii 240
+                           a++h n  +qal+r++
+  GCF_000005845_029990 441 AAIHENVDEQALERLV 456
+                           6788888888888876 PP
+
+>> GCF_000005845_000980  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   99.4   0.1   4.2e-31   2.8e-28       4     274 ..      87     357 ..      84     366 .. 0.81
+   2 ?    5.3   0.0     0.018        12     275     319 ..     394     436 ..     388     454 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 99.4 bits;  conditional E-value: 4.2e-31
+       pilU.mafft-edit   4 kllkllverkgsdlfit.ae..vppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaeg.iGrfrvsaflqq 88 
+                             l+  +e+++sd++i  a+      l++dG + ++ + + +   alt   ++l +  +a+++  +++ f+++ +g +  fr++++  +
+  GCF_000005845_000980  87 RTLQSALEQRASDIHIEpADnaYRIRLRIDGVLHPLPDVSPDAGVALTARLKVLGNLDIAEHRLPQDGQFTVELAGnAVSFRIATLPCR 175
+                           56888999********733311456799*********99999999999999*********************98762568********* PP
+
+       pilU.mafft-edit  89 elvGmvlrrietkiptldelkl...pevlkevala...krGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcv 171
+                           +   +vlr ++    +ld  +l   p  l + a a    +Glvl+ G tGsGk+ tl + ++  n+  +  i +vedpve   +  +  
+  GCF_000005845_000980 176 GGEKVVLRLLQQVGQALDVNTLgmqPLQLADFAHAlqqPQGLVLVTGPTGSGKTVTLYSALQKLNTA-DINICSVEDPVEIPIAGLNQT 263
+                           ********99877666654433223455777664311158*****************9999888765.568*********977766666 PP
+
+       pilU.mafft-edit 172 vtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlr 260
+                                 Gl   +f+  l++ lrq pdvi+iGeird et e ai+ a+tGhl l+tlh+ns+ ++l r+ ++  +         ls  l 
+  GCF_000005845_000980 264 QIHPRAGL---TFQGVLRALLRQDPDVIMIGEIRDGETAEIAIKAAQTGHLVLSTLHTNSTCETLVRLQQMGVA------RWMLSSALT 343
+                           55666788...68999*********************************************9999997655322......233788899 PP
+
+       pilU.mafft-edit 261 alvaqrlipkkdgk 274
+                            ++aqrl++k   +
+  GCF_000005845_000980 344 LVIAQRLVRKLCPH 357
+                           99999999986555 PP
+
+  == domain 2  score: 5.3 bits;  conditional E-value: 0.018
+       pilU.mafft-edit 275 graaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqa 319
+                           gr+a +evl  tp++ +li     +++ ++ +++r+ Gm+t+ + 
+  GCF_000005845_000980 394 GRTALFEVLPITPVIRQLISAN--TDVESLETHARQAGMRTLFEN 436
+                           8******************754..455566678999999986544 PP
+
+>> GCF_000006725_018700  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  105.7   0.6   5.2e-33   3.4e-30       3     271 ..     188     456 ..     186     466 .. 0.81
+   2 ?   -1.3   0.0       1.8   1.2e+03     275     323 ..     502     549 ..     496     564 .. 0.59
+
+  Alignments for each domain:
+  == domain 1  score: 105.7 bits;  conditional E-value: 5.2e-33
+       pilU.mafft-edit   3 ekllkllverkgsdlfit...aevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiG.rfrvsaflq 87 
+                           + +++  ve ++sd++i      + +  +vdG +++  + p + + a+    +i+ + ++a+ +  +++   + ++g    +rvs    
+  GCF_000006725_018700 188 NLVIQRAVELRASDIHIEpfeNRLKVRYRVDGVLIDAESPPSKLAAAVVSRVKIMAKLNIAERRLPQDGRIMLRVQGKElDLRVSVVPT 276
+                           567889999*******963224567888999999998877666666666667899999999999999999999887764369****999 PP
+
+       pilU.mafft-edit  88 qelvGmvlrrietkiptldelkl...pevlkeva...lakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrc 170
+                            +   +v+r ++ +   +d  kl    e+l+  +       G++l+ G tGsGk+ttl ++++  n+    +i+tvedpve+  e  + 
+  GCF_000006725_018700 277 SHGESVVMRLLDRETVVFDFQKLgfiDELLNRFSrvlEMPHGILLVTGPTGSGKTTTLYTVLNRLNTT-GVKIITVEDPVEYQIEGINQ 364
+                           99999999999877776665554112466766542214568******************999876664.558***************** PP
+
+       pilU.mafft-edit 171 vvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnl 259
+                           + ++ ++Gld   f  al++ +rq pd+i+iGe+rd et   ai+ a tGhl l+tlh+nsa   l r++++  e+     l  l+  +
+  GCF_000006725_018700 365 IQAKPQIGLD---FASALRSIVRQDPDIIMIGEMRDLETARIAIQSALTGHLVLSTLHTNSAAGGLTRLLDMGVEDY----L--LTSTI 444
+                           *********9...666******************************************************9987763....3..34455 PP
+
+       pilU.mafft-edit 260 ralvaqrlipkk 271
+                           ++++aqrl+++ 
+  GCF_000006725_018700 445 NGVLAQRLVRRL 456
+                           688888888765 PP
+
+  == domain 2  score: -1.3 bits;  conditional E-value: 1.8
+       pilU.mafft-edit 275 graaavevll.ntplvsdlirkGevhelkevmkksrelGmqtf.dqalfel 323
+                           gr+a+ve l+ +  l   +i +  + el ++    r+ Gm+t+ +  l ++
+  GCF_000006725_018700 502 GRTAIVEFLImDDALRRAVISRTGIGELEQIA---RQAGMRTMyEDGLIKA 549
+                           67788886641556667777887787777774...4567766413444443 PP
+
+>> GCF_000006765_030620  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  105.7   0.7   5.1e-33   3.3e-30       2     243 ..     126     373 ..     125     398 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 105.7 bits;  conditional E-value: 5.1e-33
+       pilU.mafft-edit   2 lekllkllverkgsdlfi.tae..vppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr...frvsa 84 
+                           ++++l + + +++sd+++ t e  + + ++vdG +++v + + + +  l    +++    +a+ +  +++   is +  Gr    rvs+
+  GCF_000006765_030620 126 INAILGEAIRENASDIHLeTFEkrLVVRFRVDGVLREVLEPKRELAALLVSRIKVMARLDIAEKRIPQDGR--ISLRVGGRevdIRVST 212
+                           789999**********9834441156778999999999854443333333334556666666555555555..555666664458**** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkiptl..delklpe....vlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +   +   +vlr ++ +   l  ++l + e    +++e   +  G++l+ G tGsGk+ttl a +   n++ +  iltvedp+e+  e 
+  GCF_000006765_030620 213 LPSANGERVVLRLLDKQAGRLnlQHLGMSErdrkLMDETVRKPHGILLVTGPTGSGKTTTLYASLTTLNDR-TRNILTVEDPIEYHLE- 299
+                           **************999876511567665422214555555558*****************9999988865.678*********9433. PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlv 243
+                                tq +  +d  +f   l++ lrq pdv+++Geirdret e a++ + tGhl l+tlh+nsa  a+ r++++ 
+  GCF_000006765_030620 300 -GIGQTQVNAKVDM-TFARGLRAILRQDPDVVMVGEIRDRETAEIAVQASLTGHLVLSTLHTNSAIGAITRLVDMG 373
+                           .2335777777775.699*****************************************************99874 PP
+
+>> GCF_000006765_026420  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  103.3   0.1   2.7e-32   1.8e-29       2     242 ..     192     438 ..     191     463 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: 103.3 bits;  conditional E-value: 2.7e-32
+       pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiG.rfrvsafl 86 
+                           +++++ + +e+++sd++i     ++   ++vdG + ++ + p ++  a+    +++s   +a+ +  +++ ++i ++g+    rvs++ 
+  GCF_000006765_026420 192 VNNVMSQAMEKRSSDIHIEpreFDFRIRFRVDGVLHDQLSLPRERFAAVVSRIKLISAIDIAERRLPQDGRMSIRVSGTElDVRVSTLP 280
+                           578999999*********732256888999*****99987777777776666778999999999999*******988765379*****9 PP
+
+       pilU.mafft-edit  87 qqelvGmvlrrietkip..tldelk.lpevlkeva...lakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkr 169
+                             +   +v+r ++ +     ld l  lp+ l+ +     +  G++l+ G tGsGksttl   ++  n+    ++++vedpve+      
+  GCF_000006765_026420 281 GVHGESVVMRLLPKEREglRLDRLGmLPDHLRRMRawvAEPHGIILVTGPTGSGKSTTLYGALEEINDG-VRKLISVEDPVEYQVPNIT 368
+                           999999999999877651157898647999998752214679*****************9988887764.6689*********777655 PP
+
+       pilU.mafft-edit 170 cvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl 242
+                            v    ++Gl   +f +al++ lrq pdvi+iGeird et e a++ + tGhl l+tlh+n+a  a+ r+i++
+  GCF_000006765_026420 369 QVQVHADIGL---TFAAALRSILRQDPDVIMIGEIRDLETAEIAVQSSLTGHLVLSTLHTNDAVSAFTRLIDM 438
+                           5555555555...79*******************************************************986 PP
+
+>> GCF_000006745_003690  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  101.9   0.3   7.1e-32   4.7e-29       2     270 ..     186     454 ..     185     464 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 101.9 bits;  conditional E-value: 7.1e-32
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppa...lkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiG.rfrvsafl 86 
+                           +++l++  ++ ++sd++i  ++ +     ++dG + +   ++++ ++al l  +++ +  +++ +  +++ f i ++g     r+s++ 
+  GCF_000006745_003690 186 INSLFEDAIQVGASDIHIEPDANVLrlrQRIDGVLHETLLHEVNIASALVLRLKLMANLDISEKRLPQDGRFNIRVKGQSvDIRMSTMP 274
+                           7899999***********9887764222689**9999999999999****************************998764279*****9 PP
+
+       pilU.mafft-edit  87 qqelvGmvlrrietk..iptldelklpe.vlkeva.lakr..GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkr 169
+                            q+   +v+r ++    +  l+e  +p+ +l  +    kr  G++l+ G tGsGk+ttl   ++  n+ s  +i+t edpve+  +  +
+  GCF_000006745_003690 275 IQHGESVVMRLLNQSagVRKLEESGIPPhLLLRLRhQLKRphGMILVTGPTGSGKTTTLYGALNELNT-SGKKIITAEDPVEYRISRIN 362
+                           9999999999987652267899*99975255555413354559****************988876665.4458**************** PP
+
+       pilU.mafft-edit 170 cvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlsln 258
+                            v  + ++ ld   f   l+  lrq pd+il+Ge+rd+et+e  +  a tGhl l+tlh+n+a  +  r+i++        l+   +  
+  GCF_000006745_003690 363 QVQVNPKINLD---FSTLLRTFLRQDPDIILVGEMRDQETVEIGLRAALTGHLVLSTLHTNDAVDSALRLIDM---GAPGYLV---ASA 442
+                           99999999999...7889*****************************************98876555555554...4444443...457 PP
+
+       pilU.mafft-edit 259 lralvaqrlipk 270
+                           +ra+vaqrl++k
+  GCF_000006745_003690 443 VRAVVAQRLVRK 454
+                           899999999987 PP
+
+>> GCF_000006945_002010  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   97.3   0.1   1.8e-30   1.2e-27       2     271 ..      85     354 ..      84     371 .. 0.82
+   2 ?    2.3   0.0      0.14        93     275     300 ..     394     419 ..     389     453 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 97.3 bits;  conditional E-value: 1.8e-30
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevp...palkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisae.giGrfrvsafl 86 
+                           l++ l+  +++++sd+++  ++      l++dG +  + + + ++  alt   ++l +  +a+++  +++ f++  + ++  fr++++ 
+  GCF_000006945_002010  85 LNQTLRSAMAKRASDIHLEPGASryrIRLRIDGVLHILQDIAKETGLALTARLKVLGNLDIAEHRLPQDGQFTVDLAgDSISFRIATLP 173
+                           68899999**********87765222689*****99999888888889999999********************97625679******* PP
+
+       pilU.mafft-edit  87 qqelvGmvlrrietkiptldelklpevlkev......alakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkr 169
+                            +e   +vlr ++    tld  +l     ++        + +Glvl+ G tGsGk+ tl + ++ rn+     + +vedp+e   +  +
+  GCF_000006945_002010 174 CKEGEKVVLRLLHQVEQTLDLDTLGMYGAQLtafrqaLQQPQGLVLVTGPTGSGKTVTLYSALQTRNTPGI-NLCSVEDPIEIPLDGIN 261
+                           **********99998888876555544333310111034568*************************9876.689*******9888777 PP
+
+       pilU.mafft-edit 170 cvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlsln 258
+                                   Gl   +f+  l++ lrq pd+i++Geird +t e ai+ a+tGhl l+tlh+ns+ ++l r+ ++  +      ++ +s  
+  GCF_000006945_002010 262 QTQIHPRAGL---TFQNVLRALLRQDPDIIMVGEIRDGDTAEIAIKAAQTGHLVLSTLHTNSTSETLIRLQQMGVA-----RWM-ISSA 341
+                           6666667888...69999**********************************************999887655322.....233.5667 PP
+
+       pilU.mafft-edit 259 lralvaqrlipkk 271
+                           l  +vaqrl++k 
+  GCF_000006945_002010 342 LTLVVAQRLVRKL 354
+                           7779999999875 PP
+
+  == domain 2  score: 2.3 bits;  conditional E-value: 0.14
+       pilU.mafft-edit 275 graaavevllntplvsdlirkGevhe 300
+                           gr+a +evl  tp + +li  G  ++
+  GCF_000006945_002010 394 GRTALFEVLTVTPALRQLIASGASAQ 419
+                           89*****************9997655 PP
+
+>> GCF_000006725_014600  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -0.6   0.0       1.1   7.2e+02     263     326 ..      15      82 ..       5      96 .. 0.69
+   2 !   98.9   0.2   5.7e-31   3.8e-28       2     242 ..     198     445 ..     197     477 .. 0.83
+
+  Alignments for each domain:
+  == domain 1  score: -0.6 bits;  conditional E-value: 1.1
+       pilU.mafft-edit 263 vaqrlipk...kdgkgraaavevl.lntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyea 326
+                           +a+rl+++   ++   r+a  + +  + pl   li k  v+  k   +++ e Gm  +d + f+  ++
+  GCF_000006725_014600  15 IARRLVQDgsiEEATARTAQNQAMaAKVPLPQWLIDKKLVSTAKLAAANALEFGMPLLDVSAFDHNHN 82 
+                           55666654222344556665555414679999999************************999986543 PP
+
+  == domain 2  score: 98.9 bits;  conditional E-value: 5.7e-31
+       pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkec..nfaisaegiGrfrvsaf 85 
+                           ++k+l   + r++sd++      +  + +++dG ++ v+k p + ++      +++s+  +a+ +  +++     +s+++   frvs++
+  GCF_000006725_014600 198 VNKVLIDAIRRGASDIHFEpyeEDYRVRFRIDGLLKGVAKAPNKLNQRIAARLKVMSQLDIAEKRVPQDGriKLNVSKTKQVDFRVSTL 286
+                           789999999******9875222578899**********999988888888888999999998887777661156778888899****** PP
+
+       pilU.mafft-edit  86 lqqelvGmvlrrietkipt..ldelklp...evlkevalak.rGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehk 168
+                                  +vlr ++       +d+l      + l   a++k  G+vl+ G tGsGk+ +l + +g  n+++   i t edpve      
+  GCF_000006725_014600 287 PTLFGEKVVLRILDGSAAKlgIDKLGYEadqQTLFMEAIHKpYGMVLVTGPTGSGKTVSLYTALGILNDET-RNISTAEDPVEIRLPGV 374
+                           9998889999999877664116777765111444444667747************************9876.58*********999999 PP
+
+       pilU.mafft-edit 169 rcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl 242
+                           + v  + + G+   +f +al++ lrq pdvi++Geird et e ai+ a+tGh+ l+tlh+n+a q++ r++++
+  GCF_000006725_014600 375 NQVQQNNKRGM---TFAAALRSFLRQDPDVIMVGEIRDLETAEIAIKAAQTGHMVLSTLHTNDAPQTIARLMNM 445
+                           99988888887...69*******************************************************997 PP
+
+>> GCF_000006765_044720  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   95.2   0.1   7.8e-30   5.1e-27       2     270 ..     188     457 ..     187     476 .. 0.83
+   2 ?    3.3   0.0     0.069        45     271     304 ..     499     533 ..     496     554 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 95.2 bits;  conditional E-value: 7.8e-30
+       pilU.mafft-edit   2 lekllkllverkgsdlfita.e..vppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnf..aisaegiGrfrvsaf 85 
+                           ++k+l   ++ ++sdl+    e    + ++ dG + +v+k p++ ++  +   +++    +++ ++ +++     +s++++  frv+++
+  GCF_000006765_044720 188 VNKMLLDAIKGGSSDLHFEPyEkiYRVRFRTDGMLHEVAKPPIQLASRISARLKVMAGLDISERRKPQDGRIkmRVSKTKSIDFRVNTL 276
+                           678888889999999987541211568899**************99999999999*999999999999886511567788889*****9 PP
+
+       pilU.mafft-edit  86 lqqelvGmvlrrietk..iptldelklpevlkevala..k..rGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehk 168
+                                  +v+r ++       +d l   e  ke+ la  k  +G++l+ G tGsGk+ +l + ++  n+     i t edpve   e  
+  GCF_000006765_044720 277 PTLWGEKIVMRILDSSsaQMGIDALGYEEDQKELYLAalKqpQGMILVTGPTGSGKTVSLYTGLNILNTTD-INISTAEDPVEINLEGI 364
+                           88777778888777651155789****9999998765222347******************9999999865.579*********99999 PP
+
+       pilU.mafft-edit 169 rcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl.vpeerreqllldls 256
+                           + v  +   G+d   f  al++ lrq pdvi++Geird et e ai+ a+tGh+ ++tlh+nsa ++l r++++ vp+       ++l+
+  GCF_000006765_044720 365 NQVNVNPRQGMD---FSQALRAFLRQDPDVIMVGEIRDLETAEIAIKAAQTGHMVMSTLHTNSAAETLTRLLNMgVPA-------FNLA 443
+                           999999999*99...889******************************************************984553.......3444 PP
+
+       pilU.mafft-edit 257 lnlralvaqrlipk 270
+                             ++ ++aqrl +k
+  GCF_000006765_044720 444 TSVNLIIAQRLARK 457
+                           44444788888766 PP
+
+  == domain 2  score: 3.3 bits;  conditional E-value: 0.069
+       pilU.mafft-edit 271 kdgkgraaavevllntplvsdlir.kGevhelkev 304
+                           ++ kgr+++ ev+ ntp +  +i+  G+  e+ e 
+  GCF_000006765_044720 499 NGYKGRVGIYEVVKNTPALQRIIMeEGNSIEIAEQ 533
+                           5679***************9998724666666554 PP
+
+>> GCF_000006845_014310  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   96.9   0.0   2.4e-30   1.6e-27       2     242 ..     176     424 ..     175     452 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 96.9 bits;  conditional E-value: 2.4e-30
+       pilU.mafft-edit   2 lekllkllverkgsdl...fitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr...frvsa 84 
+                           ++k l   + +++sd+   f   ++   ++vdG++++v + p++    l    +++s   +++ +  +++ + ++ ++ G+   frvs+
+  GCF_000006845_014310 176 IHKTLSDALRSGASDIhfeFYEHNARIRFRVDGQLREVVQPPIAVRGQLASRIKVMSRLDISEKRIPQDGRMQLTFQKGGKpvdFRVST 264
+                           67788888889999983334456778889***************9999999999********************9999997777***** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkip..tldelklpevlkevala...k.rGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +       +v+r ++       +d+l + +  k++ l+   +  G+vl+ G tGsGk+ +l + ++  n++s   i t edp e     
+  GCF_000006845_014310 265 LPTLFGEKVVMRILNSDAAslNIDQLGFEPFQKKLLLEaihRpYGMVLVTGPTGSGKTVSLYTCLNILNTESV-NIATAEDPAEINLPG 352
+                           98766666666666665541168999999998888554111336*************************9987.79*********9999 PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl 242
+                            + v  + + Gl   +f +alk+ lrq pd+i++Geird et + ai+ a+tGh+ ++tlh+n+a  +l r++++
+  GCF_000006845_014310 353 INQVNVNDKQGL---TFAAALKSFLRQDPDIIMVGEIRDLETADIAIKAAQTGHMVFSTLHTNNAPATLSRMLNM 424
+                           999999999999...699******************************************************997 PP
+
+>> GCF_000006745_024820  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   95.8   0.3   5.4e-30   3.5e-27       2     269 ..     127     394 ..     126     402 .. 0.73
+   2 ?   -3.3   0.0         7   4.6e+03     272     295 ..     437     460 ..     433     499 .. 0.67
+
+  Alignments for each domain:
+  == domain 1  score: 95.8 bits;  conditional E-value: 5.4e-30
+       pilU.mafft-edit   2 lekllkllverkgsdlfi.tae..vppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr...frvsa 84 
+                           ++++l + +++++sd++i t e  +   ++vdG +++v   + + ++ l    +++ +  +a+ +  +++  ++     Gr    rvs+
+  GCF_000006745_024820 127 INAMLGEAIKEGASDIHIeTFEktLSIRFRVDGVLREVLAPSRKLSSLLVSRVKVMAKLDIAEKRVPQDGRISLR--IGGRavdVRVST 213
+                           789999***********9444511445678999999887444333344444446777777777777777766554..44443238**** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkiptldelklpevlke....valakr..GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +   +   +v+r ++ +   ld  +l    ++      l kr  G++l+ G tGsGksttl a ++  n+ s+  iltvedp+ef  + 
+  GCF_000006745_024820 214 MPSSHGERVVMRLLDKNATRLDLHSLGMTAHNhdnfRRLIKRphGIILVTGPTGSGKSTTLYAGLQELNS-SERNILTVEDPIEFDID- 300
+                           **9999999****99999988765554443331111235555559****************998877665.5678**********544. PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldls 256
+                                tq +  +d  +f   l++ lrq pdv+++Geird et + a++ + tGhl ++tlh+n+a  a+ r+ ++  e     +l+  s
+  GCF_000006745_024820 301 -GIGQTQVNPRVDM-TFARGLRAILRQDPDVVMVGEIRDLETAQIAVQASLTGHLVMSTLHTNTAVGAVTRLRDMGIE----PFLI--S 381
+                           .3445666666775.699***************************************************998665332....2333..4 PP
+
+       pilU.mafft-edit 257 lnlralvaqrlip 269
+                             l +++aqrl++
+  GCF_000006745_024820 382 SSLLGVLAQRLVR 394
+                           4455666666665 PP
+
+  == domain 2  score: -3.3 bits;  conditional E-value: 7
+       pilU.mafft-edit 272 dgkgraaavevllntplvsdlirk 295
+                           + +gr+++ e+ll    + +li+ 
+  GCF_000006745_024820 437 GYRGRTGIHELLLVDDALQELIHS 460
+                           567777777777777777777753 PP
+
+>> GCF_000006745_021960  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   88.3   0.1   9.9e-28   6.5e-25       2     278 ..     186     463 ..     185     473 .. 0.77
+   2 ?    4.2   0.0     0.037        24     274     326 ..     498     548 ..     493     558 .. 0.80
+
+  Alignments for each domain:
+  == domain 1  score: 88.3 bits;  conditional E-value: 9.9e-28
+       pilU.mafft-edit   2 lekllkllverkgsdlfit...aevppalkvdGkvtkvskeplske.ealtlvrailsekqladfertkec..nfaisaegiGrfrvsa 84 
+                           ++++l   v +++sd++      +    l+ dG +++   +p s+  + l    +ils+  +a+ +  +++     +s++++  +rvs+
+  GCF_000006745_021960 186 INQVLLDAVRKGASDIHFEpyeNQYRIRLRCDGILVETQ-QPASHLsRRLAARIKILSKLDIAERRLPQDGriKLRLSRDTAIDMRVST 273
+                           788999999999999986522145667788999888766.44444404444445788887777666555551156788999999***** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkiptl..delklpevlkevala..kr..GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +       +vlr ++     l  d+l   +  k++ l+  kr  G++l+ G tGsGk+ +l + +   n+ s+  i t edpve   + 
+  GCF_000006745_021960 274 LPTLWGEKIVLRLLDSSAANLdiDKLGYNPQQKQLYLNalKRpqGMILMTGPTGSGKTVSLYTGLRILNT-SQINISTAEDPVEINLSG 361
+                           999999999***99998887611567766667776553225445*************9999776666665.556899************ PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldls 256
+                            + v  q ++G+    f  al++ lrq pdv+++Geird et e a++ a+tGhl l+tlh+nsa +++ r+ ++  e       ++l+
+  GCF_000006745_021960 362 INQVQVQPKIGF---GFAEALRSFLRQDPDVVMVGEIRDLETAEIAVKAAQTGHLVLSTLHTNSAAETVIRLANMGVEP------FNLA 441
+                           ***********9...5999**********************************************99999988875543......5566 PP
+
+       pilU.mafft-edit 257 lnlralvaqrlipkkdgkgraa 278
+                             l  ++aqrl ++  ++ ++a
+  GCF_000006745_021960 442 SSLSLIIAQRLARRLCKHCKIA 463
+                           6666688888877776666655 PP
+
+  == domain 2  score: 4.2 bits;  conditional E-value: 0.037
+       pilU.mafft-edit 274 kgraaavevl.lntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyea 326
+                            gr+++ ev+ +nt l+  ++++  +h++ ++    +  Gmqt++++  e + +
+  GCF_000006745_021960 498 SGRVGIYEVMaFNTELAEAIMQRASIHQIERLA---KANGMQTLQESGLEKLRE 548
+                           5899****99579999999********998875...567999999886666555 PP
+
+>> GCF_000006765_051490  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   89.0   0.0   6.2e-28   4.1e-25       9     242 ..     218     458 ..     210     480 .. 0.72
+   2 ?   -1.5   0.0       2.1   1.4e+03     270     294 ..     522     546 ..     516     565 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 89.0 bits;  conditional E-value: 6.2e-28
+       pilU.mafft-edit   9 lverkgsdlfita...evppalkvdGkvtkvskeplskeealtlvr..ailsekqladfertkecnfaisaeg..iGrfrvsaflqqel 90 
+                             ++++sd++i     +  + +++dG + +v + p  ++ ++ +v+  + l   ++a+ ++ +++    ++ +     +r+s++     
+  GCF_000006765_051490 218 AFQQRASDIHIEPrreQGTVRFRIDGVLHNVYQFP--PQVTMAVVSrlKSLGRMNVAEKRKPQDGRVKTKTPDgaEVELRLSTLPTAFG 304
+                           55666777776541113345677777777776444..3334444430034444555555555555555544431123567777776666 PP
+
+       pilU.mafft-edit  91 vGmvlrri..etkiptldelklp..ev..lkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvt 173
+                             mv+r    e+ + ++d+l +   ++   + ++ +  G++l+ G tGsGk+ttl + +    ++ +  + t+edp+e +    + +  
+  GCF_000006765_051490 305 EKMVMRIFdpEVLLKSFDQLGFSadDLrrWQSMTSQPNGIILVTGPTGSGKTTTLYTTLKQLATD-EVNVCTIEDPIEMIEPSFNQMQV 392
+                           66777766224556778887764222311456666778*****************9998877665.5589*****************99 PP
+
+       pilU.mafft-edit 174 qrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl 242
+                           q ++ l    f   +++ lrq pd+i++Geird et e ai+ a tGhl l+tlh+n++  a+ r+++l
+  GCF_000006765_051490 393 QHNIDLT---FASGVRALLRQDPDIIMVGEIRDLETAEMAIQAALTGHLVLSTLHTNDSPTAITRLLEL 458
+                           *999885...67788889************************************************987 PP
+
+  == domain 2  score: -1.5 bits;  conditional E-value: 2.1
+       pilU.mafft-edit 270 kkdgkgraaavevllntplvsdlir 294
+                           +++ +gra++ e++l +  + +li 
+  GCF_000006765_051490 522 DTGYRGRAGVYEIMLLSDSLKELIT 546
+                           56679**********9999999986 PP
+
+>> GCF_000006745_007610  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   82.6   0.0   5.5e-26   3.6e-23     119     240 ..     226     351 ..      90     378 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 82.6 bits;  conditional E-value: 5.5e-26
+       pilU.mafft-edit 119 lakrGlvllvGatGsGksttlaalvg...yrnenssGhiltvedpvefvhe..hkrcvvtqrevGldtesfevalknslrqapdviliG 202
+                            +  Gl ++ G+tGsGkst+l   ++   +   + +G  +tvedpve++ +   ++++v+  +     + f  a+++++r+ pdvi+iG
+  GCF_000006745_007610 226 NTSYGLFIVSGTTGSGKSTSLKKYIEllfFNKYKGKGCFVTVEDPVEYLISgaQQSSIVADNDD-KTKNPFADAVRSAMRRDPDVIMIG 313
+                           4668*****************998874424555679************8652256677777664.56789******************* PP
+
+       pilU.mafft-edit 203 eirdretmeyaiafaetGhlclatlhansanqaldrii 240
+                           eird+ t+e   +  e+Gh cl+t+ha s    l+r+ 
+  GCF_000006745_007610 314 EIRDKPTVEALSSAVESGHYCLTTIHAGSVVSVLQRLS 351
+                           *********999999**************999999975 PP
+
+>> GCF_000006765_042490  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   49.3   0.3   7.1e-16   4.7e-13     118     243 ..     212     339 ..     190     388 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 49.3 bits;  conditional E-value: 7.1e-16
+       pilU.mafft-edit 118 alakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcv..vtqr..evGldtesfevalknslrqapdviliG 202
+                           a+++r  +l+ G tG+Gk+t l  + g+ +e+    i+t+ed  e    h++ v   t+     G    +    ++n+lr  pd i++G
+  GCF_000006765_042490 212 AVSRRCNILISGGTGTGKTTLLNVISGFIDERE--RIVTIEDTAELQLGHDHVVrlETRPpnAEGYGEVTARDLIRNALRMRPDRIILG 298
+                           799*************************98765..7*******998877666551033321122333333344589************* PP
+
+       pilU.mafft-edit 203 eirdretmeyaiafaetGhl.clatlhansanqaldriihlv 243
+                           eir  e ++  ++  +tGh   ++t+hansa  +l r+  lv
+  GCF_000006765_042490 299 EIRGVEVLDV-LQAMNTGHDgSMSTVHANSAMDSLLRMEMLV 339
+                           ********96.78889999637**********9998876555 PP
+
+>> GCF_000006905_024050  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   46.7   0.0   4.6e-15     3e-12     117     240 ..     153     277 ..     146     286 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 46.7 bits;  conditional E-value: 4.6e-15
+       pilU.mafft-edit 117 valakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcv..vtqr.evGldtesfevalknslrqapdviliG 202
+                            a+++r  ++l G t sGk+t l alv      ++  ++ +ed  e   +h++++  ++ r + G      e  l++slr  pd il+G
+  GCF_000006905_024050 153 TAIQRRKTIVLSGGTSSGKTTLLNALVKEIP--AHERLVLIEDAPEIQLRHENAIglIAARsDTGEAQVDAEDLLQASLRMRPDRILLG 239
+                           58999*********************97555..556799999998877777776433766635565555566789************** PP
+
+       pilU.mafft-edit 203 eirdretmeyaiafaetGhl.clatlhansanqaldrii 240
+                           e+r re+ ++ +   +tGh   ++t+ha+s   ald+i 
+  GCF_000006905_024050 240 ELRGREAFAF-LRAVNTGHPgSITTVHADSPQGALDQIA 277
+                           *******999.5667899963799************995 PP
+
+>> GCF_000006905_029150  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   41.0   0.0   2.4e-13   1.6e-10     121     242 ..     273     396 ..     154     401 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 41.0 bits;  conditional E-value: 2.4e-13
+       pilU.mafft-edit 121 krGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcv.vtqrevGldte...sfevalknslrqapdviliGeir 205
+                            r  +++ G tGsGk+t l +++ + +   +  ++t ed  e   +  + v +  r   l+     +    +kn+lr  p+ i++Ge+r
+  GCF_000006905_029150 273 CRCNLVISGGTGSGKTTLLNTMTAFIDP--TERVVTCEDAAELQLQQPHVVrLETRPPNLEGSgavTMRDLVKNCLRMRPERIIVGEVR 359
+                           45566789*****************865..678*********976665555245666666543111566678***************** PP
+
+       pilU.mafft-edit 206 dretmeyaiafaetGhl.clatlhansanqaldriihl 242
+                             e+ +  ++  +tGh   + tlhans  +a+ ri  +
+  GCF_000006905_029150 360 GPEAFDL-LQAMNTGHDgSMGTLHANSPREAISRIESM 396
+                           *****97.677899996379**************9765 PP
+
+>> GCF_000006725_015970  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   39.4   0.0   7.5e-13   4.9e-10     116     245 ..     171     301 ..     145     315 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 39.4 bits;  conditional E-value: 7.5e-13
+       pilU.mafft-edit 116 evalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehk.rcv..vtqre.vGldtesfevalknslrqapdvil 200
+                           ++a++    +++vG tGsGk+t   ++++   +  +  ++tved  e   +h+ + v     r+  G  +   + a+ ++lr  pd il
+  GCF_000006725_015970 171 KLAMQHGLTLVIVGKTGSGKTTIGKSITNCIPT--DERLVTVEDVHEMFLNHHpNKVhlFYSRDgEGSLSINPKQAIASCLRMKPDRIL 257
+                           5677665556789*********99999987665..5689******99665554144311344431232233346899************ PP
+
+       pilU.mafft-edit 201 iGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpe 245
+                           + e+r  e+ e+  +   +Gh  ++t ha  a +a+d+i+ l+ +
+  GCF_000006725_015970 258 LTEMRGDEAWEFV-KAVGSGHPGISTAHAGGALEAFDQIVALIKD 301
+                           ***********96.55679*********************99865 PP
+
+>> GCF_000005845_004500  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   17.2   0.0   4.1e-06    0.0027     119     186 ..      32      99 ..      20     119 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 17.2 bits;  conditional E-value: 4.1e-06
+       pilU.mafft-edit 119 lakrGlvl.lvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfev 186
+                           + krG  + lvG +GsGkst la l g  ++ ssG +  v +p+  + e  r+ +  + vG+  +sf +
+  GCF_000005845_004500  32 VVKRGETIaLVGESGSGKSTLLAILAGL-DDGSSGEVSLVGQPLHNMDEEARAKLRAKHVGFVFQSFML 99 
+                           4689965549************999998.56789***************************99999864 PP
+
+>> GCF_000006925_004060  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   17.2   0.0   4.1e-06    0.0027     119     186 ..      32      99 ..      20     119 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 17.2 bits;  conditional E-value: 4.1e-06
+       pilU.mafft-edit 119 lakrGlvl.lvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfev 186
+                           + krG  + lvG +GsGkst la l g  ++ ssG +  v +p+  + e  r+ +  + vG+  +sf +
+  GCF_000006925_004060  32 VVKRGETIaLVGESGSGKSTLLAILAGL-DDGSSGEVSLVGQPLHNMDEEARAKLRAKHVGFVFQSFML 99 
+                           4689965549************999998.56789***************************99999864 PP
+
+>> GCF_000005845_029540  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   16.0   0.0   9.3e-06    0.0061     112     217 ..      26     132 ..      11     140 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 16.0 bits;  conditional E-value: 9.3e-06
+       pilU.mafft-edit 112 evlkevalakr..GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfevalknslrqapdv 198
+                           +vlk++ l+ +    ++l G +GsGkstt+   +++ +e+++G i+   d +e   + ++    ++evG+  + f++    ++ q   +
+  GCF_000005845_029540  26 HVLKNINLTVQpgERIVLCGPSGSGKSTTIRC-INHLEEHQQGRIV--VDGIELNEDIRNIERVRQEVGMVFQHFNLFPHLTVLQNCTL 111
+                           6888887765421468999**********975.78999******96..59***9999999999999***99999998777776665554 PP
+
+       pilU.mafft-edit 199 ..iliGeirdretmeyaiafa 217
+                             i + ++ ++e+ + a+++ 
+  GCF_000005845_029540 112 apIWVRKMPKKEAEDLAVHYL 132
+                           335566666666666666665 PP
+
+>> GCF_000006925_029370  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.4   0.0   1.5e-05    0.0098     112     194 ..      26     107 ..      12     139 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 15.4 bits;  conditional E-value: 1.5e-05
+       pilU.mafft-edit 112 evlkevalakr..GlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfevalknslrq 194
+                           +vlk++ l+ +    ++l G +GsGkstt+   +++ +e+++G i+   d +e   + ++    ++evG+  + f++    ++ q
+  GCF_000006925_029370  26 HVLKNINLTVQpgERIVLCGPSGSGKSTTIRC-INHLEEHQQGRIV--VDGIELNEDIRNIERVRQEVGMVFQHFNLFPHLTVLQ 107
+                           6888887765421468999**********975.78999******96..599**99999999999999999998888766555555 PP
+
+>> GCF_000006745_012390  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.4   0.0   2.9e-05     0.019     112     185 ..      24      96 ..      16     107 .. 0.81
+   2 ?   -1.2   0.0       1.6     1e+03     188     240 ..     156     216 ..     150     223 .. 0.60
+
+  Alignments for each domain:
+  == domain 1  score: 14.4 bits;  conditional E-value: 2.9e-05
+       pilU.mafft-edit 112 evlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfe 185
+                           +vlk++ l+ k+G  +++ G +GsGkst +   ++  +e+++G i+   +  e   + k+  + +revG+  + f+
+  GCF_000006745_012390  24 HVLKNINLNvKKGeRIVICGPSGSGKSTMIR-CINRLEEHQKGQIIVAGN--ELTEDLKNIELVRREVGMCFQHFN 96 
+                           6899887743555267888********8765.6778899******98765..788999999999*****9877776 PP
+
+  == domain 2  score: -1.2 bits;  conditional E-value: 1.6
+       pilU.mafft-edit 188 lknslrqapdviliGeird.......retmeyaiafaetGhlclatlha.nsanqaldrii 240
+                           +  sl   p+++l+ e  +       re ++  ++ ae G   l   h    a +  dr+i
+  GCF_000006745_012390 156 IARSLCMNPQIMLFDEPTSaldpemvREVLDVMVELAEEGMTMLCVTHEmGFAKEVADRVI 216
+                           5555555555555555433222333378888888888888777766664144666667766 PP
+
+>> GCF_000006945_005490  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.2   0.0   1.6e-05     0.011     119     186 ..      32      99 ..      20     118 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 15.2 bits;  conditional E-value: 1.6e-05
+       pilU.mafft-edit 119 lakrGlvl.lvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfev 186
+                           + krG  + l+G +GsGkst la l g   + ssG +  v  p+  + e  r+ +  + vG+  +sf +
+  GCF_000006945_005490  32 VVKRGETIaLIGESGSGKSTLLAILAGLD-DGSSGEVSLVGKPLHQMDEEARAQLRAQHVGFVFQSFML 99 
+                           46899655389***********9999985.6789*******************999999*999999864 PP
+
+>> GCF_000006745_000080  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.5   0.1   5.5e-05     0.036     111     194 ..      14      99 ..       5     118 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 13.5 bits;  conditional E-value: 5.5e-05
+       pilU.mafft-edit 111 pevlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGhiltvedpvefv.hehkrcvvtqrevGldtesfevalknslrq 194
+                            evlk + l+ +rG +v+++G++G+Gkst l   v++ ++  +G i   e  v+   h++ + +  +r+ G+  + + +    + rq
+  GCF_000006745_000080  14 SEVLKGIDLEiQRGeIVVIIGSSGTGKSTLLR-CVNFLEQADQGSIRIDELTVDTQkHTKADVLALRRKTGFVFQNYALFAHLTARQ 99 
+                           5778866654245538999*********9775.689999999999987777887641555555666788888888877776666666 PP
+
+>> GCF_000006745_031910  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   13.7   0.0   4.9e-05     0.032     112     186 ..      23      98 ..      12     145 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: 13.7 bits;  conditional E-value: 4.9e-05
+       pilU.mafft-edit 112 evlkevala..krGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldtesfev 186
+                           ++lk+v l+      v +vGa+G+Gkst ++ l g  ++ s+G +  +  p+  + +  r+ +    vG+  +sf +
+  GCF_000006745_031910  23 TILKQVNLSiqAGESVAIVGASGAGKSTLMTLLAGL-DTPSEGEVYLLGKPLSQLDDEARAALRSESVGFVFQSFLL 98 
+                           578877665204457899**********99988886.67899****9*****9999999999999999999999865 PP
+
+>> GCF_000006945_005040  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.9   0.0   8.2e-05     0.054     113     145 ..     356     390 ..     340     398 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 12.9 bits;  conditional E-value: 8.2e-05
+       pilU.mafft-edit 113 vlkevala..krGlvllvGatGsGksttlaalvgy 145
+                           vl++++l+   r +v lvG tGsGkst  + l+gy
+  GCF_000006945_005040 356 VLQDITLSvpSRSFVALVGHTGSGKSTLASLLMGY 390
+                           78888776337****************99999998 PP
+
+>> GCF_000006945_023080  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.4   0.0   0.00012     0.078     112     167 ..      20      76 ..      11      85 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: 12.4 bits;  conditional E-value: 0.00012
+       pilU.mafft-edit 112 evlkevalakr.Glvl.lvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           evlk v+l+ r G v+ ++G++GsGkst l   +++ ++ s+G i+   + ++ v ++
+  GCF_000006945_023080  20 EVLKGVSLQARaGDVIsIIGSSGSGKSTFLR-CINFLEKPSEGAIIVNGQNINLVRDK 76 
+                           799****998845554389********9886.589***********998888888765 PP
+
+>> GCF_000006745_016400  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.1   0.0   0.00029      0.19     104     145 ..      18      61 ..       6      69 .. 0.77
+   2 ?   -1.1   0.0       1.5   9.8e+02     282     320 ..      86     126 ..      81     129 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 11.1 bits;  conditional E-value: 0.00029
+       pilU.mafft-edit 104 tldelklpevlkevala.krGl.vllvGatGsGksttlaalvgy 145
+                           +ld+ +  ++l +++l  k  l +l+ G+tGsGks+t+ al + 
+  GCF_000006745_016400  18 SLDSTTKDKLLSNLSLLrKASLnILITGSTGSGKSSTINALFDM 61 
+                           567777788999999751556734567*************9886 PP
+
+  == domain 2  score: -1.1 bits;  conditional E-value: 1.5
+       pilU.mafft-edit 282 vllntplvsdlir..kGevhelkevmkksrelGmqtfdqal 320
+                           vl +tp + d i   k +v+ +k++++k  + G  + d  l
+  GCF_000006745_016400  86 VLWDTPGLGDGIDedKKHVQAIKQLLNKRDDHGQLAIDLVL 126
+                           67778888887752366788899999998888887777655 PP
+
+>> GCF_000006925_003620  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.2   0.0   0.00014     0.094     113     145 ..     356     390 ..     339     400 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 12.2 bits;  conditional E-value: 0.00014
+       pilU.mafft-edit 113 vlkevala..krGlvllvGatGsGksttlaalvgy 145
+                           vlk++ l+   r +v lvG tGsGkst  + l+gy
+  GCF_000006925_003620 356 VLKNINLSvpSRNFVALVGHTGSGKSTLASLLMGY 390
+                           67766544228****************99999998 PP
+
+>> GCF_000005845_004050  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   12.0   0.0   0.00015       0.1     113     145 ..     356     390 ..     339     398 .. 0.79
+
+  Alignments for each domain:
+  == domain 1  score: 12.0 bits;  conditional E-value: 0.00015
+       pilU.mafft-edit 113 vlkevala..krGlvllvGatGsGksttlaalvgy 145
+                           vlk++ l+   r +v lvG tGsGkst  + l+gy
+  GCF_000005845_004050 356 VLKNINLSvpSRNFVALVGHTGSGKSTLASLLMGY 390
+                           67766544228****************99999998 PP
+
+>> GCF_000006745_017110  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   11.5   0.0   0.00022      0.14     111     153 ..      21      64 ..       4     121 .. 0.74
+
+  Alignments for each domain:
+  == domain 1  score: 11.5 bits;  conditional E-value: 0.00022
+       pilU.mafft-edit 111 pevlkevala.krG.lvllvGatGsGksttlaalvgyrnenssGh 153
+                            +vlk v+++ krG lv ++G++GsGkst l  ++g  ++ s+G 
+  GCF_000006745_017110  21 TQVLKGVSFElKRGeLVSIIGSSGSGKSTLLH-ILGALDDASEGQ 64 
+                           589***998658886899**********9775.445555555555 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (342 nodes)
+Target sequences:                        30128  (9463607 residues searched)
+Passed MSV filter:                      1276  (0.0423526); expected 602.6 (0.02)
+Passed bias filter:                     1104  (0.0366437); expected 602.6 (0.02)
+Passed Vit filter:                       232  (0.00770048); expected 30.1 (0.001)
+Passed Fwd filter:                        51  (0.00169278); expected 0.3 (1e-05)
+Initial search space (Z):              30128  [actual number of targets]
+Domain search space  (domZ):              46  [number of targets reported over threshold]
+# CPU time: 0.22u 0.00s 00:00:00.22 Elapsed: 00:00:00.22
+# Mc/sec: 14711.61
+//
+[ok]

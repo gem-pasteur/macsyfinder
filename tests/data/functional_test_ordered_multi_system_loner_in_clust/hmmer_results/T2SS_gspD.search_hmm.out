@@ -1,0 +1,76 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T2SS_gspD.hmm
+# target sequence database:        tests/data/base/test_2.fasta
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_18-01-21/hmmer_results/T2SS_gspD.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       gspD_tcoffee_aln  [M=596]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    7.2e-49  158.2  17.7      2e-47  153.4  14.5    2.1  2  VICH001.B.00001.C001_01400  gspd
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01400  gspd
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !    5.7   0.1   0.00024     0.011       4      73 ..      76     141 ..      72     146 .. 0.84
+   2 !  153.4  14.5   4.4e-49     2e-47     254     586 ..     168     535 ..     145     544 .. 0.73
+
+  Alignments for each domain:
+  == domain 1  score: 5.7 bits;  conditional E-value: 0.00024
+            gspD_tcoffee_aln   4 kdadieavvkavgeatgktfivdprVkGkvslvsekplseaealelllsvLrlqgfavvesngvlkvvpe 73 
+                                 +d++ +a+   + + t     + p V G+++l   + ++ +eal +   v +l+gf vv++++v++v p+
+  VICH001.B.00001.C001_01400  76 EDVEAKAFFASLVQGTEYSAAIHPAVTGRITLNL-TDVTLDEALGV---VRDLYGFEVVKEGKVIQVYPA 141
+                                 677888888899999999999**********975.56777777665...6789**************985 PP
+
+  == domain 2  score: 153.4 bits;  conditional E-value: 4.4e-49
+            gspD_tcoffee_aln 254 qlvggtkteegnsgesg.kva.........srssggd.................gasgsag.......saagevtsevegekv 302
+                                 + +++t t++ ns++s  + +         s     +                 ++    +         ++ +++ +  ++ 
+  VICH001.B.00001.C001_01400 168 GTITNTDTNNSNSSSSSsS-SissnsssdgS-----SsnsnsnrsdarggteieTT----NesdfwplLEKAVAQLLGGSGGQ 240
+                                 4444444444444433321.12222222210.....11111222222221123233....03334444334445555566677 PP
+
+            gspD_tcoffee_aln 303 liqadaatNaLiitaseevyrnlreVieqL.DvrraQVlvealivEvsedkakqlGvqwavknagttgagtnfansggsilnl 384
+                                 ++  ++++  L ++a ++ +r+++e +      + +QV+ ea i Ev+  +  q G++w  +    +  g+n++ + gsi + 
+  VICH001.B.00001.C001_01400 241 TVIVNPQAGVLTLRAYPDEIRQVNEFLGISqQRMHRQVILEAKILEVTLSDGYQQGINWSKAFS-SN--GANYKIGSGSITQD 320
+                                 777889999***************997644044578***********************75544.44..47888888888888 PP
+
+            gspD_tcoffee_aln 385 aaaaatt...ngkdalesltlnGvaigvlgknkdlgalvsalksdtksnvLsTPsiltldNeeAkilVGqnvPiltg..svl. 461
+                                  ++  +t    g da+++l   G +  v+  + ++ a++s+++ ++++nvLs P ++ ++N++A i VG +   +t   sv+ 
+  VICH001.B.00001.C001_01400 321 SNGNPITsvlPGLDAIGNL--LGGQSNVVISSGSFDAVISFMATQGDLNVLSSPRVTASNNQKAVIKVGTDEYYVTDlsSVVg 401
+                                 8887777555566666666..5666666668**************************************98776664214444 PP
+
+            gspD_tcoffee_aln 462 tg.sgsdnpfqtverkdvGvkLkvkPqineggavkLdieqEvSavkeras.....saasdlvi...nkRsikttvlvddgdii 535
+                                 tg +++++p  t+     G++L v+Pqi + g v L++   v  v+++++     s+  +l +   + R+ ++ + ++dgd++
+  VICH001.B.00001.C001_01400 402 TGdNAQASPDITLTPFFSGISLDVTPQIDDQGNVLLHVHPAVIEVEQQTKkilyrSEEIELPLarsSIRESDSVIRAKDGDVV 484
+                                 665566677778888888******************************9999987666666551114577788999******* PP
+
+            gspD_tcoffee_aln 536 vlgGLlddneteseekvPlLgdiPllGaLFrskskerektnlmvflrPtii 586
+                                 v+gGL+  n+ ++++kvP+Lgd+P lG+LFr+++k  +kt+l+++l+Pt++
+  VICH001.B.00001.C001_01400 485 VIGGLMKSNTVDQVSKVPFLGDVPALGHLFRNTTKLTQKTELVILLKPTVV 535
+                                 **************************************************9 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (596 nodes)
+Target sequences:                           46  (19704 residues searched)
+Passed MSV filter:                         4  (0.0869565); expected 0.9 (0.02)
+Passed bias filter:                        1  (0.0217391); expected 0.9 (0.02)
+Passed Vit filter:                         1  (0.0217391); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0217391); expected 0.0 (1e-05)
+Initial search space (Z):                 46  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 1174.36
+//
+[ok]

@@ -1,0 +1,9 @@
+# gene: Tad_flp extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Tad_flp.search_hmm.out hmm output
+# profile length= 52
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006765_042530	GCF_000006765	14325	72	Tad_flp	7.600e-20	71.000	0.981	0.722	8	59
+GCF_000006905_008290	GCF_000006905	18359	57	Tad_flp	1.100e-08	35.200	0.885	0.754	8	50
+GCF_000006905_029210	GCF_000006905	20451	59	Tad_flp	2.100e-18	66.400	0.981	0.814	1	48
+GCF_000006925_026670	GCF_000006925	23934	79	Tad_flp	9.700e-14	51.500	0.962	0.646	14	64

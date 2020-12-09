@@ -1,0 +1,11 @@
+# gene: ComM_comEC extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/ComM_comEC.search_hmm.out hmm output
+# profile length= 643
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000005845_008250	GCF_000005845	825	754	ComM_comEC	1.400e-23	84.000	0.687	0.590	126	570
+GCF_000006725_019920	GCF_000006725	6234	825	ComM_comEC	4.300e-62	211.200	0.936	0.724	174	770
+GCF_000006745_017080	GCF_000006745	8276	752	ComM_comEC	4.400e-58	197.900	0.936	0.774	137	718
+GCF_000006765_029440	GCF_000006765	13016	741	ComM_comEC	3.200e-30	105.900	0.686	0.596	129	570
+GCF_000006845_002590	GCF_000006845	15903	691	ComM_comEC	1.100e-33	117.400	0.568	0.518	156	513
+GCF_000006945_009960	GCF_000006945	26576	754	ComM_comEC	3.000e-21	76.200	0.681	0.585	129	569
