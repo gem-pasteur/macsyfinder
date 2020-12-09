@@ -243,15 +243,11 @@ class Cluster:
         if self._score is not None:
             return self._score
         else:
-            seen_hits = set()
+            seen_hits = {}
             score = 0
             _log.debug(f"===================== compute score for cluster =====================")
             for v_hit in self.hits:
                 _log.debug(f"-------------- test hit {v_hit.gene.name} --------------")
-                if v_hit.gene_ref.name in seen_hits:
-                    # count only one occurrence of each hit per cluster
-                    _log.debug(f"{v_hit.id} code for {v_hit.gene_ref.name} which is already in cluster score = continue")
-                    continue
 
                 # attribute a score for this hit
                 # according to status of the gene_ref in the model: mandatory/accessory
@@ -263,22 +259,38 @@ class Cluster:
                     hit_score = self._hit_weights.neutral
                 else:
                     raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
-                _log.debug(f"{v_hit.id} is {v_hit.status} score = {hit_score}")
+                _log.debug(f"{v_hit.id} is {v_hit.status} hit score = {hit_score}")
 
                 # weighted the hit score according to the hit match the gene or
                 # is an exchangeable
                 if v_hit.gene_ref.is_exchangeable:
                     hit_score *= self._hit_weights.exchangeable
-                    _log.debug(f"{v_hit.id} is exchangeable score = {hit_score}")
+                    _log.debug(f"{v_hit.id} is exchangeable hit score = {hit_score}")
                 else:
                     hit_score *= self._hit_weights.itself
 
                 if self.loner() and v_hit.multi_system:
-                    _log.debug(f"{v_hit.id} is loner and multi_system")
                     hit_score *= self._hit_weights.loner_multi_system
-                    _log.debug(f"{v_hit.id} = {hit_score}")
-                score += hit_score
-                seen_hits.add(v_hit.gene_ref.name)
+                    _log.debug(f"{v_hit.id} is loner and multi_system hit score = {hit_score}")
+
+                # funct is the name of the gene if it code for itself
+                # or the name of the reference gene if it's an exchangeable
+                funct = v_hit.gene_ref.alternate_of().name
+                if funct in seen_hits:
+                    # count only one occurrence of each function per cluster
+                    # the score use is the max of hit score for this function
+                    if hit_score > seen_hits[funct]:
+                        seen_hits[funct] = hit_score
+                        _log.debug(f"{v_hit.id} code for {funct} update hit_score to {hit_score}")
+                    else:
+                        _log.debug(f"{v_hit.id} code for {funct} which is already take in count in cluster")
+                else:
+                    _log.debug(f"{v_hit.id} {v_hit.gene_ref.name} is not already in cluster")
+                    seen_hits[funct] = hit_score
+
+            hits_scores = seen_hits.values()
+            score = sum(hits_scores)
+            _log.debug(f"cluster score = sum({list(hits_scores)}) = {score}")
         _log.debug(f"===============================================================")
         self._score = score
         return score
