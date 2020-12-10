@@ -1,21 +1,17 @@
-exclude macsypy/test_*.py
+recursive-exclude data *
 
-recursive-include doc/_build/html *
-include doc/_build/latex/Macsyfinder.pdf
+recursive-include doc/build/html *
+include doc/build/latex/Macsyfinder.pdf
 
-recursive-include data/models *
-include data/sequence_data/datatest_gembase.fasta*
-include data/sequence_data/datatest_gembase.topology
-include data/sequence_data/results.macsyfinder.json
-
-recursive-include include tests *
+recursive-include tests *
 recursive-include utils *
-
 include etc/macsyfinder.conf
 
+include README.md
 include COPYING
 include COPYRIGHT
 include NEWS
 include CITATION.yml
 include requirements.txt
 include requirements_dev.txt
+
