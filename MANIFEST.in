@@ -10,6 +10,8 @@ recursive-exclude tests/__pycache__ *
 include README.md
 include COPYING
 include COPYRIGHT
+include CONTRIBUTING.md
+include CONTRIBUTORS
 include NEWS
 include CITATION.yml
 include requirements.txt
