@@ -38,7 +38,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.ifconfig',
               'sphinx.ext.viewcode',
               'sphinx.ext.inheritance_diagram',
-              'sphinx.ext.graphviz'
+              'sphinx.ext.graphviz',
+              'sphinx.ext.imgconverter'
               ]
 
 # Add any paths that contain templates here, relative to this directory.
