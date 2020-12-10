@@ -90,18 +90,18 @@ class MatchMakerTest(MacsyTest):
         self.model.add_neutral_gene(gene_toto)
         self.model.add_forbidden_gene(gene_abc)
 
-        self.c_hits = {}
-        self.c_hits['h_sctj'] = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_sctj_flg'] = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_sctn'] = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_sctn_flg'] = Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_gspd'] = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_gspd_an'] = Hit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_abc'] = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_abc_ho'] = Hit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_toto'] = Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.c_hits['h_toto_ho'] = Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-
+        self.c_hits = {
+                    'h_sctj': Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_sctj_flg': Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_sctn': Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_sctn_flg': Hit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_gspd': Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_gspd_an': Hit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_abc': Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_abc_ho': Hit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_toto': Hit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'h_toto_ho': Hit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    }
 
     def test_sort_hits_by_status(self):
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
