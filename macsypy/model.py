@@ -166,6 +166,8 @@ class Model(metaclass=MetaModel):
         :type max_nb_genes: integer
         :param multi_loci: 
         :type multi_loci: boolean
+        :raise ModelInconsistencyError: if an error is found in model logic.
+                                        For instance *genes_required* > *min_mandatory_genes_required*
         """
         self.fqn = fqn
         self._name = DefinitionLocation.split_fqn(self.fqn)[-1]
@@ -233,6 +235,10 @@ class Model(metaclass=MetaModel):
 
     @property
     def name(self):
+        """
+
+        :return: the short name of this model
+        """
         return self._name
 
 
