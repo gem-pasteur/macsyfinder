@@ -217,38 +217,13 @@ def expand_data(data_to_expand):
                 data_struct.append((base_dest_dir, [one_src]))
     return data_struct
 
-#####################
-# for the pypi site #
-#####################
 
-# pypi use long_description in rst to generate the package page
-# but github or gitlab use markdown
-# to generate the package and push it on pypi we need
-# pandoc to convert on the fly the READmE.md => rst
+def read_md(f):
+    import codecs
+    with codecs.open(f, 'r', encoding='utf8') as f:
+        text = f.read()
+    return text
 
-try:
-    from pypandoc import convert
-    def read_md(f):
-        try:
-            return convert(f, 'rst')
-        except OSError as err:
-            if str(err).startswith('No pandoc was found:'):
-                warnings.warn("'pypandoc' module do not found 'pandoc' lib.\n"
-                              "Please install pandoc to convert Markdown to RST",
-                              RuntimeWarning)
-                return open(f, 'r').read()
-        else:
-            raise err
-except ImportError:
-    import sys
-    warnings.warn("WARNING: pypandoc module not found.\nCould not convert Markdown to RST",
-                  ImportWarning)
-
-    def read_md(f):
-        import codecs
-        with codecs.open(f, 'r', encoding='utf8') as f:
-            text = f.read()
-        return text
 
 ###################################################
 # the configuration of the installer start bellow #
@@ -258,6 +233,7 @@ setup(name='macsyfinder',
       version=mf_version,
       description="MacSyFinder: Detection of macromolecular systems in protein datasets using systems modelling and similarity search",
       long_description=read_md('README.md'),
+      long_description_content_type="text/markdown",
       author="Sophie Abby, Bertrand Néron",
       author_email="sophie.abby@univ-grenoble-alpes.fr, bneron@pasteur.fr",
       url="https://github.com/gem-pasteur/macsyfinder/",
@@ -271,12 +247,13 @@ setup(name='macsyfinder',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
+          'Programming Language :: Python :: 3.9',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Intended Audience :: Science/Research',
           'Topic :: Scientific/Engineering :: Bio-Informatics'
           ],
-      python_requires='>=3.4',
-      install_requires=open("requirements.txt").read().split(),
+      python_requires='>=3.6',
+      install_requires=[i for i in [l.strip() for l in open("requirements.txt").read().split('\n')] if i],
       extras_require={'dev': open("requirements_dev.txt").read().split()},
       test_suite='tests.run_tests.discover',
       zip_safe=False,
