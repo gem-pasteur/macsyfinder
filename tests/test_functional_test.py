@@ -173,7 +173,8 @@ class Test(MacsyTest):
         # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
         # pos         2      3     11     12     13      14    23     32     46
         # clst      [         ]   [                        ]  [  ]   [  ]   [  ]
-
+        # syst                    [abc    mfp    abc    gspd   omf    omf    omf]
+        
         expected_result_dir = self.find_data("functional_test_ordered_multi_system")
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
@@ -201,6 +202,7 @@ class Test(MacsyTest):
         # gene id   01397  01398  01399  01400  01506  01548  01562
         # pos        8      9      10      11    13     29     43
         # clst     [                               ]   [  ]   [  ]
+        # syst     [abc    mfp    abc    gspd   omf]
 
         expected_result_dir = self.find_data("functional_test_ordered_multi_system_loner_in_clust")
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
@@ -228,7 +230,7 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]  [  ]   [  ]
+        # clst     [         ]   [           ]
         # syst    abc, mfp, abc, gspd, omf, omf
 
         expected_result_dir = self.find_data("functional_test_ordered_multi_loci")
@@ -258,7 +260,7 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]  [  ]   [  ]
+        # clst     [         ]   [           ]
         # syst    no system
 
         expected_result_dir = self.find_data("functional_test_ordered_single_loci")
@@ -287,7 +289,7 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
-        # syst
+        # syst    abc    mfp    abc    gspd   omf    omf
         expected_result_dir = self.find_data("functional_test_unordered")
         args = "--db-type unordered " \
                f"--models-dir {self.find_data('models')} " \
