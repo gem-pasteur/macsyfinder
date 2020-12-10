@@ -18,26 +18,25 @@ The parsing consists in three phases.
 
 Phase 1. 
 
-   * each Gene is parsed from the Model it is defined
-   * From the list of Model to detect, the list of Models to parse is established
-
-Phase 2.
-
    * For each model to parse
    
      * create the Model
      * add this Model to the model_bank
-     * create the Genes defined in this Model with their attributes but not their Homologs
-     * add these Genes in the gene_bank
+     * findall genes defined in this model what are the level in the model definition.
+     * create the CoreGene (a Gene which is not bind to a model).
+       For each gene name there is only one instance of CoreGene
+     * add these CoreGene in the gene_bank
     
-Phase 3. 
+Phase 2.
 
-   * For each System to search
+   * For each model to search
    
      * For each Gene defined in this System:
      
-         * create the Homologs by encapsulating Genes from the gene_bank
-         * add the Gene to the Model
+         * link the gene to the model. Create a ModelGene by encapsulating CoreGene from the gene_bank
+           It can exists at each run several ModelGene for one CoreGene
+         * If a gene has exhangeables create them (an Exchangeable inherits from ModeleGene)
+           and add them to the current ModelGene
 
 
 For instance::
@@ -45,19 +44,18 @@ For instance::
     Syst_1
     <system inter_gene_max_space="10">
         <gene name=”A” mandatory=”1” loner="1">
-            <homologs>
-                <gene name=”B” sys_ref=”Syst_2”>
-            </homologs>
+            <exchangeables>
+                <gene name=”B”>
+            </exchangeables>
         </gene>
     <system>
     
     Syst_2
     <system inter_gene_max_space="15">
         <gene name=”B” mandatory=”1”>
-            <homologs>
-                <gene name=”B” sys_ref=”Syst_1”
-                <gene name=”C” sys_ref=”Syst_3”>
-            </homologs>
+            <exchangeables>
+                <gene name=”C”>
+            </exchangeables>
         </gene>
     <system>
     
@@ -69,16 +67,13 @@ For instance::
 
 With the example above:
 
-* the Syst_1 has a gene_A 
-* the gene_A has homolog gene_B
-* the gene_B has a reference to Syst_2
-* gene_B attributes from the Syst_2 are used to build the Gene
-* the Syst_2 has attributes as defined in the corresponding XML file (inter_gene_max_space ,...)
-
-Contrariwise: 
-
-* the gene_B has no Homologs
-* the Syst_2 has no Genes
+* the CoreGene A, B, C will be created
+* the ModelGene (Syst_1, A)  (Syst_1, B), (Syst_2, B), (Syst_2, C), (Syst_3, C)
+* The ModeleGene (Syst_1, A), (Syst_2, B) and (Syst_3, C) are directly link to their respective Models
+* and where (Syst_1, B) (Syst_2, C) are exchangeables and link respectively to (Syst_1, A) and (Syst_2, B)
+* the ModelGene has attributes defined in the model where they appear
+  (Syst_1, B) inter_gene_max_space="10"
+  (Syst_2, B) inter_gene_max_space="15"
 
 .. note::
     The only "full" Systems (*i.e.,* with all corresponding Genes created) are those to detect.
