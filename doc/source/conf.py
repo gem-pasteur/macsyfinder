@@ -62,3 +62,10 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# customize the latex output
+# it allow more level in nested list
+# (thx https://stackoverflow.com/questions/28454217/how-to-avoid-the-too-deeply-nested-error-when-creating-pdfs-with-sphinx)
+latex_elements = {
+    'preamble': r'\usepackage{enumitem}\setlistdepth{20}'
+}
