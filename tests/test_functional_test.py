@@ -174,7 +174,7 @@ class Test(MacsyTest):
         # pos         2      3     11     12     13      14    23     32     46
         # clst      [         ]   [                        ]  [  ]   [  ]   [  ]
         # syst                    [abc    mfp    abc    gspd   omf    omf    omf]
-        
+
         expected_result_dir = self.find_data("functional_test_ordered_multi_system")
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
