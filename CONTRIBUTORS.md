@@ -23,3 +23,4 @@ This is a list of people who have made contributions to Macsyfinder.
 * Rémi Denise <> :bulb: :file_folder: :umbrella:
 * Marie Touchon <https://research.pasteur.fr/fr/member/marie-touchon/> :bulb: :umbrella:
 * Amandine Perrin <> :computer:
+* Yoann Dufresne <https://research.pasteur.fr/fr/member/yoann-dufresne/> :bulb:
