@@ -16,6 +16,7 @@ This is a list of people who have made contributions to Macsyfinder.
 
 
 * Sophie Abby <sophie.abby@univ-grenoble-alpes.fr> :bulb: :computer: :pencil2: :file_folder: :umbrella: :bug:
+* Eduardo Rocha <https://research.pasteur.fr/en/member/eduardo-rocha/> :bulb:  
 * Bertrand Néron <https://github.com/bneron/> :computer: :bulb: :pencil2: :white_check_mark: 
 * freeh4cker <https://github.com/freeh4cker> :computer:
 * Hervé Ménager <https://github.com/hmenager> :computer:
