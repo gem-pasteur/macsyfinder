@@ -4,15 +4,15 @@ CONTRIBUTORS
 This is a list of people who have made contributions to Macsyfinder.
 
 
-| Emoji             | Represents    | Comments                                                            |
-|-------------------|---------------|---------------------------------------------------------------------|
-|:computer:         | Code          | Links to commits on source code by the user on this project         |
-|:pencil2:          | Documentation | Links to commits on Wiki, or other source of documentation          |
-|:white_check_mark: | Tests         | Links to commits on unit or functional tests                        |
-|:bulb:             | Ideas         |                                                                     |
-|:file_folder:      | Data          | Links to contributed data for the project (both tests and datasets) |
-|:bug:              | Bug reports   | Links to issues reported by the user                                |
-|:umbrella:         | User Testing  | Links to user tests and reports                                     |
+| Emoji             | Represents    | Comments                                                             |
+|-------------------|---------------|----------------------------------------------------------------------|
+|:computer:         | Code          | Linked to whoever commits on source code by the user on this project |
+|:pencil2:          | Documentation | Linked to whoever commits on Wiki, or other source of documenta      |
+|:white_check_mark: | Tests         | Linked to whoever commits on unit or functional tests                |
+|:bulb:             | Ideas         | Linked to whoever brings ideas                                       |
+|:file_folder:      | Data          | Linked to whoever contributed data  (both tests and datasets)        |
+|:bug:              | Bug reports   | Linked to whoever report issues                                      |
+|:umbrella:         | User Testing  | Linked to whoever does, user tests                                   |
 
 
 * Sophie Abby <sophie.abby@univ-grenoble-alpes.fr> :bulb: :computer: :pencil2: :file_folder: :umbrella: :bug:
