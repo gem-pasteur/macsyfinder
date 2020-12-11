@@ -36,6 +36,7 @@ and quorum constraints
     * min_genes_required
 
 
+.. _model_bank_api:
 
 ModelBank
 =========
