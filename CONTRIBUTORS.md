@@ -22,6 +22,6 @@ This is a list of people who have made contributions to Macsyfinder.
 * Hervé Ménager <https://github.com/hmenager> :computer:
 * Francisco J. Ossandon <https://github.com/fjossandon> :computer:
 * Rémi Denise <> :bulb: :file_folder: :umbrella:
-* Marie Touchon <https://research.pasteur.fr/fr/member/marie-touchon/> :bulb: :umbrella:
+* Marie Touchon <https://research.pasteur.fr/en/member/marie-touchon/> :bulb: :umbrella:
 * Amandine Perrin <> :computer:
-* Yoann Dufresne <https://research.pasteur.fr/fr/member/yoann-dufresne/> :bulb:
+* Yoann Dufresne <https://research.pasteur.fr/en/member/yoann-dufresne/> :bulb:
