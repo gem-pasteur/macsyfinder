@@ -1,5 +1,5 @@
 sphinx
 sphinx_rtd_theme
 sphinx-autodoc-typehints
-pypandoc
+sphinxcontrib-svg2pdfconverter
 coverage
