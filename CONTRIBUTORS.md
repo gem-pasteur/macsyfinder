@@ -16,12 +16,12 @@ This is a list of people who have made contributions to Macsyfinder.
 
 
 * Sophie Abby <sophie.abby@univ-grenoble-alpes.fr> :bulb: :computer: :pencil2: :file_folder: :umbrella: :bug:
-* Eduardo Rocha <https://research.pasteur.fr/en/member/eduardo-rocha/> :bulb:  
+* Eduardo Rocha <https://research.pasteur.fr/en/member/eduardo-rocha/> :bulb: :umbrella:
 * Bertrand Néron <https://github.com/bneron/> :computer: :bulb: :pencil2: :white_check_mark: 
 * freeh4cker <https://github.com/freeh4cker> :computer:
 * Hervé Ménager <https://github.com/hmenager> :computer:
 * Francisco J. Ossandon <https://github.com/fjossandon> :computer:
-* Rémi Denise <> :bulb: :file_folder: :umbrella:
+* Rémi Denise <https://scholar.google.com/citations?user=hAhbGqkAAAAJ&hl=en> :bulb: :file_folder: :umbrella:
 * Marie Touchon <https://research.pasteur.fr/en/member/marie-touchon/> :bulb: :umbrella:
 * Amandine Perrin <https://github.com/orgs/gem-pasteur/people/asetGem> :computer:
 * Yoann Dufresne <https://research.pasteur.fr/en/member/yoann-dufresne/> :bulb:
