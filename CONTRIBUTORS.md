@@ -7,5 +7,5 @@ People are listed alphabetically by surname.
 * Sophie Abby <sophie.abby@univ-grenoble-alpes.fr>
 * freeh4cker <freeh4cker@gmail.com>
 * Hervé Ménager <hmenager@pasteur.fr>
-* Bertrand Néron <bneron@pasteur.fr> :code: :doc:
+* Bertrand Néron <bneron@pasteur.fr> :code: :doc: :art: :santa:
 * Francisco J. Ossandon <fco.j.ossandon@gmail.com> :code:
