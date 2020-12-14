@@ -756,7 +756,7 @@ Use ordered replicon to have better prediction.
 
     def test_parse_args(self):
         command_line = "macsyfinder --sequence-db test_1.fasta --db-type=gembase --models-dir data/models/ " \
-                       "--models TFF-SF_final all -w 4 --out test_1-all"
+                       "--models functional all -w 4 --out test_1-all"
         parser, args = parse_args(command_line.split()[1:])
         self.assertIsNone(args.cfg_file)
         self.assertIsNone(args.coverage_profile)
@@ -784,11 +784,11 @@ Use ordered replicon to have better prediction.
         self.assertEqual(args.verbosity, 0)
         self.assertEqual(args.worker, 4)
 
-        self.assertListEqual(args.models, [['TFF-SF_final', 'all']])
+        self.assertListEqual(args.models, [['functional', 'all']])
 
         command_line = "macsyfinder --sequence-db test_!.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
-                       "--models TFF-SF_final all -w 4 --out test_1-all " \
+                       "--models functional all -w 4 --out test_1-all " \
                        "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')

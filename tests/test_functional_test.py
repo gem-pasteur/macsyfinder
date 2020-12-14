@@ -312,7 +312,7 @@ class Test(MacsyTest):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m TFF-SF T4P " \
+               "-m functional T12SS " \
                "-o {out_dir}"
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists')
@@ -329,7 +329,7 @@ class Test(MacsyTest):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m TFF-SF T4P " \
+               "-m functional T12SS " \
                "-o {out_dir} "
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists_and_not_dir')
@@ -362,7 +362,7 @@ class Test(MacsyTest):
     def test_no_seq_db(self):
         args = "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m TFF-SF T4P " \
+               "-m functional T12SS " \
                "-o {out_dir} "
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_seq_db')
@@ -377,7 +377,7 @@ class Test(MacsyTest):
     def test_no_db_type(self):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                f"--models-dir {self.find_data('models')} " \
-               "-m TFF-SF T4P " \
+               "-m functional T12SS " \
                "-o {out_dir} "
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_db_type')
@@ -392,7 +392,7 @@ class Test(MacsyTest):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
                "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m TFF-SF Unknown_model " \
+               "-m functional Unknown_model " \
                "-o {out_dir}"
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_model_unkwon')
