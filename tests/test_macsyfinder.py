@@ -94,7 +94,7 @@ set_2
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -159,7 +159,7 @@ neutral genes:
 
     def test_systems_to_tsv(self):
             args = argparse.Namespace()
-            args.sequence_db = self.find_data("base", "test_base.fa")
+            args.sequence_db = self.find_data("base", "test_1.fasta")
             args.db_type = 'gembase'
             args.models_dir = self.find_data('models')
             cfg = Config(MacsyDefaults(), args)
@@ -227,7 +227,7 @@ neutral genes:
 
     def test_solutions_to_tsv(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -427,7 +427,7 @@ neutral genes:
 
     def test_rejected_clst_to_txt(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = "blabla"
@@ -496,7 +496,7 @@ These clusters have been rejected because:
 
     def test_likely_systems_to_txt(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'unordered'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -585,7 +585,7 @@ Use ordered replicon to have better prediction.
 
     def test_likely_systems_to_tsv(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'unordered'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -667,7 +667,7 @@ Use ordered replicon to have better prediction.
 
     def test_unnlikely_systems_to_txt(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'unordered'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -755,8 +755,8 @@ Use ordered replicon to have better prediction.
 
 
     def test_parse_args(self):
-        command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt --db-type=gembase --models-dir data/models/ " \
-                       "--models TFF-SF_final all -w 4 --out VICH001-all"
+        command_line = "macsyfinder --sequence-db test_1.fasta --db-type=gembase --models-dir data/models/ " \
+                       "--models TFF-SF_final all -w 4 --out test_1-all"
         parser, args = parse_args(command_line.split()[1:])
         self.assertIsNone(args.cfg_file)
         self.assertIsNone(args.coverage_profile)
@@ -779,16 +779,16 @@ Use ordered replicon to have better prediction.
         self.assertFalse(args.relative_path)
         self.assertEqual(args.db_type, 'gembase')
         self.assertEqual(args.models_dir, 'data/models/')
-        self.assertEqual(args.out_dir, 'VICH001-all')
-        self.assertEqual(args.sequence_db, 'VICH001.B.00001.C001.prt')
+        self.assertEqual(args.out_dir, 'test_1-all')
+        self.assertEqual(args.sequence_db, 'test_1.fasta')
         self.assertEqual(args.verbosity, 0)
         self.assertEqual(args.worker, 4)
 
         self.assertListEqual(args.models, [['TFF-SF_final', 'all']])
 
-        command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt " \
+        command_line = "macsyfinder --sequence-db test_!.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
-                       "--models TFF-SF_final all -w 4 --out VICH001-all " \
+                       "--models TFF-SF_final all -w 4 --out test_1-all " \
                        "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
@@ -796,7 +796,7 @@ Use ordered replicon to have better prediction.
         self.assertTrue(args.relative_path)
         self.assertTrue(args.mute)
 
-        command_line = "macsyfinder --sequence-db VICH001.B.00001.C001.prt " \
+        command_line = "macsyfinder --sequence-db test_1.dasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
                        "--i-evalue-sel=0.5 " \
                        "--min-genes-required TXSScan/T2SS 15 --min-genes-required TXSScan/Flagellum 10"
@@ -897,7 +897,7 @@ Use ordered replicon to have better prediction.
 
         out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
         os.mkdir(out_dir)
-        seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
+        seq_db = self.find_data('base', 'test_1.fasta')
         model_dir = self.find_data('data_set', 'models')
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4 -o {out_dir}"
 

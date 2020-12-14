@@ -53,7 +53,7 @@ class Test(MacsyTest):
         if os.path.exists(args.out_dir):
             shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
         os.makedirs(args.out_dir)
-        seq_db = self.find_data("base", "test_base.fa")
+        seq_db = self.find_data("base", "test_1.fasta")
         shutil.copy(seq_db, args.out_dir)
 
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))

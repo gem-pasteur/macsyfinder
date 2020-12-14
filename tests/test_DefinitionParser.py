@@ -43,7 +43,7 @@ class TestModelParser(MacsyTest):
     def setUp(self):
         defaults = MacsyDefaults()
         self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.sequence_db = self.find_data("base", "test_1.fasta")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
         self.args.res_search_dir = tempfile.gettempdir()

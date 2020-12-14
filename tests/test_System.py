@@ -41,7 +41,7 @@ class SystemTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.verbosity = 3

@@ -42,7 +42,7 @@ class TestBuildCluster(MacsyTest):
 
     def setUp(self) -> None:
         self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.sequence_db = self.find_data("base", "test_1.fasta")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
         self.args.res_search_dir = "blabla"
@@ -182,7 +182,7 @@ class TestHitFunc(MacsyTest):
 
     def setUp(self) -> None:
         self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.sequence_db = self.find_data("base", "test_1.fasta")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
         self.args.res_search_dir = "blabla"
@@ -273,7 +273,7 @@ class TestCluster(MacsyTest):
 
     def setUp(self) -> None:
         self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_base.fa")
+        self.args.sequence_db = self.find_data("base", "test_1.fasta")
         self.args.db_type = 'gembase'
         self.args.models_dir = self.find_data('models')
         self.args.res_search_dir = "blabla"

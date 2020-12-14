@@ -375,11 +375,11 @@ class TestConfig(MacsyTest):
 
     def test_previous_n_sequence_db(self):
         self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results'))
-        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'VICH001.B.00001.C001.prt'))
+        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'test_1.fasta'))
         with self.catch_log() as log:
             cfg = Config(self.defaults, self.parsed_args)
             catch_msg = log.get_value().strip()
-        self.assertEqual(cfg.sequence_db(), 'tests/data/base/VICH001.B.00001.C001.prt')
+        self.assertEqual(cfg.sequence_db(), 'tests/data/base/test_1.fasta')
         self.assertEqual(f"ignore sequence_db '{self.parsed_args.sequence_db}' "
                          f"use sequence_db from previous_run '{self.parsed_args.previous_run}'.",
                          catch_msg)
