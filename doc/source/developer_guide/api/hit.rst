@@ -9,11 +9,34 @@
 .. _hit:
 
 
+
 ***
 hit
 ***
 
 A Hit is created when `hmmsearch` find similarities between a profile and protein of the input dataset
+
+
+.. figure:: ../../_static/gene_obj_interaction.svg
+
+    A diagram showing the interaction between CoreGene, ModelGene, Model, HIt, ValidHit interactions
+    The diagram above represents the models, genes and hit generated from the definitions below.
+
+    .. code-block::
+
+        <model name="A" inter_gene_max_space="2">
+            <gene name="abc" presence="mandatory"/>
+            <gene name="def" presence="accessory"/>
+        </model>
+
+        <model name="B" inter_gene_max_space="5">
+            <gene name="def" presence="mandatory"/>
+                <exchangeables>
+                    <gene name="abc"/>
+                </exchangeables>
+            <gene name="ghj" presence="accessory"
+        </model>
+
 
 .. _hit_api:
 

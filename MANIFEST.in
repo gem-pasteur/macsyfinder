@@ -1,15 +1,17 @@
 recursive-exclude data *
 
 recursive-include doc/build/html *
-include doc/build/latex/Macsyfinder.pdf
+include doc/build/latex/macsyfinder.pdf
 
-recursive-include tests *
 recursive-include utils *
 include etc/macsyfinder.conf
+recursive-exclude tests/__pycache__ *
 
 include README.md
 include COPYING
 include COPYRIGHT
+include CONTRIBUTING.md
+include CONTRIBUTORS
 include NEWS
 include CITATION.yml
 include requirements.txt

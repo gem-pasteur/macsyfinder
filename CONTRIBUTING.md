@@ -182,7 +182,7 @@ def foo(param_1, param_2):
 
 ### Documentation Style guide
 
-* We use [sphinx](http://www.sphinx-doc.org/en/stable/) with reStructuredText syntax to document the project.
+* We use [sphinx](http://www.sphinx-doc.org/en/stable/) with ReStructuredText syntax to document the project.
 * We have separate user and developer documentation.
 * In developer documentation before diving head first in detailed documentation,
   you should try to get an overview of how your code works.
