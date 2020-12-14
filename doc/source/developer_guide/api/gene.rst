@@ -12,7 +12,7 @@
 gene
 ****
 
-TThe :ref:`Gene object <gene>` represents genes encoding the protein components of a Model.
+The :ref:`Gene object <gene>` represents genes encoding the protein components of a Model.
 There is 2 kind of gene The ``CoreGene`` (:class:`macsypy.gene.CoreGene`) which must be unique given a name.
 A ``CoreGene`` must have a corresponding HMM protein profile.
 A ``ModelGene`` encapsulate a CoreGene and is linked to a Model.
