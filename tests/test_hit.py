@@ -39,7 +39,7 @@ class HitTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         self.cfg = Config(MacsyDefaults(), args)
@@ -143,7 +143,7 @@ class ValidHitTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -203,7 +203,7 @@ class GetBestHitTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         self.cfg = Config(MacsyDefaults(), args)
@@ -270,7 +270,7 @@ class HitWeightTest(MacsyTest):
 
     def test_hit_weight_default(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         cfg = Config(MacsyDefaults(), args)
@@ -284,7 +284,7 @@ class HitWeightTest(MacsyTest):
 
     def test_hit_weight_not_default(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.mandatory_weight = 2.0

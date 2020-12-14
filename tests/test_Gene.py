@@ -40,7 +40,7 @@ class TestCoreGene(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
@@ -77,7 +77,7 @@ class TestModelGene(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
-        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
