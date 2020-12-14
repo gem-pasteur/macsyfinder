@@ -852,7 +852,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual(systems, [])
 
         # test No hits
-        seq_db = self.find_data('base', 'test_aesu.fa')
+        seq_db = self.find_data('base', 'test_1.fasta')
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4 -o {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)

@@ -203,7 +203,7 @@ class TestConfig(MacsyTest):
                       'i_evalue_sel': 20,
                       'replicon_topology': 'linear',
                       'db_type': 'gembase',
-                      'sequence_db': self.find_data(os.path.join('base', 'test_aesu.fa')),
+                      'sequence_db': self.find_data(os.path.join('base', 'test_1.fasta')),
                       'topology_file': __file__  # test only the existence of a file
                       }
 
