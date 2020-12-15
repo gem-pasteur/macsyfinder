@@ -1,4 +1,5 @@
 recursive-exclude data *
+include data/models/readme
 
 recursive-include doc/build/html *
 include doc/build/latex/macsyfinder.pdf
