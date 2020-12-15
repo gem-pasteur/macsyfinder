@@ -12,48 +12,53 @@
 MacSyFinder Quick Start 
 =======================
 
-In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
 
-* Type: 
-  :code:`macsyfinder -h`
+.. figure:: ../_static/under_construction.gif
 
-  to see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
+    This page is still under construction
 
 
-* On a "metagenomic" dataset for example:
-  :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all`
+1. We recommend to install macsyfinder using pip in a virtual environment (for further details see :ref:`installation`)
 
-  will detect all systems modelled in .xml files placed in the *"model_family"* definitions folder located in the models default location
-  in a metagenomic dataset.
+   .. code-block:: bash
 
-  :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models/ --models model_family all`
-  will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder.
+        python3 -m venv MacSyFinder
+        cd MacSyFinder
+        source bin/activate
+        pip install macsyfinder
 
-* On a completely assembled genome (where the gene order is known, and is relevant for systems detection): 
+   .. warning::
 
-  :code:`macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models/ --models model_family ModelA ModelB`
-  will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"*
-  in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
-  definition files placed in the folder *"my-models/model_family/mydefinitions"*.
+        hmmsearch from hmmer package (http://hmmer.org/) must be installed.
 
-See :ref:`input-dataset-label` for more on input datasets. 
+2. Prepare your data. you need to one file containing all protein sequence of your genome in fasta format
+   (for further details see :ref:`input-dataset-label`)
+
+3. You need to have models to search in your input data.
+   please refer to :ref:`model_definition` to create your own package of models
+   We eiil provide soon a set of predefined models.
+
+4. command lines
+
+    * Type:
+      :code:`macsyfinder -h`
+
+      To see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
+      In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the next steps:
+
+    * On a "metagenomic" dataset for example:
+      :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models --models model_family all`
+
+      will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder.
 
 
-.. The systems available for detection are the:
-    - "Flagellum" -- the bacterial flagellum, involved in motility
-    - "T1SS" -- the type 1 secretion system, involved in the secretion of degrading enzymes, toxins,...
-    - "T2SS" -- the type 2 secretion system, also involved in the secretion of degrading enzymes, toxins,...
-    - "T3SS" -- the type 3 secretion, related to the flagellum and dedicated to the secretion into eukaryotic cells
-    - "cT4SS" -- the conjugative type 4 secretion system, involved in the transfer of genetic material to other cells
-    - "pT4SSi" -- the MPFi-like T4SS dedicated to protein secretion
-    - "pT4SSt" -- the MPFt-like T4SS dedicated to protein secretion
-    - "T5aSS" -- the "classical" autotransporter 
-    - "T5bSS" -- the "two-partner" secretion system
-    - "T5cSS" -- the "trimeric" autotransporter
-    - "T6SS" -- the type 6 secretion system, involved in protein secretion into bacterial and eukaryotic cells
-    - "T4P" -- the type IV pilus, involved in twitching motility, adhesion to cells,...
-    - "Tad" -- the Tad pilus, involved in adhesion,...
-    
+    * On a completely assembled genome (where the gene order is known, and is relevant for systems detection):
+
+      :code:`macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
+
+      will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"*
+      in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
+      definition files placed in the folder *"my-models/model_family/definitions"*.
 
 .. note::
 
@@ -64,59 +69,5 @@ See :ref:`input-dataset-label` for more on input datasets.
     The *"all"* keyword allows to detect all models available in the definitions folder in a single run.
     See the :ref:`Command-line options <command-line-label>`.
 
-
-.. _datatest:   
-
-First trial with a test dataset
-*******************************
-
-We included a test dataset in the MacSyFinder package.
-**By default, it will be installed** in /share/macsyfinder or /usr/share/macsyfinder.
-But it can be located elsewhere if it was specified during installation.
-
-This dataset consists in the detection of CRISPR-Cas SubTypes with the definitions in the
-/share/macsyfinder/DEF folder, using the profiles in the /share/macsyfinder/profiles folder.
-This classification was previously described in `Makarova et al. 2011 <http://www.ncbi.nlm.nih.gov/pubmed/21552286>`_,
-and the profiles are from  the `TIGRFAM database <http://www.jcvi.org/cgi-bin/tigrfams/index.cgi>`_
-(release 13 of August 15 2012) and some of them were specifically designed for
-CRISPR-Cas classification (`Haft et. al, 2005 <http://www.ncbi.nlm.nih.gov/pubmed/16292354>`_).
-The definitions are detailed in the `MacSyFinder's paper <https://dx.doi.org/10.1371%2Fjournal.pone.0110726>`_.
-
-As a test sequence dataset, we propose three replicons in /share/macsyfinder/sequence_data/datatest_gembase.fasta: 
-
-    - *Escherichia coli* str. K-12 substr. MG1655 chromosome (ESCO001c01a).
-      Genbank accession number: `NC_000913 <http://www.ncbi.nlm.nih.gov/nuccore/NC_000913>`_.
-    - *Haloarcula marismortui* ATCC 43049 plasmid pNG400 (HAMA001p04a).
-      Genbank accession number: `NC_006392 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006392>`_.
-    - *Legionella pneumophila* str. Paris, complete genome (LEPN003c01a).
-      Genbank accession number: `NC_006368 <http://www.ncbi.nlm.nih.gov/nuccore/NC_006368>`_.
-
-They were concatenated in a single fasta file, following the "gembase" format proposed :ref:`here <gembase_convention>`,
-and thus MacSyfinder will treat the three different replicons separately for systems inference.
-
-To run the detection and classification of all subtypes, type
-
-.. code-block:: bash
-
-    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta all
-
-To run the detection of the Type-IE subtype only, type
-
-.. code-block:: bash
-
-    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta CAS-TypeIE
-
-A sample topology file is included /share/macsyfinder/sequence_data/datatest_gembase.topology,
-and follows the convention in :ref:`here <topology-files>`.
-It allows to specify a different topology "linear" or "circular" for each replicon in the "gembase" format.
-Otherwise, by default the topology is set to "circular".
-It can also be specified in the commmand-line (see the :ref:`Command-line options <command-line-label>`).
-
-To run the detection using the topology file, type
-
-.. code-block:: bash
-
-    macsyfinder --db-type gembase --sequence-db /share/macsyfinder/sequence_data/datatest_gembase.fasta \
-    --topology-file /share/macsyfinder/sequence_data/datatest_gembase.topology all
 
 
