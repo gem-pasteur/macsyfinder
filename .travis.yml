@@ -1,6 +1,8 @@
 language: python
 python:
-  - "2.7"
+  - "3.7"
+  - "3.8"
+  - "3.9"
 # Apply only on main branches
 branches:
   except:
@@ -9,23 +11,19 @@ branches:
 # command to install Ubuntu dependencies
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install ncbi-blast+
-  - wget  http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2.tar.gz
-  - tar -xf hmmer-3.1b2.tar.gz
-  - cd hmmer-3.1b2 && ./configure && make && sudo make install
-  - cd -
-
+  - sudo apt-get -y --no-install-recommends install hmmer python3 python3-pip
 
 # command to install python dependencies
 install: 
-- "pip install coverage"
-- "pip install python-coveralls"
+  - pip3 install coverage
+  - pip3 install python-coveralls
 
 # command to run tests
 script:
-- python setup.py build
-- python setup.py install --no-viewer 
-- python tests.py -vv
-
+  - pip install .
+  - python3 setup.py test
+  - coverage run --source macsypy tests/run_tests.py -vv
+  - coverage report
+  -
 after_success:
   - coveralls
