@@ -26,7 +26,7 @@ MacSyFinder dependencies
 
 MacSyFinder has one program dependency:
 
- - the *Hmmer* program, version 3.1 (http://hmmer.janelia.org/).
+ - the *Hmmer* program, version 3.1 or greater (http://hmmer.org/).
 
 The *hmmsearch* program should be installed (*e.g.*, in the PATH) in order to use MacSyFinder.
 Otherwise, the paths to this executable must be specified in the command-line:
