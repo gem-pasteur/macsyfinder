@@ -27,7 +27,7 @@ Before creating bug reports, please check [this list](#before-submitting-a-bug-r
 as you might find out that you don't need to create one.
 When you are creating a bug report, please 
 [include as many details as possible](#how-do-i-submit-a-good-bug-report). 
-Fill out [the required template](.gitlab/Bug.md), the information it asks for helps us resolve issues faster.
+Fill out [the required template](.github/ISSUE_TEMPLATE.md), the information it asks for helps us resolve issues faster.
 
 > **Note:**
 > If you find a **Closed** issue that seems like it is the same thing that you're experiencing, 
@@ -35,14 +35,14 @@ Fill out [the required template](.gitlab/Bug.md), the information it asks for he
 
 #### Before Submitting A Bug Report
 
-* **Perform a [cursory search](https://gitlab.pasteur.fr/gem/MacSyFinder/issues?scope=all&utf8=%E2%9C%93&state=opened&label_name[]=Bug)** 
+* **Perform a [cursory search](https://github.com/gem-pasteur/macsyfinder/issues?q=is%3Aopen+is%3Aissue+label%3Abug)** 
 to see if the problem has already been reported. 
 If it has **and the issue is still open**, add a comment to the existing issue instead of opening a new one.
 
 
 #### How Do I Submit A (Good) Bug Report?
 
-Bugs are tracked as [GitLab issues](https://gitlab.pasteur.fr/gem/MacSyFinder/issues?scope=all&utf8=%E2%9C%93&state=opened&label_name[]=Bug). 
+Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/). 
 Create an issue on that repository and provide the following information by filling in the template.
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
@@ -52,14 +52,14 @@ Explain the problem and include additional details to help maintainers reproduce
   When listing steps, **don't just say what you did, but explain how you did it**. 
 * **Provide specific examples to demonstrate the steps**. 
   Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. 
-  If you're providing snippets in the issue, use [Markdown multiline blocks](https://docs.gitlab.com/ee/user/markdown.html#multiline-blockquote)
-  or [Markdown code blocks](https://docs.gitlab.com/ee/user/markdown.html#code-and-syntax-highlighting).
+  If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
 * **Explain which behavior you expected to see instead and why.**
 * **If you're reporting that MacSyFinder crashed**, 
   include a crash report with a stack trace from the operating system. 
-  Include the crash report in the issue in a [code block](https://docs.gitlab.com/ee/user/markdown.html#multiline-blockquote), 
-  or put it in a [snippets](https://gitlab.pasteur.fr/dashboard/snippets) and provide link to that gist.
+  Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines), 
+  a [file attachment](https://help.github.com/articles/file-attachments-on-issues-and-pull-requests/), 
+  or put it in a [gist](https://gist.github.com/) and provide link to that gist.
 * **If the problem wasn't triggered by a specific action**, describe what you were doing before the problem happened 
   and share more information using the guidelines below.
 
@@ -68,7 +68,7 @@ Explain the problem and include additional details to help maintainers reproduce
 * **Did the problem start happening recently** (e.g. after updating to a new version of macsyfinder) or was this always a problem?
 * If the problem started happening recently, **can you reproduce the problem in an older version of macsyfinder?** 
   What's the most recent version in which the problem doesn't happen? You can download older versions of macsyfinder from 
-  [the releases page](https://gitlab.pasteur.fr/gem/MacSyFinder/tags).
+  [the releases page](https://github.com/gem-pasteur/macsyfinder/releases).
 * **Can you reliably reproduce the issue?** If not, provide details about how often the problem happens and under which conditions it normally happens.
 * If the problem is related to working with files (e.g. opening and editing files), 
 
@@ -82,24 +82,23 @@ and find related suggestions :mag_right:.
 Before creating enhancement suggestions, please check [this list](#before-submitting-an-enhancement-suggestion) 
 as you might find out that you don't need to create one. 
 When you are creating an enhancement suggestion, please [include as many details as possible](#how-do-i-submit-a-good-enhancement-suggestion). 
-Fill in [the template](.gitlab/Feature.md), including the steps that you imagine you would take if the feature you're requesting existed.
+Fill in [the template](.github/ISSUE_TEMPLATE.md), including the steps that you imagine you would take if the feature you're requesting existed.
 
 #### Before Submitting An Enhancement Suggestion
 
-* **Check if you're using [the latest version of macsyfinder](https://gitlab.pasteur.fr/gem/MacSyFinder/tags)**.
-* **Perform a [cursory search](https://gitlab.pasteur.fr/gem/MacSyFinder/issues?scope=all&utf8=%E2%9C%93&state=opened&label_name[]=Enhancement)** 
+* **Check if you're using [the latest version of macsyfinder](https://github.com/gem-pasteur/macsyfinder/releases)**.
+* **Perform a [cursory search](https://github.com/gem-pasteur/macsyfinder/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement)** 
   to see if the enhancement has already been suggested. 
   If it has, add a comment to the existing issue instead of opening a new one.
 
 #### How Do I Submit A (Good) Enhancement Suggestion?
 
-Enhancement suggestions are tracked as [GitHub issues](https://gitlab.pasteur.fr/gem/MacSyFinder/issues?scope=all&utf8=%E2%9C%93&state=opened&label_name[]=Enhancement). 
+Enhancement suggestions are tracked as [GitHub issues](https://guides.github.com/features/issues/). 
 
 * **Use a clear and descriptive title** for the issue to identify the suggestion.
 * **Provide a step-by-step description of the suggested enhancement** in as many details as possible.
 * **Provide specific examples to demonstrate the steps**. 
-  Include copy/pasteable snippets which you use in those examples, as [Markdown multiline blocks](https://docs.gitlab.com/ee/user/markdown.html#multiline-blockquote)
-  or [Markdown code blocks](https://docs.gitlab.com/ee/user/markdown.html#code-and-syntax-highlighting).
+  Include copy/pasteable snippets which you use in those examples, as [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
 * **Describe the current behavior** and **explain which behavior you expected to see instead** and why.
 * **Explain why this enhancement would be useful** to most macsyfinder users.
 * **Specify which version of macsyfinder you're using.** You can get the exact version by running `macsyfinder --version` in your terminal.
@@ -131,9 +130,9 @@ Unsure where to begin contributing to macsyfinder? You can start by looking thro
 5. Is the code human understandable? This can be accomplished via a clear code
    style as well as documentation and/or comments.
 6. The pull request will be reviewed by others, and the final merge must be
-   done by the Integron_finder project lead.
+   done by the MacSyFinder project lead.
 7. Documentation must be provided if necessary ([next section](#documentation-style-guide))
-8. Fill in [the required template](https://gitlab.pasteur.fr/gem/MacSyFinder/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=)
+8. Fill in [the required template](.github/PULL_REQUEST_TEMPLATE.md)
 9. Do not include issue numbers in the PR title
 
 ### Style guides
@@ -155,7 +154,7 @@ Unsure where to begin contributing to macsyfinder? You can start by looking thro
 
 ### Python Style guide
 
-*integron_finder* (from version 2.0) is written in Python3. 
+*integron_finder* (from version 2.0) is written in Python3.7 or above
 We try to follow the [zen of python](https://www.python.org/dev/peps/pep-0020/) principles, 
 and we adopted the [pep8](https://www.python.org/dev/peps/pep-0008/) coding style.
 Add docstring compatible with sphinx in [restructuredtext]() format.
