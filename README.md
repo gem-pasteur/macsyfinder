@@ -1,8 +1,10 @@
 # MacSyFinder
 
-[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
-[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)
-[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
+[![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+
+[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/coverage/index.html)
+
+[![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
@@ -13,9 +15,9 @@ Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014). MacSyFinder: A Progr
 http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 
-## Download distribution
+## MacSyFinder is available on pypi
  
-[ ![Download](https://api.bintray.com/packages/gem-pasteur/MacSyFinder/macsyfinder/images/download.svg) ](https://bintray.com/gem-pasteur/MacSyFinder/macsyfinder/_latestVersion)
+[pypi](https://pypi.org/project/macsyfinder/)
 
 
 ## Installation from distribution
@@ -30,9 +32,9 @@ After creating a virtualenv dedicated to macsyfinder and activating it
 
 you can install macsyfinder as describe below.
     
-### from distribution
+### from pypi
 
-    pip install macsyfinder-xxx.tar.gz
+    pip install macsyfinder-xxx
 
 ### from git repository
 
@@ -59,20 +61,14 @@ or to run a specific test
     python tests/run_tests.py -vv tests/test_xxx.py
         
      
-### with gitlab-ci
+### with travis-ci
 
-[![pipeline status](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/pipeline.svg)](https://gitlab.pasteur.fr/gem/MacSyFinder/commits/master)  
+[![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 [![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/coverage/index.html)
 
 ## Documentation
 
-You will find complete documentation for setting up your project.
-for the development version on gitlab pages
-
-[![Doc](https://img.shields.io/badge/docs-passed-brightgreen.svg)](http://gem.pages.pasteur.fr/MacSyFinder/)
-
-
-for public version on readthedocs
+You will find complete documentation for setting up your project on readthedocs
 
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 
@@ -85,6 +81,10 @@ MacSyFinder is developed and released under [![Open Source License: GPL v3](http
 We encourage contributions, bug report, enhancement ... 
 
 But before to do that, we encourage to read [the contributing guide](CONTRIBUTING.md).
+
+## Contributors
+
+[List of all people who participated in the macsyfinder project](CONTRIBUTORS.md).
 
 ## Note
 
