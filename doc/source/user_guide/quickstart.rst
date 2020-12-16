@@ -12,10 +12,17 @@
 MacSyFinder Quick Start 
 =======================
 
+.. only:: html
 
-.. figure:: ../_static/under_construction.gif
+    .. figure:: ../_static/under_construction.gif
 
-    This page is still under construction
+        This page is still under construction
+
+.. only:: latex
+
+    .. figure:: ../_static/under_construction.jpeg
+
+        This page is still under construction
 
 
 1. We recommend to install MacSyFinder using `pip` in a virtual environment (for further details see :ref:`installation`).

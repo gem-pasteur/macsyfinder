@@ -139,12 +139,9 @@ It consists in a hierarchic view of a Model that has specific features described
 All these elements and corresponding parameters will parametrize the search of Systems matching the search by MacSyFinder, in terms of Gene content and genomic architecture criteria. 
 
 
-
-.. image:: ../_static/MSF_modelling.svg
+.. image:: ../_static/MSF_modelling.*
     :height: 1000px
     :align: left
-
-
 
 
 * The element root of a System's model is "model".

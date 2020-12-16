@@ -52,13 +52,9 @@ by the user or by default (see :ref:`Hmmer options <hmmer-options>` and for more
 This step, and the extraction of significant hits can be performed in parallel (`-w` command-line option).
 See the :ref:`command-line-label`, and the :ref:`search_genes API <search_genes>` for more details.
 
-
-
-   .. image:: ../_static/msf_functionning_step1.svg
+   .. image:: ../_static/msf_functionning_step1.*
      :height: 500px
      :align: left
-
-
 
 
 .. _system_assessment:
@@ -102,11 +98,9 @@ The following two steps are reiterated for each model being searched.
     The `loner` components may form a cluster on their own.
 
 
-
-   .. image:: ../_static/msf_functionning_step2.svg
-     :height: 500px
-     :align: left
-
+    .. image:: ../_static/msf_functionning_step2.*
+       :height: 500px
+       :align: left
 
    
 Once performed for each model searched, the :ref:`next step <combinatorial-exploration>` is performed.
@@ -199,17 +193,17 @@ this calls for a **combinatorial screening** of the different clusters to assemb
    plus **a penality part** to avoid too much component's redundancy in Cluster's combinations.
    The systems' scoring step is exemplified in this figure:
 
-
-   .. image:: ../_static/msf_functionning_step3.svg
+   .. image:: ../_static/msf_functionning_step3.*
      :height: 500px
      :align: left
+
 
 
 *********************************************************************
 D. Repeat operations B and C for the other models being searched
 *********************************************************************
 
-.. image:: ../_static/msf_functionning_step4.svg
+.. image:: ../_static/msf_functionning_step4.*
      :height: 500px
      :align: left
 
@@ -242,7 +236,7 @@ which maximizes the score. This allows to provide the user with one, or multiple
 that have the **best score possible** among all combinations of compatible `Systems`.
 
 
-   .. image:: ../_static/msf_functionning_step5.svg
-     :height: 500px
-     :align: left
+.. image:: ../_static/msf_functionning_step5.*
+ :height: 500px
+ :align: left
 
