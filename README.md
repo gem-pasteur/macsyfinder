@@ -2,9 +2,12 @@
 
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 
-[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/coverage/index.html)
+[![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
+
+[]
 
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
@@ -26,7 +29,7 @@ We encourage to install macsyfinder in a [virtualenv](https://virtualenv.pypa.io
 
 After creating a virtualenv dedicated to macsyfinder and activating it
 
-    python -m venv my_project
+    python3 -m venv my_project
     cd my_project
     source bin/activate
 
@@ -34,37 +37,37 @@ you can install macsyfinder as describe below.
     
 ### from pypi
 
-    pip install macsyfinder-xxx
+    pip3 install macsyfinder-xxx
 
 ### from git repository
 
-    git clone https://gitlab.pasteur.fr/gem/MacSyFinder.git
+    git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
-    pip install .
+    pip3 install .
     
 ### for developers
 
-    git clone https://gitlab.pasteur.fr/gem/MacSyFinder.git
+    git clone https://github.com/gem-pasteur/macsyfinder.git
     cd macsyfinder
-    pip install .[dev]
+    pip3 install .[dev]
  
 ## Unit tests 
 
-    python setup.py test
+    python3 setup.py test
     
 or 
     
-    python tests/run_tests.py -vv
+    python3 tests/run_tests.py -vv
     
 or to run a specific test
 
-    python tests/run_tests.py -vv tests/test_xxx.py
+    python3 tests/run_tests.py -vv tests/test_xxx.py
         
      
 ### with travis-ci
 
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
-[![coverage report](https://gitlab.pasteur.fr/gem/MacSyFinder/badges/master/coverage.svg)](http://gem.pages.pasteur.fr/MacSyFinder/coverage/index.html)
+[![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
 
 ## Documentation
 
