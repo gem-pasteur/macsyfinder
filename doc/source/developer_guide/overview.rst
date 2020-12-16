@@ -112,8 +112,9 @@ MacSyFinder architecture overview
 ---------------------------------
 
 An overview of the main classes.
-  
-.. figure:: ../_static/macsyfinder_classes.svg
+
+
+.. figure:: ../_static/macsyfinder_classes.*
 
     The macsyfinder classes diagram.
     The classes are not details. only the main attributes allowing us to understand the interaction are mentioned.
@@ -127,6 +128,7 @@ An overview of the main classes.
 
 .. note::
     use *view image* of your browser to  zoom in the diagram
+
 
 
 MacSyFinder functioning overview
