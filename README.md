@@ -37,7 +37,9 @@ you can install macsyfinder as describe below.
     
 ### from pypi
 
-    pip3 install macsyfinder-xxx
+    pip3 install macsyfinder==x.x
+
+where `x.x` is the version number
 
 ### from git repository
 
