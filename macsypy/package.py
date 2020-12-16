@@ -71,7 +71,7 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
     def unarchive_package(self, path: str) -> str:
         """
         Unarchive and uncompress a package under
-        <remote cache>/<organization name>/<package name>/<vers>/<package name>
+        `<remote cache>/<organization name>/<package name>/<vers>/<package name>`
 
         :param str path:
         :return: The path to the package
