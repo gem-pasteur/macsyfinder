@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 project = 'MacSyFinder'
 copyright = "2014-2020, 'Institut Pasteur (Paris), CNRS'"
-author = u"'Sophie Abby, Bertrand Néron'"
+author = u"Sophie Abby, Bertrand Néron"
 
 # The full version, including alpha/beta/rc tags
 release = '2.0'
@@ -33,7 +33,6 @@ release = '2.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
-              'sphinx_autodoc_typehints',
               'sphinx.ext.doctest',
               'sphinx.ext.todo',
               'sphinx.ext.coverage',
@@ -41,7 +40,6 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.inheritance_diagram',
               'sphinx.ext.graphviz',
-              'sphinxcontrib.inkscapeconverter'
               ]
 
 # Add any paths that contain templates here, relative to this directory.
