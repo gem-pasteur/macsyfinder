@@ -1,13 +1,13 @@
 # MacSyFinder
 
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
-
 [![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
-
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/macsyfinder)](https://pypi.org/project/macsyfinder/)
-
+[![Open Source License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
-
+[![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder/latest)](https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
+![Conda](https://img.shields.io/conda/pn/bioconda/macsyfinder)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
