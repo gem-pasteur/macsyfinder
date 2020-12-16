@@ -21,9 +21,8 @@ install:
 # command to run tests
 script:
   - pip install .
-  - python3 setup.py test
   - coverage run --source macsypy tests/run_tests.py -vv
   - coverage report
-  -
+  
 after_success:
   - coveralls
