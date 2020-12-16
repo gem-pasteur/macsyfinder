@@ -1,0 +1,2 @@
+sphinx-autodoc-typehints
+sphinxcontrib-svg2pdfconverter
