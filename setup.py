@@ -269,7 +269,7 @@ setup(name='macsyfinder',
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
       data_files=expand_data([('share/macsyfinder/data/', ['data']),
                               ('share/doc/macsyfinder/html', ['doc/build/html']),
-                              ('share/doc/macsyfinder/pdf', ['doc/build/latex/MacSyFinder.pdf']),
+                              ('share/doc/macsyfinder/pdf', ['doc/build/latex/macsyfinder.pdf']),
                               ('etc/macsyfinder', ['etc/macsyfinder.conf'])
                               ]),
 
