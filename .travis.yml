@@ -23,6 +23,6 @@ script:
   - pip install .
   - coverage run --source macsypy tests/run_tests.py -vv
   - coverage report
-  
+
 after_success:
   - coveralls
