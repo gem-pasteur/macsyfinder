@@ -20,8 +20,7 @@ http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0110726
 
 ## MacSyFinder is available on pypi
  
-[pypi](https://pypi.org/project/macsyfinder/)
-
+[![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
 
 ## Installation from distribution
 
@@ -76,6 +75,28 @@ or to run a specific test
 You will find complete documentation for setting up your project on readthedocs
 
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
+
+## Docker
+
+MacSyFinder is also available as [Docker container](https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
+
+### how to use macsyfinder container with docker
+
+The computaion are perform under `msf` user in `/home/msf` inside the container.
+So You have to mount a directory from the host in the container to exchange data (inputs data, and results)
+from the host and the container.
+The shared directory must be writable by the `msf` user or overwrite the user in the container by your id (see example below)
+
+    mkdir shared_dir
+    cd shared_dir
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  macsyfinder:2.0rc1  --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+
+### how to use with singularity
+
+As the docker image is registered in docker hub you can also use it directly with [Singularity](https://sylabs.io/docs/).
+Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
+
+    singularity run -H ${HOME} docker://gempasteur/macsyfinder:2.0rc1 --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 ## Licence:
 
