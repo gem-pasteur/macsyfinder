@@ -9,7 +9,7 @@ include etc/macsyfinder.conf
 
 recursive-exclude tests/__pycache__ *
 exclude tests/__init__.pyc
-recursive-include tests/data/base/ *
+recursive-include tests/ *
 
 include README.md
 include COPYING
