@@ -89,7 +89,7 @@ The shared directory must be writable by the `msf` user or overwrite the user in
 
     mkdir shared_dir
     cd shared_dir
-    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  macsyfinder:2.0rc1  --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:2.0rc1  --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 ### how to use with singularity
 
