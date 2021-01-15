@@ -462,6 +462,7 @@ class Config:
                          [(model_family, [def_name1, ...]), ... ]
         """
         opt = []
+        #value = [value]
         for models in value:
             if models[0].startswith('models'):
                 model_family_name, *models_name = models[1].split(' ')

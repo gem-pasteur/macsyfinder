@@ -169,6 +169,7 @@ class ModelLocation:
             self.name = os.path.basename(path)
         else:
             self.name = os.path.basename(def_dir)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@ PATH = ", path)
         if not profile_dir:
             profile_dir = os.path.join(path, 'profiles')
         self._profiles = self._scan_profiles(profile_dir,

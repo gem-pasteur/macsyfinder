@@ -40,6 +40,7 @@ def get_def_to_detect(models, model_registry):
     :rtype: list of :class:`macsypy.registries.DefinitionLocation` objects
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ models", models)
     def_to_detect = []
     for group_of_model in models:
         root, def_name = group_of_model
