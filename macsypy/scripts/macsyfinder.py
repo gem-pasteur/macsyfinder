@@ -427,6 +427,8 @@ Conflicts with options:
     # data set, which are used on many different machines (using previous-run option).
 
     parsed_args = parser.parse_args(args)
+    print("@@@@@@@@@@@@@@ parsed_args", parsed_args)
+    #sys.exit(1)
     return parser, parsed_args
 
 
