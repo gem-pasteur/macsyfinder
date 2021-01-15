@@ -203,11 +203,12 @@ Example of a macsy-model definition in XML:
            <gene name="sctC"/>
        </exchangeables>
     </gene>
-    <gene name="sctN_FLG" presence="mandatory" loner="1"/>
+    <gene name="sctN_FLG" presence="mandatory" loner="1">
        <exchangeables>
            <gene name="gspE"/>
            <gene name="pilT"/>
        </exchangeables>
+    </gene>
     <gene name="sctV_FLG" presence="mandatory"/>
     <gene name="flp" presence="accessory"/>
   </model>
