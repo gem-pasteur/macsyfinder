@@ -172,20 +172,20 @@ Options for clusters and systems' scoring:
 .. code-block:: text
 
   --mandatory-weight MANDATORY_WEIGHT
-                        the weight of a mandatory component in cluster scoring
+                        the weight (score) of a mandatory component when scoring clusters
                         (default:1.0)
   --accessory-weight ACCESSORY_WEIGHT
-                        the weight of a mandatory component in cluster scoring
+                        the weight (score) of an accessory component when scoring clusters
                         (default:0.5)
   --exchangeable-weight EXCHANGEABLE_WEIGHT
-                        the weight modifier for a component which code for exchangeable cluster scoring
-                            (default:0.8)
+                        the weight modifier for the score of a component that is exchangeable
+                        (default:0.8)
   --redundancy-penalty REDUNDANCY_PENALTY
-                        the weight modifier for cluster which bring a component already presents in other
-                        clusters (default:1.5)
+                        the weight modifier for the score of a component that is already present in another cluster 
+			(default:1.5)
 
   --loner-multi-system-weight LONER_MULTI_SYSTEM_WEIGHT
-  			the weight modifier for a hit which is loner and multi-system at the same time
+  			the weight modifier for the score of a component that is `loner` and `multi-system` at the same time
                         (default:0.7)
   
 
