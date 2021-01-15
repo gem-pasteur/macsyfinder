@@ -106,6 +106,12 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 # handle clusters containing only one loner
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters.append(new_cluster)
+            elif model.min_genes_required == 1:
+                # the hit does not collocate but the model required only one gene
+                # handle clusters containing only one gene
+                new_cluster = Cluster(cluster_scaffold, model, hit_weights)
+                clusters.append(new_cluster)
+
         elif len_scaffold > 1:
             new_cluster = Cluster(cluster_scaffold, model, hit_weights)
             clusters.append(new_cluster)
