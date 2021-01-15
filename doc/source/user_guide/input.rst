@@ -167,7 +167,7 @@ Options for Hmmer execution and hits filtering:
 
 .. _score-options:
 
-Options for cluster and systems scoring:
+Options for clusters and systems' scoring:
 
 .. code-block:: text
 
@@ -179,11 +179,15 @@ Options for cluster and systems scoring:
                         (default:0.5)
   --exchangeable-weight EXCHANGEABLE_WEIGHT
                         the weight modifier for a component which code for exchangeable cluster scoring
-                            (default:0.75)
+                            (default:0.8)
   --redundancy-penalty REDUNDANCY_PENALTY
                         the weight modifier for cluster which bring a component already presents in other
                         clusters (default:1.5)
 
+  --loner-multi-system-weight LONER_MULTI_SYSTEM_WEIGHT
+  			the weight modifier for a hit which is loner and multi-system at the same time
+                        (default:0.7)
+  
 
 .. _path-options:
 
