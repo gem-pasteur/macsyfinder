@@ -83,9 +83,10 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 cluster_scaffold.append(hit)
             else:
                 is_a_loner = model.get_gene(cluster_scaffold[0].gene.name).loner
-                if len(cluster_scaffold) > 1 or is_a_loner:
+                if len(cluster_scaffold) > 1 or is_a_loner or model.min_genes_required == 1:
                     # close the current scaffold if it contains at least 2 hits
                     # or one loner
+                    # or min_gene_required == 1
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 # open new scaffold
