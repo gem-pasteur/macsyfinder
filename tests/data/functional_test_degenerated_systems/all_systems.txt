@@ -1,0 +1,22 @@
+# macsyfinder 20210115.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional degenerated_systems -o functional_test_degenerated_systems --previous-run tests/data/functional_test_degenerated_systems/ --relative-path
+# Systems found:
+
+system id = UserReplicon_degenerated_systems_1
+model = functional/degenerated_systems
+replicon = UserReplicon
+clusters = [('VICH001.B.00001.C001_01398', 'T1SS_mfp', 7), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 15)]
+occ = 1
+wholeness = 1.000
+loci nb = 1
+score = 1.500
+
+mandatory genes:
+	- T1SS_mfp: 1 (T1SS_mfp)
+
+accessory genes:
+	- T2SS_gspD: 1 (T2SS_gspD)
+
+neutral genes:
+
+============================================================
