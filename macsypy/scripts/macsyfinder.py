@@ -832,7 +832,6 @@ def main(args=None, loglevel=None):
         models = ModelBank()
         genes = GeneBank()
         profile_factory = ProfileFactory(config)
-        macsypy.hit.hit_weight = macsypy.hit.HitWeight(itself=3, exchangeable=.75, mandatory=2, accessory=.25, neutral=1.5)
 
         logger.info("\n{:#^70}".format(" Searching systems "))
         all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
