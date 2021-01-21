@@ -481,7 +481,7 @@ ligne 3 et bbbbb
     </weights>
     <filtering>
         <e_value_search>0.12</e_value_search>
-        <e_value_sel>0.012</e_value_sel>
+        <i_evalue_sel>0.012</i_evalue_sel>
         <coverage_profile>0.55</coverage_profile>
         <cut_ga>False</cut_ga>
     </filtering>
