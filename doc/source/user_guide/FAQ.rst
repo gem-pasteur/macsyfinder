@@ -37,8 +37,19 @@ What search mode to be used?
 
 Depending on the type of dataset you have, you will have to adapt MacSyFinder's search mode. 
 
-- If you have a fasta file from a complete genome where **proteins are ordered** according to the corresponding genes' order along the replicon, your dataset is entitled to the most powerful search mode: `ordered_replicon` and use the following option `--db-type ordered_replicon`.
+- If you have a fasta file from a complete genome where **proteins are ordered** according to the corresponding genes' order along the replicon, your dataset is entitled to the most powerful search mode (see below): `ordered_replicon` and use the following option `--db-type ordered_replicon`.
 
-- If you have a fasta file of proteins with no sense of the order of the genes along the chromosome(s) or replicon(s), you will have to use the `unordere` search mode with the following option: `--db-type unordered`
+- If you have a fasta file of proteins with **no sense of the order** of the corresponding genes along the chromosome(s) or replicon(s), you will have to use the `unordered` search mode with the following option: `--db-type unordered`
 
-- If you have multiple `ordered` replicons to analyse at once, you will have to follow the `Gembase` convention to name the proteins in the fasta file, so that the original replicons can be assessed from their name: :ref:`see here for a description <gembase_convention>` . 
+- If you have **multiple ordered replicons** to analyse at once, you can follow the `Gembase` convention to name the proteins in the fasta file, so that the original replicons can be assessed from their name: :ref:`see here for a description <gembase_convention>`. 
+
+.. note::
+
+ - When the **gene order is known** (`ordered_replicon` search mode) the power of the analysis is **maximal**, since both the genomic content and context are taken into account for the search.
+
+ - When the **gene order is unknown** (`unordered` search mode) the power of the analysis is more **limited** since the presence of systems can only be suggested on the basis of the quorum of components - and not based on genomic context information. 
+
+
+More on command-line options :ref:`here <command-line-label>` and on MacSyFinder's functioning :ref:`here <functioning>`.
+
+
