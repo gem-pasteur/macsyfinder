@@ -53,7 +53,7 @@ class TestMacsyDefaults(MacsyTest):
                          'multi_loci': set(),
                          'mute': False,
                          'out_dir': None,
-                         'previous_run': False,
+                         'previous_run': None,
                          'profile_suffix': '.hmm',
                          'quiet': 0,
                          'relative_path': False,
