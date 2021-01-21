@@ -360,7 +360,7 @@ class TestConfig(MacsyTest):
                             'exchangeable': 12.0,
                             'loner_multi_system': 10.0}
         self.assertDictEqual(cfg.hit_weights(), expected_weights)
-        self.assertEqual(cfg.e_value_sel(), 0.012)
+        self.assertEqual(cfg.i_evalue_sel(), 0.012)
         self.assertEqual(cfg.e_value_search(), 0.12)
         self.assertEqual(cfg.coverage_profile(), 0.55)
         self.assertTrue(cfg.no_cut_ga())
