@@ -53,3 +53,16 @@ Depending on the type of dataset you have, you will have to adapt MacSyFinder's 
 More on command-line options :ref:`here <command-line-label>` and on MacSyFinder's functioning :ref:`here <functioning>`.
 
 
+
+How to interpret the results from an `unordered` search?
+--------------------------------------------------------
+
+As mentioned above, in the `unordered` search mode, the inference of a system's presence is only based on the list of components found in the protein dataset. 
+Thus, the kind of search specificity provided when using the genomic context (components next to each other are more likely to be part of a same system's occurrence) is not within reach. 
+
+In the `unordered` search mode, the number of proteins selected as system's components (based on the filtering of HMM profiles' similarity search) is reported.
+We decided to report all kinds of system's components, including the `forbidden` ones in order to raise awareness of the user -> even if all constraints are met for the system's inference (here, the quorum: minimal number of components), it cannot be excluded that a `forbidden` component would lie next to the *bona fide* components (`mandatory` and `accessory` ones) in the genome... 
+
+In the end, the `unordered` search mode provides an idea as to whether the **genetic potential** for a given system is found in the set of proteins analysed, with no attempt to assign proteins to particular systems' occurrences, nor guarantee as to whether `forbidden` components should be considered for the potential occurrences. 
+
+
