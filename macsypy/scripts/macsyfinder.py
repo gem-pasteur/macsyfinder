@@ -267,7 +267,7 @@ If not specified, rely on the environment variable PATH
                                type=float,
                                default=None,
                                help=f"""Maximal e-value for hits to be reported during hmmsearch search.
-By default MF set per profile threshold for hmmsearch run (--cut_ga option) 
+By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option) 
 for profiles containing the GA bit score threshold.
 If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
 To applied the --e-value-search to all profiles use the --no-cut-ga option. 
@@ -413,7 +413,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
                                  help="Displays all models installed at generic location and quit.")
     general_options.add_argument("--cfg-file",
                                  action='store',
-                                 help="Path to a MacSyFinder configuration file to be used.")
+                                 help="Path to a MacSyFinder configuration file to be used. (conflict with --previous-run)")
     general_options.add_argument("--previous-run",
                                  action='store',
                                  default=None,
@@ -422,7 +422,7 @@ It allows to skip the Hmmer search step on a same dataset,
 as it uses previous run results and thus parameters regarding Hmmer detection.
 The configuration file from this previous run will be used.
 Conflicts with options:  
-    --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
+    --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
                                  default=False,
