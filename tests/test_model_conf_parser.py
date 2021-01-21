@@ -44,7 +44,7 @@ class TestModelConfParser(MacsyTest):
                          'neutral_weight': 0.0,
                          'loner_multi_system_weight': 10.0,
                          'e_value_search': 0.12,
-                         'e_value_sel': 0.012,
+                         'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
                          'no_cut_ga': True}
         conf_file = self.find_data('conf_files', 'model_conf.xml')
@@ -69,7 +69,7 @@ class TestModelConfParser(MacsyTest):
 
     def test_parse_wo_filtering(self):
         expected_conf = {'e_value_search': 0.12,
-                         'e_value_sel': 0.012,
+                         'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
                          'no_cut_ga': True}
         conf_file = self.find_data('conf_files', 'model_conf_wo_weights.xml')
@@ -109,7 +109,7 @@ class TestModelConfParser(MacsyTest):
 
     def test_parse_filtering(self):
         expected_filters = {'e_value_search': 0.12,
-                            'e_value_sel': 0.012,
+                            'i_evalue_sel': 0.012,
                             'coverage_profile': 0.55,
                             'no_cut_ga': True
                             }
@@ -146,7 +146,7 @@ class TestModelConfParser(MacsyTest):
 
     def test_parse_w_unkown_tag(self):
         expected_filters = {'e_value_search': 0.12,
-                            'e_value_sel': 0.012,
+                            'i_evalue_sel': 0.012,
                             'coverage_profile': 0.55,
                             'no_cut_ga': True
                             }
