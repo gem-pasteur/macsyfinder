@@ -66,3 +66,13 @@ We decided to report all kinds of system's components, including the `forbidden`
 In the end, the `unordered` search mode provides an idea as to whether the **genetic potential** for a given system is found in the set of proteins analysed, with no attempt to assign proteins to particular systems' occurrences, nor guarantee as to whether `forbidden` components should be considered for the potential occurrences. 
 
 
+How to search for multiple models at once?
+------------------------------------------
+
+
+
+When can the option `--previous-run` be used?
+-------------------------------------------
+
+
+
