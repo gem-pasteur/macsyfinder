@@ -71,7 +71,7 @@ class MacsyDefaults(dict):
         self.multi_loci = kwargs.get('multi_loci', set())
         self.mute = kwargs.get('mute', False)
         self.out_dir = kwargs.get('out_dir', None)
-        self.previous_run = kwargs.get('previous_run', False)
+        self.previous_run = kwargs.get('previous_run', None)
         self.profile_suffix = kwargs.get('profile_suffix', '.hmm')
         self.quiet = kwargs.get('quiet', 0)
         self.relative_path = kwargs.get('relative_path', False)
