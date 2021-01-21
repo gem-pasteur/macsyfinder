@@ -784,7 +784,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual(args.verbosity, 0)
         self.assertEqual(args.worker, 4)
 
-        self.assertListEqual(args.models, [['functional', 'all']])
+        self.assertListEqual(args.models, ['functional', 'all'])
 
         command_line = "macsyfinder --sequence-db test_!.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
