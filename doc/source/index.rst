@@ -52,6 +52,17 @@ User Guide
 
    user_guide/index
 
+
+=============
+Modeler Guide
+=============
+
+.. toctree::
+   :maxdepth: 2
+
+   modeler_guide/index
+
+
 ===============
 Developer Guide
 ===============
