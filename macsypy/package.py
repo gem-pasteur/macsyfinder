@@ -42,7 +42,8 @@ from .profile import ProfileFactory
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank
-from .error import MacsydataError, MacsyDataLimitError
+from .model_conf_parser import ModelConfParser
+from .error import MacsydataError, MacsyDataLimitError, MacsypyError
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
@@ -331,7 +332,7 @@ class Package:
         """
         all_warnings = []
         all_errors = []
-        for meth in self._check_structure, self._check_metadata, self._check_model_consistency:
+        for meth in self._check_structure, self._check_metadata, self._check_model_consistency, self._check_model_conf:
             errors, warnings = meth()
             all_errors.extend(errors)
             all_warnings.extend(warnings)
@@ -347,7 +348,7 @@ class Package:
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}'package structure")
+        _log.info(f"Checking '{self.name}' package structure")
         errors = []
         warnings = []
         if not os.path.exists(self.path):
@@ -380,6 +381,7 @@ class Package:
     def _check_model_consistency(self) -> Tuple[List, List]:
         """
         check if each xml seems well write, each genes have an associated profile, etc
+
         :return:
         """
         _log.info(f"Checking '{self.name}' Model definitions")
@@ -401,6 +403,28 @@ class Package:
         _log.info("Definitions are consistent")
         # to respect same api as _check_metadata and _check_structure
         return [], []
+
+
+    def _check_model_conf(self) -> Tuple[List[str], List[str]]:
+        """
+        check if a model configuration file is present in the package (model_conf.xml)
+        if the syntax of this file is good.
+
+        :return:
+        """
+        _log.info(f"Checking '{self.name}' model configuration")
+        errors = []
+        warnings = []
+        conf_file = os.path.join(self.path, 'model_conf.xml')
+        if os.path.exists(conf_file):
+            mcp = ModelConfParser(conf_file)
+            try:
+                mcp.parse()
+            except (ValueError, MacsypyError) as err:
+                errors.append(str(err))
+        else:
+            _log.info(f"There is no model configuration for package {self.name}.")
+        return errors, warnings
 
 
     def _check_metadata(self) -> Tuple[List[str], List[str]]:
