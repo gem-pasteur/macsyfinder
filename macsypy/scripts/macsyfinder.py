@@ -140,13 +140,11 @@ def parse_args(args):
     # , formatter_class=argparse.RawDescriptionHelpFormatter)
     # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--models",
-                        action='append',
                         nargs='*',
                         default=None,
-                        help="""The models to search. The --models option can be set several times.
-For each --models options the first element must be the name of family models, 
-followed by the name of the models.
-If the name 'all' is in the list, all models from the family will be searched.
+                        help="""The models to search.
+The first element must be the name of family models, followed by the name of the models to search.
+If the name 'all' is in the list of models, all models from the family will be searched.
 '--models TXSS Flagellum T2SS' 
           means MSF will search for the models TXSS/Flagellum and TXSS/T2SS
 '--models TXSS all' 

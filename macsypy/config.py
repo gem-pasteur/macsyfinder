@@ -266,9 +266,8 @@ class Config:
                 conf_str += f"[{section}]\n"
                 if section == 'models':
                     # [(model_family, (def_name1, ...)), ... ]
-                    for i, models in enumerate(self._options['models'], 1):
-                        model_family, def_names = models
-                        conf_str += f"models_{i} = {model_family} {' '.join(def_names)}\n"
+                    model_family, model_names = self.models()
+                    conf_str += f"models = {model_family} {' '.join(model_names)}\n"
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
@@ -456,21 +455,21 @@ class Config:
                       the configuration files
 
                       if value come from command_line
-                          [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
+                          ['model1', 'def1', 'def2', 'def3']
                       if value come from config file
-                         [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
+                         'set_1', 'T9SS T3SS T4SS_typeI')]
                          [(model_family, [def_name1, ...]), ... ]
         """
-        opt = []
-        #value = [value]
-        for models in value:
-            if models[0].startswith('models'):
-                model_family_name, *models_name = models[1].split(' ')
-            else:
-                model_family_name = models[0]
-                models_name = models[1:]
-            opt.append((model_family_name, models_name))
-        self._options['models'] = opt
+        if isinstance(value, str):
+            # it comes from a config_file
+            # value = model_family_name model1 model2
+            model_family_name, *models_name = value.split()
+        else:
+            # it come from the command line
+            # value = ['model_family_name', 'model1', 'model2']
+            model_family_name = value[0]
+            models_name = value[1:]
+        self._options['models'] = (model_family_name, models_name)
 
 
     def out_dir(self):
