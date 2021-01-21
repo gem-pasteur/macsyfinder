@@ -1,5 +1,5 @@
 ---
-author:
+maintainer:
   name: first_name last_name
   email: login@my_domain.fr
 short_desc: this is a short description of the repos
@@ -12,6 +12,6 @@ cite:
     citation
     with author link and so on
 doc: http://link/to/the/documentation
-licence: CC-BY-NC-SA 4.0
-copyrights: 2019, Institut Pasteur, CNRS
+license: CC-BY-NC-SA 4.0
+copyright: 2019, Institut Pasteur, CNRS
 

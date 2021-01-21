@@ -122,7 +122,7 @@ class ModelConfParser:
                 raise MacsypyError(msg)
 
         elements = {'e_value_search': float,
-                    'e_value_sel': float,
+                    'i_evalue_sel': float,
                     'coverage_profile': float,
                     'accessory': float,
                     'cut_ga': parse_cut_ga,
