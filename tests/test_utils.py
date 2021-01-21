@@ -49,7 +49,7 @@ class TestUtils(MacsyTest):
     def test_get_def_to_detect(self):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
-        cmd_args.models = [('set_1', 'def_1_1', 'def_1_2', 'def_1_3')]
+        cmd_args.models = ('set_1', 'def_1_1', 'def_1_2', 'def_1_3')
         config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'fake_model_dir')),
                         cmd_args)
         registry = ModelRegistry()
@@ -58,18 +58,18 @@ class TestUtils(MacsyTest):
             registry.add(ml)
 
         # case where models are specified on command line
-        res = get_def_to_detect([('set_1', ['def_1_1', 'def_1_2', 'def_1_3'])], registry)
+        res = get_def_to_detect(('set_1', ['def_1_1', 'def_1_2', 'def_1_3']), registry)
         model_loc = registry['set_1']
         exp = [model_loc.get_definition(name) for name in ('set_1/def_1_1', 'set_1/def_1_2', 'set_1/def_1_3')]
         self.assertListEqual(res, exp)
 
         # case we search all models
-        res = get_def_to_detect([('set_1', ['all'])], registry)
+        res = get_def_to_detect(('set_1', ['all']), registry)
         exp = model_loc.get_all_definitions()
         self.assertListEqual(res, exp)
 
         # case the models required does not exists
         with self.assertRaises(ValueError):
-            get_def_to_detect([('set_1', ['FOO', 'BAR'])], registry)
+            get_def_to_detect(('set_1', ['FOO', 'BAR']), registry)
 
 
