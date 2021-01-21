@@ -1,0 +1,11 @@
+# macsyfinder 20210115.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional uncomplete_degenerated_systems -o functional_test_uncomplete_degenerated_systems --previous-run tests/data/functional_test_uncomplete_degenerated_systems/ --relative-path
+# Rejected clusters:
+
+Cluster:
+- model = uncomplete_degenerated_systems
+- replicon = UserReplicon
+- hits = (VICH001.B.00001.C001_01400, T2SS_gspD, 15)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (1) is not reached: 0
+============================================================
