@@ -433,8 +433,13 @@ Conflicts with options:
     # data set, which are used on many different machines (using previous-run option).
 
     parsed_args = parser.parse_args(args)
-    print("@@@@@@@@@@@@@@ parsed_args", parsed_args)
-    #sys.exit(1)
+    if parsed_args.cfg_file and parsed_args.previous_run:
+        # argparse does not allow to have mutually exclusive option  in a argument group
+        # I prefer to have these 2 options in general options group
+        # so I mimic the exclusive_group behavior
+        parser.print_usage()
+        print("macsyfinder: error: argument --previous-run: not allowed with argument --cfg-file")
+        sys.exit(2)
     return parser, parsed_args
 
 
