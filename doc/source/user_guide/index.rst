@@ -31,3 +31,12 @@ MacSyFinder functioning
 
    model_definition
    functioning
+
+
+
+Frequently Asked Questions
+==========================
+.. toctree::
+   :maxdepth: 2
+
+   FAQ
