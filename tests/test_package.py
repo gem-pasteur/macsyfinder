@@ -34,6 +34,7 @@ import glob
 import yaml
 from unittest.mock import patch
 
+import macsypy
 from macsypy import package
 from macsypy.error import MacsydataError, MacsyDataLimitError
 
@@ -408,6 +409,9 @@ class TestPackage(MacsyTest):
             shutil.rmtree(self.tmpdir)
         os.makedirs(self.tmpdir)
 
+        macsypy.init_logger()
+        macsypy.logger_set_level(30)
+
         self.metadata = {"maintainer": {"name": "auth_name",
                                     "email": "auth_name@mondomain.fr"},
                          "short_desc": "this is a short description of the repos",
@@ -430,7 +434,8 @@ ligne 3 et bbbbb
         except:
             pass
 
-    def create_fake_package(self, model, definitions=True, profiles=True, metadata=True, readme=True, license=True):
+    def create_fake_package(self, model, definitions=True, profiles=True,
+                            metadata=True, readme=True, license=True, conf=True, bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
         if definitions:
@@ -463,6 +468,37 @@ ligne 3 et bbbbb
         if license:
             with open(os.path.join(pack_path, "LICENSE"), 'w') as f:
                 f.write("# This the License\n")
+        if conf:
+            with open(os.path.join(pack_path, "model_conf.xml"), 'w') as f:
+                conf = """<model_config>
+    <weights>
+        <itself>11</itself>
+        <exchangeable>12</exchangeable>
+        <mandatory>13</mandatory>
+        <accessory>14</accessory>
+        <neutral>0</neutral>
+        <loner_multi_system>10</loner_multi_system>
+    </weights>
+    <filtering>
+        <e_value_search>0.12</e_value_search>
+        <e_value_sel>0.012</e_value_sel>
+        <coverage_profile>0.55</coverage_profile>
+        <cut_ga>False</cut_ga>
+    </filtering>
+</model_config>
+"""
+                f.write(conf)
+        elif bad_conf:
+            with open(os.path.join(pack_path, "model_conf.xml"), 'w') as f:
+                conf = """<model_config>
+    <weights>
+        <itself>FOO</itself>
+        <exchangeable>BAR</exchangeable>
+    </weights>
+</model_config>
+"""
+                f.write(conf)
+
         return pack_path
 
 
@@ -493,6 +529,29 @@ ligne 3 et bbbbb
         os.rename(pack.readme, readme_path)
         self.assertIsNone(pack._find_readme())
 
+    def test_check_model_conf(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_model_conf()
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings, [])
+
+    def test_check_model_conf_no_conf(self):
+        fake_pack_path = self.create_fake_package('fake_model', conf=False)
+        pack = package.Package(fake_pack_path)
+        errors, warnings = pack._check_model_conf()
+        self.assertListEqual(errors, [])
+        self.assertListEqual(warnings, [])
+
+    def test_check_model_conf_bad_conf(self):
+        fake_pack_path = self.create_fake_package('fake_model', conf=False, bad_conf=True)
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_conf()
+        self.maxDiff =None
+        self.assertListEqual(errors, [f"The model configuration file '{fake_pack_path}/model_conf.xml' "
+                                      f"cannot be parsed: could not convert string to float: 'FOO'"])
+        self.assertListEqual(warnings, [])
 
     def test_check_structure(self):
         fake_pack_path = self.create_fake_package('fake_model')
