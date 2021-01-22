@@ -66,13 +66,41 @@ We decided to report all kinds of system's components, including the `forbidden`
 In the end, the `unordered` search mode provides an idea as to whether the **genetic potential** for a given system is found in the set of proteins analysed, with no attempt to assign proteins to particular systems' occurrences, nor guarantee as to whether `forbidden` components should be considered for the potential occurrences. 
 
 
-How to search for multiple models at once?
-------------------------------------------
+How to search for multiple systems at once?
+-------------------------------------------
 
+- It is possible to search for only some systems from a macsy-model package. In this case, the command-line should be formed as follows:
+
+.. code-block:: text
+
+   macsyfinder --models TXSS Flagellum T2SS --sequence-db mygenomes.fasta --db-type gembase 
+
+This would run the search of the systems "Flagellum" and "T2SS" in the dataset "mygenomes.fasta". 
+
+
+- To run the search of all the models contained in a macsy-model package, use the following: 
+
+.. code-block:: text
+
+   macsyfinder --models TXSS all --sequence-db mygenomes.fasta --db-type gembase 
+   macsyfinder --models CRISPRCas all --sequence-db mygenomes.fasta --db-type gembase 
+   macsyfinder --models CRISPRCas/typing all --sequence-db mygenomes.fasta --db-type gembase 
+
+You can see that the `all` keyword can not only be applied to an entire macsy-model package and its entire hierarchy, but can also be ran on all the systems from a macsy-model sub-directory. 
 
 
 When can the option `--previous-run` be used?
--------------------------------------------
+---------------------------------------------
 
+The option `--previous-run` enables to avoid running the HMM profile search and the hits extraction when the set of systems to search and the replicons to analyse are exactly the same between runs. 
+This enables to alter the features of the systems to be searched for, i.e. basically any feature found in the XML file of the corresponding models: 
 
+- the maximal distance allowed between components to be considered as part of a same locus `--inter-gene-max-space`
+- the minimal number of components to be found to infer a full system `--min-mandatory-genes-required` and `--min-genes-required`
+- the general genomic architecture of the system `--multi-loci`
 
+This also means that there are a number of options that are incompatible with  `--previous-run`, including:
+
+.. code-block:: text
+
+   --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
