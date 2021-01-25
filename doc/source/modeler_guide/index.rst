@@ -20,5 +20,6 @@ Model Systems
 
    package
    modeling
+   helper_tools
    publish_package
    gallery
