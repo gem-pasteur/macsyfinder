@@ -27,6 +27,8 @@ import shutil
 import os
 import argparse
 import sys
+from io import StringIO
+from itertools import groupby
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
@@ -232,11 +234,115 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.log_level = 30
-        self.cfg = Config(MacsyDefaults(), args)
+        cfg = Config(MacsyDefaults(), args)
         gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
 
-        hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, self.cfg)
+        hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
 
-        hmm_hit = [">> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific"]
+        hmm_hit = [">> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 "
+                   "6260390 6261757 | tRNA modific"]
         hit_id = hmm_prof._parse_hmm_header(hmm_hit)
         self.assertEqual(hit_id, 'NC_xxxxx_xx_056141')
+
+
+    def test_parse_hmm_body(self):
+        def make_hmm_group(hmm_string):
+            hmm_file = StringIO(hmm_string)
+            hmm_hits = (x[1] for x in groupby(hmm_file, lambda l: l.startswith('>>')))
+            header = next(hmm_hits)
+            body = next(hmm_hits)
+            return body
+
+
+        gene_name = "gspD"
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.log_level = 30
+        cfg = Config(MacsyDefaults(), args)
+        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+
+        hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
+
+        # with one significant hit
+        hmm = """>> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  779.2   5.5  1.4e-237    2e-236       1     596 []     104     741 ..     104     741 .. 0.93
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        hits = hmm_prof._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = [macsyprofile.LightHit(gene_name, "NC_xxxxx_xx_056141", 803, "NC_xxxxx_xx", 141, float(2e-236), float(779.2),
+                           float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)]
+        self.assertListEqual(hits, expected_hits)
+        # with no significant hit
+        hmm = """>> PSAE001c01_051090  C ATG TGA 5675714 5677858 Valid pilQ 2145 _PA5040_NP_253727.1_ PA5040 1 5675714 5677858 | type 4 f
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   27.1   0.2   6.3e-10   6.6e-07       1     120 [.     286     402 ..     286     407 .. 0.86
+   2 !  186.2   0.1   4.2e-58   4.3e-55     294     590 ..     405     709 ..     397     712 .. 0.84
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        hits = hmm_prof._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = []
+        self.assertListEqual(hits, expected_hits)
+
+        # with no hit
+        hmm = """>> PSAE001c01_051090  C ATG TGA 5675714 5677858 Valid pilQ 2145 _PA5040_NP_253727.1_ PA5040 1 5675714 5677858 | type 4 f
+        bla bla
+        """
+        body = make_hmm_group(hmm)
+        hits = hmm_prof._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        expected_hits = []
+        self.assertListEqual(hits, expected_hits)
+
+        # with invalid hmm
+        hmm = """>> NC_xxxxx_xx_056141  C ATG TAA 6260390 6261757 Valid PA5567 1368 _NP_254254.1_ PA5567 1 6260390 6261757 | tRNA modific
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  779.2   5.5  1.4e-237    foo       1     596 []     104     741 ..     104     741 .. 0.93
+
+  Alignments for each domain:
+"""
+        body = make_hmm_group(hmm)
+        with self.assertRaises(ValueError) as ctx:
+            hmm_prof._parse_hmm_body('NC_xxxxx_xx_056141', 596, 803, 0.5, 'NC_xxxxx_xx', 141, 0.5, body)
+        self.assertEqual(str(ctx.exception), """Invalid line to parse :   1 !  779.2   5.5  1.4e-237    foo       1     596 []     104     741 ..     104     741 .. 0.93
+:could not convert string to float: 'foo'""")
+
+
+    def test_parse(self):
+        gene_name = "gspD"
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.log_level = 30
+        args.sequence_db = self.find_data("base", "test_base.fa")
+        args.profile_coverage = -1
+        args.i_evalue_sel = 10e9
+        cfg = Config(MacsyDefaults(), args)
+        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+
+        hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
+
+        expected_hits = [
+            macsyprofile.LightHit('gspD', 'NC_xxxxx_xx_056141', 803, 'NC_xxxxx_xx', 141, 2.000e-236, 779.200, 1.000,
+                                  (741.0 - 104.0 + 1) / 803, 104, 741),
+            macsyprofile.LightHit('gspD', 'PSAE001c01_006940', 803, 'PSAE001c01', 68, 1.2e-234, 779.2, 1.0,
+                                  (741.0 - 104.0 + 1) / 803, 104, 741),
+            macsyprofile.LightHit('gspD', 'PSAE001c01_031420', 658, 'PSAE001c01', 73, 1.8e-210, 699.3, 1.0,
+                                  (614.0 - 55.0 + 1) / 658, 55, 614),
+            macsyprofile.LightHit('gspD', 'PSAE001c01_018920', 776, 'PSAE001c01', 71, 6.1e-183, 608.4, 1.0,
+                                  (606.0 - 48.0 + 1) / 776, 48, 606),
+            macsyprofile.LightHit('gspD', 'PSAE001c01_013980', 759, 'PSAE001c01', 69, 3.7e-76, 255.8, 1.0,
+                                  (736.0 - 105.0 + 1) / 759, 105, 736),
+            macsyprofile.LightHit('gspD', 'PSAE001c01_017350', 600, 'PSAE001c01', 70, 3.2e-27, 94.2, 0.5,
+                                  (506.0 - 226.0 + 1) / 600, 226, 506),
+        ]
+
+        hits = hmm_prof.parse()
+        self.assertListEqual(expected_hits, hits)
