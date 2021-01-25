@@ -104,3 +104,15 @@ This also means that there are a number of options that are incompatible with  `
 .. code-block:: text
 
    --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
+
+
+
+Which output file to be used to get ONE solution?
+-------------------------------------------------
+
+Since version 2 of MacSyFinder, a combinatorial exploration of the possible sets of systems is performed. A scoring scheme has been set up to differentiate between solutions, in order to provide the user with the most complete set of systems as possible given the searched models. This score is maximal for the "best solution". This also means that some solutions might get the same maximal score. In this case, one can wonder how to find all the equivalent solutions, and an other, how to simply pick one solution among the best, whichever it is. 
+We thus propose several kind of :ref:`output files <ordered_outputs>`. 
+
+- All equivalent best solutions are found in the `all_best_solutions.tsv` file. 
+- One best solution is given in the `best_solution.tsv` file. 
+
