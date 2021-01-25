@@ -65,7 +65,7 @@ def get_profile_len(path: str) -> int:
     Parse the HMM profile to extract the length and the presence of GA bit threshold
 
     :param str path: The path to the hmm profile used to produced the hmm search output to analyse
-    :return: the lentgh, presence of ga bit threshold
+    :return: the length, presence of ga bit threshold
     :rtype: tuple(int length, bool ga_threshold)
     """
     with open(path) as f:
