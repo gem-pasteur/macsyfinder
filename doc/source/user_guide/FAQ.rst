@@ -72,7 +72,7 @@ How to search for multiple models at once?
 
 
 When can the option `--previous-run` be used?
--------------------------------------------
+---------------------------------------------
 
 
 
