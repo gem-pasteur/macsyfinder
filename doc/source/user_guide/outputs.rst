@@ -252,7 +252,8 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
     systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
 
 .. note::
-    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
+    each system reported is separated from the others with a blank line to ease human reading.
+    These lines are ignored during the parsing with pandas.
 
 
 best_solution.tsv and all_best_solutions.tsv
