@@ -388,7 +388,7 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
                  *                           *  *           *     *
 
 
-    MacSyData - MacSyFinder Data Management
+    MacSyProfile - MacSyFinder profile helper tool
     '''))
 
     parser.add_argument('previous_run',
