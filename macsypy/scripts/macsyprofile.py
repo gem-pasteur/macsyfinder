@@ -320,7 +320,8 @@ def init_logger(level='INFO', out=True):
     """
     logger = colorlog.getLogger('macsyprofile')
     logging = colorlog.logging.logging
-    handlers = []
+    if isinstance(level, str):
+        level = getattr(logging, level)
     if out:
         stdout_handler = colorlog.StreamHandler(sys.stderr)
         if level <= logging.DEBUG:
@@ -342,13 +343,9 @@ def init_logger(level='INFO', out=True):
                                                      )
         stdout_handler.setFormatter(stdout_formatter)
         logger.addHandler(stdout_handler)
-        handlers.append(stdout_handler)
     else:
         null_handler = logging.NullHandler()
         logger.addHandler(null_handler)
-        handlers.append(null_handler)
-    if isinstance(level, str):
-        level = getattr(logging, level)
     logger.setLevel(level)
     return logger
 
