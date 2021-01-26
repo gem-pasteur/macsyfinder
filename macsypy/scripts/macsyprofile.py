@@ -447,20 +447,20 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
     return parsed_args
 
 
-def main(args=None, loglevel=None) -> None:
+def main(args=None, log_level=None) -> None:
     """
     main entry point to macsyprofile
 
     :param args: the arguments passed on the command line without the program name
     :type args: List of string
-    :param loglevel: the output verbosity
-    :type loglevel: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
+    :param log_level: the output verbosity
+    :type log_level: a positive int or a string among 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'
     """
     global _log
     args = sys.argv[1:] if args is None else args
     parsed_args = parse_args(args)
 
-    if loglevel is None:
+    if log_level is None:
         log_level = verbosity_to_log_level(parsed_args.verbosity)
     _log = init_logger(log_level, out=(not parsed_args.mute))
 
