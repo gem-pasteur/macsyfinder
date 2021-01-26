@@ -305,9 +305,7 @@ def header(cmd: List[str]) -> str:
     """
     header = f"""# macsyprofile {macsypy.__version__}
 # macsyprofile {' '.join(cmd)}
-
-hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage
-\tbegin\tend"""
+hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage\tbegin\tend"""
     return header
 
 
