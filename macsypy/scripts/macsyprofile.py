@@ -503,7 +503,6 @@ def main(args=None, log_level=None) -> None:
             hits = hmm.parse()
             all_hits += hits
         if len(all_hits) > 0:
-
             if parsed_args.best_hits:
                 # It's important to keep this sorting to have in last all_hits version
                 # the hits with the same replicon_name and position sorted by score
@@ -523,6 +522,8 @@ def main(args=None, log_level=None) -> None:
             _log.info(f"found {len(all_hits)} hits")
             for hit in all_hits:
                 print(hit, file=prof_out)
+        else:
+            _log.info(f"No hit found")
 
 
 if __name__ == '__main__':
