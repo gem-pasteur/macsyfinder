@@ -41,11 +41,8 @@ class TestMacsyprofile(MacsyTest):
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
-        self.models_dir = os.path.join(self.tmpdir, 'models')
-        os.mkdir(self.models_dir)
 
         self.args = argparse.Namespace()
-        macsyprofile._log = macsyprofile.init_logger(20)  # 20 logging.INFO
         self.previous_run = self.find_data('functional_test_gembase')
 
     def tearDown(self):
@@ -56,6 +53,15 @@ class TestMacsyprofile(MacsyTest):
         # some function in macsyprofile script suppress the traceback
         # but without traceback it's hard to debug test :-(
         sys.tracebacklimit = 1000  # the default value
+
+        # at each call of macsyprofile.main
+        # init_logger is call and new handler is add
+        # remove them
+        logger = macsyprofile._log
+        if logger:
+            for handler in logger.handlers[:]:
+                logger.removeHandler(handler)
+
 
 
     def test_pasre_args(self):
@@ -115,9 +121,7 @@ class TestMacsyprofile(MacsyTest):
         cmd = f"macsyprofile --coverage-profile {coverage_profile} --out {out} {self.previous_run}"
         expected_header = f"""# macsyprofile {version}
 # macsyprofile {' '.join(cmd.split()[1:])}
-
-hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage
-\tbegin\tend"""
+hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tscore\tprofile_coverage\tsequence_coverage\tbegin\tend"""
         got_header = macsyprofile.header(cmd.split()[1:])
         self.assertEqual(expected_header, got_header)
 
@@ -346,3 +350,67 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
 
         hits = hmm_prof.parse()
         self.assertListEqual(expected_hits, hits)
+
+    def test_functional(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile.tsv')
+        cmd = f"macsyprofile -o {out} {previous_run} "
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+    def test_functional_pattern(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile_pattern.tsv')
+        # the argument do not need to be protected (we do not use shell)
+        # as on real command line so '*mpf' => *mpf
+        cmd = f"macsyprofile -o {out} -p *mfp {previous_run} "
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+    def test_functional_coverage(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile_coverage.tsv')
+        cmd = f"macsyprofile -o {out} --coverage-profile 0.5 {previous_run} "
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+    def test_functional_evalue(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile_evalue.tsv')
+        cmd = f"macsyprofile -o {out} --i-evalue-sel 1e-3 {previous_run} "
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+    def test_functional_best_score(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile_best_score.tsv')
+        cmd = f"macsyprofile -o {out} --best-hits score {previous_run} "
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+    def test_functional_no_hits(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        expected_result = self.find_data('results_macsyprofile_no_hits.tsv')
+        cmd = f"macsyprofile -o {out} --i-evalue-sel 1e-10 --coverage-profile 2.0 {previous_run}"
+        macsyprofile.main(cmd.split()[1:], log_level='WARNING')
+        self.assertFileEqual(expected_result, out, comment='#')
+
+
+    def test_functional_out_exists(self):
+        out = os.path.join(self.tmpdir, 'test_macsyprofile')
+        open(out, 'w').close()
+        previous_run = self.find_data('functional_test_degenerated_systems')
+        cmd = f"macsyprofile -o {out} --mute --best-hits score {previous_run} "
+
+        # we cannot test the log message here
+        # because the logger are init when main is called
+        # after that the context is establish
+        # so when the wrapper is called the handler cannot be substitute by the fake
+        with self.assertRaises(ValueError):
+            macsyprofile.main(cmd.split()[1:])
