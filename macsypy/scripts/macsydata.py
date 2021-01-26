@@ -797,7 +797,7 @@ def main(args=None) -> None:
     macsypy.init_logger()
     macsypy.logger_set_level(level=log_level)
     # set logger for this script
-    _log = init_logger(verbosity_to_log_level(parsed_args.verbose))
+    _log = init_logger(log_level)
 
     if 'func' in parsed_args:
         parsed_args.func(parsed_args)
