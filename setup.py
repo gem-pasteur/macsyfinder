@@ -264,6 +264,8 @@ setup(name='macsyfinder',
           'console_scripts': [
               'macsyfinder=macsypy.scripts.macsyfinder:main',
               'macsydata=macsypy.scripts.macsydata:main',
+              'macsy_gembase_split=macsypy.scripts.macsy_gembase_split:main',
+              'macsy_merge_results=macsypy.scripts.macsy_merge_results:main',
           ]
       },
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]
