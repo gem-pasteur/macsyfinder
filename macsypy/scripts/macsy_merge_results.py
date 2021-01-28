@@ -65,7 +65,7 @@ def merge_files(files, out, ignore=None, keep_first=None, header=""):
                     f_out.write(line)
 
 
-def merge_and_reindex(files, out):
+def merge_and_reindex(files, out, header=""):
     """
     merge all_best_solutions and reindex the sol_id column
 
@@ -73,10 +73,6 @@ def merge_and_reindex(files, out):
     :type files: list of str
     :param str out: the path to the merged file
     """
-    header = f"""# parallel_msf {macsypy.__version__}
-#
-# systems found:
-"""
     with open(out, 'w') as f_out:
         f_out.write(header)
         last_sol_id = 0
@@ -117,7 +113,11 @@ def merge_results(results_dirs, out_dir='.'):
     out_file = os.path.join(out_dir, 'merged_all_best_solutions.tsv')
     _log.info(f"Merging 'all_best_solutions.tsv' in to '{out_file}'")
     all_best_solutions_files = [os.path.join(d, 'all_best_solutions.tsv') for d in results_dirs]
-    merge_and_reindex(all_best_solutions_files, out_file)
+    header = f"""# parallel_msf {macsypy.__version__}
+# merged all_best_solutions.tsv
+# systems found:
+"""
+    merge_and_reindex(all_best_solutions_files, out_file, header=header)
 
     out_file = os.path.join(out_dir, 'merged_best_solution.tsv')
     _log.info(f"Merging 'best_solution.tsv' in to '{out_file}'")
@@ -216,7 +216,10 @@ def main(args=None, log_level=None) -> None:
 
     outdir_err = None
     if not os.path.exists(parsed_args.outdir):
-        outdir_err = f"No such file or directory: {parsed_args.outdir}"
+        try:
+            os.mkdir(parsed_args.outdir)
+        except PermissionError as err:
+            outdir_err = f"Cannot create {parsed_args.outdir} : {err}"
     elif not os.path.isdir(parsed_args.outdir):
         outdir_err = f"{parsed_args.outdir} is not a directory"
     elif not os.access(parsed_args.outdir, os.W_OK):
