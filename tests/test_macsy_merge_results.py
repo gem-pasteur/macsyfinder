@@ -67,8 +67,8 @@ class TestMerge(MacsyTest):
         shutil.copytree(src_res_2, dest_res_2)
         merge_dir = os.path.join(self.test_dir, 'merged_results')
         os.mkdir(merge_dir)
-        cmd = f"macsy_merge_results -o {merge_dir} {dest_res_1} {dest_res_2}"
-        macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
+        cmd = f"macsy_merge_results -o {merge_dir} --mute {dest_res_1} {dest_res_2}"
+        macsy_merge_results.main(args=cmd.split()[1:])
 
         results_files = ('best_solution.tsv', 'all_best_solutions.tsv', 'all_systems.tsv',
                          'all_systems.txt', 'rejected_clusters.txt')
@@ -91,8 +91,8 @@ class TestMerge(MacsyTest):
         shutil.copytree(src_res_2, dest_res_2)
         merge_dir = os.path.join(self.test_dir, 'merged_results')
         os.mkdir(merge_dir)
-        cmd = f"macsy_merge_results -o {merge_dir} {dest_res_1} {dest_res_2}"
-        macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
+        cmd = f"macsy_merge_results -o {merge_dir} --mute -qq {dest_res_1} {dest_res_2}"
+        macsy_merge_results.main(args=cmd.split()[1:])
 
         results_files = ('best_solution.tsv', 'all_best_solutions.tsv', 'all_systems.tsv',
                          'all_systems.txt', 'rejected_clusters.txt')
@@ -104,7 +104,7 @@ class TestMerge(MacsyTest):
                 self.assertFileEqual(expected, recieved, comment='#')
 
 
-    def test_functional_merge_out_exists(self):
+    def test_functional_gembase_split_out_exists(self):
         res_1 = 'results'
         src_res_1 = self.find_data('data_set', res_1)
         dest_res_1 = os.path.join(self.test_dir, res_1)
@@ -134,8 +134,6 @@ class TestMerge(MacsyTest):
         res_2 = 'results_no_hits'
         src_res_2 = self.find_data('data_set', res_2)
         dest_res_2 = os.path.join(self.test_dir, res_2)
-        shutil.copytree(src_res_1, dest_res_1)
-        shutil.copytree(src_res_2, dest_res_2)
         merge_dir = os.path.join(self.test_dir, 'merged_results')
 
         ###########################
