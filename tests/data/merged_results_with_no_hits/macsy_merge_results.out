@@ -1,0 +1,5 @@
+INFO     : Merging 'all_best_solutions.tsv' in to 'merged_with_no_hits/merged_all_best_solutions.tsv'
+INFO     : Merging 'best_solution.tsv' in to 'merged_with_no_hits/merged_best_solution.tsv'
+INFO     : Merging 'all_systems.tsv' in to 'merged_with_no_hits/merged_all_systems.tsv'
+INFO     : Merging 'all_systems.txt' in to 'merged_with_no_hits/merged_all_systems.txt'
+INFO     : Merging 'rejected_clusters.txt' in to 'merged_with_no_hits/merged_rejected_clusters.txt'
