@@ -6,7 +6,7 @@
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG05616.hmm
 # target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
 # output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG05616.search_hmm.out
-# sequence reporting threshold:    E-value <= 1
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -34,7 +34,7 @@ Passed Vit filter:                         6  (0.00237342); expected 2.5 (0.001)
 Passed Fwd filter:                         0  (0); expected 0.0 (1e-05)
 Initial search space (Z):               2528  [actual number of targets]
 Domain search space  (domZ):               0  [number of targets reported over threshold]
-# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.04
-# Mc/sec: 20876.85
+# CPU time: 0.03u 0.00s 00:00:00.03 Elapsed: 00:00:00.03
+# Mc/sec: 27835.80
 //
 [ok]
