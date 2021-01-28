@@ -173,13 +173,16 @@ def main(args=None, log_level=None):
 
     outdir_err = None
     if not os.path.exists(parsed_args.outdir):
-        outdir_err = f"No such file or directory: {parsed_args.outdir}"
+        try:
+            os.mkdir(parsed_args.outdir)
+        except PermissionError as err:
+            outdir_err = f"Cannot create {parsed_args.outdir} : {err}"
     elif not os.path.isdir(parsed_args.outdir):
         outdir_err = f"{parsed_args.outdir} is not a directory"
     elif not os.access(parsed_args.outdir, os.W_OK):
         outdir_err = f"{parsed_args.outdir} is not writable"
     if outdir_err:
-        log = colorlog.getLogger('macsypy.merge')
+        log = colorlog.getLogger('macsypy.split')
         stdout_handler = colorlog.StreamHandler(sys.stdout)
         stdout_formatter = colorlog.ColoredFormatter("%(log_color)s%(message)s",
                                                      datefmt=None,
