@@ -118,6 +118,7 @@ scoring weights:
     * accessory (*float* default = 0.5)
     * exchangeable (*float* default = 0.8)
     * loner_multi_systems (*float* default =  0.7)
+    * redundancy_penalty (*float* default = 1.5)
 
 filtering options:
 
@@ -150,6 +151,7 @@ The model_conf.xml configuration file is in xml format and must have the followi
             <mandatory>1</mandatory>
             <accessory>0.5</accessory>
             <exchangeable>0.8</exchangeable>
+            <redundancy_penalty>1.5</redundancy_penalty>
             <loner_multi_system>0.7</loner_multi_system>
         </weights>
         <filtering>
