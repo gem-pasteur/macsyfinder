@@ -34,7 +34,7 @@ def find_best_solutions(systems):
     :param systems: the systems to analyse
     :type systems: list of :class:`macsypy.system.System` object
     :return: the list of list of systems which represent one best solution and the it's score
-    :rtype: tuple of 2 elements
+    :rtype: tuple of 2 elements the best solution and it's score
             ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
             The inner list represent a best solution
     """
@@ -42,8 +42,8 @@ def find_best_solutions(systems):
         """
         sort cliques
 
-         - first by the sum of hits of system composing the solution, most hits in first
-         - second by the number of hits, most system in first
+         - first by the sum of hits of systems composing the solution, most hits in first
+         - second by the number of systems, most system in first
          - and finally by hits position. This criteria is to produce predictable results
            between two runs and to be testable (functional_test gembase)
 
