@@ -111,7 +111,8 @@ class Config:
                              'verbosity', 'quiet', 'mute', 'worker')),
                 ]
 
-    model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral', 'loner_multi_system',
+    model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral',
+                  'loner_multi_system', 'redundancy_penalty',
                   'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
 
 

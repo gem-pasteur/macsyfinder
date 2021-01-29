@@ -234,7 +234,10 @@ class OrderedMatchMaker(MatchMaker):
 class UnorderedMatchMaker(MatchMaker):
 
     def match(self, hits):
-
+        """
+        :param hits:
+        :return:
+        """
         # count the hits
         # and track for each hit for which gene it counts for
         mandatory_hits, accessory_hits, neutral_hits, forbidden_hits = self.sort_hits_by_status(hits)
