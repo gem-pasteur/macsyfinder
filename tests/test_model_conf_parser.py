@@ -43,6 +43,7 @@ class TestModelConfParser(MacsyTest):
                          'accessory_weight': 14.0,
                          'neutral_weight': 0.0,
                          'loner_multi_system_weight': 10.0,
+                         'redundancy_penalty': 20.0,
                          'e_value_search': 0.12,
                          'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
@@ -53,12 +54,13 @@ class TestModelConfParser(MacsyTest):
         self.assertDictEqual(expected_conf, test_conf)
 
 
-    def test_parse_wo_weights(self):
+    def test_parse_wo_filtering(self):
         expected_conf = {'itself_weight': 11.0,
                          'exchangeable_weight': 12.0,
                          'mandatory_weight': 13.0,
                          'accessory_weight': 14.0,
                          'neutral_weight': 0.0,
+                         'redundancy_penalty': 20.0,
                          'loner_multi_system_weight': 10.0}
 
         conf_file = self.find_data('conf_files', 'model_conf_wo_filtering.xml')
@@ -67,7 +69,7 @@ class TestModelConfParser(MacsyTest):
         self.assertDictEqual(expected_conf, test_conf)
 
 
-    def test_parse_wo_filtering(self):
+    def test_parse_wo_weights(self):
         expected_conf = {'e_value_search': 0.12,
                          'i_evalue_sel': 0.012,
                          'coverage_profile': 0.55,
@@ -97,6 +99,7 @@ class TestModelConfParser(MacsyTest):
                             'mandatory_weight': 13.0,
                             'accessory_weight': 14.0,
                             'neutral_weight': 0.0,
+                            'redundancy_penalty': 20.0,
                             'loner_multi_system_weight': 10.0,
                             }
         conf_file = self.find_data('conf_files', 'model_conf.xml')
