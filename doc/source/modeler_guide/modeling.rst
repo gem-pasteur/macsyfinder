@@ -145,7 +145,7 @@ Example of a macsy-model definition in XML:
 
 .. code-block:: xml
 
-  <model inter_gene_max_space="5" ver="2.0">
+  <model inter_gene_max_space="5" vers="2.0">
     <gene name="gspD" presence="mandatory">
        <exchangeables>
            <gene name="sctC"/>
