@@ -162,3 +162,5 @@ The model_conf.xml configuration file is in xml format and must have the followi
         </filtering>
     </model_config>
 
+
+:ref:`Details about scoring method <combinatorial-exploration>`
