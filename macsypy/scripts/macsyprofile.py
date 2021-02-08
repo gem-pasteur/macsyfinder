@@ -139,7 +139,7 @@ class HmmProfile:
         """
         all_hits = []
         idx = Indexes(self.cfg)
-        macsyfinder_idx = idx.find_my_indexes()
+        macsyfinder_idx = idx.build()
         my_db = self._build_my_db(self._hmmer_raw_out)
         self._fill_my_db(macsyfinder_idx, my_db)
 

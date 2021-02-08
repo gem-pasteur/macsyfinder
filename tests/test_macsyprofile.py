@@ -198,10 +198,10 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         args.log_level = 30
         args.sequence_db = self.find_data("base", "test_base.fa")
         cfg = Config(MacsyDefaults(), args)
-        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+        gspD_hmmer_path = self.find_data('hmm', 'gspD.search_hmm.out')
 
         idx = Indexes(cfg)
-        macsyfinder_idx = idx.find_my_indexes()
+        macsyfinder_idx = idx.build()
         hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
 
         db = hmm_prof._build_my_db(gspD_hmmer_path)
@@ -329,7 +329,7 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         args.profile_coverage = -1
         args.i_evalue_sel = 10e9
         cfg = Config(MacsyDefaults(), args)
-        gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
+        gspD_hmmer_path = self.find_data('hmm', 'gspD.search_hmm.out')
 
         hmm_prof = macsyprofile.HmmProfile(gene_name, 596, gspD_hmmer_path, cfg)
 
