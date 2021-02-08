@@ -22,7 +22,7 @@ coverage:
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
   script:
     - python3.8 -m pip install --no-binary=macsyfinder .
-    - coverage run --source=macsypy tests/run_tests.py
+    - coverage run --source=macsypy tests/run_tests.py -vv
     - coverage html
     - coverage report
 
