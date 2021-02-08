@@ -16,8 +16,9 @@ macsyprofile
 ============
 
 To help to develop new model we provide a tool `macsyprofile` which is used as post treatement.
-It is run on previous macsyfinder analysis, it extract from raw hmmer file the hits and compute the profile coverage.
-It write down the results in a file in `tsv` format.
+It is run on previous macsyfinder analysis, it extract from raw hmmer files the hits and compute the profile coverage
+for each of them.
+Then it write down the results in a file in `tsv` format.
 
 .. code-block:: text
 
