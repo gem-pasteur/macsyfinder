@@ -79,7 +79,7 @@ Then it write down the results in a file in `tsv` format.
 --pattern example
 -----------------
 
-If in previous_run hmmer_results you have the following files
+If in `<previous_run>/hmmer_results` you have the following files:
 
 .. code-block:: text
 
