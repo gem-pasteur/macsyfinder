@@ -41,7 +41,7 @@ Then it write down the results in a file in `tsv` format.
       *      *         *        *    *              *
                  *                           *  *           *     *
 
-    MacSyData - MacSyFinder Data Management
+    MacSyProfile - MacSyFinder profile helper tool
 
     positional arguments:
       previous_run          The path to a macsyfinder results directory.
