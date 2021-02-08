@@ -12,7 +12,7 @@
 Gallery of examples of MacSyFinder's models 
 *******************************************
 
-.. contents:: Table of contents of the examples' gallery
+.. contents:: Table of contents of gallery
 	:local: 
         :depth: 1 
 
@@ -64,10 +64,27 @@ Therefore, we can attribute the `loner` feature to the OMF component.
 In addition to the latter exception described, it means that this OMF component can also be involved in the functioning of not a single, but several machineries at the same time. In practice, this would mean that two full sets of T1SS components can be inferred with a single OMF component found in the genome. This corresponds to the `multi-system` feature. 
 
 
+
+.. image:: ../_static/T1SS_example.*
+    :height: 4000px
+    :align: center
+
+
+
 4. Writing down the model
 -------------------------
 
 Now that all elements of the model are listed, the model for the T1SS can be written using the dedicated MacSyFinder XML grammar:
+
+
+.. code-block:: xml
+
+  <model inter_gene_max_space="5" min_mandatory_genes_required="3" min_genes_required="3" vers="2.0">
+      <gene name="T1SS_abc" presence="mandatory"/>
+      <gene name="T1SS_mfp" presence="mandatory"/>
+      <gene name="T1SS_omf" presence="mandatory" loner="1" multi_system="1"/>
+  </model>
+
 
 
 
