@@ -483,7 +483,7 @@ def main(args=None, log_level=None) -> None:
 
     if os.path.exists(profile_report_path) and not parsed_args.force:
         _log.critical(f"The file {profile_report_path} already exists. "
-                      f"Remove it or specify or use --force option")
+                      f"Remove it or specify a new output name --out or use --force option")
         sys.tracebacklimit = 0
         raise ValueError() from None
 
