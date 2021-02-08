@@ -133,7 +133,7 @@ The first line of results is a header line.
 .. note::
     This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
 
-    import pandas as pd
+        import pandas as pd
 
-    systems = pd.read_cvs("path/to/hmm_coverage.tsv", sep='\t', comment='#')
+        systems = pd.read_cvs("path/to/hmm_coverage.tsv", sep='\t', comment='#')
 
