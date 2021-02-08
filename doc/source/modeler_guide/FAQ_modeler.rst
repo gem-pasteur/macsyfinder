@@ -32,6 +32,17 @@ To ensure we have all elements to help, please provide:
 All these will definitely help us to help you! ;-) 
 
 
-How to list several components or HMM profiles for a given function?
---------------------------------------------------------------------
+How to list several components or HMM profiles for a given function in the model?
+---------------------------------------------------------------------------------
+
+MacSyFinder provides a framework to associate a component/function in the model of a system with the mean to search for it - a HMM profile. 
+
+In some cases, it is needed to list several possible components (i.e. HMM profiles) to assume a given function for the system to model. There can be several reasons for that: 
+
+ - a biological reason (e.g., two components from two different gene families can assume a same role in the system)
+ - a methodological reason (it is not possible or difficult to provide a single HMM profile that covers the diversity of the components' sequences to be retrieved). 
+ 
+It is possible to list several possible components for a same role within the system's model using the `exchangeables` keyword. 
+
+See :ref:`here<exchangeables_label>` for more details and examples. 
 
