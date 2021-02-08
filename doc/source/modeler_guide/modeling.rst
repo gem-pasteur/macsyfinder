@@ -123,6 +123,8 @@ All these elements and corresponding parameters will parametrize the search of S
      it means that it can be used to fill multiple systems' occurrences - and thus be considered part of several systems. ( *default false* ).
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
+.. _exchangeables_label:
+
  The element "gene" may have one "exchangeables" child element:
 
    * The element "exchangeables" can contain one or more elements "gene".
