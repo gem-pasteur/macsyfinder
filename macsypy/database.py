@@ -83,6 +83,8 @@ class Indexes:
         :param force: If True, force the index building even
                       if the index files are present in the sequence data set folder
         :type force: boolean
+        :return: the path to the index
+        :rtype: str
         """
         my_indexes = self.find_my_indexes()
 
@@ -104,6 +106,7 @@ class Indexes:
 
         self._my_indexes = self.find_my_indexes()
         assert self._my_indexes, "failed create macsyfinder indexes"
+        return self._my_indexes
 
 
     def find_my_indexes(self):
