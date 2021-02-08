@@ -77,16 +77,14 @@ class Test(MacsyTest):
 
     def test_build_no_idx(self):
         idx = Indexes(self.cfg)
-        idx.build()
-        my_idx = idx.find_my_indexes()
+        my_idx =idx.build()
         self.assertEqual(my_idx, os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"))
 
 
     def test_build_with_idx(self):
         idx = Indexes(self.cfg)
         open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"), 'w').close()
-        idx.build()
-        my_idx = idx.find_my_indexes()
+        my_idx = idx.build()
         self.assertEqual(os.path.getsize(my_idx), 0)
 
 
