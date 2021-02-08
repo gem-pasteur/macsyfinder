@@ -92,3 +92,63 @@ Now that all elements of the model are listed, the model for the T1SS can be wri
 
 The case of T3SS and the bacterial flagellum, or how to distinguish homologous cellular machineries
 ===================================================================================================
+
+
+A toy example on how to model similar yet distinct machineries :ref:`here<model-definition-grammar-label>`. 
+
+
+
+
+
+
+.. image:: ../_static/T3SS_example.*
+    :height: 4000px
+    :align: center
+
+
+
+
+Model of the T3SS: 
+
+.. code-block:: xml
+
+  <model inter_gene_max_space="10" min_mandatory_genes_required="7" min_genes_required="7" multi_loci="1" vers="2.0">
+     <gene name="T3SS_sctC" presence="mandatory">
+         <exchangeables>
+            <gene name="T2SS_gspD"/>
+            <gene name="T4P_pilQ"/>
+            <gene name="Tad_rcpA"/>
+         </exchangeables>
+     </gene>
+     <gene name="T3SS_sctJ" presence="mandatory"/>
+     <gene name="T3SS_sctN" presence="mandatory"/>
+     <gene name="T3SS_sctQ" presence="mandatory"/>
+     <gene name="T3SS_sctR" presence="mandatory"/>
+     <gene name="T3SS_sctS" presence="mandatory"/>
+     <gene name="T3SS_sctT" presence="mandatory"/>
+     <gene name="T3SS_sctU" presence="mandatory"/>
+     <gene name="T3SS_sctV" presence="mandatory"/>
+     <gene name="Flg_fliE" presence="forbidden"/>
+     <gene name="Flg_flgB" presence="forbidden"/>
+     <gene name="Flg_flgC" presence="forbidden"/>
+  </model>
+
+
+Model of the Flagellum:
+
+.. code-block:: xml
+
+  <model inter_gene_max_space="20" min_mandatory_genes_required="9" min_genes_required="10" multi_loci="1" vers="2.0">
+    <gene name="Flg_sctJ_FLG" presence="mandatory"/>
+    <gene name="Flg_sctN_FLG" presence="mandatory"/>
+    <gene name="Flg_sctQ_FLG" presence="mandatory"/>
+    <gene name="Flg_sctR_FLG" presence="mandatory"/>
+    <gene name="Flg_sctS_FLG" presence="mandatory"/>
+    <gene name="Flg_sctT_FLG" presence="mandatory"/>
+    <gene name="Flg_sctU_FLG" presence="mandatory"/>
+    <gene name="Flg_sctV_FLG" presence="mandatory"/>
+    <gene name="Flg_flgB" presence="mandatory"/>
+    <gene name="Flg_flgC" presence="mandatory"/>
+    <gene name="Flg_fliE" presence="mandatory"/>
+    <gene name="T3SS_sctC" presence="forbidden"/>
+ </model>
