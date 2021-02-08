@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -64,7 +64,7 @@ For example:
          http://dx.doi.org/10.1038/srep23080
     doc: https://github.com/macsy-models/TXSS
     license: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
-    copyright: 2014-2020, Institut Pasteur, CNRS
+    copyright: 2014-2021, Institut Pasteur, CNRS
 
 .. warning::
     This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not be considered as a *macsy-model package*.
