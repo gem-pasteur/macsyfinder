@@ -8,9 +8,9 @@
     
 .. _gallery_models:
 
-********************************
-Examples of MacSyFinder's models 
-********************************
+*******************************************
+Gallery of examples of MacSyFinder's models 
+*******************************************
 
 .. contents:: Table of contents of the examples' gallery
 	:local: 
