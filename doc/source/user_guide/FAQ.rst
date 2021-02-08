@@ -121,3 +121,7 @@ We thus propose several kind of :ref:`output files <ordered_outputs>`.
 - All equivalent best solutions are found in the `all_best_solutions.tsv` file. 
 - One best solution is given in the `best_solution.tsv` file. 
 
+.. note:: 
+
+   For those more familiar with the output files from MacSyFinder v1, the file `best_solution.tsv` is the closest from 
+   the previous output file `macsyfinder.report`.
