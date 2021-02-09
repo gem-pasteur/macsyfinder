@@ -74,6 +74,14 @@ Then it write down the results in a file in `tsv` format.
 
     For more details, visit the MacSyFinder website and see the MacSyFinder documentation.
 
+for instance
+
+.. code-block:: shell
+
+    macsyprofile  macsyfinder-2021XXXX_XX-XX-XX
+
+will analyse the hmmer raw outputs stored in `macsyfinder-2021XXXX_XX-XX-XX/hmmer_results` dir
+and the result wil be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
 
 
 --pattern example
@@ -102,20 +110,36 @@ If in `<previous_run>/hmmer_results` you have the following files:
     previous_run/hmmer_results/MSH_mshC.search_hmm.out
 
 
-But you are interested only in ComM family genes, you can specify the option --pattern 'ComM*'.
+But you are interested only in ComM family genes, you can specify the option --pattern 'ComM*'
+For instance:
 
 .. code-block:: text
 
-    previous_run/hmmer_results/ComM_comC.search_hmm.out
-    previous_run/hmmer_results/ComM_comEB.search_hmm.out
-    previous_run/hmmer_results/ComM_comEC.search_hmm.out
-    previous_run/hmmer_results/ComM_comGA.search_hmm.out
-    previous_run/hmmer_results/ComM_comGB.search_hmm.out
-    previous_run/hmmer_results/ComM_comGC.search_hmm.out
-    previous_run/hmmer_results/ComM_comGD.search_hmm.out
-    previous_run/hmmer_results/ComM_comGE.search_hmm.out
+    macsyprofile --pattern 'ComM*'  macsyfinder-2021XXXX_XX-XX-XX
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comB.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comC.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEA.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEB.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEC.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGA.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGB.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGC.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGD.search_hmm.out
+    parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGE.search_hmm.out
+    found 79 hits
+    result is in 'macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv'
 
-The patterns availables are the `glob` patterns (the jokers usable with unix `ls` command )
+.. note::
+
+    The patterns availables are the `glob` patterns (the jokers usable with unix `ls` command )
+
+    .. code-block:: text
+
+        macsyprofile --pattern 'ComM_com?C' -f macsyfinder-2021XXXX_XX-XX-XX
+        parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEC.search_hmm.out
+        parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGC.search_hmm.out
+        found 16 hits
+        result is in 'macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv'
 
 The `macsyprofile` output is a tabulated separated values (`.tsv`) files
 The first lines which are comments (starting with '#') display the tool version
@@ -130,6 +154,7 @@ The first line of results is a header line.
     GCF_000006745_021980    GCF_000006745   2198    291     ComM_comC       2.500e-40       136.400 0.942   0.708   62      267
     GCF_000006745_007650    GCF_000006745   765     253     ComM_comC       9.600e-31       105.100 0.937   0.798   43      244
     ...
+
 
 .. note::
     This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
