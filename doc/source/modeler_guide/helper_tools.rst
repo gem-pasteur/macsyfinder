@@ -167,7 +167,7 @@ The first line of results is a header line.
 
 
 .. warning::
-    The macsyprofile is not compliant with results produce with `macsyfinder v1`
-    if you get ```IndexError: list index out of range``` error when you use `macsyprofile`.
-    It probably mean that the results were produced by an older non compliant `macsyfinder` version.
+    The macsyprofile is not compliant with results produced with `macsyfinder v1`.
+    If you get ```IndexError: list index out of range``` error when you use `macsyprofile`,
+    it probably mean that the results were produced by an older non compliant `macsyfinder` version.
 
