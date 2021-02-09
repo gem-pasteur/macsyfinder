@@ -251,7 +251,7 @@ setup(name='macsyfinder',
           'Intended Audience :: Science/Research',
           'Topic :: Scientific/Engineering :: Bio-Informatics'
           ],
-      python_requires='>=3.6',
+      python_requires='>=3.7',
       install_requires=[i for i in [l.strip() for l in open("requirements.txt").read().split('\n')] if i],
       extras_require={'dev': open("requirements_dev.txt").read().split()},
       test_suite='tests.run_tests.discover',
