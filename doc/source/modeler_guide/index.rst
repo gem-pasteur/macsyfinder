@@ -13,8 +13,8 @@ Modeler Guide
 =============
 
 
-Model Systems
-=============
+Modelling Systems with MacSyFinder
+==================================
 .. toctree::
    :maxdepth: 2
 
@@ -23,3 +23,4 @@ Model Systems
    helper_tools
    publish_package
    gallery
+   FAQ_modeler
