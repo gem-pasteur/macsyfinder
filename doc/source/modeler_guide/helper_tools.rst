@@ -12,6 +12,8 @@
 Helper Tool
 ***********
 
+.. _macsyprofile:
+
 macsyprofile
 ============
 

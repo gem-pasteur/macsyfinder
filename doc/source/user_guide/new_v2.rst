@@ -244,3 +244,29 @@ Here follow some examples of updates from v1 to v2.
 	- As only the secretin component 'T3SS_sctC' was exchangeable in its role within T3SS with its homologs T2SS_gspD, T4P_pilQ and Tad_rcpA, these three components are now set as `exchangeables` (they can functionally *replace* the component 'T3SS_sctC'), and all other `homologs` do not need to be listed anymore.  
 	- The keyword `system_ref` is not needed anymore. Therefore, the **v2** definition of T3SS is way more compact than that for **v1**.
 
+
+Models are more formalized
+==========================
+
+The models data are more formalized, with a well defined structure.
+For instance the definitions and profiles must be packed together in what we call a `macsy-model` package
+If you intend to modelize new systems please refer to the :ref:`modeler_guide`.
+
+Model installation
+==================
+
+macsyfinder provide a new tool to manage the models. see :ref:`macsydata`.
+
+Model configuration
+===================
+
+The modeler can provide some spcific configuration values released along the model package. see :ref:`model_configuration`.
+
+
+Modeler helper tool
+===================
+
+To help modelers to create new models we provide a new helper tools `macsyprofile` which annalyse hmmesearch raw output from
+a previous macsyfinder results to compute the coverage of all hits. :ref:`macsyprofile`
+
+

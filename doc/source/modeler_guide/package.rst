@@ -104,6 +104,8 @@ metadata file
 This file contains some meta information about the package itself.
 
 
+.. _model_configuration:
+
 model configuration
 -------------------
 
