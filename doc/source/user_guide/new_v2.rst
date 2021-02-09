@@ -255,18 +255,18 @@ If you intend to modelize new systems please refer to the :ref:`modeler_guide`.
 Model installation
 ==================
 
-macsyfinder provide a new tool to manage the models. see :ref:`macsydata`.
+macsyfinder provide a new tool to manage the models. See :ref:`macsydata`.
 
 Model configuration
 ===================
 
-The modeler can provide some spcific configuration values released along the model package. see :ref:`model_configuration`.
+The modeler can provide some spcific configuration values released along the model package. See :ref:`model_configuration`.
 
 
 Modeler helper tool
 ===================
 
-To help modelers to create new models we provide a new helper tools `macsyprofile` which annalyse hmmesearch raw output from
-a previous macsyfinder results to compute the coverage of all hits. :ref:`macsyprofile`
+To help modelers to create new models we provide a new helper tool `macsyprofile` which annalyse hmmsearch raw output from
+a previous macsyfinder results to compute the coverage of all hits. See :ref:`macsyprofile`.
 
 
