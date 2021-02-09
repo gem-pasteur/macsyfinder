@@ -13,7 +13,7 @@ Publishing/sharing models
 *************************
 
 
- .. _model_package:
+ .. _writing_model_package:
 
 Writing my own macsy-model package
 ==================================
