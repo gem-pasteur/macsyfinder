@@ -522,6 +522,7 @@ def main(args=None, log_level=None) -> None:
             _log.info(f"found {len(all_hits)} hits")
             for hit in all_hits:
                 print(hit, file=prof_out)
+            _log.info(f"result is in '{profile_report_path}'")
         else:
             _log.info(f"No hit found")
 
