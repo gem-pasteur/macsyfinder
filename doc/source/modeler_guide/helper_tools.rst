@@ -165,3 +165,9 @@ The first line of results is a header line.
 
         systems = pd.read_cvs("path/to/hmm_coverage.tsv", sep='\t', comment='#')
 
+
+.. warning::
+    The macsyprofile is not compliant with results produce with `macsyfinder v1`
+    if you get ```IndexError: list index out of range``` error when you use `macsyprofile`.
+    It probably mean that the results were produced by an older non compliant `macsyfinder` version.
+
