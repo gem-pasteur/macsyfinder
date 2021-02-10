@@ -58,8 +58,9 @@ Here follow some examples of updates from v1 to v2.
 .. note::
 
 	In a nutshell, the minimal changes from v1 to v2 for a simple macsy-model listing components are the following:
-	- <system> => <model>
-	- `vers = "2.0"`
+	
+	  - <system> => <model>
+	  - `vers = "2.0"`
 
 .. _ex2:
 
