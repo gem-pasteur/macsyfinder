@@ -51,7 +51,8 @@ MacSyFinder Quick Start
       :code:`macsyfinder -h`
 
       To see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
-      In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the following steps:
+      In order to run MacSyFinder on your favorite dataset as soon as you have :ref:`installed it <macsydata>`,
+      you can simply follow the following steps:
 
     * On a "metagenomic" (unordered) dataset for example:
       :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all`
@@ -67,11 +68,12 @@ MacSyFinder Quick Start
       in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
       definition files placed in the folder *"my-models/model_family/definitions"*.
 
-    * If you want to run the same analysis as above but with models not installed by macsydata
+    * If you want to run the same analysis as above but with models not installed by macsydata:
 
       :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
 
-      `my-models` must follow the :ref:`macsy-models package <package_structure>` structure
+      `my-models` is the directory containing  the model packages.
+      The models must follow the :ref:`macsy-models package<package_structure>` structure.
 
 .. note::
 
