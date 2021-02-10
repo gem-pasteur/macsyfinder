@@ -54,18 +54,24 @@ MacSyFinder Quick Start
       In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the following steps:
 
     * On a "metagenomic" (unordered) dataset for example:
-      :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models --models model_family all`
+      :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all`
 
       will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder without taking into account any gene order.
 
 
     * On a completely assembled genome (where the gene order is known, and is relevant for systems' detection):
 
-      :code:`macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
+      :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models model_family ModelA ModelB`
 
       will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"*
       in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
       definition files placed in the folder *"my-models/model_family/definitions"*.
+
+    * If you want to run the same analysis as above but with models not installed by macsydata
+
+      :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
+
+      `my-models` must follow the :ref:`macsy-models package <package_structure>` structure
 
 .. note::
 
