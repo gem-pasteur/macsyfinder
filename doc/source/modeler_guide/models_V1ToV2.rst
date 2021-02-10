@@ -31,9 +31,6 @@ For those who had designed MacSyFinder's models for Version 1 and would like to 
  "exchangeable" is not a feature anymore, but is replaced by the keyword "exchangeables". 
 
 
-Examples
-========
-
 Here follow some examples of updates from v1 to v2.
 
 

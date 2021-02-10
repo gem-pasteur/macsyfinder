@@ -24,3 +24,10 @@ Modelling Systems with MacSyFinder
    publish_package
    gallery
    FAQ_modeler
+
+Carrying models from v1 to v2
+=============================
+.. toctree::
+   :maxdepth: 2
+
+   models_V1ToV2
