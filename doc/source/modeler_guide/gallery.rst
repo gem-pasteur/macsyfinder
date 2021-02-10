@@ -65,9 +65,6 @@ In addition to the latter exception described, it means that this OMF component 
 
 
 
-.. ../_static/T1SS_example.*
-
-
 .. image:: ../_static/T1SS_example.*
     :height: 4000px
     :align: center
@@ -101,14 +98,9 @@ A toy example on how to model similar yet distinct machineries :ref:`here<model-
 
 
 
-
-.. ../_static/MSF_modelling.*
-
-
 .. image:: ../_static/T3SS_example.*
     :height: 4000px
     :align: center
-
 
 
 
