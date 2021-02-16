@@ -96,7 +96,9 @@ Now that all elements of the model are listed, the model for the T1SS can be wri
 The case of T3SS and the bacterial flagellum, or how to distinguish homologous cellular machineries
 ===================================================================================================
 
-The type III secretion system (T3SS, involved in proteic effectors secretion into eukaryotic cells) and the bacterial flagellum (involved in motility) are evolutionarily related (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). This can make their annotation in genomes tricky, if only based on core components that can have homologs in both systems. However, these machineries also have specific core components. With MacSyFinder and the *forbidden* feature for components, it is possible to model this, and create models for efficient discrimination between homologous machineries. 
+The type III secretion system (T3SS, involved in proteic effectors secretion into eukaryotic cells) and the bacterial flagellum (involved in motility) are evolutionarily related (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). This can make their annotation in genomes tricky, if only based on core components that can have homologs in both systems. 
+
+However, these machineries also have specific core components. With MacSyFinder and the *forbidden* feature for components, it is possible to model this, and create models for efficient discrimination between homologous machineries. 
 
 For a toy example on how to model similar yet distinct machineries, you can also have a look :ref:`here<model-definition-grammar-label>`. 
 
