@@ -32,6 +32,43 @@ To ensure we have all elements to help, please provide:
 All these will definitely help us to help you! ;-) 
 
 
+
+.. _cmd-line-examples:
+
+What do MacSyFinder command lines should look like?
+---------------------------------------------------
+
+
+Here are a few examples of command line formation: 
+
+
+To seek for help:
+   
+ :code:`macsyfinder -h`
+
+
+The minimal command line, to search all systems with models from the "TFF-SF" set of models:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all`
+
+To search for several systems (ModelA and ModelB) from the "model_family" set of models that can be found in the "./my-models" folder:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models model_family ModelA ModelB --models-dir ./my-models`
+
+To alter the search parameters and allow a maximal distance between components of 20 for the T2SS and 15 for the Tad pilus:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --inter-gene-max-space T2SS 20 --inter-gene-max-space Tad 15`
+
+To alter the search parameters and allow the Tad pilus to be made of multiple loci:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --multi-loci Tad`
+ 
+ 
+
+
+See also the :ref:`quickstart` section for more examples. 
+
+
 What search mode to be used?
 ----------------------------
 
