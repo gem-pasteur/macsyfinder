@@ -86,35 +86,35 @@ README.md
 
 A description of the package: what kind of systems the package models,
 how to use it etc... in `markdown <https://guides.github.com/features/mastering-markdown/>`_ format.
-The Readme is display to the user on the macsy-models repository on github.
-It is also display whe the user run `macsydata help`.
+The Readme is displayed to the user on the macsy-models repository on Github.
+It is also displayed when the user runs `macsydata help`.
 
 
 LICENCE
 -------
 
-The licence use to protect and share your work.
+The licence is used to protect your work when sharing it.
 If you don't know which licence to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
 *This file is optional, but highly recommended.*
 
 
-metadata file
+Metadata file
 -------------
 
-This file contains some meta information about the package itself.
+The `metadata.yml` file contains some meta information about the package itself.
 
 
 .. _model_configuration:
 
-model configuration
+Model configuration
 -------------------
 
-The modeler have the possibility to specify some options specific for its package
-different than the masyfinder defaults (new in v2).
+The modeler have the possibility to specify some options that are specific to its package, 
+different than the MacSyFinder defaults (`new in v2`) in the `model_conf.xml` file.
 
-This options can be grouped in two families: the scoring weights and filtering options.
+These options can be grouped in two families: the scoring weights and filtering options.
 
-scoring weights:
+Scoring weights:
 
     * mandatory (*float* default = 1.0)
     * accessory (*float* default = 0.5)
@@ -122,29 +122,29 @@ scoring weights:
     * loner_multi_systems (*float* default =  0.7)
     * redundancy_penalty (*float* default = 1.5)
 
-filtering options:
+Filtering options:
 
     * e_value_search (*float* default = 0.1)
     * i_evalue_sel (*float* default = 0.001)
     * profile_coverage (*float* default = 0.5)
     * cut_ga (*bool* default = True)
 
-All this options are optional and can be omitted in the configuration file, the file itself is optional.
-The precedence rules between the different level of configuration are:
+All these options are optional and can be omitted in the configuration file, **the file itself is optional**.
+The precedence rules between the different levels of configuration are:
 
  system < home < model < project < --cfg-file | --previous-run < command line options
 
 
  * **system**: file in /etc/macsyfinder/macsyfinder.conf on in virtalenv/etc/macsyfinder/macsyfinder.conf
-   in case of virtualenv this configuration affect only the macsyfinder installed in this virtualenv
+   in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
  * **home**:  ~/.macsyfinder/macsyfinder.conf
- * **model**: file model_conf.xml at the root of model package
- * **project**: a file macsyfinder.conf in the directory where is run the macsyfinder command
- * **cfgfile**: any configuration file specify by the user on the command line (conflict with --previous-run opt)
- * **previous-run**: the macsyfinder.comf find in the results directory of the previous run (conflict with --cfg-file opt)
- * **command line**: any option specify directly on the command line
+ * **model**: the model_conf.xml file at the root of the model package
+ * **project**: the macsyfinder.conf file found in the directory where the `macsyfinder` command was run
+ * **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
+ * **previous-run**: the macsyfinder.conf file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
+ * **command line**: any option specified directly in the command line
 
-The model_conf.xml configuration file is in xml format and must have the following structure
+The model_conf.xml configuration file is in xml format and must have the following structure: 
 
 .. code-block:: yaml
 
@@ -165,4 +165,4 @@ The model_conf.xml configuration file is in xml format and must have the followi
     </model_config>
 
 
-:ref:`Details about scoring method <combinatorial-exploration>`
+:ref:`Details about the scoring method can be obtained here <combinatorial-exploration>`.
