@@ -17,10 +17,13 @@ Helper Tool
 macsyprofile
 ============
 
-To help to develop new model we provide a tool `macsyprofile` which is used as post treatement.
-It is run on previous macsyfinder analysis, it extract from raw hmmer files the hits and compute the profile coverage
-for each of them.
-Then it write down the results in a file in `tsv` format.
+To help develop new models we provide the tool `macsyprofile` which is to be used as post treatement.
+
+It is ran over a previous macsyfinder analysis:
+ 
+   * it extracts from raw HMMER output files the hits and computes the profile coverage for each of them.
+   * it enables to filter the hits in a user-defined manner, to test other values of filtering parameters than those used with the MacSyFinder run.
+   * it writes down the results in a file in `tsv` format `hmm_coverage.tsv`.
 
 .. code-block:: text
 
@@ -76,20 +79,33 @@ Then it write down the results in a file in `tsv` format.
 
     For more details, visit the MacSyFinder website and see the MacSyFinder documentation.
 
-for instance
+For instance
 
 .. code-block:: shell
 
     macsyprofile  macsyfinder-2021XXXX_XX-XX-XX
 
-will analyse the hmmer raw outputs stored in `macsyfinder-2021XXXX_XX-XX-XX/hmmer_results` dir
-and the result wil be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
+will analyse the HMMER raw outputs stored in `macsyfinder-2021XXXX_XX-XX-XX/hmmer_results` directory
+and the results wil be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
 
 
---pattern example
------------------
+Setting filtering parameters
+----------------------------
 
-If in `<previous_run>/hmmer_results` you have the following files:
+This helper tool is designed to help the user test the relevance of the HMM profiles used, what filtering parameters for HMMER to be used, and understand why some components might be unexpectedly missing from the MacSyFinder results. 
+This can thus help to improve the models - for instance for the genomic location parameters (is a component not found cause it should be listed as a `loner`?). 
+
+Therefore by default, the filtering parameters are very loose so that most hits found with HMMER will be reported, even the weakest ones. 
+
+However, it is possible to filter hits to be extracted based on the profile coverage with `--coverage-profile` or the i-evalue (`--i-evalue-sel`) to be a bit more stringent. 
+
+Also, it is possible to use the `--best-hits` in order to report only the best hit for a given protein sequence when several profiles were matching hit. 
+
+
+Using patterns with "--pattern"
+-------------------------------
+
+If in `previous_run/hmmer_results` you have the following files:
 
 .. code-block:: text
 
@@ -112,7 +128,7 @@ If in `<previous_run>/hmmer_results` you have the following files:
     previous_run/hmmer_results/MSH_mshC.search_hmm.out
 
 
-But you are interested only in ComM family genes, you can specify the option --pattern 'ComM*'
+But you are interested only in ComM family genes, you can specify the option ``--pattern 'ComM*'``
 For instance:
 
 .. code-block:: text
@@ -133,7 +149,7 @@ For instance:
 
 .. note::
 
-    The patterns availables are the `glob` patterns (the jokers usable with unix `ls` command )
+    The patterns available are the `glob` patterns (the jokers usable with unix `ls` command )
 
     .. code-block:: text
 
