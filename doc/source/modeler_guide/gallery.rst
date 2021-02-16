@@ -21,9 +21,9 @@ Here follows a "gallery" of MacSyFinder models we have developed over the years,
 
 These examples are extracted from published work, see the following references (they include more examples):
 
-- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_ , *Scientific Reports*, for the description of the T1SS and T3SS models
-- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_ , *PLoS Genetics*, for the evolutionary study of the T3SS and the bacterial flagellum
-- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_ , *PLoS Biology*, for the description of the T2SS and type IV-filament super-family models
+- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_ , *Scientific Reports*, for the description of the T1SS and T3SS models (and way more models not discussed here). 
+- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_ , *PLoS Genetics*, for the evolutionary study of the T3SS and the bacterial flagellum, and how were designed the corresponding profiles. 
+- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_ , *PLoS Biology*, for the description of the T2SS and type IV-filament super-family models. 
 
 .. - Abby et al. 2014, *PLoS ONE* and Bernheim et al. 2018, for the description of the Cas systems models
 
@@ -45,7 +45,13 @@ The type I secretion system (T1SS) consists in three conserved components:
 - an outer membrane protein (OMF)
 
 For their detection, we therefore need to provide HMM profiles for each component, for example: "abc.hmm", "mfp.hmm" and "omf.hmm". 
-These can be specifically designed, or taken from HMM profiles databanks such as PFAM or TIGRFAM. 
+These can be specifically designed, or taken from HMM profiles databanks such as `PFAM <http://pfam.xfam.org/>`_ , `TIGRFAM <http://tigrfams.jcvi.org/cgi-bin/index.cgi>`_ or `SUPERFAMILY <https://supfam.mrc-lmb.cam.ac.uk/SUPERFAMILY/>`_.. 
+
+.. note::
+  
+  For suggestions on how to design specific HMM protein profiles, read our dedicated book chapter:
+  
+  	`Identification of Protein Secretion Systems in Bacterial Genomes Using MacSyFinder <https://link.springer.com/protocol/10.1007/978-1-4939-7033-9_1>`_ by Sophie Abby and Eduardo Rocha, in *Methods in Molecular Biology* (2017).
 
 
 2. Determining the role of the components
@@ -93,10 +99,10 @@ Now that all elements of the model are listed, the model for the T1SS can be wri
 
 .. _T3SS:
 
-The case of T3SS and the bacterial flagellum, or how to distinguish homologous cellular machineries
-===================================================================================================
+The case of T3SS and bacterial flagella, or how to distinguish homologous cellular machineries
+==============================================================================================
 
-The type III secretion system (T3SS, involved in proteic effectors secretion into eukaryotic cells) and the bacterial flagellum (involved in motility) are evolutionarily related (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). This can make their annotation in genomes tricky, if only based on core components that can have homologs in both systems. 
+The type III secretion system (T3SS), involved in proteic effectors secretion into eukaryotic cells) and the bacterial flagellum (involved in motility) are evolutionarily related (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). This can make their annotation in genomes tricky, if only based on core components that can have homologs in both systems. 
 
 However, these machineries also have **specific core components**. With MacSyFinder and the *forbidden* feature for components, it is possible to model this, and create models for efficient discrimination between homologous machineries. 
 
@@ -113,6 +119,8 @@ Yet, the T3SS is made of two dozens of components, and the flagellum, more than 
 - It is also the case of the T3SS, which has one specific core component: the secretin. 
 
 Solely based on the specificity of core components, it is possible to distinguish T3SS from flagella. This can be done by listing the **specific core components** of a given system as *mandatory* in the system, and as *forbidden* in the homologous system. 
+
+Then, HMM protein profiles can be specifically designed for these components, or can be retrieved from databases such as `PFAM <http://pfam.xfam.org/>`_ , `TIGRFAM <http://tigrfams.jcvi.org/cgi-bin/index.cgi>`_ or `SUPERFAMILY <https://supfam.mrc-lmb.cam.ac.uk/SUPERFAMILY/>`_.
 
 
 2. Dealing with components with varied evolutionary origins
@@ -132,11 +140,29 @@ In the following drawing, a scheme of a T3SS is shown on the left, and the featu
     :align: center
 
 
-3. Describing the genetic architecture of the systems
------------------------------------------------------
+3. Describing the quorum, and genetic architecture of the systems
+-----------------------------------------------------------------
+
+- T3SS and bacterial flagella are generally encoded on the form of multi-components loci in genomes. Given the fact that we designed HMM protein profiles only for the most conserved, core components of these machineries, and that it means that several systems' components can intersperse between the core ones (remember, T3SS has aroound 25 components, and the flagellum >40), we set the *inter-gene-max-space* parameter (maximal number of components allowed between two systems' components to consider them consecutive) to 10 in the case of the T3SS, and to 20 in the case of the flagellum. 
+
+- T3SS and bacterial flagella can be encoded by one, or multiple loci. We therefore use the *multi-loci* feature to describe their genetic architecture (set to "1", meaning "True" in the models). 
 
 
-Model of the T3SS: 
+.. note::
+  
+  For suggestions on how to set the quorum and genetic architecture parameters, read our dedicated book chapter:
+  
+  	`Identification of Protein Secretion Systems in Bacterial Genomes Using MacSyFinder <https://link.springer.com/protocol/10.1007/978-1-4939-7033-9_1>`_ by Sophie Abby and Eduardo Rocha, in *Methods in Molecular Biology* (2017).
+
+
+4. Writing down the models
+--------------------------
+
+
+Given all the features described above, here is the model of the T3SS: 
+
+
+**T3SS.xml**
 
 .. code-block:: xml
 
@@ -162,7 +188,9 @@ Model of the T3SS:
   </model>
 
 
-Model of the Flagellum:
+And the model of the Flagellum:
+
+**Flagellum.xml**
 
 .. code-block:: xml
 
