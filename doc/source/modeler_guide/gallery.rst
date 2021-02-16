@@ -98,24 +98,42 @@ The case of T3SS and the bacterial flagellum, or how to distinguish homologous c
 
 The type III secretion system (T3SS, involved in proteic effectors secretion into eukaryotic cells) and the bacterial flagellum (involved in motility) are evolutionarily related (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). This can make their annotation in genomes tricky, if only based on core components that can have homologs in both systems. 
 
-However, these machineries also have specific core components. With MacSyFinder and the *forbidden* feature for components, it is possible to model this, and create models for efficient discrimination between homologous machineries. 
+However, these machineries also have **specific core components**. With MacSyFinder and the *forbidden* feature for components, it is possible to model this, and create models for efficient discrimination between homologous machineries. 
 
 For a toy example on how to model similar yet distinct machineries, you can also have a look :ref:`here<model-definition-grammar-label>`. 
 
 
-1. Identifying genetic components
----------------------------------
+1. Identifying genetic components and determining their role
+------------------------------------------------------------
 
 The T3SS is partly homologous to the bacterial flagellum: 8 of its 9 core components are homologous to core components of the flagellum. This is explained by the fact that the T3SS is evolutionarily derived from the flagellum (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_). 
-Yet, the T3SS is made of two dozens of components, and the flagellum, more than twice this number of components. The flagellum presents **specific core components** that have no counterpart in the T3SS. It is also the case of the T3SS, which has a specific core component: the secretin. 
-Therefore, solely based on the specificity of core components, it is possible to distinguish T3SS from flagella. This can be done by listing the **specific core components** of a given system as *mandatory* in the system, and as *forbidden* in the homologous system. 
+Yet, the T3SS is made of two dozens of components, and the flagellum, more than twice this number of components: 
 
- 
+- The flagellum presents specific core components that have no counterpart in the T3SS. 
+- It is also the case of the T3SS, which has one specific core component: the secretin. 
+
+Solely based on the specificity of core components, it is possible to distinguish T3SS from flagella. This can be done by listing the **specific core components** of a given system as *mandatory* in the system, and as *forbidden* in the homologous system. 
+
+
+2. Dealing with components with varied evolutionary origins
+-----------------------------------------------------------
+
+Another peculiarity of T3SS' evolutionary history consists in that of the secretin, which has been co-opted (acquired) at least three times independently along T3SS diversification: once from the T2SS, once from the Tad pilus, and once from the Type IVa pilus (`Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_ , `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_ ). 
+
+This means that sometimes, the T3SS secretin will have more sequence similarity for the secretins from these other machineries - and thus that the profile for the T3SS secretin might "miss" these components, whereas profiles for secretins from the T2SS, T4P or Tad might be more efficient to retrieve them. 
+
+Using the *exchangeables* feature, MacSyFinder enables to use different HMM protein profile to search for components that may fill a same function. Therefore, it is possible to list profiles of secretins from other machineries among the set of profiles to use to retrieve all T3SS potential secretins.
+
+
+In the following drawing, a scheme of a T3SS is shown on the left, and the features listed above are shown on a scheme of the T3SS model, including forbidden components from the flagellum (red crosses), and exchangeable components for the secretin "sctC", depicted with yellow boxes (with the name of the secretin gene from the T4aP, T2SS and Tad pilus respectively). The *inter-gene-max-space* parameter - i.e., maximal number of components allowed between two systems' components to consider them consecutive - is expressed with the "d" letter. 
 
 .. image:: ../_static/T3SS_example.*
     :height: 4000px
     :align: center
 
+
+3. Describing the genetic architecture of the systems
+-----------------------------------------------------
 
 
 Model of the T3SS: 
