@@ -17,13 +17,13 @@ MacSyFinder relies on the definition of models of macromolecular systems as a **
 to be searched by similarity search, and a **set of rules** regarding their genomic organization and 
 their requirement level to make a complete system (mandatory, accessory components, number of components required). 
 
-See :ref:`below<model-definition-grammar-label>` for more details on MacSyFinder's modelling scheme and the section 
+See the section :ref:`model-definition-grammar-label` for more details on MacSyFinder's modelling scheme and the section 
 on :ref:`Functioning <functioning>` for the principles of the MacSyFinder's search engine.
 
 
 A **MacSyFinder model** (macsy-model for short) is the association of several elements:
 
-    * a **definition** which describes the system to detect with a specific **XML grammar** that is described :ref:`below<model-definition-grammar-label>`.
+    * a **definition** which describes the system to detect with a specific **XML grammar** that is :ref:`described here<model-definition-grammar-label>`.
     
     * a set of :ref:`HMM profiles <provide-hmm_label>`  (one per component/gene in the model) to enable the similarity search of the systems' components with the HMMER program.
 
@@ -38,7 +38,7 @@ A set of models from a same family (coherent set) of systems to detect is called
 Structure of a macsy-model package
 ==================================
 
-A macsy-model package follows the following structure ::
+A macsy-model package follows the following structure: ::
 
     family_name
         |_______ metadata.yml
@@ -55,7 +55,7 @@ A macsy-model package follows the following structure ::
                      |________ geneB.hmm
 
 
-If the package contains sub-families ::
+If the package contains sub-families: ::
 
     family_name
         |_______ metadata.yml
@@ -102,6 +102,50 @@ Metadata file
 -------------
 
 The `metadata.yml` file contains some meta information about the package itself.
+
+It is in `YAML <https://en.wikipedia.org/wiki/YAML>`_ format and must have the following structure:
+
+.. code-block:: yaml
+
+    ---
+    maintainer:
+      name: The name of the person who maintains/to contact for further information. (required)
+      email: The email of the maintainer (required)
+    short_desc: A one line description of the package (can e.g. be used for *macsydata* searches) (required)
+    vers: The package version (required)
+    cite: The publication(s) to cite by the user when the package is used (optional, used by `macsydata cite`)
+    doc: Where to find extended documentation (optional)
+    license: The license under the package is released (optional but highly recommended)
+    copyright: The copyright of the package (optional)
+
+For example:
+
+.. code-block:: yaml
+
+    ---
+    maintainer:
+       name: first name last name
+       email: login@my_domain.com
+    short_desc: Models for 15 types of secretion systems or bacterial appendages (T1SS, T2SS, T3SS, T4P, pT4SSt, pT4SSi, T5aSS, T5bSS, T5bSS, T6SSi, T6SSii, T6SSiii, Flagellum, Tad, T9SS).
+    vers: 0.0a1
+    cite:
+       - |
+         Abby Sophie S., Cury Jean, Guglielmini Julien, Néron Bertrand, Touchon Marie, Rocha Eduardo P. C. (2016).
+         Identification of protein secretion systems in bacterial genomes.
+         In Scientific Reports, 6, pp. 23080.
+         http://dx.doi.org/10.1038/srep23080
+    doc: https://github.com/macsy-models/TXSS
+    license: CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+    copyright: 2014-2021, Institut Pasteur, CNRS
+
+.. warning::
+    This `metadata.yml` file is **mandatory**. Without this file your archive/repository will not be considered as a *macsy-model package*.
+
+.. note::
+
+    * *-* specify an item of yaml list
+    * *|* is used to specify a single item but over multiple lines.
+
 
 
 .. _model_configuration:
