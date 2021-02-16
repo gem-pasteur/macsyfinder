@@ -35,14 +35,14 @@ All these will definitely help us to help you! ;-)
 
 .. _cmd-line-examples:
 
-What do MacSyFinder command lines should look like?
----------------------------------------------------
+What do MacSyFinder command lines look like?
+--------------------------------------------
 
 
 Here are a few examples of command line formation: 
 
 
-To seek for help:
+To browse interactive help:
    
  :code:`macsyfinder -h`
 
@@ -62,9 +62,7 @@ To alter the search parameters and allow a maximal distance between components o
 To alter the search parameters and allow the Tad pilus to be made of multiple loci:
 
  :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --multi-loci Tad`
- 
- 
-
+  
 
 See also the :ref:`quickstart` section for more examples. 
 
