@@ -109,8 +109,8 @@ The `metadata.yml` file contains some meta information about the package itself.
 Model configuration
 -------------------
 
-The modeler have the possibility to specify some options that are specific to its package, 
-different than the MacSyFinder defaults (`new in v2`) in the `model_conf.xml` file.
+The modeler has the possibility to specify some options that are specific to their package, 
+different than the MacSyFinder defaults in the `model_conf.xml` file. ``NEW in v2`` 
 
 These options can be grouped in two families: the scoring weights and filtering options.
 
