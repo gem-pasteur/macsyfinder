@@ -58,7 +58,7 @@ Models are more formalized
 
 The models data are more formalized, with a well defined structure.
 For instance the definitions and profiles must be packed together in what we call a `macsy-model` package
-If you intend to modelize new systems please refer to the :ref:`modeler_guide`.
+If you intend to model new systems please refer to the :ref:`modeler_guide`.
 
 
 
