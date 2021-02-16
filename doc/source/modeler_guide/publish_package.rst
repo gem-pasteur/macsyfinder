@@ -15,10 +15,11 @@ Publishing/sharing models
 
  .. _writing_model_package:
 
+
 Writing your own macsy-model package
 ====================================
 
-The whole package structure and the corresponding files :ref:`are described here <package_structure>` and requires five different
+The whole package structure and the corresponding files are described in the section :ref:`package_structure`. It requires five different
 types of files to be complete:
 
 * a metadata.yml file (mandatory)
@@ -33,35 +34,43 @@ types of files to be complete:
 Sharing your models
 ===================
 
-If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository.
+If you want to share your models you can create a :ref:`macsy-model package <model_package>` in your github repository. 
+Several steps are needed to publish your model:
 
-1. check the validity of your package with the ``macsydata check`` command.
-   macsydata check will report you:
+1. Check the **validity** of your package with the ``macsydata check`` command.
+   It will report:
 
-   * every thing is clear: macsydata display you the next step to perform to publish the package
-   * warning : it means that the package could be improved.
-             it better to fix it, but you go to *step 3*
-   * error: the package is not ready to be publish as is. fix the errors before to go to *step 3*
+   * everything is clear: `macsydata` displays the next step totake to publish the package
 
-2. create a tag, and submit a pull request to https://github.com/macsy-models organization.
-   This step is **very important**, without tag, there is no package.
-   macsydata check only tagged packages.
-   It's also of the model provider to setup a tag with the same name as the version in the metadata file.
-   It is recommended to follow a versioning scheme describe here https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
-3. when your pull request (PR) is accepted, the model package becomes automatically available to the community through the *macsydata* tool.
+   * warning: it means that the package could be improved.
+   
+   It is better to fix it if you can, but you can also proceed to *Step 3*
+
+   * error: the package is not ready to be published as is. You have to fix the errors before you go to *Step 3*.
+
+2. Create a **tag**, and submit a **pull request** to the https://github.com/macsy-models organization.
+   This step is **very important**: without a tag, there is no package.
+   `macsydata checks` only tagged packages.
+   It is also the duty of the model provider to setup a tag with the same name as the version in the `metadata.yml` file.
+   It is recommended to follow a versioning scheme describe here: https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
+
+3. When your pull request (PR) is accepted, the model package becomes automatically available to the community through the `macsydata` tool.
 
 If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
 This archive will also be usable with the `macsydata` tool.
 
-.. note:: macsydata check
-    check the syntax of the package. But it does not publish anything.
-    It just warn you if something goes wrong with the package.
-    every model provider should check it's own package before to publish it.
+.. note:: 
+
+    ``macsydata check``
+    checks the syntax of the package, but it does not publish anything.
+    It just warns you if something is wrong with the package.
+    Every model provider should check its own package before publishing it.
     The package publication is done by the `git push` and the `pull request`.
 
-example of macsydata check outputs
+Examples of ``macsydata check`` outputs:
 
-your package is syntactically correct
+
+Your package is syntactically correct:
 
 .. code-block:: text
 
@@ -87,7 +96,7 @@ your package is syntactically correct
             git push --tags
 
 
-You received some warnings
+You received some warnings: 
 
 .. code-block:: text
 
@@ -104,7 +113,7 @@ You received some warnings
     I'll take it this time, but I'm not happy.
     I'll be really happy, if you fix warnings above, before to publish these models.
 
-You received some errors
+You received some errors:
 
 .. code-block:: text
 
