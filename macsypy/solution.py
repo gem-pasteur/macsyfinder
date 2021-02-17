@@ -60,6 +60,7 @@ def find_best_solutions(systems):
         sorted_cliques = sorted(l, key=lambda item: (sum([len(sys.hits) for sys in item[0]]),
                                                      len(item[0]),
                                                      item[1],
+                                                     sum([sys.wholeness for sys in item[0]]) / len(item[0]),
                                                      '_'.join([sys.id for sys in item[0]])
                                                      ),
                                 reverse=True)
