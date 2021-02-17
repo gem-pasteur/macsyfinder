@@ -8,9 +8,9 @@
 
 .. _modeler_guide:
 
-=============
-Modeler Guide
-=============
+==============
+Modeller Guide
+==============
 
 
 Modelling Systems with MacSyFinder
