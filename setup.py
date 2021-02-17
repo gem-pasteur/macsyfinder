@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -244,7 +244,6 @@ setup(name='macsyfinder',
           'Environment :: Console',
           'Operating System :: POSIX',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
@@ -252,7 +251,7 @@ setup(name='macsyfinder',
           'Intended Audience :: Science/Research',
           'Topic :: Scientific/Engineering :: Bio-Informatics'
           ],
-      python_requires='>=3.6',
+      python_requires='>=3.7',
       install_requires=[i for i in [l.strip() for l in open("requirements.txt").read().split('\n')] if i],
       extras_require={'dev': open("requirements_dev.txt").read().split()},
       test_suite='tests.run_tests.discover',
@@ -266,6 +265,7 @@ setup(name='macsyfinder',
               'macsydata=macsypy.scripts.macsydata:main',
               'macsy_gembase_split=macsypy.scripts.macsy_gembase_split:main',
               'macsy_merge_results=macsypy.scripts.macsy_merge_results:main',
+              'macsyprofile=macsypy.scripts.macsyprofile:main',
           ]
       },
       # (dataprefix +'where to put the data in the install, [where to find the data in the tar ball]

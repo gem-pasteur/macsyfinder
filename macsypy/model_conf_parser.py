@@ -95,10 +95,11 @@ class ModelConfParser:
                     'mandatory': float,
                     'accessory': float,
                     'neutral': float,
-                    'loner_multi_system': float}
+                    'loner_multi_system': float,
+                    'redundancy_penalty': float}
         weights_conf = self._parse_section(weights_node, elements)
         # rename options as in the other part of MSF
-        weights_conf = {f"{k}_weight": v for k, v in weights_conf.items()}
+        weights_conf = {(f"{k}_weight"if k != 'redundancy_penalty' else k): v for k, v in weights_conf.items()}
         return weights_conf
 
 
