@@ -23,7 +23,7 @@ Modelling Systems with MacSyFinder
    helper_tools
    publish_package
    gallery
-   FAQ_modeler
+   
 
 Carrying models from v1 to v2
 =============================
@@ -31,3 +31,10 @@ Carrying models from v1 to v2
    :maxdepth: 2
 
    models_V1ToV2
+
+Frequently Asked Questions
+==========================
+.. toctree::
+   :maxdepth: 2
+   
+   FAQ_modeler
