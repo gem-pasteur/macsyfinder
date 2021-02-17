@@ -245,6 +245,13 @@ General options:
                             --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
 
 
+
+.. note:: 
+  For some command line examples, have a look :ref:`here<cmd-line-examples>`, or at the :ref:`quickstart` section.
+
+
+
+
 .. _config-definition-label:
 
 Configuration file
