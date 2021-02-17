@@ -31,6 +31,9 @@ The models are grouped by *family* possibly gathering *sub-families* (multiple l
 A set of models from a same family (coherent set) of systems to detect is called hereafter a **macsy-model package** ``NEW in V2``.
 
 
+.. note:: 
+  For details on how to create your own macsy-models, have a look at the :ref:`modeler_guide`. 
+
 
 
 ******************
