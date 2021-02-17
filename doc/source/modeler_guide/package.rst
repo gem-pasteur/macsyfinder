@@ -42,7 +42,7 @@ A macsy-model package follows the following structure: ::
 
     family_name
         |_______ metadata.yml
-        |_______ LICENCE
+        |_______ LICENSE
         |_______ README.md
         |_______ model_conf.xml
         |_______ definitions
@@ -59,7 +59,7 @@ If the package contains sub-families: ::
 
     family_name
         |_______ metadata.yml
-        |_______ LICENCE
+        |_______ LICENSE
         |_______ README.md
         |_______ model_conf.xml
         |_______ definitions
@@ -90,11 +90,11 @@ The Readme is displayed to the user on the macsy-models repository on Github.
 It is also displayed when the user runs `macsydata help`.
 
 
-LICENCE
+LICENSE
 -------
 
-The licence is used to protect your work when sharing it.
-If you don't know which licence to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
+The license is used to protect your work when sharing it.
+If you don't know which license to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
 *This file is optional, but highly recommended.*
 
 
