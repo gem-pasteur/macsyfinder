@@ -160,3 +160,38 @@ We thus propose several kind of :ref:`output files <ordered_outputs>`.
 
    For those more familiar with the output files from MacSyFinder v1, the file `best_solution.tsv` is the closest from 
    the previous output file `macsyfinder.report`.
+
+
+Where to find MacSyFinder models?
+---------------------------------
+
+Since version 2, there is a tool to enable the download and installation of published models from a repository: the `macsydata` tool. 
+
+See :ref:`here for details <macsydata>` on how to use it. 
+
+
+
+What are the rules for option precedence?
+-----------------------------------------
+
+MacSyFinder offers many ways to parametrize the systems' search: through the command-line, through various configuration files (for the models, for the run, etc...). It offers a large control over the search engine. But it also means you can get lost in configuration. ;-) 
+
+Here is a recap of the rules for option precedence. In a general manner, the command line always wins. 
+
+The precedence rules between the different levels of configuration are:
+
+.. code-block:: text
+
+ system < home < model < project < --cfg-file | --previous-run < command line options
+
+
+
+* **system**: file in /etc/macsyfinder/macsyfinder.conf on in virtalenv/etc/macsyfinder/macsyfinder.conf
+  in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
+* **home**:  ~/.macsyfinder/macsyfinder.conf
+* **model**: the model_conf.xml file at the root of the model package
+* **project**: the macsyfinder.conf file found in the directory where the `macsyfinder` command was run
+* **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
+* **previous-run**: the macsyfinder.conf file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
+* **command line**: any option specified directly in the command line
+
