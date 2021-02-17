@@ -22,12 +22,12 @@ Writing your own macsy-model package
 The whole package structure and the corresponding files are described in the section :ref:`package_structure`. It requires five different
 types of files to be complete:
 
-* a metadata.yml file (mandatory)
-* a README.md file (mandatory)
-* a LICENCE file (optional but **HIGHLY** recommended)
-* a model_conf.xml file (optional)
-* macsy-models definition(s) (mandatory)
-* HMM profiles (mandatory)
+* a `metadata.yml` file (mandatory)
+* a `README.md` file (mandatory)
+* a `LICENSE` file (optional but **HIGHLY** recommended)
+* a `model_conf.xml` file (optional)
+* macsy-models definition(s) within a `definitions` folder (mandatory)
+* HMM profiles within a `profiles` folder (mandatory)
 
 
 
@@ -38,15 +38,16 @@ If you want to share your models you can create a :ref:`macsy-model package <mod
 Several steps are needed to publish your model:
 
 1. Check the **validity** of your package with the ``macsydata check`` command.
+   You have to run it from within the folder containing your package files. 
    It will report:
 
    * everything is clear: `macsydata` displays the next step totake to publish the package
 
    * warning: it means that the package could be improved.
    
-   It is better to fix it if you can, but you can also proceed to *Step 3*
+   It is better to fix it if you can, but you can also proceed to *Step 2*
 
-   * error: the package is not ready to be published as is. You have to fix the errors before you go to *Step 3*.
+   * error: the package is not ready to be published as is. You have to fix the errors before you go to *Step 2*.
 
 2. Create a **tag**, and submit a **pull request** to the https://github.com/macsy-models organization.
    This step is **very important**: without a tag, there is no package.
