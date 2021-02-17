@@ -294,6 +294,40 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **used_in** - whether the hit could be used in another system's occurrence
 
 
+.. note::
+    If you want to have a synthetic view of which systems have been found in your replicons and how many.
+    You can do it with few lines of pandas and the **best_solution.tsv** file. ::
+
+        import pandas as pd
+
+        best_sol = '<macsyfinder_results_dir>/best_solution.tsv'
+
+        # read data from best_solution file
+        data = pd.read_csv(best_sol, sep='\t', comment='#')
+
+        # remove useless columns
+        selection = data[['replicon', 'sys_id', 'model_fqn']]
+
+        # keep only one row per replicon, sys_id
+        dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
+
+        # count for each replicon which model have been detected and count the occurences
+        summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
+
+    below an example of the result of these *pandas* few lines:
+
+    .. code-block:: text
+
+            model_fqn      TFF-SF/MSH  TFF-SF/T2SS  TFF-SF/T4P  TFF-SF/T4bP  TFF-SF/Tad
+        replicon
+        GCF_000005845           0            1           1            0           0
+        GCF_000006725           0            1           1            0           0
+        GCF_000006745           1            1           2            1           0
+        GCF_000006765           0            3           1            0           1
+        GCF_000006845           0            0           1            0           0
+        GCF_000006905           0            1           0            0           1
+        GCF_000006925           0            0           1            0           0
+        GCF_000006945           0            0           1            0           0
 
 
 .. _rejected_clusters_file:
