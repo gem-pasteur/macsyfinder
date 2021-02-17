@@ -181,15 +181,13 @@ The precedence rules between the different levels of configuration are:
 
  system < home < model < project < --cfg-file | --previous-run < command line options
 
-
-
-* **system**: file in /etc/macsyfinder/macsyfinder.conf on in virtalenv/etc/macsyfinder/macsyfinder.conf
+* **system**: the `macsyfinder.conf` file either in /etc/macsyfinder/ or in virtalenv/etc/macsyfinder/
   in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
-* **home**:  ~/.macsyfinder/macsyfinder.conf
-* **model**: the model_conf.xml file at the root of the model package
-* **project**: the macsyfinder.conf file found in the directory where the `macsyfinder` command was run
+* **home**:  the `~/.macsyfinder/macsyfinder.conf` file
+* **model**: the `model_conf.xml` file at the root of the model package
+* **project**: the `macsyfinder.conf` file found in the directory where the `macsyfinder` command was run
 * **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
-* **previous-run**: the macsyfinder.conf file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
+* **previous-run**: the `macsyfinder.conf` file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
 * **command line**: any option specified directly in the command line
 
 The model_conf.xml configuration file is in xml format and must have the following structure: 
