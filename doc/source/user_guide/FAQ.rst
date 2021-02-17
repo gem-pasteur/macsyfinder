@@ -32,6 +32,25 @@ To ensure we have all elements to help, please provide:
 All these will definitely help us to help you! ;-) 
 
 
+.. _citations:
+
+How to cite MacSyFinder and published macy-models?
+--------------------------------------------------
+
+- `Abby et al. 2014 <https://doi.org/10.1371/journal.pone.0110726>`_, *PLoS ONE* for the **general principles of MacSyFinder** (version 1), and the corresponding set of Cas systems (CasFinder, 1st version). 
+
+- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_, *PLoS Genetics*, for the study of the evolutionary relationship between the T3SS and the bacterial flagellum, and how were designed the corresponding HMM protein profiles. 
+
+- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_, *Scientific Reports*, for the description of bacterial protein secretion systems' models (TXSScan: T1SS, T2SS, T5SS, T6SS, T9SS, Tad, T4P). 
+
+- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_, *PLoS Biology*, for the description of type IV-filament super-family models (TFF-SF: T2SS, T4aP, T4bP, Com, Tad, archaeal T4P). 
+
+- `Rendueles et al. 2017 <https://doi.org/10.1371/journal.ppat.1006525>`_, *PLoS Pathogens*, for the CapsuleFinder set of models. 
+
+- `Couvin, Bernheim et al. 2018 <https://doi.org/10.1093/nar/gky425>`_, *Nucleic Acids Research*, for the updated version of the set of Cas systems' models, CasFinder.
+
+.. add CONJscan? Which ref?
+
 
 .. _cmd-line-examples:
 
