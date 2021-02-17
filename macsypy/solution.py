@@ -44,6 +44,7 @@ def find_best_solutions(systems):
 
          - first by the sum of hits of systems composing the solution, most hits in first
          - second by the number of systems, most system in first
+         - third by the average of wholeness of the systems
          - and finally by hits position. This criteria is to produce predictable results
            between two runs and to be testable (functional_test gembase)
 
