@@ -47,7 +47,7 @@ To browse interactive help:
  :code:`macsyfinder -h`
 
 
-The minimal command line, to search all systems with models from the "TFF-SF" set of models:
+The minimal command line, to search all systems with models from the "TFF-SF" set of models (installed with `macsydata`):
 
  :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all`
 
