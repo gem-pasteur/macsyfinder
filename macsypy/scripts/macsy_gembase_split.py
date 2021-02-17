@@ -93,7 +93,7 @@ def index_seq(genome_path):
     """
     Index the sequence in the file represented by genome_path
 
-    :param str genome_path: the path to a file containing sevrela sequence in fasta format
+    :param str genome_path: the path to a file containing several sequences in fasta format
     :return: the sequences index
     :rtype: dict [str seq_id] : (int start, int stop)
     """
@@ -159,7 +159,10 @@ def parse_args(args):
 
 def main(args=None, log_level=None):
     """
-     main entry point to macsy_gembase_split
+    main entry point to macsy_gembase_split
+
+        1. index the gembase file to identify start/end of each replicon
+        2. use this information to split gembase in several files one per replicon
      
     :param args: the arguments passed on the command line
     :type args: list of str
