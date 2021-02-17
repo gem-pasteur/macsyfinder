@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -123,6 +123,8 @@ All these elements and corresponding parameters will parametrize the search of S
      it means that it can be used to fill multiple systems' occurrences - and thus be considered part of several systems. ( *default false* ).
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
+.. _exchangeables_label:
+
  The element "gene" may have one "exchangeables" child element:
 
    * The element "exchangeables" can contain one or more elements "gene".
@@ -145,7 +147,7 @@ Example of a macsy-model definition in XML:
 
 .. code-block:: xml
 
-  <model inter_gene_max_space="5" ver="2.0">
+  <model inter_gene_max_space="5" vers="2.0">
     <gene name="gspD" presence="mandatory">
        <exchangeables>
            <gene name="sctC"/>

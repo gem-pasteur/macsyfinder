@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -30,6 +30,41 @@ To ensure we have all elements to help, please provide:
 - if applicable, this would also include the macsy-models (XML models plus HMM profiles) used (or precise version of the models if there are publicly available). Same as above, if possible, please provide the smallest set possible of models and HMM profiles. 
 
 All these will definitely help us to help you! ;-) 
+
+
+
+.. _cmd-line-examples:
+
+What do MacSyFinder command lines look like?
+--------------------------------------------
+
+
+Here are a few examples of command line formation: 
+
+
+To browse interactive help:
+   
+ :code:`macsyfinder -h`
+
+
+The minimal command line, to search all systems with models from the "TFF-SF" set of models:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all`
+
+To search for several systems (ModelA and ModelB) from the "model_family" set of models that can be found in the "./my-models" folder:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models model_family ModelA ModelB --models-dir ./my-models`
+
+To alter the search parameters and allow a maximal distance between components of 20 for the T2SS and 15 for the Tad pilus:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --inter-gene-max-space T2SS 20 --inter-gene-max-space Tad 15`
+
+To alter the search parameters and allow the Tad pilus to be made of multiple loci:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --multi-loci Tad`
+  
+
+See also the :ref:`quickstart` section for more examples. 
 
 
 What search mode to be used?
@@ -110,9 +145,18 @@ This also means that there are a number of options that are incompatible with  `
 Which output file to be used to get ONE solution?
 -------------------------------------------------
 
-Since version 2 of MacSyFinder, a combinatorial exploration of the possible sets of systems is performed. A scoring scheme has been set up to differentiate between solutions, in order to provide the user with the most complete set of systems as possible given the searched models. This score is maximal for the "best solution". This also means that some solutions might get the same maximal score. In this case, one can wonder how to find all the equivalent solutions, and an other, how to simply pick one solution among the best, whichever it is. 
+Since version 2 of MacSyFinder, a combinatorial exploration of the possible sets of systems is performed.
+A scoring scheme has been set up to differentiate between solutions,
+in order to provide the user with the most complete set of systems as possible given the searched models.
+This score is maximal for the "best solution". This also means that some solutions might get the same maximal score.
+In this case, one can wonder how to find all the equivalent solutions, and an other,
+how to simply pick one solution among the best, whichever it is.
 We thus propose several kind of :ref:`output files <ordered_outputs>`. 
 
 - All equivalent best solutions are found in the `all_best_solutions.tsv` file. 
 - One best solution is given in the `best_solution.tsv` file. 
 
+.. note:: 
+
+   For those more familiar with the output files from MacSyFinder v1, the file `best_solution.tsv` is the closest from 
+   the previous output file `macsyfinder.report`.
