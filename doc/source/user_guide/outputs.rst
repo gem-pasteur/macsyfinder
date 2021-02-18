@@ -341,6 +341,17 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
 
         python msf_summary.py <path_to_best_solution.tsv or path_to_all_best_solutions.tsv>
 
+    below an example of summary of a `best_solution.tsv` file
+
+    .. literalinclude:: ../_static/best_solution-summary.tsv
+       :language: text
+
+    and a summary of `all_best_solutions.tsv` correponding to the same `macsyfinder` run
+
+    .. literalinclude:: ../_static/all_best_solutions-summary.tsv
+       :language: text
+
+
 
 .. _rejected_clusters_file:
 
