@@ -249,7 +249,7 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 
     import pandas as pd
 
-    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
+    systems = pd.read_csv("path/to/systems.tsv", sep='\t', comment='#')
 
 .. note::
     each system reported is separated from the others with a blank line to ease human reading.
