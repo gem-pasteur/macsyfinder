@@ -295,8 +295,8 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
 
 
 .. note::
-    If you want to have a synthetic view of which systems have been found in your replicons and how many.
-    You can do it with few lines of pandas and the **best_solution.tsv** file. ::
+    If you want to have a concise view of which systems have been found in your replicons and how many per replicon,
+    you can do it with a few lines of pandas on the **best_solution.tsv** file. ::
 
         import pandas as pd
 
@@ -311,10 +311,10 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
         # keep only one row per replicon, sys_id
         dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
 
-        # count for each replicon which model have been detected and count the occurences
+        # count for each replicon which models have been detected and their occurrences
         summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
 
-    below an example of the result of these *pandas* few lines:
+    Below, an example of the result of these few lines of *pandas*:
 
     .. code-block:: text
 
