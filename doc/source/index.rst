@@ -56,9 +56,9 @@ User Guide
    user_guide/index
 
 
-=============
-Modeler Guide
-=============
+==============
+Modeller Guide
+==============
 
 .. toctree::
    :maxdepth: 2
