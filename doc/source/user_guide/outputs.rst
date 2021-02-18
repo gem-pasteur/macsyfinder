@@ -330,6 +330,18 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
         GCF_000006945           0            0           1            0           0
 
 
+    if you are not fluent in `pandas`, we provide you a tiny script `msf_summary.py` based on few lines above
+    to do the job
+
+    :download:`msf_summary.py <../_static/msf_summary.py>` .
+
+    Before to execute this script, you **MUST** install `pandas <https://pandas.pydata.org/>`_.
+    If you run macsyfinder in a virtualenv do ``pip install pandas``
+    Then you can run the script ::
+
+        python msf_summary.py <path_to_best_solution.tsv or path_to_all_best_solutions.tsv>
+
+
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
