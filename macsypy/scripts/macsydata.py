@@ -484,6 +484,27 @@ To cite MacSyFinder:
         raise ValueError()
 
 
+def do_help(args: argparse.Namespace) -> None:
+    """
+    Display on stdout the content of readme file
+    if the readme file does nopt exists display a message to the user see :method:`macsypy.package.help`
+
+    :param args: the arguments passed on the command line (the package name)
+    :type args: :class:`argparse.Namespace` object
+    :return: None
+    :raise ValueError: if the package name is not known.
+    """
+    pack_name = args.package
+    inst_pack_loc = _find_installed_package(pack_name)
+    if inst_pack_loc:
+        pack = Package(inst_pack_loc.path)
+        print(pack.help())
+    else:
+        _log.error(f"Models '{pack_name}' not found locally.")
+        sys.tracebacklimit = 0
+        raise ValueError()
+
+
 def do_check(args: argparse.Namespace) -> None:
     """
 
@@ -695,6 +716,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
     cite_subparser.set_defaults(func=do_cite)
     cite_subparser.add_argument('package',
                                 help='Package name.')
+    ########
+    # help #
+    ########
+    cite_subparser = subparsers.add_parser('help',
+                                           help='get online documentation.')
+    cite_subparser.set_defaults(func=do_help)
+    cite_subparser.add_argument('package',
+                                help='Package name.')
+
     #########
     # check #
     #########
