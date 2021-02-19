@@ -1,0 +1,8 @@
+<model_config>
+    <filtering>
+        <e_value_search>0.12</e_value_search>
+        <i_evalue_sel>0.012</i_evalue_sel>
+        <coverage_profile>0.55</coverage_profile>
+        <cut_ga>False</cut_ga>
+    </filtering>
+</model_config>

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -84,13 +84,21 @@ def list_models(args):
     :return: a string representation of all models and submodels installed.
     :rtype: str
     """
-    config = Config(MacsyDefaults(), args)
+    defaults = MacsyDefaults()
+    config = Config(defaults, args)
+    system_model_dir = config.models_dir()
+    if args.models_dir:
+        model_dirs = (system_model_dir,)
+    else:
+        user_model_dir = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
+        model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
     registry = ModelRegistry()
-    models_loc_available = scan_models_dir(config.models_dir(),
-                                           profile_suffix=config.profile_suffix(),
-                                           relative_path=config.relative_path())
-    for model_loc in models_loc_available:
-        registry.add(model_loc)
+    for model_dir in model_dirs:
+        try:
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+                registry.add(model_loc)
+        except PermissionError as err:
+            _log.warning(f"{model_dir} is not readable: {err} : skip it.")
     return str(registry)
 
 
@@ -132,13 +140,11 @@ def parse_args(args):
     # , formatter_class=argparse.RawDescriptionHelpFormatter)
     # , formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-m", "--models",
-                        action='append',
                         nargs='*',
                         default=None,
-                        help="""The models to search. The --models option can be set several times.
-For each --models options the first element must be the name of family models, 
-followed by the name of the models.
-If the name 'all' is in the list, all models from the family will be searched.
+                        help="""The models to search.
+The first element must be the name of family models, followed by the name of the models to search.
+If the name 'all' is in the list of models, all models from the family will be searched.
 '--models TXSS Flagellum T2SS' 
           means MSF will search for the models TXSS/Flagellum and TXSS/T2SS
 '--models TXSS all' 
@@ -232,16 +238,12 @@ This option can be repeated several times:
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help=argparse.SUPPRESS
+                                help="""The maximal number of genes to consider a system as full.
+The first value must correspond to a model name, the second value to an integer.
+This option can be repeated several times:
+    "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
+"""
                                 )
-    # the max-nb-genes is implemented untli config
-    # but not used in quorum
-    # so disable it until we found a biological use case
-    # help="""The maximal number of genes required for model assessment.
-    # The first value must correspond to a model name, the second value to an integer.
-    # This option can be repeated several times:
-    #     "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
-    # """
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,
@@ -261,7 +263,7 @@ If not specified, rely on the environment variable PATH
                                type=float,
                                default=None,
                                help=f"""Maximal e-value for hits to be reported during hmmsearch search.
-By default MF set per profile threshold for hmmsearch run (--cut_ga option) 
+By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option) 
 for profiles containing the GA bit score threshold.
 If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
 To applied the --e-value-search to all profiles use the --no-cut-ga option. 
@@ -407,7 +409,7 @@ Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)""")
                                  help="Displays all models installed at generic location and quit.")
     general_options.add_argument("--cfg-file",
                                  action='store',
-                                 help="Path to a MacSyFinder configuration file to be used.")
+                                 help="Path to a MacSyFinder configuration file to be used. (conflict with --previous-run)")
     general_options.add_argument("--previous-run",
                                  action='store',
                                  default=None,
@@ -416,7 +418,7 @@ It allows to skip the Hmmer search step on a same dataset,
 as it uses previous run results and thus parameters regarding Hmmer detection.
 The configuration file from this previous run will be used.
 Conflicts with options:  
-    --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
+    --cfg-file, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer""")
     general_options.add_argument("--relative-path",
                                  action='store_true',
                                  default=False,
@@ -427,6 +429,13 @@ Conflicts with options:
     # data set, which are used on many different machines (using previous-run option).
 
     parsed_args = parser.parse_args(args)
+    if parsed_args.cfg_file and parsed_args.previous_run:
+        # argparse does not allow to have mutually exclusive option  in a argument group
+        # I prefer to have these 2 options in general options group
+        # so I mimic the exclusive_group behavior
+        parser.print_usage()
+        print("macsyfinder: error: argument --previous-run: not allowed with argument --cfg-file")
+        sys.exit(2)
     return parser, parsed_args
 
 
@@ -686,6 +695,8 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         for sol_id, solution in enumerate(solutions, 1):
             solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file, end='')
+    else:
+        print("# No Systems found", file=sys_file)
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -832,7 +843,6 @@ def main(args=None, loglevel=None):
         models = ModelBank()
         genes = GeneBank()
         profile_factory = ProfileFactory(config)
-        macsypy.hit.hit_weight = macsypy.hit.HitWeight(itself=3, exchangeable=.75, mandatory=2, accessory=.25, neutral=1.5)
 
         logger.info("\n{:#^70}".format(" Searching systems "))
         all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)

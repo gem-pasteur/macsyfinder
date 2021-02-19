@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -164,13 +164,13 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 
    The assumptions behind this scoring scheme are the following:
 
-    * We set a score for the different types of genes/components when defining a **cluster's score**:
+    * We set a score for the different types of genes/components when defining a **cluster's score**. Here are the default values, but these :ref:`can be changed <score-options>`:
 
         - +1.0 is added when a `mandatory` gene is present
         - +0.5 is added when an `accessory` gene is present
         - +0.0 is added when a `neutral` gene is present
         - \*0.8 (a factor of 0.8) is applied to the above-scores when the function is fulfilled by an `exchangeable` gene
-        - \*0.7 (a factor of 0.7) is applied to the above scores if the hit is a `loner` `multi system`.
+        - \*0.7 (a factor of 0.7) is applied to the above-scores if the gene is a `loner` and `multi system` component.
 
 
     * When combinations of clusters are explored in order to fulfill macsy-models' requirements and build candidate systems
@@ -182,8 +182,8 @@ this calls for a **combinatorial screening** of the different clusters to assemb
 	
         - -1.5 is added when a **redundant** mandatory gene is added when adjuncting the cluster to a candidate `System`
         - -1.5 is added when a **redundant** accessory gene is added when adjuncting the cluster to a candidate `System`
-        - for the loner multi system the score of loner is added only if the function is not fulfilled in the others culsters.
-          In this case, even there is several occurrences the score is added only once (but no penaltiy is applied).
+        - for the components that are `loner` and `multi system`, the score of the loner component is added only if the function is not fulfilled in the other clusters.
+          In this case, even if there are several occurrences of the component, it is counted only once (and no penalty is applied).
 
     * Only candidate sets of clusters that fulfill a macsy-model and that are thus designated candidate `Systems`, obtain a **System's score**
 

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -784,7 +784,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual(args.verbosity, 0)
         self.assertEqual(args.worker, 4)
 
-        self.assertListEqual(args.models, [['functional', 'all']])
+        self.assertListEqual(args.models, ['functional', 'all'])
 
         command_line = "macsyfinder --sequence-db test_!.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -271,6 +271,59 @@ class Test(MacsyTest):
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.rejected_clusters):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+    def test_degenerated_systems(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene      mfp   gspd
+        # gene id  01398  01400
+        # pos        7      15
+        # syst    abc    mfp
+        # inter_gene_max_space="8"
+        expected_result_dir = self.find_data("functional_test_degenerated_systems")
+        args = "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  degenerated_systems " \
+               "-o {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.rejected_clusters):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_uncomplete_degenerated_systems(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene      mfp   gspd
+        # gene id  01398  01400
+        # pos        7      15
+        # syst    abc    mfp
+        # inter_gene_max_space="5"
+        expected_result_dir = self.find_data("functional_test_uncomplete_degenerated_systems")
+        args = "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  uncomplete_degenerated_systems " \
+               "-o {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
         self._macsyfinder_run(args)
 
         for file_name in (self.all_systems_tsv,

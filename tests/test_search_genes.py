@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -29,6 +29,7 @@ import shutil
 import tempfile
 import argparse
 
+import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene
 from macsypy.hit import Hit
@@ -48,6 +49,9 @@ class TestSearchGenes(MacsyTest):
             shutil.rmtree(self.tmp_dir)
         os.mkdir(self.tmp_dir)
 
+        macsypy.init_logger()
+        macsypy.logger_set_level(30)
+
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_base.fa")
         args.db_type = 'gembase'
@@ -55,6 +59,7 @@ class TestSearchGenes(MacsyTest):
         args.log_level = 30
         args.out_dir = os.path.join(self.tmp_dir, 'job_1')
         args.res_search_dir = args.out_dir
+        args.no_cut_ga = True
         os.mkdir(args.out_dir)
 
         self.cfg = Config(MacsyDefaults(), args)

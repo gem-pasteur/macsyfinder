@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -83,9 +83,10 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 cluster_scaffold.append(hit)
             else:
                 is_a_loner = model.get_gene(cluster_scaffold[0].gene.name).loner
-                if len(cluster_scaffold) > 1 or is_a_loner:
+                if len(cluster_scaffold) > 1 or is_a_loner or model.min_genes_required == 1:
                     # close the current scaffold if it contains at least 2 hits
                     # or one loner
+                    # or min_gene_required == 1
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 # open new scaffold
@@ -106,6 +107,12 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 # handle clusters containing only one loner
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters.append(new_cluster)
+            elif model.min_genes_required == 1:
+                # the hit does not collocate but the model required only one gene
+                # handle clusters containing only one gene
+                new_cluster = Cluster(cluster_scaffold, model, hit_weights)
+                clusters.append(new_cluster)
+
         elif len_scaffold > 1:
             new_cluster = Cluster(cluster_scaffold, model, hit_weights)
             clusters.append(new_cluster)

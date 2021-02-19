@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -168,14 +168,53 @@ class TestBuildCluster(MacsyTest):
         # one cluster with one hit loner
         h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h80]
-        random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
         self.assertListEqual(clusters[0].hits, [h80])
 
+        # case replicon is linear
+        # one cluster with one hit min_gene_required == 1
+        # last hit is a cluster
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=1)
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+
+        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        hits = [h80]
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
+        self.assertEqual(len(clusters), 1)
+        self.assertListEqual(clusters[0].hits, [h80])
+
+        # case replicon is linear
+        # one cluster with one hit min_gene_required == 1
+        # first hit is a cluster
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=1)
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        hits = [h10, h80]
+        random.shuffle(hits)
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
+        self.assertEqual(len(clusters), 2)
+        self.assertListEqual(clusters[0].hits, [h10])
+        self.assertListEqual(clusters[1].hits, [h80])
+
+
+        # case replicon is linear
+        # one cluster with one hit min_gene_required != 1
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=2)
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        hits = [h80]
+        clusters = build_clusters(hits, rep_info, model, self.hit_weights)
+        self.assertListEqual(clusters, [])
+
         # case replicon is linear, no hits
         clusters = build_clusters([], rep_info, model, self.hit_weights)
         self.assertListEqual(clusters, [])
+
 
 
 class TestHitFunc(MacsyTest):

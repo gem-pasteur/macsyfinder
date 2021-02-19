@@ -6,7 +6,7 @@
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshO.hmm
 # target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
 # output directed to file:         results/hmmer_results/MSH_mshO.search_hmm.out
-# sequence reporting threshold:    E-value <= 1
+# sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -251,7 +251,7 @@ Passed Vit filter:                        23  (0.0090981); expected 2.5 (0.001)
 Passed Fwd filter:                        16  (0.00632911); expected 0.0 (1e-05)
 Initial search space (Z):               2528  [actual number of targets]
 Domain search space  (domZ):              16  [number of targets reported over threshold]
-# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
-# Mc/sec: 4554.95
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 9109.90
 //
 [ok]

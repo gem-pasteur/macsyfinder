@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -34,7 +34,7 @@ def find_best_solutions(systems):
     :param systems: the systems to analyse
     :type systems: list of :class:`macsypy.system.System` object
     :return: the list of list of systems which represent one best solution and the it's score
-    :rtype: tuple of 2 elements
+    :rtype: tuple of 2 elements the best solution and it's score
             ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
             The inner list represent a best solution
     """
@@ -42,8 +42,9 @@ def find_best_solutions(systems):
         """
         sort cliques
 
-         - first by the sum of hits of system composing the solution, most hits in first
-         - second by the number of hits, most system in first
+         - first by the sum of hits of systems composing the solution, most hits in first
+         - second by the number of systems, most system in first
+         - third by the average of wholeness of the systems
          - and finally by hits position. This criteria is to produce predictable results
            between two runs and to be testable (functional_test gembase)
 
@@ -60,6 +61,7 @@ def find_best_solutions(systems):
         sorted_cliques = sorted(l, key=lambda item: (sum([len(sys.hits) for sys in item[0]]),
                                                      len(item[0]),
                                                      item[1],
+                                                     sum([sys.wholeness for sys in item[0]]) / len(item[0]),
                                                      '_'.join([sys.id for sys in item[0]])
                                                      ),
                                 reverse=True)

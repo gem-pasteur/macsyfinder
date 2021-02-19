@@ -1,0 +1,3 @@
+# macsyprofile 2.0rc1
+# macsyprofile -o tests/data/results_macsyprofile_no_hits.tsv --i-evalue-sel 1e-10 --coverage-profile 2.0 tests/data/functional_test_degenerated_systems
+hit_id	replicon_name	position_hit	hit_sequence_length	gene_name	i_eval	score	profile_coverage	sequence_coverage	begin	end

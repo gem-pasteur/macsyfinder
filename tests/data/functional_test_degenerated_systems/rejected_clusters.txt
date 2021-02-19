@@ -1,0 +1,3 @@
+# macsyfinder 20210115.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional degenerated_systems -o functional_test_degenerated_systems --previous-run tests/data/functional_test_degenerated_systems/ --relative-path
+# No Rejected clusters
