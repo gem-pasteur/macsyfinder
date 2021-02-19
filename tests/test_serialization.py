@@ -33,7 +33,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits, AbstractUnordered
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
     TxtLikelySystemSerializer, TxtUnikelySystemSerializer
 
@@ -53,9 +53,10 @@ class SerializationTest(MacsyTest):
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
         self.hit_weights = HitWeight(**self.cfg.hit_weights())
-        # reset the uniq id number for AbstractSetOfHits
-        # to have predictable results
-        AbstractSetOfHits._id = itertools.count(1)
+        # reset the uniq id number for AbstractUnordered
+        # to have predictable results for (Likely/Unlikely)Systems
+        System._id = itertools.count(1)
+        AbstractUnordered._id = itertools.count(1)
 
     def test_SystemSerializer_str(self):
         model_name = 'foo'
