@@ -1,0 +1,52 @@
+stages:
+  - test
+  - coverage
+  - pages
+
+variables:
+  MACSY_VERSION: ${CI_COMMIT_REF_NAME}
+
+testing37:
+  stage: test
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
+
+  script:
+    - python3.8 /usr/bin/pip3 install --no-binary=macsyfinder .
+    - python3.8 tests/run_tests.py -vvv
+  except:
+    - /^feat.*$/
+    - /^fix.*$/
+
+coverage:
+  stage: coverage
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/coverage
+  script:
+    - python3.8 -m pip install --no-binary=macsyfinder .
+    - coverage run --source=macsypy tests/run_tests.py -vv
+    - coverage html
+    - coverage report
+
+  artifacts:
+    paths:
+      - coverage_html/
+  except:
+    - /^feat.*$/
+    - /^fix.*$/
+
+pages:
+  stage: pages
+  image: registry-gitlab.pasteur.fr/gem/macsyfinder/pages
+  dependencies:
+    - coverage
+  script:
+    - python3.8 -m pip install --no-binary=macsyfinder .
+    - cd ${CI_PROJECT_DIR}/doc/
+    - make html
+    - cd ${CI_PROJECT_DIR}
+    - mv ${CI_PROJECT_DIR}/doc/build/html/ public
+    - mv coverage_html public/coverage
+  artifacts:
+    paths:
+      - public
+  only:
+    - master

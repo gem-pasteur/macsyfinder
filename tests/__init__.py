@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -129,10 +129,14 @@ class MacsyTest(unittest.TestCase):
         from itertools import zip_longest
         with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
             for l1, l2 in zip_longest(fh1, fh2):
-                if comment and l1.startswith(comment) and l2.startswith(comment):
-                    continue
-                self.assertEqual(l1, l2, msg)
-
+                if l1 and l2:
+                    if comment and l1.startswith(comment) and l2.startswith(comment):
+                        continue
+                    self.assertEqual(l1, l2, msg)
+                elif l1:  # and not l2
+                    raise self.failureException(f"{fh1.name} is longer than {fh2.name}")
+                elif l2:  # and not l1
+                    raise self.failureException(f"{fh2.name} is longer than {fh1.name}")
 
     def assertTsvEqual(self, f1, f2, comment="#", msg=None):
         # the StringIO does not support context in python2.7

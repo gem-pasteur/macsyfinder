@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -249,10 +249,11 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 
     import pandas as pd
 
-    systems = pd.read_cvs("path/to/systems.tsv", sep='\t', comment='#')
+    systems = pd.read_csv("path/to/systems.tsv", sep='\t', comment='#')
 
 .. note::
-    each system reported is separated from the others with a blank line to ease human reading. These lines are ignored during the parsing with pandas.
+    each system reported is separated from the others with a blank line to ease human reading.
+    These lines are ignored during the parsing with pandas.
 
 
 best_solution.tsv and all_best_solutions.tsv
@@ -292,6 +293,63 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **hit_end_match** - the position in the sequence where the profile match ends
     * **used_in** - whether the hit could be used in another system's occurrence
 
+
+.. note::
+    If you want to have a concise view of which systems have been found in your replicons and how many per replicon,
+    you can do it with a few lines of pandas on the **best_solution.tsv** file. ::
+
+        import pandas as pd
+
+        best_sol = '<macsyfinder_results_dir>/best_solution.tsv'
+
+        # read data from best_solution file
+        data = pd.read_csv(best_sol, sep='\t', comment='#')
+
+        # remove useless columns
+        selection = data[['replicon', 'sys_id', 'model_fqn']]
+
+        # keep only one row per replicon, sys_id
+        dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
+
+        # count for each replicon which models have been detected and their occurrences
+        summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
+
+    Below, an example of the result of these few lines of *pandas*:
+
+    .. code-block:: text
+
+            model_fqn      TFF-SF/MSH  TFF-SF/T2SS  TFF-SF/T4P  TFF-SF/T4bP  TFF-SF/Tad
+        replicon
+        GCF_000005845           0            1           1            0           0
+        GCF_000006725           0            1           1            0           0
+        GCF_000006745           1            1           2            1           0
+        GCF_000006765           0            3           1            0           1
+        GCF_000006845           0            0           1            0           0
+        GCF_000006905           0            1           0            0           1
+        GCF_000006925           0            0           1            0           0
+        GCF_000006945           0            0           1            0           0
+
+
+    if you are not fluent in `pandas`, we provide you a tiny script `msf_summary.py` based on few lines above
+    to do the job
+
+    :download:`msf_summary.py <../_static/msf_summary.py>` .
+
+    Before to execute this script, you **MUST** install `pandas <https://pandas.pydata.org/>`_.
+    If you run macsyfinder in a virtualenv do ``pip install pandas``
+    Then you can run the script ::
+
+        python msf_summary.py <path_to_best_solution.tsv or path_to_all_best_solutions.tsv>
+
+    below an example of summary of a `best_solution.tsv` file
+
+    .. literalinclude:: ../_static/best_solution-summary.tsv
+       :language: text
+
+    and a summary of `all_best_solutions.tsv` correponding to the same `macsyfinder` run
+
+    .. literalinclude:: ../_static/all_best_solutions-summary.tsv
+       :language: text
 
 
 

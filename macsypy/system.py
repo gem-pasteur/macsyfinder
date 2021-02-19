@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -234,7 +234,10 @@ class OrderedMatchMaker(MatchMaker):
 class UnorderedMatchMaker(MatchMaker):
 
     def match(self, hits):
-
+        """
+        :param hits:
+        :return:
+        """
         # count the hits
         # and track for each hit for which gene it counts for
         mandatory_hits, accessory_hits, neutral_hits, forbidden_hits = self.sort_hits_by_status(hits)
@@ -443,13 +446,15 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         """
 
         :return: a score indicating the genes ratio of the model which have at least one hit
-                ('neutral' genes do not count)
+                 by default full system is mandatory + accessory ('neutral' genes do not count)
+                 but for special corner case it can be sepcified in model definition (xml)
+                 or on the command line
         :rtype: float
         """
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                   (len(self._mandatory_occ) + len(self._accessory_occ))
+                   self.model.max_nb_genes
         return score
 
 

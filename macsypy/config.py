@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -28,7 +28,7 @@ import logging
 from configparser import ConfigParser, ParsingError, NoSectionError
 
 from macsypy import __MACSY_CONF__, __MACSY_DATA__
-
+from  macsypy.model_conf_parser import ModelConfParser
 _log = logging.getLogger(__name__)
 
 
@@ -71,7 +71,7 @@ class MacsyDefaults(dict):
         self.multi_loci = kwargs.get('multi_loci', set())
         self.mute = kwargs.get('mute', False)
         self.out_dir = kwargs.get('out_dir', None)
-        self.previous_run = kwargs.get('previous_run', False)
+        self.previous_run = kwargs.get('previous_run', None)
         self.profile_suffix = kwargs.get('profile_suffix', '.hmm')
         self.quiet = kwargs.get('quiet', 0)
         self.relative_path = kwargs.get('relative_path', False)
@@ -111,14 +111,25 @@ class Config:
                              'verbosity', 'quiet', 'mute', 'worker')),
                 ]
 
+    model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral',
+                  'loner_multi_system', 'redundancy_penalty',
+                  'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
+
+
     def __init__(self, defaults, parsed_args):
         """
-        Store macsyfinder configuration options and propose an interface to access
-        to them.
+        Store macsyfinder configuration options and propose an interface to access to them.
 
-        The config object is populated with the defaults then superseded with the
-        value specified in configuration files and finally by the options set on the
-        command line.
+        The config object is populated in several steps, the rules of precedence are
+
+        system wide conf < user home conf < model conf < (project conf | previous run) < command line
+
+        system wide conf = etc/macsyfinder/macsyfinder.conf
+        user home conf = ~/.macsyfinder/macsyfinder.conf
+        model conf = model_conf.xml at the root of the model package
+        project conf = macsyfinder.conf  where the analysis is run
+        previous run = macsyfinder.conf in previous run results dir
+        command line = the options set on the command line
 
         :param defaults:
         :type defaults: a :class:`MacsyDefaults` object
@@ -134,47 +145,213 @@ class Config:
             self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
 
         if __MACSY_CONF__ == '$' + 'MACSYCONF':
-            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__),
-                                                           '..', 'etc'
-                                                           ))
+            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'etc'))
         else:
             self._conf_dir = __MACSY_CONF__
+
+        self._options = {}
+        self._tmp_opts = {}
+
+        self._set_default_config()
+
+        system_wide_config_file = os.path.join(self._conf_dir, self.cfg_name)
+        if os.path.exists(system_wide_config_file):
+            self._set_system_wide_config(system_wide_config_file)
+
+        user_wide_config_file = os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name)
+        if os.path.exists(user_wide_config_file):
+            self._set_user_wide_config(user_wide_config_file)
+
+        project_config_file = os.path.join(os.getcwd(), 'macsyfinder.conf')
+        if os.path.exists(project_config_file):
+            self._set_project_config_file(project_config_file)
+
+        if hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
+            user_config_file = parsed_args.cfg_file
+            if os.path.exists(user_config_file):
+                self._set_user_config_file(user_config_file)
+            else:
+                raise ValueError(f"Config file {user_config_file} not found.")
+
         previous_run = False
         if hasattr(parsed_args, 'previous_run') and parsed_args.previous_run:
-            prev_config = os.path.normpath(os.path.join(parsed_args.previous_run,
-                                                        self.cfg_name))
+            prev_config = os.path.normpath(os.path.join(parsed_args.previous_run, self.cfg_name))
             previous_run = True
             if not os.path.exists(prev_config):
                 raise ValueError(f"No config file found in dir {parsed_args.previous_run}")
-            config_files = [prev_config]
-        elif hasattr(parsed_args, 'cfg_file') and parsed_args.cfg_file:
-            config_files = [parsed_args.cfg_file]
-        else:
-            config_files = [os.path.join(self._conf_dir, self.cfg_name),
-                            os.path.join(os.path.expanduser('~'), '.macsyfinder', self.cfg_name),
-                            'macsyfinder.conf']
+            self._set_previous_run_config(prev_config)
 
-        config_files_values = self._config_file_2_dict(defaults, config_files, previous_run=previous_run)
-        args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__')}
         if previous_run:
-            if 'sequence_db' in args_dict and args_dict['sequence_db']:
+            if hasattr(parsed_args, 'sequence_db') and parsed_args.sequence_db:
                 _log.warning(f"ignore sequence_db '{parsed_args.sequence_db}' use sequence_db "
-                             f"from previous_run '{args_dict['previous_run']}'.")
-                del args_dict['sequence_db']
-        # the special methods are not used to fill with defaults values
-        self._options = {k: v for k, v in defaults.items()}
+                             f"from previous_run '{parsed_args.previous_run}'.")
+                parsed_args.sequence_db = None
 
-        for bag_of_opts in config_files_values, args_dict:
-            for opt, val in bag_of_opts.items():
-                if val is not None:
-                    met_name = f'_set_{opt}'
-                    if hasattr(self, met_name):
-                        # config has a specific method to parse and store the value
-                        # for this option
-                        getattr(self, met_name)(val)
-                    else:
-                        # config has no method defined to set this option
-                        self._options[opt] = val
+        self._set_command_line_config(parsed_args)
+
+        models = self.models()
+        if models:
+            # the config is also used for macsydata
+            # in this case the models are not necessary
+            model_family_root, _ = models
+            models_config_file = os.path.join(self.models_dir(), model_family_root, 'model_conf.xml')
+            if os.path.exists(models_config_file):
+                self._set_model_config(models_config_file)
+
+        # superseed options (potentially in model_conf)
+        # by the values provided by previous-run, project conf, the users on the commandline
+        self._options.update(self._tmp_opts)
+
+
+    def _set_options(self, options):
+        """
+        set key, value in the general config
+
+        :param options: the options to specify in general config
+        :type options: a dictionary with option name as keys and values as values
+        """
+        for opt, val in options.items():
+            if val is not None:
+                met_name = f'_set_{opt}'
+                if hasattr(self, met_name):
+                    # config has a specific method to parse and store the value
+                    # for this option
+                    getattr(self, met_name)(val)
+                else:
+                    # config has no method defined to set this option
+                    self._options[opt] = val
+
+
+    def _set_default_config(self):
+        """
+        set the value comming from MacsyDefaults
+        """
+        # the special methods are not used to fill with defaults values
+        self._options = {k: v for k, v in self._defaults.items()}
+
+
+    def _set_system_wide_config(self, config_path):
+        """
+        set the options from the system wide configuration file
+
+        :param str config_path:
+        """
+        system_wide_config = self._config_file_2_dict(config_path)
+        self._set_options(system_wide_config)
+
+
+    def _set_user_wide_config(self, config_path):
+        """
+        Set the options from the ~/.macsyfinder/macsyfinder.conf file
+
+        :param str config_path: The path to the ~/.macsyfinder/macsyfinder.conf
+        """
+        user_wide_config = self._config_file_2_dict(config_path)
+        self._set_options(user_wide_config)
+
+
+    def _set_model_config(self, model_conf_path):
+        """
+        Set the options from the model package model_conf.xml file
+
+        :param str model_conf_path: The path to the model_conf.xml file
+        """
+        mp = ModelConfParser(model_conf_path)
+        model_conf = mp.parse()
+
+        self._set_options(model_conf)
+
+
+    def _set_project_config_file(self, config_path):
+        """
+        Set the options from the macsyfinder.conf present in the current directory
+
+        :param str config_path: the path to the configuration file
+        """
+        project_config = self._config_file_2_dict(config_path)
+        for opt in self.model_opts:
+            if opt in project_config:
+                self._tmp_opts[opt] = project_config[opt]
+                del(project_config[opt])
+        self._set_options(project_config)
+
+
+    def _set_user_config_file(self, config_path):
+        """
+        Set the options specified by the user on the command line via the --cfg-file option
+
+        :param str config_path: The path to the configuration path
+        """
+        user_config = self._config_file_2_dict(config_path)
+        for opt in self.model_opts:
+            if opt in user_config:
+                self._tmp_opts[opt] = user_config[opt]
+                del (user_config[opt])
+        self._set_options(user_config)
+
+    def _set_previous_run_config(self, prev_config_path):
+        """
+        Set the options specified by the user on the command line via --previous-run
+
+        :param prev_config_path:
+        """
+        previous_conf = self._config_file_2_dict(prev_config_path)
+        if 'out_dir' in previous_conf:
+            # set the out_dir from the previous_run is a non sense
+            del(previous_conf['out_dir'])
+        for opt in self.model_opts:
+            if opt in previous_conf:
+                self._tmp_opts[opt] = previous_conf[opt]
+                del (previous_conf[opt])
+        self._set_options(previous_conf)
+
+
+    def _set_command_line_config(self, parsed_args):
+        """
+
+        :param parsed_args: the argument set on the command line
+        :type parsed_args: :class:`argparse.Namespace` object.
+        """
+        # do not iter on args special attribute
+        # do not set option if the value is None (not specified on command line)
+        args_dict = {k: v for k, v in vars(parsed_args).items() if not k.startswith('__') and v is not None}
+        for opt in self.model_opts:
+            if opt in args_dict:
+                self._tmp_opts[opt] = args_dict[opt]
+                del (args_dict[opt])
+        self._set_options(args_dict)
+
+
+    def _config_file_2_dict(self, file):
+        """
+        Parse a configuration file in ini format in dictionnary
+
+        :param str file: path to the configuartion file
+        :return: the parsed options
+        :rtype: dict
+        """
+        parser = ConfigParser()
+        parse_meth = {int: parser.getint,
+                      float: parser.getfloat,
+                      bool: parser.getboolean
+                      }
+        try:
+            parser.read([file])
+            _log.debug(f"Configuration file {file} parsed.")
+        except ParsingError as err:
+            raise ParsingError(f"The macsyfinder configuration file '{file}' is not well formed: {err}") from None
+        opts = {}
+        sections = [s for s in parser.sections()]
+
+        for section in sections:
+            for option in parser.options(section):
+                opt_type = type(self._defaults.get(option, None))
+                try:
+                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                except (ValueError, TypeError) as err:
+                    raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
+                opts[option] = opt_value
+        return opts
 
 
     def __getattr__(self, option_name):
@@ -206,50 +383,6 @@ class Config:
             raise ValueError(f"You must provide a list of model name and value separated by spaces: {value}")
 
 
-    def _config_file_2_dict(self, defaults, files, previous_run=False):
-        """
-        parse config files files, the last one have precedence on the previous on so on, and return a dict
-        with properties, values.
-        The defaults is just used to know the type of the properties and cast them. It is not used to fill
-        the dict with default values.
-
-        :param defaults: the macsyfinder defaults value
-        :type defaults: a :class:`macsypy.config.MacsyDefaults` object
-        :param files: the configuration files to parse
-        :type files: list of string
-        :return: dict
-        """
-        parser = ConfigParser()
-        parse_meth = {int: parser.getint,
-                      float: parser.getfloat,
-                      bool: parser.getboolean
-                      }
-        try:
-            used_files = parser.read(files)
-            _log.debug(f"Files parsed for configuration: {', '.join(used_files)}")
-        except ParsingError as err:
-            raise ParsingError(f"A macsyfinder configuration file is not well formed: {err}") from None
-
-        opts = {}
-        sections = [s for s in parser.sections() if s != 'models']
-        for section in sections:
-            for option in parser.options(section):
-                if previous_run and option == 'out_dir':
-                    # set the out_dir from the previous_run is a non sense
-                    continue
-                opt_type = type(defaults.get(option, None))
-                try:
-                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
-                except (ValueError, TypeError) as err:
-                    raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
-                opts[option] = opt_value
-        try:
-            opts['models'] = parser.items('models')
-        except NoSectionError:
-            pass
-        return opts
-
-
     def save(self, path_or_buf=None):
         """
         save itself in a file in ini format.
@@ -266,9 +399,8 @@ class Config:
                 conf_str += f"[{section}]\n"
                 if section == 'models':
                     # [(model_family, (def_name1, ...)), ... ]
-                    for i, models in enumerate(self._options['models'], 1):
-                        model_family, def_names = models
-                        conf_str += f"models_{i} = {model_family} {' '.join(def_names)}\n"
+                    model_family, model_names = self.models()
+                    conf_str += f"models = {model_family} {' '.join(model_names)}\n"
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
@@ -456,20 +588,21 @@ class Config:
                       the configuration files
 
                       if value come from command_line
-                          [['model1', 'def1', 'def2', 'def3'], ['model2', 'def4'], ...]
+                          ['model1', 'def1', 'def2', 'def3']
                       if value come from config file
-                         [('set_1', 'T9SS, T3SS, T4SS_typeI'), ('set_2', 'T4P')]
+                         'set_1', 'T9SS T3SS T4SS_typeI')]
                          [(model_family, [def_name1, ...]), ... ]
         """
-        opt = []
-        for models in value:
-            if models[0].startswith('models'):
-                model_family_name, *models_name = models[1].split(' ')
-            else:
-                model_family_name = models[0]
-                models_name = models[1:]
-            opt.append((model_family_name, models_name))
-        self._options['models'] = opt
+        if isinstance(value, str):
+            # it comes from a config_file
+            # value = model_family_name model1 model2
+            model_family_name, *models_name = value.split()
+        else:
+            # it come from the command line
+            # value = ['model_family_name', 'model1', 'model2']
+            model_family_name = value[0]
+            models_name = value[1:]
+        self._options['models'] = (model_family_name, models_name)
 
 
     def out_dir(self):
@@ -570,6 +703,12 @@ class Config:
 
 
     def hit_weights(self):
+        """
+
+        :return: the options used in scoring systems (mandatory_weight, accessory_weight, itself_weight,
+                 exchangeable_weight, loner_multi_system_weight)
+        :rtype: dict
+        """
         return {'mandatory': self._options['mandatory_weight'],
                 'accessory': self._options['accessory_weight'],
                 'neutral': self._options['neutral_weight'],

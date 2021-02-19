@@ -1,0 +1,11 @@
+<model_config>
+    <weights>
+        <itself>11</itself>
+        <exchangeable>12</exchangeable>
+        <mandatory>13</mandatory>
+        <accessory>14</accessory>
+        <neutral>0</neutral>
+        <redundancy_penalty>20</redundancy_penalty>
+        <loner_multi_system>10</loner_multi_system>
+    </weights>
+</model_config>

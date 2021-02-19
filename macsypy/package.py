@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -42,7 +42,8 @@ from .profile import ProfileFactory
 from .definition_parser import DefinitionParser
 from .model import ModelBank
 from .gene import GeneBank
-from .error import MacsydataError, MacsyDataLimitError
+from .model_conf_parser import ModelConfParser
+from .error import MacsydataError, MacsyDataLimitError, MacsypyError
 
 
 class AbstractModelIndex(metaclass=abc.ABCMeta):
@@ -331,7 +332,7 @@ class Package:
         """
         all_warnings = []
         all_errors = []
-        for meth in self._check_structure, self._check_metadata, self._check_model_consistency:
+        for meth in self._check_structure, self._check_metadata, self._check_model_consistency, self._check_model_conf:
             errors, warnings = meth()
             all_errors.extend(errors)
             all_warnings.extend(warnings)
@@ -347,7 +348,7 @@ class Package:
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}'package structure")
+        _log.info(f"Checking '{self.name}' package structure")
         errors = []
         warnings = []
         if not os.path.exists(self.path):
@@ -380,6 +381,7 @@ class Package:
     def _check_model_consistency(self) -> Tuple[List, List]:
         """
         check if each xml seems well write, each genes have an associated profile, etc
+
         :return:
         """
         _log.info(f"Checking '{self.name}' Model definitions")
@@ -403,6 +405,28 @@ class Package:
         return [], []
 
 
+    def _check_model_conf(self) -> Tuple[List[str], List[str]]:
+        """
+        check if a model configuration file is present in the package (model_conf.xml)
+        if the syntax of this file is good.
+
+        :return:
+        """
+        _log.info(f"Checking '{self.name}' model configuration")
+        errors = []
+        warnings = []
+        conf_file = os.path.join(self.path, 'model_conf.xml')
+        if os.path.exists(conf_file):
+            mcp = ModelConfParser(conf_file)
+            try:
+                mcp.parse()
+            except (ValueError, MacsypyError) as err:
+                errors.append(str(err))
+        else:
+            _log.info(f"There is no model configuration for package {self.name}.")
+        return errors, warnings
+
+
     def _check_metadata(self) -> Tuple[List[str], List[str]]:
         """
         Check the QA of package metadata_path
@@ -410,7 +434,7 @@ class Package:
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}' metadata_path")
+        _log.info(f"Checking '{self.name}' {self.metadata_path}")
         errors = []
         warnings = []
         data = self._load_metadata()
@@ -418,14 +442,14 @@ class Package:
         nice_to_have = ("cite", "doc", "license", "copyright")
         for item in must_have:
             if item not in data:
-                errors.append(f"field '{item}' is mandatory in metadata_path.")
+                errors.append(f"field '{item}' is mandatory in {self.metadata_path}.")
         for item in nice_to_have:
             if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
+                warnings.append(f"It's better if the field '{item}' is setup in {self.metadata_path} file")
         if "maintainer" in data:
             for item in ("name", "email"):
                 if item not in data["maintainer"]:
-                    errors.append(f"field 'maintainer.{item}' is mandatory in metadata_path.")
+                    errors.append(f"field 'maintainer.{item}' is mandatory in {self.metadata_path}.")
         return errors, warnings
 
 

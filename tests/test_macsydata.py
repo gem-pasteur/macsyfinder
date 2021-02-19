@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -361,6 +361,32 @@ To cite MacSyFinder:
 - Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
   MacSyFinder: A Program to Mine Genomes for Molecular Systems with an Application to CRISPR-Cas Systems.
   PLoS ONE 9(10): e110726. doi:10.1371/journal.pone.0110726"""
+
+        self.assertEqual(expected_citation, citation)
+
+
+    def test_help(self):
+        pack_name = "nimportnaoik"
+        self.args.package = pack_name
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError):
+                macsydata.do_help(self.args)
+            log_msg = log.get_value()
+        self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
+
+        pack_name = "fake_pack"
+        self.args.package = pack_name
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_help(self.args)
+                citation = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+        expected_citation = '# This a README'
 
         self.assertEqual(expected_citation, citation)
 

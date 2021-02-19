@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -185,15 +185,18 @@ class DefinitionParser:
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        max_nb_genes = model_node.get('max_nb_genes')
-        if max_nb_genes is not None:
-            try:
-                max_nb_genes = int(max_nb_genes)
-            except ValueError:
-                msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
-                _log.critical(msg)
-                raise SyntaxError(msg)
-
+        cfg_max_nb_genes =  self.cfg.max_nb_genes(def_loc.fqn)
+        if cfg_max_nb_genes is not None:
+            max_nb_genes = cfg_max_nb_genes
+        else:
+            max_nb_genes = model_node.get('max_nb_genes')
+            if max_nb_genes is not None:
+                try:
+                    max_nb_genes = int(max_nb_genes)
+                except ValueError:
+                    msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
+                    _log.critical(msg)
+                    raise SyntaxError(msg)
         multi_loci = model_node.get('multi_loci')
         if multi_loci is not None:
             multi_loci = multi_loci.lower() in ("1", "true")

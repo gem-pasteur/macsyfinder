@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -37,9 +37,23 @@ from tests import MacsyTest
 class TestConfig(MacsyTest):
 
     def setUp(self):
+        self._current_dir = os.getcwd()
+        self.tmp_dir = os.path.join(tempfile.gettempdir(),
+                                    'test_macsyfinder_Config')
+        if os.path.exists(self.tmp_dir):
+            shutil.rmtree(self.tmp_dir)
+        os.mkdir(self.tmp_dir)
         self.defaults = MacsyDefaults()
         self.parsed_args = Namespace()
 
+
+    def tearDown(self):
+        os.chdir(self._current_dir)
+        try:
+            shutil.rmtree(self.cfg.working_dir())
+            #pass
+        except:
+            pass
 
     def test_str_2_tuple(self):
         s = 'set_1/Flagellum 12 set_1/t4ss 13'
@@ -53,14 +67,24 @@ class TestConfig(MacsyTest):
         self.assertEqual(str(ctx.exception),
                          f"You must provide a list of model name and value separated by spaces: {s}")
 
+    def test_set_option(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        opts = {'GOOD': "GOOD", "BAD": None}
+        self.assertFalse('GOOD' in cfg._options)
+        self.assertFalse('BAD' in cfg._options)
+        cfg._set_options(opts)
+        self.assertTrue('GOOD' in cfg._options)
+        self.assertEqual(cfg._options['GOOD'], 'GOOD')
+        self.assertFalse('BAD' in cfg._options)
+
 
     def test_config_file_2_dict(self):
         cfg = Config(self.defaults, self.parsed_args)
-        res = cfg._config_file_2_dict(self.defaults, ['nimportnaoik'])
+        res = cfg._config_file_2_dict('nimportnaoik')
         self.assertDictEqual({}, res)
 
         cfg_file = self.find_data(os.path.join('conf_files', 'macsy_test_conf.conf'))
-        res = cfg._config_file_2_dict(self.defaults, [cfg_file])
+        res = cfg._config_file_2_dict(cfg_file)
         expected = {'db_type': 'gembase',
                     'inter_gene_max_space': 'set_1/T2SS 2 set_1/Flagellum 4',
                     'min_mandatory_genes_required': 'set_1/T2SS 5 set_1/Flagellum 9',
@@ -71,7 +95,7 @@ class TestConfig(MacsyTest):
 
         bad_cfg_file = self.find_data(os.path.join('conf_files', 'macsy_test_bad_conf.conf'))
         with self.assertRaises(ParsingError):
-            cfg._config_file_2_dict(self.defaults, [bad_cfg_file])
+            cfg._config_file_2_dict(bad_cfg_file)
 
 
     def test_Config(self):
@@ -98,7 +122,7 @@ class TestConfig(MacsyTest):
                                  msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
 
 
-    def test_Config_file(self):
+    def test_cmd_config_file(self):
         methods_needing_args = {'inter_gene_max_space': [('set_1/Flagellum', 4), ('set_1/T2SS', 2)],
                                 'max_nb_genes':  [('set_1/Flagellum', 6), ('set_1/T3SS', 3)],
                                 'min_genes_required': [('set_1/Flagellum', 8), ('set_1/T4SS', 4)],
@@ -128,6 +152,52 @@ class TestConfig(MacsyTest):
                     self.assertEqual(getattr(cfg, opt)(model), genes)
             else:
                 self.assertEqual(getattr(cfg, opt)(), val)
+
+        self.parsed_args.cfg_file = 'niportnaoik'
+        with self.assertRaises(ValueError) as ctx:
+            Config(self.defaults, self.parsed_args)
+        self.assertEqual(str(ctx.exception),
+                         "Config file niportnaoik not found.")
+
+
+    def test_project_config_file(self):
+        os.chdir(self.tmp_dir)
+        methods_needing_args = {'inter_gene_max_space': [('set_1/Flagellum', 4), ('set_1/T2SS', 2)],
+                                'max_nb_genes':  [('set_1/Flagellum', 6), ('set_1/T3SS', 3)],
+                                'min_genes_required': [('set_1/Flagellum', 8), ('set_1/T4SS', 4)],
+                                'min_mandatory_genes_required': [('set_1/Flagellum', 12), ('set_1/T6SS', 6)],
+                                'multi_loci': {'set_1/Flagellum', 'T4SS'}
+                                }
+        hmmer_opts_in_file = {'coverage_profile': 0.8,
+                             'e_value_search': 0.12}
+
+        try:
+            shutil.copyfile(self.find_data(os.path.join('conf_files', 'project.conf')),
+                            os.path.join(self.tmp_dir, 'macsyfinder.conf')
+                            )
+            cfg = Config(self.defaults, self.parsed_args)
+
+            expected_values = {k: v for k, v in self.defaults.items()}
+            expected_values.update(methods_needing_args)
+            expected_values.update(hmmer_opts_in_file)
+
+            for opt, val in expected_values.items():
+                if opt == 'out_dir':
+                    self.assertEqual(cfg.out_dir(),
+                                     os.path.join(cfg.res_search_dir(),
+                                                  f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
+                                     )
+                elif opt == 'multi_loci':
+                    self.assertTrue(cfg.multi_loci('set_1/Flagellum'))
+                    self.assertTrue(cfg.multi_loci('set_1/T4SS'))
+                    self.assertFalse(cfg.multi_loci('set_1/T6SS'))
+                elif opt in methods_needing_args:
+                    for model, genes in expected_values[opt]:
+                        self.assertEqual(getattr(cfg, opt)(model), genes)
+                else:
+                    self.assertEqual(getattr(cfg, opt)(), val)
+        except:
+            os.chdir(self._current_dir)
 
 
     def test_Config_file_bad_values(self):
@@ -279,6 +349,23 @@ class TestConfig(MacsyTest):
                 self.assertEqual(getattr(cfg, opt)(), exp_val)
 
 
+    def test_model_conf(self):
+        self.parsed_args.models_dir = self.find_data('models')
+        self.parsed_args.models = "Model_w_conf all"
+        cfg = Config(self.defaults, self.parsed_args)
+        expected_weights = {'mandatory': 13.0,
+                            'accessory': 14.0,
+                            'neutral': 0.0,
+                            'itself': 11.0,
+                            'exchangeable': 12.0,
+                            'loner_multi_system': 10.0}
+        self.assertDictEqual(cfg.hit_weights(), expected_weights)
+        self.assertEqual(cfg.i_evalue_sel(), 0.012)
+        self.assertEqual(cfg.e_value_search(), 0.12)
+        self.assertEqual(cfg.coverage_profile(), 0.55)
+        self.assertTrue(cfg.no_cut_ga())
+
+
     def test_bad_values(self):
         invalid_syntax = {'inter_gene_max_space': 'set_1/Flagellum 4 2',
                           'max_nb_genes': 'set_1/Flagellum set_1/T3SS 3',
@@ -347,18 +434,27 @@ class TestConfig(MacsyTest):
     def test_save(self):
         self.parsed_args.max_nb_genes = [['Set_1/T2SS', 5], ['set_1/Flagelum', 12]]
         self.parsed_args.multi_loci = 'Set_1/T2SS,set_1/Flagelum'
-        self.parsed_args.models = [['Set_1', 'T9SS', 'T3SS', 'T4SS_typeI']]
+        self.parsed_args.models = ['Set_1', 'T9SS', 'T3SS', 'T4SS_typeI']
         cfg = Config(self.defaults, self.parsed_args)
         expected = {k: v for k, v in cfg._options.items() if v is not None}
         expected['max_nb_genes'] = 'Set_1/T2SS 5 set_1/Flagelum 12'
-        expected['models'] = [('models_1', 'Set_1 T9SS T3SS T4SS_typeI')]
+        expected['models'] = 'Set_1 T9SS T3SS T4SS_typeI'
+        # save in file 'macsyfinder.conf'
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
-            saved_opt = cfg._config_file_2_dict(self.defaults, [cfg_path])
-            saved_opt['multi_loci'] = {v for v in [v.strip() for v in saved_opt['multi_loci'].split(',')] if v}
+            new_args = Namespace()
+            new_args.cfg_file = cfg_path
+            restored_cfg = Config(self.defaults, new_args)
             self.maxDiff = None
-            self.assertDictEqual(saved_opt, expected)
+            # the option cfg-file differ from the 2 configs
+            # None in cfg
+            # cfg_path in restored_cfg
+            self.assertEqual(restored_cfg._options['cfg_file'], cfg_path)
+            del(cfg._options['cfg_file'])
+            del(restored_cfg._options['cfg_file'])
+            self.assertDictEqual(cfg._options, restored_cfg._options)
+
 
     def test_out_dir(self):
         cfg = Config(self.defaults, self.parsed_args)
@@ -375,13 +471,16 @@ class TestConfig(MacsyTest):
 
     def test_previous_n_sequence_db(self):
         self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results'))
-        self.parsed_args.sequence_db = self.find_data(os.path.join('base', 'test_1.fasta'))
+        sequence_db = self.find_data(os.path.join('base', 'test_1.fasta'))
+        self.parsed_args.sequence_db = sequence_db
         with self.catch_log() as log:
             cfg = Config(self.defaults, self.parsed_args)
+            # The config set the parsed_args.sequence_db to None
             catch_msg = log.get_value().strip()
-        self.assertEqual(cfg.sequence_db(), 'tests/data/base/test_1.fasta')
-        self.assertEqual(f"ignore sequence_db '{self.parsed_args.sequence_db}' "
-                         f"use sequence_db from previous_run '{self.parsed_args.previous_run}'.",
+        self.assertEqual(cfg.sequence_db(), 'tests/data/base/VICH001.B.00001.C001.prt')
+        self.maxDiff = None
+        self.assertEqual(f"ignore sequence_db '{sequence_db}' use sequence_db from previous_run "
+                         f"'{os.path.abspath(cfg.previous_run())}'.",
                          catch_msg)
 
     def test_previous_wo_cfg(self):

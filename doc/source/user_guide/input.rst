@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -129,6 +129,11 @@ Systems detection options:
                         The first value must correspond to a model fully qualified name, the second value to an integer.
                         This option can be repeated several times:
                             "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10
+  --max-nb-genes MAX_NB_GENES MAX_NB_GENES
+                        The maximal number of genes to consider a system as full.
+                        The first value must correspond to a model name, the second value to an integer.
+                        This option can be repeated several times:
+                            "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
   --multi-loci MULTI_LOCI
                         Specifies if the system can be detected as a 'scattered' system.
                         The models are specified as a comma separated list of fully qualified name
@@ -167,23 +172,27 @@ Options for Hmmer execution and hits filtering:
 
 .. _score-options:
 
-Options for cluster and systems scoring:
+Options for clusters and systems' scoring:
 
 .. code-block:: text
 
   --mandatory-weight MANDATORY_WEIGHT
-                        the weight of a mandatory component in cluster scoring
+                        the weight (score) of a mandatory component when scoring clusters
                         (default:1.0)
   --accessory-weight ACCESSORY_WEIGHT
-                        the weight of a mandatory component in cluster scoring
+                        the weight (score) of an accessory component when scoring clusters
                         (default:0.5)
   --exchangeable-weight EXCHANGEABLE_WEIGHT
-                        the weight modifier for a component which code for exchangeable cluster scoring
-                            (default:0.75)
+                        the weight modifier for the score of a component that is exchangeable
+                        (default:0.8)
   --redundancy-penalty REDUNDANCY_PENALTY
-                        the weight modifier for cluster which bring a component already presents in other
-                        clusters (default:1.5)
+                        the weight modifier for the score of a component that is already present in another cluster 
+			(default:1.5)
 
+  --loner-multi-system-weight LONER_MULTI_SYSTEM_WEIGHT
+  			the weight modifier for the score of a component that is `loner` and `multi-system` at the same time
+                        (default:0.7)
+  
 
 .. _path-options:
 
@@ -239,6 +248,13 @@ General options:
                         The configuration file from this previous run will be used.
                         Conflict with options
                             --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
+
+
+
+.. note:: 
+  For some command line examples, have a look :ref:`here<cmd-line-examples>`, or at the :ref:`quickstart` section.
+
+
 
 
 .. _config-definition-label:
@@ -303,7 +319,9 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
       These values will supersede the values found in the model definition file.
     * *min_genes_required* = list of models' fully qualified name and integer separated by spaces.
       These values will supersede the values found in the model definition file.
-    
+    * *max_nb_genes* = list of models' fully qualified names and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
@@ -359,7 +377,8 @@ Example of a configuration file
     inter_gene_max_space = TXSS/T2SS 22 TXSS/Flagellum 44
     min_mandatory_genes_required = TXSS/T2SS 6 TXSS/Flagellum 4
     min_genes_required = TXSS/T2SS 8 TXSS/Flagellum 4
-    
+    max_nb_genes = TXSS/T2SS 12 TXSS/Flagellum 8
+
     [hmmer]
     hmmer = hmmsearch
     e_value_res = 1

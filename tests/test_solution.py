@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -48,6 +48,9 @@ def _build_systems(cfg, profile_factory):
     model_F = Model("foo/F", 10)
     model_G = Model("foo/G", 10)
     model_H = Model("foo/H", 10)
+    model_I = Model("foo/I", 10)
+    model_J = Model("foo/J", 10)
+    model_K = Model("foo/K", 10)
 
     c_gene_sctn_flg = CoreGene(model_location, "sctN_FLG", profile_factory)
     gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_B)
@@ -78,6 +81,9 @@ def _build_systems(cfg, profile_factory):
     gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
     gene_abc.add_exchangeable(gene_abc_ho)
 
+    c_gene_sctc = CoreGene(model_location, "sctC", profile_factory)
+    gene_sctc = ModelGene(c_gene_sctc, model_J)
+
     model_A.add_mandatory_gene(gene_sctn)
     model_A.add_mandatory_gene(gene_sctj)
     model_A.add_accessory_gene(gene_gspd)
@@ -101,16 +107,33 @@ def _build_systems(cfg, profile_factory):
 
     model_F.add_mandatory_gene(gene_abc)
 
-    # idem as C
+    # model G idem as C
     model_G.add_mandatory_gene(gene_sctn_flg)
     model_G.add_mandatory_gene(gene_sctj_flg)
     model_G.add_mandatory_gene(gene_flgB)
     model_G.add_accessory_gene(gene_tadZ)
     model_G.add_accessory_gene(gene_gspd)
 
-    # idem as D
+    # mode lH idem as D
     model_H.add_mandatory_gene(gene_abc)
     model_H.add_accessory_gene(gene_sctn)
+
+    # model I
+    model_I.add_mandatory_gene(gene_flgB)
+    model_I.add_accessory_gene(gene_tadZ)
+
+    # model J
+    model_J.add_mandatory_gene(gene_abc)
+    model_J.add_mandatory_gene(gene_gspd)
+    model_J.add_accessory_gene(gene_tadZ)
+    model_J.add_accessory_gene(gene_sctc)
+
+    # model K
+    model_K.add_mandatory_gene(gene_flgB)
+    model_K.add_mandatory_gene(gene_sctn_flg)
+    model_K.add_accessory_gene(gene_sctj_flg)
+    model_K.add_accessory_gene(gene_sctn)
+
 
     h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
     h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -164,6 +187,27 @@ def _build_systems(cfg, profile_factory):
     c7 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY)],
                  model_F, hit_weights)
 
+    model_H._min_mandatory_genes_required = 1
+    model_H._min_genes_required = 1
+
+    model_I._min_mandatory_genes_required = 1
+    model_I._min_genes_required = 1
+    c8 = Cluster([ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
+                 model_I, hit_weights)
+
+    model_J._min_mandatory_genes_required = 1
+    model_J._min_genes_required = 1
+    c9 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
+                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
+                 model_I, hit_weights)
+
+    model_K._min_mandatory_genes_required = 1
+    model_K._min_genes_required = 1
+    c10 = Cluster([ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                  ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
+                  model_K, hit_weights)
+
     systems = {}
 
     systems['A'] = System(model_A, [c1, c2], cfg.redundancy_penalty())  # 5 hits
@@ -185,6 +229,12 @@ def _build_systems(cfg, profile_factory):
     systems['G'].id = "replicon_id_G"
     systems['H'] = System(model_H, [c5], cfg.redundancy_penalty())  # 2 hits
     systems['H'].id = "replicon_id_H"
+    systems['I'] = System(model_I, [c8], cfg.redundancy_penalty())  # 2 hits
+    systems['I'].id = "replicon_id_I"
+    systems['J'] = System(model_J, [c9], cfg.redundancy_penalty())  # 2 hits
+    systems['J'].id = "replicon_id_J"
+    systems['K'] = System(model_K, [c10], cfg.redundancy_penalty())  # 2 hits
+    systems['K'].id = "replicon_id_K"
 
     return systems
 
@@ -328,11 +378,11 @@ class SolutionExplorerTest(MacsyTest):
         # replicon_id_D ['hit_abc', 'hit_sctn']
         # replicon_id_G ['hit_sctj_flg', 'hit_tadZ', 'hit_flgB', 'hit_gspd']
         # replicon_id_H ['hit_abc', 'hit_sctn']
-        # C and D are compatible 4.5
-        # C and H are compatible 4.5
-        # G and D are compatible 4.5
-        # G and H are compatible 4.5
-        # B and A are compatible 3.5
+        # C and D are compatible 4.5   wholeness = 0.8  + 1.0 = 1.8
+        # C and H are compatible 4.5               0.8  + 1.0 = 1.8
+        # G and D are compatible 4.5               0.8  + 1.0 = 1.8
+        # G and H are compatible 4.5               0.8  + 1.0 = 1.8
+        # B and A are compatible 3.5               0.75 + 1.0 = 1.75
         # So the best Solution expected are C D / C H / G D / G H with score 4.5
 
         best_sol, score = find_best_solutions(sorted_syst)
@@ -343,4 +393,23 @@ class SolutionExplorerTest(MacsyTest):
         best_sol = {frozenset(sol) for sol in best_sol}
         expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 4.5)
+        self.assertSetEqual(best_sol, expected_sol)
+
+        systems = [self.systems[k] for k in 'HJKI']
+        sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
+        best_sol, score = find_best_solutions(sorted_syst)
+
+        # check if solution is ordered by woleness average (3rd criterion)
+        # first criterion nb of hits
+        # second citerion nb of systems
+        # replicon_id_H ['hit_abc', 'hit_sctn']
+        # replicon_id_I ['hit_flgB', 'hit_tadZ']
+        # replicon_id_J ['hit_abc', 'hit_tadZ']
+        # replicon_id_K ['hit_flgB', 'hit_sctn']
+        #                                                             score  Nb hits  nb sys wholeness
+        expected_sol = [[self.systems[k] for k in 'HI'],  # 1.5 + 1.5 = 3.0    4        2       1.0
+                        [self.systems[k] for k in 'JK']]  # 1.5 + 1.5 = 3.0    4        2       0.5
+        best_sol = {frozenset(sol) for sol in best_sol}
+        expected_sol = {frozenset(sol) for sol in expected_sol}
+        self.assertEqual(score, 3.0)
         self.assertSetEqual(best_sol, expected_sol)
