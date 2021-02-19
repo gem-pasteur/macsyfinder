@@ -184,6 +184,8 @@ The first line of results is a header line.
 
 .. warning::
     The `macsyprofile` is not compliant with results produced with `macsyfinder v1`.
-    If you get ```IndexError: list index out of range``` error when you use `macsyprofile`,
-    it probably means that the results were produced by an old incompatible version of `macsyfinder`.
+    If you get ``Cannot find models in conf file XXX. May be these results have been generated with an old version of macsyfinder.``
+    Check the configuration file, if `[models]` section contains ``models_1 = XXX YYY`` remove the `_1` from models
+   ``models = XXX YYY`
+
 
