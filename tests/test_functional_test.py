@@ -33,18 +33,20 @@ import itertools
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
-from macsypy.system import AbstractSetOfHits
+from macsypy.system import System, AbstractUnordered
 
 
 class Test(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
-        # reset AbstractSetOfHits internal id to have predictable results (Systems, ...) id
+        # reset System, AbstractUnordered internal id to have predictable results (Systems, ...) id
         # it's works only if there is only one replicon
         # for gembase the order is not guarantee
 
-        AbstractSetOfHits._id = itertools.count(1)
+        System._id = itertools.count(1)
+        AbstractUnordered._id = itertools.count(1)
+
         self.all_systems_tsv = "all_systems.tsv"
         self.all_systems_txt = "all_systems.txt"
         self.all_best_solutions = "all_best_solutions.tsv"
