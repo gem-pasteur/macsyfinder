@@ -433,3 +433,12 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
 
         with self.assertRaises(ValueError):
             macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)
+
+    def test_functional(self):
+        old = self.find_data('conf_files', 'macsyfinder-old.conf')
+        shutil.copyfile(old, os.path.join(self.tmpdir, 'macsyfinder.conf'))
+
+        previous_run = self.tmpdir
+        cmd = f"macsyprofile {previous_run}"
+        with self.assertRaises(ValueError):
+            macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)

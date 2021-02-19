@@ -497,7 +497,13 @@ def main(args=None, log_level=None) -> None:
         raise ValueError() from None
 
     hmmer_files = sorted(glob.glob(os.path.join(hmmer_results, f"{parsed_args.pattern}{hmm_suffix}")))
-    profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+    try:
+        profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+    except IndexError:
+        _log.critical(f"Cannot find models in conf file {msf_run_path}. "
+                      f"May be these results have been generated with an old version of macsyfinder.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
 
     _log.debug(f"hmmer_files: {hmmer_files}")
     all_hits = []
