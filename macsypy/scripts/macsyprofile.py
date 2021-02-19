@@ -464,6 +464,15 @@ def main(args=None, log_level=None) -> None:
         log_level = verbosity_to_log_level(parsed_args.verbosity)
     _log = init_logger(log_level, out=(not parsed_args.mute))
 
+    if not os.path.exists(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run}: No such directory.")
+        sys.tracebacklimit = 0
+        raise FileNotFoundError() from None
+    elif not os.path.isdir(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run} is not a directory.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
     defaults = MacsyDefaults(i_evalue_sel=1.0e9, coverage_profile=-1.0)
     cfg = Config(defaults, parsed_args)
 
