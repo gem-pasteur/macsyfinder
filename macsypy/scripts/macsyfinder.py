@@ -238,16 +238,12 @@ This option can be repeated several times:
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help=argparse.SUPPRESS
+                                help="""The maximal number of genes to consider a system as full.
+The first value must correspond to a model name, the second value to an integer.
+This option can be repeated several times:
+    "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
+"""
                                 )
-    # the max-nb-genes is implemented untli config
-    # but not used in quorum
-    # so disable it until we found a biological use case
-    # help="""The maximal number of genes required for model assessment.
-    # The first value must correspond to a model name, the second value to an integer.
-    # This option can be repeated several times:
-    #     "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
-    # """
     system_options.add_argument("--multi-loci",
                                 action='store',
                                 default=None,

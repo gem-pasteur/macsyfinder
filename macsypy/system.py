@@ -446,13 +446,15 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         """
 
         :return: a score indicating the genes ratio of the model which have at least one hit
-                ('neutral' genes do not count)
+                 by default full system is mandatory + accessory ('neutral' genes do not count)
+                 but for special corner case it can be sepcified in model definition (xml)
+                 or on the command line
         :rtype: float
         """
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                   (len(self._mandatory_occ) + len(self._accessory_occ))
+                   self.model.max_nb_genes
         return score
 
 
