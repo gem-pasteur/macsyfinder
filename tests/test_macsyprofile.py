@@ -27,6 +27,7 @@ import shutil
 import os
 import argparse
 import sys
+import logging
 from io import StringIO
 from itertools import groupby
 
@@ -414,3 +415,30 @@ hit_id\treplicon_name\tposition_hit\thit_sequence_length\tgene_name\ti_eval\tsco
         # so when the wrapper is called the handler cannot be substitute by the fake
         with self.assertRaises(ValueError):
             macsyprofile.main(cmd.split()[1:])
+
+
+    def test_functional_no_previous_run(self):
+        cmd = "macsyprofile --mute nimportnaoik "
+
+        # we cannot test the log message here
+        # because the logger are init when main is called
+        # after that the context is establish
+        # so when the wrapper is called the handler cannot be substitute by the fake
+        with self.assertRaises(FileNotFoundError):
+            macsyprofile.main(cmd.split()[1:])
+
+        bad_previous_run = os.path.join(self.tmpdir, 'test_macsyprofile')
+        open(bad_previous_run, 'w').close()
+        cmd = f"macsyprofile  {bad_previous_run} "
+
+        with self.assertRaises(ValueError):
+            macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)
+
+    def test_functional(self):
+        old = self.find_data('conf_files', 'macsyfinder-old.conf')
+        shutil.copyfile(old, os.path.join(self.tmpdir, 'macsyfinder.conf'))
+
+        previous_run = self.tmpdir
+        cmd = f"macsyprofile {previous_run}"
+        with self.assertRaises(ValueError):
+            macsyprofile.main(cmd.split()[1:], log_level=logging.CRITICAL + 1)

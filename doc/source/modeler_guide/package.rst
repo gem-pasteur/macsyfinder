@@ -42,7 +42,7 @@ A macsy-model package follows the following structure: ::
 
     family_name
         |_______ metadata.yml
-        |_______ LICENCE
+        |_______ LICENSE
         |_______ README.md
         |_______ model_conf.xml
         |_______ definitions
@@ -59,7 +59,7 @@ If the package contains sub-families: ::
 
     family_name
         |_______ metadata.yml
-        |_______ LICENCE
+        |_______ LICENSE
         |_______ README.md
         |_______ model_conf.xml
         |_______ definitions
@@ -90,11 +90,11 @@ The Readme is displayed to the user on the macsy-models repository on Github.
 It is also displayed when the user runs `macsydata help`.
 
 
-LICENCE
+LICENSE
 -------
 
-The licence is used to protect your work when sharing it.
-If you don't know which licence to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
+The license is used to protect your work when sharing it.
+If you don't know which license to choose, have a look at `CreativeCommons <https://creativecommons.org/share-your-work/>`_
 *This file is optional, but highly recommended.*
 
 
@@ -176,17 +176,19 @@ Filtering options:
 All these options are optional and can be omitted in the configuration file, **the file itself is optional**.
 The precedence rules between the different levels of configuration are:
 
+
+.. code-block:: text
+
  system < home < model < project < --cfg-file | --previous-run < command line options
 
-
- * **system**: file in /etc/macsyfinder/macsyfinder.conf on in virtalenv/etc/macsyfinder/macsyfinder.conf
-   in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
- * **home**:  ~/.macsyfinder/macsyfinder.conf
- * **model**: the model_conf.xml file at the root of the model package
- * **project**: the macsyfinder.conf file found in the directory where the `macsyfinder` command was run
- * **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
- * **previous-run**: the macsyfinder.conf file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
- * **command line**: any option specified directly in the command line
+* **system**: the `macsyfinder.conf` file either in /etc/macsyfinder/ or in virtalenv/etc/macsyfinder/
+  in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
+* **home**:  the `~/.macsyfinder/macsyfinder.conf` file
+* **model**: the `model_conf.xml` file at the root of the model package
+* **project**: the `macsyfinder.conf` file found in the directory where the `macsyfinder` command was run
+* **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
+* **previous-run**: the `macsyfinder.conf` file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
+* **command line**: any option specified directly in the command line
 
 The model_conf.xml configuration file is in xml format and must have the following structure: 
 

@@ -659,8 +659,8 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'maintainer' is mandatory in metadata_path."])
-        self.assertEqual(warnings, [])
+        self.assertListEqual(errors, [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml."])
+        self.assertListEqual(warnings, [])
 
         #################
         # No short desc #
@@ -673,7 +673,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'short_desc' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'short_desc' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -687,7 +687,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'vers' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -702,7 +702,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'cite' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##########
         # No doc #
@@ -716,7 +716,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'doc' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##############
         # No license #
@@ -730,7 +730,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'license' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
 
         ################
         # No copyright #
@@ -744,7 +744,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'copyright' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##################
         # No maintainer name #
@@ -762,7 +762,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'maintainer.name' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'maintainer.name' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
 
@@ -780,11 +780,11 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertListEqual(errors,
-                             ["field 'maintainer' is mandatory in metadata_path.",
-                              "field 'vers' is mandatory in metadata_path."])
+                             [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml.",
+                              f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertListEqual(warnings,
-                             ["It's better if the field 'cite' is setup in metadata_path file",
-                              "It's better if the field 'license' is setup in metadata_path file"])
+                             [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file",
+                              f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', license=False)
