@@ -464,6 +464,15 @@ def main(args=None, log_level=None) -> None:
         log_level = verbosity_to_log_level(parsed_args.verbosity)
     _log = init_logger(log_level, out=(not parsed_args.mute))
 
+    if not os.path.exists(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run}: No such directory.")
+        sys.tracebacklimit = 0
+        raise FileNotFoundError() from None
+    elif not os.path.isdir(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run} is not a directory.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
     defaults = MacsyDefaults(i_evalue_sel=1.0e9, coverage_profile=-1.0)
     cfg = Config(defaults, parsed_args)
 
@@ -488,7 +497,13 @@ def main(args=None, log_level=None) -> None:
         raise ValueError() from None
 
     hmmer_files = sorted(glob.glob(os.path.join(hmmer_results, f"{parsed_args.pattern}{hmm_suffix}")))
-    profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+    try:
+        profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+    except IndexError:
+        _log.critical(f"Cannot find models in conf file {msf_run_path}. "
+                      f"May be these results have been generated with an old version of macsyfinder.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
 
     _log.debug(f"hmmer_files: {hmmer_files}")
     all_hits = []

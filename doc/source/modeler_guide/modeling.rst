@@ -108,6 +108,9 @@ All these elements and corresponding parameters will parametrize the search of S
        (whose corresponding proteins match a profile of the model) required to infer the system's presence.
      * **multi_loci**: a *boolean* set to True ("1", "true" or "True") to allow the definition of "scattered" systems
        (i.e., systems encoded at different genomic loci or by different gene *clusters*). If not specified, *default value is false*.
+     * **max_nb_genes** define how many genes is necessary to consider a system as full. By default it is the sum of mandatory and accessory genes.
+       But sometimes in special cases, there is 2 profiles, so 2 *msf* genes in model for one real gene. So in system only one gene can be detected
+       and the whaleness is false.
 
   * The model contains one or more element(s) "gene" that correspond(s) to the genetic components of the macromolecular system.
 

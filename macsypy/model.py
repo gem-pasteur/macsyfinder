@@ -162,7 +162,9 @@ class Model(metaclass=MetaModel):
         :type min_mandatory_genes_required: integer
         :param min_genes_required: the quorum of genes to define this model
         :type min_genes_required: integer
-        :param max_nb_genes: 
+        :param max_nb_genes: The number of gene to be considered as full system
+                             Used to compute the wholeness.
+                             If None the mx_nb_genes = mandatory + accessory
         :type max_nb_genes: integer
         :param multi_loci: 
         :type multi_loci: boolean
@@ -290,7 +292,11 @@ class Model(metaclass=MetaModel):
         :return: the maximum number of genes to assess the model presence.
         :rtype: int (or None)
         """
-        return self._max_nb_genes
+        if self._max_nb_genes is None:
+            max_nb_genes = len(self.mandatory_genes) + len(self.accessory_genes)
+        else:
+            max_nb_genes = self._max_nb_genes
+        return max_nb_genes
 
     @property
     def multi_loci(self):

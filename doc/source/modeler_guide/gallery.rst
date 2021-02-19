@@ -21,9 +21,9 @@ Here follows a "gallery" of MacSyFinder models we have developed over the years,
 
 These examples are extracted from published work, see the following references (they include more examples):
 
-- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_ , *Scientific Reports*, for the description of the T1SS and T3SS models (and way more models not discussed here). 
-- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_ , *PLoS Genetics*, for the evolutionary study of the T3SS and the bacterial flagellum, and how were designed the corresponding profiles. 
-- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_ , *PLoS Biology*, for the description of the T2SS and type IV-filament super-family models. 
+- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_, *Scientific Reports*, for the description of the T1SS and T3SS models (and way more models not discussed here). 
+- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_, *PLoS Genetics*, for the evolutionary study of the T3SS and the bacterial flagellum, and how were designed the corresponding profiles. 
+- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_, *PLoS Biology*, for the description of the T2SS and type IV-filament super-family models. 
 
 .. - Abby et al. 2014, *PLoS ONE* and Bernheim et al. 2018, for the description of the Cas systems models
 

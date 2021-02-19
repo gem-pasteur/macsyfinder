@@ -434,7 +434,7 @@ class Package:
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}' metadata_path")
+        _log.info(f"Checking '{self.name}' {self.metadata_path}")
         errors = []
         warnings = []
         data = self._load_metadata()
@@ -442,14 +442,14 @@ class Package:
         nice_to_have = ("cite", "doc", "license", "copyright")
         for item in must_have:
             if item not in data:
-                errors.append(f"field '{item}' is mandatory in metadata_path.")
+                errors.append(f"field '{item}' is mandatory in {self.metadata_path}.")
         for item in nice_to_have:
             if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
+                warnings.append(f"It's better if the field '{item}' is setup in {self.metadata_path} file")
         if "maintainer" in data:
             for item in ("name", "email"):
                 if item not in data["maintainer"]:
-                    errors.append(f"field 'maintainer.{item}' is mandatory in metadata_path.")
+                    errors.append(f"field 'maintainer.{item}' is mandatory in {self.metadata_path}.")
         return errors, warnings
 
 
