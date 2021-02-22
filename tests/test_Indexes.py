@@ -41,14 +41,8 @@ class Test(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
-
         args.db_type = 'gembase'
-        args.e_value_res = 1
-        args.i_evalue_sel = 0.5
         args.models_dir = self.find_data('models')
-        args.res_search_suffix = ''
-        args.log_level = 30
-
         args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         if os.path.exists(args.out_dir):
             shutil.rmtree(os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes'))
@@ -56,6 +50,7 @@ class Test(MacsyTest):
         seq_db = self.find_data("base", "test_1.fasta")
         shutil.copy(seq_db, args.out_dir)
 
+        args.index_dir = args.out_dir
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
 
         self.cfg = Config(MacsyDefaults(), args)
@@ -107,33 +102,37 @@ class Test(MacsyTest):
             with self.assertRaises(IOError) as ctx:
                 with self.catch_log():
                     idx.build()
-            self.assertEqual(str(ctx.exception),
-                             f"The '{idx_dir}' dir is not writable. Change rights or specify --index-dir.")
+            self.assertEqual(f"The '{idx_dir}' dir is not writable.",
+                             str(ctx.exception))
         finally:
             os.chmod(idx_dir, 0o777)
 
     @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_index_dir(self):
-        idx = Indexes(self.cfg)
+        # case index-dir is not specify sequence-db dir is not writable
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
+        cfg = Config(MacsyDefaults(), args)
+        idx = Indexes(cfg)
         index_dir = idx._index_dir(build=False)
-        expc_idx_dir = os.path.dirname(self.cfg.sequence_db())
+        expc_idx_dir = os.path.dirname(cfg.sequence_db())
         self.assertEqual(index_dir, expc_idx_dir)
         try:
             os.chmod(index_dir, 0000)
             with self.assertRaises(ValueError) as ctx:
                 _ = idx._index_dir(build=True)
-            self.assertEqual(str(ctx.exception),
-                             f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.")
+            self.assertEqual(f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.",
+                             str(ctx.exception))
         finally:
             os.chmod(index_dir, 0o777)
 
+
         args = argparse.Namespace()
         args.db_type = 'gembase'
-        args.e_value_res = 1
-        args.i_evalue_sel = 0.5
         args.models_dir = self.find_data('models')
-        args.res_search_suffix = ''
-        args.log_level = 30
         args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         args.index_dir = os.path.join(args.out_dir, 'index_dir')
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
@@ -158,20 +157,14 @@ class Test(MacsyTest):
             with self.assertRaises(ValueError) as ctx:
                 _ = idx._index_dir(build=True)
             self.assertEqual(str(ctx.exception),
-                             f"The '{index_dir}' dir is not writable")
+                             f"The '{index_dir}' dir is not writable.")
         finally:
             os.chmod(args.index_dir, 0o777)
 
 
     def test_build_my_indexes(self):
         args = argparse.Namespace()
-
         args.db_type = 'gembase'
-        args.e_value_res = 1
-        args.i_evalue_sel = 0.5
-        args.models_dir = self.find_data('models')
-        args.res_search_suffix = ''
-        args.log_level = 30
 
         args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
         if os.path.exists(args.out_dir):
@@ -180,12 +173,50 @@ class Test(MacsyTest):
         seq_db = self.find_data("base", "test_base_with_errors.fa")
         shutil.copy(seq_db, args.out_dir)
         args.sequence_db = os.path.join(args.out_dir, os.path.basename(seq_db))
-        cfg = Config(MacsyDefaults(), args)
+        self.cfg = Config(MacsyDefaults(), args)
 
-        idx = Indexes(cfg)
+        idx = Indexes(self.cfg)
         with self.assertRaises(MacsypyError) as e:
             # the directory for index exist and is writable but
             # the sequence file is corrupted and cannot be read correctly
             with self.catch_log():
                 idx._build_my_indexes(args.out_dir)
         self.assertTrue(str(e.exception).startswith("unable to index the sequence dataset:"))
+
+
+    def test_iter(self):
+        idx = Indexes(self.cfg)
+        with self.assertRaises(MacsypyError) as ctx:
+            next(iter(idx))
+
+        self.assertEqual(str(ctx.exception),
+                         'Build index before to use it.')
+
+        idx.build()
+        expected_idx = [('VICH001.B.00001.C001_01359', 200, 1), ('VICH001.B.00001.C001_01360', 484, 2),
+                        ('VICH001.B.00001.C001_01361', 406, 3), ('VICH001.B.00001.C001_01390', 326, 4),
+                        ('VICH001.B.00001.C001_01391', 54, 5), ('VICH001.B.00001.C001_01392', 206, 6),
+                        ('VICH001.B.00001.C001_01393', 477, 7), ('VICH001.B.00001.C001_01394', 126, 8),
+                        ('VICH001.B.00001.C001_01395', 405, 9), ('VICH001.B.00001.C001_01396', 572, 10),
+                        ('VICH001.B.00001.C001_01397', 721, 11), ('VICH001.B.00001.C001_01398', 467, 12),
+                        ('VICH001.B.00001.C001_01399', 720, 13), ('VICH001.B.00001.C001_01400', 559, 14),
+                        ('VICH001.B.00001.C001_01401', 153, 15), ('VICH001.B.00001.C001_01402', 4558, 16),
+                        ('VICH001.B.00001.C001_01500', 120, 17), ('VICH001.B.00001.C001_01501', 344, 18),
+                        ('VICH001.B.00001.C001_01502', 478, 19), ('VICH001.B.00001.C001_01503', 724, 20),
+                        ('VICH001.B.00001.C001_01504', 309, 21), ('VICH001.B.00001.C001_01505', 390, 22),
+                        ('VICH001.B.00001.C001_01506', 419, 23), ('VICH001.B.00001.C001_01540', 353, 24),
+                        ('VICH001.B.00001.C001_01541', 229, 25), ('VICH001.B.00001.C001_01542', 267, 26),
+                        ('VICH001.B.00001.C001_01543', 328, 27), ('VICH001.B.00001.C001_01544', 258, 28),
+                        ('VICH001.B.00001.C001_01545', 228, 29), ('VICH001.B.00001.C001_01546', 538, 30),
+                        ('VICH001.B.00001.C001_01547', 77, 31), ('VICH001.B.00001.C001_01548', 476, 32),
+                        ('VICH001.B.00001.C001_01549', 324, 33), ('VICH001.B.00001.C001_01550', 387, 34),
+                        ('VICH001.B.00001.C001_01551', 382, 35), ('VICH001.B.00001.C001_01552', 149, 36),
+                        ('VICH001.B.00001.C001_01553', 319, 37), ('VICH001.B.00001.C001_01554', 237, 38),
+                        ('VICH001.B.00001.C001_01555', 74, 39), ('VICH001.B.00001.C001_01556', 362, 40),
+                        ('VICH001.B.00001.C001_01557', 170, 41), ('VICH001.B.00001.C001_01558', 77, 42),
+                        ('VICH001.B.00001.C001_01559', 296, 43), ('VICH001.B.00001.C001_01560', 405, 44),
+                        ('VICH001.B.00001.C001_01561', 182, 45), ('VICH001.B.00001.C001_01562', 445, 46),
+                        ('VICH001.B.00001.C001_01563', 212, 47), ('VICH001.B.00001.C001_01564', 387, 48),
+                        ('VICH001.B.00001.C001_01565', 414, 49)]
+        self.assertListEqual(list(iter(idx)), expected_idx)
+
