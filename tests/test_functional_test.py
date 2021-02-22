@@ -73,6 +73,7 @@ class Test(MacsyTest):
                f"--models-dir={self.find_data('models')} " \
                "--models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad " \
                "--out-dir={out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -96,6 +97,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m test_loners MOB_cf_T5SS " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -125,6 +127,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -154,6 +157,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -166,6 +170,30 @@ class Test(MacsyTest):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_index_dir(self):
+        # genetic organization of test_3.fasta
+        # gene       abc    mfp    omf    omf    abc    gspd
+        # gene id   01397  01398  01548  01562  01399  01400
+        # pos        8      9      19     27     37     38
+        # clst    [            ]               [           ]
+        # syst  no system
+
+        expected_result_dir = self.find_data("functional_test_ordered_linear")
+        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear  " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        sequences_dir = self.find_data('base')
+        self._macsyfinder_run(args)
+
+        self.assertTrue(os.path.exists(os.path.join(self.out_dir, "test_3.fasta.idx")))
 
 
     def test_ordered_multi_system(self):
@@ -183,6 +211,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multi-syst-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -212,6 +241,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multi-syst-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -240,6 +270,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                "--multi-loci functional/T12SS-simple-exch " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
@@ -270,6 +301,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -297,6 +329,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  degenerated_systems " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -324,6 +357,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  uncomplete_degenerated_systems " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -350,6 +384,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
+               "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -448,6 +483,7 @@ class Test(MacsyTest):
                "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
                "-m functional Unknown_model " \
+               "--index-dir {out_dir} " \
                "-o {out_dir}"
 
         self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_model_unkwon')
@@ -472,3 +508,4 @@ class Test(MacsyTest):
         macsyfinder.main(args=args.split(),
                          loglevel='ERROR'
                          )
+

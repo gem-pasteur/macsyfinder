@@ -775,6 +775,7 @@ Use ordered replicon to have better prediction.
         self.assertIsNone(args.res_extract_suffix)
         self.assertIsNone(args.res_search_suffix)
         self.assertIsNone(args.topology_file)
+        self.assertIsNone(args.index_dir)
         self.assertFalse(args.idx)
         self.assertFalse(args.list_models)
         self.assertFalse(args.mute)
@@ -788,12 +789,13 @@ Use ordered replicon to have better prediction.
 
         self.assertListEqual(args.models, ['functional', 'all'])
 
-        command_line = "macsyfinder --sequence-db test_!.fasta " \
+        command_line = "macsyfinder --sequence-db test_1.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
                        "--models functional all -w 4 --out test_1-all " \
-                       "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path"
+                       "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path --index-dir the_idx_dir"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
+        self.assertEqual(args.index_dir, 'the_idx_dir')
         self.assertEqual(args.multi_loci, "TXSscan/T2SS,TXSScan/T3SS")
         self.assertTrue(args.relative_path)
         self.assertTrue(args.mute)
@@ -819,7 +821,8 @@ Use ordered replicon to have better prediction.
         # test gembase replicon
         seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
         model_dir = self.find_data('data_set', 'models')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
@@ -845,7 +848,8 @@ Use ordered replicon to have better prediction.
         self.assertEqual(len(rejected_clst), 11)
 
         # test hits but No Systems
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_bank = ModelBank()
@@ -856,7 +860,8 @@ Use ordered replicon to have better prediction.
 
         # test No hits
         seq_db = self.find_data('base', 'test_1.fasta')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_bank = ModelBank()
