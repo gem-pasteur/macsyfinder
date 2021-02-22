@@ -82,8 +82,14 @@ To alter the search parameters and allow the Tad pilus to be made of multiple lo
 
  :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --multi-loci Tad`
   
+In `gembase` or `ordered_replicon` mode `macsyfinder` need to index the sequence\-db. By default, this index is write
+beside the sequence-db file. But sometimes the directory where the sequence-db is located is not writable,
+in centralized shared data in multi user environement for instance. to avoid to copy sequence in other location,
+you could specify an alternate directory with \-\-index\-dir (This directory must exists):
 
-See also the :ref:`quickstart` section for more examples. 
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --index-dir my-indexes --models TFF-SF all`
+
+See also the :ref:`quickstart` section for more examples.
 
 
 What search mode to be used?
