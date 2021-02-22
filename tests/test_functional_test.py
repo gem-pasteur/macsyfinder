@@ -26,6 +26,7 @@
 import shutil
 import tempfile
 import os
+import sys
 import inspect
 import unittest
 import itertools
@@ -495,6 +496,25 @@ class Test(MacsyTest):
         self.assertEqual(str(ctx.exception),
                          "Unknown_model does not match with any definitions")
 
+
+    def test_cfg_n_previous_run(self):
+        args = f"--cfg-file foo --previous-run bar " \
+               "-o {out_dir}"
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_cfg_n_previous_run')
+        os.makedirs(self.out_dir)
+
+        args = args.format(out_dir=self.out_dir)
+
+        real_exit = sys.exit
+        sys.exit = self.fake_exit
+        try:
+            with self.catch_io(out=True):
+                with self.assertRaises(TypeError) as ctx:
+                    macsyfinder.main(args=args.split(), loglevel='ERROR')
+            self.assertEqual(str(ctx.exception), '2')
+        finally:
+            sys.exit = real_exit
 
     def _macsyfinder_run(self, args_tpl):
         # get the name of the calling function
