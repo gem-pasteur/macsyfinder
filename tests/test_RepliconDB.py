@@ -100,7 +100,7 @@ class Test(MacsyTest):
                            ('056140', '127'), ('056141', '803'), ('056141', '803')]
 
         idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        idx.build()
 
     def tearDown(self):
         try:
@@ -133,7 +133,7 @@ class Test(MacsyTest):
         cfg = Config(MacsyDefaults(), self.args)
 
         idx = Indexes(cfg)
-        idx._build_my_indexes()
+        idx.build()
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(cfg)
         db._fill_ordered_min_max(cfg.replicon_topology())
@@ -241,9 +241,15 @@ class Test(MacsyTest):
         ESCO030p01 = RepliconInfo(self.cfg.replicon_topology(), 1, 67, self.ESCO030p01_genes)
         PSAE001c01 = RepliconInfo(self.cfg.replicon_topology(), 68, 133, self.PSAE001c01_genes)
         NCXX = RepliconInfo("circular", 134, 141, self.NCDB_genes)
-        self.assertCountEqual(iter(db.items()), [('ESCO030p01', ESCO030p01),
-                                                 ('NC_xxxxx_xx', NCXX),
-                                                 ('PSAE001c01', PSAE001c01)])
+        iter_items = db.iteritems()
+        for item in [('ESCO030p01', ESCO030p01), ('PSAE001c01', PSAE001c01), ('NC_xxxxx_xx', NCXX)]:
+            with self.subTest(item=item):
+                self.assertEqual(next(iter_items), item)
+
+    def test_names(self):
+        db = RepliconDB(self.cfg)
+        exp_name = ['ESCO030p01', 'PSAE001c01', 'NC_xxxxx_xx']
+        self.assertListEqual(db.replicon_names(), exp_name)
 
 
     def test_replicon_infos(self):

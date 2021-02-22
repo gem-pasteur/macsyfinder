@@ -74,7 +74,7 @@ class Indexes:
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db()
         self.name = os.path.basename(self._fasta_path)
-        self._my_indexes = None  # path
+
 
     def build(self, force=False):
         """
@@ -86,39 +86,65 @@ class Indexes:
         :return: the path to the index
         :rtype: str
         """
-        my_indexes = self.find_my_indexes()
+        my_indexes = self.find_my_indexes() # check read
 
         ###########################
         # build indexes if needed #
         ###########################
-        index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db()))
+
 
         if force or not my_indexes:
-            # formatdb create indexes in the same directory as the sequence_db
-            # so it must be writable
-            # if the directory is not writable, formatdb do a Segmentation fault
-            if not os.access(index_dir, os.R_OK | os.W_OK):
-                msg = f"cannot build indexes, ({index_dir}) is not writable"
+            try:
+                index_dir = self._index_dir(build=True) # check build
+            except ValueError as err:
+                msg = str(err)
                 _log.critical(msg)
                 raise IOError(msg)
 
-            self._build_my_indexes()
+            index = self._build_my_indexes(index_dir)
+            my_indexes = index
 
-        self._my_indexes = self.find_my_indexes()
-        assert self._my_indexes, "failed create macsyfinder indexes"
-        return self._my_indexes
+        return my_indexes
 
 
     def find_my_indexes(self):
         """
         :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
-        """ 
-        path = os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx")
+        """
+        index_dir = self._index_dir(build=False)
+        path = os.path.join(index_dir, self.name + ".idx")
         if os.path.exists(path):
             return path
 
-    def _build_my_indexes(self):
+
+    def _index_dir(self, build=False):
+        """
+        search where to store(build=True) read indexes
+
+        :param bool build: if check the index-dir permissions to write
+        :return: The directory where read or write the indexes
+        :rtype: str
+        :raise ValueError: if the directory specify by --index-dir option does not exists
+                           or if build = True index-dir is not writable
+        """
+        index_dir = self.cfg.index_dir()
+        if index_dir:
+            if not os.path.exists(index_dir):
+                raise ValueError(f"No such directory: {index_dir}")
+            elif build and not os.access(index_dir, os.W_OK):
+                raise ValueError(f"The '{index_dir}' dir is not writable")
+            else:
+                return index_dir
+        else:
+            index_dir = os.path.dirname(self.cfg.sequence_db())
+            if build and not os.access(index_dir, os.W_OK):
+                raise ValueError(f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.")
+            else:
+                return index_dir
+
+
+    def _build_my_indexes(self, index_dir):
         """
         Build macsyfinder indexes. These indexes are stored in a file.
 
@@ -127,9 +153,10 @@ class Indexes:
          - sequence id;sequence length;sequence rank
 
         """
+        index_file = os.path.join(index_dir, self.name + ".idx")
         try:
             with open(self._fasta_path, 'r') as fasta_file:
-                with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx"), 'w') as my_base:
+                with open(index_file, 'w') as my_base:
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
                     for seq_id, comment, length in f_iter:
@@ -139,6 +166,7 @@ class Indexes:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
             raise MacsypyError(msg)
+        return index_file
 
 
 """handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
