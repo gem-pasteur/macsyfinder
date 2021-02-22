@@ -423,6 +423,11 @@ the hit selection for systems detection. (default no threshold)"""
                         action='store',
                         default=None,
                         help="the path to a file to write results.")
+    parser.add_argument('--index-dir',
+                        action='store',
+                        default=None,
+                        help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
+
     parser.add_argument('-f', '--force',
                         action='store_true',
                         default=False,
