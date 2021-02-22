@@ -112,7 +112,7 @@ class Test(MacsyTest):
         finally:
             os.chmod(idx_dir, 0o777)
 
-
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
     def test_index_dir(self):
         idx = Indexes(self.cfg)
         index_dir = idx._index_dir(build=False)
