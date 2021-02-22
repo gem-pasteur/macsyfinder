@@ -67,6 +67,7 @@ class Test(MacsyTest):
         except:
             pass
 
+
     def test_find_my_indexes(self):
         idx = Indexes(self.cfg)
         self.assertIsNone(idx.find_my_indexes())
@@ -106,10 +107,60 @@ class Test(MacsyTest):
             with self.assertRaises(IOError) as ctx:
                 with self.catch_log():
                     idx.build()
-            self.assertRegex(str(ctx.exception),
-                             "cannot build indexes, \(.+/test_macsyfinder_indexes\) is not writable")
+            self.assertEqual(str(ctx.exception),
+                             f"The '{idx_dir}' dir is not writable. Change rights or specify --index-dir.")
         finally:
             os.chmod(idx_dir, 0o777)
+
+
+    def test_index_dir(self):
+        idx = Indexes(self.cfg)
+        index_dir = idx._index_dir(build=False)
+        expc_idx_dir = os.path.dirname(self.cfg.sequence_db())
+        self.assertEqual(index_dir, expc_idx_dir)
+        try:
+            os.chmod(index_dir, 0000)
+            with self.assertRaises(ValueError) as ctx:
+                _ = idx._index_dir(build=True)
+            self.assertEqual(str(ctx.exception),
+                             f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.")
+        finally:
+            os.chmod(index_dir, 0o777)
+
+        args = argparse.Namespace()
+        args.db_type = 'gembase'
+        args.e_value_res = 1
+        args.i_evalue_sel = 0.5
+        args.models_dir = self.find_data('models')
+        args.res_search_suffix = ''
+        args.log_level = 30
+        args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+        args.index_dir = os.path.join(args.out_dir, 'index_dir')
+        args.sequence_db = os.path.join(args.out_dir, os.path.basename(self.cfg.sequence_db()))
+        cfg = Config(MacsyDefaults(), args)
+        idx = Indexes(cfg)
+
+        # case --index-dir does not exists
+        with self.assertRaises(ValueError) as ctx:
+            _ = idx._index_dir(build=False)
+        self.assertEqual(str(ctx.exception),
+                         f"No such directory: {args.index_dir}")
+
+        # case --index-dir is not writable
+        os.makedirs(args.index_dir)
+        os.chmod(args.index_dir, 0000)
+        try:
+            # but I do nnot care I only read
+            index_dir = idx._index_dir(build=False)
+            self.assertEqual(index_dir, args.index_dir)
+
+            # it's important to build indexes
+            with self.assertRaises(ValueError) as ctx:
+                _ = idx._index_dir(build=True)
+            self.assertEqual(str(ctx.exception),
+                             f"The '{index_dir}' dir is not writable")
+        finally:
+            os.chmod(args.index_dir, 0o777)
 
 
     def test_build_my_indexes(self):
@@ -133,6 +184,8 @@ class Test(MacsyTest):
 
         idx = Indexes(cfg)
         with self.assertRaises(MacsypyError) as e:
+            # the directory for index exist and is writable but
+            # the sequence file is corrupted and cannot be read correctly
             with self.catch_log():
-                idx._build_my_indexes()
+                idx._build_my_indexes(args.out_dir)
         self.assertTrue(str(e.exception).startswith("unable to index the sequence dataset:"))

@@ -357,6 +357,10 @@ to organize the models in subsystems.""")
                              default=None,
                              help="""Path to the directory where to store output results.
 if out-dir is specified, res-search-dir will be ignored.""")
+    dir_options.add_argument('--index-dir',
+                             action='store',
+                             default=None,
+                             help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
     dir_options.add_argument('--res-search-suffix',
                              action='store',
                              default=None,
