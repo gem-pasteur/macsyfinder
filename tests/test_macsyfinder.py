@@ -871,56 +871,58 @@ Use ordered replicon to have better prediction.
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
 
-#
-#     def test_search_systems_unordered(self):
-#         logger = logging.getLogger('macsypy.macsyfinder')
-#         macsypy.logger_set_level(level='ERROR')
-#         defaults = MacsyDefaults()
-#
-#         out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
-#         os.mkdir(out_dir)
-#         seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
-#         model_dir = self.find_data('data_set', 'models')
-#         # test unordered replicon
-#         args = f"--sequence-db {seq_db} --db-type=unordered --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
-#
-#         _, parsed_args = parse_args(args.split())
-#         config = Config(defaults, parsed_args)
-#         model_bank = ModelBank()
-#         gene_bank = GeneBank()
-#         profile_factory = ProfileFactory(config)
-#
-#         systems, uncomplete_sys = search_systems(config, model_bank, gene_bank, profile_factory, logger)
-#         expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
-#         self.assertListEqual([s.id for s in systems], expected_sys_id)
-#
-#         expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
-#         self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)
-#
-#
-#     def test_search_systems_model_unknown(self):
-#         logger = logging.getLogger('macsypy.macsyfinder')
-#         macsypy.logger_set_level(level='ERROR')
-#         defaults = MacsyDefaults()
-#
-#         out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
-#         os.mkdir(out_dir)
-#         seq_db = self.find_data('base', 'test_1.fasta')
-#         model_dir = self.find_data('data_set', 'models')
-#         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4 -o {out_dir}"
-#
-#         _, parsed_args = parse_args(args.split())
-#         config = Config(defaults, parsed_args)
-#         model_bank = ModelBank()
-#         gene_bank = GeneBank()
-#         profile_factory = ProfileFactory(config)
-#
-#         exit_ori = sys.exit
-#         sys.exit = self.fake_exit
-#         try:
-#             with self.assertRaises(TypeError) as ctx:
-#                 _ = search_systems(config, model_bank, gene_bank, profile_factory, logger)
-#             self.assertEqual(str(ctx.exception),
-#                              "macsyfinder: \"No such model definition: 'nimporaoik'\"")
-#         finally:
-#             sys.exit = exit_ori
+
+    def test_search_systems_unordered(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='ERROR')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+        seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
+        model_dir = self.find_data('data_set', 'models')
+        # test unordered replicon
+        args = f"--sequence-db {seq_db} --db-type=unordered --models-dir {model_dir} --models set_1 all -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+
+        systems, uncomplete_sys = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
+        self.assertListEqual([s.id for s in systems], expected_sys_id)
+
+        expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
+        self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)
+
+
+    def test_search_systems_model_unknown(self):
+        logger = logging.getLogger('macsypy.macsyfinder')
+        macsypy.logger_set_level(level='ERROR')
+        defaults = MacsyDefaults()
+
+        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
+        os.mkdir(out_dir)
+        seq_db = self.find_data('base', 'test_1.fasta')
+        model_dir = self.find_data('data_set', 'models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
+
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_bank = ModelBank()
+        gene_bank = GeneBank()
+        profile_factory = ProfileFactory(config)
+
+        exit_ori = sys.exit
+        sys.exit = self.fake_exit
+        try:
+            with self.assertRaises(TypeError) as ctx:
+                _ = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+            self.assertEqual(str(ctx.exception),
+                             "macsyfinder: \"No such model definition: 'nimporaoik'\"")
+        finally:
+            sys.exit = exit_ori
