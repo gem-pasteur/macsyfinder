@@ -91,7 +91,7 @@ class Indexes:
         ###########################
         # build indexes if needed #
         ###########################
-        if my_indexes:
+        if my_indexes and not force:
             with open(my_indexes) as idx:
                 seq_path = next(idx).strip()
             if seq_path.count(';') == 2:
