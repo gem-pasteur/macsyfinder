@@ -78,7 +78,7 @@ class Indexes:
 
     def build(self, force=False):
         """
-        Build the indexes from the sequence data set in fasta format
+        Build the indexes from the sequence data set in fasta format,
 
         :param force: If True, force the index building even
                       if the index files are present in the sequence data set folder
@@ -91,7 +91,16 @@ class Indexes:
         ###########################
         # build indexes if needed #
         ###########################
-
+        if my_indexes:
+            with open(my_indexes) as idx:
+                seq_path = next(idx).strip()
+            if seq_path.count(';') == 2:
+                # there is no path in idx, it's an old index
+                _log.warning(f"The '{my_indexes}' index file is in old format. Force index building.")
+                force = True
+            elif seq_path != self._fasta_path:
+                _log.warning(f"The '{my_indexes}' index file does not point to '{self._fasta_path}'. Force builing")
+                force = True
 
         if force or not my_indexes:
             try:
@@ -149,6 +158,7 @@ class Indexes:
         Build macsyfinder indexes. These indexes are stored in a file.
 
         The file format is the following:
+         - the first line is the path of the sequence-db indexed
          - one entry per line, with each line having this format:
          - sequence id;sequence length;sequence rank
 
@@ -157,6 +167,7 @@ class Indexes:
         try:
             with open(self._fasta_path, 'r') as fasta_file:
                 with open(index_file, 'w') as my_base:
+                    my_base.write(self._fasta_path + '\n')
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
                     for seq_id, comment, length in f_iter:
@@ -180,6 +191,7 @@ class Indexes:
         if path is None:
             raise MacsypyError("Build index before to use it.")
         with open(path) as idx_file:
+            seq_target = next(idx_file)
             for line in idx_file:
                 seq_id, length, _rank = line.split(";")
                 length = int(length)
