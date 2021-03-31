@@ -26,7 +26,8 @@ import os
 import sysconfig
 import warnings
 
-from distutils.errors import DistutilsFileError, DistutilsSetupError
+from setuptools import distutils
+from distutils.errors import DistutilsSetupError, DistutilsFileError
 from distutils.util import subst_vars as distutils_subst_vars
 
 from setuptools import setup, find_packages
