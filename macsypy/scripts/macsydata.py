@@ -522,7 +522,8 @@ def do_check(args: argparse.Namespace) -> None:
     if warnings:
         for warning in warnings:
             _log.warning(warning)
-        _log.warning("""macsydata says: You're only giving me a partial QA payment?
+        _log.warning("""
+macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
 I'll be really happy, if you fix warnings above, before to publish these models.""")
 
@@ -734,7 +735,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     check_subparser.add_argument('path',
                                  nargs='?',
                                  default=os.getcwd(),
-                                 help='the directory to check')
+                                 help='the path to root directory models to check')
     return parser
 
 
