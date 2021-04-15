@@ -74,11 +74,11 @@ class Indexes:
         self.cfg = cfg
         self._fasta_path = cfg.sequence_db()
         self.name = os.path.basename(self._fasta_path)
-        self._my_indexes = None  # path
+
 
     def build(self, force=False):
         """
-        Build the indexes from the sequence data set in fasta format
+        Build the indexes from the sequence data set in fasta format,
 
         :param force: If True, force the index building even
                       if the index files are present in the sequence data set folder
@@ -86,50 +86,92 @@ class Indexes:
         :return: the path to the index
         :rtype: str
         """
-        my_indexes = self.find_my_indexes()
+        my_indexes = self.find_my_indexes() # check read
 
         ###########################
         # build indexes if needed #
         ###########################
-        index_dir = os.path.abspath(os.path.dirname(self.cfg.sequence_db()))
+        if my_indexes and not force:
+            with open(my_indexes) as idx:
+                seq_path = next(idx).strip()
+            if seq_path.count(';') == 2:
+                # there is no path in idx, it's an old index
+                _log.warning(f"The '{my_indexes}' index file is in old format. Force index building.")
+                force = True
+            elif seq_path != self._fasta_path:
+                _log.warning(f"The '{my_indexes}' index file does not point to '{self._fasta_path}'. Force builing")
+                force = True
 
         if force or not my_indexes:
-            # formatdb create indexes in the same directory as the sequence_db
-            # so it must be writable
-            # if the directory is not writable, formatdb do a Segmentation fault
-            if not os.access(index_dir, os.R_OK | os.W_OK):
-                msg = f"cannot build indexes, ({index_dir}) is not writable"
+            try:
+                index_dir = self._index_dir(build=True)  # check build
+            except ValueError as err:
+                msg = str(err)
                 _log.critical(msg)
-                raise IOError(msg)
+                raise IOError(msg) from None
 
-            self._build_my_indexes()
+            index = self._build_my_indexes(index_dir)
+            my_indexes = index
 
-        self._my_indexes = self.find_my_indexes()
-        assert self._my_indexes, "failed create macsyfinder indexes"
-        return self._my_indexes
+        return my_indexes
 
 
     def find_my_indexes(self):
         """
         :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
         :rtype: string
-        """ 
-        path = os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx")
+        """
+        index_dir = self._index_dir(build=False)
+        path = os.path.join(index_dir, self.name + ".idx")
         if os.path.exists(path):
             return path
 
-    def _build_my_indexes(self):
+
+    def _index_dir(self, build=False):
+        """
+        search where to store(build=True) read indexes
+
+        :param bool build: if check the index-dir permissions to write
+        :return: The directory where read or write the indexes
+        :rtype: str
+        :raise ValueError: if the directory specify by --index-dir option does not exists
+                           or if build = True index-dir is not writable
+        """
+        index_dir = self.cfg.index_dir()
+        if index_dir:
+            if not os.path.exists(index_dir):
+                raise ValueError(f"No such directory: {index_dir}")
+            elif build and not os.access(index_dir, os.W_OK):
+                raise ValueError(f"The '{index_dir}' dir is not writable.")
+            else:
+                return index_dir
+        else:
+            # we need abspath because if user provide filename not path for sequence_db
+            # for instance my_seq.faste instead of ./my_seq.fasta
+            # then index_dir is empty string
+            # and os.access return False
+            index_dir = os.path.dirname(os.path.abspath(self.cfg.sequence_db()))
+            if build and not os.access(index_dir, os.W_OK):
+                raise ValueError(f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.")
+            else:
+                return index_dir
+
+
+    def _build_my_indexes(self, index_dir):
         """
         Build macsyfinder indexes. These indexes are stored in a file.
 
         The file format is the following:
+         - the first line is the path of the sequence-db indexed
          - one entry per line, with each line having this format:
          - sequence id;sequence length;sequence rank
 
         """
+        index_file = os.path.join(index_dir, self.name + ".idx")
         try:
             with open(self._fasta_path, 'r') as fasta_file:
-                with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), self.name + ".idx"), 'w') as my_base:
+                with open(index_file, 'w') as my_base:
+                    my_base.write(self._fasta_path + '\n')
                     f_iter = fasta_iter(fasta_file)
                     seq_nb = 0
                     for seq_id, comment, length in f_iter:
@@ -139,11 +181,32 @@ class Indexes:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
             raise MacsypyError(msg)
+        return index_file
+
+
+    def __iter__(self):
+        """
+        :raise MacsypyError: if the indexes are not buid
+        :return: an iterator on the indexes
+
+        To use it the index must be build.
+        """
+        path = self.find_my_indexes()
+        if path is None:
+            raise MacsypyError("Build index before to use it.")
+        with open(path) as idx_file:
+            seq_target = next(idx_file)
+            for line in idx_file:
+                seq_id, length, _rank = line.split(";")
+                length = int(length)
+                _rank = int(_rank)
+                yield (seq_id, length, _rank)
 
 
 """handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
 each genes is representing by a tuple (seq_id, length)"""
 RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
+
 
 
 class RepliconDB:
@@ -164,8 +227,7 @@ class RepliconDB:
         """
         self.cfg = cfg
         assert self.cfg.db_type() in ('gembase', 'ordered_replicon')
-        idx = Indexes(self.cfg)
-        self.sequence_idx = idx.find_my_indexes()
+        self._idx = Indexes(self.cfg)
         self.topology_file = self.cfg.topology_file()
         self._DB = {}
         if self.topology_file:
@@ -193,6 +255,7 @@ class RepliconDB:
                 topo_dict[replicon_name] = topo
         return topo_dict
 
+
     def _fill_ordered_min_max(self, default_topology=None):
         """
         For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
@@ -201,15 +264,12 @@ class RepliconDB:
         :type default_topology: string
         """
         _min = 1
-        # self.sequence_idx is a file with the following structure seq_id;seq_length;seq_rank\n
-        with open(self.sequence_idx) as idx_f:
-            _max = 0
-            genes = []
-            for line in idx_f:
-                seq_id, length, _rank = line.split(";")
-                genes.append((seq_id, length))
-                _max += 1
-            self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
+        _max = 0
+        genes = []
+        for seq_id, length, _rank in self._idx:
+            genes.append((seq_id, length))
+            _max += 1
+        self._DB[self.ordered_replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
     def _fill_gembase_min_max(self, topology, default_topology):
@@ -222,43 +282,43 @@ class RepliconDB:
         :param default_topology: the topology provided by the config.replicon_topology 
         :type default_topology: string
         """
-        def grp_replicon(line):
+        def grp_replicon(entry):
             """
             in gembase the identifier of fasta sequence follows the following schema: 
             <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
             but not in the <seq-name>.
             so grp_replicon allow to group sequences belonging to the same replicon.
             """
-            return "_".join(line.split('_')[: -1])
+            return "_".join(entry[0].split('_')[: -1])
 
-        def parse_entry(entry):
+        def parse_seq_id(seq_id):
             """
-            parse an entry in the index file (.idx)
-            an entry have the following format sequence_id;sequence length;sequence rank in replicon
+            parse a gemabse sequence id (.idx)
+            seq_id has the following format <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
+            but not in the <seq-name>.
             """
-            entry = entry.rstrip()
-            seq_id, length, rank = entry.split(';')
-            replicon_name = "_".join(seq_id.split('_')[: -1])
-            seq_name = seq_id.split('_')[-1]
-            return replicon_name, seq_name, length, int(rank)
+            *replicon_name, seq_name = seq_id.split('_')
+            replicon_name = "_".join(replicon_name)
+            return replicon_name, seq_name
 
-        with open(self.sequence_idx) as idx_f:
-            replicons = (x[1] for x in groupby(idx_f, grp_replicon))
-            for replicon in replicons:
-                genes = []
-                entry = next(replicon)
-                replicon_name, seq_name, seq_length, _min = parse_entry(entry)
+        replicons = (x[1] for x in groupby(self._idx, grp_replicon))
+        for replicon in replicons:
+            genes = []
+            seq_id, seq_length, _min = next(replicon)
+
+            replicon_name, seq_name = parse_seq_id(seq_id)
+            genes.append((seq_name, seq_length))
+            for seq_id, seq_length, rank in replicon:
+                # pass all sequence of the replicon until the last one
+                _, seq_name = parse_seq_id(seq_id)
                 genes.append((seq_name, seq_length))
-                for entry in replicon:
-                    # pass all sequence of the replicon until the last one
-                    _, seq_name, seq_length, _ = parse_entry(entry)
-                    genes.append((seq_name, seq_length))
-                _, seq_name, seq_length, _max = parse_entry(entry)
-                genes.append((seq_name, seq_length))
-                if replicon_name in topology:
-                    self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)
-                else:
-                    self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
+            _, seq_name = parse_seq_id(seq_id)
+            _max = rank
+            genes.append((seq_name, seq_length))
+            if replicon_name in topology:
+                self._DB[replicon_name] = RepliconInfo(topology[replicon_name], _min, _max, genes)
+            else:
+                self._DB[replicon_name] = RepliconInfo(default_topology, _min, _max, genes)
 
 
     def __contains__(self, replicon_name):

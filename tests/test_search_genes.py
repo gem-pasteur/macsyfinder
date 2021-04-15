@@ -60,6 +60,7 @@ class TestSearchGenes(MacsyTest):
         args.out_dir = os.path.join(self.tmp_dir, 'job_1')
         args.res_search_dir = args.out_dir
         args.no_cut_ga = True
+        args.index_dir = os.path.join(self.tmp_dir)
         os.mkdir(args.out_dir)
 
         self.cfg = Config(MacsyDefaults(), args)
@@ -68,12 +69,12 @@ class TestSearchGenes(MacsyTest):
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
         idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        idx.build()
         self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
-            shutil.rmtree(self.cfg.working_dir())
+            shutil.rmtree(self.tmp_dir)
             #pass
         except:
             pass
