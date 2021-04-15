@@ -395,14 +395,25 @@ class Package:
         config = NoneConfig()
         config.models_dir = lambda: self.path
         try:
-            try:
-                profile_factory = ProfileFactory(config)
-                model_registry = ModelRegistry()
-                model_registry.add(model_loc)
-                parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
-                parser.parse(all_def)
-            except MacsypyError as err:
-                errors.append(str(err))
+            profile_factory = ProfileFactory(config)
+            model_registry = ModelRegistry()
+            model_registry.add(model_loc)
+            parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
+            for one_def in all_def:
+                try:
+                    parser.parse([one_def])
+                except MacsypyError as err:
+                    errors.append(str(err))
+
+            if not errors:
+                # if some def cannot be parsed
+                # I skip testing profile not in def
+                # may be there are in the unparsable def
+                genes_in_def = {fqn.split('/')[-1] for fqn in gene_bank.genes_fqn()}
+                profiles_fqn = set(model_loc.get_profiles_names())
+                profiles_not_in_def = profiles_fqn - genes_in_def
+                if profiles_not_in_def:
+                    warnings.append(f"The {', '.join(profiles_not_in_def)} profiles are not referenced in any definitions.")
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")

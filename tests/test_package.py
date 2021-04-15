@@ -434,7 +434,7 @@ ligne 3 et bbbbb
         except:
             pass
 
-    def create_fake_package(self, model, definitions=True, profiles=True,
+    def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
                             metadata=True, readme=True, license=True, conf=True, bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
@@ -442,21 +442,28 @@ ligne 3 et bbbbb
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="flgB" presence="mandatory"/>
     <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
-</system>""")
+</model>""")
             with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="fliE" presence="mandatory" multi_system="True"/>
     <gene name="tadZ" presence="accessory" loner="True"/>
     <gene name="sctC" presence="forbidden"/>
-</system>""")
-
+</model>""")
+        if bad_definitions:
+            with open(os.path.join(def_dir, "model_3.xml"), 'w') as f:
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="2" min_genes_required="1" vers="2.0">
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+</model>""")
         if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
+                if skip_hmm and name in skip_hmm:
+                    continue
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
             meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
@@ -628,6 +635,49 @@ ligne 3 et bbbbb
         self.assertEqual(errors, [])
         self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it."])
+
+
+    def test_check_model_consistency(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, [])
+
+
+    def test_check_model_consistency_extra_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        open(os.path.join(fake_pack_path, 'profiles', 'extra_profile.hmm'), 'w').close()
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, ['The extra_profile profiles are not referenced in any definitions.'])
+        self.assertEqual(errors, [])
+
+
+    def test_check_model_consistency_lack_one_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model', skip_hmm=['flgB', 'fliE'])
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, ["'fake_model/flgB': No such profile",
+                                  "'fake_model/fliE': No such profile"])
+
+
+    def test_check_model_consistency_bad_definitions(self):
+        fake_pack_path = self.create_fake_package('fake_model', bad_definitions=True)
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, ["fake_model/model_3: min_genes_required '1' must be greater or equal than "
+                                  "min_mandatory_genes_required '2'"])
+
 
     def test_check_no_readme_n_no_license(self):
         fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
