@@ -665,8 +665,10 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_model_consistency()
 
         self.assertEqual(warnings, [])
-        self.assertEqual(errors, ["'fake_model/flgB': No such profile",
+        self.assertSetEqual(set(errors),
+                            set(["'fake_model/flgB': No such profile",
                                   "'fake_model/fliE': No such profile"])
+                            )
 
 
     def test_check_model_consistency_bad_definitions(self):
