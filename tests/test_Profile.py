@@ -110,7 +110,7 @@ class TestProfile(MacsyTest):
 
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
-    def test_execute(self):
+    def test_execute_hmm_with_GA(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
             model = Model("foo/T2SS", 10)
@@ -141,6 +141,9 @@ class TestProfile(MacsyTest):
             report_bis = profile.execute()
             self.assertIs(report, report_bis)
 
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_execute_hmm_w_GA_n_nocutga(self):
             # case GA threshold in profile but --no-cut-ga is set
             args = argparse.Namespace()
             args.sequence_db = self.find_data("base", "test_1.fasta")
@@ -152,6 +155,11 @@ class TestProfile(MacsyTest):
             args.no_cut_ga = True
             cfg = Config(MacsyDefaults(), args)
 
+            model = Model("foo/T2SS", 10)
+            gene_name = 'T5aSS_PF03797'
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+            gene = ModelGene(c_gene, model)
+            profile_path = self.model_location.get_profile("T5aSS_PF03797")
             profile = Profile(gene, cfg, profile_path)
             report = profile.execute()
             hmmer_raw_out = profile.hmm_raw_output
@@ -161,7 +169,10 @@ class TestProfile(MacsyTest):
                 self.assertEqual("# sequence reporting threshold:    E-value <= 0.5", l.strip())
 
 
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_execute_hmm_wo_GA(self):
             # case cut-ga but no GA threshold in hmmprofile
+            model = Model("foo/T2SS", 10)
             gene_name = 'abc'
             c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
             gene = ModelGene(c_gene, model)
