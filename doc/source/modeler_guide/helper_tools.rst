@@ -191,4 +191,3 @@ The first line of results is a header line.
     If you get ``Cannot find models in conf file XXX. May be these results have been generated with an old version of macsyfinder.``
     Check the configuration file, if `[models]` section contains ``models_1 = XXX YYY`` remove the `_1` from models
     ``models = XXX YYY``
-
