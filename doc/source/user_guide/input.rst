@@ -210,6 +210,9 @@ Path options:
   -o OUT_DIR, --out-dir OUT_DIR
                         Path to the directory where to store results.
                         if out-dir is specified res-search-dir will be ignored.
+  --index-dir INDEX_DIR
+                        Specifies the path to a directory to store/read the sequence index when the sequence-db dir
+                        is not writable.
   --res-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files. (default: .search_hmm.out)
   --res-extract-suffix RES_EXTRACT_SUFFIX
@@ -344,6 +347,7 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     * *res_search_suffix* = (default= *.search_hmm.out* )
     * *models_dir* = (default= *./models* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
+    * *index_dir* = (default= beside the sequence_db)
 
   * **general**
     
@@ -400,6 +404,7 @@ Example of a configuration file
     models_dir = %(data_dir)/data/models
     profile_suffix = .fasta-aln.hmm
     res_extract_suffix = .res_hmm
+    index_dir = path/where/I/store/my_indexes
 
    [general]
    log_level = debug

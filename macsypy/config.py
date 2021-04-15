@@ -60,6 +60,7 @@ class MacsyDefaults(dict):
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
         self.idx = kwargs.get('idx', False)
+        self.index_dir = kwargs.get('index_dir', None)
         self.inter_gene_max_space = kwargs.get('inter_gene_max_space', None)
         self.log_level = kwargs.get('log_level', logging.INFO)
         self.log_file = kwargs.get('log_file', 'macsyfinder.log')
@@ -106,7 +107,7 @@ class Config:
                 ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
                                'itself_weight', 'redundancy_penalty', 'loner_multi_system_weight')),
                 ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
-                                 'res_search_suffix', 'res_extract_suffix')),
+                                 'res_search_suffix', 'res_extract_suffix', 'index_dir')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
                              'verbosity', 'quiet', 'mute', 'worker')),
                 ]

@@ -50,9 +50,9 @@ class TestConfig(MacsyTest):
     def tearDown(self):
         os.chdir(self._current_dir)
         try:
-            shutil.rmtree(self.cfg.working_dir())
+            shutil.rmtree(self.tmp_dir)
             #pass
-        except:
+        except Exception as err:
             pass
 
     def test_str_2_tuple(self):

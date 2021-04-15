@@ -42,6 +42,7 @@ class TestMacsyDefaults(MacsyTest):
                          'hmmer': 'hmmsearch',
                          'i_evalue_sel': 0.001,
                          'idx': False,
+                         'index_dir': None,
                          'inter_gene_max_space': None,
                          'log_file': 'macsyfinder.log',
                          'log_level': logging.INFO,

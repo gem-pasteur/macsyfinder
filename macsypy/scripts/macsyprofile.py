@@ -189,11 +189,11 @@ class HmmProfile:
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
-        with open(macsyfinder_idx, 'r') as idx:
-            for l in idx:
-                seqid, length, rank = l.split(';')
-                if seqid in db:
-                    db[seqid] = (int(length), int(rank))
+        idx = Indexes(self.cfg)
+        idx.build()
+        for seqid, length, rank in idx:
+            if seqid in db:
+                db[seqid] = (length, rank)
 
 
     def _get_replicon_name(self, hit_id: str) -> str:
@@ -423,6 +423,11 @@ the hit selection for systems detection. (default no threshold)"""
                         action='store',
                         default=None,
                         help="the path to a file to write results.")
+    parser.add_argument('--index-dir',
+                        action='store',
+                        default=None,
+                        help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
+
     parser.add_argument('-f', '--force',
                         action='store_true',
                         default=False,

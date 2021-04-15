@@ -68,6 +68,9 @@ It is ran over a previous macsyfinder analysis:
       -p PATTERN, --pattern PATTERN
                             pattern to filter the hmm files to analyse.
       -o OUT, --out OUT     the path to a file to write results.
+      --index-dir INDEX_DIR
+                            Specifies the path to a directory to store/read the sequence index
+                            when the sequence-db dir is not writable.
       -f, --force           force to write output even the file already exists
                             (overwrite it).
       -V, --version         show program's version number and exit
@@ -183,9 +186,9 @@ The first line of results is a header line.
 
 
 .. warning::
+
     The `macsyprofile` is not compliant with results produced with `macsyfinder v1`.
     If you get ``Cannot find models in conf file XXX. May be these results have been generated with an old version of macsyfinder.``
     Check the configuration file, if `[models]` section contains ``models_1 = XXX YYY`` remove the `_1` from models
-   ``models = XXX YYY`
-
+    ``models = XXX YYY``
 

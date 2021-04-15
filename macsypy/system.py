@@ -371,11 +371,11 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
     Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
     """
 
-    _id = itertools.count(1)
+    #_id = itertools.count(1)
 
 
     def __init__(self, model, replicon_name):
-        self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
+        #self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
         self.model = model
 
     def _sort_hits(self, hits):
@@ -467,6 +467,8 @@ class System(AbstractSetOfHits):
                          GeneStatus.ACCESSORY,
                          GeneStatus.NEUTRAL)
 
+    _id = itertools.count(1)
+
     def __init__(self, model, clusters, redundancy_penalty=1.5):
         """
 
@@ -476,6 +478,7 @@ class System(AbstractSetOfHits):
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         """
         self._replicon_name = clusters[0].replicon_name
+        self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
         self.clusters = clusters
         self.redundancy_penalty = redundancy_penalty
         self._score = None
@@ -691,12 +694,16 @@ class AbstractUnordered(AbstractSetOfHits):
     Technical abstract class to factorize code share between
     LikelySystem and UnlikelySystem
     """
+
+    _id = itertools.count(1)
+
     def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits):
         self._mandatory_hits = mandatory_hits
         self._accessory_hits = accessory_hits
         self._neutral_hits = neutral_hits
         self._forbidden_hits = forbidden_hits
         self._replicon_name = self.allowed_hits[0].replicon_name
+        self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
         super().__init__(model, self._replicon_name)
 
     @property

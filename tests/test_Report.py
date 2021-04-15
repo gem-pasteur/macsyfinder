@@ -72,7 +72,7 @@ class TestReport(MacsyTest):
         self.profile_factory = ProfileFactory(self.cfg)
 
         idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        idx.build()
 
 
     def tearDown(self):
