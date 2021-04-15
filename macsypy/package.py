@@ -385,6 +385,8 @@ class Package:
         :return:
         """
         _log.info(f"Checking '{self.name}' Model definitions")
+        errors = []
+        warnings = []
         model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
         model_bank = ModelBank()
@@ -393,16 +395,19 @@ class Package:
         config = NoneConfig()
         config.models_dir = lambda: self.path
         try:
-            profile_factory = ProfileFactory(config)
-            model_registry = ModelRegistry()
-            model_registry.add(model_loc)
-            parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
-            parser.parse(all_def)
+            try:
+                profile_factory = ProfileFactory(config)
+                model_registry = ModelRegistry()
+                model_registry.add(model_loc)
+                parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
+                parser.parse(all_def)
+            except MacsypyError as err:
+                errors.append(str(err))
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")
         # to respect same api as _check_metadata and _check_structure
-        return [], []
+        return errors, warnings
 
 
     def _check_model_conf(self) -> Tuple[List[str], List[str]]:
