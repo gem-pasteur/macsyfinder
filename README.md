@@ -8,6 +8,7 @@
 [![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
 [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder/latest)](https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
 ![Conda](https://img.shields.io/conda/pn/bioconda/macsyfinder)
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/gem-pasteur/macsyfinder/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/gem-pasteur/macsyfinder)
 
 MacSyFinder - Detection of macromolecular systems in protein datasets using systems modelling and similarity search.
 
