@@ -104,11 +104,11 @@ class Indexes:
 
         if force or not my_indexes:
             try:
-                index_dir = self._index_dir(build=True) # check build
+                index_dir = self._index_dir(build=True)  # check build
             except ValueError as err:
                 msg = str(err)
                 _log.critical(msg)
-                raise IOError(msg)
+                raise IOError(msg) from None
 
             index = self._build_my_indexes(index_dir)
             my_indexes = index
@@ -146,7 +146,11 @@ class Indexes:
             else:
                 return index_dir
         else:
-            index_dir = os.path.dirname(self.cfg.sequence_db())
+            # we need abspath because if user provide filename not path for sequence_db
+            # for instance my_seq.faste instead of ./my_seq.fasta
+            # then index_dir is empty string
+            # and os.access return False
+            index_dir = os.path.dirname(os.path.abspath(self.cfg.sequence_db()))
             if build and not os.access(index_dir, os.W_OK):
                 raise ValueError(f"The '{index_dir}' dir is not writable. Change rights or specify --index-dir.")
             else:

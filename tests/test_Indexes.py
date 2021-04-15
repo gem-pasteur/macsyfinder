@@ -219,7 +219,7 @@ VICH001.B.00001.C001_01565;414;49
         os.makedirs(args.index_dir)
         os.chmod(args.index_dir, 0000)
         try:
-            # but I do nnot care I only read
+            # but I do not care I only read
             index_dir = idx._index_dir(build=False)
             self.assertEqual(index_dir, args.index_dir)
 
@@ -231,6 +231,21 @@ VICH001.B.00001.C001_01565;414;49
         finally:
             os.chmod(args.index_dir, 0o777)
 
+        # case the sequence_db value is just a filename not a path
+        current_dir = os.getcwd()
+        try:
+            os.chdir(args.out_dir)
+            args = argparse.Namespace()
+            args.db_type = 'gembase'
+            args.models_dir = self.find_data('models')
+            args.out_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_indexes')
+            args.sequence_db = os.path.basename(self.cfg.sequence_db())
+            cfg = Config(MacsyDefaults(), args)
+            idx = Indexes(cfg)
+            idx_dir = idx._index_dir(build=True)
+            self.assertEqual(idx_dir, os.getcwd())
+        finally:
+            os.chdir(current_dir)
 
     def test_build_my_indexes(self):
         args = argparse.Namespace()
