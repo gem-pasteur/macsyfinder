@@ -326,6 +326,14 @@ class ModelLocation:
         return self._profiles[name]
 
 
+    def get_profiles_names(self):
+        """
+        :return: The list of profiles name (without extension) for this model location
+        :rtype: str
+        """
+        return list(self._profiles.keys())
+
+
     def __str__(self):
         return self.name
 
