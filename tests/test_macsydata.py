@@ -422,6 +422,7 @@ for instance if you want to add the models to 'macsy-models'
             log_msg = log.get_value().strip()
         expected_msg = """The package 'fake_1' have not any LICENSE file. May be you have not right to use it.
 The package 'fake_1' have not any README file.
+
 macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
 I'll be really happy, if you fix warnings above, before to publish these models."""
