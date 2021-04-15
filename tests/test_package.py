@@ -667,7 +667,7 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, [])
         self.assertSetEqual(set(errors),
                             set(["'fake_model/flgB': No such profile",
-                                  "'fake_model/fliE': No such profile"])
+                                 "'fake_model/fliE': No such profile"])
                             )
 
 
