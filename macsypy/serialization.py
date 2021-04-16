@@ -85,12 +85,12 @@ class TsvSystemSerializer(SystemSerializer):
     Handle System serialization in tsv format
     """
 
-    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
+    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
              "hit_begin_match\thit_end_match\tused_in"
 
     template = Template("$sys_replicon_name\t$vh_id\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
-                        "$sys_id\t$sys_loci\t$sys_wholeness\t$sys_score\t"
+                        "$sys_id\t$sys_loci\t$locus_num\t$sys_wholeness\t$sys_score\t"
                         "$sys_occurrence\t$vh_gene_role\t$vh_status\t$vh_seq_length\t$vh_i_eval\t"
                         "$vh_score\t$vh_profile_coverage\t$vh_sequence_coverage\t$vh_begin_match"
                         "\t$vh_end_match\t$used_in_systems\n")
@@ -101,14 +101,14 @@ class TsvSystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
+                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tlocus_num\\tsys_wholeness\\tsys_score
                      \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
                      \\thit_seq_cov\\tit_begin_match\\thit_end_match
 
         :rtype: str
         """
         tsv = ''
-        for cluster in system.clusters:
+        for locus_num, cluster in enumerate(system.clusters, 1):
             for vh in sorted(cluster.hits, key=lambda vh: vh.position):
                 used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
                 used_in_systems.sort()
@@ -120,6 +120,7 @@ class TsvSystemSerializer(SystemSerializer):
                     sys_model_fqn=system.model.fqn,
                     sys_id=system.id,
                     sys_loci=system.loci,
+                    locus_num=locus_num,
                     sys_wholeness=f"{system.wholeness:.3f}",
                     sys_score=f"{system.score:.3f}",
                     sys_occurrence=system.occurrence(),
