@@ -68,7 +68,11 @@ class MacsyDefaults(dict):
         self.min_genes_required = kwargs.get('min_genes_required', None)
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', [])
-        self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
+        self.models_dir = kwargs.get('models_dir', [path for path in
+                                                    (os.path.join(prefix_data, 'models'),
+                                                     os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
+                                                    if os.path.exists(path)]
+                                     )
         self.multi_loci = kwargs.get('multi_loci', set())
         self.mute = kwargs.get('mute', False)
         self.out_dir = kwargs.get('out_dir', None)
@@ -672,8 +676,12 @@ class Config:
         """
         :param str path: the path to the models (definitions + profiles) are stored.
         """
+        # if models_dir is provide by the user this value mask cannonical ones
+        # prefix_data, 'models'
+        # os.path.expanduser('~'), '.macsyfinder', 'data'
+        # models_dir must return a list of path
         if os.path.exists(path) and os.path.isdir(path):
-            self._options['models_dir'] = path
+            self._options['models_dir'] = [path]
         else:
             raise ValueError(f"models_dir '{path}' does not exists or is not a directory.")
 

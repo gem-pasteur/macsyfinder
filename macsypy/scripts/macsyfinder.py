@@ -471,11 +471,20 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
     registry = ModelRegistry()
-    models_loc_available = scan_models_dir(config.models_dir(),
-                                           profile_suffix=config.profile_suffix(),
-                                           relative_path=config.relative_path())
-    for model_loc in models_loc_available:
-        registry.add(model_loc)
+
+    if args.models_dir:
+        model_dirs = (system_model_dir,)
+    else:
+        model_dirs = config.models_dir()
+    for model_dir in model_dirs:
+        try:
+            models_loc_available = scan_models_dir(model_dir,
+                                                   profile_suffix=config.profile_suffix(),
+                                                   relative_path=config.relative_path())
+            for model_loc in models_loc_available:
+                registry.add(model_loc)
+        except PermissionError as err:
+            _log.warning(f"{model_dir} is not readable: {err} : skip it.")
     # build indexes
     idx = Indexes(config)
     idx.build(force=config.idx)
