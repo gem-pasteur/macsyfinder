@@ -1,0 +1,4 @@
+# macsyfinder 20210420.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_1.fasta --db-type ordered_replicon --models-dir tests/data/models --models functional T12SS-multi-syst-exch --relative-path -w 8 --previous-run tests/data/functional_test_ordered_multi_system -o functional_test_ordered_multi_system
+replicon	functional/T12SS-multi-syst-exch
+UserReplicon	1
