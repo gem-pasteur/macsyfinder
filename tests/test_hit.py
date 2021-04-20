@@ -156,11 +156,11 @@ class ValidHitTest(MacsyTest):
 
         gene_name = "gspD"
         self.c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
-        self.gene_gspd = ModelGene(self.c_gene_gspd, model)
+        self.gene_gspd = ModelGene(self.c_gene_gspd, model, multi_system=True)
 
         gene_name = "sctJ"
         self.c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
-        self.gene_sctj = ModelGene(self.c_gene_sctj, model)
+        self.gene_sctj = ModelGene(self.c_gene_sctj, model, loner=True)
 
         model.add_mandatory_gene(self.gene_gspd)
         model.add_accessory_gene(self.gene_sctj)
@@ -197,6 +197,18 @@ class ValidHitTest(MacsyTest):
 
         self.assertEqual(v_hit_0, v_hit_1)
         self.assertNotEqual(v_hit_0, v_hit_2)
+
+    def test_multi_system(self):
+        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
+        self.assertTrue(v_hit_2.multi_system)
+        self.assertFalse(v_hit_1.multi_system)
+
+    def test_loner(self):
+        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
+        self.assertFalse(v_hit_2.loner)
+        self.assertTrue(v_hit_1.loner)
 
 
 class GetBestHitTest(MacsyTest):
