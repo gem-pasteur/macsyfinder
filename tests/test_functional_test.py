@@ -94,7 +94,7 @@ class Test(MacsyTest):
 
 
     def test_only_loners(self):
-        expected_result_dir = self.find_data("functional_tests_only_loners")
+        expected_result_dir = self.find_data("functional_test_only_loners")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear  " \
                f"--models-dir {self.find_data('models')} " \
