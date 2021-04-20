@@ -185,8 +185,13 @@ class Cluster:
     def __len__(self):
         return len(self.hits)
 
+    @property
     def loner(self):
-        return len(self) == 1
+        """
+        :return: True if this cluster is made of only one hit representing a loner gene
+        """
+        return len(self) == 1 and self.hits[0].loner
+
 
     def _check_replicon_consistency(self):
         """
@@ -276,7 +281,7 @@ class Cluster:
                 else:
                     hit_score *= self._hit_weights.itself
 
-                if self.loner() and v_hit.multi_system:
+                if self.loner and v_hit.multi_system:
                     hit_score *= self._hit_weights.loner_multi_system
                     _log.debug(f"{v_hit.id} is loner and multi_system hit score = {hit_score}")
 
