@@ -156,15 +156,18 @@ class MacsyTest(unittest.TestCase):
 
                 # the system_id may change from one run to another
                 # So I have to remove them before to compare each row
+                filename = os.path.basename(fh1.name)
                 if header:
                     fields_nb = len(fields_1)
                     header = False
-                if fields_nb == 20:  # all_systems.tsv
+                if filename == 'all_systems.tsv' or filename == 'best_solution.tsv':
                     fields_1.pop(5)
                     fields_2.pop(5)
-                elif fields_nb == 21:  # all_best_systems best_systems
+                elif filename == 'all_best_solutions.tsv':
                     fields_1.pop(6)
                     fields_2.pop(6)
+                elif filename == 'best_solution_summary.tsv': # best_solution.summary
+                    pass
                 else:
                     raise RuntimeError(f"{fh1.name} {len(fields_1)}")
 
