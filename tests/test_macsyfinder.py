@@ -43,7 +43,7 @@ from macsypy.system import System, HitSystemTracker, RejectedClusters, \
 from macsypy.cluster import Cluster
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
-    likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
+    summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -225,6 +225,15 @@ neutral genes:
             track_multi_systems_hit = HitSystemTracker([])
             systems_to_tsv([], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+    def test_summary_best_solution(self):
+        best_solution_file = self.find_data('data_set', 'results', 'best_solution.tsv')
+        expected_summary_file = self.find_data('data_set', 'results', 'best_solution_summary.tsv')
+        computed_summary = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary, 'w') as f:
+            summary_best_solution(best_solution_file, f)
+        self.assertTsvEqual(expected_summary_file, computed_summary)
+
 
 
     def test_solutions_to_tsv(self):
