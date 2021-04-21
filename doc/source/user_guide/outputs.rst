@@ -82,6 +82,7 @@ headers are provided with the content of the lines in the file.
     
     The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
+  * **best_solution_summary.tsv** is a summary of the `best_solution.tsv` file.
 
   * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
@@ -294,40 +295,56 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **used_in** - whether the hit could be used in another system's occurrence
 
 
+best_solution_summary.tsv
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Is a concise view, based on **best_solution.tsv**, of which systems have been found in your replicons
+and how many per replicon.
+The 2 first lines are comment and indicate the msf version and the command line which generate this results.
+Then a table in tabulation separated columns, with models as columns and replicon as index.
+
+.. code-block:: text
+
+    # macsyfinder 20210420.dev
+    # macsyfinder --sequence-db DATA_TEST/sequences.prt --db-type=gembase --models-dir data/models/ --models TFF-SF_final all -w 4
+        model_fqn      TFF-SF/MSH  TFF-SF/T2SS  TFF-SF/T4P  TFF-SF/T4bP  TFF-SF/Tad
+    replicon
+    GCF_000005845           0            1           1            0           0
+    GCF_000006725           0            1           1            0           0
+    GCF_000006745           1            1           2            1           0
+    GCF_000006765           0            3           1            0           1
+    GCF_000006845           0            0           1            0           0
+    GCF_000006905           0            1           0            0           1
+    GCF_000006925           0            0           1            0           0
+    GCF_000006945           0            0           1            0           0
+
+as a `tsv` file it can be parsed easily using pandas::
+
+    import pandas as pd
+    solution = pd.read_csv('path to best_solution_summary.tsv', sep='\t', comment='#', index_col=0)
+
+
 .. note::
-    If you want to have a concise view of which systems have been found in your replicons and how many per replicon,
-    you can do it with a few lines of pandas on the **best_solution.tsv** file. ::
 
-        import pandas as pd
+        If you want to do the same operation but based on the *all_best_solutions.tsv* file,
+        you can do it with the few lines of pandas below::
 
-        best_sol = '<macsyfinder_results_dir>/best_solution.tsv'
+            import pandas as pd
 
-        # read data from best_solution file
-        data = pd.read_csv(best_sol, sep='\t', comment='#')
+            all_best_sol = '<macsyfinder_results_dir>/all_best_solutions.tsv'
 
-        # remove useless columns
-        selection = data[['replicon', 'sys_id', 'model_fqn']]
+            # read data from best_solution file
+            data = pd.read_csv(all_best_sol, sep='\t', comment='#')
 
-        # keep only one row per replicon, sys_id
-        dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
+            # remove useless columns
+            selection = data[['sol_id', 'replicon', 'sys_id', 'model_fqn']]
 
-        # count for each replicon which models have been detected and their occurrences
-        summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
+            # keep only one row per replicon, sys_id
+            dropped = selection.drop_duplicates(subset=['sol_id', 'replicon', 'sys_id'])
 
-    Below, an example of the result of these few lines of *pandas*:
+            # count for each replicon which models have been detected and their occurrences
+            summary = pd.crosstab(index=[dropped.sol_id, dropped.replicon], columns=dropped['model_fqn'])
 
-    .. code-block:: text
-
-            model_fqn      TFF-SF/MSH  TFF-SF/T2SS  TFF-SF/T4P  TFF-SF/T4bP  TFF-SF/Tad
-        replicon
-        GCF_000005845           0            1           1            0           0
-        GCF_000006725           0            1           1            0           0
-        GCF_000006745           1            1           2            1           0
-        GCF_000006765           0            3           1            0           1
-        GCF_000006845           0            0           1            0           0
-        GCF_000006905           0            1           0            0           1
-        GCF_000006925           0            0           1            0           0
-        GCF_000006945           0            0           1            0           0
 
 
     if you are not fluent in `pandas`, we provide you a tiny script `msf_summary.py` based on few lines above
@@ -335,18 +352,11 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
 
     :download:`msf_summary.py <../_static/msf_summary.py>` .
 
-    Before to execute this script, you **MUST** install `pandas <https://pandas.pydata.org/>`_.
-    If you run macsyfinder in a virtualenv do ``pip install pandas``
     Then you can run the script ::
 
-        python msf_summary.py <path_to_best_solution.tsv or path_to_all_best_solutions.tsv>
+        python msf_summary.py <path_to_all_best_solutions.tsv>
 
-    below an example of summary of a `best_solution.tsv` file
-
-    .. literalinclude:: ../_static/best_solution-summary.tsv
-       :language: text
-
-    and a summary of `all_best_solutions.tsv` correponding to the same `macsyfinder` run
+    below an example of summary of `all_best_solutions.tsv`
 
     .. literalinclude:: ../_static/all_best_solutions-summary.tsv
        :language: text
