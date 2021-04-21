@@ -395,7 +395,7 @@ class TestCluster(MacsyTest):
         c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
         c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
 
-        gene_1 = ModelGene(c_gene_1, model)
+        gene_1 = ModelGene(c_gene_1, model, loner=True)
         gene_2 = ModelGene(c_gene_2, model)
 
         #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
@@ -406,9 +406,12 @@ class TestCluster(MacsyTest):
         v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
 
         c1 = Cluster([v_h10], model, self.hit_weights)
-        c2 = Cluster([v_h10, v_h20], model, self.hit_weights)
-        self.assertTrue(c1.loner())
-        self.assertFalse(c2.loner())
+        c2 = Cluster([v_h20], model, self.hit_weights)
+        c3 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        self.assertTrue(c1.loner)
+        self.assertFalse(c2.loner)
+        self.assertFalse(c3.loner)
+
 
     def test_contains(self):
         model = Model("foo/T2SS", 11)

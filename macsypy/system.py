@@ -523,7 +523,7 @@ class System(AbstractSetOfHits):
         regular_clsts = []
         loner_multi_syst_clsts = []
         for clst in self.clusters:
-            if clst.loner() and clst.hits[0].multi_system:
+            if clst.loner and clst.hits[0].multi_system:
                 loner_multi_syst_clsts.append(clst)
             else:
                 regular_clsts.append(clst)
@@ -597,17 +597,26 @@ class System(AbstractSetOfHits):
     def loci(self):
         """
         :return: The number of loci of this system (loners are not considered)
-        :rtype: int > 0
+        :rtype: int >= 0
         """
+        loci = 0
         # we do not take loners in account
-        loci = sum([1 for c in self.clusters if len(c) > 1])
+        for clst in self.clusters:
+            clst_len = len(clst)  # hit nb in cluster
+            if clst_len > 1:
+                loci += 1
+            else:
+                # clst cannot be empty
+                # clst_len == 1
+                if not clst.hits[0].loner:
+                    loci += 1
         return loci
 
 
     @property
     def multi_loci(self):
         """
-        :return: True if the systems is multi_loci. False otherwise
+        :return: True if the systems is encoded in multiple loci. False otherwise
         :rtype: bool
         """
         return self.loci > 1

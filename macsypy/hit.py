@@ -179,7 +179,19 @@ class ValidHit:
 
     @property
     def multi_system(self):
+        """
+        :return: True if the hit represent a `multi_systems` :class:`macsypy.Gene.ModelGene`, False otherwise.
+        """
         return self.gene_ref.multi_system
+
+
+    @property
+    def loner(self):
+        """
+        :return: True if the hit represent a `loner` :class:`macsypy.Gene.ModelGene`, False otherwise.
+        """
+        return self.gene_ref.loner
+
 
     def __getattr__(self, item):
         return getattr(self.hit, item)

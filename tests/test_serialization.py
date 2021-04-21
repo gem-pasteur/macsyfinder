@@ -165,7 +165,7 @@ neutral genes:
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
-        gene_sctn = ModelGene(c_gene_sctn, model)
+        gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
         gene_sctn.add_exchangeable(gene_sctn_flg)
