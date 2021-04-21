@@ -485,6 +485,7 @@ class System(AbstractSetOfHits):
         super().__init__(model, self._replicon_name)
 
 
+
     @property
     def score(self):
         """
@@ -592,25 +593,34 @@ class System(AbstractSetOfHits):
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
 
+    @property
+    def loci_num(self):
+        """
+        :return: the number of the corresponding locus for each cluster
+                 the cluster made of only one hit reprenting a loner is not considered as a loci
+                 so these clusters have the locus_num = 0
+        :rtype: list of int
+        """
+        loci = []
+        loci_num = 0
+        # we do not take loners in account
+        for clst in self.clusters:
+            if not clst.loner:
+                loci_num += 1
+                loci.append(loci_num)
+            else:
+                loci.append(0)
+        return loci
+
 
     @property
-    def loci(self):
+    def loci_nb(self):
         """
         :return: The number of loci of this system (loners are not considered)
         :rtype: int >= 0
         """
-        loci = 0
-        # we do not take loners in account
-        for clst in self.clusters:
-            clst_len = len(clst)  # hit nb in cluster
-            if clst_len > 1:
-                loci += 1
-            else:
-                # clst cannot be empty
-                # clst_len == 1
-                if not clst.hits[0].loner:
-                    loci += 1
-        return loci
+        loci_nb = len([1 for c in self.clusters if not c.loner])
+        return loci_nb
 
 
     @property
@@ -619,7 +629,7 @@ class System(AbstractSetOfHits):
         :return: True if the systems is encoded in multiple loci. False otherwise
         :rtype: bool
         """
-        return self.loci > 1
+        return self.loci_nb > 1
 
 
     def is_compatible(self, other):
