@@ -56,7 +56,7 @@ replicon = {system.replicon_name}
 clusters = {clst}
 occ = {system.occurrence()}
 wholeness = {system.wholeness:.3f}
-loci nb = {system.loci}
+loci nb = {system.loci_nb}
 score = {system.score:.3f}
 """
         for title, genes in (("mandatory", system.mandatory_occ),
@@ -108,7 +108,8 @@ class TsvSystemSerializer(SystemSerializer):
         :rtype: str
         """
         tsv = ''
-        for locus_num, cluster in enumerate(system.clusters, 1):
+        loci_num = system.loci_num
+        for locus_num, cluster in zip(loci_num, system.clusters):
             for vh in sorted(cluster.hits, key=lambda vh: vh.position):
                 used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
                 used_in_systems.sort()
@@ -119,7 +120,7 @@ class TsvSystemSerializer(SystemSerializer):
                     vh_position=vh.position,
                     sys_model_fqn=system.model.fqn,
                     sys_id=system.id,
-                    sys_loci=system.loci,
+                    sys_loci=system.loci_nb,
                     locus_num=locus_num,
                     sys_wholeness=f"{system.wholeness:.3f}",
                     sys_score=f"{system.score:.3f}",
