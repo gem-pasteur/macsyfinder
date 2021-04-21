@@ -232,9 +232,11 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **model_fqn** - the model fully-qualified name
     * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
+    * **locus_num** - the number of the locus where is located this gene. Loners gene have locus_num = 0
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
-    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
+    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence,
+      based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence.
     * **hit_gene_ref** - the gene in the model whose this hit plays the role of
     * **hit_status** - the status of the component in the assigned system's definition
     * **hit_seq_len** - the length of the protein sequence matched by this hit
@@ -255,6 +257,20 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 .. note::
     each system reported is separated from the others with a blank line to ease human reading.
     These lines are ignored during the parsing with pandas.
+
+.. literalinclude:: ../_static/all_systems.tsv
+   :language: text
+   :lines: 1-15
+
+.. note::
+    That if a loner is not clustered with other genes it is not considered as locus.
+    So it's locus number is 0 and not count for `sys_loci` (number of loci for a system)
+    see above lines
+
+    .. code-block:: text
+
+        GCF_000005845	GCF_000005845_026740	T4P_pilT	2674	TFF-SF/T4P	GCF_000005845_T4P_25	3	0	0.556	7.800
+        GCF_000005845	GCF_000005845_026930	T2SS_gspO	2693	TFF-SF/T4P	GCF_000005845_T4P_25	3	0	0.556	7.800
 
 
 best_solution.tsv and all_best_solutions.tsv
@@ -280,6 +296,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **model_fqn** - the model fully-qualified name
     * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
+    * **locus_num** - the number of the locus where is located this gene. Loners gene have locus_num = 0
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
     * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
@@ -294,6 +311,25 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **hit_end_match** - the position in the sequence where the profile match ends
     * **used_in** - whether the hit could be used in another system's occurrence
 
+.. note::
+    each system reported is separated from the others with a blank line to ease human reading.
+    These lines are ignored during the parsing with pandas.
+
+Example of `best_solution.tsv files`
+
+.. literalinclude:: ../_static/best_solution.tsv
+   :language: text
+   :lines: 1-15
+
+Example of `all_best_solutions.tsv files`
+
+.. literalinclude:: ../_static/all_best_solutions.tsv
+   :language: text
+   :lines: 1-20, 28-35
+
+.. note::
+    If a loner is not clustered with other genes it is not considered as locus.
+    So it's locus number is 0 and not count for `sys_loci` (number of loci for a system)
 
 best_solution_summary.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -358,7 +394,7 @@ as a `tsv` file it can be parsed easily using pandas::
 
     below an example of summary of `all_best_solutions.tsv`
 
-    .. literalinclude:: ../_static/all_best_solutions-summary.tsv
+    .. literalinclude:: ../_static/all_best_solutions_summary.tsv
        :language: text
 
 
