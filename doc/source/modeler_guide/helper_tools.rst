@@ -182,7 +182,7 @@ The first line of results is a header line.
 
         import pandas as pd
 
-        systems = pd.read_cvs("path/to/hmm_coverage.tsv", sep='\t', comment='#')
+        systems = pd.read_csv("path/to/hmm_coverage.tsv", sep='\t', comment='#')
 
 
 .. warning::

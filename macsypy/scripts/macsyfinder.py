@@ -34,6 +34,7 @@ from textwrap import dedent
 
 import colorlog
 _log = colorlog.getLogger('macsypy')
+import pandas as pd
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
@@ -703,6 +704,24 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         print("# No Systems found", file=sys_file)
 
 
+def summary_best_solution(best_solution_path, sys_file):
+    """
+    do a summary of best_solution in best_solution_path and write it on out_path
+
+    :param str best_solution_path: the path to the best_solution file
+    """
+    print(_outfile_header(), file=sys_file)
+    try:
+        best_solution = pd.read_csv(best_solution_path, sep='\t', comment='#')
+    except pd.errors.EmptyDataError:
+        print("# Systems found:", file=sys_file)
+    else:
+        selection = best_solution[['replicon', 'sys_id', 'model_fqn']]
+        dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
+        summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
+        summary.to_csv(sys_file, sep='\t')
+
+
 def rejected_clst_to_txt(rejected_clusters, clst_file):
     """
     print rejected clusters in a file
@@ -795,6 +814,10 @@ def main(args=None, loglevel=None):
     defaults = MacsyDefaults()
     config = Config(defaults, parsed_args)
 
+    if parsed_args.list_models:
+        print(list_models(parsed_args), file=sys.stdout)
+        sys.exit(0)
+
     ###########################
     # creation of working dir
     ###########################
@@ -822,123 +845,127 @@ def main(args=None, loglevel=None):
 
     logger = logging.getLogger('macsypy.macsyfinder')
 
-    if parsed_args.list_models:
-        print(list_models(parsed_args), file=sys.stdout)
-        sys.exit(0)
+    if not parsed_args.previous_run and not parsed_args.models:
+        parser.print_help()
+        print()
+        sys.tracebacklimit = 0
+        raise OptionError("argument --models or --previous-run is required.")
+    elif not parsed_args.previous_run and not parsed_args.sequence_db:
+        parser.print_help()
+        print()
+        sys.tracebacklimit = 0
+        raise OptionError("argument --sequence-db or --previous-run is required.")
+    elif not parsed_args.previous_run and not parsed_args.db_type:
+        parser.print_help()
+        print()
+        sys.tracebacklimit = 0
+        raise OptionError("argument --db-type or --previous-run is required.")
+
+    #############################
+    # command seems Ok Let's go #
+    #############################
+    _log.info(f"command used: {' '.join(sys.argv)}")
+
+    models = ModelBank()
+    genes = GeneBank()
+    profile_factory = ProfileFactory(config)
+
+    logger.info("\n{:#^70}".format(" Searching systems "))
+    all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+
+    track_multi_systems_hit = HitSystemTracker(all_systems)
+    if config.db_type() in ('gembase', 'ordered_replicon'):
+        #############################
+        # Ordered/Gembase replicons #
+        #############################
+
+        ###########################
+        # select the best systems #
+        ###########################
+        logger.info("\n{:#^70}".format(" Computing best solutions "))
+        best_solutions = []
+        one_best_solution = []
+
+        # group systems found by replicon
+        # before to search best system combination
+        import time
+        for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
+            syst_group = list(syst_group)
+            logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
+            t0 = time.time()
+            best_sol_4_1_replicon, score = find_best_solutions(syst_group)
+            t1 = time.time()
+            logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
+            # if several solutions are equivalent same number of system and score is same
+            # store all equivalent solution in best_solution => all_best_systems
+            # pick one in one_best_solution => best_systems
+            best_solutions.extend(best_sol_4_1_replicon)
+            one_best_solution.append(best_sol_4_1_replicon[0])
+
+        ##############################
+        # Write the results in files #
+        ##############################
+        logger.info("\n{:#^70}".format(" Writing down results "))
+        system_filename = os.path.join(config.working_dir(), "all_systems.txt")
+        tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
+
+        with open(system_filename, "w") as sys_file:
+            systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
+
+        with open(tsv_filename, "w") as tsv_file:
+            systems_to_tsv(all_systems, track_multi_systems_hit, tsv_file)
+
+        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clusters.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
+            rejected_clst_to_txt(rejected_clusters, clst_file)
+        if not (all_systems or rejected_clusters):
+            logger.info("No Systems found in this dataset.")
+
+        tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
+        with open(tsv_filename, "w") as tsv_file:
+            solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
+
+        best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
+        with open(best_solution_filename, "w") as best_solution_file:
+            # flattern the list and sort it
+            one_best_solution = [syst for sol in one_best_solution for syst in sol]
+            one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+            systems_to_tsv(one_best_solution, track_multi_systems_hit, best_solution_file)
+
+        summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
+        with open(summary_filename, "w") as summary_file:
+            summary_best_solution(best_solution_filename, summary_file)
+
     else:
-        if not parsed_args.previous_run and not parsed_args.models:
-            parser.print_help()
-            print()
-            sys.tracebacklimit = 0
-            raise OptionError("argument --models or --previous-run is required.")
-        elif not parsed_args.previous_run and not parsed_args.sequence_db:
-            parser.print_help()
-            print()
-            sys.tracebacklimit = 0
-            raise OptionError("argument --sequence-db or --previous-run is required.")
-        elif not parsed_args.previous_run and not parsed_args.db_type:
-            parser.print_help()
-            print()
-            sys.tracebacklimit = 0
-            raise OptionError("argument --db-type or --previous-run is required.")
+        #######################
+        # Unordered replicons #
+        #######################
 
-        _log.info(f"command used: {' '.join(sys.argv)}")
+        ##############################
+        # Write the results in files #
+        ##############################
+        logger.info("\n{:#^70}".format(" Writing down results "))
 
-        models = ModelBank()
-        genes = GeneBank()
-        profile_factory = ProfileFactory(config)
+        system_filename = os.path.join(config.working_dir(), "all_systems.txt")
+        with open(system_filename, "w") as sys_file:
+            likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
 
-        logger.info("\n{:#^70}".format(" Searching systems "))
-        all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+        # forbidden = [s for s in all_systems if s.forbidden_occ]
+        # system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
+        # with open(system_filename, "w") as sys_file:
+        #     likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
 
-        track_multi_systems_hit = HitSystemTracker(all_systems)
-        if config.db_type() in ('gembase', 'ordered_replicon'):
-            #############################
-            # Ordered/Gembase replicons #
-            #############################
+        system_filename = os.path.join(config.working_dir(), "all_systems.tsv")
+        with open(system_filename, "w") as sys_file:
+            likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
 
-            ###########################
-            # select the best systems #
-            ###########################
-            logger.info("\n{:#^70}".format(" Computing best solutions "))
-            best_solutions = []
-            one_best_solution = []
+        cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
+        with open(cluster_filename, "w") as clst_file:
+            unlikely_systems_to_txt(rejected_clusters, clst_file)
 
-            # group systems found by replicon
-            # before to search best system combination
-            import time
-            for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
-                syst_group = list(syst_group)
-                logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
-                t0 = time.time()
-                best_sol_4_1_replicon, score = find_best_solutions(syst_group)
-                t1 = time.time()
-                logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
-                # if several solutions are equivalent same number of system and score is same
-                # store all equivalent solution in best_solution => all_best_systems
-                # pick one in one_best_solution => best_systems
-                best_solutions.extend(best_sol_4_1_replicon)
-                one_best_solution.append(best_sol_4_1_replicon[0])
-
-            ##############################
-            # Write the results in files #
-            ##############################
-            logger.info("\n{:#^70}".format(" Writing down results "))
-            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
-            tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
-
-            with open(system_filename, "w") as sys_file:
-                systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
-
-            with open(tsv_filename, "w") as tsv_file:
-                systems_to_tsv(all_systems, track_multi_systems_hit, tsv_file)
-
-            cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
-            with open(cluster_filename, "w") as clst_file:
-                rejected_clusters.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
-                rejected_clst_to_txt(rejected_clusters, clst_file)
-            if not (all_systems or rejected_clusters):
-                logger.info("No Systems found in this dataset.")
-
-            tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
-            with open(tsv_filename, "w") as tsv_file:
-                solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
-
-            tsv_filename = os.path.join(config.working_dir(), "best_solution.tsv")
-            with open(tsv_filename, "w") as tsv_file:
-                # flattern the list and sort it
-                one_best_solution = [syst for sol in one_best_solution for syst in sol]
-                one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-                systems_to_tsv(one_best_solution, track_multi_systems_hit, tsv_file)
-        else:
-            #######################
-            # Unordered replicons #
-            #######################
-
-            ##############################
-            # Write the results in files #
-            ##############################
-            logger.info("\n{:#^70}".format(" Writing down results "))
-
-            system_filename = os.path.join(config.working_dir(), "all_systems.txt")
-            with open(system_filename, "w") as sys_file:
-                likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
-
-            # forbidden = [s for s in all_systems if s.forbidden_occ]
-            # system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
-            # with open(system_filename, "w") as sys_file:
-            #     likely_systems_to_tsv(forbidden, track_multi_systems_hit, sys_file)
-
-            system_filename = os.path.join(config.working_dir(), "all_systems.tsv")
-            with open(system_filename, "w") as sys_file:
-                likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
-
-            cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
-            with open(cluster_filename, "w") as clst_file:
-                unlikely_systems_to_txt(rejected_clusters, clst_file)
-
-            if not (all_systems or rejected_clusters):
-                logger.info("No Systems found in this dataset.")
+        if not (all_systems or rejected_clusters):
+            logger.info("No Systems found in this dataset.")
 
     logger.info("END")
 

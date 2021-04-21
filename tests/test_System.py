@@ -207,6 +207,11 @@ class SystemTest(MacsyTest):
         sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
         self.assertEqual(sys_single_locus_plus_loner.loci, 1)
 
+        c4 = Cluster([v_hit_1], model, self.hit_weights)
+        sys_single_locus_of_one_hit_not_loner = System(model, [c4], self.cfg.redundancy_penalty())
+        self.assertEqual(sys_single_locus_of_one_hit_not_loner.loci, 1)
+
+
     def test_wholeness(self):
         model_1 = Model("foo/T2SS", 10)
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
