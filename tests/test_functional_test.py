@@ -411,122 +411,122 @@ class Test(MacsyTest):
                 self.assertFileEqual(expected_result, get_results, comment="#")
 
 
-    # def test_working_dir_exists(self):
-    #     args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-    #            "--db-type ordered_replicon " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-m functional T12SS " \
-    #            "-o {out_dir}"
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists')
-    #     os.makedirs(self.out_dir)
-    #     open(os.path.join(self.out_dir, 'toto.empty'), 'w').close()
-    #
-    #     args = args.format(out_dir=self.out_dir)
-    #     with self.assertRaises(ValueError) as ctx:
-    #         macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #     self.assertEqual(str(ctx.exception),
-    #                      f"'{self.out_dir}' already exists and is not a empty")
-    #
-    # def test_working_dir_exists_and_not_dir(self):
-    #     args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-    #            "--db-type ordered_replicon " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-m functional T12SS " \
-    #            "-o {out_dir} "
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists_and_not_dir')
-    #     try:
-    #         open(self.out_dir, 'w').close()
-    #
-    #         args = args.format(out_dir=self.out_dir)
-    #         with self.assertRaises(ValueError) as ctx:
-    #             macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #         self.assertEqual(str(ctx.exception),
-    #                          f"'{self.out_dir}' already exists and is not a directory")
-    #     finally:
-    #         os.unlink(self.out_dir)
-    #
-    #
-    # def test_no_models(self):
-    #     args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-    #            "--db-type ordered_replicon " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-o {out_dir} "
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_models')
-    #     args = args.format(out_dir=self.out_dir)
-    #     with self.catch_io(out=True):
-    #         with self.assertRaises(OptionError) as ctx:
-    #             macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #     self.assertEqual(str(ctx.exception),
-    #                      "argument --models or --previous-run is required.")
-    #
-    # def test_no_seq_db(self):
-    #     args = "--db-type ordered_replicon " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-m functional T12SS " \
-    #            "-o {out_dir} "
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_seq_db')
-    #
-    #     args = args.format(out_dir=self.out_dir)
-    #     with self.catch_io(out=True):
-    #         with self.assertRaises(OptionError) as ctx:
-    #             macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #     self.assertEqual(str(ctx.exception),
-    #                      "argument --sequence-db or --previous-run is required.")
-    #
-    # def test_no_db_type(self):
-    #     args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-m functional T12SS " \
-    #            "-o {out_dir} "
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_db_type')
-    #     args = args.format(out_dir=self.out_dir)
-    #     with self.catch_io(out=True):
-    #         with self.assertRaises(OptionError) as ctx:
-    #             macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #     self.assertEqual(str(ctx.exception),
-    #                      "argument --db-type or --previous-run is required.")
-    #
-    # def test_model_unknown(self):
-    #     args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
-    #            "--db-type ordered_replicon " \
-    #            f"--models-dir {self.find_data('models')} " \
-    #            "-m functional Unknown_model " \
-    #            "--index-dir {out_dir} " \
-    #            "-o {out_dir}"
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_model_unkwon')
-    #     os.makedirs(self.out_dir)
-    #
-    #     args = args.format(out_dir=self.out_dir)
-    #     with self.assertRaises(ValueError) as ctx:
-    #         macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #     self.assertEqual(str(ctx.exception),
-    #                      "Unknown_model does not match with any definitions")
-    #
-    #
-    # def test_cfg_n_previous_run(self):
-    #     args = f"--cfg-file foo --previous-run bar " \
-    #            "-o {out_dir}"
-    #
-    #     self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_cfg_n_previous_run')
-    #     os.makedirs(self.out_dir)
-    #
-    #     args = args.format(out_dir=self.out_dir)
-    #
-    #     real_exit = sys.exit
-    #     sys.exit = self.fake_exit
-    #     try:
-    #         with self.catch_io(out=True):
-    #             with self.assertRaises(TypeError) as ctx:
-    #                 macsyfinder.main(args=args.split(), loglevel='ERROR')
-    #         self.assertEqual(str(ctx.exception), '2')
-    #     finally:
-    #         sys.exit = real_exit
+    def test_working_dir_exists(self):
+        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
+               "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS " \
+               "-o {out_dir}"
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists')
+        os.makedirs(self.out_dir)
+        open(os.path.join(self.out_dir, 'toto.empty'), 'w').close()
+
+        args = args.format(out_dir=self.out_dir)
+        with self.assertRaises(ValueError) as ctx:
+            macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         f"'{self.out_dir}' already exists and is not a empty")
+
+    def test_working_dir_exists_and_not_dir(self):
+        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
+               "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS " \
+               "-o {out_dir} "
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_working_dir_exists_and_not_dir')
+        try:
+            open(self.out_dir, 'w').close()
+
+            args = args.format(out_dir=self.out_dir)
+            with self.assertRaises(ValueError) as ctx:
+                macsyfinder.main(args=args.split(), loglevel='ERROR')
+            self.assertEqual(str(ctx.exception),
+                             f"'{self.out_dir}' already exists and is not a directory")
+        finally:
+            os.unlink(self.out_dir)
+
+
+    def test_no_models(self):
+        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
+               "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-o {out_dir} "
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_models')
+        args = args.format(out_dir=self.out_dir)
+        with self.catch_io(out=True):
+            with self.assertRaises(OptionError) as ctx:
+                macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         "argument --models or --previous-run is required.")
+
+    def test_no_seq_db(self):
+        args = "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS " \
+               "-o {out_dir} "
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_seq_db')
+
+        args = args.format(out_dir=self.out_dir)
+        with self.catch_io(out=True):
+            with self.assertRaises(OptionError) as ctx:
+                macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         "argument --sequence-db or --previous-run is required.")
+
+    def test_no_db_type(self):
+        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS " \
+               "-o {out_dir} "
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_no_db_type')
+        args = args.format(out_dir=self.out_dir)
+        with self.catch_io(out=True):
+            with self.assertRaises(OptionError) as ctx:
+                macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         "argument --db-type or --previous-run is required.")
+
+    def test_model_unknown(self):
+        args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
+               "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional Unknown_model " \
+               "--index-dir {out_dir} " \
+               "-o {out_dir}"
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_model_unkwon')
+        os.makedirs(self.out_dir)
+
+        args = args.format(out_dir=self.out_dir)
+        with self.assertRaises(ValueError) as ctx:
+            macsyfinder.main(args=args.split(), loglevel='ERROR')
+        self.assertEqual(str(ctx.exception),
+                         "Unknown_model does not match with any definitions")
+
+
+    def test_cfg_n_previous_run(self):
+        args = f"--cfg-file foo --previous-run bar " \
+               "-o {out_dir}"
+
+        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_cfg_n_previous_run')
+        os.makedirs(self.out_dir)
+
+        args = args.format(out_dir=self.out_dir)
+
+        real_exit = sys.exit
+        sys.exit = self.fake_exit
+        try:
+            with self.catch_io(out=True):
+                with self.assertRaises(TypeError) as ctx:
+                    macsyfinder.main(args=args.split(), loglevel='ERROR')
+            self.assertEqual(str(ctx.exception), '2')
+        finally:
+            sys.exit = real_exit
 
     def _macsyfinder_run(self, args_tpl):
         # get the name of the calling function
