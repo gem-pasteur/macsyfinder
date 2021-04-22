@@ -60,7 +60,7 @@ class SerializationTest(MacsyTest):
 
     def test_SystemSerializer_str(self):
         model_name = 'foo'
-        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir(), model_name))
+        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir()[0], model_name))
         model_A = Model("foo/A", 10)
         model_B = Model("foo/B", 10)
 
@@ -200,7 +200,7 @@ neutral genes:
 
     def test_SolutionSerializer_tsv(self):
         model_name = 'foo'
-        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir(), model_name))
+        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir()[0], model_name))
         model_A = Model("foo/A", 10)
         model_B = Model("foo/B", 10)
 

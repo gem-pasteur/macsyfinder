@@ -39,7 +39,7 @@ from tests import MacsyTest
 
 def _build_systems(cfg, profile_factory):
     model_name = 'foo'
-    model_location = ModelLocation(path=os.path.join(cfg.models_dir(), model_name))
+    model_location = ModelLocation(path=os.path.join(cfg.models_dir()[0], model_name))
     model_A = Model("foo/A", 10)
     model_B = Model("foo/B", 10)
     model_C = Model("foo/C", 10)
