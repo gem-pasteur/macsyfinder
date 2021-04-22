@@ -86,12 +86,7 @@ def list_models(args):
     """
     defaults = MacsyDefaults()
     config = Config(defaults, args)
-    system_model_dir = config.models_dir()
-    if args.models_dir:
-        model_dirs = (system_model_dir,)
-    else:
-        user_model_dir = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
-        model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
+    model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
@@ -472,11 +467,7 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
     registry = ModelRegistry()
 
-    if args.models_dir:
-        model_dirs = (system_model_dir,)
-    else:
-        model_dirs = config.models_dir()
-    for model_dir in model_dirs:
+    for model_dir in config.models_dir():
         try:
             models_loc_available = scan_models_dir(model_dir,
                                                    profile_suffix=config.profile_suffix(),

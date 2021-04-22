@@ -503,7 +503,9 @@ def main(args=None, log_level=None) -> None:
 
     hmmer_files = sorted(glob.glob(os.path.join(hmmer_results, f"{parsed_args.pattern}{hmm_suffix}")))
     try:
-        profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+        model_familly_name = cfg.models()[0]
+        model_dir = [p for p in [os.path.join(p, model_familly_name) for p in cfg.models_dir()] if os.path.exists(p)][-1]
+        profiles_dir = os.path.join(model_dir, 'profiles')
     except IndexError:
         _log.critical(f"Cannot find models in conf file {msf_run_path}. "
                       f"May be these results have been generated with an old version of macsyfinder.")
