@@ -280,7 +280,7 @@ Each file can define options, and in the end all options are integrated. If an o
 .. note::
     The precedence rules from the least to the most important priority are:
  
-    $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < ./macsyfinder.conf < "command-line" options
+    $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < macsyfinder.conf < "command-line" options
    
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
@@ -345,7 +345,7 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     
     * *res_search_dir* = (default= *./datatest/res_search* )
     * *res_search_suffix* = (default= *.search_hmm.out* )
-    * *models_dir* = (default= *./models* )
+    * *system_models_dir* = (default= *./models* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
     * *index_dir* = (default= beside the sequence_db)
 
@@ -401,7 +401,7 @@ Example of a configuration file
     data_dir = %(prefix)s/data/
     res_search_dir = %(prefix)s/dataset/res_search/
     res_search_suffix = .raw_hmm
-    models_dir = %(data_dir)/data/models
+    system_models_dir = %(data_dir)/data/models, ~/.macsyfinder/data
     profile_suffix = .fasta-aln.hmm
     res_extract_suffix = .res_hmm
     index_dir = path/where/I/store/my_indexes
@@ -415,6 +415,21 @@ Example of a configuration file
     After a run, the corresponding configuration file ("macsyfinder.conf") is generated as a (re-usable)
     output file that stores every options used in the run.
     It is stored in the results' directory (see :ref:`the output section <outputs>`).
+
+.. warning::
+
+    The configuration variable `models_dir` cannot be set in general configuration file.
+    |`models_dir`` can be set only in configuration under user control.
+    ```$(HOME)/.macsyfinder/macsyfinder.conf < macsyfinder.conf < "command-line" options```
+    `models_dir` is a single path to a directory whre masyfinder can find models.
+
+    But the `system_models_dir` can be set in general configuration file
+    $PREFIX/etc/macsyfinder/macsyfinder.conf
+
+    `system_models_dir` manage a list of locations where macsyfinder can find models.
+    The order of locations is important, it reflects the precedence rule (The models found in last location
+    superseed models found in previous location).
+    By default `system_models_dir` is set to *$PREFIX/share/macsyfinder/data/models*, *$HOME/.macsyfinder/data*
 
 
 In-house input files
