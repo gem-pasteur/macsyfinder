@@ -204,9 +204,7 @@ def _find_all_installed_packages() -> ModelRegistry:
     """
     defaults = MacsyDefaults()
     config = Config(defaults, argparse.Namespace())
-    system_model_dir = config.models_dir()
-    user_model_dir = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
-    model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
+    model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
@@ -250,7 +248,6 @@ def do_install(args: argparse.Namespace) -> None:
 
     pack_name = user_req.name
     inst_pack_loc = _find_installed_package(pack_name)
-
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
@@ -336,7 +333,7 @@ def do_install(args: argparse.Namespace) -> None:
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
-        dest = config.models_dir()
+        dest = config.models_dir()[0]
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -377,7 +374,6 @@ def do_uninstall(args: argparse.Namespace) -> None:
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name)
-
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         shutil.rmtree(pack.path)

@@ -91,7 +91,7 @@ class ModelRegistry:
 
     def add(self, model_loc):
         """
-        :param model_loc: the model location to ad to the registry
+        :param model_loc: the model location to add to the registry
         :type model_loc: :class:`ModelLocation` object
         """
         self._registry[model_loc.name] = model_loc
