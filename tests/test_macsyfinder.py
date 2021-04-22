@@ -43,7 +43,7 @@ from macsypy.system import System, HitSystemTracker, RejectedClusters, \
 from macsypy.cluster import Cluster
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
-    likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
+    summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -197,18 +197,18 @@ neutral genes:
 # {' '.join(sys.argv)}
 # Systems found:
 """
-            system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
-                                     "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
-                                     "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
-                                     "hit_begin_match", "hit_end_match", "used_in"])
+            system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
+                                     "sys_loci", "locus_num", "sys_wholeness", "sys_score", "sys_occ",
+                                     "hit_gene_ref", "hit_status", "hit_seq_len", "hit_i_eval", "hit_score",
+                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "used_in"])
             system_tsv += "\n"
             system_tsv += "\t".join([ "replicon_id", "hit_1", "gspD", "1", "foo/T2SS", system_1.id,
-                                     "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000", "1.000",
-                                     "1.000", "10", "20", ""])
+                                     "1", "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000",
+                                     "1.000", "1.000", "10", "20", ""])
             system_tsv += "\n"
-            system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.000",
-                                     "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000", "1.000", "1.000", "10",
-                                     "20", ""])
+            system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id,
+                                     "1", "1", "1.000", "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000",
+                                     "1.000", "1.000", "10", "20", ""])
             system_tsv += "\n\n"
 
             f_out = StringIO()
@@ -225,6 +225,14 @@ neutral genes:
             track_multi_systems_hit = HitSystemTracker([])
             systems_to_tsv([], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+    def test_summary_best_solution(self):
+        best_solution_file = self.find_data('data_set', 'results', 'best_solution.tsv')
+        expected_summary_file = self.find_data('data_set', 'results', 'best_solution_summary.tsv')
+        computed_summary = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary, 'w') as f:
+            summary_best_solution(best_solution_file, f)
+        self.assertTsvEqual(expected_summary_file, computed_summary)
 
 
     def test_solutions_to_tsv(self):
@@ -343,80 +351,81 @@ neutral genes:
 # {' '.join(sys.argv)}
 # Systems found:
 """
-        sol_tsv += "\t".join(["sol_id", "replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
+        sol_tsv += "\t".join(["sol_id", "replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
+                              "sys_loci", "locus_num",
                               "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
                               "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
                               "hit_begin_match", "hit_end_match", "used_in"])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
+                              '1', '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
+                              '1', '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
+                              '1', '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'gspD', 'accessory',
+                              '1', '1', '0.800', '3.000', '1', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_A'])
         sol_tsv += "\n"
         sol_tsv += "\n"

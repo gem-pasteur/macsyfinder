@@ -485,6 +485,7 @@ class System(AbstractSetOfHits):
         super().__init__(model, self._replicon_name)
 
 
+
     @property
     def score(self):
         """
@@ -523,7 +524,7 @@ class System(AbstractSetOfHits):
         regular_clsts = []
         loner_multi_syst_clsts = []
         for clst in self.clusters:
-            if clst.loner() and clst.hits[0].multi_system:
+            if clst.loner and clst.hits[0].multi_system:
                 loner_multi_syst_clsts.append(clst)
             else:
                 regular_clsts.append(clst)
@@ -592,25 +593,43 @@ class System(AbstractSetOfHits):
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
 
+    @property
+    def loci_num(self):
+        """
+        :return: the number of the corresponding locus for each cluster
+                 the cluster made of only one hit reprenting a loner is not considered as a loci
+                 so these clusters have the locus_num = 0
+        :rtype: list of int
+        """
+        loci = []
+        loci_num = 0
+        # we do not take loners in account
+        for clst in self.clusters:
+            if not clst.loner:
+                loci_num += 1
+                loci.append(loci_num)
+            else:
+                loci.append(0)
+        return loci
+
 
     @property
-    def loci(self):
+    def loci_nb(self):
         """
         :return: The number of loci of this system (loners are not considered)
-        :rtype: int > 0
+        :rtype: int >= 0
         """
-        # we do not take loners in account
-        loci = sum([1 for c in self.clusters if len(c) > 1])
-        return loci
+        loci_nb = len([1 for c in self.clusters if not c.loner])
+        return loci_nb
 
 
     @property
     def multi_loci(self):
         """
-        :return: True if the systems is multi_loci. False otherwise
+        :return: True if the systems is encoded in multiple loci. False otherwise
         :rtype: bool
         """
-        return self.loci > 1
+        return self.loci_nb > 1
 
 
     def is_compatible(self, other):

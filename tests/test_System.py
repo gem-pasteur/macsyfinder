@@ -178,7 +178,7 @@ class SystemTest(MacsyTest):
         sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
         self.assertFalse(sys_single_locus_plus_loner.multi_loci)
 
-    def test_loci(self):
+    def test_loci_nb(self):
         model = Model("foo/T2SS", 10)
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model)
@@ -199,13 +199,50 @@ class SystemTest(MacsyTest):
         c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
         c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
         sys_single_locus = System(model, [c1], self.cfg.redundancy_penalty())
-        self.assertEqual(sys_single_locus.loci, 1)
+        self.assertEqual(sys_single_locus.loci_nb, 1)
         sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
-        self.assertEqual(sys_multi_loci.loci, 2)
+        self.assertEqual(sys_multi_loci.loci_nb, 2)
         c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
         c3 = Cluster([v_hit_3], model, self.hit_weights)
         sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
-        self.assertEqual(sys_single_locus_plus_loner.loci, 1)
+        self.assertEqual(sys_single_locus_plus_loner.loci_nb, 1)
+
+        c4 = Cluster([v_hit_1], model, self.hit_weights)
+        sys_single_locus_of_one_hit_not_loner = System(model, [c4], self.cfg.redundancy_penalty())
+        self.assertEqual(sys_single_locus_of_one_hit_not_loner.loci_nb, 1)
+
+    def test_loci_num(self):
+        model = Model("foo/T2SS", 10)
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model)
+        model.add_mandatory_gene(gene_gspd)
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        model.add_accessory_gene(gene_sctj)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
+        model.add_accessory_gene(gene_sctn)
+
+        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c2 = Cluster([v_hit_1, v_hit_3], model, self.hit_weights)
+        sys_single_locus = System(model, [c1], self.cfg.redundancy_penalty())
+        self.assertListEqual(sys_single_locus.loci_num, [1])
+        sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
+        self.assertListEqual(sys_multi_loci.loci_num, [1, 2])
+        c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
+        c3 = Cluster([v_hit_3], model, self.hit_weights)
+        sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
+        self.assertListEqual(sys_single_locus_plus_loner.loci_num, [1, 0])
+
+        c4 = Cluster([v_hit_1], model, self.hit_weights)
+        sys_single_locus_of_one_hit_not_loner = System(model, [c4], self.cfg.redundancy_penalty())
+        self.assertEqual(sys_single_locus_of_one_hit_not_loner.loci_num, [1])
 
     def test_wholeness(self):
         model_1 = Model("foo/T2SS", 10)
