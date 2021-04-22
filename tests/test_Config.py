@@ -117,6 +117,10 @@ class TestConfig(MacsyTest):
             elif opt in methods_needing_args:
                 self.assertEqual(getattr(cfg, opt)('whatever'), val,
                                  msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)('whatever')} !=  got {val}")
+            elif opt == 'models_dir':
+                val = self.defaults['system_models_dir']
+                self.assertEqual(getattr(cfg, opt)(), val,
+                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
                                  msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
@@ -150,8 +154,10 @@ class TestConfig(MacsyTest):
             elif opt in methods_needing_args:
                 for model, genes in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), genes)
+            elif opt == 'models_dir':
+                self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
             else:
-                self.assertEqual(getattr(cfg, opt)(), val)
+                self.assertEqual(getattr(cfg, opt)(), val, msg=f"error with {opt}")
 
         self.parsed_args.cfg_file = 'niportnaoik'
         with self.assertRaises(ValueError) as ctx:
@@ -194,6 +200,8 @@ class TestConfig(MacsyTest):
                 elif opt in methods_needing_args:
                     for model, genes in expected_values[opt]:
                         self.assertEqual(getattr(cfg, opt)(model), genes)
+                elif opt == 'models_dir':
+                    self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
                 else:
                     self.assertEqual(getattr(cfg, opt)(), val)
         except:
@@ -253,6 +261,8 @@ class TestConfig(MacsyTest):
                     elif opt in methods_needing_args:
                         for model, genes in expected_values[opt]:
                             self.assertEqual(getattr(cfg, opt)(model), genes)
+                    elif opt == 'models_dir':
+                        self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
                     else:
                         self.assertEqual(getattr(cfg, opt)(), val)
             finally:
@@ -297,7 +307,8 @@ class TestConfig(MacsyTest):
             elif opt in methods_needing_args:
                 for model, genes in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), int(genes))
-
+            elif opt == 'models_dir':
+                self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
                                  msg=f"{opt} failed: expected: val '{val}' != got '{getattr(cfg, opt)}'")
@@ -344,7 +355,8 @@ class TestConfig(MacsyTest):
             elif opt in cfg_needing_args:
                 for model, val in expected_values[opt]:
                     self.assertEqual(getattr(cfg, opt)(model), int(val))
-
+            elif opt == 'models_dir':
+                self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
             else:
                 self.assertEqual(getattr(cfg, opt)(), exp_val)
 
@@ -443,6 +455,7 @@ class TestConfig(MacsyTest):
         with tempfile.TemporaryDirectory() as tmpdirname:
             cfg_path = os.path.join(tmpdirname, 'macsyfinder.conf')
             cfg.save(path_or_buf=cfg_path)
+            cfg.save(path_or_buf='/tmp/macsyfinder.conf')
             new_args = Namespace()
             new_args.cfg_file = cfg_path
             restored_cfg = Config(self.defaults, new_args)

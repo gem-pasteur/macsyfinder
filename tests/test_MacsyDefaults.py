@@ -24,6 +24,9 @@
 
 import os
 import logging
+import shutil
+import tempfile
+
 from time import strftime
 
 from macsypy.config import MacsyDefaults
@@ -50,7 +53,10 @@ class TestMacsyDefaults(MacsyTest):
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
                          'models': [],
-                         'models_dir': os.path.normpath(os.path.join(os.path.dirname(__file__), 'data', 'models')),
+                         'system_models_dir': [path for path in (
+                             os.path.normpath(os.path.join(os.path.dirname(__file__), 'data', 'models')),
+                             os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')) if os.path.exists(path)],
+                         'models_dir': None,
                          'multi_loci': set(),
                          'mute': False,
                          'out_dir': None,
@@ -75,6 +81,7 @@ class TestMacsyDefaults(MacsyTest):
                          'loner_multi_system_weight': 0.7
                          }
 
+
     def test_MacsyDefaults(self):
         defaults = MacsyDefaults()
         self.assertDictEqual(defaults, self.defaults)
@@ -88,11 +95,18 @@ class TestMacsyDefaults(MacsyTest):
 
     def test_MacsyDefaults_with_MACSY_DATA(self):
         import macsypy.config
+        self.maxDiff = None
         macsydata = macsypy.config.__MACSY_DATA__
-        macsypy.config.__MACSY_DATA__ = 'niportnaoik'
-        self.defaults['models_dir'] = 'niportnaoik/data/models'
+        macsypy.config.__MACSY_DATA__ = tempfile.mkdtemp()
+        system_models_dir = os.path.join(macsypy.config.__MACSY_DATA__, 'data', 'models')
         try:
+            os.makedirs(system_models_dir)
+            self.defaults['system_models_dir'] = [path for path in
+                                                  (system_models_dir,
+                                                   os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
+                                                  if os.path.exists(path)]
             defaults = MacsyDefaults()
             self.assertDictEqual(defaults, self.defaults)
         finally:
+            shutil.rmtree(macsypy.config.__MACSY_DATA__)
             macsypy.config.__MACSY_DATA__ = macsydata

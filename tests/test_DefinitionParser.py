@@ -221,7 +221,7 @@ class TestModelParser(MacsyTest):
         model_name, def_name = model_2_detect[0].split_fqn(model_2_detect[0].fqn)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(
-                             os.path.join(self.cfg.models_dir(),
+                             os.path.join(self.cfg.models_dir()[0],
                                           model_name,
                                           'definitions',
                                           def_name)))
@@ -234,7 +234,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({}): inter_gene_max_space must be an integer: 12.5".format(
-                             os.path.join(self.cfg.models_dir(), "foo/definitions/bad_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir()[0], "foo/definitions/bad_inter_gene_max_space.xml")
                          )
                          )
 
@@ -246,7 +246,7 @@ class TestModelParser(MacsyTest):
 
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({}): inter_gene_max_space must be defined".format(
-                             os.path.join(self.cfg.models_dir(), "foo/definitions/no_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir()[0], "foo/definitions/no_inter_gene_max_space.xml")
                          )
                          )
 
