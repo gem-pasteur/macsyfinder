@@ -46,7 +46,7 @@ from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, HitSystemTracker
-from macsypy.utils import get_def_to_detect
+from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
@@ -704,22 +704,44 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         print("# No Systems found", file=sys_file)
 
 
-def summary_best_solution(best_solution_path, sys_file):
+def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_names):
     """
     do a summary of best_solution in best_solution_path and write it on out_path
 
     :param str best_solution_path: the path to the best_solution file
     """
     print(_outfile_header(), file=sys_file)
+
+    def fill_replicon(summary):
+        computed_replicons = set(summary.index)
+        lacking_replicons = set(replicon_names) - computed_replicons
+        lacking_replicons = sorted(lacking_replicons)
+        for rep in lacking_replicons:
+            row = pd.Series({m:0 for m in summary.columns}, name=rep)
+            summary = summary.append(row)
+        return summary
+
+    def fill_models(summary):
+        computed_models = set(summary.columns)
+        lacking_models = set(models_fqn) - computed_models
+        lacking_models = sorted(lacking_models)
+        for model in lacking_models:
+            summary[model] = [0 for _ in summary.index]
+        return summary
+
     try:
         best_solution = pd.read_csv(best_solution_path, sep='\t', comment='#')
     except pd.errors.EmptyDataError:
-        print("# Systems found:", file=sys_file)
+        summary = pd.DataFrame(0, index=replicon_names, columns=models_fqn)
+        summary.index.name = 'replicon'
     else:
         selection = best_solution[['replicon', 'sys_id', 'model_fqn']]
         dropped = selection.drop_duplicates(subset=['replicon', 'sys_id'])
         summary = pd.crosstab(index=dropped.replicon, columns=dropped['model_fqn'])
-        summary.to_csv(sys_file, sep='\t')
+        summary = fill_replicon(summary)
+        summary = fill_models(summary)
+
+    summary.to_csv(sys_file, sep='\t')
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -935,7 +957,14 @@ def main(args=None, loglevel=None):
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
-            summary_best_solution(best_solution_filename, summary_file)
+            models_fqn = config.models()
+            models_fqn = [f'{fam}/{mod}' for fam, mod in itertools.product([models_fqn[0]], models_fqn[1])]
+            if config.db_type() == 'gembase':
+                replicons_names = get_replicon_names(config.sequence_db())
+            else:
+                # it's an ordered_replicon
+                replicons_names = [RepliconDB.ordered_replicon_name]
+            summary_best_solution(best_solution_filename, summary_file, models_fqn, replicons_names)
 
     else:
         #######################
