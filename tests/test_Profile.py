@@ -51,7 +51,7 @@ class TestProfile(MacsyTest):
         self.cfg = Config(MacsyDefaults(), args)
 
         if os.path.exists(self.cfg.working_dir()):
-            shutil(self.cfg.working_dir())
+            shutil.rmtree(self.cfg.working_dir())
         os.makedirs(self.cfg.working_dir())
 
         self.model_name = 'foo'
@@ -110,7 +110,7 @@ class TestProfile(MacsyTest):
 
 
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
-    def test_execute(self):
+    def test_execute_hmm_with_GA(self):
         for db_type in ("gembase", "ordered_replicon", "unordered"):
             self.cfg._set_db_type(db_type)
             model = Model("foo/T2SS", 10)
@@ -141,6 +141,44 @@ class TestProfile(MacsyTest):
             report_bis = profile.execute()
             self.assertIs(report, report_bis)
 
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_execute_hmm_protected_path(self):
+        # create a hmmdir with space in name
+        self.cfg.hmmer_dir = lambda: 'hmmer results'
+        # create sequence_db path with space in path
+        seq_path = os.path.join(self.cfg.working_dir(), "test test1.fasta")
+        shutil.copyfile(self.find_data("base", "test_1.fasta"),
+                        seq_path)
+        self.cfg._set_sequence_db(seq_path)
+
+        model = Model("foo/T2SS", 10)
+        gene_name = 'T5aSS_PF03797'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+
+        # case GA threshold in profile
+        profile_path = self.model_location.get_profile("T5aSS_PF03797")
+        profile = Profile(gene, self.cfg, profile_path)
+        report = profile.execute()
+        hmmer_raw_out = profile.hmm_raw_output
+        with open(hmmer_raw_out, 'r') as hmmer_raw_out_file:
+            first_l = hmmer_raw_out_file.readline()
+            # a hmmsearch output file has been produced
+            self.assertTrue(first_l.startswith("# hmmsearch :: search profile(s) against a sequence database"))
+            for i in range(5):
+                # skip 4 lines
+                l = hmmer_raw_out_file.readline()
+            # a hmmsearch used the abc profile line should become with: "# query HMM file: {the path tp hmm profile used}"
+            self.assertTrue(l.find(profile_path) != -1)
+            for i in range(3):
+                # skip 2 lines
+                l = hmmer_raw_out_file.readline()
+            self.assertEqual("# model-specific thresholding:     GA cutoffs", l.strip())
+
+
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_execute_hmm_w_GA_n_nocutga(self):
             # case GA threshold in profile but --no-cut-ga is set
             args = argparse.Namespace()
             args.sequence_db = self.find_data("base", "test_1.fasta")
@@ -152,6 +190,11 @@ class TestProfile(MacsyTest):
             args.no_cut_ga = True
             cfg = Config(MacsyDefaults(), args)
 
+            model = Model("foo/T2SS", 10)
+            gene_name = 'T5aSS_PF03797'
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+            gene = ModelGene(c_gene, model)
+            profile_path = self.model_location.get_profile("T5aSS_PF03797")
             profile = Profile(gene, cfg, profile_path)
             report = profile.execute()
             hmmer_raw_out = profile.hmm_raw_output
@@ -161,7 +204,10 @@ class TestProfile(MacsyTest):
                 self.assertEqual("# sequence reporting threshold:    E-value <= 0.5", l.strip())
 
 
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_execute_hmm_wo_GA(self):
             # case cut-ga but no GA threshold in hmmprofile
+            model = Model("foo/T2SS", 10)
             gene_name = 'abc'
             c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
             gene = ModelGene(c_gene, model)

@@ -311,11 +311,24 @@ class ModelLocationTest(MacsyTest):
                          os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
 
 
+    def test_get_profiles_names(self):
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(path=simple_dir)
+
+        self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
+                         os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
+
+        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
+                                  def_dir=os.path.join(simple_dir, 'definitions'))
+        self.assertSetEqual(set(model_loc.get_profiles_names()),
+                            {os.path.splitext(prof)[0] for prof in self.simple_models['profiles']})
+
     def test_str(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
         model_loc.name = 'foo20'
         self.assertEqual('foo20', str(model_loc))
+
 
     def test_get_definitions(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)

@@ -91,7 +91,7 @@ class ModelRegistry:
 
     def add(self, model_loc):
         """
-        :param model_loc: the model location to ad to the registry
+        :param model_loc: the model location to add to the registry
         :type model_loc: :class:`ModelLocation` object
         """
         self._registry[model_loc.name] = model_loc
@@ -324,6 +324,14 @@ class ModelLocation:
         :raise: KeyError if name does not match with any profiles.
         """
         return self._profiles[name]
+
+
+    def get_profiles_names(self):
+        """
+        :return: The list of profiles name (without extension) for this model location
+        :rtype: str
+        """
+        return list(self._profiles.keys())
 
 
     def __str__(self):

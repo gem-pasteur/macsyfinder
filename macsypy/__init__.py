@@ -25,7 +25,7 @@
 from time import strftime, localtime
 import sys
 
-__version__ = "2.0rc1"
+__version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
 
 __MACSY_CONF__ = '$MACSYCONF'
 __MACSY_DATA__ = '$MACSYDATA'

@@ -38,11 +38,12 @@ from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation
 from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.model import Model, ModelBank
-from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractSetOfHits, LikelySystem, UnlikelySystem
+from macsypy.system import System, HitSystemTracker, RejectedClusters, \
+    AbstractSetOfHits, AbstractUnordered, LikelySystem, UnlikelySystem
 from macsypy.cluster import Cluster
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
-    likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
+    summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -53,7 +54,8 @@ class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
-        AbstractSetOfHits._id = itertools.count(1)
+        System._id = itertools.count(1)
+        AbstractUnordered._id = itertools.count(1)
 
     def tearDown(self):
         try:
@@ -195,18 +197,18 @@ neutral genes:
 # {' '.join(sys.argv)}
 # Systems found:
 """
-            system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
-                                     "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
-                                     "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
-                                     "hit_begin_match", "hit_end_match", "used_in"])
+            system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
+                                     "sys_loci", "locus_num", "sys_wholeness", "sys_score", "sys_occ",
+                                     "hit_gene_ref", "hit_status", "hit_seq_len", "hit_i_eval", "hit_score",
+                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "used_in"])
             system_tsv += "\n"
             system_tsv += "\t".join([ "replicon_id", "hit_1", "gspD", "1", "foo/T2SS", system_1.id,
-                                     "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000", "1.000",
-                                     "1.000", "10", "20", ""])
+                                     "1", "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000",
+                                     "1.000", "1.000", "10", "20", ""])
             system_tsv += "\n"
-            system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id, "1", "1.000",
-                                     "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000", "1.000", "1.000", "10",
-                                     "20", ""])
+            system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id,
+                                     "1", "1", "1.000", "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000",
+                                     "1.000", "1.000", "10", "20", ""])
             system_tsv += "\n\n"
 
             f_out = StringIO()
@@ -223,6 +225,14 @@ neutral genes:
             track_multi_systems_hit = HitSystemTracker([])
             systems_to_tsv([], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+    def test_summary_best_solution(self):
+        best_solution_file = self.find_data('data_set', 'results', 'best_solution.tsv')
+        expected_summary_file = self.find_data('data_set', 'results', 'best_solution_summary.tsv')
+        computed_summary = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary, 'w') as f:
+            summary_best_solution(best_solution_file, f)
+        self.assertTsvEqual(expected_summary_file, computed_summary)
 
 
     def test_solutions_to_tsv(self):
@@ -341,80 +351,81 @@ neutral genes:
 # {' '.join(sys.argv)}
 # Systems found:
 """
-        sol_tsv += "\t".join(["sol_id", "replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id", "sys_loci",
+        sol_tsv += "\t".join(["sol_id", "replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
+                              "sys_loci", "locus_num",
                               "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
                               "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
                               "hit_begin_match", "hit_end_match", "used_in"])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                              '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
+                              '1', '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
+                              '1', '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
+                              '1', '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/C', 'sys_id_C',
-                              '1', '0.800', '3.000', '1', 'gspD', 'accessory',
+                              '1', '1', '0.800', '3.000', '1', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_A'])
         sol_tsv += "\n"
         sol_tsv += "\n"
@@ -773,6 +784,7 @@ Use ordered replicon to have better prediction.
         self.assertIsNone(args.res_extract_suffix)
         self.assertIsNone(args.res_search_suffix)
         self.assertIsNone(args.topology_file)
+        self.assertIsNone(args.index_dir)
         self.assertFalse(args.idx)
         self.assertFalse(args.list_models)
         self.assertFalse(args.mute)
@@ -786,12 +798,13 @@ Use ordered replicon to have better prediction.
 
         self.assertListEqual(args.models, ['functional', 'all'])
 
-        command_line = "macsyfinder --sequence-db test_!.fasta " \
+        command_line = "macsyfinder --sequence-db test_1.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
                        "--models functional all -w 4 --out test_1-all " \
-                       "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path"
+                       "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path --index-dir the_idx_dir"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
+        self.assertEqual(args.index_dir, 'the_idx_dir')
         self.assertEqual(args.multi_loci, "TXSscan/T2SS,TXSScan/T3SS")
         self.assertTrue(args.relative_path)
         self.assertTrue(args.mute)
@@ -817,7 +830,8 @@ Use ordered replicon to have better prediction.
         # test gembase replicon
         seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
         model_dir = self.find_data('data_set', 'models')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 all -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
@@ -826,15 +840,16 @@ Use ordered replicon to have better prediction.
         profile_factory = ProfileFactory(config)
 
         systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
-        expected_sys_id = ['VICH001.B.00001.C001_MSH_5', 'VICH001.B.00001.C001_MSH_7',
-                           'VICH001.B.00001.C001_T4P_25', 'VICH001.B.00001.C001_T4P_23',
-                           'VICH001.B.00001.C001_T4P_21', 'VICH001.B.00001.C001_T4P_22',
-                           'VICH001.B.00001.C001_T4P_17', 'VICH001.B.00001.C001_T4P_16',
-                           'VICH001.B.00001.C001_T4bP_26', 'VICH001.B.00001.C001_T4P_24',
-                           'VICH001.B.00001.C001_T4P_18', 'VICH001.B.00001.C001_T4P_19',
-                           'VICH001.B.00001.C001_T4P_20',
-                           'VICH001.B.00001.C001_T2SS_10', 'VICH001.B.00001.C001_T2SS_9'
+        expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
+                           'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_12',
+                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_11',
+                           'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
+                           'VICH001.B.00001.C001_T4bP_15', 'VICH001.B.00001.C001_T4P_13',
+                           'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
+                           'VICH001.B.00001.C001_T4P_9',
+                           'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3'
                            ]
+
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
         expected_scores = [10.5, 10.0, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.3, 7.5]
@@ -842,7 +857,8 @@ Use ordered replicon to have better prediction.
         self.assertEqual(len(rejected_clst), 11)
 
         # test hits but No Systems
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_bank = ModelBank()
@@ -853,7 +869,8 @@ Use ordered replicon to have better prediction.
 
         # test No hits
         seq_db = self.find_data('base', 'test_1.fasta')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 T4bP -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_bank = ModelBank()
@@ -874,7 +891,8 @@ Use ordered replicon to have better prediction.
         seq_db = self.find_data('base', 'VICH001.B.00001.C001.prt')
         model_dir = self.find_data('data_set', 'models')
         # test unordered replicon
-        args = f"--sequence-db {seq_db} --db-type=unordered --models-dir {model_dir} --models set_1 all -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=unordered --models-dir {model_dir} --models set_1 all -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
@@ -899,7 +917,8 @@ Use ordered replicon to have better prediction.
         os.mkdir(out_dir)
         seq_db = self.find_data('base', 'test_1.fasta')
         model_dir = self.find_data('data_set', 'models')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4 -o {out_dir}"
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4" \
+               f" -o {out_dir} --index-dir {out_dir}"
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)

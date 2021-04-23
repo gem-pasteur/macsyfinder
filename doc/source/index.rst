@@ -12,8 +12,11 @@
 Welcome to MacSyFinder's documentation!
 =======================================
 
-A **new version of MacSyFinder (v2)** is available, see :ref:`here for an overview of the novelties<new_v2>`. The search engine was improved, and some bugs/unwanted behaviors corrected. 
-MacSyFinder's models for V2 are very similar, yet not compatible with those from V1. See here for details on :ref:`how to carry your models to V2<models_v1_v2>`.
+
+.. note:: 
+
+  A **new version of MacSyFinder (v2)** is available, see :ref:`here for an overview of the novelties<new_v2>`. The search engine was improved, and some bugs/unwanted behaviors corrected. 
+  MacSyFinder's models for v2 are very similar, yet not compatible with those from v1. See here for details on :ref:`how to carry your models to v2<models_v1_v2>`.
 
 
 MacSyFinder is a program to **model and detect macromolecular systems, genetic pathways**... in protein datasets.
@@ -53,9 +56,9 @@ User Guide
    user_guide/index
 
 
-=============
-Modeler Guide
-=============
+==============
+Modeller Guide
+==============
 
 .. toctree::
    :maxdepth: 2

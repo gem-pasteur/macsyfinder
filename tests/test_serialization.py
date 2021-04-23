@@ -33,7 +33,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits, AbstractUnordered
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
     TxtLikelySystemSerializer, TxtUnikelySystemSerializer
 
@@ -53,13 +53,14 @@ class SerializationTest(MacsyTest):
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
         self.hit_weights = HitWeight(**self.cfg.hit_weights())
-        # reset the uniq id number for AbstractSetOfHits
-        # to have predictable results
-        AbstractSetOfHits._id = itertools.count(1)
+        # reset the uniq id number for AbstractUnordered
+        # to have predictable results for (Likely/Unlikely)Systems
+        System._id = itertools.count(1)
+        AbstractUnordered._id = itertools.count(1)
 
     def test_SystemSerializer_str(self):
         model_name = 'foo'
-        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir(), model_name))
+        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir()[0], model_name))
         model_A = Model("foo/A", 10)
         model_B = Model("foo/B", 10)
 
@@ -164,7 +165,7 @@ neutral genes:
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
-        gene_sctn = ModelGene(c_gene_sctn, model)
+        gene_sctn = ModelGene(c_gene_sctn, model, loner=True)
         c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
         gene_sctn.add_exchangeable(gene_sctn_flg)
@@ -182,15 +183,15 @@ neutral genes:
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
         system_serializer = TsvSystemSerializer()
 
-        sys_tsv = "\t".join(["replicon_id", "h_gspd", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1",
+        sys_tsv = "\t".join(["replicon_id", "h_gspd", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1", "1",
                              "1.000", "1.900", "1", "gspD", "mandatory", "803",
                              "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
         sys_tsv += "\n"
-        sys_tsv += "\t".join(["replicon_id", "h_sctj", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1",
+        sys_tsv += "\t".join(["replicon_id", "h_sctj", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1", "1",
                               "1.000", "1.900", "1", "sctJ", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "20", "30", ""])
         sys_tsv += "\n"
-        sys_tsv += "\t".join(["replicon_id", "h_sctn_flg", "sctN_FLG", "30", "foo/T2SS", sys_multi_loci.id, "1",
+        sys_tsv += "\t".join(["replicon_id", "h_sctn_flg", "sctN_FLG", "30", "foo/T2SS", sys_multi_loci.id, "1", "0",
                               "1.000", "1.900", "1", "sctN", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "30", "40", ""])
         sys_tsv += "\n"
@@ -199,7 +200,7 @@ neutral genes:
 
     def test_SolutionSerializer_tsv(self):
         model_name = 'foo'
-        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir(), model_name))
+        model_location = ModelLocation(path=os.path.join(self.cfg.models_dir()[0], model_name))
         model_A = Model("foo/A", 10)
         model_B = Model("foo/B", 10)
 
@@ -281,41 +282,42 @@ neutral genes:
         system_serializer = TsvSolutionSerializer()
 
         sol_tsv = '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                            '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                            '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                             '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'gspD', 'accessory',
+                             '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                             '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                             '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                             '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                             '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                             '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                             '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         ser = system_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
         self.assertEqual(ser, sol_tsv)
+
 
     def test_LikelySystemSerializer_txt(self):
         model = Model("foo/FOO", 10)
