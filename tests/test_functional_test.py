@@ -87,7 +87,7 @@ class Test(MacsyTest):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
-                self.assertTsvEqual(expected_result, get_results, comment="#")
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
         expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
         get_results = os.path.join(self.out_dir, self.rejected_clusters)
         self.assertFileEqual(expected_result, get_results, comment="#")
