@@ -221,7 +221,7 @@ class TestModelParser(MacsyTest):
         model_name, def_name = model_2_detect[0].split_fqn(model_2_detect[0].fqn)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({0}.xml): max_nb_genes must be an integer: HOHOHO".format(
-                             os.path.join(self.cfg.models_dir(),
+                             os.path.join(self.cfg.models_dir()[0],
                                           model_name,
                                           'definitions',
                                           def_name)))
@@ -234,7 +234,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({}): inter_gene_max_space must be an integer: 12.5".format(
-                             os.path.join(self.cfg.models_dir(), "foo/definitions/bad_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir()[0], "foo/definitions/bad_inter_gene_max_space.xml")
                          )
                          )
 
@@ -246,7 +246,7 @@ class TestModelParser(MacsyTest):
 
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({}): inter_gene_max_space must be defined".format(
-                             os.path.join(self.cfg.models_dir(), "foo/definitions/no_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir()[0], "foo/definitions/no_inter_gene_max_space.xml")
                          )
                          )
 
@@ -378,20 +378,18 @@ class TestModelParser(MacsyTest):
 
 
     def test_max_nb_genes_cfg(self):
-        # test max_nb_genes is specified from configuration
-        # so this value must overload the value read from xml
-        model_fqn = 'foo/model_5'
-
-        max_nb_genes = [[model_fqn, '4']]
-        self.args.max_nb_genes = max_nb_genes
-
-        self.cfg = Config(MacsyDefaults(), self.args)
         self.model_bank = ModelBank()
         self.gene_bank = GeneBank()
         self.model_registry = ModelRegistry()
         models_location = scan_models_dir(self.args.models_dir)
         for ml in models_location:
             self.model_registry.add(ml)
+
+        # max_nb_genes is specified in xml
+        # no user configuration on this
+        self.cfg = Config(MacsyDefaults(), self.args)
+        model_fqn = 'foo/model_6'  # 4 genes in this model
+        self.cfg = Config(MacsyDefaults(), self.args)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.model_registry, self.profile_factory)
 
@@ -399,6 +397,20 @@ class TestModelParser(MacsyTest):
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
         self.assertEqual(m.max_nb_genes, 4)
+
+        # max_nb_genes is specified from configuration
+        # so this value must overload the value read from xml
+        model_fqn = 'foo/model_5' # 4 genes in this model
+        max_nb_genes = [[model_fqn, '6']]
+        self.args.max_nb_genes = max_nb_genes
+        self.cfg = Config(MacsyDefaults(), self.args)
+        self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
+                                       self.model_registry, self.profile_factory)
+
+        models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(models_2_detect)
+        m = self.model_bank[model_fqn]
+        self.assertEqual(m.max_nb_genes, 6)
 
 
     def test_multi_loci_cfg(self):

@@ -122,9 +122,19 @@ class TestModel(MacsyTest):
         max_nb_genes_xml = 10
         model = Model(model_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
         self.assertEqual(model.max_nb_genes, max_nb_genes_xml)
-        model = Model(model_fqn, inter_gene_max_space)
-        self.assertIsNone(model.max_nb_genes)
 
+        model = Model(model_fqn, inter_gene_max_space)
+        self.assertEqual(model.max_nb_genes, 0)
+
+        c_gene_sctc = CoreGene(self.model_location, "sctC", self.profile_factory)
+        gene_sctc = ModelGene(c_gene_sctc, model)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+
+        model.add_mandatory_gene(gene_sctc)
+        model.add_accessory_gene(gene_abc)
+        self.assertEqual(model.max_nb_genes, 2)
         self.clean_working_dir()
 
 

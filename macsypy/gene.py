@@ -78,6 +78,14 @@ class GeneBank:
         return iter(self._genes_bank.values())
 
 
+    def genes_fqn(self):
+        """
+        :return: the fully qualified name for all genes in the bank
+        :rtype: str
+        """
+        return [f"{fam}/{gen_nam}" for fam, gen_nam in self._genes_bank.keys()]
+
+
     def add_new_gene(self, model_location, name, profile_factory):
         """
         Create a gene and store it in the bank. If the same gene (same name) is add twice,

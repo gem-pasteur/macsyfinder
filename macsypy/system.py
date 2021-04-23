@@ -371,11 +371,11 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
     Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
     """
 
-    _id = itertools.count(1)
+    #_id = itertools.count(1)
 
 
     def __init__(self, model, replicon_name):
-        self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
+        #self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
         self.model = model
 
     def _sort_hits(self, hits):
@@ -446,13 +446,15 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         """
 
         :return: a score indicating the genes ratio of the model which have at least one hit
-                ('neutral' genes do not count)
+                 by default full system is mandatory + accessory ('neutral' genes do not count)
+                 but for special corner case it can be sepcified in model definition (xml)
+                 or on the command line
         :rtype: float
         """
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                   (len(self._mandatory_occ) + len(self._accessory_occ))
+                   self.model.max_nb_genes
         return score
 
 
@@ -465,6 +467,8 @@ class System(AbstractSetOfHits):
                          GeneStatus.ACCESSORY,
                          GeneStatus.NEUTRAL)
 
+    _id = itertools.count(1)
+
     def __init__(self, model, clusters, redundancy_penalty=1.5):
         """
 
@@ -474,10 +478,12 @@ class System(AbstractSetOfHits):
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         """
         self._replicon_name = clusters[0].replicon_name
+        self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
         self.clusters = clusters
         self.redundancy_penalty = redundancy_penalty
         self._score = None
         super().__init__(model, self._replicon_name)
+
 
 
     @property
@@ -518,7 +524,7 @@ class System(AbstractSetOfHits):
         regular_clsts = []
         loner_multi_syst_clsts = []
         for clst in self.clusters:
-            if clst.loner() and clst.hits[0].multi_system:
+            if clst.loner and clst.hits[0].multi_system:
                 loner_multi_syst_clsts.append(clst)
             else:
                 regular_clsts.append(clst)
@@ -587,25 +593,43 @@ class System(AbstractSetOfHits):
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
 
+    @property
+    def loci_num(self):
+        """
+        :return: the number of the corresponding locus for each cluster
+                 the cluster made of only one hit reprenting a loner is not considered as a loci
+                 so these clusters have the locus_num = 0
+        :rtype: list of int
+        """
+        loci = []
+        loci_num = 0
+        # we do not take loners in account
+        for clst in self.clusters:
+            if not clst.loner:
+                loci_num += 1
+                loci.append(loci_num)
+            else:
+                loci.append(0)
+        return loci
+
 
     @property
-    def loci(self):
+    def loci_nb(self):
         """
         :return: The number of loci of this system (loners are not considered)
-        :rtype: int > 0
+        :rtype: int >= 0
         """
-        # we do not take loners in account
-        loci = sum([1 for c in self.clusters if len(c) > 1])
-        return loci
+        loci_nb = len([1 for c in self.clusters if not c.loner])
+        return loci_nb
 
 
     @property
     def multi_loci(self):
         """
-        :return: True if the systems is multi_loci. False otherwise
+        :return: True if the systems is encoded in multiple loci. False otherwise
         :rtype: bool
         """
-        return self.loci > 1
+        return self.loci_nb > 1
 
 
     def is_compatible(self, other):
@@ -689,12 +713,16 @@ class AbstractUnordered(AbstractSetOfHits):
     Technical abstract class to factorize code share between
     LikelySystem and UnlikelySystem
     """
+
+    _id = itertools.count(1)
+
     def __init__(self, model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits):
         self._mandatory_hits = mandatory_hits
         self._accessory_hits = accessory_hits
         self._neutral_hits = neutral_hits
         self._forbidden_hits = forbidden_hits
         self._replicon_name = self.allowed_hits[0].replicon_name
+        self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
         super().__init__(model, self._replicon_name)
 
     @property

@@ -44,6 +44,7 @@ def find_best_solutions(systems):
 
          - first by the sum of hits of systems composing the solution, most hits in first
          - second by the number of systems, most system in first
+         - third by the average of wholeness of the systems
          - and finally by hits position. This criteria is to produce predictable results
            between two runs and to be testable (functional_test gembase)
 
@@ -60,6 +61,7 @@ def find_best_solutions(systems):
         sorted_cliques = sorted(l, key=lambda item: (sum([len(sys.hits) for sys in item[0]]),
                                                      len(item[0]),
                                                      item[1],
+                                                     sum([sys.wholeness for sys in item[0]]) / len(item[0]),
                                                      '_'.join([sys.id for sys in item[0]])
                                                      ),
                                 reverse=True)

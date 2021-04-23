@@ -75,10 +75,10 @@ Models configuration
 The modeler can provide some spcific configuration values released along the model package. See :ref:`model_configuration`.
 
 
-Modeler helper tool
-===================
+Modeller helper tool
+====================
 
-To help modelers create new models we provide a new helper tool `macsyprofile`, which analyses HMMER raw output files from
+To help modellers create new models we provide a new helper tool `macsyprofile`, which analyses HMMER raw output files from
 results of a previous MacSyFinder run, to provide information on all hits even if filtered out. See :ref:`macsyprofile`.
 
 

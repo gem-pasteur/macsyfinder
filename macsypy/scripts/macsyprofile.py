@@ -189,11 +189,11 @@ class HmmProfile:
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
-        with open(macsyfinder_idx, 'r') as idx:
-            for l in idx:
-                seqid, length, rank = l.split(';')
-                if seqid in db:
-                    db[seqid] = (int(length), int(rank))
+        idx = Indexes(self.cfg)
+        idx.build()
+        for seqid, length, rank in idx:
+            if seqid in db:
+                db[seqid] = (length, rank)
 
 
     def _get_replicon_name(self, hit_id: str) -> str:
@@ -423,6 +423,11 @@ the hit selection for systems detection. (default no threshold)"""
                         action='store',
                         default=None,
                         help="the path to a file to write results.")
+    parser.add_argument('--index-dir',
+                        action='store',
+                        default=None,
+                        help="Specifies the path to a directory to store/read the sequence index when the sequence-db dir is not writable.")
+
     parser.add_argument('-f', '--force',
                         action='store_true',
                         default=False,
@@ -464,6 +469,15 @@ def main(args=None, log_level=None) -> None:
         log_level = verbosity_to_log_level(parsed_args.verbosity)
     _log = init_logger(log_level, out=(not parsed_args.mute))
 
+    if not os.path.exists(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run}: No such directory.")
+        sys.tracebacklimit = 0
+        raise FileNotFoundError() from None
+    elif not os.path.isdir(parsed_args.previous_run):
+        _log.critical(f"{parsed_args.previous_run} is not a directory.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
     defaults = MacsyDefaults(i_evalue_sel=1.0e9, coverage_profile=-1.0)
     cfg = Config(defaults, parsed_args)
 
@@ -488,7 +502,15 @@ def main(args=None, log_level=None) -> None:
         raise ValueError() from None
 
     hmmer_files = sorted(glob.glob(os.path.join(hmmer_results, f"{parsed_args.pattern}{hmm_suffix}")))
-    profiles_dir = os.path.join(cfg.models_dir(), cfg.models()[0], 'profiles')
+    try:
+        model_familly_name = cfg.models()[0]
+        model_dir = [p for p in [os.path.join(p, model_familly_name) for p in cfg.models_dir()] if os.path.exists(p)][-1]
+        profiles_dir = os.path.join(model_dir, 'profiles')
+    except IndexError:
+        _log.critical(f"Cannot find models in conf file {msf_run_path}. "
+                      f"May be these results have been generated with an old version of macsyfinder.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
 
     _log.debug(f"hmmer_files: {hmmer_files}")
     all_hits = []

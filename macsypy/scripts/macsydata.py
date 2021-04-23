@@ -204,9 +204,7 @@ def _find_all_installed_packages() -> ModelRegistry:
     """
     defaults = MacsyDefaults()
     config = Config(defaults, argparse.Namespace())
-    system_model_dir = config.models_dir()
-    user_model_dir = os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')
-    model_dirs = (system_model_dir, user_model_dir) if os.path.exists(user_model_dir) else (system_model_dir,)
+    model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
@@ -250,7 +248,6 @@ def do_install(args: argparse.Namespace) -> None:
 
     pack_name = user_req.name
     inst_pack_loc = _find_installed_package(pack_name)
-
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
@@ -336,7 +333,7 @@ def do_install(args: argparse.Namespace) -> None:
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
-        dest = config.models_dir()
+        dest = config.models_dir()[0]
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -377,7 +374,6 @@ def do_uninstall(args: argparse.Namespace) -> None:
     """
     pack_name = args.package
     inst_pack_loc = _find_installed_package(pack_name)
-
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         shutil.rmtree(pack.path)
@@ -484,6 +480,27 @@ To cite MacSyFinder:
         raise ValueError()
 
 
+def do_help(args: argparse.Namespace) -> None:
+    """
+    Display on stdout the content of readme file
+    if the readme file does nopt exists display a message to the user see :method:`macsypy.package.help`
+
+    :param args: the arguments passed on the command line (the package name)
+    :type args: :class:`argparse.Namespace` object
+    :return: None
+    :raise ValueError: if the package name is not known.
+    """
+    pack_name = args.package
+    inst_pack_loc = _find_installed_package(pack_name)
+    if inst_pack_loc:
+        pack = Package(inst_pack_loc.path)
+        print(pack.help())
+    else:
+        _log.error(f"Models '{pack_name}' not found locally.")
+        sys.tracebacklimit = 0
+        raise ValueError()
+
+
 def do_check(args: argparse.Namespace) -> None:
     """
 
@@ -501,7 +518,8 @@ def do_check(args: argparse.Namespace) -> None:
     if warnings:
         for warning in warnings:
             _log.warning(warning)
-        _log.warning("""macsydata says: You're only giving me a partial QA payment?
+        _log.warning("""
+macsydata says: You're only giving me a partial QA payment?
 I'll take it this time, but I'm not happy.
 I'll be really happy, if you fix warnings above, before to publish these models.""")
 
@@ -695,6 +713,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
     cite_subparser.set_defaults(func=do_cite)
     cite_subparser.add_argument('package',
                                 help='Package name.')
+    ########
+    # help #
+    ########
+    cite_subparser = subparsers.add_parser('help',
+                                           help='get online documentation.')
+    cite_subparser.set_defaults(func=do_help)
+    cite_subparser.add_argument('package',
+                                help='Package name.')
+
     #########
     # check #
     #########
@@ -704,7 +731,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     check_subparser.add_argument('path',
                                  nargs='?',
                                  default=os.getcwd(),
-                                 help='the directory to check')
+                                 help='the path to root directory models to check')
     return parser
 
 

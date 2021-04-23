@@ -1,6 +1,6 @@
-## Version of Integron_Finder:
+## Version of MacsyFinder:
 
-Write here the output of integron_finder --version.
+Write here the output of macsyfinder --version.
 
 ### OS
 
