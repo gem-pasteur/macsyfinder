@@ -22,9 +22,8 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-import contextlib
-import os
-import sys
+
+from itertools import groupby
 
 from .registries import DefinitionLocation
 
@@ -51,3 +50,28 @@ def get_def_to_detect(models, model_registry):
         def_to_detect = [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_names]
     return def_to_detect
 
+
+def get_replicon_names(genome_path):
+    """
+    parse gembase file and the list of replicon identifiers
+
+    :param str genome_path: The path to a file containing sequence in **gembase** format
+    :return: the list of replicon identifiers
+    :rtype: list of str
+    """
+    def grp_replicon(ids):
+        """
+        in gembase the identifier of fasta sequence follows the following schema:
+        <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
+        but not in the <seq-name>.
+        so grp_replicon allow to group sequences belonging to the same replicon.
+        """
+        return "_".join(ids.split('_')[: -1])
+
+    seq_ids = []
+    with open(genome_path, 'r') as fh:
+        for line in fh:
+            if line.startswith('>'):
+                seq_ids.append(line.split()[0][1:])
+    replicons = [rep_name for rep_name, _ in groupby(seq_ids, key=grp_replicon)]
+    return replicons
