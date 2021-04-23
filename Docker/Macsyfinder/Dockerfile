@@ -9,7 +9,7 @@ RUN apt update -y &&\
     apt install -y --no-install-recommends hmmer python3 python3-pip
 RUN apt clean -y
 
-RUN pip3 install macsyfinder==2.0rc2
+RUN pip3 install macsyfinder==2.0rc4
 
 ENV DEBIAN_FRONTEND teletype
 ENV PYTHONIOENCODING UTF-8
