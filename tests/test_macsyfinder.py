@@ -226,13 +226,62 @@ neutral genes:
             systems_to_tsv([], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
 
+
     def test_summary_best_solution(self):
-        best_solution_file = self.find_data('data_set', 'results', 'best_solution.tsv')
-        expected_summary_file = self.find_data('data_set', 'results', 'best_solution_summary.tsv')
-        computed_summary = os.path.join(self.tmp_dir, 'summary.tsv')
-        with open(computed_summary, 'w') as f:
-            summary_best_solution(best_solution_file, f)
-        self.assertTsvEqual(expected_summary_file, computed_summary)
+        best_solution_path = self.find_data('best_solution.tsv')
+        expected_summary_path = self.find_data('best_solution_summary.tsv')
+        computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary_path, 'w') as computed_summary_file:
+            models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
+            replicon_names= ['VICH001.B.00001.C001']
+            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+        self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
+
+    def test_summary_best_solution_empty(self):
+        best_solution_path = self.find_data('best_solution_empty.tsv')
+        expected_summary_path = os.path.join(self.tmp_dir, 'expected_best_sol_summary.tsv')
+        with open(expected_summary_path, 'w') as expected_summary_file:
+            expected_summary_file.write("# macsyfinder vers\n")
+            expected_summary_file.write("# msf command line\n")
+            expected_summary_file.write('\t'.join(['replicon', 'set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']) + '\n')
+            expected_summary_file.write('\t'.join(['VICH001.B.00001.C001',	'0', '0', '0', '0']) + '\n')
+
+        computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary_path, 'w') as f:
+            models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
+            replicon_names = ['VICH001.B.00001.C001']
+            summary_best_solution(best_solution_path, f, models_fqn, replicon_names)
+        self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
+
+    def test_summary_best_solution_lack_models(self):
+        best_solution_path = self.find_data('best_solution.tsv')
+        expected_summary_path = self.find_data('summary_best_solution_lack_models.tsv')
+        computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary_path, 'w') as computed_summary_file:
+            models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP', "empty/model"]
+            replicon_names = ['VICH001.B.00001.C001']
+            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+        self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
+
+    def test_summary_best_solution_lack_replicon(self):
+        best_solution_path = self.find_data('best_solution.tsv')
+        expected_summary_path = self.find_data('summary_best_solution_lack_replicon.tsv')
+        computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary_path, 'w') as computed_summary_file:
+            models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
+            replicon_names = ['VICH001.B.00001.C001', 'added_replicon']
+            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+        self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
+
+    def test_summary_best_solution_lack_models_replicons(self):
+        best_solution_path = self.find_data('best_solution.tsv')
+        expected_summary_path = self.find_data('summary_best_solution_lack_models_replicons.tsv')
+        computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        with open(computed_summary_path, 'w') as computed_summary_file:
+            models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP', "empty/model"]
+            replicon_names = ['VICH001.B.00001.C001', 'added_replicon']
+            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+        self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
 
     def test_solutions_to_tsv(self):
