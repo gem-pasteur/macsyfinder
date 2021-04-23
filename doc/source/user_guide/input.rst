@@ -419,7 +419,7 @@ Example of a configuration file
 .. warning::
 
     The configuration variable `models_dir` cannot be set in general configuration file.
-    |`models_dir`` can be set only in configuration under user control.
+    `models_dir`` can be set only in configuration under user control.
     ```$(HOME)/.macsyfinder/macsyfinder.conf < macsyfinder.conf < "command-line" options```
     `models_dir` is a single path to a directory whre masyfinder can find models.
 
