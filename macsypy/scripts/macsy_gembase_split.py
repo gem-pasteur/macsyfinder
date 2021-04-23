@@ -37,7 +37,7 @@ from macsypy.config import MacsyDefaults
 
 def copy_chunk(fh_in, out, start, stop):
     """
-    Copy file from fh_in to ou from position start to stop
+    Copy file from fh_in to out from position start to stop
 
     :param fh_in: the source file
     :type fh_in: file like object
