@@ -339,20 +339,8 @@ and how many per replicon.
 The 2 first lines are comment and indicate the msf version and the command line which generate this results.
 Then a table in tabulation separated columns, with models as columns and replicon as index.
 
-.. code-block:: text
-
-    # macsyfinder 20210420.dev
-    # macsyfinder --sequence-db DATA_TEST/sequences.prt --db-type=gembase --models-dir data/models/ --models TFF-SF_final all -w 4
-        model_fqn      TFF-SF/MSH  TFF-SF/T2SS  TFF-SF/T4P  TFF-SF/T4bP  TFF-SF/Tad
-    replicon
-    GCF_000005845           0            1           1            0           0
-    GCF_000006725           0            1           1            0           0
-    GCF_000006745           1            1           2            1           0
-    GCF_000006765           0            3           1            0           1
-    GCF_000006845           0            0           1            0           0
-    GCF_000006905           0            1           0            0           1
-    GCF_000006925           0            0           1            0           0
-    GCF_000006945           0            0           1            0           0
+.. literalinclude:: ../_static/best_solution_summary.tsv
+       :language: text
 
 as a `tsv` file it can be parsed easily using pandas::
 
