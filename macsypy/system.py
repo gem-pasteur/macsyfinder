@@ -603,13 +603,15 @@ class System(AbstractSetOfHits):
         """
         loci = []
         loci_num = 0
+        loners_num = 0
         # we do not take loners in account
         for clst in self.clusters:
             if not clst.loner:
                 loci_num += 1
                 loci.append(loci_num)
             else:
-                loci.append(0)
+                loners_num -= 1
+                loci.append(loners_num)
         return loci
 
 
