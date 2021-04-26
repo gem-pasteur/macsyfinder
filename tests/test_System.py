@@ -238,7 +238,7 @@ class SystemTest(MacsyTest):
         c1 = Cluster([v_hit_1, v_hit_2], model, self.hit_weights)
         c3 = Cluster([v_hit_3], model, self.hit_weights)
         sys_single_locus_plus_loner = System(model, [c1, c3], self.cfg.redundancy_penalty())
-        self.assertListEqual(sys_single_locus_plus_loner.loci_num, [1, 0])
+        self.assertListEqual(sys_single_locus_plus_loner.loci_num, [1, -1])
 
         c4 = Cluster([v_hit_1], model, self.hit_weights)
         sys_single_locus_of_one_hit_not_loner = System(model, [c4], self.cfg.redundancy_penalty())
