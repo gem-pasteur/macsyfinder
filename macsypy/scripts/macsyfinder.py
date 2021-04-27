@@ -927,7 +927,7 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        logger.info("\n{:#^70}".format(" Writing down results "))
+        logger.info("\n{:#^70}".format(f" Writing down results in '{os.path.basename(config.working_dir())}' "))
         system_filename = os.path.join(config.working_dir(), "all_systems.txt")
         tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
 
@@ -974,7 +974,7 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        logger.info("\n{:#^70}".format(" Writing down results "))
+        logger.info("\n{:#^70}".format(f" Writing down results in '{os.path.basename(config.working_dir())}' "))
 
         system_filename = os.path.join(config.working_dir(), "all_systems.txt")
         with open(system_filename, "w") as sys_file:
