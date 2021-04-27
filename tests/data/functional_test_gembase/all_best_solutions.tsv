@@ -1,5 +1,5 @@
 # macsyfinder 20210421.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --models-dir=tests/data//models/ --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path --sequence-db tests/data/base/gembase.fasta -w 12 --previous-run tests/data/functional_test_gembase/ -o functional_test_gembase_2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --models-dir=tests/data//models/ --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path --sequence-db tests/data/base/gembase.fasta -w 12 --previous-run tests/data/functional_test_gembase/ -o functional_test_gembase
 # Systems found:
 sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in
 1	GCF_000005845	GCF_000005845_000970	T4P_pilC	97	TFF-SF/T4P	GCF_000005845_T4P_25	3	1	0.556	7.800	1	T4P_pilC	mandatory	400	2.2e-105	353.100	0.991	0.830	62	393	
