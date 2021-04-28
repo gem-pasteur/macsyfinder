@@ -121,7 +121,18 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "unable to parse model definition 'foo/model_w_unknown_attribute' : "
-                         "The model definition model_w_unknown_attribute.xml has an unknow attribute 'multi-loci'. Please fix the definition.")
+                         "The model definition model_w_unknown_attribute.xml has an unknow attribute 'multi-loci'. "
+                         "Please fix the definition.")
+
+    def test_gene_w_unkown_attr(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/gene_w_unknown_attribute')]
+        with self.assertRaises(MacsypyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         "unable to parse model definition 'foo/gene_w_unknown_attribute' : "
+                         "The model definition gene_w_unknown_attribute.xml has an unknow attribute 'multi-system' for a gene."
+                         " Please fix the definition.")
 
     def test_wo_presence(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/fail_wo_presence')]
