@@ -114,6 +114,14 @@ class TestModelParser(MacsyTest):
         sctJ = m1.get_gene('sctJ')
         self.assertTrue(sctJ.is_exchangeable)
 
+    def test_model_w_unkown_attr(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/model_w_unknown_attribute')]
+        with self.assertRaises(MacsypyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         "unable to parse model definition 'foo/model_w_unknown_attribute' : "
+                         "The model definition model_w_unknown_attribute.xml has an unknow attribute 'multi-loci'. Please fix the definition.")
 
     def test_wo_presence(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/fail_wo_presence')]
@@ -388,15 +396,16 @@ class TestModelParser(MacsyTest):
         # max_nb_genes is specified in xml
         # no user configuration on this
         self.cfg = Config(MacsyDefaults(), self.args)
-        model_fqn = 'foo/model_6'  # 4 genes in this model
+        model_fqn = 'foo/model_6'  # 4 genes in this model but xml specify 3
         self.cfg = Config(MacsyDefaults(), self.args)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.model_registry, self.profile_factory)
 
+
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
-        self.assertEqual(m.max_nb_genes, 4)
+        self.assertEqual(m.max_nb_genes, 3)
 
         # max_nb_genes is specified from configuration
         # so this value must overload the value read from xml
