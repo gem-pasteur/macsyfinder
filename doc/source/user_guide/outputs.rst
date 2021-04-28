@@ -232,7 +232,7 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **model_fqn** - the model fully-qualified name
     * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
-    * **locus_num** - the number of the locus where is located this gene. Loners gene have locus_num = 0
+    * **locus_num** - the number of the locus where is located this gene. Loners gene have negative locus_num
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
     * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence,
@@ -269,8 +269,8 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 
     .. code-block:: text
 
-        GCF_000005845	GCF_000005845_026740	T4P_pilT	2674	TFF-SF/T4P	GCF_000005845_T4P_25	3	0	0.556	7.800
-        GCF_000005845	GCF_000005845_026930	T2SS_gspO	2693	TFF-SF/T4P	GCF_000005845_T4P_25	3	0	0.556	7.800
+        GCF_000005845	GCF_000005845_026740	T4P_pilT	2674	TFF-SF/T4P	GCF_000005845_T4P_25	3	-1	0.556	7.800
+        GCF_000005845	GCF_000005845_026930	T2SS_gspO	2693	TFF-SF/T4P	GCF_000005845_T4P_25	3	-2	0.556	7.800
 
 
 best_solution.tsv and all_best_solutions.tsv
@@ -296,7 +296,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **model_fqn** - the model fully-qualified name
     * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
-    * **locus_num** - the number of the locus where is located this gene. Loners gene have locus_num = 0
+    * **locus_num** - the number of the locus where is located this gene. Loners gene have negative locus_num
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
     * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
