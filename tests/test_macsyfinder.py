@@ -35,12 +35,13 @@ import itertools
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
 from macsypy.profile import ProfileFactory
-from macsypy.registries import ModelLocation
+from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
 from macsypy.hit import Hit, ValidHit, HitWeight
 from macsypy.model import Model, ModelBank
 from macsypy.system import System, HitSystemTracker, RejectedClusters, \
     AbstractSetOfHits, AbstractUnordered, LikelySystem, UnlikelySystem
 from macsypy.cluster import Cluster
+from macsypy.utils import get_def_to_detect
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
     summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
@@ -57,11 +58,23 @@ class TestMacsyfinder(MacsyTest):
         System._id = itertools.count(1)
         AbstractUnordered._id = itertools.count(1)
 
+
     def tearDown(self):
         try:
             shutil.rmtree(self.tmp_dir)
         except:
             pass
+
+    def _fill_model_registry(self, config):
+        model_registry = ModelRegistry()
+
+        for model_dir in config.models_dir():
+            models_loc_available = scan_models_dir(model_dir,
+                                                   profile_suffix=config.profile_suffix(),
+                                                   relative_path=config.relative_path())
+            for model_loc in models_loc_available:
+                model_registry.add(model_loc)
+        return model_registry
 
 
     def test_list_models(self):
@@ -884,11 +897,9 @@ Use ordered replicon to have better prediction.
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
-        model_bank = ModelBank()
-        gene_bank = GeneBank()
-        profile_factory = ProfileFactory(config)
-
-        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
                            'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_12',
                            'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_11',
@@ -910,10 +921,9 @@ Use ordered replicon to have better prediction.
                f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
-        model_bank = ModelBank()
-        gene_bank = GeneBank()
-        profile_factory = ProfileFactory(config)
-        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
 
         # test No hits
@@ -922,10 +932,9 @@ Use ordered replicon to have better prediction.
                f" -o {out_dir} --index-dir {out_dir}"
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
-        model_bank = ModelBank()
-        gene_bank = GeneBank()
-        profile_factory = ProfileFactory(config)
-        systems, rejected_clst = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
 
@@ -945,42 +954,13 @@ Use ordered replicon to have better prediction.
 
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
-        model_bank = ModelBank()
-        gene_bank = GeneBank()
-        profile_factory = ProfileFactory(config)
 
-        systems, uncomplete_sys = search_systems(config, model_bank, gene_bank, profile_factory, logger)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        systems, uncomplete_sys = search_systems(config, model_registry, def_to_detect, logger)
         expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
         expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
         self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)
 
-
-    def test_search_systems_model_unknown(self):
-        logger = logging.getLogger('macsypy.macsyfinder')
-        macsypy.logger_set_level(level='ERROR')
-        defaults = MacsyDefaults()
-
-        out_dir = os.path.join(self.tmp_dir, 'macsyfinder_test_search_systems')
-        os.mkdir(out_dir)
-        seq_db = self.find_data('base', 'test_1.fasta')
-        model_dir = self.find_data('data_set', 'models')
-        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models nimporaoik -w 4" \
-               f" -o {out_dir} --index-dir {out_dir}"
-
-        _, parsed_args = parse_args(args.split())
-        config = Config(defaults, parsed_args)
-        model_bank = ModelBank()
-        gene_bank = GeneBank()
-        profile_factory = ProfileFactory(config)
-
-        exit_ori = sys.exit
-        sys.exit = self.fake_exit
-        try:
-            with self.assertRaises(TypeError) as ctx:
-                _ = search_systems(config, model_bank, gene_bank, profile_factory, logger)
-            self.assertEqual(str(ctx.exception),
-                             "macsyfinder: \"No such model definition: 'nimporaoik'\"")
-        finally:
-            sys.exit = exit_ori
