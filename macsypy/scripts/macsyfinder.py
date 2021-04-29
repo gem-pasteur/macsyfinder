@@ -439,7 +439,7 @@ Conflicts with options:
     return parser, parsed_args
 
 
-def search_systems(config, model_bank, gene_bank, profile_factory, logger):
+def search_systems(config, model_registry, models_def_to_detect, logger):
     """
     Do the job, this function is the orchestrator of all the macsyfinder mechanics
     at the end several files are produced containing the results
@@ -452,12 +452,10 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
 
     :param config: The MacSyFinder Configuration
     :type config: :class:`macsypy.config.Config` object
-    :param model_bank: The bank populated with the available models
-    :type model_bank: :class:`macsypy.model.ModelBank` object
-    :param gene_bank: the bank containing all genes
-    :type gene_bank: :class:`macsypy.gene.GeneBank` object
-    :param profile_factory: The profile factory
-    :type profile_factory: :class:`macsypy.gene.ProfileFactory`
+    :param model_registry: the registry of all models
+    :type model_registry: :class:`macsypy.registries.ModelRegistry` object
+    :param models_def_to_detect: the defintions to detect
+    :type models_def_to_detect: list of :class:`macsypy.registries.DefinitionLocation` objects
     :param logger: The logger use to display information to the user.
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
@@ -466,27 +464,21 @@ def search_systems(config, model_bank, gene_bank, profile_factory, logger):
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
-    registry = ModelRegistry()
 
-    for model_dir in config.models_dir():
-        try:
-            models_loc_available = scan_models_dir(model_dir,
-                                                   profile_suffix=config.profile_suffix(),
-                                                   relative_path=config.relative_path())
-            for model_loc in models_loc_available:
-                registry.add(model_loc)
-        except PermissionError as err:
-            _log.warning(f"{model_dir} is not readable: {err} : skip it.")
     # build indexes
     idx = Indexes(config)
     idx.build(force=config.idx)
 
     # create models
-    parser = DefinitionParser(config, model_bank, gene_bank, registry, profile_factory)
-    try:
-        models_def_to_detect = get_def_to_detect(config.models(), registry)
-    except KeyError as err:
-        sys.exit(f"macsyfinder: {err}")
+    model_bank = ModelBank()
+    gene_bank = GeneBank()
+    profile_factory = ProfileFactory(config)
+
+    parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
+    # try:
+    #     models_def_to_detect = get_def_to_detect(config.models(), registry)
+    # except KeyError as err:
+    #     sys.exit(f"macsyfinder: {err}")
 
     parser.parse(models_def_to_detect)
 
@@ -888,12 +880,27 @@ def main(args=None, loglevel=None):
     #############################
     _log.info(f"command used: {' '.join(sys.argv)}")
 
-    models = ModelBank()
-    genes = GeneBank()
-    profile_factory = ProfileFactory(config)
+    ########################################
+    # compute which model I have to search #
+    ########################################
+    model_registry = ModelRegistry()
+    for model_dir in config.models_dir():
+        try:
+            models_loc_available = scan_models_dir(model_dir,
+                                                   profile_suffix=config.profile_suffix(),
+                                                   relative_path=config.relative_path())
+            for model_loc in models_loc_available:
+                model_registry.add(model_loc)
+        except PermissionError as err:
+            _log.warning(f"{model_dir} is not readable: {err} : skip it.")
+
+    try:
+        models_def_to_detect = get_def_to_detect(config.models(), model_registry)
+    except KeyError as err:
+        sys.exit(f"macsyfinder: {err}")
 
     logger.info("\n{:#^70}".format(" Searching systems "))
-    all_systems, rejected_clusters = search_systems(config, models, genes, profile_factory, logger)
+    all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
 
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
@@ -957,8 +964,7 @@ def main(args=None, loglevel=None):
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
-            models_fqn = config.models()
-            models_fqn = [f'{fam}/{mod}' for fam, mod in itertools.product([models_fqn[0]], models_fqn[1])]
+            models_fqn = [m.fqn for m in models_def_to_detect]
             if config.db_type() == 'gembase':
                 replicons_names = get_replicon_names(config.sequence_db())
             else:
