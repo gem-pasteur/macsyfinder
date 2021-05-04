@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:groovy
 
 MAINTAINER Bertrand Neron <bneron@pasteur.fr>
 
@@ -6,10 +6,16 @@ USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y &&\
-    apt install -y --no-install-recommends hmmer python3 python3-pip
+    apt install -y --no-install-recommends hmmer python3 python3-pip git
 RUN apt clean -y
 
-RUN pip3 install macsyfinder==2.0rc2
+RUN cd /tmp &&\
+    git clone https://github.com/gem-pasteur/macsyfinder.git &&\
+    cd macsyfinder &&\
+    python3 -m pip install . &&\
+    install -m 755 Docker/Macsyfinder/macsyfinder-entrypoint.sh /usr/local/bin &&\
+    cd /tmp &&\
+    rm -Rf macsyfinder
 
 ENV DEBIAN_FRONTEND teletype
 ENV PYTHONIOENCODING UTF-8
@@ -18,4 +24,5 @@ RUN useradd -m msf
 USER msf
 WORKDIR /home/msf
 
-ENTRYPOINT ["/bin/sh", "-c", "macsyfinder $0 $@"]
+CMD macsyfinder --help
+ENTRYPOINT ["/usr/local/bin/macsyfinder-entrypoint.sh"]
