@@ -157,7 +157,7 @@ class DefinitionParser:
 
         gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'inter_gene_max_space'}
         gene_all_attributes = set()
-        for gene in model_node.getiterator('gene'):
+        for gene in model_node.iter('gene'):
             gene_all_attributes |= set(gene.attrib.keys())
         gene_unallowed_attribute = gene_all_attributes - gene_allowed_attributes
         if gene_unallowed_attribute:
