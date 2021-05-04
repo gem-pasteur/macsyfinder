@@ -12,7 +12,7 @@ case ${CMD} in
   macsyprofile)
     exec /usr/local/bin/macsyprofile ${ARGS} ;;
 	* )
-		echo -e "command \"${CMD}\" is not supported.\nAvailable commands: \"macsyfinder\"|\"macsydata\"|\"macsyprofile\""
+		echo -e "command \"${CMD}\" is not supported.\nAvailable commands: macsyfinder | macsydata | macsyprofile"
     exit 127
     ;;
 esac
