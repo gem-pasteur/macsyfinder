@@ -11,9 +11,9 @@
    inkscape:version="0.91 r13725"
    id="svg8"
    version="1.1"
-   viewBox="0 0 320.25704 96.402934"
-   height="9.6402931cm"
-   width="32.025703cm">
+   viewBox="0 0 320.96257 108.50799"
+   height="307.5817pt"
+   width="909.81512pt">
   <defs
      id="defs2">
     <marker
@@ -324,22 +324,22 @@
     </marker>
   </defs>
   <sodipodi:namedview
-     units="cm"
-     fit-margin-bottom="0"
-     fit-margin-right="0"
-     fit-margin-left="0"
-     fit-margin-top="0"
+     units="pt"
+     fit-margin-bottom="1"
+     fit-margin-right="1"
+     fit-margin-left="1"
+     fit-margin-top="1"
      inkscape:window-maximized="0"
-     inkscape:window-y="242"
-     inkscape:window-x="441"
-     inkscape:window-height="999"
-     inkscape:window-width="1781"
+     inkscape:window-y="226"
+     inkscape:window-x="182"
+     inkscape:window-height="1118"
+     inkscape:window-width="2369"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="94.125792"
-     inkscape:cx="532.454"
+     inkscape:cy="95.375731"
+     inkscape:cx="285.19867"
      inkscape:zoom="1.0019906"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -355,15 +355,25 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(78.468661,-199.37333)"
+     transform="translate(78.821439,-187.62104)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
+    <rect
+       inkscape:transform-center-y="8.6642642"
+       inkscape:transform-center-x="54.012656"
+       y="-199.2925"
+       x="-78.387825"
+       height="11.237845"
+       width="320.09534"
+       id="rect3570"
+       style="fill:#d6fffc;fill-opacity:1;stroke:#000000;stroke-width:0.16166364;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       transform="scale(1,-1)" />
     <rect
        inkscape:transform-center-y="-45.600585"
        inkscape:transform-center-x="54.005394"
@@ -1133,15 +1143,15 @@
        xml:space="preserve" />
     <text
        id="text22494"
-       y="246.48177"
-       x="232.76553"
+       y="196.90933"
+       x="-76.778267"
        style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
-         y="246.48177"
-         x="232.76553"
+         y="196.90933"
+         x="-76.778267"
          id="tspan22492"
-         sodipodi:role="line">C</tspan></text>
+         sodipodi:role="line">C- Scoring candidate systems</tspan></text>
     <g
        transform="translate(234.18479,273.37823)"
        id="g3310-1" />
