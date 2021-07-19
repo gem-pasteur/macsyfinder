@@ -334,10 +334,10 @@ Example of `all_best_solutions.tsv files`
 best_solution_summary.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is a concise view, based on **best_solution.tsv**, of which systems have been found in your replicons
-and how many per replicon.
-The 2 first lines are comment and indicate the msf version and the command line which generate this results.
-Then a table in tabulation separated columns, with models as columns and replicon as index.
+This file is a concise view of which systems have been found in your replicons and how many per replicon. 
+It is based on **best_solution.tsv**, .
+The first two lines are comments that indicate the version of MacSyFinder and the command line used to generate the results.
+Then a table represented by tabulated text to separate columns, with the searched models in columns and the replicons scanned for the models in row.
 
 .. literalinclude:: ../_static/best_solution_summary.tsv
        :language: text
