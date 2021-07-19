@@ -33,12 +33,13 @@ Otherwise, the paths to this executable must be specified in the command-line:
 see the :ref:`command-line options <hmmer-options>`.
  
  
-MacSyFinder also relies on four Python library dependencies:
+MacSyFinder also relies on five Python library dependencies:
 
  - colorlog
  - pyyaml
  - packaging
  - networkx
+ - pandas
 
 These dependencies will be automatically retrieved and installed when using `pip` for installation (see below). 
  
