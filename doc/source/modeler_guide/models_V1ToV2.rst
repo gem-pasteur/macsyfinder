@@ -31,6 +31,12 @@ For those who had designed MacSyFinder's models for Version 1 and would like to 
  "exchangeable" is not a feature anymore, but is replaced by the keyword "exchangeables". 
 
 
+.. note::
+ 
+ These changes in the grammar used to specify model is also accompanied by a change on how to organize folders with models and profiles.
+ In particular, the new file architecture enables an :ref:`easier shipping<publish_package>` of the developed macsy-models. See :ref:`here<model_package>` for more details.
+  
+
 Here follow some examples of updates from v1 to v2.
 
 
