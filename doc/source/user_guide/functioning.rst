@@ -9,8 +9,8 @@
 .. _functioning:
 
 
-MacSyFinder's functioning
-=========================
+MacSyFinder's search engine
+===========================
 
 ********************
 Functioning overview
