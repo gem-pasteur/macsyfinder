@@ -16,39 +16,16 @@ MacSyFinder provides different types of output files. At each run, MacSyFinder c
 whose name is based on a fixed prefix and a random suffix, for instance "macsyfinder-20130128_08-57-46".
 MacSyFinder output files are stored in this run-specific folder.
 
-.. _hmmer-outputs-label:
-
-Hmmer results' output files 
----------------------------
-Raw Hmmer outputs are provided, as long with processed tabular outputs that include hits filtered as
-specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
-will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and 
-"sctC.res_hmm_extract" for the output file after processing/filtering of the HMMER results by MacSyFinder.
-
-The processed output file "sctC.res_hmm_extract" recalls on the first lines the parameters used for
-hits filtering and relevant information on the matches, as in this example:
-
-.. code-block:: text
-
-  # gene: sctC extract from /Users/bob/macsyfinder_results/
-        macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
-  # profile length= 544
-  # i_evalue threshold= 0.001000
-  # coverage threshold= 0.500000
-  # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score 
-        profile_coverage sequence_coverage begin end
-  PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6   
-        0.588235  0.419676        395     731
-  PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7   
-        0.976103  0.724227        35      596
-  PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7   
-        0.963235  0.844985        49      604
-  PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4   
-        0.571691  0.463585        374     704
-
 
 .. note::
     Each tabular output file contains a header line describing each column in the output.
+
+
+There are three types of output files: 
+  1. The main output files for the systems' search. They differ with the search mode (:ref:`ordered<ordered_outputs>` or :ref:`unordered<unordered_outputs>`). 
+  2. The :ref:`HMMER output files<hmmer-outputs-label>` (search of each systems' components), located in the `hmmer_results` folder. 
+  3. The internal :ref:`configuration and log files<logs_and_conf>`.
+
 
 
 .. _ordered_outputs:
@@ -451,14 +428,18 @@ Systems detection results
 
 As for ordered replicons, several output files are provided.
 
-    * **all_possible_systems.txt** - This file contains the description of candidate systems found.
-    * **all_possible_systems.tsv** - The same information as in `all_possible_systems.txt` but in the tabulated tsv format.
-    * **uncomplete_systems.txt** - This file contains occurrences for systems that did not complete models' definitions and that were therefore not kept as candidate systems.
+    * :ref:`all_systems.txt<all_systems_txt_unordered>` - This file contains the description of candidate systems found.
+    * :ref:`all_systems.tsv<all_systems_tsv_unordered>` - The same information as in `all_systems.txt` but in the tabulated tsv format.
+    * :ref:`uncomplete_systems.txt<uncomplete_unordered>` - This file contains occurrences for systems that did not complete models' definitions and that were therefore not kept as candidate systems.
 
 
-In this `unordered` search mode, there is no notion of order or distance of the components along the replicon. The clustering step
-is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
+.. note::
 
+  In this `unordered` search mode, there is no notion of order or distance of the components along the replicon. The clustering step
+  is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
+
+
+.. _all_systems_txt_unordered:
 
 all_systems.txt
 ~~~~~~~~~~~~~~~
@@ -529,7 +510,7 @@ This file contains the same information as in `all_systems.txt` but in `tsv` for
     This file can be easily parsed with pandas::
 
         import pandas as pd
-        pot_systems = pd.read_csv('all_possible_systems.tsv', sep='\t', comment='#')
+        pot_systems = pd.read_csv('all_systems.tsv', sep='\t', comment='#')
 
 
 .. code-block:: text
@@ -560,6 +541,8 @@ This file contains the same information as in `all_systems.txt` but in `tsv` for
     Unordered	GCF_000006845_000250	T4P_pilY	25	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilY	accessory	1006	2.2e-57	191.700	0.728	0.389	463	853
     Unordered	GCF_000006845_000700	T4P_pilY	70	TFF-SF/T4P_single_locus	Unordered_T4P_single_locus_1	0.889	T4P_pilY	accessory	1047	1.9e-57	191.900	0.721	0.362	516	894
 
+
+.. _uncomplete_unordered:
 
 uncomplete_systems.txt
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -612,6 +595,40 @@ followed by the model description and the components found.
 
     ============================================================
 
+
+
+.. _hmmer-outputs-label:
+
+Hmmer results' output files 
+---------------------------
+Raw Hmmer outputs are provided, as long with processed tabular outputs that include hits filtered as
+specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
+will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and 
+"sctC.res_hmm_extract" for the output file after processing/filtering of the HMMER results by MacSyFinder.
+
+The processed output file "sctC.res_hmm_extract" recalls on the first lines the parameters used for
+hits filtering and relevant information on the matches, as in this example:
+
+.. code-block:: text
+
+  # gene: sctC extract from /Users/bob/macsyfinder_results/
+        macsyfinder-20130128_08-57-46/sctC.search_hmm.out hmm output
+  # profile length= 544
+  # i_evalue threshold= 0.001000
+  # coverage threshold= 0.500000
+  # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score 
+        profile_coverage sequence_coverage begin end
+  PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6   
+        0.588235  0.419676        395     731
+  PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7   
+        0.976103  0.724227        35      596
+  PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7   
+        0.963235  0.844985        49      604
+  PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4   
+        0.571691  0.463585        374     704
+
+
+.. _logs_and_conf:
 
 Logs and configuration files
 ----------------------------
