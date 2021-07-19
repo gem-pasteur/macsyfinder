@@ -232,7 +232,7 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **model_fqn** - the model fully-qualified name
     * **sys_id** - the unique identifier attributed to the detected system
     * **sys_loci** - the number of loci
-    * **locus_num** - the number of the locus where is located this gene. Loners gene have negative locus_num
+    * **locus_num** - the number of the locus where is located this gene. Loners gene have a negative locus_num
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
     * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence,
@@ -255,7 +255,7 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
     systems = pd.read_csv("path/to/systems.tsv", sep='\t', comment='#')
 
 .. note::
-    each system reported is separated from the others with a blank line to ease human reading.
+    Each system reported is separated from the others with a blank line to ease human reading.
     These lines are ignored during the parsing with pandas.
 
 .. literalinclude:: ../_static/all_systems.tsv
@@ -263,9 +263,9 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
    :lines: 1-15
 
 .. note::
-    That if a loner is not clustered with other genes it is not considered as locus.
-    So it's locus number is 0 and not count for `sys_loci` (number of loci for a system)
-    see above lines
+    If a loner component is not clustered with other genes, it will not be considered as part of a locus.
+    Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
+    See above lines for more details. 
 
     .. code-block:: text
 
@@ -291,7 +291,7 @@ For the description of the fields of `best_solution.tsv`, see :ref:`above <all_s
 
 For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
-    * **sol_id** - the name of the solution it is part of
+    * **sol_id** - the name of the solution it is part of **(only in** `all_best_solutions.tsv` **files)**
     * **replicon** - the name of the replicon it belongs to
     * **hit_id** - the unique identifier of the hit
     * **gene_name** - the name of the component identified by the hit
@@ -315,7 +315,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **used_in** - whether the hit could be used in another system's occurrence
 
 .. note::
-    each system reported is separated from the others with a blank line to ease human reading.
+    Each system reported is separated from the others with a blank line to ease human reading.
     These lines are ignored during the parsing with pandas.
 
 Example of `best_solution.tsv files`
@@ -331,9 +331,9 @@ Example of `all_best_solutions.tsv files`
    :lines: 1-20, 28-35
 
 .. note::
-    If a loner is not clustered with other genes it is not considered as locus.
-    So it's locus number is 0 and not count for `sys_loci` (number of loci for a system)
-
+    If a loner component is not clustered with other genes, it will not be considered as part of a locus.
+    Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
+    See above lines for more details. 
 
 
 .. _best_solution_summary_tsv:
