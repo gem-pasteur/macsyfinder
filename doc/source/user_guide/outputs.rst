@@ -335,7 +335,7 @@ best_solution_summary.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This file is a concise view of which systems have been found in your replicons and how many per replicon. 
-It is based on **best_solution.tsv**, .
+It is based on **best_solution.tsv**.
 The first two lines are comments that indicate the version of MacSyFinder and the command line used to generate the results.
 Then a table represented by tabulated text to separate columns, with the searched models in columns and the replicons scanned for the models in row.
 
