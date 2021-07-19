@@ -69,7 +69,7 @@ Different types of output files are provided, human-readable files ".txt", and t
 headers are provided with the content of the lines in the file.
 
 
-  * **best_solution.tsv** - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
+  * :ref:`best_solution.tsv<best_solution_tsv>` - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
     under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
     If multiple solutions showed a maximal score, the solution maximizing
 
@@ -82,19 +82,19 @@ headers are provided with the content of the lines in the file.
     
     The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
-  * **best_solution_summary.tsv** is a summary of the `best_solution.tsv` file.
+  * :ref:`best_solution_summary.tsv<best_solution_summary_tsv>` is a summary of the `best_solution.tsv` file, containing the number of systems detected in each replicon analysed.
 
-  * **all_systems.txt** - This file describes the search process of all possible candidate systems given the definitions in systems' models -
+  * :ref:`all_systems.txt<all_systems_txt>` - This file describes the search process of all possible candidate systems given the definitions in systems' models -
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
     under the form of a tabulated file in `all_systems.tsv`.
 
-  * **rejected_clusters.txt** - This file lists candidate clusters of systems' components that were rejected by
+  * :ref:`rejected_clusters.txt<rejected_clusters_file>` - This file lists candidate clusters of systems' components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system.
 
-  * **all_best_solutions.tsv** - This file contains all possible best solutions under the form of a per-component, tabulated report file.
+  * :ref:`all_best_solutions.tsv<best_solution_tsv>` - This file contains all possible best solutions under the form of a per-component, tabulated report file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
 
-  * **all_systems.tsv** - This file contains all possible candidate systems given the definitions -
+  * :ref:`all_systems.tsv<all_systems_tsv>` - This file contains all possible candidate systems given the definitions -
     without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
     to the tabulated version of the `all_systems.txt` file.  
 
@@ -273,6 +273,9 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
         GCF_000005845	GCF_000005845_026930	T2SS_gspO	2693	TFF-SF/T4P	GCF_000005845_T4P_25	3	-2	0.556	7.800
 
 
+
+.. _best_solution_tsv:
+
 best_solution.tsv and all_best_solutions.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -330,6 +333,10 @@ Example of `all_best_solutions.tsv files`
 .. note::
     If a loner is not clustered with other genes it is not considered as locus.
     So it's locus number is 0 and not count for `sys_loci` (number of loci for a system)
+
+
+
+.. _best_solution_summary_tsv:
 
 best_solution_summary.tsv
 ~~~~~~~~~~~~~~~~~~~~~~~~~
