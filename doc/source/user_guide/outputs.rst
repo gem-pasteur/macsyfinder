@@ -17,14 +17,16 @@ whose name is based on a fixed prefix and a random suffix, for instance "macsyfi
 MacSyFinder output files are stored in this run-specific folder.
 
 
-.. note::
-    Each tabular output file contains a header line describing each column in the output.
-
 
 There are three types of output files: 
   1. The main output files for the systems' search. They differ with the search mode (:ref:`ordered<ordered_outputs>` or :ref:`unordered<unordered_outputs>`). 
   2. The :ref:`HMMER output files<hmmer-outputs-label>` (search of each systems' components), located in the `hmmer_results` folder. 
   3. The internal :ref:`configuration and log files<logs_and_conf>`.
+
+
+
+.. note::
+    Each tabular output file contains a header line describing each column in the output.
 
 
 
@@ -48,12 +50,9 @@ headers are provided with the content of the lines in the file.
 
   * :ref:`best_solution.tsv<best_solution_tsv>` - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
     under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
-    If multiple solutions showed a maximal score, the solution maximizing
+    If multiple solutions showed a maximal score, a :ref:`ranking <sort_eqt_best_solution>` is established.
 
-        1. the number of components in systems and
-        2. the number of systems detected is proposed.
-
-    To see potential other best solutions (in case several obtained the same highest score), see file `all_best_solutions.tsv`. 
+    To see potential other best solutions (in case several obtained the same highest score), see file :ref:`all_best_solutions.tsv<best_solution_tsv>`. 
 
     To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
     
@@ -311,6 +310,21 @@ Example of `all_best_solutions.tsv files`
     If a loner component is not clustered with other genes, it will not be considered as part of a locus.
     Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
     See above lines for more details. 
+
+
+
+.. _sort_eqt_best_solution:
+
+.. note:: 
+   In case multiple solutions have the exact same score, a sorting is performed among the best solutions, and the solution ranked 1st 
+   is reported in the `best_solution.tsv` and `best_solution.txt` files. 
+   The ranking is performed as follow:
+   
+   1. by the number of systems' components constituting the solution (most components first)
+   2. by the number of systems (most systems in first)
+   3. by the average of systems' wholeness
+   4. by hits position. This criterion is mostly introduced to produce reproducible results between two runs.
+
 
 
 .. _best_solution_summary_tsv:
