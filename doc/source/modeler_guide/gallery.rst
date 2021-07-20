@@ -12,7 +12,7 @@
 Gallery of examples of MacSyFinder's models 
 *******************************************
 
-.. contents:: Table of contents of gallery
+.. contents:: Table of contents of the gallery
 	:local: 
         :depth: 1 
 
@@ -21,7 +21,7 @@ Here follows a "gallery" of MacSyFinder models we have developed over the years,
 
 These examples are extracted from published work, see the following references (they include more examples):
 
-- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_, *Scientific Reports*, for the description of the T1SS and T3SS models (and way more models not discussed here). 
+- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_, *Scientific Reports*, for the description of the T1SS, T3SS and T5aSS models (and way more models not discussed here). 
 - `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_, *PLoS Genetics*, for the evolutionary study of the T3SS and the bacterial flagellum, and how were designed the corresponding profiles. 
 - `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_, *PLoS Biology*, for the description of the T2SS and type IV-filament super-family models. 
 
@@ -29,10 +29,39 @@ These examples are extracted from published work, see the following references (
 
 
 
+.. _T5SS:
+
+Getting started with a one-component system: the autotransporter T5SS
+=====================================================================
+
+This case is rather straight-forward, as the detection of the autotransporter type V secretion system (T5aSS) relies solely on the detection of 
+a single component. This system indeed encodes both a translocator (outer membrane, pore-forming domain) and a passenger domain (toxin or enzyme) on the same gene. 
+
+The translocator domain is the **evolutionarily conserved** part across T5aSS. This family of homologous proteins 
+is gathered in the PFAM protein family `PF03797 <http://pfam.xfam.org/family/PF03797>`_  of "Autotransporter" domains. 
+
+We thus downloaded the corresponding pre-computed HMM profile that we named "T5aSS_PF03797.hmm" to enable its search using sequence similarity.
+
+We then wrote the corresponding MacSyFinder model in a file **T5aSS.xml**:
+
+.. code-block:: xml
+
+  <model inter_gene_max_space="1" vers="2.0">
+      <gene name="T5aSS_PF03797" presence="mandatory"/>
+  </model>
+
+
+It can be noted that several features do not have to be defined if default values are relevant. In particular, 
+in this example it is not needed to specify the quorum parameters: the default value for the minimal number of genes required 
+to infer the presence of the T5aSS is by default the number of components listed in the definition of the system (1). 
+
+
+
+
 .. _T1SS:
 
-Getting started with a (not-so-)simple example: modelling the T1SS
-==================================================================
+A (not-so-)simple example: modelling the T1SS
+=============================================
 
 
 1. Identifying genetic components
