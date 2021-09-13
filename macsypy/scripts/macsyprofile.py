@@ -320,7 +320,6 @@ def init_logger(level='INFO', out=True):
     :rtype: :class:`logging.Logger` instance
     """
     logger = colorlog.getLogger('macsyprofile')
-    logging = colorlog.logging.logging
     if isinstance(level, str):
         level = getattr(logging, level)
     if out:
