@@ -761,8 +761,8 @@ def init_logger(level='INFO', out=True):
     :return: logger
     :rtype: :class:`logging.Logger` instance
     """
+
     logger = colorlog.getLogger('macsydata')
-    logging = colorlog.logging.logging
     handlers = []
     if out:
         stdout_handler = colorlog.StreamHandler(sys.stderr)
