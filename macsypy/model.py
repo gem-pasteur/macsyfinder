@@ -29,6 +29,8 @@ from itertools import chain
 
 from .error import ModelInconsistencyError
 from .registries import DefinitionLocation
+from .hit import ModelHit
+from .gene import GeneStatus
 
 
 class ModelBank:
@@ -120,6 +122,7 @@ class MetaModel(type):
         :return: unbound method
         """
         def setter(self, gene):
+            gene.status = getattr(GeneStatus, cat.upper())
             getattr(self, f"_{cat}_genes").append(gene)
         return setter
 
@@ -329,15 +332,23 @@ class Model(metaclass=MetaModel):
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
 
 
-    @property
-    def genes(self):
+    def genes(self, exchangeable=False):
         """
-        :return: all the genes without the exchangeables which are described in the model.
+        :param bool exchangeable: include exchageables if True
+        :return: all the genes described in the model.
+                 with exchangeables if exchageable is True.
+                 otherwise only "first level" genes.
         :rtype: set of :class:`macsypy.gene.ModelGene` objects.
         """
         # we assume that a gene cannot appear twice in a model
-        return {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
+        primary_genes = {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
                 for g in sublist}
+        if exchangeable:
+            exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
+            all_genes = {g for g in chain(primary_genes, exchangeable_genes)}
+        else:
+            all_genes = primary_genes
+        return all_genes
 
 
     def filter(self, hits):
@@ -349,12 +360,18 @@ class Model(metaclass=MetaModel):
         only the hits related to genes implied in the model are kept.
 
         :param hits: list of hits to filter
-        :type hits: list of :class:`macsypy.report.Hit` object
+        :type hits: list of :class:`macsypy.report.CoreHit` object
         :return: list of hits
-        :rtype: list of :class:`macsypy.report.Hit` object
+        :rtype: list of :class:`macsypy.report.CoreHit` object
         """
-        primary_genes = self.genes
-        exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
-        all_genes = {g.name for g in chain(primary_genes, exchangeable_genes)}
-        compatible_hits = [h for h in hits if h.gene.name in all_genes]
+        all_genes = {g.name: g for g in self.genes(exchangeable=True)}
+        compatible_hits = []
+        for hit in hits:
+            if hit.gene.name in all_genes:
+                gene = all_genes[hit.gene.name]
+                compatible_hits.append(ModelHit(hit,
+                                                gene,
+                                                gene.status)
+                                       )
         return compatible_hits
+

@@ -168,7 +168,7 @@ class ModelGene:
         self._loner = loner
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
-
+        self.status = None
 
     def __getattr__(self, item):
         try:

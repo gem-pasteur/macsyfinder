@@ -120,7 +120,7 @@ class Test(MacsyTest):
         # genetic organization of test_3.fasta
         # gene       abc    mfp    omf    omf    abc    gspd
         # gene id   01397  01398  01548  01562  01399  01400
-        # pos        8      9      19     27     37     38
+        # pos        2      3      19     27     37     38
         # clst                 ]               [
         # syst (abc,37),  (gspd, 38), (abc,2), (mfp,3)
 
@@ -151,7 +151,7 @@ class Test(MacsyTest):
         # genetic organization of test_3.fasta
         # gene       abc    mfp    omf    omf    abc    gspd
         # gene id   01397  01398  01548  01562  01399  01400
-        # pos        8      9      19     27     37     38
+        # pos        2      3      19     27     37     38
         # clst    [            ]               [           ]
         # syst  no system
 
@@ -202,7 +202,7 @@ class Test(MacsyTest):
         self.assertTrue(os.path.exists(os.path.join(self.out_dir, "test_3.fasta.idx")))
 
 
-    def test_ordered_multi_system(self):
+    def test_ordered_loner(self):
         # genetic organization of test_1.fasta
         #
         # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf
@@ -215,7 +215,39 @@ class Test(MacsyTest):
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-multi-syst-exch " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.summary,
+                          self.rejected_clusters):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+    def test_ordered_loner_2_clusters(self):
+        # genetic organization of test_5.fasta
+        #
+        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf     abc    mfp     gspd
+        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
+        # pos         2      3     11     12     13      14    23     32     46
+        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]    [                    ]
+        # syst                    [abc    mfp    abc    gspd] [omf]  [omf]  [omf]   [abc     mfp    gspd ]
+        # 2 systems [abc    mfp    abc    gspd  omf46] with equivalent for omf46 [omf23 omf32]
+        #           [abc     mfp    gspd   omf46] with equivalent for omf46 [omf23 omf32]
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system")
+        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
+        args = "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
                "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
@@ -233,7 +265,40 @@ class Test(MacsyTest):
                 self.assertFileEqual(expected_result, get_results, comment="#")
 
 
-    def test_ordered_multi_system_loner_in_clust(self):
+    def test_ordered_loner_2_clusters_one_loner(self):
+        # genetic organization of test_6.fasta
+        #
+        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf     abc    mfp     gspd
+        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
+        # pos         2      3     11     12     13      14    23     32     46
+        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]    [                    ]
+        # syst                    [abc    mfp    abc    gspd]  [omf]   [abc     mfp    gspd ]
+        # 2 systems [abc    mfp    abc    gspd  omf23] with warning 1 loner 2 systems
+        #           [abc     mfp    gspd   omf23] with with warning 1 loner 2 systems
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system")
+        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
+        args = "--db-type ordered_replicon " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.summary,
+                          self.rejected_clusters):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_ordered_loner_in_clust(self):
         # genetic organization of test_2.fasta
         #
         # gene       abc    mfp    abc    gspd   omf    omf    omf
@@ -246,7 +311,7 @@ class Test(MacsyTest):
         # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-multi-syst-exch " \
+               "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
                "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
@@ -271,7 +336,7 @@ class Test(MacsyTest):
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
         # clst     [         ]   [           ]
-        # syst    abc, mfp, abc, gspd, omf, omf
+        # syst      abc, mfp,      abc, gspd,    omf, omf
 
         expected_result_dir = self.find_data("functional_test_ordered_multi_loci")
         args = "--db-type ordered_replicon " \
@@ -333,7 +398,7 @@ class Test(MacsyTest):
         # gene      mfp   gspd
         # gene id  01398  01400
         # pos        7      15
-        # syst    abc    mfp
+        # syst      mfp    mfp
         # inter_gene_max_space="8"
         expected_result_dir = self.find_data("functional_test_degenerated_systems")
         args = "--db-type ordered_replicon " \
@@ -359,10 +424,10 @@ class Test(MacsyTest):
     def test_uncomplete_degenerated_systems(self):
         # genetic organization of test_4.fasta
         #
-        # gene      mfp   gspd
-        # gene id  01398  01400
-        # pos        7      15
-        # syst    abc    mfp
+        # gene      mfp(Man)   gspd(acce)
+        # gene id    01398        01400
+        # pos         7            15
+        # syst       mfp
         # inter_gene_max_space="5"
         expected_result_dir = self.find_data("functional_test_uncomplete_degenerated_systems")
         args = "--db-type ordered_replicon " \

@@ -50,7 +50,7 @@ from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.solution import find_best_solutions
+from macsypy.solution import find_best_solutions, combine_clusters
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
     TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer
 
@@ -553,38 +553,48 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.info(f"Check model {model.fqn}")
             hits_related_one_model = model.filter(hits_by_replicon[rep_name])
             logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
-            logger.debug("".join([str(h) for h in hits_related_one_model]))
+            hit_header_str = "id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match"
+            hits_str = "".join([str(h) for h in hits_related_one_model])
+            logger.debug(f"\n{hit_header_str}\n{hits_str}")
             logger.debug("#" * 80)
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
-            clusters = cluster.build_clusters(hits_related_one_model, rep_info, model, hit_weights)
-            logger.debug("{:#^80}".format("CLUSTERS"))
+            clusters, true_loners, multi_systems_hits = cluster.build_clusters(hits_related_one_model, rep_info, model, hit_weights)
+            logger.debug("{:#^80}".format(" CLUSTERS "))
             logger.debug("\n" + "\n".join([str(c) for c in clusters]))
+            logger.debug("{:=^50}".format(" LONERS "))
+            logger.debug("\n" + "\n".join([str(h) for h in true_loners.values()]))
+            logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
+            logger.debug("\n" + "\n".join([str(h) for h in multi_systems_hits.values()]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
-            if model.multi_loci:
-                # The loners are already in clusters lists with their context
-                # so they are take in account
-                clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-            else:
-                # we must add loners manually
-                # but only if the cluster does not already contains them
-                loners = cluster.get_loners(hits_related_one_model, model, hit_weights)
-                clusters_combination = []
-                for one_cluster in clusters:
-                    one_clust_combination = [one_cluster]
-                    filtered_loners = cluster.filter_loners(one_cluster, loners)
-                    one_clust_combination.extend(filtered_loners)
-                    clusters_combination.append([one_clust_combination])
+            # if model.multi_loci:
+            #     # The loners are already in clusters lists with their context
+            #     # so they are take in account
+            #     clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+            # else:
+            #     # we must add loners manually
+            #     # but only if the cluster does not already contains them
+            #     loners = cluster.get_loners(hits_related_one_model, model, hit_weights)
+            #     clusters_combination = []
+            #     for one_cluster in clusters:
+            #         one_clust_combination = [one_cluster]
+            #         filtered_loners = cluster.filter_loners(one_cluster, loners)
+            #         one_clust_combination.extend(filtered_loners)
+            #         clusters_combination.append([one_clust_combination])
 
-            for one_combination_set in clusters_combination:
-                for one_clust_combination in one_combination_set:
-                    ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
-                    res = ordered_matcher.match(one_clust_combination)
-                    if isinstance(res, System):
-                        systems.append(res)
-                    else:
-                        rejected_clusters.append(res)
+            clusters_combination = combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=model.multi_loci)
+
+            for one_clust_combination in clusters_combination:
+                ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
+                print("\n####################################################")
+                print("### one_clust_combination", one_clust_combination, type(one_clust_combination))
+                print("####################################################")
+                res = ordered_matcher.match(one_clust_combination)
+                if isinstance(res, System):
+                    systems.append(res)
+                else:
+                    rejected_clusters.append(res)
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
     return systems, rejected_clusters
@@ -598,7 +608,8 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
         for model in models_to_detect:
             logger.info(f"Check model {model.fqn}")
             hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-            logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+            logger.debug("{:#^80}".format(" hits related to {} \n".format(model.name)))
+            logger.debug("id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match")
             logger.debug("".join([str(h) for h in hits_related_one_model]))
             logger.debug("#" * 80)
             logger.info("Searching systems")

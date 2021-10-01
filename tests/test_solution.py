@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -135,56 +135,56 @@ def _build_systems(cfg, profile_factory):
     model_K.add_accessory_gene(gene_sctn)
 
 
-    h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_abc = Hit(c_gene_abc, "hit_abc", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
     model_A._min_mandatory_genes_required = 2
     model_A._min_genes_required = 2
     hit_weights = HitWeight(**cfg.hit_weights())
-    c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                  ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
-                  ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+    c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                  ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                  ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                   ],
                  model_A, hit_weights)
 
-    c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                  ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+    c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                  ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
                  model_A, hit_weights)
 
     model_B._min_mandatory_genes_required = 1
     model_B._min_genes_required = 2
-    c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                  ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
+    c3 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                  ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
                  model_B, hit_weights)
     model_C._min_mandatory_genes_required = 1
     model_C._min_genes_required = 2
-    c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                  ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                  ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+    c4 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                  ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                  ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
                  model_C, hit_weights)
     model_D._min_mandatory_genes_required = 1
     model_D._min_genes_required = 1
-    c5 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
-                  ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
+    c5 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY),
+                  ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
                  model_D, hit_weights)
 
     model_E._min_mandatory_genes_required = 0
     model_E._min_genes_required = 1
-    c6 = Cluster([ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+    c6 = Cluster([ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
                  model_E, hit_weights)
 
     model_F._min_mandatory_genes_required = 1
     model_F._min_genes_required = 1
-    c7 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY)],
+    c7 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY)],
                  model_F, hit_weights)
 
     model_H._min_mandatory_genes_required = 1
@@ -192,20 +192,20 @@ def _build_systems(cfg, profile_factory):
 
     model_I._min_mandatory_genes_required = 1
     model_I._min_genes_required = 1
-    c8 = Cluster([ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
+    c8 = Cluster([ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
                  model_I, hit_weights)
 
     model_J._min_mandatory_genes_required = 1
     model_J._min_genes_required = 1
-    c9 = Cluster([ValidHit(h_abc, gene_abc, GeneStatus.MANDATORY),
-                  ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
+    c9 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY),
+                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
                  model_I, hit_weights)
 
     model_K._min_mandatory_genes_required = 1
     model_K._min_genes_required = 1
-    c10 = Cluster([ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                  ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
+    c10 = Cluster([ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                   ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
                   model_K, hit_weights)
 
     systems = {}

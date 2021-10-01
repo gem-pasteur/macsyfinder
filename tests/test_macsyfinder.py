@@ -36,7 +36,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
-from macsypy.hit import Hit, ValidHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, HitWeight
 from macsypy.model import Model, ModelBank
 from macsypy.system import System, HitSystemTracker, RejectedClusters, \
     AbstractSetOfHits, AbstractUnordered, LikelySystem, UnlikelySystem
@@ -134,10 +134,10 @@ set_2
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         system_1 = System(model,
                           [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
@@ -198,10 +198,10 @@ neutral genes:
             gene_sctj = ModelGene(c_gene_sctj, model)
             model.add_accessory_gene(gene_sctj)
 
-            hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-            v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-            hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-            v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+            hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+            hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
             system_1 = System(model,
                               [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                               cfg.redundancy_penalty())
@@ -361,40 +361,40 @@ neutral genes:
         model_C.add_accessory_gene(gene_tadZ)
         model_C.add_accessory_gene(gene_gspd)
 
-        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
         hit_weights = HitWeight(**cfg.hit_weights())
-        c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
-                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
                      model_A, hit_weights)
 
-        c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+        c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
                      model_A, hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
-        c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
+        c3 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
                      model_B, hit_weights)
 
         model_C._min_mandatory_genes_required = 1
         model_C._min_genes_required = 2
-        c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+        c4 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
+                      ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
                      model_C, hit_weights)
 
         sys_A = System(model_A, [c1, c2], cfg.redundancy_penalty())
@@ -521,16 +521,16 @@ neutral genes:
         model.add_mandatory_gene(gene_1)
         model.add_accessory_gene(gene_2)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
-        h40 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
-        h50 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h40 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h40 = ModelHit(h40, gene_1, GeneStatus.MANDATORY)
+        h50 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h50 = ModelHit(h50, gene_2, GeneStatus.ACCESSORY)
         hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([v_h10, v_h20], model, hit_weights)
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
@@ -602,14 +602,14 @@ These clusters have been rejected because:
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
@@ -691,14 +691,14 @@ Use ordered replicon to have better prediction.
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
@@ -773,14 +773,14 @@ Use ordered replicon to have better prediction.
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
         reason = "why it not a system"
         system_1 = UnlikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4], reason)
 
