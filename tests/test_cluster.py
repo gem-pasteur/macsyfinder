@@ -31,7 +31,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
-from macsypy.hit import Hit, ValidHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
 from macsypy.cluster import Cluster, build_clusters, get_loners, filter_loners
@@ -75,18 +75,18 @@ class TestBuildCluster(MacsyTest):
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
 
-        #     Hit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h11 = Hit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
-        h20 = Hit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h21 = Hit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
-        h30 = Hit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        h31 = Hit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
-        h50 = Hit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        h51 = Hit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
-        h60 = Hit(core_genes[2], "h60", 10, "replicon_1", 60, 1.0, 60.0, 1.0, 1.0, 10, 20)
-        h61 = Hit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h11 = CoreHit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h21 = CoreHit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h31 = CoreHit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        h50 = CoreHit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        h51 = CoreHit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        h60 = CoreHit(core_genes[2], "h60", 10, "replicon_1", 60, 1.0, 60.0, 1.0, 1.0, 10, 20)
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
 
         # case replicon is linear, 2 clusters
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61]
@@ -97,8 +97,8 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[1].hits, [h51, h61])
 
         # case replicon is linear with a single hit (not loner) between 2 clusters
-        h70 = Hit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
-        h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h70 = CoreHit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h50, h51, h70, h80]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
@@ -108,7 +108,7 @@ class TestBuildCluster(MacsyTest):
 
         # replicon is linear, 3 clusters, the last one contains only one hit (loner)
         rep_info = RepliconInfo('linear', 1, 100, [(f"g_{i}", i*10) for i in range(1, 101)])
-        h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
@@ -133,7 +133,7 @@ class TestBuildCluster(MacsyTest):
 
         # replicon is circular the last hit is incorporate to the first cluster
         rep_info = RepliconInfo('circular', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
-        h80 = Hit(core_genes[3], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[3], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h20, h21, h30, h31, h50, h51, h60, h61, h80]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
@@ -152,11 +152,11 @@ class TestBuildCluster(MacsyTest):
         self.assertListEqual(clusters[1].hits, [h51, h61])
 
         # case replicon is linear, 2 clusters, the hits 11,21,31 and 51,61 are contiguous
-        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
-        h11 = Hit(core_genes[2], "h11", 10, "replicon_1", 11, 1.0, 21.0, 1.0, 1.0, 10, 20)
-        h12 = Hit(core_genes[1], "h12", 10, "replicon_1", 12, 1.0, 31.0, 1.0, 1.0, 10, 20)
-        h50 = Hit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
-        h51 = Hit(core_genes[3], "h51", 10, "replicon_1", 51, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        h11 = CoreHit(core_genes[2], "h11", 10, "replicon_1", 11, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        h12 = CoreHit(core_genes[1], "h12", 10, "replicon_1", 12, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        h50 = CoreHit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        h51 = CoreHit(core_genes[3], "h51", 10, "replicon_1", 51, 1.0, 61.0, 1.0, 1.0, 10, 20)
         hits = [h10, h11, h12, h50, h51]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
@@ -166,7 +166,7 @@ class TestBuildCluster(MacsyTest):
 
         # case replicon is linear
         # one cluster with one hit loner
-        h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h80]
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
@@ -179,7 +179,7 @@ class TestBuildCluster(MacsyTest):
         model.add_mandatory_gene(model_genes[0])
         model.add_accessory_gene(model_genes[1])
 
-        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h80]
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertEqual(len(clusters), 1)
@@ -191,8 +191,8 @@ class TestBuildCluster(MacsyTest):
         model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=1)
         model.add_mandatory_gene(model_genes[0])
         model.add_accessory_gene(model_genes[1])
-        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
-        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h10, h80]
         random.shuffle(hits)
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
@@ -206,7 +206,7 @@ class TestBuildCluster(MacsyTest):
         model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=2)
         model.add_mandatory_gene(model_genes[0])
         model.add_accessory_gene(model_genes[1])
-        h80 = Hit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
         hits = [h80]
         clusters = build_clusters(hits, rep_info, model, self.hit_weights)
         self.assertListEqual(clusters, [])
@@ -253,13 +253,13 @@ class TestHitFunc(MacsyTest):
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = Hit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h30 = Hit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        h61 = Hit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
-        h80 = Hit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
 
         # loners are clusters of one hit
         loners = get_loners([h10, h20, h30, h61, h80], model, self.hit_weights)
@@ -286,13 +286,13 @@ class TestHitFunc(MacsyTest):
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = Hit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h30 = Hit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        h40 = Hit(core_genes[3], "h40", 10, "replicon_1", 40, 1.0, 61.0, 1.0, 1.0, 10, 20)
-        h50 = Hit(core_genes[4], "h50", 10, "replicon_1", 50, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h40 = CoreHit(core_genes[3], "h40", 10, "replicon_1", 40, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        h50 = CoreHit(core_genes[4], "h50", 10, "replicon_1", 50, 1.0, 80.0, 1.0, 1.0, 10, 20)
 
         c1 = Cluster([h10, h20, h30, h40, h50], model, self.hit_weights)
         filtered_loners = filter_loners(c1, [Cluster([h30], model, self.hit_weights),
@@ -333,18 +333,18 @@ class TestCluster(MacsyTest):
 
         gene_1 = ModelGene(c_gene_1, model_1)
 
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_1, GeneStatus.MANDATORY)
-        h30 = Hit(c_gene_3, "h30", 10, "replicon_2", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        v_h30 = ValidHit(h30, gene_1, GeneStatus.ACCESSORY)
-        h50 = Hit(c_gene_3, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_1, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_1, GeneStatus.MANDATORY)
+        h30 = CoreHit(c_gene_3, "h30", 10, "replicon_2", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_1, GeneStatus.ACCESSORY)
+        h50 = CoreHit(c_gene_3, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_1, GeneStatus.ACCESSORY)
 
         with self.assertRaises(MacsypyError) as ctx:
             with self.catch_log():
-                Cluster([v_h10, v_h20, v_h30, v_h50], model_1, self.hit_weights)
+                Cluster([m_h10, m_h20, m_h30, m_h50], model_1, self.hit_weights)
         msg = "Cannot build a cluster from hits coming from different replicons"
         self.assertEqual(str(ctx.exception), msg)
 
@@ -359,14 +359,14 @@ class TestCluster(MacsyTest):
         gene_2 = ModelGene(c_gene_2, model)
 
         replicon_name = "replicon_1"
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, replicon_name, 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, replicon_name, 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, replicon_name, 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, replicon_name, 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
         self.assertEqual(c1.replicon_name, replicon_name)
 
 
@@ -379,14 +379,14 @@ class TestCluster(MacsyTest):
         gene_1 = ModelGene(c_gene_1, model)
         gene_2 = ModelGene(c_gene_2, model)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
         self.assertEqual(len(c1), 2)
 
     def test_loner(self):
@@ -398,16 +398,17 @@ class TestCluster(MacsyTest):
         gene_1 = ModelGene(c_gene_1, model, loner=True)
         gene_2 = ModelGene(c_gene_2, model)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        l_h10 = Loner(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c1 = Cluster([v_h10], model, self.hit_weights)
-        c2 = Cluster([v_h20], model, self.hit_weights)
-        c3 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c1 = Cluster([l_h10], model, self.hit_weights)
+        c2 = Cluster([m_h20], model, self.hit_weights)
+        c3 = Cluster([m_h10, m_h20], model, self.hit_weights)
         self.assertTrue(c1.loner)
         self.assertFalse(c2.loner)
         self.assertFalse(c3.loner)
@@ -424,20 +425,20 @@ class TestCluster(MacsyTest):
         gene_2 = ModelGene(c_gene_2, model)
         gene_3 = ModelGene(c_gene_3, model)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
-        h30 = Hit(c_gene_3, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
-        h50 = Hit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h10, v_h20, v_h50], model, self.hit_weights)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
+        h30 = CoreHit(c_gene_3, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_3, GeneStatus.ACCESSORY)
+        h50 = CoreHit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_3, GeneStatus.ACCESSORY)
+        c1 = Cluster([m_h10, m_h20, m_h50], model, self.hit_weights)
 
-        self.assertTrue(v_h10 in c1)
-        self.assertFalse(v_h30 in c1)
+        self.assertTrue(m_h10 in c1)
+        self.assertFalse(m_h30 in c1)
 
 
     def test_fulfilled_function(self):
@@ -454,21 +455,21 @@ class TestCluster(MacsyTest):
         gene_4 = Exchangeable(c_gene_4, gene_3)
         gene_3.add_exchangeable(gene_4)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
 
-        c = Cluster([v_h10, v_h20], model, self.hit_weights)
+        c = Cluster([m_h10, m_h20], model, self.hit_weights)
 
         self.assertTrue(c.fulfilled_function(gene_1))
         self.assertFalse(c.fulfilled_function(gene_3))
 
-        h50 = Hit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_4, GeneStatus.ACCESSORY)
-        c = Cluster([v_h10, v_h50], model, self.hit_weights)
+        h50 = CoreHit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_4, GeneStatus.ACCESSORY)
+        c = Cluster([m_h10, m_h50], model, self.hit_weights)
         self.assertTrue(c.fulfilled_function(gene_3))
 
     def test_score(self):
@@ -505,60 +506,60 @@ class TestCluster(MacsyTest):
         gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
         model.add_mandatory_gene(gene_flie)
 
-        h_gspd = Hit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_gspd = ValidHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
-        h_tadz = Hit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_tadz = ValidHit(h_tadz, gene_tadZ, GeneStatus.MANDATORY)
+        h_gspd = CoreHit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
+        h_tadz = CoreHit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_tadz = ModelHit(h_tadz, gene_tadZ, GeneStatus.MANDATORY)
 
-        h_sctj = Hit(c_gene_sctj, "h_sctj", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctj = ValidHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
-        h_sctj_an = Hit(c_gene_sctJ_FLG, "h_sctj_an", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctj_an = ValidHit(h_sctj_an, analog_sctJ_FLG, GeneStatus.ACCESSORY)
+        h_sctj = CoreHit(c_gene_sctj, "h_sctj", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_sctj = ModelHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
+        h_sctj_an = CoreHit(c_gene_sctJ_FLG, "h_sctj_an", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_sctj_an = ModelHit(h_sctj_an, analog_sctJ_FLG, GeneStatus.ACCESSORY)
 
-        h_sctn = Hit(c_gene_sctn, "sctn", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctn = ValidHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
-        h_sctn_hom = Hit(c_gene_sctn_FLG, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_sctn_hom = ValidHit(h_sctn_hom, homolog_sctn_FLG, GeneStatus.ACCESSORY)
+        h_sctn = CoreHit(c_gene_sctn, "sctn", 40, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_sctn = ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)
+        h_sctn_hom = CoreHit(c_gene_sctn_FLG, "h_scth_hom", 30, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_sctn_hom = ModelHit(h_sctn_hom, homolog_sctn_FLG, GeneStatus.ACCESSORY)
 
-        h_toto = Hit(c_gene_sctn, "toto", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_toto = ValidHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+        h_toto = CoreHit(c_gene_sctn, "toto", 50, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_toto = ModelHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
 
-        h_flie = Hit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_flie = ValidHit(h_flie, gene_flie, GeneStatus.MANDATORY)
+        h_flie = CoreHit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        l_flie = Loner(h_flie, gene_flie, GeneStatus.MANDATORY)
 
         # 2 mandatory, 2 accessory no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn], model, self.hit_weights)
+        c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 2 mandatory, 2 accessory 1 neutral, no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_toto], model, self.hit_weights)
+        c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn, m_h_toto], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 1 mandatory + 1 mandatory duplicated 1 time
         # 1 accessory + 1 accessory duplicated 1 times
         # no analog/homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn, v_h_gspd, v_h_sctn], model, self.hit_weights)
+        c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn, m_h_gspd, m_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
         # 2 mandatory
         # 1 accessory + 1 accessory homolog
-        c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctn_hom], model, self.hit_weights)
+        c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn_hom], model, self.hit_weights)
         self.assertEqual(c1.score, 2.9)
 
         # # 2 mandatory
         # # 1 accessory + 1 accessory analog of the 1rst accessory
-        # c1 = Cluster([v_h_gspd, v_h_tadz, v_h_sctj, v_h_sctj_an], model, self.hit_weights)
+        # c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctj_an], model, self.hit_weights)
         # self.assertEqual(c1.score, 2.5)
 
         # test loners multi system
-        c1 = Cluster([v_h_flie], model, self.hit_weights)
+        c1 = Cluster([l_flie], model, self.hit_weights)
         self.assertEqual(c1.score, 0.7)
 
         # test the cache score
         self.assertEqual(c1.score, 0.7)
 
-        non_valid_hit = ValidHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)
-        c1 = Cluster([v_h_gspd, non_valid_hit, v_h_tadz], model, self.hit_weights)
+        non_valid_hit = ModelHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)
+        c1 = Cluster([m_h_gspd, non_valid_hit, m_h_tadz], model, self.hit_weights)
         with self.assertRaises(MacsypyError) as ctx:
             c1.score
         self.assertEqual(str(ctx.exception),
@@ -576,41 +577,41 @@ class TestCluster(MacsyTest):
         gene_2 = ModelGene(c_gene_2, model)
         gene_3 = ModelGene(c_gene_3, model)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
-        h30 = Hit(c_gene_3, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
-        h50 = Hit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
+        h30 = CoreHit(c_gene_3, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_3, GeneStatus.ACCESSORY)
+        h50 = CoreHit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_3, GeneStatus.ACCESSORY)
 
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
-        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
+        c2 = Cluster([m_h30, m_h50], model, self.hit_weights)
         c1.merge(c2)
-        self.assertListEqual(c1.hits, [v_h10, v_h20, v_h30, v_h50])
+        self.assertListEqual(c1.hits, [m_h10, m_h20, m_h30, m_h50])
 
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
-        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
+        c2 = Cluster([m_h30, m_h50], model, self.hit_weights)
         c2.merge(c1)
-        self.assertListEqual(c2.hits, [v_h30, v_h50, v_h10, v_h20])
+        self.assertListEqual(c2.hits, [m_h30, m_h50, m_h10, m_h20])
 
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
-        c2 = Cluster([v_h30, v_h50], model, self.hit_weights)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
+        c2 = Cluster([m_h30, m_h50], model, self.hit_weights)
         c1.merge(c2, before=True)
-        self.assertListEqual(c1.hits, [v_h30, v_h50, v_h10, v_h20])
+        self.assertListEqual(c1.hits, [m_h30, m_h50, m_h10, m_h20])
 
         model_2 = Model("foo/T3SS", 11)
         c_gene_3 = CoreGene(self.model_location, "sctJ", self.profile_factory)
         gene_3 = ModelGene(c_gene_3, model)
 
-        h30 = Hit(c_gene_3, "h30", 10, "replicon_2", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        v_h30 = ValidHit(h30, gene_3, GeneStatus.ACCESSORY)
-        h50 = Hit(c_gene_3, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_3, GeneStatus.ACCESSORY)
-        c3 = Cluster([v_h30, v_h50], model_2, self.hit_weights)
+        h30 = CoreHit(c_gene_3, "h30", 10, "replicon_2", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_3, GeneStatus.ACCESSORY)
+        h50 = CoreHit(c_gene_3, "h50", 10, "replicon_2", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_3, GeneStatus.ACCESSORY)
+        c3 = Cluster([m_h30, m_h50], model_2, self.hit_weights)
         with self.assertRaises(MacsypyError) as ctx:
             c1.merge(c3)
         self.assertEqual(str(ctx.exception), "Try to merge Clusters from different model")
@@ -625,13 +626,13 @@ class TestCluster(MacsyTest):
         gene_1 = ModelGene(c_gene_1, model)
         gene_2 = ModelGene(c_gene_2, model)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.MANDATORY)
-        c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
+        c1 = Cluster([m_h10, m_h20], model, self.hit_weights)
         s ="""Cluster:
 - model = T2SS
 - replicon = replicon_1

@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit, get_best_hits, HitWeight
+from macsypy.hit import CoreHit, ModelHit, get_best_hits, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -35,7 +35,7 @@ from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-class HitTest(MacsyTest):
+class CoreHitTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
@@ -59,19 +59,19 @@ class HitTest(MacsyTest):
         gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
         # compare hit with different id (comparison based on seq identifier)
-        h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
-                 float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
-                 float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+        h0 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+                     float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76),
+                     float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
         self.assertGreater(h1, h0)
         self.assertLess(h0, h1)
         # compare hit with different same id (comparison based on score)
         # score = 779.2
-        h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
-                 float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h0 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+                     float(779.2), float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         # score = 255.8
-        h1 = Hit(gene, "PSAE001c01_006940", 759, "PSAE001c01", 4146, float(3.7e-76),
-                 float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+        h1 = CoreHit(gene, "PSAE001c01_006940", 759, "PSAE001c01", 4146, float(3.7e-76),
+                     float(255.8), float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
         self.assertGreater(h0, h1)
         self.assertLess(h1, h0)
 
@@ -80,12 +80,12 @@ class HitTest(MacsyTest):
         gene_name = "gspD"
         gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
-        h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h2 = Hit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76), float(255.8),
-                 float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+        h0 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h2 = CoreHit(gene, "PSAE001c01_013980", 759, "PSAE001c01", 4146, float(3.7e-76), float(255.8),
+                     float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
         self.assertEqual(h0, h1)
         self.assertNotEqual(h0, h2)
 
@@ -107,9 +107,9 @@ class HitTest(MacsyTest):
                     'end': 741
                     }
 
-        hit = Hit(gene, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'],
-                  hit_prop['position'], hit_prop['i_eval'], hit_prop['score'],
-                  hit_prop['profil_coverage'], hit_prop['sequence_coverage'], hit_prop['begin'],hit_prop['end'])
+        hit = CoreHit(gene, hit_prop['id'], hit_prop['hit_seq_len'], hit_prop['replicon_name'],
+                      hit_prop['position'], hit_prop['i_eval'], hit_prop['score'],
+                      hit_prop['profil_coverage'], hit_prop['sequence_coverage'], hit_prop['begin'], hit_prop['end'])
         s = "{id}\t{replicon_name}\t{position:d}\t{hit_seq_len:d}\t{gene_name}\t{i_eval:.3e}" \
             "\t{score:.3f}\t{profil_coverage:.3f}\t{sequence_coverage:.3f}\t{begin:d}\t{end:d}\n".format(**hit_prop)
         self.assertEqual(s, str(hit))
@@ -119,8 +119,8 @@ class HitTest(MacsyTest):
         gene_name = "gspD"
         gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
-        h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h0 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         self.assertEqual(h0.get_position(), 3450)
 
 
@@ -128,18 +128,18 @@ class HitTest(MacsyTest):
         gene_name = "gspD"
         gene = CoreGene(self.model_location, gene_name, self.profile_factory)
 
-        h0 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h2 = Hit(gene, "PSAE001c01_006941", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
-                 float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h0 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h2 = CoreHit(gene, "PSAE001c01_006941", 803, "PSAE001c01", 3450, float(1.2e-234), float(779.2),
+                     float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         self.assertTrue(isinstance(hash(h0), int))
         self.assertEqual(hash(h0), hash(h1))
         self.assertNotEqual(hash(h0), hash(h2))
 
 
-class ValidHitTest(MacsyTest):
+class ModelHitTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
@@ -165,50 +165,50 @@ class ValidHitTest(MacsyTest):
         model.add_mandatory_gene(self.gene_gspd)
         model.add_accessory_gene(self.gene_sctj)
 
-        self.hit_1 = Hit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        self.hit_2 = Hit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.hit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
 
     def test_init(self):
-        v_hit_1 = ValidHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        v_hit_1 = ModelHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(v_hit_1.gene_ref, self.gene_gspd)
         self.assertEqual(v_hit_1.status, GeneStatus.MANDATORY)
-        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
+        v_hit_2 = ModelHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
         self.assertEqual(v_hit_2.gene_ref, self.gene_gspd)
         self.assertEqual(v_hit_2.status, GeneStatus.ACCESSORY)
 
         with self.assertRaises(MacsypyError) as ctx:
-            ValidHit(self.hit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+            ModelHit(self.hit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(str(ctx.exception),
-                         "The ValidHit 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+                         "The ModelHit 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
 
     def test_hash(self):
         self.assertEqual(hash(self.hit_1), hash(self.hit_1))
         self.assertNotEqual(hash(self.hit_1), hash(self.hit_2))
 
     def test_delegation(self):
-        v_hit_1 = ValidHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        v_hit_1 = ModelHit(self.hit_1, self.gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(v_hit_1.get_position(), 2)
 
     def test_eq(self):
-        v_hit_0 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
-        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
-        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
+        v_hit_0 = ModelHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_1 = ModelHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_2 = ModelHit(self.hit_2, self.gene_gspd, GeneStatus.ACCESSORY)
 
         self.assertEqual(v_hit_0, v_hit_1)
         self.assertNotEqual(v_hit_0, v_hit_2)
 
     def test_multi_system(self):
-        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
-        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
+        v_hit_1 = ModelHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+        v_hit_2 = ModelHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
         self.assertTrue(v_hit_2.multi_system)
         self.assertFalse(v_hit_1.multi_system)
 
-    def test_loner(self):
-        v_hit_1 = ValidHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
-        v_hit_2 = ValidHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
-        self.assertFalse(v_hit_2.loner)
-        self.assertTrue(v_hit_1.loner)
+    # def test_loner(self):
+    #     v_hit_1 = ModelHit(self.hit_1, self.gene_sctj, GeneStatus.MANDATORY)
+    #     v_hit_2 = ModelHit(self.hit_2, self.gene_gspd, GeneStatus.MANDATORY)
+    #     self.assertFalse(v_hit_2.loner)
+    #     self.assertTrue(v_hit_1.loner)
 
 
 class GetBestHitTest(MacsyTest):
@@ -241,10 +241,10 @@ class GetBestHitTest(MacsyTest):
         ######################
         # based on the score #
         ######################
-        h0 = Hit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
-                 10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, float(3.7e-76),
-                 11, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+        h0 = CoreHit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, float(1.2e-234),
+                     10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, float(3.7e-76),
+                     11, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
 
         h = get_best_hits([h0, h1])
         self.assertEqual(h[0], h1)
@@ -252,10 +252,10 @@ class GetBestHitTest(MacsyTest):
         #######################
         # based on the i_eval #
         #######################
-        h0 = Hit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
-                 10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 11,
-                 10, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
+        h0 = CoreHit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
+                     10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 11,
+                     10, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
 
         h = get_best_hits([h0, h1], key='i_eval')
         self.assertEqual(h[0], h0)
@@ -263,10 +263,10 @@ class GetBestHitTest(MacsyTest):
         #################################
         # based on the profile_coverage #
         #################################
-        h0 = Hit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
-                 10, 10, (741.0 - 104.0 + 1) / 803, 104, 741)
-        h1 = Hit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 10,
-                 10, 11, (736.0 - 105.0 + 1) / 759, 105, 736)
+        h0 = CoreHit(gene_gspd, "PSAE001c01_006940", 803, "PSAE001c01", 3450, 10,
+                     10, 10, (741.0 - 104.0 + 1) / 803, 104, 741)
+        h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 10,
+                     10, 11, (736.0 - 105.0 + 1) / 759, 105, 736)
 
         h = get_best_hits([h0, h1], key='profile_coverage')
         self.assertEqual(h[0], h1)

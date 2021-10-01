@@ -32,7 +32,7 @@ from threading import Lock
 from itertools import groupby
 
 from .database import Indexes, RepliconDB
-from .hit import Hit
+from .hit import CoreHit
 
 
 class HMMReport(object, metaclass=abc.ABCMeta):
@@ -224,7 +224,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.Hit` objects
+        :rtype: list of :class:`macsypy.report.CoreHit` objects
 
         """
         first_line = next(b_grp)
@@ -254,17 +254,17 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                             if cov_profile >= coverage_threshold:
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
-                                hits.append(Hit(self.gene,
-                                                hit_id,
-                                                seq_lg,
-                                                replicon_name,
-                                                position_hit,
-                                                i_eval,
-                                                score,
-                                                cov_profile,
-                                                cov_gene,
-                                                begin,
-                                                end))
+                                hits.append(CoreHit(self.gene,
+                                                    hit_id,
+                                                    seq_lg,
+                                                    replicon_name,
+                                                    position_hit,
+                                                    i_eval,
+                                                    score,
+                                                    cov_profile,
+                                                    cov_gene,
+                                                    begin,
+                                                    end))
                     except ValueError as err:
                         msg = f"Invalid line to parse :{line}:{err}"
                         _log.debug(msg)

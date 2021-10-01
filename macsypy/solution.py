@@ -28,7 +28,7 @@ import networkx as nx
 
 def find_best_solutions(systems):
     """
-    Among the systems choose the combination of systems which does not share :class:`macsypy.hit.Hit`
+    Among the systems choose the combination of systems which does not share :class:`macsypy.hit.CoreHit`
     and maximize the sum of systems scores
 
     :param systems: the systems to analyse
@@ -89,3 +89,62 @@ def find_best_solutions(systems):
     # sort the solutions (cliques)
     solutions = sort_cliques(max_cliques)
     return solutions, max_score
+
+
+
+def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False):
+    """
+    generate the combinations of clusters, with loners and multi systems
+
+    :param clusters: the clusters to combinates
+    :type clusters: list of :class:`macsypy.cluster.Cluster` object
+    :param true_loners: loners which not involved in a cluster
+    :type true_loners: dict with the name of the function code by the loner as key
+                       and 1 :class:`macsypy.cluster.Cluster` with the best :class:`macsypy.hit.Loner` as value
+    :param multi_systems_hits: the multi-systems hits
+    :type multi_systems_hits: dict the name of the function code by the multi-system hit as key
+                              and 1 :class:`macsypy.cluster.Cluster` with the best :class:`macsypy.hit.ModelHit`
+                              multi-system hit as value
+    :param bool multi_loci: True if the model is multi_loci false otherwise
+    :return:
+    """
+    print("############################### DEBUG combine_clusters ############################################")
+    if multi_loci:
+        cluster_combinations =  [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+    else:
+        cluster_combinations = [[clstr] for clstr in clusters]
+
+    print("### L117 cluster_combinations", cluster_combinations, type(cluster_combinations))
+    # add loners
+    combination_w_loners = []
+    for func_name, clst_loner in true_loners.items():
+        for one_combination in cluster_combinations:
+            to_add = True
+            for clstr in one_combination:
+                if clstr.fulfilled_function(func_name):
+                    to_add = False
+                    break
+            if to_add:
+                combination_w_loners.append(one_combination + [clst_loner])
+
+    print("### L130 combination_w_loners", combination_w_loners, type(combination_w_loners))
+    cluster_combinations += combination_w_loners
+    print("### L132 cluster_combinations", cluster_combinations, type(cluster_combinations))
+
+    # add multi-system
+    combination_w_ms = []
+    for func_name, hit_multi_sys in multi_systems_hits.items():
+        for one_combination in cluster_combinations:
+            to_add = True
+            for clstr in one_combination:
+                if clstr.fulfilled_function(func_name):
+                    to_add = False
+                    break
+            if to_add:
+                combination_w_ms.append(one_combination + [hit_multi_sys])
+
+    print("### L146 combination_w_ms", combination_w_ms, type(combination_w_ms))
+    cluster_combinations += combination_w_ms
+    print("### L148 cluster_combinations", cluster_combinations, type(cluster_combinations))
+    print("############################### END DEBUG combine_clusters ############################################")
+    return  cluster_combinations

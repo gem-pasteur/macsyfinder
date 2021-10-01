@@ -35,7 +35,7 @@ from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 def search_genes(genes, cfg):
     """
     For each gene of the list, use the corresponding profile to perform an Hmmer search, and parse the output
-    to generate a HMMReport that is saved in a file after Hit filtering.
+    to generate a HMMReport that is saved in a file after CoreHit filtering.
     These tasks are performed in parallel using threads.
     The number of workers can be limited by worker_nb directive in the config object or
     in the command-line with the "-w" option.

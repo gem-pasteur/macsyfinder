@@ -32,7 +32,7 @@ _log = logging.getLogger(__name__)
 
 from.gene import GeneStatus
 from .cluster import Cluster
-from .hit import ValidHit
+from .hit import ModelHit
 from .error import MacsypyError
 
 
@@ -75,17 +75,17 @@ class MatchMaker(metaclass=abc.ABCMeta):
 
     def sort_hits_by_status(self, hits):
         """
-        sort :class:`macsypy.hit.Hit` according the
+        sort :class:`macsypy.hit.CoreHit` according the
         the status of the gene the hit code for.
 
-        :param hits: list of :class:`macsypy.hit.Hit` object
+        :param hits: list of :class:`macsypy.hit.CoreHit` object
         :return: the valid hits according their status
         :rtype: a tuple of 4 lists
 
-              * :class:`macsypy.hit.ValidHit` for MANDATORY genes
-              * :class:`macsypy.hit.ValidHit` for ACCESSORY genes
-              * :class:`macsypy.hit.ValidHit` for NEUTRAL genes
-              * :class:`macsypy.hit.ValidHit` for FORBIDDEN genes
+              * :class:`macsypy.hit.ModelHit` for MANDATORY genes
+              * :class:`macsypy.hit.ModelHit` for ACCESSORY genes
+              * :class:`macsypy.hit.ModelHit` for NEUTRAL genes
+              * :class:`macsypy.hit.ModelHit` for FORBIDDEN genes
 
         """
         mandatory_hits = []
@@ -94,40 +94,40 @@ class MatchMaker(metaclass=abc.ABCMeta):
         forbidden_hits = []
         for hit in hits:
             gene_name = hit.gene.name
-            # the ValidHit need to be linked to the
+            # the ModelHit need to be linked to the
             # gene of the model
             gene = self._model.get_gene(gene_name)
             if gene_name in self.mandatory_counter:
                 self.mandatory_counter[hit.gene.name] += 1
-                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(ModelHit(hit, gene, GeneStatus.MANDATORY))
             elif gene_name in self.exchangeable_mandatory:
                 gene_ref = self.exchangeable_mandatory[gene_name]
                 self.mandatory_counter[gene_ref.name] += 1
-                mandatory_hits.append(ValidHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(ModelHit(hit, gene, GeneStatus.MANDATORY))
 
             elif gene_name in self.accessory_counter:
                 self.accessory_counter[gene_name] += 1
-                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(ModelHit(hit, gene, GeneStatus.ACCESSORY))
             elif gene_name in self.exchangeable_accessory:
                 gene_ref = self.exchangeable_accessory[gene_name]
                 self.accessory_counter[gene_ref.name] += 1
-                accessory_hits.append(ValidHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(ModelHit(hit, gene, GeneStatus.ACCESSORY))
 
             elif gene_name in self.neutral_counter:
                 self.neutral_counter[gene_name] += 1
-                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(ModelHit(hit, gene, GeneStatus.NEUTRAL))
             elif gene_name in self.exchangeable_neutral:
                 gene_ref = self.exchangeable_neutral[gene_name]
                 self.neutral_counter[gene_ref.name] += 1
-                neutral_hits.append(ValidHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(ModelHit(hit, gene, GeneStatus.NEUTRAL))
 
             elif gene_name in self.forbidden_counter:
                 self.forbidden_counter[gene_name] += 1
-                forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(ModelHit(hit, gene, GeneStatus.FORBIDDEN))
             elif gene_name in self.exchangeable_forbidden:
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
-                forbidden_hits.append(ValidHit(hit, gene, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(ModelHit(hit, gene, GeneStatus.FORBIDDEN))
 
         return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
@@ -178,11 +178,11 @@ class OrderedMatchMaker(MatchMaker):
         forbidden_hits = []
         for cluster in clusters:
             # sort hits between forbidden and the other
-            # and transform hit in ValidHit
+            # and transform hit in ModelHit
             *one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
             if one_clst_forbidden_hits:
                 forbidden_hits.extend(one_clst_forbidden_hits)
-            # create cluster of ValidHit
+            # create cluster of ModelHit
             one_clst_allowed_hits = [vh for st_hits in one_clst_allowed_hits for vh in st_hits]
             one_clst_allowed_hits.sort(key=attrgetter('position'))
             valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
@@ -421,7 +421,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         """
         fill structures one for supported status mandatory, accessory, ...
         each structure count how many hit for each gene of the model
-        mandatory_occ = { gene_name : [ValidHit, ...]
+        mandatory_occ = { gene_name : [ModelHit, ...]
         :return: None
         """
         for status in [str(s) for s in self._supported_status]:
@@ -429,7 +429,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
                     f"_{status}_occ",
                     {g.name: [] for g in getattr(self.model, f"{status}_genes")}
                     )
-        # all the hits are ValidHit
+        # all the hits are ModelHit
         for hit in self.hits:
             name = hit.gene_ref.alternate_of().name
             status = str(hit.status)  # transform gene status in lower string
@@ -574,7 +574,7 @@ class System(AbstractSetOfHits):
 
         :return: a predict number of biologic systems
         """
-        genes = {g.name: g for g in self.model.genes}
+        genes = {g.name: g for g in self.model.genes()}
         occ_per_gene = [len(hits) for gene_name, hits in self._mandatory_occ.items()
                         if not genes[gene_name].multi_system]
         # if a systems contains 5 gene with occ of 1 and 5 gene with 0 occ
@@ -639,7 +639,7 @@ class System(AbstractSetOfHits):
         :param other: the other systems to test compatibility
         :type other: :class:`macsypy.system.System` object
         :return: True if other system is compatible with this one. False otherwise.
-                 Two systems are compatible if they do not share :class:`macsypy.hit.Hit`
+                 Two systems are compatible if they do not share :class:`macsypy.hit.CoreHit`
                  except hit corresponding to a multi_system gene in the model.
 
                  .. note::
@@ -665,7 +665,7 @@ class RejectedClusters(AbstractSetOfHits):
         :param model:
         :type model: :class:`macsypy.model.Model` object
         :param clusters: list of clusters. These Clusters should be created with
-                         :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ValidHit` objects
+                         :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ModelHit` objects
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         :param reason: the reason why these clusters have been rejected
         :type reason: list of string
@@ -731,7 +731,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def hits(self):
         """
         :return: The list of all hits sorted by their position
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._sort_hits(self._mandatory_hits + self._accessory_hits + self._neutral_hits + self.forbidden_hits)
 
@@ -739,7 +739,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def mandatory_hits(self):
         """
         :return: The list of mandatory hits
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._mandatory_hits[:]
 
@@ -747,7 +747,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def accessory_hits(self):
         """
         :return: The list of accesory hits
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._accessory_hits[:]
 
@@ -755,7 +755,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def neutral_hits(self):
         """
         :return: The list of neutral hits
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._neutral_hits[:]
 
@@ -763,7 +763,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def forbidden_hits(self):
         """
         :return: The list of forbidden hits
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
         return self._forbidden_hits[:]
 
@@ -771,7 +771,7 @@ class AbstractUnordered(AbstractSetOfHits):
     def allowed_hits(self):
         """
         :return: The list of allowed (mandatory, accessory, neutral) hits
-        :rtype: list of :class:`macsypy.hit.ValidHit` objects
+        :rtype: list of :class:`macsypy.hit.ModelHit` objects
         """
 
         return self._mandatory_hits + self._accessory_hits + self._neutral_hits
@@ -821,9 +821,9 @@ class UnlikelySystem(AbstractUnordered):
         :type model: :class:`macsypy.model.Model` object
         :param allowed_hits: The list of hits that form this potential system
                              this hits status must be MANDATORY, ACCESSORY or NEUTRAL
-        :type allowed_hits: list of :class:`macsypy.hit.ValidHit` objects
+        :type allowed_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param forbidden_hits: The list of hits that are forbidden
-        :type forbidden_hits: list of :class:`macsypy.hit.ValidHit` objects
+        :type forbidden_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param reasons: the reasons why this set of hits has been rejected
         :type reasons: List of str
         """
