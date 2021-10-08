@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/functional/profiles/T1SS_abc.hmm
 # target sequence database:        tests/data/base/test_4.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-00-40/hmmer_results/T1SS_abc.search_hmm.out
+# output directed to file:         functional_test_unordered/hmmer_results/T1SS_abc.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +116,7 @@ Passed Vit filter:                         3  (0.0697674); expected 0.0 (0.001)
 Passed Fwd filter:                         2  (0.0465116); expected 0.0 (1e-05)
 Initial search space (Z):                 43  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
-# Mc/sec: 947.14
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
 //
 [ok]

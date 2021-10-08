@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/tests/data/models/functional/profiles/T2SS_gspD.hmm
+# query HMM file:                  tests/data/models/functional/profiles/T2SS_gspD.hmm
 # target sequence database:        tests/data/base/test_4.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20210115_13-51-01/hmmer_results/T2SS_gspD.search_hmm.out
+# output directed to file:         functional_test_uncomplete_degenerated_systems/hmmer_results/T2SS_gspD.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -70,7 +70,7 @@ Passed Vit filter:                         1  (0.0232558); expected 0.0 (0.001)
 Passed Fwd filter:                         1  (0.0232558); expected 0.0 (1e-05)
 Initial search space (Z):                 43  [actual number of targets]
 Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
-# Mc/sec: 563.37
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 1126.74
 //
 [ok]

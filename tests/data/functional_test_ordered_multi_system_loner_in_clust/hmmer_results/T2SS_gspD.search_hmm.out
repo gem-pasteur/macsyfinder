@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/functional/profiles/T2SS_gspD.hmm
 # target sequence database:        tests/data/base/test_2.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_18-01-21/hmmer_results/T2SS_gspD.search_hmm.out
+# output directed to file:         functional_test_ordered_multi_system_loner_in_clust/hmmer_results/T2SS_gspD.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

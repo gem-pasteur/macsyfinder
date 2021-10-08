@@ -1,0 +1,69 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T2SS_gspF.hmm
+# target sequence database:        tests/data/base/test_8.fasta
+# output directed to file:         functional_test_ordered_1_loner_exch_in_clust/hmmer_results/T2SS_gspF.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspF  [M=335]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+   2.1e-142  465.5   9.3   2.4e-142  465.3   9.3    1.0  1  VICH001.B.00001.C001_02599  gspf
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_02599  gspf
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  465.3   9.3  5.3e-144  2.4e-142       1     335 []      68     402 ..      68     402 .. 1.00
+
+  Alignments for each domain:
+  == domain 1  score: 465.3 bits;  conditional E-value: 5.3e-144
+                   T2SS_gspF   1 lalltrqLatLlaaglpLeeaLkavaeqaekkklrsvleavrekvreGksLsdalaefpklfpelyramvaaGEasGkLeevl 83 
+                                 lal+trqLatL+++g+pLee+L+avaeq+ek+++r++l avr+kv+eG++Lsd+l ++p++f+el+r+mvaaGE+sG+L++vl
+  VICH001.B.00001.C001_02599  68 LALITRQLATLVQSGMPLEECLRAVAEQSEKPRIRTMLVAVRAKVTEGYTLSDSLGDYPHVFDELFRSMVAAGEKSGHLDSVL 150
+                                 799******************************************************************************** PP
+
+                   T2SS_gspF  84 erladyleerqklrskiiqAliYPaillvvsvavvvflltfVVPkiveifesmkqelPlltrillalsdflrayglllllalv 166
+                                 erlady e+rqk+rsk++qA+iYP++l+v++v++v+fll++VVPkiv +f +m+q+lP++t++ll++sdfl+++g+ ll++l+
+  VICH001.B.00001.C001_02599 151 ERLADYAENRQKMRSKLQQAMIYPVVLVVFAVGIVAFLLAAVVPKIVGQFVQMGQALPASTQFLLDASDFLQHWGISLLVGLL 233
+                                 *********************************************************************************** PP
+
+                   T2SS_gspF 167 lllvllrlllkkpalrlkldklllrlpligklirklevarfartlsillssgvpLlealeiaaevlsnsvlkealeeaaekvr 249
+                                 +l++l+r ll kp++rl++d+ +++lp+igk++r+l++arfartlsi++ss++p+l+++++a +v++n+++k+++ +aae+vr
+  VICH001.B.00001.C001_02599 234 MLIYLVRWLLTKPDIRLRWDRRVISLPVIGKIARGLNTARFARTLSICTSSAIPILDGMRVAVDVMTNQFVKQQVLAAAENVR 316
+                                 *********************************************************************************** PP
+
+                   T2SS_gspF 250 eGksLseaLeetklfpplllhmiasGEkSgeLeemLeraadiyeeelekriklllsllePllivvmglvvgfivlsiLlpils 332
+                                 eG+sL++aLe+tklfpp++lhmiasGE+SgeLe mL+raad++++++e++++++l +++P+li++m+++v+fiv++ L+pil+
+  VICH001.B.00001.C001_02599 317 EGSSLRKALEQTKLFPPMMLHMIASGEQSGELEGMLTRAADNQDNSFESTVNIALGIFTPALIALMAGMVLFIVMATLMPILE 399
+                                 *********************************************************************************** PP
+
+                   T2SS_gspF 333 lnq 335
+                                 +n+
+  VICH001.B.00001.C001_02599 400 MNN 402
+                                 *97 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (335 nodes)
+Target sequences:                           46  (19691 residues searched)
+Passed MSV filter:                         3  (0.0652174); expected 0.9 (0.02)
+Passed bias filter:                        3  (0.0652174); expected 0.9 (0.02)
+Passed Vit filter:                         1  (0.0217391); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0217391); expected 0.0 (1e-05)
+Initial search space (Z):                 46  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]
