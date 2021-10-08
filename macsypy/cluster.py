@@ -56,7 +56,6 @@ def build_clusters(hits, rep_info, model, hit_weights):
     :return: list of clusters
     :rtype: List of :class:`Cluster` objects
     """
-    print("######################################### DEBUG build_clusters ###################################################")
     def collocates(h1, h2):
         """
         compute the distance (in number of gene between) between 2 hits
@@ -90,28 +89,21 @@ def build_clusters(hits, rep_info, model, hit_weights):
     # keep the first one, this with the best score
     # position == sequence rank in replicon
     hits = [next(group) for pos, group in itertools.groupby(hits, lambda h: h.position)]
-    print("### L93 hits", [(h.gene.name, h.position) for h in hits])
     if hits:
         hit = hits[0]
         gene = gene = model.get_gene(hit.gene.name)
         cluster_scaffold.append(ModelHit(hit, gene_ref=gene, gene_status=gene.status))
-        previous_hit = hit
+        previous_hit = cluster_scaffold[0]
 
         for hit in hits[1:]:
-            print("=======================", hit.gene_ref.name, "=======================")
-            print("### clusters", [(h.gene.name, h.position) for c in clusters for h in c.hits])
-            print("### cluster_scaffold", [(h.gene.name, h.position) for h in cluster_scaffold ])
             # hit is a CoreHit so hit.gene is a CoreGene
             gene = model.get_gene(hit.gene.name)
             m_hit = ModelHit(hit, gene_ref=gene, gene_status=gene.status)
-            if collocates(previous_hit, hit):
+            if collocates(previous_hit, m_hit):
                 cluster_scaffold.append(m_hit)
             else:
-                print(f"{cluster_scaffold[-1].gene_ref.name} does not colocate with {hit.gene_ref.name}")
-                print("len(cluster_scaffold)", len(cluster_scaffold))
                 if len(cluster_scaffold) > 1 :
                     # close the current scaffold if it contains at least 2 hits
-                    print("close the current scaffold if it contains at least 2 hits")
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 elif model.min_genes_required == 1:
@@ -120,7 +112,6 @@ def build_clusters(hits, rep_info, model, hit_weights):
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
                 elif model.get_gene(cluster_scaffold[0].gene.name).loner:
-                    print(f"gene in scaffold {cluster_scaffold[0].gene.name} is_a_loner")
                     # close the current scaffold it contains 1 hit
                     # to handle circularity if it's the last cluster
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
@@ -129,7 +120,6 @@ def build_clusters(hits, rep_info, model, hit_weights):
                     # circularity and merging is done
 
                 # open new scaffold
-                print(f"open new scafold [{m_hit.gene.name}]")
                 cluster_scaffold = [m_hit]
             previous_hit = m_hit
 
@@ -156,13 +146,9 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters.append(new_cluster)
 
-        print("### L153 clusters before circularity", clusters)
         # handle circularity
         if len(clusters) > 1:
-            print("############## DEBUG circularity ####################")
-            print("### topology", rep_info.topology)
             if collocates(clusters[-1].hits[-1], clusters[0].hits[0]):
-                print("### collocates")
                 clusters[0].merge(clusters[-1], before=True)
                 clusters = clusters[:-1]
 
@@ -171,22 +157,13 @@ def build_clusters(hits, rep_info, model, hit_weights):
         ###################
         # true_loner is a hit which encode for a gene tagged as loner
         # and which does NOT clusterize with some other hits of interest
-        print("###################")
-        print("# get True Loners #")
-        print("###################")
         true_clusters = []
         true_loners = {}
 
         for clstr in clusters:
-            print("=====================================================================================")
-            print("### clstr.hits", clstr.hits)
-            print("### cluster", [(h.gene.name, h.position) for h in clstr.hits])
             if len(clstr) > 1:
-                print("### append to true_clusters")
                 true_clusters.append(clstr)
             elif clstr.loner:
-                print("### clstr.loner")
-                print("### appned to true loners")
                 loner = clstr[0]
                 func_name = loner.gene_ref.alternate_of().name
                 if func_name in true_loners:
@@ -194,14 +171,10 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 else:
                     true_loners[func_name] = [loner]
             else:
-                print("### cluster of 1 hit NOT a loner")
-                print("### append to true_clusters")
                 # it's a cluster of 1 hit
                 # but it's NOT a loner
                 # min_genes_required == 1
                 true_clusters.append(clstr)
-            print("### true_clusters", true_clusters)
-            print("### true_loners", true_loners)
 
         for func_name in true_loners:
             # transform ModelHit in Loner
@@ -212,7 +185,7 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 hit = counterpart.pop(i)
                 true_loners[func_name].append(Loner(hit, counterpart=counterpart))
             # replace List of Loners by the best Loner
-            best_loner = get_best_hit_4_func(func_name, loners, key='score')
+            best_loner = get_best_hit_4_func(func_name, true_loners[func_name], key='score')
             true_loners[func_name] = best_loner
 
         true_loners = {func_name: Cluster([loner], model, hit_weights) for func_name, loner in true_loners.items()}
@@ -236,7 +209,10 @@ def build_clusters(hits, rep_info, model, hit_weights):
             multi_system_hits[func_name] = best_loner
 
         multi_system_hits = {func_name: Cluster([ms], model, hit_weights) for func_name, ms in multi_system_hits.items()}
-
+    else: #there is not hits
+        true_clusters = []
+        true_loners = {}
+        multi_system_hits = {}
     return true_clusters, true_loners, multi_system_hits
 
 
@@ -401,7 +377,7 @@ class Cluster:
                 elif v_hit.status == GeneStatus.NEUTRAL:
                     hit_score = self._hit_weights.neutral
                 else:
-                    raise MacsypyError("a Cluster contains hit which is neither mandatory nor accessory")
+                    raise MacsypyError(f"a Cluster contains hit {v_hit.gene.name} {v_hit.position} which is neither mandatory nor accessory: {v_hit.status}")
                 _log.debug(f"{v_hit.id} is {v_hit.status} hit score = {hit_score}")
 
                 # weighted the hit score according to the hit match the gene or

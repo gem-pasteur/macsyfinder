@@ -168,13 +168,15 @@ class ModelGene:
         self._loner = loner
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
-        self.status = None
+        self._status = None
+
 
     def __getattr__(self, item):
         try:
             return getattr(self._gene, item)
         except AttributeError:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+
 
     def __str__(self):
         """
@@ -192,6 +194,25 @@ class ModelGene:
                 s += h.name + ", "
             s = s[:-2]
         return s
+
+
+    @property
+    def status(self):
+        """
+        :return: The status of this gene
+        :rtype: :class:`macsypy.gene.GeneStatus` object
+        """
+        return self._status
+
+
+    def set_status(self, status):
+        """
+        Set the status for this gene
+
+        :param status: the status of this gene
+        :type status: :class:`macsypy.gene.GeneStatus` object
+        """
+        self._status = status
 
 
     @property
@@ -362,6 +383,18 @@ class Exchangeable(ModelGene):
         :raise MacsypyError:
         """
         raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
+
+    @property
+    def status(self):
+        """
+        :return: The status of this gene. if the status is not define for this gene itself,
+                 return the status of the reference gene.
+        :rtype: :class:`macsypy.gene.GeneStatus` object
+        """
+        if self._status:
+            return self.status
+        else:
+            return self._ref.status
 
 
 class GeneStatus(Enum):

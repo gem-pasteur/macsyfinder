@@ -122,7 +122,7 @@ class MetaModel(type):
         :return: unbound method
         """
         def setter(self, gene):
-            gene.status = getattr(GeneStatus, cat.upper())
+            gene.set_status(getattr(GeneStatus, cat.upper()))
             getattr(self, f"_{cat}_genes").append(gene)
         return setter
 

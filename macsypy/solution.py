@@ -108,28 +108,33 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
     :param bool multi_loci: True if the model is multi_loci false otherwise
     :return:
     """
-    print("############################### DEBUG combine_clusters ############################################")
-    if multi_loci:
+    if not clusters:
+        cluster_combinations = []
+    elif multi_loci:
         cluster_combinations =  [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+        cluster_combinations =  list(itertools.chain(*cluster_combinations))
     else:
-        cluster_combinations = [[clstr] for clstr in clusters]
+        cluster_combinations = [[clst] for clst in clusters]
 
-    print("### L117 cluster_combinations", cluster_combinations, type(cluster_combinations))
     # add loners
     combination_w_loners = []
     for func_name, clst_loner in true_loners.items():
-        for one_combination in cluster_combinations:
-            to_add = True
-            for clstr in one_combination:
-                if clstr.fulfilled_function(func_name):
-                    to_add = False
-                    break
-            if to_add:
-                combination_w_loners.append(one_combination + [clst_loner])
+        if cluster_combinations:
+            for one_combination in cluster_combinations:
+                to_add = True
+                for clstr in one_combination:
+                    if clstr.fulfilled_function(func_name):
+                        to_add = False
+                        break
+                if to_add:
+                    combination_w_loners.append(list(one_combination) + [clst_loner])
+        else:
+            # case wher no regular cluster are found
+            # we found only loners
+            # definition may contain only loners
+            combination_w_loners.append([clst_loner])
 
-    print("### L130 combination_w_loners", combination_w_loners, type(combination_w_loners))
     cluster_combinations += combination_w_loners
-    print("### L132 cluster_combinations", cluster_combinations, type(cluster_combinations))
 
     # add multi-system
     combination_w_ms = []
@@ -143,8 +148,5 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
             if to_add:
                 combination_w_ms.append(one_combination + [hit_multi_sys])
 
-    print("### L146 combination_w_ms", combination_w_ms, type(combination_w_ms))
     cluster_combinations += combination_w_ms
-    print("### L148 cluster_combinations", cluster_combinations, type(cluster_combinations))
-    print("############################### END DEBUG combine_clusters ############################################")
     return  cluster_combinations
