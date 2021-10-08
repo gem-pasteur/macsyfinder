@@ -14,3 +14,4 @@ sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys
 1	UserReplicon	VICH001.B.00001.C001_01506	T1SS_omf	22	functional/T12SS-loner-exch	UserReplicon_T12SS-loner-exch_2	1	-1	1.000	3.000	1	T1SS_omf	mandatory	419	1.1e-34	111.500	0.998	0.912	25	406		
 
 # WARNING Loner: there is only 1 occurence of loner 'T1SS_omf' and 2 potential systems
+

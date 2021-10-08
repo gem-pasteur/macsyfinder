@@ -138,7 +138,7 @@ class MacsyTest(unittest.TestCase):
                 elif l2:  # and not l1
                     raise self.failureException(f"{fh2.name} is longer than {fh1.name}")
 
-    def assertTsvEqual(self, f1, f2, tsv_type='best_solution', comment="#", msg=None):
+    def assertTsvEqual(self, f1, f2, tsv_type='best_solution.tsv', comment="#", msg=None):
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
         from itertools import zip_longest
@@ -167,6 +167,8 @@ class MacsyTest(unittest.TestCase):
                     fields_1.pop(6)
                     fields_2.pop(6)
                 elif tsv_type == 'best_solution_summary.tsv':
+                    pass
+                elif tsv_type == 'best_solution_loners.tsv':
                     pass
                 else:
                     raise RuntimeError(f"unknown {tsv_type}")
