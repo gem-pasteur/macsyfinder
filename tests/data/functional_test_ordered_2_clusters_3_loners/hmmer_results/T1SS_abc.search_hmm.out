@@ -1,0 +1,178 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T1SS_abc.hmm
+# target sequence database:        tests/data/base/test_5.fasta
+# output directed to file:         functional_test_ordered_2_clusters_3_loners/hmmer_results/T1SS_abc.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       abc  [M=501]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+   2.2e-158  520.0   9.5   2.7e-158  519.7   9.5    1.1  1  VICH001.B.00001.C001_01399  abc
+   2.4e-157  516.6   5.5     3e-157  516.3   5.5    1.1  1  VICH001.B.00001.C001_01397  abc
+    4.8e-55  179.1   1.7    6.1e-55  178.8   1.7    1.1  1  VICH001.B.00001.C001_01150  abc
+    4.1e-30   96.9   0.0    5.6e-29   93.1   0.0    1.9  1  VICH001.B.00001.C001_01569  
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01399  abc
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  519.7   9.5  1.7e-159  2.7e-158       1     501 []     167     669 ..     167     669 .. 1.00
+
+  Alignments for each domain:
+  == domain 1  score: 519.7 bits;  conditional E-value: 1.7e-159
+                         abc   1 lsvvinllaLvsplymlqVyDrvlpsrnvstLavltvlllvlilleallevlRslvvvrlgskldvelnarvfkallelpl.. 81 
+                                 +s+v+++laL+spl++++V+D+vl++++ stL vl   l++  ++e +l +lR +  ++++ ++d++l+ ++ ++l+ lpl  
+  VICH001.B.00001.C001_01399 167 FSFVLQILALISPLFFQVVMDKVLVHQAWSTLDVLVFGLVITGVIEVVLRGLREYQYAHTANRIDIQLGLKLVQHLFGLPLmf 249
+                                 79********************************************************************************* PP
+
+                         abc  82 .ekrrkgdagqrlrdldqlRafltgsaltallDapwvvvflvvvflyhpklgllvlagllvlialslvteavlrkrleeklkr 163
+                                  ++r++g +++r+r+ld++R+fltgs  t  ++++++ vfl v+ l+++ l+ l +a+++++++l+   ++ ++  +e+++++
+  VICH001.B.00001.C001_01399 250 fKSRQVGAIVTRVRELDTIREFLTGSMFTLTVELLFMFVFLYVMSLLSAPLTGLFIATVPCYVLLAWWLTPRMQAAIEKQFSH 332
+                                 *********************************************************************************** PP
+
+                         abc 164 saeaqslavetlrnaevikalgmlgqlkrrWlrqkaeyvalqlkasevaaavasisklvraalqsliLglgallaidgkitiG 246
+                                 +a+++s+++et+ ++e++k+l++++++ rrW++q +++v+++  + +++++ + +++l++++  + iL+lga+ +++ ++tiG
+  VICH001.B.00001.C001_01399 333 AAANTSFLTETVAGSETLKSLAVEPRFIRRWDEQTEKMVTTGYDVQQLNNRSNHLVQLLQKITSVAILWLGATEVLSLEMTIG 415
+                                 *********************************************************************************** PP
+
+                         abc 247 mliAgsilvgrvlapveqligvwkqfssarlsleRledllkaekeakaklelpapegslsvegvslrykgdsadvlsnvslsi 329
+                                 +liA+++++ ++ +p+++++++w qf ++r+++e+l+d+l+   e+++  + + ++g++s++++ +ry++d  ++++++sl i
+  VICH001.B.00001.C001_01399 416 QLIAFNMMTNHIAQPLARMVELWGQFIQTRVAIEKLGDMLNLPVEQHTGSDNVTISGAISFKNILFRYQPDIPPTINDLSLDI 498
+                                 *********************************************************************************** PP
+
+                         abc 330 aaGevlgivGaSgsGKstLarllvglfepesGrvrldgadikqvdkeklgrqigyllQdieLfsgsvaeNIarfaeemdsekv 412
+                                 +aGe+lg+vG+SgsGKstLarll +l++pe+G++ +dg+ ++ ++ ++l++ +g++lQ++ Lf++sv eNIa+ ++e++ e++
+  VICH001.B.00001.C001_01399 499 RAGETLGVVGTSGSGKSTLARLLLRLYSPEQGSITIDGIPLNHINVQQLRQRVGVVLQENFLFHKSVSENIAQSKPEASLEEI 581
+                                 *********************************************************************************** PP
+
+                         abc 413 vaaAklagvHelIlelpeGYdtliGegGagLSgGQrQRialARAlyrkPallvlDEansaLDsegekalqraikklkargrtv 495
+                                 ++aAkl+g+H++Il+lp+GYdt++ egG++LSgGQrQR+a+AR l+ +P++l+lDEa+saLD+e++ ++q+++ ++ argrtv
+  VICH001.B.00001.C001_01399 582 IEAAKLSGAHDFILKLPMGYDTVLAEGGQSLSGGQRQRLAIARTLLSDPKVLILDEATSALDDESQAVIQANMASI-ARGRTV 663
+                                 ****************************************************************************.****** PP
+
+                         abc 496 vliaHr 501
+                                 + iaHr
+  VICH001.B.00001.C001_01399 664 ITIAHR 669
+                                 *****9 PP
+
+>> VICH001.B.00001.C001_01397  abc
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  516.3   5.5  1.9e-158    3e-157       3     501 .]     175     677 ..     173     677 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 516.3 bits;  conditional E-value: 1.9e-158
+                         abc   3 vvinllaLvsplymlqVyDrvlpsrnvstLavltvlllvlilleallevlRslvvvrlgskldvelnarvfkallelpl...e 82 
+                                 + ++++aLvsp+ + +V+D+vl+ r+ s+L vl++++l+l + e + ++lR +v+ +l+s+++ el  r++++l+ lpl   +
+  VICH001.B.00001.C001_01397 175 IALQIFALVSPMLFENVIDKVLVGRSLSSLHVLALAMLALAIAEPAYSYLRNTVFGHLASQVNAELSGRLYRHLVGLPLtyfK 257
+                                 569******************************************************************************** PP
+
+                         abc  83 krrkgdagqrlrdldqlRafltgsaltallDapwvvvflvvvflyhpklgllvlagllvlialslvteavlrkrleeklkrsa 165
+                                 +r++g++ +r+r++ q+R+fltgs+l+ llD+++v vfl+v+f y + l++lv+++l+++++l l+  +  rk++e++ +++a
+  VICH001.B.00001.C001_01397 258 QRQTGQIIARVREMAQIRQFLTGSTLMLLLDLIFVTVFLAVMFHYASTLTWLVIGSLVIYFVLWLIAGPLIRKKVESEYESDA 340
+                                 *********************************************************************************** PP
+
+                         abc 166 eaqslavetlrnaevikalgmlgqlkrrWlrqkaeyvalqlkasevaaavasisklvraalqsliLglgallaidgkitiGml 248
+                                 +a+ +++e ++++e+ik+ + + ++ ++W+r  +++++  + a + + ++++++ lv+++   l L+ g   +++g+it+G+l
+  VICH001.B.00001.C001_01397 341 NATTFLTEAVTGIETIKTTATEHRFLEQWQRILSQQLNRSFDAQKSGLIAGQAIALVQKLTAALLLWWGVSAVLKGEITPGQL 423
+                                 *********************************************************************************** PP
+
+                         abc 249 iAgsilvgrvlapveqligvwkqfssarlsleRledllkaeke..akaklelpapegslsvegvslrykgdsadvlsnvslsi 329
+                                 +A+++l+g+v++pv +l+++w++f+++ ++l R++d+l + +e  ++  +++p+  g ++++++++ry++d+ +vl n+sl+i
+  VICH001.B.00001.C001_01397 424 VAFNMLAGHVTQPVLRLAQIWQDFQHTLIALRRVGDILDEPREnsKQGLASVPELDGGIEFSNIRFRYHQDAPEVLANLSLKI 506
+                                 ****************************************99975566679******************************** PP
+
+                         abc 330 aaGevlgivGaSgsGKstLarllvglfepesGrvrldgadikqvdkeklgrqigyllQdieLfsgsvaeNIarfaeemdsekv 412
+                                 ++G+ +g++G+SgsGKstL+rll++l++p++G+v++dg+d++++d+ +l+r+++++lQ++ Lfsgsva+NI + +++++ e++
+  VICH001.B.00001.C001_01397 507 KPGQFIGVTGPSGSGKSTLTRLLQRLYVPQHGQVLVDGMDLAIADPVSLRRNMSVVLQESILFSGSVADNIRLCKPQASDEEI 589
+                                 *********************************************************************************** PP
+
+                         abc 413 vaaAklagvHelIlelpeGYdtliGegGagLSgGQrQRialARAlyrkPallvlDEansaLDsegekalqraikklkargrtv 495
+                                  +aA+lag+  +I  lp+G++  +Ge+Ga+LSgGQrQRialARAl+ +P++l+lDEa+saLD+++e  ++ ++ ++ +rgrtv
+  VICH001.B.00001.C001_01397 590 RHAAQLAGALAFIEGLPHGFNQPVGEKGAALSGGQRQRIALARALLVNPRILLLDEATSALDYNSEASIMSNMDEI-CRGRTV 671
+                                 ****************************************************************************.****** PP
+
+                         abc 496 vliaHr 501
+                                 + iaHr
+  VICH001.B.00001.C001_01397 672 ISIAHR 677
+                                 *****9 PP
+
+>> VICH001.B.00001.C001_01150  abc
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  178.8   1.7   3.9e-56   6.1e-55     125     501 .]     157     532 ..     123     532 .. 0.87
+
+  Alignments for each domain:
+  == domain 1  score: 178.8 bits;  conditional E-value: 3.9e-56
+                         abc 125 flyhpklgllv.lagllvlialslvteavlrkrleeklkrsaeaqslavetlrnaevikalgmlgqlkrrWlrqkaeyvalql 206
+                                   ++p lg+    + llvl ++  + +   +k  ++ ++++ae      + l++   + + g + + ++  l  +++ +  q 
+  VICH001.B.00001.C001_01150 157 AWFDPQLGMTLgAILLLVLLVWPTLFYRLGKKNGQHLTQNKAELRVRTLDWLQGYSELTIFGAEQTYRQAILTAQDKLLRNQY 239
+                                 45778888754133445555666666666777777777777777777888899999999999999999999999999999999 PP
+
+                         abc 207 kasevaaavasisklvraalqsliLglgallaidgkitiGmliAgsilvgrv.lapveqligvwkqfssarlsleRledllka 288
+                                   ++v  +++s+  l +    +l+++l+a  +  g  t+  liA   ++  + ++ +  ++g+++++ ++ +s  Rl++++ a
+  VICH001.B.00001.C001_01150 240 VNAQVSGLAQSLLLLANGWTLVLMIWLAADGV--GGQTPDPLIALVAFATMAsVELLMPIAGAFQHLGQTLTSARRLNEIILA 320
+                                 99999999999999999999889999888765..45677777776666655414555667899999999************** PP
+
+                         abc 289 ekeakaklelpapegs..lsvegvslrykgdsadvlsnvslsiaaGevlgivGaSgsGKstLarllvglfepesGrvrldgad 369
+                                 ++e + +++ +a +g+  ++++gv + y++++ +++++  l++a+G+ ++ivG+ gsGKstL++ll++ + +++G++ + g+d
+  VICH001.B.00001.C001_01150 321 KPEVEFTAQPTAHNGQynIEFNGVHFAYQANKPKAIDDFTLTLAQGQKVAIVGQTGSGKSTLIQLLCRYWDVQQGQITIGGTD 403
+                                 ***9999999999997335566************************************************************* PP
+
+                         abc 370 ikqvdkeklgrqigyllQdieLfsgsvaeNIarfaeemdsekvvaaAklagvHelIlelpeGYdtliGegGagLSgGQrQRia 452
+                                 i+ + +  l+  i+++ Q + +++g++++N+ ++++++  e++    +  g   l+++     +t +GegG  LSgG + R++
+  VICH001.B.00001.C001_01150 404 IREWRESDLRAAISVVSQRVDILNGTLRDNLKLAKPDATDEALSDILQQVGLEKLLQD--AALNTWLGEGGRQLSGGEKRRLG 484
+                                 *******************************************************997..568******************** PP
+
+                         abc 453 lARAlyrkPallvlDEansaLDsegekalqraikklkargrtvvliaHr 501
+                                 +ARAl+++  +l+lDE++  LD++ e+ +++ ++      +tv++i+Hr
+  VICH001.B.00001.C001_01150 485 IARALLHNAPILLLDEPTEGLDKQTEQQIMQLLHCH-FGHKTVLFITHR 532
+                                 *******************************99876.99*********9 PP
+
+>> VICH001.B.00001.C001_01569  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   93.1   0.0   3.6e-30   5.6e-29     319     500 ..      22     202 ..      15     203 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 93.1 bits;  conditional E-value: 3.6e-30
+                         abc 319 advlsnvslsiaaGevlgivGaSgsGKstLarllvglfepesGrvrldgadikqvdk...eklgr.qigyllQdieLfsg.sv 396
+                                 ++vl+  +l++++G+ l+++G+SgsGKstL+ l+ gl +++sG++   g  ++   +    +++r +ig + Q+ +L+    +
+  VICH001.B.00001.C001_01569  22 HPVLQGAELTLNQGDQLALMGESGSGKSTLLNLIAGLDSADSGEIWFPGFPMHHTSEhhrTAFRRdNIGQIFQQYNLLPTlNI 104
+                                 679**********************************************988876541115677747*********996538* PP
+
+                         abc 397 aeNIarfaeemdsekvvaaAklagvHelIlelpeGYdtliGegGagLSgGQrQRialARAlyrkPallvlDEansaLDsegek 479
+                                 a+NI   + +   + + +    ag    Il+       l+G   +  SgGQ+QR a+ARAly +P++l+ DE++ +LD+   +
+  VICH001.B.00001.C001_01569 105 ADNIRFCR-Q--LKGLPED---AGLWRQILSAL-DLMPLLGRYPEEVSGGQQQRAAIARALYMEPKILLADEPTGSLDERNAE 180
+                                 ****5555.3..3334343...44444444432.23569******************************************** PP
+
+                         abc 480 alqraikkl.kargrtvvliaH 500
+                                 a++r +++l ++ +   +l++H
+  VICH001.B.00001.C001_01569 181 AVMRLLTTLtRQLNCALLLVTH 202
+                                 *******993344667788888 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (501 nodes)
+Target sequences:                           62  (26545 residues searched)
+Passed MSV filter:                         9  (0.145161); expected 1.2 (0.02)
+Passed bias filter:                        7  (0.112903); expected 1.2 (0.02)
+Passed Vit filter:                         5  (0.0806452); expected 0.1 (0.001)
+Passed Fwd filter:                         4  (0.0645161); expected 0.0 (1e-05)
+Initial search space (Z):                 62  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 664.95
+//
+[ok]
