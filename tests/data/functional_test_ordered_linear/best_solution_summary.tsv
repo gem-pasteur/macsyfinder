@@ -1,4 +1,0 @@
-# macsyfinder 20210423.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/test_3.fasta --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models --models functional T12SS-simple-exch --relative-path -w 8 --previous-run tests/data/functional_test_ordered_linear/ -o functional_test_ordered_linear
-replicon	functional/T12SS-simple-exch
-UserReplicon	0
