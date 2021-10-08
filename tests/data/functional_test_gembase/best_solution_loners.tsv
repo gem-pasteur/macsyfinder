@@ -1,8 +1,7 @@
 # macsyfinder 20211008.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path --sequence-db tests/data/base/gembase.fasta -o functional_test_gembase
+# tests/run_tests.py -vv tests/test_functional_test.py -vv
 # Loners found:
 replicon	model_fqn	function	gene_name	hit_id	hit_pos	thit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
-
 GCF_000005845	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000005845_026740	2674	mandatory	3261.100e-117	393.600	0.944	0.979	3	321
 
 GCF_000005845	TFF-SF/T4P	T4P_pilD	T2SS_gspO	GCF_000005845_026930	2693	mandatory	2691.300e-87	294.000	1.000	0.859	30	260

@@ -771,7 +771,7 @@ def loners_to_tsv(systems, hit_system_tracker, sys_file):
             best_loners = syst.get_loners()
             if best_loners and not print_header:
                 print("# Loners found:", file=sys_file)
-                print(header, file=sys_file)
+                print(header, file=sys_file, end='')
                 print_header = True
             for best_loner in best_loners:
                 if best_loner in loners_seen:
