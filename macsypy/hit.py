@@ -201,21 +201,24 @@ class ModelHit:
         """
         return self.gene_ref.multi_system
 
-    # @property
-    # def true_loner(self):
-    #     """
-    #     :return: True if the hit represent a `loner` :class:`macsypy.Gene.ModelGene`, False otherwise.
-    #              A True Loner is a hit representing a gene with the attribute loner and which does not include in a cluster.
-    #
-    #              - a hit representing a loner gene but include in a cluster is not a true loner
-    #              - a hit which is not include with other gene in a cluster but does not represnet a gene loner is not a
-    #                True loner (This situation may append when min_genes_required = 1)
-    #     """
-    #     return False
+    @property
+    def loner(self):
+        """
+        :return: True if the hit represent a `loner` :class:`macsypy.Gene.ModelGene`, False otherwise.
+                 A True Loner is a hit representing a gene with the attribute loner and which does not include in a cluster.
+
+                 - a hit representing a loner gene but include in a cluster is not a true loner
+                 - a hit which is not include with other gene in a cluster but does not represnet a gene loner is not a
+                   True loner (This situation may append when min_genes_required = 1)
+        """
+        return False
 
 
     def __getattr__(self, item):
-        return getattr(self._hit, item)
+        try:
+            return getattr(self._hit, item)
+        except AttributeError:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'") from None
 
     def __gt__(self, other):
         return self._hit > other
@@ -225,6 +228,10 @@ class ModelHit:
 
     def __lt__(self, other):
         return self._hit < other
+
+    @property
+    def counterpart(self):
+        return []
 
 
 class Loner(ModelHit):
@@ -258,9 +265,17 @@ class Loner(ModelHit):
     def counterpart(self):
         return self._counterpart
 
-    # @property
-    # def true_loner(self):
-    #     return True
+    def __str__(self):
+        ch_str = str(self._hit)[:-1]
+
+        return ch_str + '\t' + ','.join([h.id for h in self.counterpart])
+
+    def __len__(self):
+        return len(self.counterpart) + 1
+
+    @property
+    def loner(self):
+        return True
 
 
 @dataclass(frozen=True)
@@ -304,7 +319,7 @@ def get_best_hit_4_func(function, hits, key='score'):
     originals = []
     exchangeables = []
     for hit in hits:
-        if hit.gene_ref.alternate_of().name == function:
+        if hit.gene_ref.name == function:
             originals.append(hit)
         else:
             exchangeables.append(hit)
@@ -312,7 +327,6 @@ def get_best_hit_4_func(function, hits, key='score'):
         hits = originals
     else:
         hits = exchangeables
-
     if key == 'score':
         hits.sort(key=attrgetter(key), reverse=True)
     elif key == 'i_eval':

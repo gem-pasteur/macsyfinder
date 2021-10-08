@@ -99,42 +99,42 @@ class MatchMaker(metaclass=abc.ABCMeta):
             gene = self._model.get_gene(gene_name)
             if gene_name in self.mandatory_counter:
                 self.mandatory_counter[hit.gene.name] += 1
-                mandatory_hits.append(ModelHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(hit)
             elif gene_name in self.exchangeable_mandatory:
                 gene_ref = self.exchangeable_mandatory[gene_name]
                 self.mandatory_counter[gene_ref.name] += 1
-                mandatory_hits.append(ModelHit(hit, gene, GeneStatus.MANDATORY))
+                mandatory_hits.append(hit)
 
             elif gene_name in self.accessory_counter:
                 self.accessory_counter[gene_name] += 1
-                accessory_hits.append(ModelHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(hit)
             elif gene_name in self.exchangeable_accessory:
                 gene_ref = self.exchangeable_accessory[gene_name]
                 self.accessory_counter[gene_ref.name] += 1
-                accessory_hits.append(ModelHit(hit, gene, GeneStatus.ACCESSORY))
+                accessory_hits.append(hit)
 
             elif gene_name in self.neutral_counter:
                 self.neutral_counter[gene_name] += 1
-                neutral_hits.append(ModelHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(hit)
             elif gene_name in self.exchangeable_neutral:
                 gene_ref = self.exchangeable_neutral[gene_name]
                 self.neutral_counter[gene_ref.name] += 1
-                neutral_hits.append(ModelHit(hit, gene, GeneStatus.NEUTRAL))
+                neutral_hits.append(hit)
 
             elif gene_name in self.forbidden_counter:
                 self.forbidden_counter[gene_name] += 1
-                forbidden_hits.append(ModelHit(hit, gene, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(hit)
             elif gene_name in self.exchangeable_forbidden:
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
-                forbidden_hits.append(ModelHit(hit, gene, GeneStatus.FORBIDDEN))
+                forbidden_hits.append(hit)
 
         return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
 
     def present_genes(self):
         """
-        :return: the lists of genes name in model which are present replicon (included exchangeable)
+        :return: the lists of genes name in model which are present in the replicon (included exchangeable)
         :rtype: tuple of 4 lists for mandatory, accessory, neutral and forbidden
                 ([str gene_name, ...], [str gene_name], [str gene_name], [str gene_name])
         """
@@ -171,7 +171,6 @@ class OrderedMatchMaker(MatchMaker):
         :return: either a System or a RejectedClusters
         :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
         """
-
         # count the hits
         # and track for each hit for which gene it counts for
         valid_clusters = []
@@ -290,13 +289,12 @@ class HitSystemTracker(dict):
     def __init__(self, systems):
         super(HitSystemTracker, self).__init__()
         for system in systems:
-            v_hits = system.hits
-            for v_hit in v_hits:
-                hit = v_hit.hit
-                if hit not in self:
-                    self[hit] = set()
-                self[hit].add(system)
-
+            m_hits = system.hits
+            for m_hit in m_hits:
+                c_hit = m_hit.hit
+                if c_hit not in self:
+                    self[c_hit] = set()
+                self[c_hit].add(system)
 
 class ClusterSystemTracker(dict):
     """
@@ -597,8 +595,8 @@ class System(AbstractSetOfHits):
     def loci_num(self):
         """
         :return: the number of the corresponding locus for each cluster
-                 the cluster made of only one hit reprenting a loner is not considered as a loci
-                 so these clusters have the locus_num = 0
+                 the cluster made of only one Loner are not considered as a loci
+                 so these clusters have a negative locus_num
         :rtype: list of int
         """
         loci = []
@@ -645,9 +643,18 @@ class System(AbstractSetOfHits):
                  .. note::
                     This method is used to compute the best combination of systems.
         """
-        other_hits = {vh.hit for vh in other.hits if not vh.multi_system}
-        my_hits = {vh.hit for vh in self.hits if not vh.multi_system}
+        other_hits = {mh.hit for mh in other.hits if (not mh.loner and not mh.multi_system)}
+        my_hits = {mh.hit for mh in self.hits if (not mh.loner and mh.multi_system)}
         return not (my_hits & other_hits)
+
+
+    def get_loners(self):
+        """
+        :return: The True Loners belonging to the systems
+        :rtype: set of :class:`macsypy.hit.Loner` object
+        """
+        return {mh for mh in self.hits if mh.loner}
+
 
 
 class RejectedClusters(AbstractSetOfHits):

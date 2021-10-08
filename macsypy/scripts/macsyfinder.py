@@ -494,7 +494,6 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable (formerly homologs/analogs) are also added because they can "replace" an important gene...
         ex_genes = []
-
         for g in genes:
             ex_genes += g.exchangeables
         all_genes += (genes + ex_genes)
@@ -528,7 +527,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         db_type = config.db_type()
         if db_type in ('ordered_replicon', 'gembase'):
-            systems, rejected_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
+            systems, rejected_clusters, true_loners = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
                                                                      config, logger)
             return systems, rejected_clusters
         elif db_type == "unordered":
@@ -563,41 +562,24 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.debug("{:#^80}".format(" CLUSTERS "))
             logger.debug("\n" + "\n".join([str(c) for c in clusters]))
             logger.debug("{:=^50}".format(" LONERS "))
-            logger.debug("\n" + "\n".join([str(h) for h in true_loners.values()]))
+            logger.debug("\n" + "\n".join([str(c) for c in true_loners.values()]))
             logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
             logger.debug("\n" + "\n".join([str(h) for h in multi_systems_hits.values()]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
-            # if model.multi_loci:
-            #     # The loners are already in clusters lists with their context
-            #     # so they are take in account
-            #     clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-            # else:
-            #     # we must add loners manually
-            #     # but only if the cluster does not already contains them
-            #     loners = cluster.get_loners(hits_related_one_model, model, hit_weights)
-            #     clusters_combination = []
-            #     for one_cluster in clusters:
-            #         one_clust_combination = [one_cluster]
-            #         filtered_loners = cluster.filter_loners(one_cluster, loners)
-            #         one_clust_combination.extend(filtered_loners)
-            #         clusters_combination.append([one_clust_combination])
-
             clusters_combination = combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=model.multi_loci)
-
             for one_clust_combination in clusters_combination:
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
-                print("\n####################################################")
-                print("### one_clust_combination", one_clust_combination, type(one_clust_combination))
-                print("####################################################")
                 res = ordered_matcher.match(one_clust_combination)
                 if isinstance(res, System):
                     systems.append(res)
                 else:
                     rejected_clusters.append(res)
+
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-    return systems, rejected_clusters
+
+    return systems, rejected_clusters, true_loners
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
@@ -653,6 +635,9 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
         for system in systems:
             sys_serializer = TsvSystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
+        warnings = _loner_warning(systems)
+        if warnings:
+            print("\n".join(warnings), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -677,6 +662,10 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
             sys_serializer = TxtSystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
             print("=" * 60, file=sys_file)
+
+        warnings = _loner_warning(systems)
+        if warnings:
+            print("\n".join(warnings), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -703,8 +692,29 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         for sol_id, solution in enumerate(solutions, 1):
             solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file, end='')
+
+            warnings = _loner_warning(solution)
+            if warnings:
+                print("\n".join(warnings) + "\n", file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
+
+def _loner_warning(sytems):
+    warnings = []
+    loner_tracker = {}
+    for syst in sytems:
+        loners = syst.get_loners()
+        for loner in loners:
+            if loner in loner_tracker:
+                loner_tracker[loner].append(syst)
+            else:
+                loner_tracker[loner] = [syst]
+    for loner, systs in loner_tracker.items():
+        if len(loner) < len(systs):
+            warnings.append(f"# WARNING Loner: there is only {len(loner)} occurence of loner '{loner.gene.name}' "
+                            f"and {len(systs)} potential systems [{', '.join([s.id for s in systs])}]")
+
+    return warnings
 
 
 def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_names):
@@ -745,6 +755,43 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
         summary = fill_models(summary)
 
     summary.to_csv(sys_file, sep='\t')
+
+
+def loners_to_tsv(systems, hit_system_tracker, sys_file):
+    print(_outfile_header(), file=sys_file)
+    print_header = False
+    if systems:
+        header = "replicon\tmodel_fqn\tfunction\tgene_name\t" \
+                 "hit_id\thit_pos\tthit_status\thit_seq_len\t" \
+                 "hit_i_eval\thit_score\thit_profile_cov\t" \
+                 "hit_seq_cov\thit_begin_match\thit_end_match\n"
+
+        loners_seen = set()
+        for syst in systems:
+            best_loners = syst.get_loners()
+            if best_loners and not print_header:
+                print("# Loners found:", file=sys_file)
+                print(header, file=sys_file)
+                print_header = True
+            for best_loner in best_loners:
+                if best_loner in loners_seen:
+                    continue
+                loners_seen.add(best_loner)
+                loners = [best_loner]
+                loners += best_loner.counterpart
+                loners.sort(key=lambda h: h.position)
+                for one_loner in loners:
+                    s = f"{one_loner.replicon_name}\t{one_loner.gene_ref.model.fqn}\t{one_loner.gene_ref.alternate_of().name}\t{one_loner.gene_ref.name}\t" \
+                        f"{one_loner.id}\t{one_loner.position:d}\t{one_loner.status}\t{one_loner.seq_length:d}" \
+                        f"{one_loner.i_eval:.3e}\t{one_loner.score:.3f}\t{one_loner.profile_coverage:.3f}\t" \
+                        f"{one_loner.sequence_coverage:.3f}\t{one_loner.begin_match:d}\t{one_loner.end_match:d}"
+                    print(s, file=sys_file)
+                print(file=sys_file)
+
+
+    if not print_header:
+        print("# No loners found", file=sys_file)
+
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -911,8 +958,7 @@ def main(args=None, loglevel=None):
         sys.exit(f"macsyfinder: {err}")
 
     logger.info("\n{:#^70}".format(" Searching systems "))
-    all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
-
+    all_systems, rejected_clusters  = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
@@ -972,6 +1018,10 @@ def main(args=None, loglevel=None):
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             systems_to_tsv(one_best_solution, track_multi_systems_hit, best_solution_file)
+
+        loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
+        with open(loners_filename, "w") as loners_file:
+            loners_to_tsv(one_best_solution, track_multi_systems_hit, loners_file)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
