@@ -1,5 +1,5 @@
-# macsyfinder 20211008.dev
-# tests/run_tests.py -vv tests/test_functional_test.py -vv
+# macsyfinder 20211012.dev
+# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --relative-path --sequence-db tests/data/base/gembase.fasta
 # Rejected clusters:
 
 Cluster:
