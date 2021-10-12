@@ -69,20 +69,20 @@ class MatchMakerTest(MacsyTest):
         gene_gspd = ModelGene(c_gene_gspd, self.model)
 
         c_gene_flgb = CoreGene(self.model_location, "flgB", self.profile_factory)
-        gene_gspd_an = Exchangeable(c_gene_flgb, gene_gspd)
-        gene_gspd.add_exchangeable(gene_gspd_an)
+        gene_gspd_ex = Exchangeable(c_gene_flgb, gene_gspd)
+        gene_gspd.add_exchangeable(gene_gspd_ex)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, self.model)
         c_gene_tadz = CoreGene(self.model_location, "tadZ", self.profile_factory)
-        gene_abc_ho = Exchangeable(c_gene_tadz, gene_abc)
-        gene_abc.add_exchangeable(gene_abc_ho)
+        gene_abc_ex = Exchangeable(c_gene_tadz, gene_abc)
+        gene_abc.add_exchangeable(gene_abc_ex)
 
         c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
         gene_toto = ModelGene(c_gene_toto, self.model)
         c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
-        gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
-        gene_toto.add_exchangeable(gene_toto_ho)
+        gene_toto_ex = Exchangeable(c_gene_totote, gene_toto)
+        gene_toto.add_exchangeable(gene_toto_ex)
 
         self.model.add_mandatory_gene(gene_sctn)
         self.model.add_mandatory_gene(gene_sctj)
@@ -91,24 +91,37 @@ class MatchMakerTest(MacsyTest):
         self.model.add_forbidden_gene(gene_abc)
 
         self.c_hits = {
-                    'h_sctj': CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_sctj_flg': CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_sctn': CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_sctn_flg': CoreHit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_gspd': CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_gspd_an': CoreHit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_abc': CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_abc_ho': CoreHit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_toto': CoreHit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
-                    'h_toto_ho': CoreHit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_sctj': CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_sctj_flg': CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_sctn': CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_sctn_flg': CoreHit(c_gene_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_gspd': CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_gspd_ex': CoreHit(c_gene_flgb, "hit_gspd_an", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_abc': CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_abc_ex': CoreHit(c_gene_tadz, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_toto': CoreHit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
+                    'ch_toto_ex': CoreHit(c_gene_totote, "hit_toto_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20),
                     }
+        self.m_hits = {
+            'mh_sctj': ModelHit(self.c_hits['ch_sctj'], gene_sctj, GeneStatus.MANDATORY),
+            'mh_sctj_flg': ModelHit(self.c_hits['ch_sctj_flg'], gene_sctj_flg, GeneStatus.MANDATORY),
+            'mh_sctn': ModelHit(self.c_hits['ch_sctn'], gene_sctn, GeneStatus.MANDATORY),
+            'mh_sctn_flg': ModelHit(self.c_hits['ch_sctn_flg'], gene_sctn_flg, GeneStatus.MANDATORY),
+            'mh_gspd': ModelHit(self.c_hits['ch_gspd'], gene_gspd, GeneStatus.ACCESSORY),
+            'mh_gspd_ex': ModelHit(self.c_hits['ch_gspd_ex'], gene_gspd_ex, GeneStatus.ACCESSORY),
+            'mh_abc': ModelHit(self.c_hits['ch_abc'], gene_abc, GeneStatus.FORBIDDEN),
+            'mh_abc_ex': ModelHit(self.c_hits['ch_abc_ex'], gene_abc_ex, GeneStatus.FORBIDDEN),
+            'mh_toto': ModelHit(self.c_hits['ch_toto'], gene_toto, GeneStatus.NEUTRAL),
+            'mh_toto_ex': ModelHit(self.c_hits['ch_toto_ex'], gene_toto_ex, GeneStatus.NEUTRAL)
+        }
+
 
     def test_sort_hits_by_status(self):
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
-        mandatory_exp = [self.c_hits['h_sctn'], self.c_hits['h_sctj']]
-        accessory_exp = [self.c_hits['h_gspd']]
-        neutral_exp = [self.c_hits['h_toto']]
-        forbidden_exp = [self.c_hits['h_abc']]
+        mandatory_exp = [self.m_hits['mh_sctn'], self.m_hits['mh_sctj']]
+        accessory_exp = [self.m_hits['mh_gspd']]
+        neutral_exp = [self.m_hits['mh_toto']]
+        forbidden_exp = [self.m_hits['mh_abc']]
 
         mandatory, accessory, neutral, forbidden = ordered_match_maker.sort_hits_by_status(mandatory_exp + accessory_exp + neutral_exp + forbidden_exp)
         self.assertListEqual([h.gene.name for h in mandatory_exp], [h.gene.name for h in mandatory])
@@ -117,10 +130,10 @@ class MatchMakerTest(MacsyTest):
         self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene.name for h in forbidden])
 
         # do the same but with exchangeable
-        mandatory_exp_exch = [self.c_hits['h_sctn_flg'], self.c_hits['h_sctj_flg']]
-        accessory_exp_exch = [self.c_hits['h_gspd_an']]
-        neutral_exp_exch = [self.c_hits['h_toto_ho']]
-        forbidden_exp_exch = [self.c_hits['h_abc_ho']]
+        mandatory_exp_exch = [self.m_hits['mh_sctn_flg'], self.m_hits['mh_sctj_flg']]
+        accessory_exp_exch = [self.m_hits['mh_gspd_ex']]
+        neutral_exp_exch = [self.m_hits['mh_toto_ex']]
+        forbidden_exp_exch = [self.m_hits['mh_abc_ex']]
 
         mandatory, accessory, neutral, forbidden = ordered_match_maker.sort_hits_by_status(mandatory_exp_exch +
                                                                                            accessory_exp_exch +
@@ -148,7 +161,7 @@ class MatchMakerTest(MacsyTest):
         # it lack one mandatory gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 3
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -159,7 +172,7 @@ class MatchMakerTest(MacsyTest):
         # all quorum are reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -167,7 +180,7 @@ class MatchMakerTest(MacsyTest):
         # with one mandatory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn'], self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj_flg'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -175,7 +188,7 @@ class MatchMakerTest(MacsyTest):
         # with one accessory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd_an']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd_ex']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, System)
@@ -183,7 +196,7 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
         self.assertIsInstance(res, RejectedClusters)
@@ -193,7 +206,7 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached even there is a neutral
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto']],
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd'], self.m_hits['mh_toto']],
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
@@ -203,7 +216,7 @@ class MatchMakerTest(MacsyTest):
 
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto_ho']],
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd'], self.m_hits['mh_toto_ex']],
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
@@ -214,7 +227,7 @@ class MatchMakerTest(MacsyTest):
         # the cluster contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc']],
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd'], self.m_hits['mh_abc']],
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
@@ -224,7 +237,7 @@ class MatchMakerTest(MacsyTest):
         # the cluster contain a forbidden gene homolog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc_ho']],
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd'], self.m_hits['mh_abc_ex']],
                      self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1])
@@ -236,8 +249,8 @@ class MatchMakerTest(MacsyTest):
         #####################
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj'], self.c_hits['h_sctn']], self.model, self.cfg.hit_weights())
-        c2 = Cluster([self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj'], self.m_hits['mh_sctn']], self.model, self.cfg.hit_weights())
+        c2 = Cluster([self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1, c2])
         self.assertIsInstance(res, System)
@@ -245,8 +258,8 @@ class MatchMakerTest(MacsyTest):
         # with one analog an one homolog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn_flg']], self.model, self.cfg.hit_weights())
-        c2 = Cluster([self.c_hits['h_gspd_an']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj_flg'], self.m_hits['mh_sctn_flg']], self.model, self.cfg.hit_weights())
+        c2 = Cluster([self.m_hits['mh_gspd_ex']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1, c2])
         self.assertIsInstance(res, System)
@@ -254,9 +267,9 @@ class MatchMakerTest(MacsyTest):
         # with one analog an one homolog and one forbidden in 3 clusters
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        c1 = Cluster([self.c_hits['h_sctj_flg'], self.c_hits['h_sctn_flg']], self.model, self.cfg.hit_weights())
-        c2 = Cluster([self.c_hits['h_gspd']], self.model, self.cfg.hit_weights())
-        c3 = Cluster([self.c_hits['h_abc']], self.model, self.cfg.hit_weights())
+        c1 = Cluster([self.m_hits['mh_sctj_flg'], self.m_hits['mh_sctn_flg']], self.model, self.cfg.hit_weights())
+        c2 = Cluster([self.m_hits['mh_gspd']], self.model, self.cfg.hit_weights())
+        c3 = Cluster([self.m_hits['mh_abc']], self.model, self.cfg.hit_weights())
         ordered_match_maker = OrderedMatchMaker(self.model, self.cfg.redundancy_penalty())
         res = ordered_match_maker.match([c1, c2, c3])
         self.assertEqual(res.reasons, ["There is 1 forbidden genes occurrence(s): abc"])
@@ -266,7 +279,7 @@ class MatchMakerTest(MacsyTest):
         # it lack one mandatory gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 3
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_gspd']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_gspd']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
@@ -277,7 +290,7 @@ class MatchMakerTest(MacsyTest):
         # all quorum are reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, LikelySystem)
@@ -285,7 +298,7 @@ class MatchMakerTest(MacsyTest):
         # with one mandatory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        hits = [self.c_hits['h_sctj_flg'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
+        hits = [self.m_hits['mh_sctj_flg'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, LikelySystem)
@@ -293,7 +306,7 @@ class MatchMakerTest(MacsyTest):
         # with one accessory analog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd_an']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd_ex']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, LikelySystem)
@@ -301,7 +314,7 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
@@ -311,7 +324,7 @@ class MatchMakerTest(MacsyTest):
         # the min_gene_required quorum is not reached even there is a neutral
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd'], self.m_hits['mh_toto']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
@@ -320,7 +333,7 @@ class MatchMakerTest(MacsyTest):
 
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 4
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn_flg'], self.c_hits['h_gspd'], self.c_hits['h_toto_ho']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn_flg'], self.m_hits['mh_gspd'], self.m_hits['mh_toto_ex']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, UnlikelySystem)
@@ -330,22 +343,22 @@ class MatchMakerTest(MacsyTest):
         # the hits contain a forbidden gene
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        allowed_hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd']]
-        forbidden_hits = [self.c_hits['h_abc']]
+        allowed_hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd']]
+        forbidden_hits = [self.m_hits['mh_abc']]
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(allowed_hits + forbidden_hits)
         self.assertIsInstance(res, LikelySystem)
         self.assertListEqual([(h.id, h.position) for h in res.hits],
                              [(h.id, h.position) for h in allowed_hits + forbidden_hits])
-        self.assertListEqual(res._forbidden_hits, [self.c_hits['h_abc']])
+        self.assertListEqual(res._forbidden_hits, [self.m_hits['mh_abc']])
 
         # the cluster contain a forbidden gene homolog
         self.model._min_mandatory_genes_required = 2
         self.model._min_genes_required = 1
-        hits = [self.c_hits['h_sctj'], self.c_hits['h_sctn'], self.c_hits['h_gspd'], self.c_hits['h_abc_ho']]
+        hits = [self.m_hits['mh_sctj'], self.m_hits['mh_sctn'], self.m_hits['mh_gspd'], self.m_hits['mh_abc_ex']]
 
         unordered_match_maker = UnorderedMatchMaker(self.model)
         res = unordered_match_maker.match(hits)
         self.assertIsInstance(res, LikelySystem)
-        self.assertListEqual(res._forbidden_hits, [self.c_hits['h_abc_ho']])
-
+        self.assertListEqual(res._forbidden_hits, [self.m_hits['mh_abc_ex']])
+    #
