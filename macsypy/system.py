@@ -644,7 +644,7 @@ class System(AbstractSetOfHits):
                     This method is used to compute the best combination of systems.
         """
         other_hits = {mh.hit for mh in other.hits if (not mh.loner and not mh.multi_system)}
-        my_hits = {mh.hit for mh in self.hits if (not mh.loner and mh.multi_system)}
+        my_hits = {mh.hit for mh in self.hits if (not mh.loner and not mh.multi_system)}
         return not (my_hits & other_hits)
 
 
