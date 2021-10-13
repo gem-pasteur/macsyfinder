@@ -26,7 +26,7 @@ import os
 import argparse
 import itertools
 
-from macsypy.hit import CoreHit, ModelHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -171,29 +171,38 @@ neutral genes:
         gene_sctn.add_exchangeable(gene_sctn_flg)
         model.add_accessory_gene(gene_sctn)
 
-        h_gspd = CoreHit(c_gene_gspd, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_h_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
-        h_sctj = CoreHit(c_gene_sctj, "h_sctj", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 20, 30)
-        v_h_sctj = ModelHit(h_sctj, gene_sctj, GeneStatus.ACCESSORY)
-        h_sctn_flg = CoreHit(c_gene_sctn_flg, "h_sctn_flg", 803, "replicon_id", 30, 1.0, 1.0, 1.0, 1.0, 30, 40)
-        v_h_sctn_flg = ModelHit(h_sctn_flg, gene_sctn_flg, GeneStatus.ACCESSORY)
-        c1 = Cluster([v_h_gspd, v_h_sctj], model, self.hit_weights)
-        c2 = Cluster([v_h_sctn_flg], model, self.hit_weights)
+        #CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                           pos      score
+        ch_gspd = CoreHit(c_gene_gspd, "h_gspd", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_gspd = ModelHit(ch_gspd, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
+        ch_sctj = CoreHit(c_gene_sctj, "h_sctj", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 20, 30)
+        mh_sctj = ModelHit(ch_sctj, gene_ref=gene_sctj, gene_status=GeneStatus.ACCESSORY)
+
+        ch_sctn_flg = CoreHit(c_gene_sctn_flg, "h_sctn_flg", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 30, 40)
+        ch_sctn = CoreHit(c_gene_sctn, "h_sctn", 803, "replicon_id", 80, 1.0, 1.0, 1.0, 1.0, 30, 40)
+        mh_sctn = Loner(ch_sctn, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY, counterpart=[ch_sctn_flg])
+
+        #mh_sctn_flg = ModelHit(h_sctn_flg, gene_sctn_flg, GeneStatus.ACCESSORY)
+
+
+        c1 = Cluster([mh_gspd, mh_sctj], model, self.hit_weights)
+        c2 = Cluster([mh_sctn], model, self.hit_weights)
         sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
         system_serializer = TsvSystemSerializer()
 
         sys_tsv = "\t".join(["replicon_id", "h_gspd", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1", "1",
-                             "1.000", "1.900", "1", "gspD", "mandatory", "803",
-                             "1.0", "1.000", "1.000", "1.000", "10", "20", ""])
+                             "1.000", "2.000", "1", "gspD", "mandatory", "803",
+                             "1.0", "1.000", "1.000", "1.000", "10", "20", "", ""])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["replicon_id", "h_sctj", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1", "1",
-                              "1.000", "1.900", "1", "sctJ", "accessory", "803",
-                              "1.0", "1.000", "1.000", "1.000", "20", "30", ""])
+                              "1.000", "2.000", "1", "sctJ", "accessory", "803",
+                              "1.0", "1.000", "1.000", "1.000", "20", "30", "", ""])
         sys_tsv += "\n"
-        sys_tsv += "\t".join(["replicon_id", "h_sctn_flg", "sctN_FLG", "30", "foo/T2SS", sys_multi_loci.id, "1", "-1",
-                              "1.000", "1.900", "1", "sctN", "accessory", "803",
-                              "1.0", "1.000", "1.000", "1.000", "30", "40", ""])
+        sys_tsv += "\t".join(["replicon_id", "h_sctn", "sctN", "80", "foo/T2SS", sys_multi_loci.id, "1", "-1",
+                              "1.000", "2.000", "1", "sctN", "accessory", "803",
+                              "1.0", "1.000", "1.000", "1.000", "30", "40", "h_sctn_flg", ""])
         sys_tsv += "\n"
         self.assertEqual(sys_tsv, system_serializer.serialize(sys_multi_loci, hit_multi_sys_tracker))
 
@@ -201,9 +210,11 @@ neutral genes:
     def test_SolutionSerializer_tsv(self):
         model_name = 'foo'
         model_location = ModelLocation(path=os.path.join(self.cfg.models_dir()[0], model_name))
-        model_A = Model("foo/A", 10)
-        model_B = Model("foo/B", 10)
 
+        ###########
+        # Model B #
+        ###########
+        model_B = Model("foo/B", 10)
         c_gene_sctn_flg = CoreGene(model_location, "sctN_FLG", self.profile_factory)
         gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_B)
         c_gene_sctj_flg = CoreGene(model_location, "sctJ_FLG", self.profile_factory)
@@ -213,6 +224,15 @@ neutral genes:
         c_gene_tadZ = CoreGene(model_location, "tadZ", self.profile_factory)
         gene_tadZ = ModelGene(c_gene_tadZ, model_B)
 
+        model_B.add_mandatory_gene(gene_sctn_flg)
+        model_B.add_mandatory_gene(gene_sctj_flg)
+        model_B.add_accessory_gene(gene_flgB)
+        model_B.add_accessory_gene(gene_tadZ)
+
+        ###########
+        # Model A #
+        ###########
+        model_A = Model("foo/A", 10)
         c_gene_sctn = CoreGene(model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_A)
         gene_sctn_hom = Exchangeable(c_gene_sctn_flg, gene_sctn)
@@ -229,27 +249,28 @@ neutral genes:
         gene_gspd.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(model_location, "abc", self.profile_factory)
-        gene_abc = ModelGene(c_gene_abc, model_A)
+        gene_abc = ModelGene(c_gene_abc, model_A, loner=True)
         gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
         gene_abc.add_exchangeable(gene_abc_ho)
 
         model_A.add_mandatory_gene(gene_sctn)
         model_A.add_mandatory_gene(gene_sctj)
         model_A.add_accessory_gene(gene_gspd)
-        model_A.add_forbidden_gene(gene_abc)
+        model_A.add_accessory_gene(gene_abc)
 
-        model_B.add_mandatory_gene(gene_sctn_flg)
-        model_B.add_mandatory_gene(gene_sctj_flg)
-        model_B.add_accessory_gene(gene_flgB)
-        model_B.add_accessory_gene(gene_tadZ)
 
+
+        #       CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                           pos      score
         h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 11, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
@@ -262,17 +283,19 @@ neutral genes:
         c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
                       ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
                      model_A, self.hit_weights)
+        c3 = Cluster([Loner(h_abc, gene_ref=gene_abc, gene_status=GeneStatus.ACCESSORY, counterpart=[h_tadZ])],
+                     model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
-        c3 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+        c5 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
                       ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
                       ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
                      model_B, self.hit_weights)
 
-        sys_A = System(model_A, [c1, c2], self.cfg.redundancy_penalty())
+        sys_A = System(model_A, [c1, c2, c3], self.cfg.redundancy_penalty())
         sys_A.id = "sys_id_A"
-        sys_B = System(model_B, [c3], self.cfg.redundancy_penalty())
+        sys_B = System(model_B, [c5], self.cfg.redundancy_penalty())
         sys_B.id = "sys_id_B"
 
         sol = [sys_A, sys_B]
@@ -282,37 +305,41 @@ neutral genes:
         system_serializer = TsvSolutionSerializer()
 
         sol_tsv = '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                            '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                            '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                            '2', '1', '1.000', '2.000', '2', 'sctJ', 'mandatory',
+                            '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
+                             '2', '1', '1.000', '2.000', '2', 'sctN', 'mandatory',
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                             '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
+                             '2', '1', '1.000', '2.000', '2', 'gspD', 'accessory',
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                             '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                             '2', '2', '1.000', '2.000', '2', 'sctJ', 'mandatory',
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                             '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
+                             '2', '2', '1.000', '2.000', '2', 'sctN', 'mandatory',
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_abc', 'abc', '20', 'foo/A', 'sys_id_A',
+                             '2', '-1', '1.000', '2.000', '2', 'abc', 'accessory',
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'hit_tadZ', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '10', 'foo/B', 'sys_id_B',
                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                             '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_flgB', 'flgB', '11', 'foo/B', 'sys_id_B',
                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_tadZ', 'tadZ', '40', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         ser = system_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
