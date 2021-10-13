@@ -183,9 +183,6 @@ neutral genes:
         ch_sctn = CoreHit(c_gene_sctn, "h_sctn", 803, "replicon_id", 80, 1.0, 1.0, 1.0, 1.0, 30, 40)
         mh_sctn = Loner(ch_sctn, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY, counterpart=[ch_sctn_flg])
 
-        #mh_sctn_flg = ModelHit(h_sctn_flg, gene_sctn_flg, GeneStatus.ACCESSORY)
-
-
         c1 = Cluster([mh_gspd, mh_sctj], model, self.hit_weights)
         c2 = Cluster([mh_sctn], model, self.hit_weights)
         sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
