@@ -900,21 +900,18 @@ Use ordered replicon to have better prediction.
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
-        expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
-                           'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_12',
-                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_11',
-                           'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
-                           'VICH001.B.00001.C001_T4bP_15', 'VICH001.B.00001.C001_T4P_13',
+        expected_sys_id = ['VICH001.B.00001.C001_MSH_1',
+                           'VICH001.B.00001.C001_T4P_13', 'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
+                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_5', 'VICH001.B.00001.C001_T4P_4',
+                           'VICH001.B.00001.C001_T4bP_14', 'VICH001.B.00001.C001_T4P_12', 'VICH001.B.00001.C001_T4P_6',
                            'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
-                           'VICH001.B.00001.C001_T4P_9',
-                           'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3'
-                           ]
+                           'VICH001.B.00001.C001_T2SS_3', 'VICH001.B.00001.C001_T2SS_2']
 
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
-        expected_scores = [10.5, 10.0, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.3, 7.5]
+        expected_scores = [10.5, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.3, 7.5]
         self.assertListEqual([s.score for s in systems], expected_scores)
-        self.assertEqual(len(rejected_clst), 11)
+        self.assertEqual(len(rejected_clst), 8)
 
         # test hits but No Systems
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4" \
