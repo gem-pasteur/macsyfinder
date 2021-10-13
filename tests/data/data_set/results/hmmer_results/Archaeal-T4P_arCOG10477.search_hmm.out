@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG10477.hmm
 # target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
-# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG10477.search_hmm.out
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20211013_10-00-17/hmmer_results/Archaeal-T4P_arCOG10477.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
