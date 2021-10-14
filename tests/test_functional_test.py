@@ -542,8 +542,39 @@ class Test(MacsyTest):
         self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
                              os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
-    def test_3_systems_2_non_compatible(self):
-        pass
+    def test_2_systems_not_compatible(self):
+        # genetic organization of test_9.fasta
+        #
+        # gene      abc   mfp    gspd   omf    gspf
+        # gene id  01397 01398  01400  01506  02599
+        # pos       9     10      13    15     17
+        # syst A   [abc    mfp   gspd]
+        # syst B                [gspd   omf   gspf]
+        # 2 systems not compatible (share gspd)
+        # so 2 solutions
+        expected_result_dir = self.find_data("functional_test_2_systems_not_compatible")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  A B " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_unordered(self):
