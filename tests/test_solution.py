@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import CoreHit, ModelHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -33,209 +33,302 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System
-from macsypy.solution import find_best_solutions
+from macsypy.solution import find_best_solutions, combine_clusters
 from tests import MacsyTest
 
-
-def _build_systems(cfg, profile_factory):
+    
+def _build_clusters(cfg, profile_factory):
+    
     model_name = 'foo'
     model_location = ModelLocation(path=os.path.join(cfg.models_dir()[0], model_name))
-    model_A = Model("foo/A", 10)
-    model_B = Model("foo/B", 10)
-    model_C = Model("foo/C", 10)
-    model_D = Model("foo/D", 10)
-    model_E = Model("foo/E", 10)
-    model_F = Model("foo/F", 10)
-    model_G = Model("foo/G", 10)
-    model_H = Model("foo/H", 10)
-    model_I = Model("foo/I", 10)
-    model_J = Model("foo/J", 10)
-    model_K = Model("foo/K", 10)
 
-    c_gene_sctn_flg = CoreGene(model_location, "sctN_FLG", profile_factory)
-    gene_sctn_flg = ModelGene(c_gene_sctn_flg, model_B)
-    c_gene_sctj_flg = CoreGene(model_location, "sctJ_FLG", profile_factory)
-    gene_sctj_flg = ModelGene(c_gene_sctj_flg, model_B)
-    c_gene_flgB = CoreGene(model_location, "flgB", profile_factory)
-    gene_flgB = ModelGene(c_gene_flgB, model_B)
-    c_gene_tadZ = CoreGene(model_location, "tadZ", profile_factory)
-    gene_tadZ = ModelGene(c_gene_tadZ, model_B)
-
-    c_gene_sctn = CoreGene(model_location, "sctN", profile_factory)
-    gene_sctn = ModelGene(c_gene_sctn, model_A)
-    gene_sctn_hom = Exchangeable(c_gene_sctn_flg, gene_sctn)
-    gene_sctn.add_exchangeable(gene_sctn_hom)
-
-    c_gene_sctj = CoreGene(model_location, "sctJ", profile_factory)
-    gene_sctj = ModelGene(c_gene_sctj, model_A)
-    gene_sctj_an = Exchangeable(c_gene_sctj_flg, gene_sctj)
-    gene_sctj.add_exchangeable(gene_sctj_an)
-
-    c_gene_gspd = CoreGene(model_location, "gspD", profile_factory)
-    gene_gspd = ModelGene(c_gene_gspd, model_A)
-    gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
-    gene_gspd.add_exchangeable(gene_gspd_an)
-
-    c_gene_abc = CoreGene(model_location, "abc", profile_factory)
-    gene_abc = ModelGene(c_gene_abc, model_A)
-    gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
-    gene_abc.add_exchangeable(gene_abc_ho)
-
-    c_gene_sctc = CoreGene(model_location, "sctC", profile_factory)
-    gene_sctc = ModelGene(c_gene_sctc, model_J)
-
-    model_A.add_mandatory_gene(gene_sctn)
-    model_A.add_mandatory_gene(gene_sctj)
-    model_A.add_accessory_gene(gene_gspd)
-    model_A.add_forbidden_gene(gene_abc)
-
-    model_B.add_mandatory_gene(gene_sctn_flg)
-    model_B.add_mandatory_gene(gene_sctj_flg)
-    model_B.add_accessory_gene(gene_flgB)
-    model_B.add_accessory_gene(gene_tadZ)
-
-    model_C.add_mandatory_gene(gene_sctn_flg)
-    model_C.add_mandatory_gene(gene_sctj_flg)
-    model_C.add_mandatory_gene(gene_flgB)
-    model_C.add_accessory_gene(gene_tadZ)
-    model_C.add_accessory_gene(gene_gspd)
-
-    model_D.add_mandatory_gene(gene_abc)
-    model_D.add_accessory_gene(gene_sctn)
-
-    model_E.add_accessory_gene(gene_gspd)
-
-    model_F.add_mandatory_gene(gene_abc)
-
-    # model G idem as C
-    model_G.add_mandatory_gene(gene_sctn_flg)
-    model_G.add_mandatory_gene(gene_sctj_flg)
-    model_G.add_mandatory_gene(gene_flgB)
-    model_G.add_accessory_gene(gene_tadZ)
-    model_G.add_accessory_gene(gene_gspd)
-
-    # mode lH idem as D
-    model_H.add_mandatory_gene(gene_abc)
-    model_H.add_accessory_gene(gene_sctn)
-
-    # model I
-    model_I.add_mandatory_gene(gene_flgB)
-    model_I.add_accessory_gene(gene_tadZ)
-
-    # model J
-    model_J.add_mandatory_gene(gene_abc)
-    model_J.add_mandatory_gene(gene_gspd)
-    model_J.add_accessory_gene(gene_tadZ)
-    model_J.add_accessory_gene(gene_sctc)
-
-    # model K
-    model_K.add_mandatory_gene(gene_flgB)
-    model_K.add_mandatory_gene(gene_sctn_flg)
-    model_K.add_accessory_gene(gene_sctj_flg)
-    model_K.add_accessory_gene(gene_sctn)
+    models = {}
 
 
-    h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-    model_A._min_mandatory_genes_required = 2
-    model_A._min_genes_required = 2
+    cg_sctn_flg = CoreGene(model_location, "sctN_FLG", profile_factory)
+    cg_sctj_flg = CoreGene(model_location, "sctJ_FLG", profile_factory)
+    cg_flgB = CoreGene(model_location, "flgB", profile_factory)
+    cg_tadZ = CoreGene(model_location, "tadZ", profile_factory)
+    cg_sctn = CoreGene(model_location, "sctN", profile_factory)
+    cg_sctj = CoreGene(model_location, "sctJ", profile_factory)
+    cg_gspd = CoreGene(model_location, "gspD", profile_factory)
+    cg_abc = CoreGene(model_location, "abc", profile_factory)
+    cg_sctc = CoreGene(model_location, "sctC", profile_factory)
+
+    ###########
+    # Model A #
+    ###########
+    models['A'] = Model("foo/A", 10)
+    mgA_sctn = ModelGene(cg_sctn, models['A'])
+    mgA_sctn_hom = Exchangeable(cg_sctn_flg, mgA_sctn)
+    mgA_sctn.add_exchangeable(mgA_sctn_hom)
+    mgA_sctj = ModelGene(cg_sctj, models['A'])
+    mgA_sctj_an = Exchangeable(cg_sctj_flg, mgA_sctj)
+    mgA_sctj.add_exchangeable(mgA_sctj_an)
+    mgA_gspd = ModelGene(cg_gspd, models['A'])
+    mgA_gspd_an = Exchangeable(cg_flgB, mgA_gspd)
+    mgA_gspd.add_exchangeable(mgA_gspd_an)
+    mgA_abc = ModelGene(cg_abc, models['A'])
+    mgA_abc_ho = Exchangeable(cg_tadZ, mgA_abc)
+    mgA_abc.add_exchangeable(mgA_abc_ho)
+
+    models['A'].add_mandatory_gene(mgA_sctn)
+    models['A'].add_mandatory_gene(mgA_sctj)
+    models['A'].add_accessory_gene(mgA_gspd)
+    models['A'].add_forbidden_gene(mgA_abc)
+
+    models['A']._min_mandatory_genes_required = 2
+    models['A']._min_genes_required = 2
+
+    ###########
+    # Model B #
+    ###########
+    models['B'] = Model("foo/B", 10)
+    mgB_sctn_flg = ModelGene(cg_sctn_flg, models['B'])
+    mgB_sctj_flg = ModelGene(cg_sctj_flg, models['B'])
+    mgB_flgB = ModelGene(cg_flgB, models['B'])
+    mgB_tadZ = ModelGene(cg_tadZ, models['B'])
+
+    models['B'].add_mandatory_gene(mgB_sctn_flg)
+    models['B'].add_mandatory_gene(mgB_sctj_flg)
+    models['B'].add_accessory_gene(mgB_flgB)
+    models['B'].add_accessory_gene(mgB_tadZ)
+
+    models['B']._min_mandatory_genes_required = 1
+    models['B']._min_genes_required = 2
+
+    ###########
+    # Model C #
+    ###########
+    models['C'] = Model("foo/C", 10)
+    mgC_sctn_flg = ModelGene(cg_sctn_flg, models['C'])
+    mgC_sctj_flg = ModelGene(cg_sctj_flg, models['C'])
+    mgC_flgB = ModelGene(cg_flgB, models['C'])
+    mgC_tadZ = ModelGene(cg_tadZ, models['C'])
+    mgC_gspd = ModelGene(cg_gspd, models['C'])
+
+    models['C'].add_mandatory_gene(mgC_sctn_flg)
+    models['C'].add_mandatory_gene(mgC_sctj_flg)
+    models['C'].add_mandatory_gene(mgC_flgB)
+    models['C'].add_accessory_gene(mgC_tadZ)
+    models['C'].add_accessory_gene(mgC_gspd)
+
+    models['C']._min_mandatory_genes_required = 1
+    models['C']._min_genes_required = 2
+
+    ###########
+    # Model D #
+    ###########
+    models['D'] = Model("foo/D", 10)
+    mgD_abc = ModelGene(cg_abc, models['D'])
+    mgD_sctn = ModelGene(cg_sctn, models['D'])
+    models['D'].add_mandatory_gene(mgD_abc)
+    models['D'].add_accessory_gene(mgD_sctn)
+
+    models['D']._min_mandatory_genes_required = 1
+    models['D']._min_genes_required = 1
+    ###########
+    # Model E #
+    ###########
+    models['E'] = Model("foo/E", 10)
+    mgE_gspd = ModelGene(cg_gspd, models['E'])
+    models['E'].add_accessory_gene(mgE_gspd)
+
+    models['E']._min_mandatory_genes_required = 0
+    models['E']._min_genes_required = 1
+
+    ###########
+    # Model F #
+    ###########
+    models['F'] = Model("foo/F", 10)
+    mgF_abc = ModelGene(cg_abc, models['F'])
+    models['F'].add_mandatory_gene(mgF_abc)
+
+    models['F']._min_mandatory_genes_required = 1
+    models['F']._min_genes_required = 1
+
+    #####################
+    # Model G idem as C #
+    #####################
+    models['G'] = Model("foo/G", 10)
+    mgG_sctn_flg = ModelGene(cg_sctn_flg, models['G'])
+    mgG_sctj_flg = ModelGene(cg_sctj_flg, models['G'])
+    mgG_flgB = ModelGene(cg_flgB, models['G'])
+    mgG_tadZ = ModelGene(cg_tadZ, models['G'])
+    mgG_gspd = ModelGene(cg_gspd, models['G'])
+    models['G'].add_mandatory_gene(mgG_sctn_flg)
+    models['G'].add_mandatory_gene(mgG_sctj_flg)
+    models['G'].add_mandatory_gene(mgG_flgB)
+    models['G'].add_accessory_gene(mgG_tadZ)
+    models['G'].add_accessory_gene(mgG_gspd)
+
+    #####################
+    # Model H idem as D #
+    #####################
+    models['H'] = Model("foo/H", 10)
+    mgH_abc = ModelGene(cg_abc, models['H'])
+    mgH_sctn = ModelGene(cg_sctn, models['H'])
+    models['H'].add_mandatory_gene(mgH_abc)
+    models['H'].add_accessory_gene(mgH_sctn)
+
+    models['H']._min_mandatory_genes_required = 1
+    models['H']._min_genes_required = 1
+
+    ###########
+    # Model I #
+    ###########
+    models['I'] = Model("foo/I", 10)
+    mgI_abc = ModelGene(cg_abc, models['I'])
+    mgI_flgB = ModelGene(cg_flgB, models['I'])
+    mgI_tadZ = ModelGene(cg_tadZ, models['I'])
+    models['I'].add_mandatory_gene(mgI_abc)
+    models['I'].add_mandatory_gene(mgI_flgB)
+    models['I'].add_accessory_gene(mgI_tadZ)
+
+    models['I']._min_mandatory_genes_required = 1
+    models['I']._min_genes_required = 1
+
+    ###########
+    # model J #
+    ###########
+    models['J'] = Model("foo/J", 10)
+    mgJ_abc = ModelGene(cg_abc, models['J'])
+    mgJ_gspd = ModelGene(cg_gspd, models['J'])
+    mgJ_tadZ = ModelGene(cg_tadZ, models['J'])
+    mgJ_sctc = ModelGene(cg_sctc, models['J'])
+    models['J'].add_mandatory_gene(mgJ_abc)
+    models['J'].add_mandatory_gene(mgJ_gspd)
+    models['J'].add_accessory_gene(mgJ_tadZ)
+    models['J'].add_accessory_gene(mgJ_sctc)
+
+    models['J']._min_mandatory_genes_required = 1
+    models['J']._min_genes_required = 1
+
+    ###########
+    # model K #
+    ###########
+    models['K'] = Model("foo/K", 10)
+    mgK_flgB = ModelGene(cg_flgB, models['K'])
+    mgK_sctn_flg = ModelGene(cg_sctn_flg, models['K'])
+    mgK_sctj_flg = ModelGene(cg_sctj_flg, models['K'])
+    mgK_sctn = ModelGene(cg_sctn, models['K'])
+    models['K'].add_mandatory_gene(mgK_flgB)
+    models['K'].add_mandatory_gene(mgK_sctn_flg)
+    models['K'].add_accessory_gene(mgK_sctj_flg)
+    models['K'].add_accessory_gene(mgK_sctn)
+
+    models['K']._min_mandatory_genes_required = 1
+    models['K']._min_genes_required = 1
+
+    ###########
+    # model L #
+    ###########
+    models['L'] = Model("foo/L", 10)
+    mgL_flgB = ModelGene(cg_flgB, models['L'])
+    mgL_sctn_flg = ModelGene(cg_sctn_flg, models['L'])
+    mgL_sctj_flg = ModelGene(cg_sctj_flg, models['L'])
+    mgL_sctn = ModelGene(cg_sctn, models['L'], loner=True)
+    models['L'].add_mandatory_gene(mgL_flgB)
+    models['L'].add_mandatory_gene(mgL_sctn_flg)
+    models['L'].add_accessory_gene(mgL_sctj_flg)
+    models['L'].add_accessory_gene(mgL_sctn)
+
+    ch_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_sctn = CoreHit(cg_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_gspd = CoreHit(cg_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_sctn_flg = CoreHit(cg_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_sctj_flg = CoreHit(cg_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_flgB = CoreHit(cg_flgB, "hit_flgB", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_tadZ = CoreHit(cg_tadZ, "hit_tadZ", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
     hit_weights = HitWeight(**cfg.hit_weights())
-    c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                  ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
-                  ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
-                  ],
-                 model_A, hit_weights)
 
-    c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                  ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                 model_A, hit_weights)
+    clusters = {}
+    clusters['c1'] = Cluster([ModelHit(ch_sctj, mgA_sctj, GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, mgA_sctn, GeneStatus.MANDATORY),
+                              ModelHit(ch_gspd, mgA_gspd, GeneStatus.ACCESSORY)
+                              ],
+                              models['A'], hit_weights)
+    clusters['c2'] = Cluster([ModelHit(ch_sctj, mgA_sctj, GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, mgA_sctn, GeneStatus.MANDATORY)],
+                              models['A'], hit_weights)
 
-    model_B._min_mandatory_genes_required = 1
-    model_B._min_genes_required = 2
-    c3 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                  ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                 model_B, hit_weights)
-    model_C._min_mandatory_genes_required = 1
-    model_C._min_genes_required = 2
-    c4 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                  ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                  ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                 model_C, hit_weights)
-    model_D._min_mandatory_genes_required = 1
-    model_D._min_genes_required = 1
-    c5 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY),
-                  ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
-                 model_D, hit_weights)
+    clusters['c3'] = Cluster([ModelHit(ch_sctj_flg, mgB_sctj_flg, GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, mgB_tadZ, GeneStatus.ACCESSORY),
+                              ModelHit(ch_flgB, mgB_flgB, GeneStatus.ACCESSORY)],
+                              models['B'], hit_weights)
 
-    model_E._min_mandatory_genes_required = 0
-    model_E._min_genes_required = 1
-    c6 = Cluster([ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
-                 model_E, hit_weights)
+    clusters['c4'] = Cluster([ModelHit(ch_sctj_flg, mgC_sctj_flg, GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, mgC_tadZ, GeneStatus.ACCESSORY),
+                              ModelHit(ch_flgB, mgC_flgB, GeneStatus.MANDATORY),
+                              ModelHit(ch_gspd, mgC_gspd, GeneStatus.ACCESSORY)],
+                              models['C'], hit_weights)
 
-    model_F._min_mandatory_genes_required = 1
-    model_F._min_genes_required = 1
-    c7 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY)],
-                 model_F, hit_weights)
+    clusters['c5'] = Cluster([ModelHit(ch_abc, mgD_abc, GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, mgD_sctn, GeneStatus.ACCESSORY)],
+                              models['D'], hit_weights)
 
-    model_H._min_mandatory_genes_required = 1
-    model_H._min_genes_required = 1
+    clusters['c6'] = Cluster([ModelHit(ch_gspd, mgE_gspd, GeneStatus.ACCESSORY)],
+                              models['E'], hit_weights)
 
-    model_I._min_mandatory_genes_required = 1
-    model_I._min_genes_required = 1
-    c8 = Cluster([ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
-                 model_I, hit_weights)
+    clusters['c7'] = Cluster([ModelHit(ch_abc, mgF_abc, GeneStatus.MANDATORY)],
+                              models['F'], hit_weights)
 
-    model_J._min_mandatory_genes_required = 1
-    model_J._min_genes_required = 1
-    c9 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY),
-                  ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)],
-                 model_I, hit_weights)
+    clusters['c8'] = Cluster([ModelHit(ch_flgB, mgI_flgB, GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, mgI_tadZ, GeneStatus.ACCESSORY)],
+                              models['I'], hit_weights)
 
-    model_K._min_mandatory_genes_required = 1
-    model_K._min_genes_required = 1
-    c10 = Cluster([ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                   ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
-                  model_K, hit_weights)
+    clusters['c9'] = Cluster([ModelHit(ch_abc, mgJ_abc, GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, mgJ_tadZ, GeneStatus.ACCESSORY)],
+                              models['J'], hit_weights)
+
+    clusters['c10'] = Cluster([ModelHit(ch_flgB, mgK_flgB, GeneStatus.MANDATORY),
+                               ModelHit(ch_sctn, mgK_sctn, GeneStatus.ACCESSORY)],
+                               models['K'], hit_weights)
+    clusters['c11'] = Cluster([ModelHit(ch_flgB, mgL_flgB, GeneStatus.MANDATORY),
+                               ModelHit(ch_sctn_flg, mgL_sctn_flg, GeneStatus.MANDATORY)],
+                               models['L'], hit_weights)
+    clusters['c12'] = Cluster([ModelHit(ch_sctj_flg, mgL_sctj_flg, GeneStatus.ACCESSORY),
+                               ModelHit(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
+                              models['L'], hit_weights)
+    clusters['c13'] = Cluster([Loner(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
+                              models['L'], hit_weights)
+    return models, clusters
+
+
+
+def _build_systems(models, clusters, cfg):
 
     systems = {}
-
-    systems['A'] = System(model_A, [c1, c2], cfg.redundancy_penalty())  # 5 hits
     # we need to tweek the replicon_id to have stable ressults
     # whatever the number of tests ran
     # or the tests order
+    systems['A'] = System(models['A'], [clusters['c1'], clusters['c2']], cfg.redundancy_penalty())  # 5 hits
     systems['A'].id = "replicon_id_A"
-    systems['B'] = System(model_B, [c3], cfg.redundancy_penalty())  # 3 hits
+    systems['B'] = System(models['B'], [clusters['c3']], cfg.redundancy_penalty())  # 3 hits
     systems['B'].id = "replicon_id_B"
-    systems['C'] = System(model_C, [c4], cfg.redundancy_penalty())  # 4 hits
+    systems['C'] = System(models['C'], [clusters['c4']], cfg.redundancy_penalty())  # 4 hits
     systems['C'].id = "replicon_id_C"
-    systems['D'] = System(model_D, [c5], cfg.redundancy_penalty())  # 2 hits
+    systems['D'] = System(models['D'], [clusters['c5']], cfg.redundancy_penalty())  # 2 hits
     systems['D'].id = "replicon_id_D"
-    systems['E'] = System(model_E, [c6], cfg.redundancy_penalty())  # 1 hit
+    systems['E'] = System(models['E'], [clusters['c6']], cfg.redundancy_penalty())  # 1 hit
     systems['E'].id = "replicon_id_E"
-    systems['F'] = System(model_F, [c7], cfg.redundancy_penalty())  # 1 hit
+    systems['F'] = System(models['F'], [clusters['c7']], cfg.redundancy_penalty())  # 1 hit
     systems['F'].id = "replicon_id_F"
-    systems['G'] = System(model_G, [c4], cfg.redundancy_penalty())  # 4 hits
+    systems['G'] = System(models['G'], [clusters['c4']], cfg.redundancy_penalty())  # 4 hits
     systems['G'].id = "replicon_id_G"
-    systems['H'] = System(model_H, [c5], cfg.redundancy_penalty())  # 2 hits
+    systems['H'] = System(models['H'], [clusters['c5']], cfg.redundancy_penalty())  # 2 hits
     systems['H'].id = "replicon_id_H"
-    systems['I'] = System(model_I, [c8], cfg.redundancy_penalty())  # 2 hits
+    systems['I'] = System(models['I'], [clusters['c8']], cfg.redundancy_penalty())  # 2 hits
     systems['I'].id = "replicon_id_I"
-    systems['J'] = System(model_J, [c9], cfg.redundancy_penalty())  # 2 hits
+    systems['J'] = System(models['J'], [clusters['c9']], cfg.redundancy_penalty())  # 2 hits
     systems['J'].id = "replicon_id_J"
-    systems['K'] = System(model_K, [c10], cfg.redundancy_penalty())  # 2 hits
+    systems['K'] = System(models['K'], [clusters['c10']], cfg.redundancy_penalty())  # 2 hits
     systems['K'].id = "replicon_id_K"
-
     return systems
 
 
@@ -262,7 +355,8 @@ class SolutionExplorerTest(MacsyTest):
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
         self.profile_factory = ProfileFactory(self.cfg)
-        self.systems = _build_systems(self.cfg, self.profile_factory)
+        self.models, self.clusters = _build_clusters(self.cfg, self.profile_factory)
+        self.systems = _build_systems(self.models, self.clusters, self.cfg)
 
 
     def test_find_best_solution(self):
@@ -413,3 +507,85 @@ class SolutionExplorerTest(MacsyTest):
         expected_sol = {frozenset(sol) for sol in expected_sol}
         self.assertEqual(score, 3.0)
         self.assertSetEqual(best_sol, expected_sol)
+
+
+    def test_combine_clusters(self):
+        ##################################################
+        # with 3 regular clusters 0 loner 0 multisystyem
+        ##################################################
+        combinations = combine_clusters([self.clusters['c1'], self.clusters['c2'],  self.clusters['c3']],
+                                       {},
+                                       {},
+                                       multi_loci=False)
+        self.assertEqual(combinations,
+                         [
+                             (self.clusters['c1'],),
+                             (self.clusters['c2'],),
+                             (self.clusters['c3'],)
+                         ])
+
+        combinations = combine_clusters([self.clusters['c1'], self.clusters['c2'], self.clusters['c3']],
+                                        {},
+                                        {},
+                                        multi_loci=True)
+        exp_combs = [
+                    (self.clusters['c1'],),
+                    (self.clusters['c2'],),
+                    (self.clusters['c3'],),
+                    (self.clusters['c1'], self.clusters['c2']),
+                    (self.clusters['c1'], self.clusters['c3']),
+                    (self.clusters['c2'], self.clusters['c3']),
+                    (self.clusters['c1'], self.clusters['c2'], self.clusters['c3'])
+                 ]
+        self.assertEqual(combinations, exp_combs)
+
+        ###########################################
+        # with 2 RC + 1 L not included in cluster
+        ###########################################
+        combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
+                                       {},
+                                       {},
+                                       multi_loci=False)
+        exp_combs = [
+                    (self.clusters['c11'],),
+                    (self.clusters['c12'],)
+                   ]
+        self.assertEqual(combinations, exp_combs)
+        combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
+                                       {},
+                                       {},
+                                       multi_loci=True)
+        exp_combs = [
+                    (self.clusters['c11'],),
+                    (self.clusters['c12'],),
+                    (self.clusters['c11'], self.clusters['c12'])
+                   ]
+        self.assertEqual(combinations, exp_combs)
+        ##################################
+        # with 2 RC + 1 L already in RC 2
+        ##################################
+        combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
+                                        {'sctN': self.clusters['c13']},
+                                        {},
+                                        multi_loci=False)
+
+        exp_combs = [
+            (self.clusters['c11'],),
+            (self.clusters['c12'],),
+            (self.clusters['c11'], self.clusters['c13']),
+            (self.clusters['c13'],),
+        ]
+        self.assertEqual(combinations, exp_combs)
+        combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
+                                        {'sctN': self.clusters['c13']},
+                                        {},
+                                        multi_loci=True)
+
+        exp_combs = [
+            (self.clusters['c11'],),
+            (self.clusters['c12'],),
+            (self.clusters['c11'], self.clusters['c12']),
+            (self.clusters['c11'], self.clusters['c13']),
+            (self.clusters['c13'],),
+        ]
+        self.assertEqual(combinations, exp_combs)
