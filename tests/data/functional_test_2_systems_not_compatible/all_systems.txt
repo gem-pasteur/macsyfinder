@@ -1,0 +1,42 @@
+# macsyfinder 20211014.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional A B --relative-path --sequence-db tests/data/base/test_9.fasta
+# Systems found:
+
+system id = UserReplicon_A_1
+model = functional/A
+replicon = UserReplicon
+clusters = [('VICH001.B.00001.C001_01397', 'T1SS_abc', 9), ('VICH001.B.00001.C001_01398', 'T1SS_mfp', 10), ('VICH001.B.00001.C001_01400', 'T2SS_gspD', 13)]
+occ = 1
+wholeness = 1.000
+loci nb = 1
+score = 2.000
+
+mandatory genes:
+	- T2SS_gspD: 1 (T2SS_gspD [UserReplicon_B_2])
+
+accessory genes:
+	- T1SS_abc: 1 (T1SS_abc)
+	- T1SS_mfp: 1 (T1SS_mfp)
+
+neutral genes:
+
+============================================================
+system id = UserReplicon_B_2
+model = functional/B
+replicon = UserReplicon
+clusters = [('VICH001.B.00001.C001_01400', 'T2SS_gspD', 13), ('VICH001.B.00001.C001_01506', 'T1SS_omf', 15), ('VICH001.B.00001.C001_02599', 'T2SS_gspF', 17)]
+occ = 1
+wholeness = 1.000
+loci nb = 1
+score = 2.000
+
+mandatory genes:
+	- T2SS_gspD: 1 (T2SS_gspD [UserReplicon_A_1])
+
+accessory genes:
+	- T1SS_omf: 1 (T1SS_omf)
+	- T2SS_gspF: 1 (T2SS_gspF)
+
+neutral genes:
+
+============================================================
