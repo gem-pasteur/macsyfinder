@@ -362,7 +362,7 @@ class Model(metaclass=MetaModel):
         :param hits: list of hits to filter
         :type hits: list of :class:`macsypy.report.CoreHit` object
         :return: list of hits
-        :rtype: list of :class:`macsypy.report.CoreHit` object
+        :rtype: list of :class:`macsypy.report.Model` object
         """
         all_genes = {g.name: g for g in self.genes(exchangeable=True)}
         compatible_hits = []
