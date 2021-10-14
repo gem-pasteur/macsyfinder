@@ -31,7 +31,7 @@ from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
-from macsypy.system import LikelySystem, UnlikelySystem, HitSystemTracker, ClusterSystemTracker
+from macsypy.system import LikelySystem, UnlikelySystem, HitSystemTracker
 
 from tests import MacsyTest
 
