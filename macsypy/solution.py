@@ -114,7 +114,7 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
         cluster_combinations =  [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
         cluster_combinations =  list(itertools.chain(*cluster_combinations))
     else:
-        cluster_combinations = [[clst] for clst in clusters]
+        cluster_combinations = [(clst,) for clst in clusters]
 
     # add loners
     combination_w_loners = []
@@ -127,15 +127,13 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
                         to_add = False
                         break
                 if to_add:
-                    combination_w_loners.append(list(one_combination) + [clst_loner])
-        else:
-            # case wher no regular cluster are found
-            # we found only loners
-            # definition may contain only loners
-            combination_w_loners.append([clst_loner])
+                    combination_w_loners.append(tuple(list(one_combination) + [clst_loner]))
+        # we always add the loner
+        # in case definition may contain only loners
+        # or min_gene_required = 1 with one Loner
+        combination_w_loners.append((clst_loner,))
 
     cluster_combinations += combination_w_loners
-
     # add multi-system
     combination_w_ms = []
     for func_name, hit_multi_sys in multi_systems_hits.items():
@@ -146,7 +144,7 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
                     to_add = False
                     break
             if to_add:
-                combination_w_ms.append(one_combination + [hit_multi_sys])
+                combination_w_ms.append(tuple(list(one_combination) + [hit_multi_sys]))
 
     cluster_combinations += combination_w_ms
     return  cluster_combinations
