@@ -124,8 +124,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_circular(self):
@@ -138,7 +138,6 @@ class Test(MacsyTest):
         # in T12SS-simple-exch omf is not a loner
 
         expected_result_dir = self.find_data("functional_test_ordered_circular")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                "--replicon-topology circular " \
                f"--models-dir {self.find_data('models')} " \
@@ -159,8 +158,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_linear(self):
@@ -172,7 +171,6 @@ class Test(MacsyTest):
         # syst  no system
         # in T12SS-simple-exch omf is not a loner
         expected_result_dir = self.find_data("functional_test_ordered_linear")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -193,8 +191,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_1_cluster_3_loners(self):
@@ -208,7 +206,6 @@ class Test(MacsyTest):
         # loners      X                                        omf    omf    omf
         # omf2 colocate with mfp3  => not considerde as Loner
         expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -229,8 +226,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_2_clusters_3_loners(self):
@@ -245,7 +242,6 @@ class Test(MacsyTest):
         #           [abc     mfp    gspd   omf46] with equivalent for omf46 [omf23 omf32]
 
         expected_result_dir = self.find_data("functional_test_ordered_2_clusters_3_loners")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -266,8 +262,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_2_clusters_1_loner(self):
@@ -302,8 +298,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_1_loner_in_clust(self):
@@ -315,8 +311,7 @@ class Test(MacsyTest):
         # clst     [                               ]   [  ]   [  ]
         # syst     [abc    mfp    abc    gspd   omf]
 
-        expected_result_dir = self.find_data("functional_test_ordered_multi_system_loner_in_clust")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
+        expected_result_dir = self.find_data("functional_test_ordered_1_loner_in_clust")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -337,8 +332,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_1_loner_exch_in_clust(self):
@@ -351,7 +346,6 @@ class Test(MacsyTest):
         # syst     [abc    mfp    abc    gspd   gspf]
 
         expected_result_dir = self.find_data("functional_test_ordered_1_loner_exch_in_clust")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -372,8 +366,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_1_clusters_3_loners_w_exchangeable(self):
@@ -386,8 +380,7 @@ class Test(MacsyTest):
         # syst                    [abc    mfp    abc    gspd   omf] with equivalent for omf23 [omf32, gspF46]
         # gspF46 have a score (465.3). omf (90, 111.5, 87) but it's an exhangeable so it canot be the "best loner"
 
-        expected_result_dir = self.find_data("functional_test_ordered_2_clusters_3_loners_w_exchangeable")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
+        expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners_w_exchangeable")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
@@ -408,8 +401,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_multi_loci(self):
@@ -445,8 +438,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_single_loci(self):
@@ -480,8 +473,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_degenerated_systems(self):
@@ -513,8 +506,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_uncomplete_degenerated_systems(self):
@@ -546,8 +539,8 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
 
-            self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
-                                 os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
     def test_3_systems_2_non_compatible(self):
         pass

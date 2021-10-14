@@ -1,5 +1,5 @@
-# macsyfinder 20211012.dev
-# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --relative-path --sequence-db tests/data/base/gembase.fasta
+# macsyfinder 20211014.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ -m TFF-SF all --relative-path --sequence-db tests/data/base/gembase.fasta
 # Rejected clusters:
 
 Cluster:
@@ -175,6 +175,14 @@ These clusters have been rejected because:
 Cluster:
 - model = T4P
 - replicon = GCF_000005845
+- hits = (GCF_000005845_026740, T4P_pilT, 2674)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000005845
 - hits = (GCF_000005845_030590, T4P_pilQ, 3059), (GCF_000005845_030620, T4P_pilN, 3062), (GCF_000005845_030630, T4P_pilM, 3063)
 Cluster:
 - model = T4P
@@ -183,6 +191,14 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 	- The quorum of genes required (5) is not reached: 4
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000005845
+- hits = (GCF_000005845_026930, T2SS_gspO, 2693)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
@@ -242,6 +258,30 @@ These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 ============================================================
 Cluster:
+- model = T2SS
+- replicon = GCF_000006725
+- hits = (GCF_000006725_014570, T4P_pilD, 5699)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
+============================================================
+Cluster:
+- model = T2SS
+- replicon = GCF_000006725
+- hits = (GCF_000006725_018700, T2SS_gspE, 6112)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006725
+- hits = (GCF_000006725_000270, T4P_pilT, 4269)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+Cluster:
 - model = T4P
 - replicon = GCF_000006725
 - hits = (GCF_000006725_001050, T4P_fimT, 4347), (GCF_000006725_001060, T4P_pilV, 4348), (GCF_000006725_001070, T4P_pilW, 4349), (GCF_000006725_001080, T4P_pilX, 4350), (GCF_000006725_001090, T4P_pilY, 4351), (GCF_000006725_001100, T4P_pilE, 4352)
@@ -661,6 +701,14 @@ These clusters have been rejected because:
 	- The quorum of genes required (5) is not reached: 4
 ============================================================
 Cluster:
+- model = T4P
+- replicon = GCF_000006725
+- hits = (GCF_000006725_022640, T4P_pilA, 6506)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 0
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+Cluster:
 - model = Archaeal-T4P
 - replicon = GCF_000006745
 - hits = (GCF_000006745_018740, Archaeal-T4P_arCOG00589, 8442), (GCF_000006745_018800, Archaeal-T4P_arCOG00589, 8448)
@@ -691,6 +739,22 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 0
 	- The quorum of genes required (4) is not reached: 1
+============================================================
+Cluster:
+- model = MSH
+- replicon = GCF_000006745
+- hits = (GCF_000006745_004600, MSH_mshA, 7028)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (3) is not reached: 1
+	- The quorum of genes required (4) is not reached: 1
+============================================================
+Cluster:
+- model = T2SS
+- replicon = GCF_000006745
+- hits = (GCF_000006745_021980, T4P_pilD, 8766)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
@@ -744,6 +808,14 @@ These clusters have been rejected because:
 Cluster:
 - model = T2SS
 - replicon = GCF_000006765
+- hits = (GCF_000006765_013660, T2SS_gspD, 11438)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
+============================================================
+Cluster:
+- model = T2SS
+- replicon = GCF_000006765
 - hits = (GCF_000006765_018460, T2SS_gspC, 11918), (GCF_000006765_018470, T2SS_gspD, 11919)
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 2
@@ -768,6 +840,14 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 	- The quorum of genes required (6) is not reached: 5
+============================================================
+Cluster:
+- model = T2SS
+- replicon = GCF_000006765
+- hits = (GCF_000006765_044730, T4P_pilD, 14545)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (6) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
@@ -917,6 +997,14 @@ These clusters have been rejected because:
 Cluster:
 - model = T4P
 - replicon = GCF_000006845
+- hits = (GCF_000006845_012440, T4P_pilA, 16888)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 0
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006845
 - hits = (GCF_000006845_014270, T4P_pilC, 17071), (GCF_000006845_014280, T4P_pilD, 17072), (GCF_000006845_014310, T4P_pilB, 17075)
 Cluster:
 - model = T4P
@@ -992,6 +1080,14 @@ Cluster:
 - hits = (GCF_000006925_030310, T4P_pilQ, 24298), (GCF_000006925_030330, T4P_pilN, 24300), (GCF_000006925_030340, T4P_pilM, 24301)
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006925
+- hits = (GCF_000006925_026070, T4P_pilT, 23874)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
@@ -1194,6 +1290,14 @@ These clusters have been rejected because:
 Cluster:
 - model = T4P
 - replicon = GCF_000006945
+- hits = (GCF_000006945_030160, T4P_pilT, 28596)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006945
 - hits = (GCF_000006945_033900, T4P_pilQ, 28970), (GCF_000006945_033930, T4P_pilN, 28973), (GCF_000006945_033940, T4P_pilM, 28974)
 Cluster:
 - model = T4P
@@ -1202,6 +1306,14 @@ Cluster:
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 3
 	- The quorum of genes required (5) is not reached: 4
+============================================================
+Cluster:
+- model = T4P
+- replicon = GCF_000006945
+- hits = (GCF_000006945_033450, T2SS_gspO, 28925)
+These clusters have been rejected because:
+	- The quorum of mandatory genes required (4) is not reached: 1
+	- The quorum of genes required (5) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P
