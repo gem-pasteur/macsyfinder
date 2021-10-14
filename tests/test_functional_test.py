@@ -549,6 +549,9 @@ class Test(MacsyTest):
             self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
                                  os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
+    def test_3_systems_2_non_compatible(self):
+        pass
+
 
     def test_unordered(self):
         # genetic organization of test_4.fasta
