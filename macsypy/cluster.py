@@ -92,13 +92,12 @@ def build_clusters(hits, rep_info, model, hit_weights):
     if hits:
         hit = hits[0]
         gene = gene = model.get_gene(hit.gene.name)
-        cluster_scaffold.append(ModelHit(hit, gene_ref=gene, gene_status=gene.status))
+        cluster_scaffold.append(hit)
         previous_hit = cluster_scaffold[0]
 
-        for hit in hits[1:]:
+        for m_hit in hits[1:]:
             # hit is a CoreHit so hit.gene is a CoreGene
             gene = model.get_gene(hit.gene.name)
-            m_hit = ModelHit(hit, gene_ref=gene, gene_status=gene.status)
             if collocates(previous_hit, m_hit):
                 cluster_scaffold.append(m_hit)
             else:

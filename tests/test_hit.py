@@ -178,6 +178,10 @@ class ModelHitTest(MacsyTest):
         self.assertEqual(mhit_2.status, GeneStatus.ACCESSORY)
 
         with self.assertRaises(MacsypyError) as ctx:
+            ModelHit(mhit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "The ModelHit 'hit' argument must be a CoreHit not <class 'macsypy.hit.ModelHit'>.")
+        with self.assertRaises(MacsypyError) as ctx:
             ModelHit(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(str(ctx.exception),
                          "The ModelHit 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")

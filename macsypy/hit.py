@@ -177,6 +177,8 @@ class ModelHit:
         :param gene_status:
         :type gene_status: :class:`macsypy.gene.GeneStatus` object
         """
+        if not isinstance(hit, CoreHit):
+            raise MacsypyError(f"The {self.__class__.__name__} 'hit' argument must be a CoreHit not {type(hit)}.")
         self._hit = hit
         if not isinstance(gene_ref, ModelGene):
             raise MacsypyError(f"The {self.__class__.__name__} 'gene_ref' argument must be a ModelGene not {type(gene_ref)}.")

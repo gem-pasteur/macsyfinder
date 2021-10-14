@@ -168,12 +168,11 @@ class TestBuildCluster(MacsyTest):
         self.assertEqual(true_loners, {})
 
         # replicon is linear the last hit is not merged with the first cluster
-        # m_h80 is link to gene_3. So, in this test, it's not a loner.
-        rep_info = RepliconInfo('linear', 1, 80, [(f"g_{i}", i*10) for i in range(1, 9)])
-        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61, m_h80]
+        # m_h80 is link to gene_4 'abc'. So, in this test, it's not a loner.
+        rep_info = RepliconInfo('linear', 1, 62, [(f"g_{i}", i*10) for i in range(1, 7)])
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61]
         random.shuffle(hits)
         true_clusters, true_loners, multi_system_hits = build_clusters(hits, rep_info, model, self.hit_weights)
-        self.assertEqual(len(true_clusters), 2)
         self.assertEqual(len(true_clusters), 2)
         self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21, m_h31])
         self.assertListEqual(true_clusters[1].hits, [m_h51, m_h61])

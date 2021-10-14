@@ -550,15 +550,15 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
             logger.info(f"Check model {model.fqn}")
-            hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+            mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
             logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
             hit_header_str = "id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match"
-            hits_str = "".join([str(h) for h in hits_related_one_model])
+            hits_str = "".join([str(h) for h in mhits_related_one_model])
             logger.debug(f"\n{hit_header_str}\n{hits_str}")
             logger.debug("#" * 80)
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
-            clusters, true_loners, multi_systems_hits = cluster.build_clusters(hits_related_one_model, rep_info, model, hit_weights)
+            clusters, true_loners, multi_systems_hits = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
             logger.debug("{:#^80}".format(" CLUSTERS "))
             logger.debug("\n" + "\n".join([str(c) for c in clusters]))
             logger.debug("{:=^50}".format(" LONERS "))
