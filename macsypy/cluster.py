@@ -257,6 +257,7 @@ class Cluster:
     Handle hits relative to a model which collocates
     """
 
+    _id = itertools.count(1)
 
     def __init__(self, hits, model, hit_wheights):
         """
@@ -272,7 +273,7 @@ class Cluster:
         self._score = None
         self._genes_roles = None
         self._hit_weights = hit_wheights
-
+        self.id = f"c{next(self._id)}"
 
     def __len__(self):
         return len(self.hits)
