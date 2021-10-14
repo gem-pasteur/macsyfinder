@@ -296,19 +296,6 @@ class HitSystemTracker(dict):
                     self[c_hit] = set()
                 self[c_hit].add(system)
 
-class ClusterSystemTracker(dict):
-    """
-    track in which system is implied each cluster
-    """
-    def __init__(self, systems):
-        super(ClusterSystemTracker, self).__init__()
-        for system in systems:
-            clusters = system.clusters
-            for clst in clusters:
-                if clst not in self:
-                    self[clst] = set()
-                self[clst].add(system)
-
 
 class MetaSetOfHits(abc.ABCMeta):
     """
