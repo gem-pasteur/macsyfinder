@@ -132,7 +132,10 @@ class MacsyTest(unittest.TestCase):
                 if l1 and l2:
                     if comment and l1.startswith(comment) and l2.startswith(comment):
                         continue
-                    self.assertEqual(l1, l2, msg)
+                    try:
+                        self.assertEqual(l1, l2, msg)
+                    except AssertionError as err:
+                        raise AssertionError(f"{fh1.name} and {fh2.name} differ:\n {err}")
                 elif l1:  # and not l2
                     raise self.failureException(f"{fh1.name} is longer than {fh2.name}")
                 elif l2:  # and not l1
