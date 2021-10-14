@@ -310,6 +310,7 @@ def get_best_hit_4_func(function, hits, key='score'):
         * i_evalue
         * profile_coverage
 
+    :param str function: the name of the function fullfil by the hits
     :param hits: the hits to filter.
     :type hits: [ :class:`macsypy.hit.Loner` object, ...]
     :param str key: The criterion used to select the best hit 'score', i_evalue', 'profile_coverage'
