@@ -32,7 +32,6 @@ _log = logging.getLogger(__name__)
 
 from.gene import GeneStatus
 from .cluster import Cluster
-from .hit import ModelHit
 from .error import MacsypyError
 
 
@@ -96,7 +95,6 @@ class MatchMaker(metaclass=abc.ABCMeta):
             gene_name = hit.gene.name
             # the ModelHit need to be linked to the
             # gene of the model
-            gene = self._model.get_gene(gene_name)
             if gene_name in self.mandatory_counter:
                 self.mandatory_counter[hit.gene.name] += 1
                 mandatory_hits.append(hit)
@@ -146,7 +144,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
 
 
     @abc.abstractmethod
-    def match(self):
+    def match(self, clusters):
         pass
 
 
@@ -210,8 +208,8 @@ class OrderedMatchMaker(MatchMaker):
             _log.debug(msg)
         if len(mandatory_genes) < self._model.min_mandatory_genes_required:
             is_a_system = False
-            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) is not reached: ' \
-                  f'{len(mandatory_genes)}'
+            msg = f'The quorum of mandatory genes required ({self._model.min_mandatory_genes_required}) ' \
+                  f'is not reached: {len(mandatory_genes)}'
             reasons.append(msg)
             _log.debug(msg)
         if len(accessory_genes) + len(mandatory_genes) < self._model.min_genes_required:
@@ -356,11 +354,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
     Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
     """
 
-    #_id = itertools.count(1)
-
-
-    def __init__(self, model, replicon_name):
-        #self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
+    def __init__(self, model):
         self.model = model
 
     def _sort_hits(self, hits):
@@ -439,7 +433,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                   self.model.max_nb_genes
+                     self.model.max_nb_genes
         return score
 
 
@@ -467,7 +461,7 @@ class System(AbstractSetOfHits):
         self.clusters = clusters
         self.redundancy_penalty = redundancy_penalty
         self._score = None
-        super().__init__(model, self._replicon_name)
+        super().__init__(model)
 
 
 
@@ -648,7 +642,6 @@ class System(AbstractSetOfHits):
         return {mh for mh in self.hits if mh.loner}
 
 
-
 class RejectedClusters(AbstractSetOfHits):
     """
     Handle a set of clusters which has been rejected during the :func:`macsypy.system.match`  step
@@ -666,8 +659,8 @@ class RejectedClusters(AbstractSetOfHits):
         :param clusters: list of clusters. These Clusters should be created with
                          :class:`macsypy.cluster.Cluster` of :class:`macsypy.hit.ModelHit` objects
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :param reason: the reason why these clusters have been rejected
-        :type reason: list of string
+        :param reasons: the reason why these clusters have been rejected
+        :type reasons: list of string
         """
         if isinstance(clusters, Cluster):
             self.clusters = [clusters]
@@ -675,7 +668,7 @@ class RejectedClusters(AbstractSetOfHits):
             self.clusters = clusters
         self._replicon_name = self.clusters[0].replicon_name
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
-        super().__init__(model, self._replicon_name)
+        super().__init__(model)
 
 
     def __str__(self):
@@ -724,7 +717,7 @@ class AbstractUnordered(AbstractSetOfHits):
         self._forbidden_hits = forbidden_hits
         self._replicon_name = self.allowed_hits[0].replicon_name
         self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
-        super().__init__(model, self._replicon_name)
+        super().__init__(model)
 
     @property
     def hits(self):
@@ -818,9 +811,12 @@ class UnlikelySystem(AbstractUnordered):
 
         :param model:  The model which has ben used to build this system
         :type model: :class:`macsypy.model.Model` object
-        :param allowed_hits: The list of hits that form this potential system
-                             this hits status must be MANDATORY, ACCESSORY or NEUTRAL
-        :type allowed_hits: list of :class:`macsypy.hit.ModelHit` objects
+        :param mandatory_hits: The list of mandatory hits (encode for a gene tagged as mandatory)
+        :type mandatory_hits: list of :class:`macsypy.hit.ModelHit` objects
+        :param accessory_hits: The list of accessory hits (encode for a gene tagged as accessory)
+        :type accessory_hits: list of :class:`macsypy.hit.ModelHit` objects
+        :param neutral_hits: The list of neutral hits (encode for a gene tagged as neutral)
+        :type neutral_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param forbidden_hits: The list of hits that are forbidden
         :type forbidden_hits: list of :class:`macsypy.hit.ModelHit` objects
         :param reasons: the reasons why this set of hits has been rejected
@@ -848,4 +844,3 @@ class UnlikelySystem(AbstractUnordered):
         :rtype: list of string
         """
         return self._reasons
-
