@@ -106,7 +106,8 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
                               and 1 :class:`macsypy.cluster.Cluster` with the best :class:`macsypy.hit.ModelHit`
                               multi-system hit as value
     :param bool multi_loci: True if the model is multi_loci false otherwise
-    :return:
+    :return: all available combination of clusters
+    :rtype: List of combination. a combination is a tuple of :class:`macsypy.cluster.Cluster` objects
     """
     if not clusters:
         cluster_combinations = []
