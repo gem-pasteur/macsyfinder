@@ -97,17 +97,14 @@ def build_clusters(hits, rep_info, model, hit_weights):
     hits = [next(group) for pos, group in itertools.groupby(hits, lambda h: h.position)]
     if hits:
         hit = hits[0]
-        gene = gene = model.get_gene(hit.gene.name)
         cluster_scaffold.append(hit)
         previous_hit = cluster_scaffold[0]
 
         for m_hit in hits[1:]:
-            # hit is a CoreHit so hit.gene is a CoreGene
-            gene = model.get_gene(hit.gene.name)
             if collocates(previous_hit, m_hit):
                 cluster_scaffold.append(m_hit)
             else:
-                if len(cluster_scaffold) > 1 :
+                if len(cluster_scaffold) > 1:
                     # close the current scaffold if it contains at least 2 hits
                     cluster = Cluster(cluster_scaffold, model, hit_weights)
                     clusters.append(cluster)
@@ -204,7 +201,7 @@ def build_clusters(hits, rep_info, model, hit_weights):
                 if not hit.gene_ref.multi_system:
                     continue
                 func_name = hit.gene_ref.alternate_of().name
-                if func_name in  multi_system_hits:
+                if func_name in multi_system_hits:
                     multi_system_hits[func_name].append(hit)
                 else:
                     multi_system_hits[func_name] = [hit]
@@ -262,7 +259,6 @@ class Cluster:
         # need this method in build_cluster before to transform ModelHit in Loner
         # so cannot rely on Loner type
         return len(self) == 1 and self.hits[0].gene_ref.loner
-
 
 
     def _check_replicon_consistency(self):
@@ -333,7 +329,6 @@ class Cluster:
             return self._score
         else:
             seen_hits = {}
-            score = 0
             _log.debug(f"===================== compute score for cluster =====================")
             for v_hit in self.hits:
                 _log.debug(f"-------------- test hit {v_hit.gene.name} --------------")
@@ -347,7 +342,8 @@ class Cluster:
                 elif v_hit.status == GeneStatus.NEUTRAL:
                     hit_score = self._hit_weights.neutral
                 else:
-                    raise MacsypyError(f"a Cluster contains hit {v_hit.gene.name} {v_hit.position} which is neither mandatory nor accessory: {v_hit.status}")
+                    raise MacsypyError(f"a Cluster contains hit {v_hit.gene.name} {v_hit.position}"
+                                       f" which is neither mandatory nor accessory: {v_hit.status}")
                 _log.debug(f"{v_hit.id} is {v_hit.status} hit score = {hit_score}")
 
                 # weighted the hit score according to the hit match the gene or
