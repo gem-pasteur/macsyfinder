@@ -86,9 +86,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                 return
 
             idx = Indexes(self.cfg)
-            macsyfinder_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
-            self._fill_my_db(macsyfinder_idx, my_db)
+            self._fill_my_db(my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel()
@@ -179,12 +178,10 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         return d
 
 
-    def _fill_my_db(self, macsyfinder_idx, db):
+    def _fill_my_db(self, db):
         """
         Fill the dictionary with information on the matched sequences
 
-        :param macsyfinder_idx: the path the macsyfinder index corresponding to the dataset
-        :type  macsyfinder_idx: string
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
