@@ -1,0 +1,16 @@
+# macsyfinder 20211014.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --relative-path --sequence-db tests/data/base/gembase.fasta
+# Loners found:
+replicon	model_fqn	function	gene_name	hit_id	hit_pos	thit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
+GCF_000005845	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000005845_026740	2674	mandatory	3261.100e-117	393.600	0.944	0.979	3	321
+
+GCF_000006725	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000006725_000270	4269	mandatory	3441.800e-172	573.700	0.994	0.985	2	340
+
+GCF_000006745	TFF-SF/T2SS	T2SS_gspO	T4P_pilD	GCF_000006745_021980	8766	mandatory	2913.100e-88	295.800	1.000	0.832	28	269
+
+GCF_000006765	TFF-SF/T2SS	T2SS_gspO	T4P_pilD	GCF_000006765_044730	14545	mandatory	2901.100e-88	297.200	1.000	0.828	31	270
+
+GCF_000006925	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000006925_026070	23874	mandatory	3416.600e-118	394.300	0.950	0.941	18	338
+
+GCF_000006945	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000006945_030160	28596	mandatory	3263.400e-113	378.800	0.933	0.966	3	317
+
