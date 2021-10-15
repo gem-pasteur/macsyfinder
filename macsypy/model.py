@@ -342,7 +342,7 @@ class Model(metaclass=MetaModel):
         """
         # we assume that a gene cannot appear twice in a model
         primary_genes = {g for sublist in [getattr(self, f"{cat}_genes") for cat in self._gene_category]
-                for g in sublist}
+                         for g in sublist}
         if exchangeable:
             exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
             all_genes = {g for g in chain(primary_genes, exchangeable_genes)}
@@ -374,4 +374,3 @@ class Model(metaclass=MetaModel):
                                                 gene.status)
                                        )
         return compatible_hits
-
