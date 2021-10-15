@@ -34,7 +34,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters, filter_loners
+from macsypy.cluster import Cluster, build_clusters
 from tests import MacsyTest
 
 
@@ -275,63 +275,6 @@ class TestBuildCluster(MacsyTest):
         true_clusters, true_loners, multi_system_hits = build_clusters([], rep_info, model, self.hit_weights)
         self.assertListEqual(true_clusters, [])
         self.assertEqual(true_loners, {})
-
-
-class TestHitFunc(MacsyTest):
-
-    def setUp(self) -> None:
-        self.args = argparse.Namespace()
-        self.args.sequence_db = self.find_data("base", "test_1.fasta")
-        self.args.db_type = 'gembase'
-        self.args.models_dir = self.find_data('models')
-        self.args.res_search_dir = "blabla"
-
-        self.cfg = Config(MacsyDefaults(), self.args)
-        self.model_name = 'foo'
-        self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
-        self.profile_factory = ProfileFactory(self.cfg)
-        self.hit_weights = HitWeight(**self.cfg.hit_weights())
-
-
-    def test_filter_loners(self):
-        model = Model("foo/T2SS", 11)
-
-        core_genes = []
-        model_genes = []
-        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc'):
-            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
-            core_genes.append(core_gene)
-            model_genes.append(ModelGene(core_gene, model))
-        model_genes[2]._loner = True
-        model_genes[3]._loner = True
-        model_genes[4]._loner = True
-
-        model.add_mandatory_gene(model_genes[0])
-        model.add_mandatory_gene(model_genes[1])
-        model.add_accessory_gene(model_genes[2])
-        model.add_accessory_gene(model_genes[3])
-        model.add_neutral_gene(model_genes[4])
-
-        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
-        #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        h40 = CoreHit(core_genes[3], "h40", 10, "replicon_1", 40, 1.0, 61.0, 1.0, 1.0, 10, 20)
-        h50 = CoreHit(core_genes[4], "h50", 10, "replicon_1", 50, 1.0, 80.0, 1.0, 1.0, 10, 20)
-
-        c1 = Cluster([h10, h20, h30, h40, h50], model, self.hit_weights)
-        filtered_loners = filter_loners(c1, [Cluster([h30], model, self.hit_weights),
-                                             Cluster([h40], model, self.hit_weights),
-                                             Cluster([h50], model, self.hit_weights)]
-                                        )
-        self.assertListEqual(filtered_loners, [])
-        c1 = Cluster([h10, h20, h40], model, self.hit_weights)
-        c30 = Cluster([h30], model, self.hit_weights)
-        c40 = Cluster([h40], model, self.hit_weights)
-        c50 = Cluster([h50], model, self.hit_weights)
-        filtered_loners = filter_loners(c1, [c30, c40, c50])
-        self.assertListEqual(filtered_loners, [c30, c50])
 
 
 class TestCluster(MacsyTest):

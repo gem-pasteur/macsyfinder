@@ -221,25 +221,6 @@ def build_clusters(hits, rep_info, model, hit_weights):
     return true_clusters, true_loners, multi_system_hits
 
 
-def filter_loners(cluster, loners):
-    """
-    filter loners to remove those which are already in the cluster
-
-    :param cluster: The cluster
-    :type cluster: :class:`macsypy.cluster.Cluster` object
-    :param loners: the clusters constituted by one loner to filter
-    :type loners: list of cluster [Cluster, ...]
-    :return: list of loners which are not already in the cluster
-    :rtype: [Clsuter, ...]
-    """
-    cluster_hit_name = {hit.gene.name for hit in cluster.hits}
-    filtered_loners = []
-    for loner in loners:
-        if loner.hits[0].gene.name not in cluster_hit_name:
-            filtered_loners.append(loner)
-    return filtered_loners
-
-
 class Cluster:
     """
     Handle hits relative to a model which collocates
