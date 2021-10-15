@@ -106,7 +106,7 @@ class Profile:
         """
         Parse the HMM profile to extract the length and the presence of GA bit threshold
 
-        :return: the lentgh, presence of ga bit threshold
+        :return: the length, presence of ga bit threshold
         :rtype: tuple(int length, bool ga_threshold)
         """
         length = None
