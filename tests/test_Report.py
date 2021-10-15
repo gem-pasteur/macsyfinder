@@ -224,10 +224,9 @@ class TestHMMReport(TestReport):
         report_path = os.path.join(self.cfg.working_dir(), gene_name + self.cfg.res_search_suffix())
         report = GembaseHMMReport(c_gene, report_path, self.cfg)
         idx = Indexes(self.cfg)
-        macsyfinder_idx = idx.find_my_indexes()
         gspD_hmmer_path = self.find_data(os.path.join('hmm', 'gspD.search_hmm.out'))
         db = report._build_my_db(gspD_hmmer_path)
-        report._fill_my_db(macsyfinder_idx, db)
+        report._fill_my_db(db)
         self.assertDictEqual(db, {'PSAE001c01_031420': (658, 73),
                                   'PSAE001c01_051090': (714, 75),
                                   'PSAE001c01_018920': (776, 71),
