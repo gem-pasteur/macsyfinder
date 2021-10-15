@@ -91,7 +91,6 @@ def find_best_solutions(systems):
     return solutions, max_score
 
 
-
 def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False):
     """
     generate the combinations of clusters, with loners and multi systems
@@ -112,8 +111,8 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
     if not clusters:
         cluster_combinations = []
     elif multi_loci:
-        cluster_combinations =  [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-        cluster_combinations =  list(itertools.chain(*cluster_combinations))
+        cluster_combinations = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
+        cluster_combinations = list(itertools.chain(*cluster_combinations))
     else:
         cluster_combinations = [(clst,) for clst in clusters]
 
@@ -148,4 +147,4 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
                 combination_w_ms.append(tuple(list(one_combination) + [hit_multi_sys]))
 
     cluster_combinations += combination_w_ms
-    return  cluster_combinations
+    return cluster_combinations
