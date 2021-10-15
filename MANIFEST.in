@@ -7,9 +7,9 @@ include doc/build/latex/macsyfinder.pdf
 recursive-include utils *
 include etc/macsyfinder.conf
 
+recursive-include tests/ *
 recursive-exclude tests/__pycache__ *
 exclude tests/__init__.pyc
-recursive-include tests/ *
 
 include README.md
 include COPYING
@@ -18,6 +18,4 @@ include CONTRIBUTING.md
 include CONTRIBUTORS
 include NEWS
 include CITATION.yml
-include requirements.txt
-include requirements_dev.txt
 
