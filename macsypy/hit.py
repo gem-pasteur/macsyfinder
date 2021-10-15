@@ -147,7 +147,6 @@ class CoreHit:
         return self.position
 
 
-
 class ModelHit:
     """
     Encapsulates a :class:`macsypy.report.CoreHit`
@@ -246,7 +245,9 @@ class ModelHit:
 
 
 class Loner(ModelHit):
-
+    """
+    Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
+    """
 
     def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
         """
