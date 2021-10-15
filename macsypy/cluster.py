@@ -53,8 +53,14 @@ def build_clusters(hits, rep_info, model, hit_weights):
     :type rep_info: :class:`macsypy.Indexes.RepliconInfo` object
     :param model: the model to study
     :type model: :class:`macsypy.model.Model` object
-    :return: list of clusters
-    :rtype: List of :class:`Cluster` objects
+    :return: list of regular clusters,
+             the True loners (loners not in cluster)
+             the multi systems hits
+    :rtype: tuple with 3 elements
+
+            * true_clusters which is list of :class:`Cluster` objects
+            * true_loners: a dict with the function and a :class:macsypy.hit.Loner object as value
+            * multi_systems_hits: a dict TODO
     """
     def collocates(h1, h2):
         """
@@ -208,28 +214,11 @@ def build_clusters(hits, rep_info, model, hit_weights):
             multi_system_hits[func_name] = best_loner
 
         multi_system_hits = {func_name: Cluster([ms], model, hit_weights) for func_name, ms in multi_system_hits.items()}
-    else: #there is not hits
+    else:  # there is not hits
         true_clusters = []
         true_loners = {}
         multi_system_hits = {}
     return true_clusters, true_loners, multi_system_hits
-
-
-
-def get_loners(hits, model, hit_weights):
-    """
-    Create a list of Clusters each cluster is build with one hit matching a loner
-
-    :param hits: The list of hits to filter
-    :param model: the model which will used to build the clusters
-    :type model: :class:`macsypy.model.Model` object
-    :return: The list of cluster which each element is build at least with one loner
-    :rtype: [Cluster, ...]
-    """
-    gene_loners = {g.name for g in model.genes() if g.loner}
-    loners = [hit for hit in hits if hit.gene.name in gene_loners]
-    loners = [Cluster([hit], model, hit_weights) for hit in loners]
-    return loners
 
 
 def filter_loners(cluster, loners):
