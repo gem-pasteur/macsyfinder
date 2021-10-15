@@ -210,7 +210,7 @@ class DefinitionParser:
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        cfg_max_nb_genes =  self.cfg.max_nb_genes(def_loc.fqn)
+        cfg_max_nb_genes = self.cfg.max_nb_genes(def_loc.fqn)
         if cfg_max_nb_genes is not None:
             max_nb_genes = cfg_max_nb_genes
         else:
