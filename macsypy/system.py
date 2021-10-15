@@ -630,6 +630,11 @@ class System(AbstractSetOfHits):
                  .. note::
                     This method is used to compute the best combination of systems.
         """
+        # a CoreHit correspond to 1 gene in replicon
+        # it can be only one CoreHit by gene
+        # but several ModelGene can exist on the same gene
+        # So toknow if two systems share same genes we have to work on the CoreHit
+        # which is hold by the ModelHit hit attribute
         other_hits = {mh.hit for mh in other.hits if (not mh.loner and not mh.multi_system)}
         my_hits = {mh.hit for mh in self.hits if (not mh.loner and not mh.multi_system)}
         return not (my_hits & other_hits)
