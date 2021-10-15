@@ -34,7 +34,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters, get_loners, filter_loners
+from macsypy.cluster import Cluster, build_clusters, filter_loners
 from tests import MacsyTest
 
 
@@ -291,40 +291,6 @@ class TestHitFunc(MacsyTest):
         self.model_location = ModelLocation(path=os.path.join(self.args.models_dir, self.model_name))
         self.profile_factory = ProfileFactory(self.cfg)
         self.hit_weights = HitWeight(**self.cfg.hit_weights())
-
-    def test_get_loners(self):
-        model = Model("foo/T2SS", 11)
-        # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
-        # each genes is representing by a tuple (seq_id, length)"""
-        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
-
-        core_genes = []
-        model_genes = []
-        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc'):
-            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
-            core_genes.append(core_gene)
-            model_genes.append(ModelGene(core_gene, model))
-        model_genes[3]._loner = True
-        model_genes[4]._loner = True
-
-        model.add_mandatory_gene(model_genes[0])
-        model.add_mandatory_gene(model_genes[1])
-        model.add_accessory_gene(model_genes[2])
-        model.add_accessory_gene(model_genes[3])
-        model.add_neutral_gene(model_genes[4])
-
-        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
-        #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
-        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
-        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
-
-        # loners are clusters of one hit
-        loners = get_loners([h10, h20, h30, h61, h80], model, self.hit_weights)
-        hit_from_clusters = [h.hits[0] for h in loners]
-        self.assertListEqual(hit_from_clusters, [h61, h80])
 
 
     def test_filter_loners(self):
