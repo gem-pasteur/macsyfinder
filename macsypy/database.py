@@ -86,7 +86,7 @@ class Indexes:
         :return: the path to the index
         :rtype: str
         """
-        my_indexes = self.find_my_indexes() # check read
+        my_indexes = self.find_my_indexes()  # check read
 
         ###########################
         # build indexes if needed #
@@ -200,13 +200,12 @@ class Indexes:
                 seq_id, length, _rank = line.split(";")
                 length = int(length)
                 _rank = int(_rank)
-                yield (seq_id, length, _rank)
+                yield seq_id, length, _rank
 
 
 """handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
 each genes is representing by a tuple (seq_id, length)"""
 RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
-
 
 
 class RepliconDB:
