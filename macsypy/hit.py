@@ -192,16 +192,24 @@ class ModelHit:
         """To be hashable, it's needed to be put in a set or used as dict key"""
         return hash((hash(self.hit), self.gene_ref.model.fqn))
 
+
     @property
     def hit(self):
+        """
+        :return: The CoreHit below this ModelHit
+        :rtype: :class:`macsypy.hit.CoreHit` oject
+        """
         return self._hit
+
 
     @property
     def multi_system(self):
         """
         :return: True if the hit represent a `multi_systems` :class:`macsypy.Gene.ModelGene`, False otherwise.
+        :rtype: bool
         """
         return self.gene_ref.multi_system
+
 
     @property
     def loner(self):
@@ -212,6 +220,7 @@ class ModelHit:
                  - a hit representing a loner gene but include in a cluster is not a true loner
                  - a hit which is not include with other gene in a cluster but does not represnet a gene loner is not a
                    True loner (This situation may append when min_genes_required = 1)
+        :rtype: bool
         """
         return False
 
@@ -265,7 +274,8 @@ class Loner(ModelHit):
 
     @property
     def counterpart(self):
-        return self._counterpart
+        """The list of hits that can play the same role"""
+        return self._counterpart[:]
 
     def __str__(self):
         ch_str = str(self._hit)[:-1]
