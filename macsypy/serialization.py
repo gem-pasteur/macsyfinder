@@ -27,6 +27,7 @@ from string import Template
 
 from macsypy.gene import GeneStatus
 
+
 class SystemSerializer(metaclass=abc.ABCMeta):
     """
     handle the different way to serialize a system
@@ -155,6 +156,7 @@ class TsvSolutionSerializer:
         """
         :param solution: the solution to serialize
         :type solution: list of :class:`macsypy.system.System` object
+        :param int sol_id: the solution identifier
         :param hit_system_tracker:
         :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this solution (a list of systems) in tabulated separated value format
