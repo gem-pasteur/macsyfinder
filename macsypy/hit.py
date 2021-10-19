@@ -22,6 +22,7 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+import abc
 from operator import attrgetter
 import logging
 from dataclasses import dataclass
@@ -243,8 +244,38 @@ class ModelHit:
     def counterpart(self):
         return []
 
+class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
 
-class Loner(ModelHit):
+
+    def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
+        if isinstance(hit, CoreHit):
+            super().__init__(hit, gene_ref, gene_status)
+        elif isinstance(hit, ModelHit):
+            super().__init__(hit.hit, hit.gene_ref, hit.gene_ref.status)
+        self._counterpart = counterpart if counterpart is not None else []
+
+
+    def __getattr__(self, item):
+        return getattr(self._hit, item)
+
+
+    @property
+    def counterpart(self):
+        """The list of hits that can play the same role"""
+        return self._counterpart[:]
+
+
+    def __str__(self):
+        ch_str = str(self._hit)[:-1]
+
+        return ch_str + '\t' + ','.join([h.id for h in self.counterpart])
+
+
+    def __len__(self):
+        return len(self.counterpart) + 1
+
+
+class Loner(AbstractCounterparttHit):
     """
     Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
     """
@@ -258,37 +289,80 @@ class Loner(ModelHit):
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        if isinstance(hit, CoreHit):
-            super().__init__(hit, gene_ref, gene_status)
+        if isinstance(hit, CoreHit) and not gene_ref:
+            raise MacsypyError()
         elif isinstance(hit, ModelHit):
-            super().__init__(hit.hit, hit.gene_ref, hit.gene_ref.status)
-        if not self.gene_ref.loner:
-            msg = f"{self.hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
+            gene_ref = hit.gene_ref
+
+        if not gene_ref.loner:
+            msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
             _log.critical(msg)
             raise MacsypyError(msg)
-        self._counterpart = counterpart if counterpart is not None else []
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
-
-    def __getattr__(self, item):
-        return getattr(self._hit, item)
-
-
-    @property
-    def counterpart(self):
-        """The list of hits that can play the same role"""
-        return self._counterpart[:]
-
-    def __str__(self):
-        ch_str = str(self._hit)[:-1]
-
-        return ch_str + '\t' + ','.join([h.id for h in self.counterpart])
-
-    def __len__(self):
-        return len(self.counterpart) + 1
 
     @property
     def loner(self):
         return True
+
+    @property
+    def multi_system(self):
+        return False
+
+
+class MultiSystems(AbstractCounterparttHit):
+    """
+    Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
+    """
+
+    def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
+        """
+        hit that is outside a cluster, the gene_ref is a loner
+
+        :param hit:
+        :type hit: :class:`macsypy.hit.CoreHit`  object
+        :param counterpart: the other occurence of the gene or exchangeable in the replicon
+        :type counterpart: list of :class:`macsypy.hit.CoreHit`
+        """
+        if not gene_ref.multi_system:
+            msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
+            _log.critical(msg)
+            raise MacsypyError(msg)
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
+
+
+    @property
+    def loner(self):
+        return False
+
+
+    @property
+    def multi_system(self):
+        return True
+
+
+class LonerMultiSystem(Loner, MultiSystems):
+
+
+    def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
+        """
+        hit that is outside a cluster, the gene_ref is a loner
+
+        :param hit:
+        :type hit: :class:`macsypy.hit.CoreHit`  object
+        :param counterpart: the other occurence of the gene or exchangeable in the replicon
+        :type counterpart: list of :class:`macsypy.hit.CoreHit`
+        """
+        if not gene_ref.loner:
+            msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
+            _log.critical(msg)
+            raise MacsypyError(msg)
+        if not gene_ref.multi_system:
+            msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
+            _log.critical(msg)
+            raise MacsypyError(msg)
+
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
 
 @dataclass(frozen=True)
