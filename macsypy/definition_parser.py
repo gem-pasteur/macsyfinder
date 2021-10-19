@@ -161,7 +161,7 @@ class DefinitionParser:
             gene_all_attributes |= set(gene.attrib.keys())
         gene_unallowed_attribute = gene_all_attributes - gene_allowed_attributes
         if gene_unallowed_attribute:
-            msg = f"The model definition {os.path.basename(path)} has an unknow attribute " \
+            msg = f"The model definition {os.path.basename(path)} has an unknown attribute " \
                   f"'{', '.join(gene_unallowed_attribute)}' for a gene." \
                   f" Please fix the definition."
             raise ModelInconsistencyError(msg)
