@@ -122,6 +122,8 @@ class Config:
                   'loner_multi_system', 'redundancy_penalty',
                   'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
 
+    path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file','models_dir', 'system_models_dir', 'out_dir',
+                 'profile_suffix', 'res_search_dir', 'res_search_suffix', 'res_extract_suffix', 'index_dir')
 
     def __init__(self, defaults, parsed_args):
         """
@@ -429,6 +431,8 @@ class Config:
                             opt_value = value
                         elif isinstance(opt_value, set) or isinstance(opt_value, list):
                             opt_value = ', '.join(opt_value)
+                        elif opt_value in self.path_opts and self.relative_path:
+                            opt_value = os.path.relpath(opt_value)
                         conf_str += f"{opt} = {opt_value}\n"
             return conf_str
 
@@ -686,7 +690,8 @@ class Config:
     def _set_system_models_dir(self, value):
         """
 
-        :param value:
+        :param value: the path of the models dir set by the system (vs set by the user)
+        :type value: list of string or a single string
         :return:
         """
         if isinstance(value, str):
