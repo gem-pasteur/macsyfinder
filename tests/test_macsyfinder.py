@@ -33,13 +33,13 @@ import unittest
 import itertools
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
+from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
 from macsypy.hit import CoreHit, ModelHit, HitWeight
-from macsypy.model import Model, ModelBank
-from macsypy.system import System, HitSystemTracker, RejectedClusters, \
-    AbstractSetOfHits, AbstractUnordered, LikelySystem, UnlikelySystem
+from macsypy.model import Model
+from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractUnordered, LikelySystem, UnlikelySystem
+
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
