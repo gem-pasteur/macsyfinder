@@ -61,6 +61,7 @@ class Indexes:
      - find the indexes required by macsyfinder to compute some scores, or build them.
     """
 
+    _field_separator = "^^"
 
     def __init__(self, cfg):
         """
@@ -87,20 +88,31 @@ class Indexes:
         :rtype: str
         """
         my_indexes = self.find_my_indexes()  # check read
-
+        
         ###########################
         # build indexes if needed #
         ###########################
         if my_indexes and not force:
             with open(my_indexes) as idx:
                 seq_path = next(idx).strip()
+                try:
+                    first_item = next(idx).strip()
+                except StopIteration:
+                    # there is only one line in file
+                    first_item = None
             if seq_path.count(';') == 2:
                 # there is no path in idx, it's an old index
                 _log.warning(f"The '{my_indexes}' index file is in old format. Force index building.")
                 force = True
             elif seq_path != self._fasta_path:
-                _log.warning(f"The '{my_indexes}' index file does not point to '{self._fasta_path}'. Force builing")
+                _log.warning(f"The '{my_indexes}' index file does not point to '{self._fasta_path}'. Force building")
                 force = True
+            if not force and first_item:
+                # the first line of idx is a valid path
+                if first_item.count(self._field_separator) == 0:
+                    # the separator is different than the actual separator
+                    _log.warning(f"The '{my_indexes}' index file is in old format. Force index building.")
+                    force = True
 
         if force or not my_indexes:
             try:
@@ -176,7 +188,7 @@ class Indexes:
                     seq_nb = 0
                     for seq_id, comment, length in f_iter:
                         seq_nb += 1
-                        my_base.write(f"{seq_id};{length:d};{seq_nb:d}\n")
+                        my_base.write(f"{seq_id}{self._field_separator}{length:d}{self._field_separator}{seq_nb:d}\n")
         except Exception as err:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
@@ -197,7 +209,10 @@ class Indexes:
         with open(path) as idx_file:
             seq_target = next(idx_file)
             for line in idx_file:
-                seq_id, length, _rank = line.split(";")
+                try:
+                    seq_id, length, _rank = line.split(self._field_separator)
+                except Exception as err:
+                    raise MacsypyError(f"fail to parse database index {path} at line: {line}", err)
                 length = int(length)
                 _rank = int(_rank)
                 yield seq_id, length, _rank
