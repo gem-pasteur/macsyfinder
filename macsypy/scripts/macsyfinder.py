@@ -467,7 +467,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
 
     # build indexes
     idx = Indexes(config)
-    idx.build(force=config.idx)
+    idx.build(force=config.idx())
 
     # create models
     model_bank = ModelBank()
