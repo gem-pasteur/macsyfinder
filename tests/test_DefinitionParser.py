@@ -131,7 +131,7 @@ class TestModelParser(MacsyTest):
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "unable to parse model definition 'foo/gene_w_unknown_attribute' : "
-                         "The model definition gene_w_unknown_attribute.xml has an unknow attribute 'multi-system' for a gene."
+                         "The model definition gene_w_unknown_attribute.xml has an unknown attribute 'multi-system' for a gene."
                          " Please fix the definition.")
 
     def test_wo_presence(self):
