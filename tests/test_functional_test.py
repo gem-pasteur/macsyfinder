@@ -410,6 +410,57 @@ class Test(MacsyTest):
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertFileEqual(expected_result, get_results, comment="#")
 
+    def test_unordered_only_forbidden(self):
+        # genetic organization of test_10.fasta
+        #
+        # gene       omf
+        # gene id   01506
+        # pos        17
+        # syst    no Systems
+        expected_result_dir = self.find_data("functional_test_unordered_only_forbidden")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-forbidden " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_unordered_no_hits(self):
+        # genetic organization of test_11.fasta
+        #
+        # gene
+        # gene id
+        # pos
+        # syst    no Systems
+        expected_result_dir = self.find_data("functional_test_unordered_no_hits")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-forbidden " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
 
     def test_working_dir_exists(self):
         args = f"--sequence-db {self.find_data('base', 'one_replicon.fasta')} " \
