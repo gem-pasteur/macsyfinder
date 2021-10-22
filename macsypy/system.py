@@ -273,8 +273,10 @@ class UnorderedMatchMaker(MatchMaker):
         if is_a_potential_system:
             res = LikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
             _log.debug("There is a genetic potential for a system")
-        else:
+        elif any((mandatory_hits, accessory_hits, neutral_hits)):
             res = UnlikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons)
+        else:
+            res = None
         _log.debug("#" * 50)
         return res
 

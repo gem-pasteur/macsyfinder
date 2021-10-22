@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T1SS_mfp.hmm
+# target sequence database:        tests/data/base/test_10.fasta
+# output directed to file:         functional_unordered_only_forbidden/hmmer_results/T1SS_mfp.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       mfp  [M=378]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    8.9e-06   16.3  11.8     0.0001   12.8  11.3    2.1  2  VICH001.B.00001.C001_01549  
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01549  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.8  11.3   2.4e-06    0.0001       9     146 ..      43     187 ..      37     204 .. 0.61
+   2 !    1.4   0.0     0.007      0.29      10      56 ..     204     250 ..     192     277 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 12.8 bits;  conditional E-value: 2.4e-06
+                         mfp   9 rkeiqhlegGivkrilVkegdrVkaGdvLlkL..davkaeaneeklrsqlaqleaqeaRlqaerrgle....siklpplltel 85 
+                                 +  i + + G+++++lV+ gd+V++G+ +++L     +a+ ++ +  +++a + aqea   a  ++++        ++  +el
+  VICH001.B.00001.C001_01549  43 QYSISSKVPGRIDQVLVRKGDQVEKGQLIFTLlsPEIDAKLEQAIAGQKAAGALAQEAENGAREQQIQaakdQWLKAQAAAEL 125
+                                 567899999*********************98333577888888888888888888875555555555000033333344444 PP
+
+                         mfp  86 rdepevakliale.....qsllesrrqtlqsekkqieasidklraeleglqrqieglkdqlallkq 146
+                                  +++++      +     ++  ++ ++++q+ k+   a+++ ++   eg + +++    q al k 
+  VICH001.B.00001.C001_01549 126 AEKTYLRVNNLYNdgvvsEQKRDEAQTQWQAAKYTESAALQMYQLAKEGAREETK----QAALEKA 187
+                                 5555433222222234444555555555666666555555555555555443333....3334444 PP
+
+  == domain 2  score: 1.4 bits;  conditional E-value: 0.007
+                         mfp  10 keiqhlegGivkrilVkegdrVkaGdvLlkLdavkaeaneeklrsql 56 
+                                  +iq+   G v+++l + g+    G +++++  ++ + +   +r+ l
+  VICH001.B.00001.C001_01549 204 TKIQSWFDGEVSQVLMHSGELAPQGFPVVTVVDTQDTWAVFNVREDL 250
+                                 68999999************999999888876666555555555555 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (378 nodes)
+Target sequences:                           41  (16516 residues searched)
+Passed MSV filter:                         4  (0.097561); expected 0.8 (0.02)
+Passed bias filter:                        2  (0.0487805); expected 0.8 (0.02)
+Passed Vit filter:                         1  (0.0243902); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0243902); expected 0.0 (1e-05)
+Initial search space (Z):                 41  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 624.30
+//
+[ok]

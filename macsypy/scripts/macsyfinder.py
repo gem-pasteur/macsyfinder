@@ -45,7 +45,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight
-from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, HitSystemTracker
+from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
 from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
@@ -602,8 +602,10 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
                 res = unordered_matcher.match(hits_related_one_model)
                 if isinstance(res, LikelySystem):
                     likely_systems.append(res)
-                else:
+                elif isinstance(res, UnlikelySystem):
                     rejected_hits.append(res)
+                else:
+                    logger.info(f"No hits related to {model.fqn } found.")
             else:
                 logger.info(f"No hits found for model {model.fqn}")
     if likely_systems:
