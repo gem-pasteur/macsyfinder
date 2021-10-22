@@ -276,8 +276,10 @@ class UnorderedMatchMaker(MatchMaker):
         if is_a_potential_system:
             res = LikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits)
             _log.debug("There is a genetic potential for a system")
-        else:
+        elif any((mandatory_hits, accessory_hits, neutral_hits)):
             res = UnlikelySystem(self._model, mandatory_hits, accessory_hits, neutral_hits, forbidden_hits, reasons)
+        else:
+            res = None
         _log.debug("#" * 50)
         return res
 
@@ -371,11 +373,7 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
     Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
     """
 
-    #_id = itertools.count(1)
-
-
     def __init__(self, model, replicon_name):
-        #self.id = f"{replicon_name}_{model.name}_{next(self._id)}"
         self.model = model
 
     def _sort_hits(self, hits):
