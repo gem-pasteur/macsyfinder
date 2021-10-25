@@ -71,6 +71,20 @@ def _collocates(h1, h2, rep_info):
 
 
 def _clusterize(hits, model, hit_weights, rep_info):
+    """
+    clusterize hit regarding the distance between them
+
+    :param hits: the hits to clusterize
+    :type hits: list of :class:`macsypy.model.ModelHit` objects
+    :param model: the model to consider
+    :type model: :class:`macsypy.model.Model` object
+    :param hit_weights: the hit weight to compute the score
+    :type hit_weights: :class:`macsypy.hit.HitWeight` object
+    :type rep_info: :class:`macsypy.Indexes.RepliconInfo` object
+
+    :return: the clusters
+    :rtype: list of :class:`macsypy.cluster.Cluster` objects.
+    """
     clusters = []
     cluster_scaffold = []
     # sort hits by increasing position and then descending score
@@ -141,6 +155,19 @@ def _clusterize(hits, model, hit_weights, rep_info):
 
 
 def set_multi_system_hit(clusters):
+    """
+    check all hits in clusters and cast those wich ref_gene is tagged as mullti-system
+    in :class:`macsypy.hit.MultiSystem`
+
+    :param clusters: the clusters
+    :type clusters: list of :class:`macsypy.cluster.Cluster`
+    :return: The clusters with MutiSystem hits and the register of multi systems hits
+             (which will use to compute the clusters combination)
+    :rtype: tuple of 2 elts
+
+            * list of :class:`macsypy.cluster.Cluster` objects
+            * dixt { str func_name: :class:`macsypy.hit.MultiSystem`}
+    """
     ms_registry = {}
     for clst in clusters:
         for hit in clst.hits:
@@ -167,6 +194,21 @@ def set_multi_system_hit(clusters):
 
 
 def _get_true_loners(clusters, model, hit_weights):
+    """
+    A we call a True Loner a Cluster composed of only one gene tagged as loner
+    (by opposition with hit representing a gene tagged loner but include in cluster with several other genes)
+
+    :param clusters: the clusters
+    :type clusters: list of :class:`macsypy.cluster.Cluster` objects.
+    :param model: the model to consider
+    :type model: :class:`macsypy.model.Model` object
+    :param hit_weights: the hit weight to compute the score
+    :type hit_weights: :class:`macsypy.hit.HitWeight` object
+    :return: tuple of 2 elts
+
+             * dict containing true clusters  {str func_name : :class:`macsypy.hit.Loner | :class:`macsypy.hit.LonerMultiSystem` object}
+             * list of :class:`macsypy.cluster.Cluster` objects
+    """
     ###################
     # get True Loners #
     ###################
@@ -227,7 +269,7 @@ def build_clusters(hits, rep_info, model, hit_weights):
     Except for loner genes which are allowed to be alone in a cluster
 
     :param hits: list of filtered hits
-    :type hits: list of :class:`macsypy.hit.CoreHit` objects
+    :type hits: list of :class:`macsypy.hit.ModelHit` objects
     :param rep_info: the replicon to analyse
     :type rep_info: :class:`macsypy.Indexes.RepliconInfo` object
     :param model: the model to study
