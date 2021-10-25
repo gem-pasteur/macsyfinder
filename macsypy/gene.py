@@ -183,7 +183,7 @@ class ModelGene:
         Print the name of the gene and of its exchangeable genes.
         """
         s = f"name : {self.name}"
-        s += f"\ninter_gene_max_space: {self.inter_gene_max_space:d}"
+        s += f"\ninter_gene_max_space: {self.inter_gene_max_space}"
         if self.loner:
             s += "\nloner"
         if self.multi_system:
@@ -284,13 +284,10 @@ class ModelGene:
     def inter_gene_max_space(self):
         """
         :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized. 
-                 If the value is not set at the Gene level, return the value set at the System level.
-        :rtype: integer.
+                 If the value is not set at the Gene level, return None.
+        :rtype: integer. or None
         """
-        if self._inter_gene_max_space is not None:
-            return self._inter_gene_max_space
-        else:
-            return self._model.inter_gene_max_space
+        return self._inter_gene_max_space
 
 
     def __hash__(self):

@@ -59,6 +59,7 @@ class TestBuildCluster(MacsyTest):
         # each genes is representing by a tuple (seq_id, length)"""
         rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
 
+        #              fqn      , inter_gene_max_sapce
         model = Model("foo/T2SS", 11)
 
         core_genes = []

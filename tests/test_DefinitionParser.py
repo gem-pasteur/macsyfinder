@@ -314,7 +314,7 @@ class TestModelParser(MacsyTest):
         self.assertEqual(m5.inter_gene_max_space, 20)
         m5_flgB = m5.get_gene('flgB')
         m5_flgC = m5.get_gene('flgC')
-        self.assertEqual(m5_flgB.inter_gene_max_space, 20)
+        self.assertIsNone(m5_flgB.inter_gene_max_space)
         self.assertEqual(m5_flgC.inter_gene_max_space, 2)
         m6 = self.model_bank['foo/model_6']
         m6_flgC = m6.get_gene('flgC')
