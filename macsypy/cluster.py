@@ -190,7 +190,8 @@ def set_multi_system_hit(clusters):
         # replace List of Loners by the best Loner
         best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
         ms_registry[func_name] = best_ms
-        return clusters, ms_registry
+
+    return clusters, ms_registry
 
 
 def _get_true_loners(clusters, model, hit_weights):
@@ -238,9 +239,8 @@ def _get_true_loners(clusters, model, hit_weights):
         loners = true_loners[func_name]
         true_loners[func_name] = []
         for i in range(len(loners)):
-            if hit.multi_system:
-                # the counterpart have been already computed
-                # to instanciate the MS hit
+            if loners[0].multi_system:
+                # the counterpart have been already computed during the MS hit instanciation
                 true_loners[func_name].append(LonerMultiSystem(hit))
             else:
                 counterpart = loners[:]
@@ -286,7 +286,7 @@ def build_clusters(hits, rep_info, model, hit_weights):
     if hits:
         clusters = _clusterize(hits, model, hit_weights, rep_info)
         clusters, multi_system_hits = set_multi_system_hit(clusters)
-        true_loners, true_clusters = _get_true_loners(clusters)
+        true_loners, true_clusters = _get_true_loners(clusters, model, hit_weights)
 
     else:  # there is not hits
         true_clusters = []
@@ -431,7 +431,7 @@ class Cluster:
                 else:
                     hit_score *= self._hit_weights.itself
 
-                if self.loner and v_hit.multi_system:
+                if v_hit.loner and v_hit.multi_system:
                     hit_score *= self._hit_weights.loner_multi_system
                     _log.debug(f"{v_hit.id} is loner and multi_system hit score = {hit_score}")
 
