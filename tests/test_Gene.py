@@ -308,7 +308,7 @@ class TestModelGene(MacsyTest):
         gene_name = 'sctJ_FLG'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         sctJ_FLG = ModelGene(c_gene, model_foo)
-        self.assertEqual(sctJ_FLG.inter_gene_max_space, system_inter_gene_max_space)
+        self.assertIsNone(sctJ_FLG.inter_gene_max_space, None)
 
         gene_name = 'sctJ'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
@@ -335,7 +335,7 @@ class TestModelGene(MacsyTest):
         analog = Exchangeable(c_sctN, sctJ_FLG)
         sctJ_FLG.add_exchangeable(analog)
         s = """name : sctJ_FLG
-inter_gene_max_space: 10
+inter_gene_max_space: None
     exchangeables: sctJ, sctN"""
         self.assertEqual(str(sctJ_FLG), s)
 
