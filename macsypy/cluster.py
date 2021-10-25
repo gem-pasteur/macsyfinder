@@ -75,7 +75,20 @@ def build_clusters(hits, rep_info, model, hit_weights):
         dist = h2.get_position() - h1.get_position() - 1
         g1 = h1.gene_ref
         g2 = h2.gene_ref
-        inter_gene_max_space = max(g1.inter_gene_max_space, g2.inter_gene_max_space)
+        model = g1.model
+        
+        d1 = g1.inter_gene_max_space
+        d2 = g2.inter_gene_max_space
+
+        if d1 is None and d2 is None:
+            inter_gene_max_space = model.inter_gene_max_space
+        elif d1 is None:
+            inter_gene_max_space = d2
+        elif d2 is None:
+            inter_gene_max_space = d1
+        else: # d1 and d2 are defined
+            inter_gene_max_space = min(d1, d2)
+
         if 0 <= dist <= inter_gene_max_space:
             return True
         elif dist <= 0 and rep_info.topology == 'circular':
