@@ -274,6 +274,14 @@ class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
     def __len__(self):
         return len(self.counterpart) + 1
 
+    @property
+    def loner(self):
+        return False
+
+    @property
+    def multi_system(self):
+        return False
+
 
 class Loner(AbstractCounterparttHit):
     """
@@ -305,9 +313,6 @@ class Loner(AbstractCounterparttHit):
     def loner(self):
         return True
 
-    @property
-    def multi_system(self):
-        return False
 
 
 class MultiSystems(AbstractCounterparttHit):
@@ -329,11 +334,6 @@ class MultiSystems(AbstractCounterparttHit):
             _log.critical(msg)
             raise MacsypyError(msg)
         super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
-
-
-    @property
-    def loner(self):
-        return False
 
 
     @property
