@@ -34,7 +34,7 @@ from .hit import MultiSystem, Loner, LonerMultiSystem, get_best_hit_4_func
 _log = logging.getLogger(__name__)
 
 
-def _collocates(h1, h2, rep_info):
+def _colocates(h1, h2, rep_info):
         """
         compute the distance (in number of gene between) between 2 hits
 
@@ -57,7 +57,7 @@ def _collocates(h1, h2, rep_info):
             inter_gene_max_space = d2
         elif d2 is None:
             inter_gene_max_space = d1
-        else: # d1 and d2 are defined
+        else:  # d1 and d2 are defined
             inter_gene_max_space = min(d1, d2)
 
         if 0 <= dist <= inter_gene_max_space:
@@ -98,7 +98,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
         previous_hit = cluster_scaffold[0]
 
         for m_hit in hits[1:]:
-            if _collocates(previous_hit, m_hit, rep_info):
+            if _colocates(previous_hit, m_hit, rep_info):
                 cluster_scaffold.append(m_hit)
             else:
                 if len(cluster_scaffold) > 1:
@@ -131,7 +131,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
             # handle circularity
             # if there are clusters
             # may be the hit collocate with the first hit of the first cluster
-            if clusters and _collocates(cluster_scaffold[0], clusters[0].hits[0], rep_info):
+            if clusters and _colocates(cluster_scaffold[0], clusters[0].hits[0], rep_info):
                 new_cluster = Cluster(cluster_scaffold, model, hit_weights)
                 clusters[0].merge(new_cluster, before=True)
             elif cluster_scaffold[0].gene_ref.loner:
@@ -147,7 +147,7 @@ def _clusterize(hits, model, hit_weights, rep_info):
 
         # handle circularity
         if len(clusters) > 1:
-            if _collocates(clusters[-1].hits[-1], clusters[0].hits[0], rep_info):
+            if _colocates(clusters[-1].hits[-1], clusters[0].hits[0], rep_info):
                 clusters[0].merge(clusters[-1], before=True)
                 clusters = clusters[:-1]
         return clusters
