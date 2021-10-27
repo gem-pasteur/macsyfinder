@@ -25,7 +25,8 @@
 import os
 import argparse
 
-from macsypy.hit import CoreHit, ModelHit, Loner, get_best_hits, get_best_hit_4_func, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem, \
+    get_best_hits, get_best_hit_4_func, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -217,7 +218,7 @@ class ModelHitTest(MacsyTest):
         self.assertFalse(mhit_2.loner)
 
 
-class LonerHitTest(MacsyTest):
+class LonerTest(MacsyTest):
 
     def setUp(self) -> None:
         args = argparse.Namespace()
@@ -254,7 +255,19 @@ class LonerHitTest(MacsyTest):
         self.assertEqual(l1.gene_ref, self.gene_gspd)
         self.assertEqual(l1.status, GeneStatus.MANDATORY)
         # create loner from a CoreHit with counterpart
-        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        _ = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+
+        # try to create Loner from cCoreHit but without gene_ref nor gene_status
+        with self.assertRaises(MacsypyError) as ctx:
+            Loner(self.chit_1, gene_ref=self.gene_gspd)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a Loner hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
+        with self.assertRaises(MacsypyError) as ctx:
+            Loner(self.chit_1, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a Loner hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
 
         # create loner from a ModelHit
         mh1 = ModelHit(self.chit_1, self.gene_gspd, GeneStatus.MANDATORY)
@@ -269,9 +282,9 @@ class LonerHitTest(MacsyTest):
                          "hit_2 cannot be a loner gene_ref 'sctJ' not tag as loner")
 
         with self.assertRaises(MacsypyError) as ctx:
-            ModelHit(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+            Loner(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(str(ctx.exception),
-                         "The ModelHit 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+                         "The Loner 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
 
 
     def test_counterpart(self):
@@ -291,9 +304,197 @@ class LonerHitTest(MacsyTest):
         l1 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
         self.assertTrue(l1.loner)
 
+    def test_multi_system(self):
+        l1 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertFalse(l1.multi_system)
+
     def test_str(self):
         l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
         self.assertEqual(str(l2),
+                         '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
+                                    '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
+                         )
+
+
+class MultiSystemTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        model = Model("foo/T2SS", 10)
+        profile_factory = ProfileFactory(cfg)
+
+        gene_name = "gspD"
+        self.c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        self.gene_gspd = ModelGene(self.c_gene_gspd, model, multi_system=True)
+
+        gene_name = "sctJ"
+        self.c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        self.gene_sctj = ModelGene(self.c_gene_sctj, model)
+
+        model.add_mandatory_gene(self.gene_gspd)
+        model.add_accessory_gene(self.gene_sctj)
+
+        self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+
+    def test_init(self):
+        # create loner from a CoreHit
+        ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(ms1.gene_ref, self.gene_gspd)
+        self.assertEqual(ms1.status, GeneStatus.MANDATORY)
+        # create loner from a CoreHit with counterpart
+        # test the creation, the content of counterpart is test in test_counterpart
+        _ = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+
+        # try to create MS from cCoreHit but without gene_ref nor gene_status
+        with self.assertRaises(MacsypyError) as ctx:
+            MultiSystem(self.chit_1, gene_ref=self.gene_gspd)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a MultiSystem hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
+        with self.assertRaises(MacsypyError) as ctx:
+            MultiSystem(self.chit_1, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a MultiSystem hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
+
+        # create MultiSystem from a ModelHit
+        mh1 = ModelHit(self.chit_1, gene_ref=self.gene_gspd,  gene_status=GeneStatus.MANDATORY)
+        ms3 = MultiSystem(mh1)
+        self.assertEqual(ms3.gene_ref, self.gene_gspd)
+        self.assertEqual(ms3.status, GeneStatus.MANDATORY)
+
+        with self.catch_log(log_name='macsypy'):
+            with self.assertRaises(MacsypyError) as ctx:
+                MultiSystem(self.chit_2, gene_ref=self.gene_sctj, gene_status=GeneStatus.ACCESSORY)
+        self.assertEqual(str(ctx.exception),
+                         "hit_2 cannot be a multi systems, gene_ref 'sctJ' not tag as multi_system")
+
+        with self.assertRaises(MacsypyError) as ctx:
+            MultiSystem(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "The MultiSystem 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+
+
+    def test_counterpart(self):
+        ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertListEqual(ms1.counterpart, [])
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        self.assertListEqual(ms2.counterpart, [self.chit_3])
+
+    def test_len(self):
+        ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(len(ms1), 1)
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        self.assertEqual(len(ms2), 2)
+
+
+    def test_loner(self):
+        ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertFalse(ms1.loner)
+
+    def test_multi_system(self):
+        ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertTrue(ms1.multi_system)
+
+    def test_str(self):
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        self.assertEqual(str(ms2),
+                         '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
+                                    '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
+                         )
+
+class LonerMultiSystemTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        model = Model("foo/T2SS", 10)
+        profile_factory = ProfileFactory(cfg)
+
+        gene_name = "gspD"
+        self.c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        self.gene_gspd = ModelGene(self.c_gene_gspd, model, loner=True, multi_system=True)
+
+        gene_name = "sctJ"
+        self.c_gene_sctj = CoreGene(models_location, gene_name, profile_factory)
+        self.gene_sctj = ModelGene(self.c_gene_sctj, model)
+
+        model.add_mandatory_gene(self.gene_gspd)
+        model.add_accessory_gene(self.gene_sctj)
+
+        self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+
+    def test_init(self):
+        # create loner from a CoreHit
+        lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(lms1.gene_ref, self.gene_gspd)
+        self.assertEqual(lms1.status, GeneStatus.MANDATORY)
+        # create loner from a CoreHit with counterpart
+        # test the creation, the content of counterpart is test in test_counterpart
+        _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+
+        # try to create MS from cCoreHit but without gene_ref nor gene_status
+        with self.assertRaises(MacsypyError) as ctx:
+            LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a LonerMultiSystem hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
+        with self.assertRaises(MacsypyError) as ctx:
+            LonerMultiSystem(self.chit_1, gene_status=GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "Cannot Create a LonerMultiSystem hit from CoreHit (gspD, 2) "
+                         "without specifying 'gene_ref' and 'gene_status'")
+
+        # create MultiSystem from a ModelHit
+        mh1 = ModelHit(self.chit_1, gene_ref=self.gene_gspd,  gene_status=GeneStatus.MANDATORY)
+        lms3 = LonerMultiSystem(mh1)
+        self.assertEqual(lms3.gene_ref, self.gene_gspd)
+        self.assertEqual(lms3.status, GeneStatus.MANDATORY)
+
+        with self.catch_log(log_name='macsypy'):
+            with self.assertRaises(MacsypyError) as ctx:
+                LonerMultiSystem(self.chit_2, gene_ref=self.gene_sctj, gene_status=GeneStatus.ACCESSORY)
+        self.assertEqual(str(ctx.exception),
+                         "hit_2 cannot be a multi systems, gene_ref 'sctJ' not tag as multi_system")
+
+        with self.assertRaises(MacsypyError) as ctx:
+            LonerMultiSystem(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
+        self.assertEqual(str(ctx.exception),
+                         "The LonerMultiSystem 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+
+
+    def test_loner(self):
+        lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertTrue(lms1.loner)
+
+    def test_multi_system(self):
+        lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.assertTrue(lms1.multi_system)
+
+    def test_str(self):
+        lms2 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        self.assertEqual(str(lms2),
                          '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
                                     '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
                          )
