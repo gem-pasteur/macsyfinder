@@ -550,7 +550,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
             logger.info(f"Check model {model.fqn}")
-            # model.filter fiter hit but also cast them in ModelHit
+            # model.filter filter hit but also cast them in ModelHit
             mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
             logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
             hit_header_str = "id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match"

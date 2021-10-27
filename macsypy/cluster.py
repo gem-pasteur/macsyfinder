@@ -171,7 +171,7 @@ def set_multi_system_hit(clusters):
     ms_registry = {}
     if clusters:
         model = clusters[0].model
-        hit_weights =  clusters[0].hit_weights
+        hit_weights = clusters[0].hit_weights
         for clst in clusters:
             for hit in clst.hits:
                 if hit.gene_ref.alternate_of().multi_system:
@@ -329,8 +329,8 @@ class Cluster:
         return self.hits[item]
 
     @property
-    def hit_weight(self):
-        return  self._hit_weights
+    def hit_weights(self):
+        return self._hit_weights
 
     @property
     def loner(self):
