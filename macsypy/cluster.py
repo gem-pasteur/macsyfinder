@@ -48,7 +48,6 @@ def _collocates(h1, h2, rep_info):
         g1 = h1.gene_ref
         g2 = h2.gene_ref
         model = g1.model
-        
         d1 = g1.inter_gene_max_space
         d2 = g2.inter_gene_max_space
 
