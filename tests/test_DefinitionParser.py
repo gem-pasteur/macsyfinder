@@ -231,7 +231,16 @@ class TestModelParser(MacsyTest):
                          " 'min_mandatory_genes_required': 6 must be lesser or equal than the number of 'mandatory' "
                          "components in the model: 5")
 
-#
+    def test_only_one_accessory(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/only_one_accessory')]
+        with self.assertRaises(ModelInconsistencyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         f"model 'only_one_accessory' is not consistent: there is only one gene in your model. " \
+                         f"So its status should be 'mandatory'.")
+
+
     def test_bad_max_nb_genes(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_max_nb_genes')]
         with self.assertRaises(SyntaxError) as context:
@@ -314,7 +323,7 @@ class TestModelParser(MacsyTest):
         self.assertEqual(m5.inter_gene_max_space, 20)
         m5_flgB = m5.get_gene('flgB')
         m5_flgC = m5.get_gene('flgC')
-        self.assertEqual(m5_flgB.inter_gene_max_space, 20)
+        self.assertIsNone(m5_flgB.inter_gene_max_space)
         self.assertEqual(m5_flgC.inter_gene_max_space, 2)
         m6 = self.model_bank['foo/model_6']
         m6_flgC = m6.get_gene('flgC')
