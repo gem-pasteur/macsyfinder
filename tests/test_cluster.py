@@ -34,7 +34,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.hit import CoreHit, ModelHit, Loner, LonerMultiSystem, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters
+from macsypy.cluster import Cluster, build_clusters, _colocates
 from tests import MacsyTest
 
 
@@ -257,7 +257,7 @@ class TestBuildCluster(MacsyTest):
         # case replicon is linear
         # one cluster with one hit min_gene_required != 1
         model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=2)
-        mcore_genes = []
+        core_genes = []
         model_genes = []
         for g_name in ('gspD', 'sctC'):
             core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
@@ -276,6 +276,75 @@ class TestBuildCluster(MacsyTest):
         true_clusters, true_loners, multi_system_hits = build_clusters([], rep_info, model, self.hit_weights)
         self.assertListEqual(true_clusters, [])
         self.assertEqual(true_loners, {})
+
+
+    def test_colocates(self):
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
+
+        #              fqn      , inter_gene_max_sapce
+        model = Model("foo/T2SS", 7)
+
+        core_genes = {}
+        model_genes = {}
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes[g_name] = core_gene
+            model_genes[g_name] = ModelGene(core_gene, model)
+
+        model.add_mandatory_gene(model_genes['gspD'])
+        model.add_mandatory_gene(model_genes['sctC'])
+        model.add_accessory_gene(model_genes['sctJ'])
+        model.add_accessory_gene(model_genes['sctN'])
+
+        h10 = CoreHit(core_genes['gspD'], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_ref=model_genes['gspD'], gene_status=GeneStatus.MANDATORY)
+
+        h15 = CoreHit(core_genes['sctC'], "h15", 10, "replicon_1", 15, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h15 = ModelHit(h15, gene_ref=model_genes['sctC'], gene_status=GeneStatus.ACCESSORY)
+        self.assertTrue(_colocates(m_h10, m_h15, rep_info))
+
+        h20 = CoreHit(core_genes['sctJ'], "h20", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        self.assertFalse(_colocates(m_h10, m_h20, rep_info))
+
+        model_genes['sctJ']._inter_gene_max_space = 10
+        self.assertTrue(_colocates(m_h10, m_h20, rep_info))
+
+        # case inter_gene_max_space is define at gene level sctJ and > than model intergene_max_space
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 30, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        model_genes['sctJ']._inter_gene_max_space = 30
+        self.assertTrue(_colocates(m_h10, m_h30, rep_info))
+
+        # same case but inter_gene_max_space is define in first gene
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 30, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        model_genes['sctJ']._inter_gene_max_space = 5
+        h35 = CoreHit(core_genes['sctN'], "h35", 10, "replicon_1", 35, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h35 = ModelHit(h35, gene_ref=model_genes['sctN'], gene_status=GeneStatus.ACCESSORY)
+        self.assertTrue(_colocates(m_h30, m_h35, rep_info))
+
+        # case inter_gene_max_sapce is define at gene level sctJ and > than model intergene_max_space
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 15, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        model_genes['sctJ']._inter_gene_max_space = 5
+        self.assertTrue(_colocates(m_h10, m_h30, rep_info))
+
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 17, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        model_genes['sctJ']._inter_gene_max_space = 5
+        self.assertFalse(_colocates(m_h10, m_h30, rep_info))
+
+        # case inter_gene_max_sapce is define at gene level sctJ and gspD use the smallest one
+        model_genes['gspD']._inter_gene_max_space = 7
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 17, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        self.assertFalse(_colocates(m_h10, m_h30, rep_info))
+
+        h30 = CoreHit(core_genes['sctJ'], "h30", 10, "replicon_1", 15, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes['sctJ'], gene_status=GeneStatus.ACCESSORY)
+        model_genes['sctJ']._inter_gene_max_space = 5
+        self.assertTrue(_colocates(m_h10, m_h30, rep_info))
 
 
 class TestCluster(MacsyTest):
