@@ -31,7 +31,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelLocation
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
-from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, LonerMultiSystem, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
 from macsypy.cluster import Cluster, build_clusters
@@ -497,6 +497,9 @@ class TestCluster(MacsyTest):
         h_flie = CoreHit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         l_flie = Loner(h_flie, gene_flie, GeneStatus.MANDATORY)
 
+        h_flie = CoreHit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        lms_flie = LonerMultiSystem(h_flie, gene_flie, GeneStatus.MANDATORY)
+
         # 2 mandatory, 2 accessory no analog/homolog
         c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
@@ -522,7 +525,7 @@ class TestCluster(MacsyTest):
         # self.assertEqual(c1.score, 2.5)
 
         # test loners multi system
-        c1 = Cluster([l_flie], model, self.hit_weights)
+        c1 = Cluster([lms_flie], model, self.hit_weights)
         self.assertEqual(c1.score, 0.7)
 
         # test the cache score
