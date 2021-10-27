@@ -417,3 +417,9 @@ class DefinitionParser:
             # the following test
             # model.min_mandatory_genes_required <= model.min_genes_required
             # is done during the model.__init__
+
+            if len_mandatory_genes == 0 and len_accessory_genes == 1:
+                msg = f"model '{model.name}' is not consistent: there is only one gene in your model. " \
+                      f"So its status should be 'mandatory'."
+                _log.critical(msg)
+                raise ModelInconsistencyError(msg)
