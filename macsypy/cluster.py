@@ -29,7 +29,7 @@ import macsypy.gene
 
 from .error import MacsypyError
 from .gene import GeneStatus
-from .hit import MultiSystems, Loner, LonerMultiSystem, get_best_hit_4_func
+from .hit import MultiSystem, Loner, LonerMultiSystem, get_best_hit_4_func
 
 _log = logging.getLogger(__name__)
 
@@ -169,28 +169,32 @@ def set_multi_system_hit(clusters):
             * dixt { str func_name: :class:`macsypy.hit.MultiSystem`}
     """
     ms_registry = {}
-    for clst in clusters:
-        for hit in clst.hits:
-            if hit.gene_ref.alternate_of().multi_system:
-                func_name = hit.gene_ref.alternate_of().name
-                if func_name in ms_registry:
-                    ms_registry[func_name].append((hit, clst))
-                else:
-                    ms_registry[func_name] = [(hit, clst)]
+    if clusters:
+        model = clusters[0].model
+        hit_weights =  clusters[0].hit_weights
+        for clst in clusters:
+            for hit in clst.hits:
+                if hit.gene_ref.alternate_of().multi_system:
+                    func_name = hit.gene_ref.alternate_of().name
+                    if func_name in ms_registry:
+                        ms_registry[func_name].append((hit, clst))
+                    else:
+                        ms_registry[func_name] = [(hit, clst)]
 
-    for func_name in ms_registry.items():
-        ms =  ms_registry[func_name]
-        ms_registry[func_name] = []
-        for i in range(len(ms)):
-            counterpart = ms[:]
-            hit, clst = counterpart.pop(i)
-            new_ms_hit = MultiSystems(hit, counterpart=counterpart)
-            clst.replace(hit, new_ms_hit)
-            ms_registry[func_name].append((MultiSystems(hit, counterpart=counterpart), clst))
-        # replace List of Loners by the best Loner
-        best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
-        ms_registry[func_name] = best_ms
+        for func_name in ms_registry.items():
+            ms =  ms_registry[func_name]
+            ms_registry[func_name] = []
+            for i in range(len(ms)):
+                counterpart = ms[:]
+                hit, clst = counterpart.pop(i)
+                new_ms_hit = MultiSystem(hit, counterpart=counterpart)
+                clst.replace(hit, new_ms_hit)
+                ms_registry[func_name].append((MultiSystem(hit, counterpart=counterpart), clst))
+            # replace List of Loners by the best Loner
+            best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
+            ms_registry[func_name] = best_ms
 
+        ms_registry = {func_name: Cluster([ms], model, hit_weights) for func_name, ms in ms_registry.items()}
     return clusters, ms_registry
 
 
@@ -302,7 +306,7 @@ class Cluster:
 
     _id = itertools.count(1)
 
-    def __init__(self, hits, model, hit_wheights):
+    def __init__(self, hits, model, hit_weights):
         """
 
         :param hits: the hits constituting this cluster
@@ -315,7 +319,7 @@ class Cluster:
         self._check_replicon_consistency()
         self._score = None
         self._genes_roles = None
-        self._hit_weights = hit_wheights
+        self._hit_weights = hit_weights
         self.id = f"c{next(self._id)}"
 
     def __len__(self):
@@ -324,6 +328,9 @@ class Cluster:
     def __getitem__(self, item):
         return self.hits[item]
 
+    @property
+    def hit_weight(self):
+        return  self._hit_weights
 
     @property
     def loner(self):
