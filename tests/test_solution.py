@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem,  HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -43,11 +43,6 @@ def _build_clusters(cfg, profile_factory):
     model_location = ModelLocation(path=os.path.join(cfg.models_dir()[0], model_name))
 
     models = {}
-
-
-
-
-
     cg_sctn_flg = CoreGene(model_location, "sctN_FLG", profile_factory)
     cg_sctj_flg = CoreGene(model_location, "sctJ_FLG", profile_factory)
     cg_flgB = CoreGene(model_location, "flgB", profile_factory)
@@ -236,6 +231,21 @@ def _build_clusters(cfg, profile_factory):
     models['L'].add_accessory_gene(mgL_sctj_flg)
     models['L'].add_accessory_gene(mgL_sctn)
 
+    ###########
+    # model M #
+    ###########
+    models['M'] = Model("foo/L", 10)
+    mgM_sctj = ModelGene(cg_sctj, models['M'])
+    mgM_gspd = ModelGene(cg_gspd, models['M'])
+    mgM_sctn = ModelGene(cg_sctn, models['M'], multi_system=True)
+    mgM_tadZ = ModelGene(cg_tadZ, models['M'])
+    mgM_abc = ModelGene(cg_abc, models['M'])
+    models['M'].add_mandatory_gene(mgM_sctj)
+    models['M'].add_mandatory_gene(mgM_gspd)
+    models['M'].add_accessory_gene(mgM_sctn)
+    models['M'].add_accessory_gene(mgM_tadZ)
+    models['M'].add_accessory_gene(mgM_abc)
+
     ch_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_sctn = CoreHit(cg_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_gspd = CoreHit(cg_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -248,55 +258,67 @@ def _build_clusters(cfg, profile_factory):
     hit_weights = HitWeight(**cfg.hit_weights())
 
     clusters = {}
-    clusters['c1'] = Cluster([ModelHit(ch_sctj, mgA_sctj, GeneStatus.MANDATORY),
-                              ModelHit(ch_sctn, mgA_sctn, GeneStatus.MANDATORY),
-                              ModelHit(ch_gspd, mgA_gspd, GeneStatus.ACCESSORY)
+    clusters['c1'] = Cluster([ModelHit(ch_sctj, gene_ref=mgA_sctj, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, gene_ref=mgA_sctn, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_gspd, gene_ref=mgA_gspd, gene_status=GeneStatus.ACCESSORY)
                               ],
                               models['A'], hit_weights)
-    clusters['c2'] = Cluster([ModelHit(ch_sctj, mgA_sctj, GeneStatus.MANDATORY),
-                              ModelHit(ch_sctn, mgA_sctn, GeneStatus.MANDATORY)],
+    clusters['c2'] = Cluster([ModelHit(ch_sctj, gene_ref=mgA_sctj, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, gene_ref=mgA_sctn, gene_status=GeneStatus.MANDATORY)],
                               models['A'], hit_weights)
 
-    clusters['c3'] = Cluster([ModelHit(ch_sctj_flg, mgB_sctj_flg, GeneStatus.MANDATORY),
-                              ModelHit(ch_tadZ, mgB_tadZ, GeneStatus.ACCESSORY),
-                              ModelHit(ch_flgB, mgB_flgB, GeneStatus.ACCESSORY)],
+    clusters['c3'] = Cluster([ModelHit(ch_sctj_flg, gene_ref=mgB_sctj_flg, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, gene_ref=mgB_tadZ, gene_status=GeneStatus.ACCESSORY),
+                              ModelHit(ch_flgB, gene_ref=mgB_flgB, gene_status=GeneStatus.ACCESSORY)],
                               models['B'], hit_weights)
 
-    clusters['c4'] = Cluster([ModelHit(ch_sctj_flg, mgC_sctj_flg, GeneStatus.MANDATORY),
-                              ModelHit(ch_tadZ, mgC_tadZ, GeneStatus.ACCESSORY),
-                              ModelHit(ch_flgB, mgC_flgB, GeneStatus.MANDATORY),
-                              ModelHit(ch_gspd, mgC_gspd, GeneStatus.ACCESSORY)],
+    clusters['c4'] = Cluster([ModelHit(ch_sctj_flg, gene_ref=mgC_sctj_flg, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, gene_ref=mgC_tadZ, gene_status=GeneStatus.ACCESSORY),
+                              ModelHit(ch_flgB, gene_ref=mgC_flgB, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_gspd, gene_ref=mgC_gspd, gene_status=GeneStatus.ACCESSORY)],
                               models['C'], hit_weights)
 
-    clusters['c5'] = Cluster([ModelHit(ch_abc, mgD_abc, GeneStatus.MANDATORY),
-                              ModelHit(ch_sctn, mgD_sctn, GeneStatus.ACCESSORY)],
+    clusters['c5'] = Cluster([ModelHit(ch_abc, gene_ref=mgD_abc, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_sctn, gene_ref=mgD_sctn, gene_status=GeneStatus.ACCESSORY)],
                               models['D'], hit_weights)
 
-    clusters['c6'] = Cluster([ModelHit(ch_gspd, mgE_gspd, GeneStatus.ACCESSORY)],
+    clusters['c6'] = Cluster([ModelHit(ch_gspd, gene_ref=mgE_gspd, gene_status=GeneStatus.ACCESSORY)],
                               models['E'], hit_weights)
 
-    clusters['c7'] = Cluster([ModelHit(ch_abc, mgF_abc, GeneStatus.MANDATORY)],
+    clusters['c7'] = Cluster([ModelHit(ch_abc, gene_ref=mgF_abc, gene_status=GeneStatus.MANDATORY)],
                               models['F'], hit_weights)
 
-    clusters['c8'] = Cluster([ModelHit(ch_flgB, mgI_flgB, GeneStatus.MANDATORY),
-                              ModelHit(ch_tadZ, mgI_tadZ, GeneStatus.ACCESSORY)],
+    clusters['c8'] = Cluster([ModelHit(ch_flgB, gene_ref=mgI_flgB, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, gene_ref=mgI_tadZ, gene_status=GeneStatus.ACCESSORY)],
                               models['I'], hit_weights)
 
-    clusters['c9'] = Cluster([ModelHit(ch_abc, mgJ_abc, GeneStatus.MANDATORY),
-                              ModelHit(ch_tadZ, mgJ_tadZ, GeneStatus.ACCESSORY)],
+    clusters['c9'] = Cluster([ModelHit(ch_abc, gene_ref=mgJ_abc, gene_status=GeneStatus.MANDATORY),
+                              ModelHit(ch_tadZ, gene_ref=mgJ_tadZ, gene_status=GeneStatus.ACCESSORY)],
                               models['J'], hit_weights)
 
-    clusters['c10'] = Cluster([ModelHit(ch_flgB, mgK_flgB, GeneStatus.MANDATORY),
-                               ModelHit(ch_sctn, mgK_sctn, GeneStatus.ACCESSORY)],
+    clusters['c10'] = Cluster([ModelHit(ch_flgB, gene_ref=mgK_flgB, gene_status=GeneStatus.MANDATORY),
+                               ModelHit(ch_sctn, gene_ref=mgK_sctn, gene_status=GeneStatus.ACCESSORY)],
                                models['K'], hit_weights)
-    clusters['c11'] = Cluster([ModelHit(ch_flgB, mgL_flgB, GeneStatus.MANDATORY),
-                               ModelHit(ch_sctn_flg, mgL_sctn_flg, GeneStatus.MANDATORY)],
+    clusters['c11'] = Cluster([ModelHit(ch_flgB, gene_ref=mgL_flgB, gene_status=GeneStatus.MANDATORY),
+                               ModelHit(ch_sctn_flg, gene_ref=mgL_sctn_flg, gene_status=GeneStatus.MANDATORY)],
                                models['L'], hit_weights)
-    clusters['c12'] = Cluster([ModelHit(ch_sctj_flg, mgL_sctj_flg, GeneStatus.ACCESSORY),
-                               ModelHit(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
+    clusters['c12'] = Cluster([ModelHit(ch_sctj_flg, gene_ref=mgL_sctj_flg, gene_status=GeneStatus.ACCESSORY),
+                               ModelHit(ch_sctn, gene_ref=mgL_sctn, gene_status=GeneStatus.ACCESSORY)],
                               models['L'], hit_weights)
-    clusters['c13'] = Cluster([Loner(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
+    clusters['c13'] = Cluster([Loner(ch_sctn, gene_ref=mgL_sctn, gene_status=GeneStatus.ACCESSORY)],
                               models['L'], hit_weights)
+
+    clusters['c14'] = Cluster([ModelHit(ch_sctj, mgM_sctj, gene_status=GeneStatus.MANDATORY),
+                              MultiSystem(ch_sctn, gene_ref=mgM_sctn, gene_status=GeneStatus.ACCESSORY),
+                              ModelHit(ch_gspd, gene_ref=mgM_gspd, gene_status=GeneStatus.ACCESSORY)
+                              ],
+                              models['M'], hit_weights)
+    clusters['c15'] = Cluster([ModelHit(ch_tadZ, gene_ref=mgM_tadZ, gene_status=GeneStatus.ACCESSORY),
+                               ModelHit(ch_abc, gene_ref=mgM_abc, gene_status=GeneStatus.ACCESSORY)
+                               ],
+                              models['M'], hit_weights)
+    clusters['c16'] = Cluster([MultiSystem(ch_sctn, gene_ref=mgM_sctn, gene_status=GeneStatus.ACCESSORY)],
+                              models['M'], hit_weights)
     return models, clusters
 
 
@@ -588,4 +610,22 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c11'], self.clusters['c13']),
             (self.clusters['c13'],),
         ]
+        self.assertEqual(combinations, exp_combs)
+
+        ###########################################
+        # with 2 RC  with one containing a MS     #
+        ###########################################
+        combinations = combine_clusters([self.clusters['c14'], self.clusters['c15']],
+                                        {},
+                                        {'sctN': self.clusters['c16']},
+                                        multi_loci=True)
+        # c14 contains a MS
+        # c15 do not contains MS
+        # c16 is the artificial cluster with only sctn
+        exp_combs = [
+            (self.clusters['c14'],),
+            (self.clusters['c15'],),
+            (self.clusters['c14'], self.clusters['c15']),
+            (self.clusters['c15'], self.clusters['c16'])
+            ]
         self.assertEqual(combinations, exp_combs)
