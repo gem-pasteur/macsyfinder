@@ -185,8 +185,10 @@ class ModelHit:
         self.gene_ref = gene_ref
         self.status = gene_status
 
+
     def __str__(self):
         return str(self._hit)
+
 
     def __hash__(self):
         """To be hashable, it's needed to be put in a set or used as dict key"""
@@ -242,12 +244,21 @@ class ModelHit:
 
     @property
     def counterpart(self):
+        # used polymophism in serialization, loop over all ModelHit
+        # instead of testing the type of ModelHit to now if there is a counterpart method
+        # defined one in the ModelHit which return empty counterpart
         return []
 
-class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
 
+class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
+    """
+    Abstract Class to handle ModelHit wit equivalent for instance Loner or MultiSystem hit
+    """
 
     def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
+        if isinstance(hit, CoreHit) and not (gene_ref and gene_status):
+            raise MacsypyError(f"Cannot Create a {self.__class__.__name__} hit from CoreHit ({hit.gene.name}, {hit.position}) "
+                                "without specifying 'gene_ref' and 'gene_status'")
         if isinstance(hit, CoreHit):
             super().__init__(hit, gene_ref, gene_status)
         elif isinstance(hit, ModelHit):
@@ -292,17 +303,25 @@ class Loner(AbstractCounterparttHit):
         """
         hit that is outside a cluster, the gene_ref is a loner
 
-        :param hit:
-        :type hit: :class:`macsypy.hit.CoreHit`  object
+        :param hit: a match between a hmm profile and a replicon
+        :type hit: :class:`macsypy.hit.CoreHit` object
+        :param gene_ref: The ModelGene link to this hit
+                         The ModeleGene have the same name than the CoreGene
+                         But one hit can be link to several ModelGene (several Model)
+                         To know for what gene this hit play role use the
+                         :meth:`macsypy.gene.ModelGene.alternate_of` ::
+
+                            hit.gene_ref.alternate_of()
+
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object
+        :param gene_status:
+        :type gene_status: :class:`macsypy.gene.GeneStatus` object
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        if isinstance(hit, CoreHit) and not gene_ref:
-            raise MacsypyError()
-        elif isinstance(hit, ModelHit):
-            gene_ref = hit.gene_ref
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
-        if not gene_ref.loner:
+        if not self.gene_ref.loner:
             msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
             _log.critical(msg)
             raise MacsypyError(msg)
@@ -315,7 +334,7 @@ class Loner(AbstractCounterparttHit):
 
 
 
-class MultiSystems(AbstractCounterparttHit):
+class MultiSystem(AbstractCounterparttHit):
     """
     Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
     """
@@ -324,16 +343,28 @@ class MultiSystems(AbstractCounterparttHit):
         """
         hit that is outside a cluster, the gene_ref is a loner
 
-        :param hit:
-        :type hit: :class:`macsypy.hit.CoreHit`  object
+        :param hit: a match between a hmm profile and a replicon
+        :type hit: :class:`macsypy.hit.CoreHit` object
+        :param gene_ref: The ModelGene link to this hit
+                         The ModeleGene have the same name than the CoreGene
+                         But one hit can be link to several ModelGene (several Model)
+                         To know for what gene this hit play role use the
+                         :meth:`macsypy.gene.ModelGene.alternate_of` ::
+
+                            hit.gene_ref.alternate_of()
+
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object
+        :param gene_status:
+        :type gene_status: :class:`macsypy.gene.GeneStatus` object
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        if not gene_ref.multi_system:
-            msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
+
+        if not self.gene_ref.multi_system:
+            msg = f"{hit.id} cannot be a multi systems, gene_ref '{gene_ref.name}' not tag as multi_system"
             _log.critical(msg)
             raise MacsypyError(msg)
-        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
 
     @property
@@ -341,28 +372,45 @@ class MultiSystems(AbstractCounterparttHit):
         return True
 
 
-class LonerMultiSystem(Loner, MultiSystems):
-
+class LonerMultiSystem(Loner, MultiSystem):
+    """
+    Handle hit which encode for a gene
+     * gene tagged as multi-system
+     * and gene tagged as loner also
+     * and the hit do not clustering with other hits.
+    """
 
     def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
         """
-        hit that is outside a cluster, the gene_ref is a loner
+        hit that is outside a cluster, the gene_ref is loner and multi_system
 
-        :param hit:
-        :type hit: :class:`macsypy.hit.CoreHit`  object
+        :param hit: a match between a hmm profile and a replicon
+        :type hit: :class:`macsypy.hit.CoreHit` object
+        :param gene_ref: The ModelGene link to this hit
+                         The ModeleGene have the same name than the CoreGene
+                         But one hit can be link to several ModelGene (several Model)
+                         To know for what gene this hit play role use the
+                         :meth:`macsypy.gene.ModelGene.alternate_of` ::
+
+                            hit.gene_ref.alternate_of()
+
+        :type gene_ref: :class:`macsypy.gene.ModelGene` object
+        :param gene_status:
+        :type gene_status: :class:`macsypy.gene.GeneStatus` object
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        if not gene_ref.loner:
+        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
+
+        if not self.gene_ref.loner:
             msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
             _log.critical(msg)
             raise MacsypyError(msg)
-        if not gene_ref.multi_system:
+        if not self.gene_ref.multi_system:
             msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
             _log.critical(msg)
             raise MacsypyError(msg)
 
-        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
 
 @dataclass(frozen=True)
