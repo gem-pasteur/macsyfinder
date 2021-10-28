@@ -454,7 +454,7 @@ class LonerMultiSystemTest(MacsyTest):
         # test the creation, the content of counterpart is test in test_counterpart
         _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
 
-        # try to create MS from cCoreHit but without gene_ref nor gene_status
+        # try to create MS from CoreHit but without gene_ref nor gene_status
         with self.assertRaises(MacsypyError) as ctx:
             LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd)
         self.assertEqual(str(ctx.exception),
@@ -468,9 +468,9 @@ class LonerMultiSystemTest(MacsyTest):
 
         # create MultiSystem from a ModelHit
         mh1 = ModelHit(self.chit_1, gene_ref=self.gene_gspd,  gene_status=GeneStatus.MANDATORY)
-        lms3 = LonerMultiSystem(mh1)
-        self.assertEqual(lms3.gene_ref, self.gene_gspd)
-        self.assertEqual(lms3.status, GeneStatus.MANDATORY)
+        lms = LonerMultiSystem(mh1)
+        self.assertEqual(lms.gene_ref, self.gene_gspd)
+        self.assertEqual(lms.status, GeneStatus.MANDATORY)
 
         with self.catch_log(log_name='macsypy'):
             with self.assertRaises(MacsypyError) as ctx:
@@ -481,8 +481,18 @@ class LonerMultiSystemTest(MacsyTest):
         with self.assertRaises(MacsypyError) as ctx:
             LonerMultiSystem(self.chit_1, self.c_gene_gspd, GeneStatus.MANDATORY)
         self.assertEqual(str(ctx.exception),
-                         "The LonerMultiSystem 'gene_ref' argument must be a ModelGene not <class 'macsypy.gene.CoreGene'>.")
+                         "The LonerMultiSystem 'gene_ref' argument must be a ModelGene"
+                         " not <class 'macsypy.gene.CoreGene'>.")
 
+        # create from a MultiSystem
+        mh1 = MultiSystem(self.chit_1,
+                          gene_ref=self.gene_gspd,
+                          gene_status=GeneStatus.MANDATORY,
+                          counterpart=[self.chit_2, self.chit_3])
+        lms = LonerMultiSystem(mh1)
+        self.assertEqual(lms.gene_ref, self.gene_gspd)
+        self.assertEqual(lms.status, GeneStatus.MANDATORY)
+        self.assertEqual(lms.counterpart, [self.chit_2, self.chit_3])
 
     def test_loner(self):
         lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
