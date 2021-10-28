@@ -537,7 +537,6 @@ class SolutionExplorerTest(MacsyTest):
         ##################################################
         combinations = combine_clusters([self.clusters['c1'], self.clusters['c2'],  self.clusters['c3']],
                                        {},
-                                       {},
                                        multi_loci=False)
         self.assertEqual(combinations,
                          [
@@ -547,7 +546,6 @@ class SolutionExplorerTest(MacsyTest):
                          ])
 
         combinations = combine_clusters([self.clusters['c1'], self.clusters['c2'], self.clusters['c3']],
-                                        {},
                                         {},
                                         multi_loci=True)
         exp_combs = [
@@ -566,7 +564,6 @@ class SolutionExplorerTest(MacsyTest):
         ###########################################
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                        {},
-                                       {},
                                        multi_loci=False)
         exp_combs = [
                     (self.clusters['c11'],),
@@ -575,7 +572,6 @@ class SolutionExplorerTest(MacsyTest):
         self.assertEqual(combinations, exp_combs)
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                        {},
-                                       {},
                                        multi_loci=True)
         exp_combs = [
                     (self.clusters['c11'],),
@@ -583,12 +579,15 @@ class SolutionExplorerTest(MacsyTest):
                     (self.clusters['c11'], self.clusters['c12'])
                    ]
         self.assertEqual(combinations, exp_combs)
+
         ##################################
         # with 2 RC + 1 L already in RC 2
         ##################################
+        # c11 = flgB, sctn_flg
+        # c12 = sctj_flg, sctn
+        # c13 = Loner sctn
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                         {'sctN': self.clusters['c13']},
-                                        {},
                                         multi_loci=False)
 
         exp_combs = [
@@ -597,10 +596,16 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c11'], self.clusters['c13']),
             (self.clusters['c13'],),
         ]
+        # ############# DEBUGGING test ######################
+        # print("\n##########################################################")
+        # print('\n'.join([str([clust.id for clust in one_comb]) for one_comb in combinations]))
+        # print("=" * 50)
+        # print('\n'.join([str([clust.id for clust in one_comb]) for one_comb in exp_combs]))
+        # print("##########################################################")
         self.assertEqual(combinations, exp_combs)
+
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                         {'sctN': self.clusters['c13']},
-                                        {},
                                         multi_loci=True)
 
         exp_combs = [
@@ -610,13 +615,13 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c11'], self.clusters['c13']),
             (self.clusters['c13'],),
         ]
+
         self.assertEqual(combinations, exp_combs)
 
         ###########################################
         # with 2 RC  with one containing a MS     #
         ###########################################
         combinations = combine_clusters([self.clusters['c14'], self.clusters['c15']],
-                                        {},
                                         {'sctN': self.clusters['c16']},
                                         multi_loci=True)
         # c14 contains a MS
