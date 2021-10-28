@@ -91,19 +91,18 @@ def find_best_solutions(systems):
     return solutions, max_score
 
 
-def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False):
+def combine_clusters(clusters, special_clusters, multi_loci=False):
     """
     generate the combinations of clusters, with loners and multi systems
 
     :param clusters: the clusters to combinates
     :type clusters: list of :class:`macsypy.cluster.Cluster` object
-    :param true_loners: loners which not involved in a cluster
-    :type true_loners: dict with the name of the function code by the loner as key
-                       and 1 :class:`macsypy.cluster.Cluster` with the best :class:`macsypy.hit.Loner` as value
-    :param multi_systems_hits: the multi-systems hits
-    :type multi_systems_hits: dict the name of the function code by the multi-system hit as key
-                              and 1 :class:`macsypy.cluster.Cluster` with the best :class:`macsypy.hit.ModelHit`
-                              multi-system hit as value
+    :param special_clusters: the multi-systems hits
+    :type special_clusterss: dict the name of the function code by hit gene_ref.alternate_of as key
+                              and 1 :class:`macsypy.cluster.Cluster` with the best a
+                              :class:`macsypy.hit.Loner` or
+                              :class:`macsypy.hit.MultiSystem` or
+                              :class:`macsypy.hit.LonerMultiSsystem` hit  as value
     :param bool multi_loci: True if the model is multi_loci false otherwise
     :return: all available combination of clusters
     :rtype: List of combination. a combination is a tuple of :class:`macsypy.cluster.Cluster` objects
@@ -116,9 +115,9 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
     else:
         cluster_combinations = [(clst,) for clst in clusters]
 
-    # add loners
-    combination_w_loners = []
-    for func_name, clst_loner in true_loners.items():
+    # add loners and multisystems
+    combination_w_special_clst = []
+    for func_name, spe_clst in special_clusters.items():
         if cluster_combinations:
             for one_combination in cluster_combinations:
                 to_add = True
@@ -127,24 +126,11 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
                         to_add = False
                         break
                 if to_add:
-                    combination_w_loners.append(tuple(list(one_combination) + [clst_loner]))
-        # we always add the loner
-        # in case definition may contain only loners
-        # or min_gene_required = 1 with one Loner
-        combination_w_loners.append((clst_loner,))
-
-    cluster_combinations += combination_w_loners
-    # add multi-system
-    combination_w_ms = []
-    for func_name, hit_multi_sys in multi_systems_hits.items():
-        for one_combination in cluster_combinations:
-            to_add = True
-            for clstr in one_combination:
-                if clstr.fulfilled_function(func_name):
-                    to_add = False
-                    break
-            if to_add:
-                combination_w_ms.append(tuple(list(one_combination) + [hit_multi_sys]))
-
-    cluster_combinations += combination_w_ms
+                    combination_w_special_clst.append(tuple(list(one_combination) + [spe_clst]))
+        if spe_clst.loner:
+            # we always add the loner
+            # in case definition may contain only loners (cluster_combinations is empty)
+            # or min_gene_required = 1 with one Loner
+            combination_w_special_clst.append((spe_clst,))
+    cluster_combinations += combination_w_special_clst
     return cluster_combinations

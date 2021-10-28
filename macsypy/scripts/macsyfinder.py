@@ -527,8 +527,8 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         db_type = config.db_type()
         if db_type in ('ordered_replicon', 'gembase'):
-            systems, rejected_clusters, true_loners = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
-                                                                     config, logger)
+            systems, rejected_clusters, special_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
+                                                                                       config, logger)
             return systems, rejected_clusters
         elif db_type == "unordered":
             likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
@@ -559,16 +559,16 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.debug("#" * 80)
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
-            clusters, true_loners, multi_systems_hits = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
+            true_clusters, special_clusters = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
             logger.debug("{:#^80}".format(" CLUSTERS "))
-            logger.debug("\n" + "\n".join([str(c) for c in clusters]))
+            logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
             logger.debug("{:=^50}".format(" LONERS "))
-            logger.debug("\n" + "\n".join([str(c) for c in true_loners.values()]))
+            logger.debug("\n" + "\n".join([str(c) for c in special_clusters.values() if c.loner]))
             logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
-            logger.debug("\n" + "\n".join([str(h) for h in multi_systems_hits.values()]))
+            logger.debug("\n" + "\n".join([str(c.hit[0]) for c in special_clusters.values() if c.multi_system]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
-            clusters_combination = combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=model.multi_loci)
+            clusters_combination = combine_clusters(true_clusters, special_clusters, multi_loci=model.multi_loci)
             for one_clust_combination in clusters_combination:
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                 res = ordered_matcher.match(one_clust_combination)
@@ -580,7 +580,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
-    return systems, rejected_clusters, true_loners
+    return systems, rejected_clusters, special_clusters
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
@@ -791,7 +791,6 @@ def loners_to_tsv(systems, hit_system_tracker, sys_file):
                     print(s, file=sys_file)
                 print(file=sys_file)
 
-
     if not print_header:
         print("# No loners found", file=sys_file)
 
@@ -961,7 +960,7 @@ def main(args=None, loglevel=None):
         sys.exit(f"macsyfinder: {err}")
 
     logger.info("\n{:#^70}".format(" Searching systems "))
-    all_systems, rejected_clusters  = search_systems(config, model_registry, models_def_to_detect, logger)
+    all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################

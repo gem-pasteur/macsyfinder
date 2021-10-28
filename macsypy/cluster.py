@@ -153,19 +153,19 @@ def _clusterize(hits, model, hit_weights, rep_info):
         return clusters
 
 
-def set_multi_system_hit(clusters):
+def _get_multi_system_hit(clusters):
     """
     check all hits in clusters and cast those wich ref_gene is tagged as mullti-system
     in :class:`macsypy.hit.MultiSystem`
 
     :param clusters: the clusters
     :type clusters: list of :class:`macsypy.cluster.Cluster`
-    :return: The clusters with MutiSystem hits and the register of multi systems hits
-             (which will use to compute the clusters combination)
+    :return: The clusters with hits which have a gene_ref tagged as multi_system cast in MultiSystem
+             and a register of multi systems hits which are not also Loner (which will use to compute the clusters combination)
     :rtype: tuple of 2 elts
 
             * list of :class:`macsypy.cluster.Cluster` objects
-            * dixt { str func_name: :class:`macsypy.hit.MultiSystem`}
+            * dict { str func_name: :class:`macsypy.hit.MultiSystem`}
     """
     ms_registry = {}
     if clusters:
@@ -244,6 +244,7 @@ def _get_true_loners(clusters, model, hit_weights):
         for i in range(len(loners)):
             if loners[0].multi_system:
                 # the counterpart have been already computed during the MS hit instanciation
+                # instead of the Loner not multisystem it include the hits which clusterize
                 true_loners[func_name].append(LonerMultiSystem(hit))
             else:
                 counterpart = loners[:]
@@ -255,7 +256,6 @@ def _get_true_loners(clusters, model, hit_weights):
 
     true_loners = {func_name: Cluster([loner], model, hit_weights) for func_name, loner in true_loners.items()}
     return true_loners, true_clusters
-
 
 
 def build_clusters(hits, rep_info, model, hit_weights):
@@ -278,24 +278,24 @@ def build_clusters(hits, rep_info, model, hit_weights):
     :param model: the model to study
     :type model: :class:`macsypy.model.Model` object
     :return: list of regular clusters,
-             the True loners (loners not in cluster)
-             the multi systems hits
-    :rtype: tuple with 3 elements
+             the special clusters (loners not in cluster and multi systems)
+    :rtype: tuple with 2 elements
 
             * true_clusters which is list of :class:`Cluster` objects
-            * true_loners: a dict with the function and a :class:macsypy.hit.Loner object as value
-            * multi_systems_hits: a dict TODO
+            * special_clusters: a dict { str function: :class:macsypy.hit.Loner |
+                                                       :class:macsypy.hit.MultiSystem |
+                                                       :class:macsypy.hit.LonerMultiSystem object}
     """
     if hits:
         clusters = _clusterize(hits, model, hit_weights, rep_info)
-        clusters, multi_system_hits = set_multi_system_hit(clusters)
+        clusters, multi_system = _get_multi_system_hit(clusters)
         true_loners, true_clusters = _get_true_loners(clusters, model, hit_weights)
+        special_clusters = true_loners | multi_system
 
     else:  # there is not hits
         true_clusters = []
-        true_loners = {}
-        multi_system_hits = {}
-    return true_clusters, true_loners, multi_system_hits
+        special_clusters = {}
+    return true_clusters, special_clusters
 
 
 class Cluster:
@@ -342,6 +342,20 @@ class Cluster:
         # need this method in build_cluster before to transform ModelHit in Loner
         # so cannot rely on Loner type
         return len(self) == 1 and self.hits[0].gene_ref.loner
+
+    @property
+    def multi_system(self):
+        """
+        :return: True if this cluster is made of only one hit representing a multi_system gene
+                 False otherwise:
+                 - contains several hits
+                 - contains one hit but gene is not tag as loner (max_gene_required = 1)
+        """
+        # need this method in build_cluster before to transform ModelHit in Loner
+        # so cannot rely on MultiSystem type
+
+        # by default gene_ref.multi_system == gene_ref.alternate_of().multi_system
+        return len(self) == 1 and self.hits[0].gene_ref.multi_system
 
 
     def _check_replicon_consistency(self):
