@@ -250,7 +250,7 @@ def _get_true_loners(clusters, model, hit_weights):
                 counterpart = loners[:]
                 hit = counterpart.pop(i)
                 true_loners[func_name].append(Loner(hit, counterpart=counterpart))
-        # replace List of Loners by the best Loner
+        # replace List of Loners/MultiSystem by the best hit
         best_loner = get_best_hit_4_func(func_name, true_loners[func_name], key='score')
         true_loners[func_name] = best_loner
 
@@ -288,9 +288,17 @@ def build_clusters(hits, rep_info, model, hit_weights):
     """
     if hits:
         clusters = _clusterize(hits, model, hit_weights, rep_info)
+
         clusters, multi_system = _get_multi_system_hit(clusters)
+        # a LonerMultiSystem must use the multisystem couterpart algo (includ clusterize hit for
+        # counterpart and best hit selection) so multisystem must be compute in first
+        # and the counter part use from the MultiSystem object
         true_loners, true_clusters = _get_true_loners(clusters, model, hit_weights)
-        special_clusters = true_loners | multi_system
+        # the order during merge s important
+        # true_loners must be in second
+        # it's during the true_loner computation
+        # that the MultiSystem Loen are cast in LonerMultisystem
+        special_clusters = multi_system | true_loners
 
     else:  # there is not hits
         true_clusters = []
