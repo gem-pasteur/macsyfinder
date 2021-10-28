@@ -259,10 +259,11 @@ class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
         if isinstance(hit, CoreHit) and not (gene_ref and gene_status):
             raise MacsypyError(f"Cannot Create a {self.__class__.__name__} hit from CoreHit ({hit.gene.name}, {hit.position}) "
                                 "without specifying 'gene_ref' and 'gene_status'")
-        if isinstance(hit, CoreHit):
+        elif isinstance(hit, CoreHit):
             super().__init__(hit, gene_ref, gene_status)
         elif isinstance(hit, ModelHit):
-            super().__init__(hit.hit, hit.gene_ref, hit.gene_ref.status)
+
+            super().__init__(hit.hit, gene_ref=hit.gene_ref, gene_status=hit.gene_ref.status)
         self._counterpart = counterpart if counterpart is not None else []
 
 
@@ -333,7 +334,6 @@ class Loner(AbstractCounterparttHit):
         return True
 
 
-
 class MultiSystem(AbstractCounterparttHit):
     """
     Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
@@ -385,7 +385,7 @@ class LonerMultiSystem(Loner, MultiSystem):
         hit that is outside a cluster, the gene_ref is loner and multi_system
 
         :param hit: a match between a hmm profile and a replicon
-        :type hit: :class:`macsypy.hit.CoreHit` object
+        :type hit: :class:`macsypy.hit.CoreHit` | :class:`macsypy.hit.ModelHit` | :class:`macsypy.hit.MultiSystem` object
         :param gene_ref: The ModelGene link to this hit
                          The ModeleGene have the same name than the CoreGene
                          But one hit can be link to several ModelGene (several Model)
@@ -400,7 +400,13 @@ class LonerMultiSystem(Loner, MultiSystem):
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
+        if isinstance(hit, MultiSystem):
+            super().__init__(hit,
+                             gene_ref=hit.gene_ref,
+                             gene_status=hit.status,
+                             counterpart=hit.counterpart)
+        else:
+            super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
         if not self.gene_ref.loner:
             msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
@@ -410,7 +416,6 @@ class LonerMultiSystem(Loner, MultiSystem):
             msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
             _log.critical(msg)
             raise MacsypyError(msg)
-
 
 
 @dataclass(frozen=True)
