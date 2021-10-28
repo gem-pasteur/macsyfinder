@@ -290,14 +290,14 @@ def build_clusters(hits, rep_info, model, hit_weights):
         clusters = _clusterize(hits, model, hit_weights, rep_info)
 
         clusters, multi_system = _get_multi_system_hit(clusters)
-        # a LonerMultiSystem must use the multisystem couterpart algo (includ clusterize hit for
+        # a LonerMultiSystem must use the multisystem counterpart algo (includ clusterize hit for
         # counterpart and best hit selection) so multisystem must be compute in first
         # and the counter part use from the MultiSystem object
         true_loners, true_clusters = _get_true_loners(clusters, model, hit_weights)
         # the order during merge s important
         # true_loners must be in second
         # it's during the true_loner computation
-        # that the MultiSystem Loen are cast in LonerMultisystem
+        # that the MultiSystem Loner are cast in LonerMultisystem
         special_clusters = multi_system | true_loners
 
     else:  # there is not hits
