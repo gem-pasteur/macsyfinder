@@ -181,7 +181,7 @@ def _get_multi_system_hit(clusters):
                         ms_registry[func_name] = [(hit, clst)]
 
         for func_name in ms_registry.items():
-            ms =  ms_registry[func_name]
+            ms = ms_registry[func_name]
             ms_registry[func_name] = []
             for i in range(len(ms)):
                 counterpart = ms[:]
@@ -392,7 +392,7 @@ class Cluster:
         :param gene: The gene which must be tested.
         :type gene: :class:`macsypy.gene.ModelGene` object
         :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
-                 (the gene hitself or an exchageable)
+                 (the gene itself or an exchangeable)
         """
         if self._genes_roles is None:
             self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
