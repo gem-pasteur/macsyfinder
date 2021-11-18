@@ -150,10 +150,10 @@ def _clusterize(hits, model, hit_weights, rep_info):
             if _colocates(clusters[-1].hits[-1], clusters[0].hits[0], rep_info):
                 clusters[0].merge(clusters[-1], before=True)
                 clusters = clusters[:-1]
-        return clusters
+    return clusters
 
 
-def _get_multi_system_hit(clusters):
+def _get_multi_system_hits(clusters):
     """
     check all hits in clusters and cast those wich ref_gene is tagged as mullti-system
     in :class:`macsypy.hit.MultiSystem`
@@ -197,17 +197,13 @@ def _get_multi_system_hit(clusters):
     return clusters, ms_registry
 
 
-def _get_true_loners(clusters, model, hit_weights):
+def _get_true_loners(clusters):
     """
     A we call a True Loner a Cluster composed of only one gene tagged as loner
     (by opposition with hit representing a gene tagged loner but include in cluster with several other genes)
 
     :param clusters: the clusters
     :type clusters: list of :class:`macsypy.cluster.Cluster` objects.
-    :param model: the model to consider
-    :type model: :class:`macsypy.model.Model` object
-    :param hit_weights: the hit weight to compute the score
-    :type hit_weights: :class:`macsypy.hit.HitWeight` object
     :return: tuple of 2 elts
 
              * dict containing true clusters  {str func_name : :class:`macsypy.hit.Loner | :class:`macsypy.hit.LonerMultiSystem` object}
@@ -220,41 +216,43 @@ def _get_true_loners(clusters, model, hit_weights):
     # and which does NOT clusterize with some other hits of interest
     true_clusters = []
     true_loners = {}
-
-    for clstr in clusters:
-        if len(clstr) > 1:
-            true_clusters.append(clstr)
-        elif clstr.loner:
-            loner = clstr[0]
-            func_name = loner.gene_ref.alternate_of().name
-            if func_name in true_loners:
-                true_loners[func_name].append(loner)
+    if clusters:
+        model = clusters[0].model
+        hit_weights = clusters[0].hit_weights
+        for clstr in clusters:
+            if len(clstr) > 1:
+                true_clusters.append(clstr)
+            elif clstr.loner:
+                loner = clstr[0]
+                func_name = loner.gene_ref.alternate_of().name
+                if func_name in true_loners:
+                    true_loners[func_name].append(loner)
+                else:
+                    true_loners[func_name] = [loner]
             else:
-                true_loners[func_name] = [loner]
-        else:
-            # it's a cluster of 1 hit
-            # but it's NOT a loner
-            # min_genes_required == 1
-            true_clusters.append(clstr)
+                # it's a cluster of 1 hit
+                # but it's NOT a loner
+                # min_genes_required == 1
+                true_clusters.append(clstr)
 
-    for func_name in true_loners:
-        # transform ModelHit in Loner
-        loners = true_loners[func_name]
-        true_loners[func_name] = []
-        for i in range(len(loners)):
-            if loners[0].multi_system:
-                # the counterpart have been already computed during the MS hit instanciation
-                # instead of the Loner not multisystem it include the hits which clusterize
-                true_loners[func_name].append(LonerMultiSystem(hit))
-            else:
-                counterpart = loners[:]
-                hit = counterpart.pop(i)
-                true_loners[func_name].append(Loner(hit, counterpart=counterpart))
-        # replace List of Loners/MultiSystem by the best hit
-        best_loner = get_best_hit_4_func(func_name, true_loners[func_name], key='score')
-        true_loners[func_name] = best_loner
+        for func_name in true_loners:
+            # transform ModelHit in Loner
+            loners = true_loners[func_name]
+            true_loners[func_name] = []
+            for i in range(len(loners)):
+                if loners[0].multi_system:
+                    # the counterpart have been already computed during the MS hit instanciation
+                    # instead of the Loner not multisystem it include the hits which clusterize
+                    true_loners[func_name].append(LonerMultiSystem(hit))
+                else:
+                    counterpart = loners[:]
+                    hit = counterpart.pop(i)
+                    true_loners[func_name].append(Loner(hit, counterpart=counterpart))
+            # replace List of Loners/MultiSystem by the best hit
+            best_loner = get_best_hit_4_func(func_name, true_loners[func_name], key='score')
+            true_loners[func_name] = best_loner
 
-    true_loners = {func_name: Cluster([loner], model, hit_weights) for func_name, loner in true_loners.items()}
+        true_loners = {func_name: Cluster([loner], model, hit_weights) for func_name, loner in true_loners.items()}
     return true_loners, true_clusters
 
 
@@ -289,11 +287,11 @@ def build_clusters(hits, rep_info, model, hit_weights):
     if hits:
         clusters = _clusterize(hits, model, hit_weights, rep_info)
 
-        clusters, multi_system = _get_multi_system_hit(clusters)
+        clusters, multi_system = _get_multi_system_hits(clusters)
         # a LonerMultiSystem must use the multisystem counterpart algo (includ clusterize hit for
         # counterpart and best hit selection) so multisystem must be compute in first
         # and the counter part use from the MultiSystem object
-        true_loners, true_clusters = _get_true_loners(clusters, model, hit_weights)
+        true_loners, true_clusters = _get_true_loners(clusters)
         # the order during merge s important
         # true_loners must be in second
         # it's during the true_loner computation
