@@ -564,7 +564,82 @@ class TestBuildCluster(MacsyTest):
 
 
     def test_get_true_loners(self):
-        self.assertTrue(False)
+        # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
+        # each genes is representing by a tuple (seq_id, length)"""
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
+
+        #              fqn      , inter_gene_max_sapce
+        model = Model("foo/T2SS", 11)
+
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model_genes[4]._loner = True
+
+        model.add_mandatory_gene(model_genes[0])
+        model.add_mandatory_gene(model_genes[1])
+        model.add_accessory_gene(model_genes[2])
+        model.add_accessory_gene(model_genes[3])
+        model.add_neutral_gene(model_genes[4])
+
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                     pos     score
+        h11 = CoreHit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h11 = ModelHit(h11, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+
+        h21 = CoreHit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h21 = ModelHit(h21, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h31 = CoreHit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        m_h31 = ModelHit(h31, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h51 = CoreHit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        m_h51 = ModelHit(h51, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        m_h61 = ModelHit(h61, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+
+        # case replicon is linear with a single hit (not loner) between 2 clusters
+        h70 = CoreHit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h70 = ModelHit(h70, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        c0 = Cluster([m_h11, m_h21], model, self.hit_weights)
+        c1 = Cluster([m_h70, m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0, c1])
+        self.assertEqual(len(true_clusters), 2)
+        self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21])
+        self.assertListEqual(true_clusters[1].hits, [m_h70, m_h80])
+        self.assertEqual(true_loners, {})
+
+        # replicon is linear, 3 clusters, the last one contains only one hit (loner h80)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+
+        c0 = Cluster([m_h11, m_h21, m_h31], model, self.hit_weights)
+        c1 = Cluster([m_h51, m_h61], model, self.hit_weights)
+        c2 = Cluster([m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0, c1, c2])
+        self.assertEqual(len(true_clusters), 2)
+        self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(true_clusters[1].hits, [m_h51, m_h61])
+        self.assertEqual(len(true_loners), 1)
+        self.assertListEqual(true_loners['abc'].hits, [m_h80])
+
+        # case replicon is linear
+        # one cluster with one hit loner
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        c0 = Cluster([m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0])
+        self.assertEqual(len(true_clusters), 0)
+        self.assertTrue(isinstance(true_loners['abc'], Cluster))
+        self.assertTrue(isinstance(true_loners['abc'][0], Loner))
+        self.assertListEqual(true_loners['abc'].hits, [m_h80])
 
 
 class TestCluster(MacsyTest):
