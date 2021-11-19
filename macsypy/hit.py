@@ -250,7 +250,7 @@ class ModelHit:
         return []
 
 
-class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
+class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
     """
     Abstract Class to handle ModelHit wit equivalent for instance Loner or MultiSystem hit
     """
@@ -262,7 +262,6 @@ class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
         elif isinstance(hit, CoreHit):
             super().__init__(hit, gene_ref, gene_status)
         elif isinstance(hit, ModelHit):
-
             super().__init__(hit.hit, gene_ref=hit.gene_ref, gene_status=hit.gene_ref.status)
         self._counterpart = counterpart if counterpart is not None else []
 
@@ -295,7 +294,7 @@ class AbstractCounterparttHit(ModelHit, metaclass=abc.ABCMeta):
         return False
 
 
-class Loner(AbstractCounterparttHit):
+class Loner(AbstractCounterpartHit):
     """
     Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
     """
@@ -334,7 +333,7 @@ class Loner(AbstractCounterparttHit):
         return True
 
 
-class MultiSystem(AbstractCounterparttHit):
+class MultiSystem(AbstractCounterpartHit):
     """
     Handle hit which encode for a gene tagged as loner and which not clustering with other hit.
     """
