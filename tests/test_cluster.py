@@ -565,14 +565,12 @@ class TestBuildCluster(MacsyTest):
 
         core_genes = []
         model_genes = []
-        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc', 'tadZ', 'flgB'):
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc', 'tadZ'):
             core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
             core_genes.append(core_gene)
             model_genes.append(ModelGene(core_gene, model))
         model_genes[4]._loner = True
         model_genes[5]._multi_system = True
-        model_genes[6]._loner = True
-        model_genes[6]._multi_system = True
 
         model.add_mandatory_gene(model_genes[0])
         model.add_mandatory_gene(model_genes[1])
@@ -580,7 +578,6 @@ class TestBuildCluster(MacsyTest):
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
         model.add_accessory_gene(model_genes[5])
-        model.add_accessory_gene(model_genes[6])
 
         #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -625,7 +622,8 @@ class TestBuildCluster(MacsyTest):
         self.assertEqual(len(ms_hits), 1)
         self.assertTrue(isinstance(clusters[0].hits[-1], MultiSystem))
 
-        # replicon linear, 2 clusters, containing one multi_system hit each (same gene)
+        # replicon is linear,
+        # 2 clusters, containing one multi_system hit each (same gene)
         h32 = CoreHit(core_genes[5], "h32", 10, "replicon_1", 32, 1.0, 80.0, 1.0, 1.0, 10, 20)
         m_h32 = ModelHit(h32, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY)
         h62 = CoreHit(core_genes[5], "h62", 10, "replicon_1", 62, 1.0, 80.0, 1.0, 1.0, 10, 30)
@@ -660,17 +658,21 @@ class TestBuildCluster(MacsyTest):
 
         core_genes = []
         model_genes = []
-        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc'):
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc',  'flgB'):
             core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
             core_genes.append(core_gene)
             model_genes.append(ModelGene(core_gene, model))
         model_genes[4]._loner = True
+        model_genes[5]._loner = True
+        model_genes[5]._multi_system = True
 
         model.add_mandatory_gene(model_genes[0])
         model.add_mandatory_gene(model_genes[1])
         model.add_accessory_gene(model_genes[2])
         model.add_accessory_gene(model_genes[3])
         model.add_neutral_gene(model_genes[4])
+        model.add_accessory_gene(model_genes[5])
+
 
         #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
@@ -744,6 +746,32 @@ class TestBuildCluster(MacsyTest):
         self.assertTrue(isinstance(true_loners['abc'], Cluster))
         self.assertTrue(isinstance(true_loners['abc'][0], Loner))
         self.assertListEqual(true_loners['abc'].hits, [m_h80])
+
+        # replicon is linear,
+        # 2 clusters,
+        #  - one regular cluster
+        #  - 3 loner multisystem (same gene)
+        h90 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 90.0, 1.0, 1.0, 10, 20)
+        h100 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 100.0, 1.0, 1.0, 10, 20)
+        h110 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 110.0, 1.0, 1.0, 10, 20)
+        m_h90 = MultiSystem(h90, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h100, h110])
+        m_h100 = MultiSystem(h100, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h90, h110])
+        m_h110 = MultiSystem(h110, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h90, h100])
+        c0 = Cluster([m_h11, m_h21, m_h31], model, self.hit_weights)
+        c1 = Cluster([m_h90], model, self.hit_weights)
+        c2 = Cluster([m_h100], model, self.hit_weights)
+        c3 = Cluster([m_h110], model, self.hit_weights)
+
+        true_loners, true_clusters = _get_true_loners([c0, c1,c2, c3])
+        self.assertEqual(len(true_clusters), 1)
+        self.assertEqual(len(true_loners), 1)
+        # check that the loner is a LonerMultiSystem
+        # that is the hit with best score mh110
+        # and hold the right counterpart
+        self.assertTrue(isinstance(true_loners['flgB'], Cluster))
+        self.assertTrue(isinstance(true_loners['flgB'][0], LonerMultiSystem))
+        self.assertListEqual(true_loners['flgB'].hits, [m_h110])
+        self.assertListEqual(true_loners['flgB'][0].counterpart, [h90, h100])
 
 
 class TestCluster(MacsyTest):
