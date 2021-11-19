@@ -563,8 +563,8 @@ class SolutionExplorerTest(MacsyTest):
         # with 2 RC + 1 L not included in cluster
         ###########################################
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
-                                       {},
-                                       multi_loci=False)
+                                        {},
+                                        multi_loci=False)
         exp_combs = [
                     (self.clusters['c11'],),
                     (self.clusters['c12'],)
