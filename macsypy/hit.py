@@ -325,7 +325,6 @@ class Loner(AbstractCounterpartHit):
             msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
             _log.critical(msg)
             raise MacsypyError(msg)
-        super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
 
 
     @property
@@ -399,22 +398,13 @@ class LonerMultiSystem(Loner, MultiSystem):
         :param counterpart: the other occurence of the gene or exchangeable in the replicon
         :type counterpart: list of :class:`macsypy.hit.CoreHit`
         """
-        if isinstance(hit, MultiSystem):
+        if isinstance(hit, (Loner, MultiSystem)):
             super().__init__(hit,
                              gene_ref=hit.gene_ref,
                              gene_status=hit.status,
                              counterpart=hit.counterpart)
         else:
             super().__init__(hit, gene_ref=gene_ref, gene_status=gene_status, counterpart=counterpart)
-
-        if not self.gene_ref.loner:
-            msg = f"{hit.id} cannot be a loner gene_ref '{gene_ref.name}' not tag as loner"
-            _log.critical(msg)
-            raise MacsypyError(msg)
-        if not self.gene_ref.multi_system:
-            msg = f"{hit.id} cannot be a multi systems gene_ref '{gene_ref.name}' not tag as multi_system"
-            _log.critical(msg)
-            raise MacsypyError(msg)
 
 
 @dataclass(frozen=True)
