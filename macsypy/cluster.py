@@ -244,10 +244,10 @@ def _get_true_loners(clusters):
             loners = true_loners[func_name]
             true_loners[func_name] = []
             for i in range(len(loners)):
-                if loners[0].multi_system:
+                if loners[i].multi_system:
                     # the counterpart have been already computed during the MS hit instanciation
                     # instead of the Loner not multisystem it include the hits which clusterize
-                    true_loners[func_name].append(LonerMultiSystem(hit))
+                    true_loners[func_name].append(LonerMultiSystem(loners[i]))
                 else:
                     counterpart = loners[:]
                     hit = counterpart.pop(i)
