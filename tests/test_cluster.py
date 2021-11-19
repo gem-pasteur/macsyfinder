@@ -997,6 +997,8 @@ class TestCluster(MacsyTest):
         gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
         model.add_mandatory_gene(gene_flie)
 
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
         h_gspd = CoreHit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         m_h_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
         h_tadz = CoreHit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -1040,10 +1042,10 @@ class TestCluster(MacsyTest):
         c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn_hom], model, self.hit_weights)
         self.assertEqual(c1.score, 2.9)
 
-        # # 2 mandatory
-        # # 1 accessory + 1 accessory analog of the 1rst accessory
-        # c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctj_an], model, self.hit_weights)
-        # self.assertEqual(c1.score, 2.5)
+        # 2 mandatory
+        # 1 accessory homolog + 2 accessory (check that the score used is the accessory not homolg)
+        c1 = Cluster([m_h_sctn_hom, m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)
+        self.assertEqual(c1.score, 3.0)
 
         # test loners multi system
         c1 = Cluster([lms_flie], model, self.hit_weights)
