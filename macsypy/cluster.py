@@ -171,24 +171,28 @@ def _get_multi_system_hits(clusters):
     if clusters:
         model = clusters[0].model
         hit_weights = clusters[0].hit_weights
+        hit_clst = {}  # get link between hit and clst
         for clst in clusters:
             for hit in clst.hits:
                 if hit.gene_ref.alternate_of().multi_system:
                     func_name = hit.gene_ref.alternate_of().name
                     if func_name in ms_registry:
-                        ms_registry[func_name].append((hit, clst))
+                        ms_registry[func_name].append(hit)
                     else:
-                        ms_registry[func_name] = [(hit, clst)]
+                        ms_registry[func_name] = [hit]
+                    hit_clst[hit] = clst
 
-        for func_name in ms_registry.items():
-            ms =  ms_registry[func_name]
+        for func_name in ms_registry:
+            ms = ms_registry[func_name]
             ms_registry[func_name] = []
             for i in range(len(ms)):
                 counterpart = ms[:]
-                hit, clst = counterpart.pop(i)
+                hit = counterpart.pop(i)
                 new_ms_hit = MultiSystem(hit, counterpart=counterpart)
+                clst = hit_clst[hit]
                 clst.replace(hit, new_ms_hit)
-                ms_registry[func_name].append((MultiSystem(hit, counterpart=counterpart), clst))
+                ms_registry[func_name].append(new_ms_hit)
+
             # replace List of Loners by the best Loner
             best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
             ms_registry[func_name] = best_ms
@@ -496,5 +500,14 @@ class Cluster:
         return s
 
     def replace(self, old, new):
+        """
+        replace hit old in this cluster by new one. (work in place)
+
+        :param old: the hit to replace
+        :type old: :class:`macsypy.hit.ModelHit` object.
+        :param new: the new hit
+        :type new: :class:`macsypy.hit.ModelHit` object.
+        :return: None
+        """
         idx = self.hits.index(old)
         self.hits[idx] = new
