@@ -34,7 +34,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem, HitWeight
 from macsypy.model import Model
 from macsypy.database import RepliconInfo
-from macsypy.cluster import Cluster, build_clusters, _colocates
+from macsypy.cluster import Cluster, build_clusters, _colocates, _clusterize, _get_multi_system_hits, _get_true_loners
 from tests import MacsyTest
 
 
@@ -347,6 +347,433 @@ class TestBuildCluster(MacsyTest):
         self.assertTrue(_colocates(m_h10, m_h30, rep_info))
 
 
+    def test_clusterize(self):
+        # handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
+        # each genes is representing by a tuple (seq_id, length)"""
+        rep_info = RepliconInfo('linear', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
+
+        #              fqn      , inter_gene_max_sapce
+        model = Model("foo/T2SS", 11)
+
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model_genes[4]._loner = True
+
+        model.add_mandatory_gene(model_genes[0])
+        model.add_mandatory_gene(model_genes[1])
+        model.add_accessory_gene(model_genes[2])
+        model.add_accessory_gene(model_genes[3])
+        model.add_neutral_gene(model_genes[4])
+
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                     pos     score
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+        h11 = CoreHit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h11 = ModelHit(h11, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+
+        h20 = CoreHit(core_genes[1], "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        m_h20 = ModelHit(h20, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+        h21 = CoreHit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h21 = ModelHit(h21, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h30 = CoreHit(core_genes[2], "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        m_h30 = ModelHit(h30, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+        h31 = CoreHit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        m_h31 = ModelHit(h31, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h50 = CoreHit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+        h51 = CoreHit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        m_h51 = ModelHit(h51, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+
+        h60 = CoreHit(core_genes[2], "h60", 10, "replicon_1", 60, 1.0, 60.0, 1.0, 1.0, 10, 20)
+        m_h60 = ModelHit(h60, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        m_h61 = ModelHit(h61, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+
+        # case replicon is linear, 2 clusters
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(got_clusters[1].hits, [m_h51, m_h61])
+
+        # case replicon is linear with a single hit (not loner) between 2 clusters
+        h70 = CoreHit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h70 = ModelHit(h70, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h50, m_h51, m_h70, m_h80]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h11, m_h21])
+        self.assertListEqual(got_clusters[1].hits, [m_h70, m_h80])
+
+        # replicon is linear, 3 clusters, the last one contains only one hit (loner h80)
+        rep_info = RepliconInfo('linear', 1, 100, [(f"g_{i}", i * 10) for i in range(1, 101)])
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61, m_h80]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 3)
+        self.assertListEqual(got_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(got_clusters[1].hits, [m_h51, m_h61])
+        self.assertListEqual(got_clusters[2].hits, [m_h80])
+
+        # replicon is circular contains only one cluster
+        rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
+        hits = [m_h10, m_h20, m_h30]
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 1)
+        self.assertListEqual(got_clusters[0].hits, [m_h10, m_h20, m_h30])
+
+        # replicon is circular the last cluster is merge  with the first So we have only one cluster
+        rep_info = RepliconInfo('circular', 1, 60, [(f"g_{i}", i * 10) for i in range(1, 7)])
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61]
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 1)
+        self.assertListEqual(got_clusters[0].hits, [m_h51, m_h61, m_h11, m_h21, m_h31])
+
+        # replicon is circular the last hit is incorporate to the first cluster
+        # m_h80 is not considered as loner it is included in a cluster
+        rep_info = RepliconInfo('circular', 1, 80, [(f"g_{i}", i * 10) for i in range(1, 9)])
+        h80 = CoreHit(core_genes[3], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61, m_h80]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h80, m_h11, m_h21, m_h31])
+        self.assertListEqual(got_clusters[1].hits, [m_h51, m_h61])
+
+        # replicon is linear the last hit is not merged with the first cluster
+        # m_h80 is link to gene_4 'abc'. So, in this test, it's not a loner.
+        rep_info = RepliconInfo('linear', 1, 62, [(f"g_{i}", i * 10) for i in range(1, 7)])
+        hits = [m_h10, m_h11, m_h20, m_h21, m_h30, m_h31, m_h50, m_h51, m_h60, m_h61]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(got_clusters[1].hits, [m_h51, m_h61])
+
+        # case replicon is linear, 2 clusters, the hits 11,21,31 and 51,61 are contiguous
+        #                                                              pos
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+        h11 = CoreHit(core_genes[2], "h11", 10, "replicon_1", 11, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h11 = ModelHit(h11, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+        h12 = CoreHit(core_genes[1], "h12", 10, "replicon_1", 12, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        m_h12 = ModelHit(h12, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+        h50 = CoreHit(core_genes[2], "h50", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        m_h50 = ModelHit(h50, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+        h51 = CoreHit(core_genes[3], "h51", 10, "replicon_1", 51, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        m_h51 = ModelHit(h51, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+        hits = [m_h10, m_h11, m_h12, m_h50, m_h51]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h10, m_h11, m_h12])
+        self.assertListEqual(got_clusters[1].hits, [m_h50, m_h51])
+
+        # case replicon is linear
+        # one cluster with one hit loner
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        hits = [m_h80]
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 1)
+        self.assertListEqual(got_clusters[0].hits, [m_h80])
+
+        # case replicon is linear
+        # one cluster with one hit min_gene_required == 1
+        # last hit is a cluster
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=1)
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[1], gene_status=GeneStatus.ACCESSORY)
+        hits = [m_h80]
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 1)
+        self.assertListEqual(got_clusters[0].hits, [m_h80])
+
+        # case replicon is linear
+        # one cluster with one hit min_gene_required == 1
+        # first hit is a cluster
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=1)
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+
+        h10 = CoreHit(core_genes[0], "h10", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h10 = ModelHit(h10, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[1], gene_status=GeneStatus.ACCESSORY)
+        hits = [m_h10, m_h80]
+        random.shuffle(hits)
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertEqual(len(got_clusters), 2)
+        self.assertListEqual(got_clusters[0].hits, [m_h10])
+        self.assertListEqual(got_clusters[1].hits, [m_h80])
+
+        # case replicon is linear
+        # one cluster with one hit min_gene_required != 1
+        model = Model("foo/T2SS", 11, min_mandatory_genes_required=1, min_genes_required=2)
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model.add_mandatory_gene(model_genes[0])
+        model.add_accessory_gene(model_genes[1])
+        h80 = CoreHit(core_genes[1], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[1], gene_status=GeneStatus.ACCESSORY)
+        hits = [m_h80]
+        got_clusters = _clusterize(hits, model, self.hit_weights, rep_info)
+        self.assertListEqual(got_clusters, [])
+
+        # case replicon is linear, no hits
+        got_clusters = _clusterize([], model, self.hit_weights, rep_info)
+        self.assertListEqual(got_clusters, [])
+
+
+    def test_get_multi_system_hits(self):
+        #              fqn      , inter_gene_max_sapce
+        model = Model("foo/T2SS", 11)
+
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc', 'tadZ'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model_genes[4]._loner = True
+        model_genes[5]._multi_system = True
+
+        model.add_mandatory_gene(model_genes[0])
+        model.add_mandatory_gene(model_genes[1])
+        model.add_accessory_gene(model_genes[2])
+        model.add_accessory_gene(model_genes[3])
+        model.add_neutral_gene(model_genes[4])
+        model.add_accessory_gene(model_genes[5])
+
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                     pos     score
+        h11 = CoreHit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h11 = ModelHit(h11, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+
+        h21 = CoreHit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h21 = ModelHit(h21, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h31 = CoreHit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        m_h31 = ModelHit(h31, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h51 = CoreHit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        m_h51 = ModelHit(h51, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        m_h61 = ModelHit(h61, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+
+        # case replicon is linear with a single hit (not loner) between 2 clusters
+        # no multi system hit
+        h70 = CoreHit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h70 = ModelHit(h70, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        c0 = Cluster([m_h11, m_h21], model, self.hit_weights)
+        c1 = Cluster([m_h70, m_h80], model, self.hit_weights)
+        clusters, ms_hits = _get_multi_system_hits([c0, c1])
+        self.assertEqual(len(clusters), 2)
+        self.assertListEqual(clusters[0].hits, [m_h11, m_h21])
+        self.assertListEqual(clusters[1].hits, [m_h70, m_h80])
+        self.assertEqual(ms_hits, {})
+
+        # replicon is linear, 1 cluster, containing one multi_system hit
+        h32 = CoreHit(core_genes[5], "h32", 10, "replicon_1", 32, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h32 = ModelHit(h32, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY)
+
+        c0 = Cluster([m_h11, m_h21, m_h31, m_h32], model, self.hit_weights)
+        clusters, ms_hits = _get_multi_system_hits([c0])
+        self.assertEqual(len(clusters), 1)
+        self.assertListEqual(clusters[0].hits, [m_h11, m_h21, m_h31, m_h32])
+        self.assertEqual(len(ms_hits), 1)
+        self.assertTrue(isinstance(clusters[0].hits[-1], MultiSystem))
+
+        # replicon is linear,
+        # 2 clusters, containing one multi_system hit each (same gene)
+        h32 = CoreHit(core_genes[5], "h32", 10, "replicon_1", 32, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h32 = ModelHit(h32, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY)
+        h62 = CoreHit(core_genes[5], "h62", 10, "replicon_1", 62, 1.0, 80.0, 1.0, 1.0, 10, 30)
+        m_h62 = ModelHit(h62, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY)
+
+        c0 = Cluster([m_h11, m_h21, m_h32], model, self.hit_weights)
+        c1 = Cluster([m_h51, m_h61, m_h62], model, self.hit_weights)
+        clusters, ms_hits = _get_multi_system_hits([c0, c1])
+        self.assertEqual(len(clusters), 2)
+        # ModelHit implement __gt_, __lt__, __eq__ so MultiSystem inherits
+        # and we can compare ModelHit and MultiSystem
+        self.assertListEqual(clusters[0].hits, [m_h11, m_h21, m_h32])
+        self.assertTrue(isinstance(clusters[0].hits[-1], MultiSystem))
+        self.assertListEqual(clusters[0].hits[-1].counterpart,
+                             [m_h62])
+
+        self.assertListEqual(clusters[1].hits, [m_h51, m_h61, m_h62])
+        self.assertTrue(isinstance(clusters[1].hits[-1], MultiSystem))
+        self.assertListEqual(clusters[1].hits[-1].counterpart,
+                             [m_h32])
+
+        self.assertEqual(len(ms_hits), 1)
+        # ms_hits values are Clusters of one MultiSystem hit
+        # check that the ms_hit in ms_hits is the best (higest score) multisystem hit
+        self.assertEqual(ms_hits['tadZ'].hits[0],
+                         clusters[1].hits[-1].counterpart[-1])
+
+
+    def test_get_true_loners(self):
+        #              fqn      , inter_gene_max_sapce
+        model = Model("foo/T2SS", 11)
+
+        core_genes = []
+        model_genes = []
+        for g_name in ('gspD', 'sctC', 'sctJ', 'sctN', 'abc',  'flgB'):
+            core_gene = CoreGene(self.model_location, g_name, self.profile_factory)
+            core_genes.append(core_gene)
+            model_genes.append(ModelGene(core_gene, model))
+        model_genes[4]._loner = True
+        model_genes[5]._loner = True
+        model_genes[5]._multi_system = True
+
+        model.add_mandatory_gene(model_genes[0])
+        model.add_mandatory_gene(model_genes[1])
+        model.add_accessory_gene(model_genes[2])
+        model.add_accessory_gene(model_genes[3])
+        model.add_neutral_gene(model_genes[4])
+        model.add_accessory_gene(model_genes[5])
+
+
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                     pos     score
+        h11 = CoreHit(core_genes[0], "h11", 10, "replicon_1", 10, 1.0, 11.0, 1.0, 1.0, 10, 20)
+        m_h11 = ModelHit(h11, gene_ref=model_genes[0], gene_status=GeneStatus.MANDATORY)
+
+        h21 = CoreHit(core_genes[2], "h21", 10, "replicon_1", 20, 1.0, 21.0, 1.0, 1.0, 10, 20)
+        m_h21 = ModelHit(h21, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h31 = CoreHit(core_genes[1], "h31", 10, "replicon_1", 30, 1.0, 31.0, 1.0, 1.0, 10, 20)
+        m_h31 = ModelHit(h31, gene_ref=model_genes[1], gene_status=GeneStatus.MANDATORY)
+
+        h51 = CoreHit(core_genes[2], "h51", 10, "replicon_1", 50, 1.0, 51.0, 1.0, 1.0, 10, 20)
+        m_h51 = ModelHit(h51, gene_ref=model_genes[2], gene_status=GeneStatus.ACCESSORY)
+
+        h61 = CoreHit(core_genes[3], "h61", 10, "replicon_1", 60, 1.0, 61.0, 1.0, 1.0, 10, 20)
+        m_h61 = ModelHit(h61, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+
+        # case replicon is linear with a single hit (not loner) between 2 clusters
+        h70 = CoreHit(core_genes[3], "h70", 10, "replicon_1", 70, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h70 = ModelHit(h70, gene_ref=model_genes[3], gene_status=GeneStatus.ACCESSORY)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        c0 = Cluster([m_h11, m_h21], model, self.hit_weights)
+        c1 = Cluster([m_h70, m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0, c1])
+        self.assertEqual(len(true_clusters), 2)
+        self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21])
+        self.assertListEqual(true_clusters[1].hits, [m_h70, m_h80])
+        self.assertEqual(true_loners, {})
+
+        # replicon is linear, 3 clusters, the last one contains only one hit (loner h80)
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+
+        c0 = Cluster([m_h11, m_h21, m_h31], model, self.hit_weights)
+        c1 = Cluster([m_h51, m_h61], model, self.hit_weights)
+        c2 = Cluster([m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0, c1, c2])
+        self.assertEqual(len(true_clusters), 2)
+        self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(true_clusters[1].hits, [m_h51, m_h61])
+        self.assertEqual(len(true_loners), 1)
+        self.assertListEqual(true_loners['abc'].hits, [m_h80])
+
+        # replicon is linear, 2 clusters, the last one contains 3 hits including one loner
+        # although the gene is mark as loner as the hit is in cluster
+        # it is not considered as True Loner
+        # so it's type should be a ModelHit not Loner
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+
+        c0 = Cluster([m_h11, m_h21, m_h31], model, self.hit_weights)
+        c1 = Cluster([m_h51, m_h61, m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0, c1])
+        self.assertEqual(len(true_clusters), 2)
+        self.assertListEqual(true_clusters[0].hits, [m_h11, m_h21, m_h31])
+        self.assertListEqual(true_clusters[1].hits, [m_h51, m_h61, m_h80])
+        self.assertEqual(len(true_loners), 0)
+        self.assertTrue(isinstance(true_clusters[1].hits[-1], ModelHit))
+        self.assertFalse(isinstance(true_clusters[1].hits[-1], Loner))
+
+        # case replicon is linear
+        # one cluster with one hit loner
+        h80 = CoreHit(core_genes[4], "h80", 10, "replicon_1", 80, 1.0, 80.0, 1.0, 1.0, 10, 20)
+        m_h80 = ModelHit(h80, gene_ref=model_genes[4], gene_status=GeneStatus.NEUTRAL)
+        c0 = Cluster([m_h80], model, self.hit_weights)
+        true_loners, true_clusters = _get_true_loners([c0])
+        self.assertEqual(len(true_clusters), 0)
+        self.assertTrue(isinstance(true_loners['abc'], Cluster))
+        self.assertTrue(isinstance(true_loners['abc'][0], Loner))
+        self.assertListEqual(true_loners['abc'].hits, [m_h80])
+
+        # replicon is linear,
+        # 2 clusters,
+        #  - one regular cluster
+        #  - 3 loner multisystem (same gene)
+        h90 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 90.0, 1.0, 1.0, 10, 20)
+        h100 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 100.0, 1.0, 1.0, 10, 20)
+        h110 = CoreHit(core_genes[5], "h90", 10, "replicon_1", 90, 1.0, 110.0, 1.0, 1.0, 10, 20)
+        m_h90 = MultiSystem(h90, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h100, h110])
+        m_h100 = MultiSystem(h100, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h90, h110])
+        m_h110 = MultiSystem(h110, gene_ref=model_genes[5], gene_status=GeneStatus.ACCESSORY, counterpart=[h90, h100])
+        c0 = Cluster([m_h11, m_h21, m_h31], model, self.hit_weights)
+        c1 = Cluster([m_h90], model, self.hit_weights)
+        c2 = Cluster([m_h100], model, self.hit_weights)
+        c3 = Cluster([m_h110], model, self.hit_weights)
+
+        true_loners, true_clusters = _get_true_loners([c0, c1,c2, c3])
+        self.assertEqual(len(true_clusters), 1)
+        self.assertEqual(len(true_loners), 1)
+        # check that the loner is a LonerMultiSystem
+        # that is the hit with best score mh110
+        # and hold the right counterpart
+        self.assertTrue(isinstance(true_loners['flgB'], Cluster))
+        self.assertTrue(isinstance(true_loners['flgB'][0], LonerMultiSystem))
+        self.assertListEqual(true_loners['flgB'].hits, [m_h110])
+        self.assertListEqual(true_loners['flgB'][0].counterpart, [h90, h100])
+
+
 class TestCluster(MacsyTest):
 
     def setUp(self) -> None:
@@ -570,6 +997,8 @@ class TestCluster(MacsyTest):
         gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
         model.add_mandatory_gene(gene_flie)
 
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
         h_gspd = CoreHit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         m_h_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
         h_tadz = CoreHit(c_gene_tadZ, "h_tadz", 20, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -613,10 +1042,10 @@ class TestCluster(MacsyTest):
         c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn_hom], model, self.hit_weights)
         self.assertEqual(c1.score, 2.9)
 
-        # # 2 mandatory
-        # # 1 accessory + 1 accessory analog of the 1rst accessory
-        # c1 = Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctj_an], model, self.hit_weights)
-        # self.assertEqual(c1.score, 2.5)
+        # 2 mandatory
+        # 1 accessory homolog + 2 accessory (check that the score used is the accessory not homolg)
+        c1 = Cluster([m_h_sctn_hom, m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)
+        self.assertEqual(c1.score, 3.0)
 
         # test loners multi system
         c1 = Cluster([lms_flie], model, self.hit_weights)
