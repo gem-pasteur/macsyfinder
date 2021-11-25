@@ -504,8 +504,9 @@ def do_help(args: argparse.Namespace) -> None:
 def do_check(args: argparse.Namespace) -> None:
     """
 
-    :param args:
-    :return:
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
     """
     pack = Package(args.path)
     errors, warnings = pack.check()
@@ -540,6 +541,56 @@ I'll be really happy, if you fix warnings above, before to publish these models.
 
         _log.log(25, f"\tgit tag {pack.metadata['vers']}")
         _log.log(25, f"\tgit push --tags")
+
+
+def do_show_definition(args: argparse.Namespace) -> None:
+    """
+    display on stdout the definition if only a package or sub-package is specified
+    display all model definitions in the corresponding package or subpackage
+
+    for instance
+
+    `TXSS+/bacterial T6SSii T6SSiii`
+
+    display models *TXSS+/bacterial/T6SSii* and *TXSS+/bacterial/T6SSiii*
+
+    `TXSS+/bacterial all` or `TXSS+/bacterial`
+
+    display all models contains in *TXSS+/bacterial subpackage*
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    def display_definition(path):
+        return open(path, 'r').read()
+
+    model_family, *models = args.model
+    pack_name, *sub_family = model_family.split('/')
+    inst_pack_loc = _find_installed_package(pack_name)
+    if inst_pack_loc:
+        if not models or 'all' in models:
+            path_2_display = [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions()]
+            for fqn, def_path in path_2_display:
+                print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+        else:
+            fqn_to_get = [f'{model_family}/{m}' for m in models]
+            for fqn in fqn_to_get:
+                try:
+                    def_path = inst_pack_loc.get_definition(fqn).path
+                    print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+                except ValueError as err:
+                    _log.error(f"Model '{fqn}' not found.")
+                    continue
+    else:
+        _log.error(f"Package '{pack_name}' not found.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
 
 ##################################
 # parsing command line arguments #
@@ -732,6 +783,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                  nargs='?',
                                  default=os.getcwd(),
                                  help='the path to root directory models to check')
+
+    ##############
+    # definition #
+    ##############
+    def_subparser = subparsers.add_parser('definition',
+                                            help='show a model definition ')
+    def_subparser.set_defaults(func=do_show_definition)
+    def_subparser.add_argument('model',
+                               nargs='+',
+                               help='the family and name(s) of a model(s) eg: TXSS T6SS T4SS or TFF/bacterial T2SS')
     return parser
 
 
