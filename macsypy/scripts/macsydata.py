@@ -198,12 +198,15 @@ def do_download(args: argparse.Namespace) -> str:
         _log.critical(str(err))
 
 
-def _find_all_installed_packages() -> ModelRegistry:
+def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     """
     :return: all models installed
     """
     defaults = MacsyDefaults()
-    config = Config(defaults, argparse.Namespace())
+    args = argparse.Namespace()
+    if models_dir is not None:
+        args.models_dir = models_dir
+    config = Config(defaults, args)
     model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
@@ -215,7 +218,7 @@ def _find_all_installed_packages() -> ModelRegistry:
     return registry
 
 
-def _find_installed_package(pack_name) -> Optional[ModelLocation]:
+def _find_installed_package(pack_name, models_dir=None) -> Optional[ModelLocation]:
     """
     search if a package names *pack_name* is already installed
 
@@ -223,7 +226,7 @@ def _find_installed_package(pack_name) -> Optional[ModelLocation]:
     :return: The model location corresponding to the `pack_name`
     :rtype: :class:`macsypy.registries.ModelLocation` object
     """
-    registry = _find_all_installed_packages()
+    registry = _find_all_installed_packages(models_dir)
     try:
         return registry[pack_name]
     except KeyError:
@@ -567,7 +570,9 @@ def do_show_definition(args: argparse.Namespace) -> None:
 
     model_family, *models = args.model
     pack_name, *sub_family = model_family.split('/')
-    inst_pack_loc = _find_installed_package(pack_name)
+
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
+
     if inst_pack_loc:
         if not models or 'all' in models:
             path_2_display = [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions()]
@@ -793,6 +798,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     def_subparser.add_argument('model',
                                nargs='+',
                                help='the family and name(s) of a model(s) eg: TXSS T6SS T4SS or TFF/bacterial T2SS')
+    def_subparser.add_argument('--models-dir',
+                               help='the path of root directory containing package instead used installed packages')
     return parser
 
 
