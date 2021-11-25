@@ -80,7 +80,7 @@ class TestMacsydata(MacsyTest):
                             license=True,
                             dest=''):
         pack_path = os.path.join(self.tmpdir, dest, model)
-        os.mkdir(pack_path)
+        os.makedirs(pack_path)
         if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
@@ -398,10 +398,11 @@ To cite MacSyFinder:
     def test_definition_all_def(self):
         pack_name = 'fake_1'
         self.args.model = [pack_name]
+        self.args.models_dir = None
         fake_pack_path = self.create_fake_package(pack_name)
 
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsypy.registries.ModelLocation(path=fake_pack_path)
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
         try:
             with self.catch_io(out=True):
                 macsydata.do_show_definition(self.args)
@@ -421,10 +422,11 @@ To cite MacSyFinder:
     def test_definition_one_def(self):
         pack_name = 'fake_1'
         self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.models_dir = None
         fake_pack_path = self.create_fake_package(pack_name)
 
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsypy.registries.ModelLocation(path=fake_pack_path)
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
         try:
             with self.catch_io(out=True):
                 macsydata.do_show_definition(self.args)
@@ -442,13 +444,33 @@ To cite MacSyFinder:
                          stdout)
 
 
+    def test_definition_models_dir(self):
+        pack_name = 'fake_1'
+        fake_pack_path = self.create_fake_package(pack_name, dest='model_dir')
+        self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.models_dir = os.path.dirname(fake_pack_path)
+
+        with self.catch_io(out=True):
+            macsydata.do_show_definition(self.args)
+            stdout = sys.stdout.getvalue().strip()
+
+        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+{self.definition_1}
+
+<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+{self.definition_2}"""
+
+        self.assertEqual(expected_output,
+                         stdout)
+
+
     def test_definition_bad_def(self):
         pack_name = 'fake_1'
         self.args.model = [pack_name, 'niportnaoik']
+        self.args.models_dir = None
         fake_pack_path = self.create_fake_package(pack_name)
-
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsypy.registries.ModelLocation(path=fake_pack_path)
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
         try:
             with self.catch_log(log_name='macsydata') as log:
                 macsydata.do_show_definition(self.args)
@@ -462,7 +484,7 @@ To cite MacSyFinder:
     def test_definition_bad_pack(self):
         pack_name = 'nimportnaoik'
         self.args.model = [pack_name]
-
+        self.args.models_dir = None
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError) as ctx:
                 macsydata.do_show_definition(self.args)
