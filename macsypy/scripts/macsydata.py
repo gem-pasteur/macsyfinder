@@ -575,7 +575,7 @@ def do_show_definition(args: argparse.Namespace) -> None:
 
     if inst_pack_loc:
         if not models or 'all' in models:
-            path_2_display = [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions()]
+            path_2_display = sorted([(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions()])
             for fqn, def_path in path_2_display:
                 print(f"""<!-- {fqn} {def_path} -->
 {display_definition(def_path)}
