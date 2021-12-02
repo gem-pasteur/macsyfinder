@@ -32,10 +32,12 @@ import shutil
 import tarfile
 import glob
 import yaml
+import colorlog
 from unittest.mock import patch
 
 import macsypy
 from macsypy import package
+from macsypy import model_conf_parser
 from macsypy.error import MacsydataError, MacsyDataLimitError
 
 from tests import MacsyTest
@@ -411,7 +413,10 @@ class TestPackage(MacsyTest):
 
         macsypy.init_logger()
         macsypy.logger_set_level(30)
-
+        logger = colorlog.getLogger('macsypy.package')
+        package._log = logger
+        logger = colorlog.getLogger('macsypy.model_conf_parser')
+        model_conf_parser._log = logger
         self.metadata = {"maintainer": {"name": "auth_name",
                                     "email": "auth_name@mondomain.fr"},
                          "short_desc": "this is a short description of the repos",
@@ -433,6 +438,11 @@ ligne 3 et bbbbb
             shutil.rmtree(self.tmpdir)
         except:
             pass
+        logger = colorlog.getLogger('macsypy.package')
+        del logger.manager.loggerDict['macsypy.package']
+        del logger.manager.loggerDict['macsypy.model_conf_parser']
+        del logger.manager.loggerDict['macsypy']
+
 
     def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
                             metadata=True, readme=True, license=True, conf=True, bad_conf=False):
