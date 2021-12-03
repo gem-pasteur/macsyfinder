@@ -437,10 +437,17 @@ class TestCluster(MacsyTest):
         self.assertTrue(c.fulfilled_function(gene_1))
         self.assertFalse(c.fulfilled_function(gene_3))
 
+        # test with several genes
+        self.assertTrue(c.fulfilled_function(gene_3, gene_1))
+
+        # The cluster contains exchangeable
         h50 = CoreHit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         m_h50 = ModelHit(h50, gene_4, GeneStatus.ACCESSORY)
         c = Cluster([m_h10, m_h50], model, self.hit_weights)
         self.assertTrue(c.fulfilled_function(gene_3))
+
+
+
 
     def test_score(self):
         model = Model("foo/T2SS", 10)
