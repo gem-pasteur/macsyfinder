@@ -575,7 +575,16 @@ def do_show_definition(args: argparse.Namespace) -> None:
 
     if inst_pack_loc:
         if not models or 'all' in models:
-            path_2_display = sorted([(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions()])
+            root_def_name = model_family if sub_family else None
+            try:
+                path_2_display = sorted(
+                    [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions(root_def_name=root_def_name)]
+                )
+            except ValueError as err:
+                _log.error(f"'{'/'.join(sub_family)}' not found in package '{pack_name}'.")
+                sys.tracebacklimit = 0
+                raise ValueError() from None
+
             for fqn, def_path in path_2_display:
                 print(f"""<!-- {fqn} {def_path} -->
 {display_definition(def_path)}
