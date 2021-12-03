@@ -292,22 +292,25 @@ class Cluster:
         return v_hit in self.hits
 
 
-    def fulfilled_function(self, gene):
+    def fulfilled_function(self, *genes):
         """
 
-        :param gene: The gene which must be tested.
-        :type gene: :class:`macsypy.gene.ModelGene` object
-        :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
+        :param gene: The genes which must be tested.
+        :type genes: :class:`macsypy.gene.ModelGene` object
+        :return: True if the cluster contains one hit which fulfill  the function corresponding of at least one gene
                  (the gene hitself or an exchageable)
         """
         if self._genes_roles is None:
             self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
-        if isinstance(gene, macsypy.gene.ModelGene):
-            function = gene.name
-        else:
-            # gene is a string
-            function = gene
-        return function in self._genes_roles
+        functions = set()
+        for gene in genes:
+            if isinstance(gene, macsypy.gene.ModelGene):
+                function = gene.name
+            else:
+                # gene is a string
+                function = gene
+            functions.add(function)
+        return self._genes_roles.intersection(functions)
 
 
     def merge(self, cluster, before=False):
