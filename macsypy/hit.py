@@ -217,7 +217,7 @@ class ModelHit:
                  A True Loner is a hit representing a gene with the attribute loner and which does not include in a cluster.
 
                  - a hit representing a loner gene but include in a cluster is not a true loner
-                 - a hit which is not include with other gene in a cluster but does not represnet a gene loner is not a
+                 - a hit which is not include with other gene in a cluster but does not represent a gene loner is not a
                    True loner (This situation may append when min_genes_required = 1)
         :rtype: bool
         """
