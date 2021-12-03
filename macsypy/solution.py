@@ -115,23 +115,27 @@ def combine_clusters(clusters, true_loners, multi_systems_hits, multi_loci=False
         cluster_combinations = list(itertools.chain(*cluster_combinations))
     else:
         cluster_combinations = [(clst,) for clst in clusters]
-
     # add loners
+    loners_combinations = true_loners.items()
+    loners_combinations = [itertools.combinations(loners_combinations, i) for i in range(1, len(loners_combinations) + 1)]
+    loners_combinations = itertools.chain(*loners_combinations)
     combination_w_loners = []
-    for func_name, clst_loner in true_loners.items():
+    for loner_comb in loners_combinations:
+        loner_functions = [item[0] for item in loner_comb]
+        loners = [item[1] for item in loner_comb]
         if cluster_combinations:
             for one_combination in cluster_combinations:
                 to_add = True
                 for clstr in one_combination:
-                    if clstr.fulfilled_function(func_name):
+                    if clstr.fulfilled_function(*loner_functions):
                         to_add = False
                         break
                 if to_add:
-                    combination_w_loners.append(tuple(list(one_combination) + [clst_loner]))
+                    combination_w_loners.append(tuple(list(one_combination) + loners))
         # we always add the loner
         # in case definition may contain only loners
         # or min_gene_required = 1 with one Loner
-        combination_w_loners.append((clst_loner,))
+        combination_w_loners.append(tuple(loners))
 
     cluster_combinations += combination_w_loners
     # add multi-system
