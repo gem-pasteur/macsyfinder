@@ -492,6 +492,24 @@ To cite MacSyFinder:
 
         self.assertEqual(log_msg, f"Package '{pack_name}' not found.")
 
+    def test_definition_bad_subfamily(self):
+        pack_name = 'fake_1'
+        self.args.model = ['/'.join([pack_name, 'niportnaoik'])]
+        self.args.models_dir = None
+        fake_pack_path = self.create_fake_package(pack_name)
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError) as ctx:
+                    macsydata.do_show_definition(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        self.assertEqual(log_msg,
+                         f"'niportnaoik' not found in package '{pack_name}'.")
+
 
     def test_check(self):
         pack_name = 'fake_1'
