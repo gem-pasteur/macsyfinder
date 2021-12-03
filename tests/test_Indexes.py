@@ -36,8 +36,7 @@ from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
-
+class TestIndex(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
