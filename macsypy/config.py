@@ -94,7 +94,7 @@ class MacsyDefaults(dict):
         self.accessory_weight = kwargs.get('accessory_weight', .5)
         self.neutral_weight = kwargs.get('neutral_weight', 0.0)
         self.exchangeable_weight = kwargs.get('exchangeable_weight', .8)
-        self.loner_multi_system_weight = kwargs.get('loner_multi_system_weight', .7)
+        self.out_of_cluster_weight = kwargs.get('out_of_cluster_weight', .7)
         self.itself_weight = kwargs.get('itself_weight', 1.0)
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
 
@@ -111,7 +111,7 @@ class Config:
                 ('models', tuple()),
                 ('hmmer', ('coverage_profile', 'e_value_search', 'no_cut_ga', 'i_evalue_sel', 'hmmer')),
                 ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
-                               'itself_weight', 'redundancy_penalty', 'loner_multi_system_weight')),
+                               'itself_weight', 'redundancy_penalty', 'out_of_cluster_weight')),
                 ('directories', ('models_dir', 'system_models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
                                  'res_search_suffix', 'res_extract_suffix', 'index_dir')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
@@ -119,7 +119,7 @@ class Config:
                 ]
 
     model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral',
-                  'loner_multi_system', 'redundancy_penalty',
+                  'out_of_cluster', 'redundancy_penalty',
                   'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
 
     path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file','models_dir', 'system_models_dir', 'out_dir',
@@ -756,7 +756,7 @@ class Config:
         """
 
         :return: the options used in scoring systems (mandatory_weight, accessory_weight, itself_weight,
-                 exchangeable_weight, loner_multi_system_weight)
+                 exchangeable_weight, out_of_cluster_weight)
         :rtype: dict
         """
         return {'mandatory': self._options['mandatory_weight'],
@@ -764,7 +764,7 @@ class Config:
                 'neutral': self._options['neutral_weight'],
                 'itself': self._options['itself_weight'],
                 'exchangeable': self._options['exchangeable_weight'],
-                'loner_multi_system': self._options['loner_multi_system_weight']
+                'out_of_cluster': self._options['out_of_cluster_weight']
                 }
 
     def log_level(self):

@@ -421,14 +421,14 @@ class HitWeight:
         * accessory = 0.5
         * neutral = 0
 
-        * loner_multi_system = 0.7
+        * out_of_cluster = 0.7
     """
     itself: float = 1
     exchangeable: float = 0.8
     mandatory: float = 1
     accessory: float = 0.5
     neutral: float = 0
-    loner_multi_system: float = 0.7
+    out_of_cluster: float = 0.7
 
 
 def get_best_hit_4_func(function, hits, key='score'):

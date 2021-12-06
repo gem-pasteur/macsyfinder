@@ -95,7 +95,7 @@ class ModelConfParser:
                     'mandatory': float,
                     'accessory': float,
                     'neutral': float,
-                    'loner_multi_system': float,
+                    'out_of_cluster': float,
                     'redundancy_penalty': float}
         weights_conf = self._parse_section(weights_node, elements)
         # rename options as in the other part of MSF
