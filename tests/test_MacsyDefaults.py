@@ -78,7 +78,7 @@ class TestMacsyDefaults(MacsyTest):
                          'exchangeable_weight': .8,
                          'itself_weight': 1.0,
                          'redundancy_penalty': 1.5,
-                         'loner_multi_system_weight': 0.7
+                         'out_of_cluster_weight': 0.7
                          }
 
 

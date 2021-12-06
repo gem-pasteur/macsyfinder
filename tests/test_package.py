@@ -494,7 +494,7 @@ ligne 3 et bbbbb
         <mandatory>13</mandatory>
         <accessory>14</accessory>
         <neutral>0</neutral>
-        <loner_multi_system>10</loner_multi_system>
+        <out_of_cluster>10</out_of_cluster>
     </weights>
     <filtering>
         <e_value_search>0.12</e_value_search>

@@ -644,7 +644,7 @@ class HitWeightTest(MacsyTest):
         self.assertEqual(hit_weight.accessory, 0.5)
         self.assertEqual(hit_weight.itself, 1)
         self.assertEqual(hit_weight.exchangeable, 0.8)
-        self.assertEqual(hit_weight.loner_multi_system, 0.7)
+        self.assertEqual(hit_weight.out_of_cluster, 0.7)
 
 
     def test_hit_weight_not_default(self):
@@ -657,7 +657,7 @@ class HitWeightTest(MacsyTest):
         args.neutral_weight = 4.0
         args.exchangeable_weight = 5.0
         args.itself_weight = 6.0
-        args.loner_multi_system_weight = 12
+        args.out_of_cluster_weight = 12
         cfg = Config(MacsyDefaults(), args)
         hit_weight = HitWeight(**cfg.hit_weights())
         self.assertEqual(hit_weight.mandatory, 2.0)
@@ -665,4 +665,4 @@ class HitWeightTest(MacsyTest):
         self.assertEqual(hit_weight.neutral, 4.0)
         self.assertEqual(hit_weight.exchangeable, 5.0)
         self.assertEqual(hit_weight.itself, 6.0)
-        self.assertEqual(hit_weight.loner_multi_system, 12.0)
+        self.assertEqual(hit_weight.out_of_cluster, 12.0)
