@@ -1025,9 +1025,9 @@ class TestCluster(MacsyTest):
         m_h_toto = ModelHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
 
         h_flie = CoreHit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        l_flie = Loner(h_flie, gene_flie, GeneStatus.MANDATORY)
 
-        h_flie = CoreHit(c_gene_flie, "h_flie", 100, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        l_flie = Loner(h_flie, gene_flie, GeneStatus.MANDATORY)
+        ms_flie = MultiSystem(h_flie, gene_flie, GeneStatus.MANDATORY)
         lms_flie = LonerMultiSystem(h_flie, gene_flie, GeneStatus.MANDATORY)
 
         # 2 mandatory, 2 accessory no analog/homolog
@@ -1054,11 +1054,20 @@ class TestCluster(MacsyTest):
         c1 = Cluster([m_h_sctn_hom, m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)
         self.assertEqual(c1.score, 3.0)
 
-        # test loners multi system
+        # test true loners
+        c1 = Cluster([l_flie], model, self.hit_weights)
+        self.assertEqual(c1.score, 0.7)
+
+        # test multi system out of cluster
+        c1 = Cluster([ms_flie], model, self.hit_weights)
+        self.assertEqual(c1.score, 0.7)
+
+        # test multi system out of cluster
         c1 = Cluster([lms_flie], model, self.hit_weights)
         self.assertEqual(c1.score, 0.7)
 
         # test the cache score
+        c1 = Cluster([ms_flie], model, self.hit_weights)
         self.assertEqual(c1.score, 0.7)
 
         non_valid_hit = ModelHit(h_sctn, gene_sctn, GeneStatus.FORBIDDEN)

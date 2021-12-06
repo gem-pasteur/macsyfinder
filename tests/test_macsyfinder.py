@@ -829,7 +829,7 @@ Use ordered replicon to have better prediction.
 
     def test_parse_args(self):
         command_line = "macsyfinder --sequence-db test_1.fasta --db-type=gembase --models-dir data/models/ " \
-                       "--models functional all -w 4 --out test_1-all"
+                       "--models functional all -w 4 --out-dir test_1-all"
         parser, args = parse_args(command_line.split()[1:])
         self.assertIsNone(args.cfg_file)
         self.assertIsNone(args.coverage_profile)
@@ -862,7 +862,7 @@ Use ordered replicon to have better prediction.
 
         command_line = "macsyfinder --sequence-db test_1.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
-                       "--models functional all -w 4 --out test_1-all " \
+                       "--models functional all -w 4 --out-dir test_1-all " \
                        "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path --index-dir the_idx_dir"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
@@ -911,7 +911,7 @@ Use ordered replicon to have better prediction.
 
         expected_scores = [10.5, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.3, 7.5]
         self.assertListEqual([s.score for s in systems], expected_scores)
-        self.assertEqual(len(rejected_clst), 10)
+        self.assertEqual(len(rejected_clst), 11)
 
         # test hits but No Systems
         args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} --models set_1 Tad -w 4" \

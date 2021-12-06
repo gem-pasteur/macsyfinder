@@ -59,7 +59,7 @@ class TestModelConfParser(MacsyTest):
                          'mandatory_weight': 13.0,
                          'accessory_weight': 14.0,
                          'neutral_weight': 0.0,
-                         'loner_multi_system_weight': 10.0,
+                         'out_of_cluster_weight': 10.0,
                          'redundancy_penalty': 20.0,
                          'e_value_search': 0.12,
                          'i_evalue_sel': 0.012,
@@ -78,7 +78,7 @@ class TestModelConfParser(MacsyTest):
                          'accessory_weight': 14.0,
                          'neutral_weight': 0.0,
                          'redundancy_penalty': 20.0,
-                         'loner_multi_system_weight': 10.0}
+                         'out_of_cluster_weight': 10.0}
 
         conf_file = self.find_data('conf_files', 'model_conf_wo_filtering.xml')
         mcp = ModelConfParser(conf_file)
@@ -117,7 +117,7 @@ class TestModelConfParser(MacsyTest):
                             'accessory_weight': 14.0,
                             'neutral_weight': 0.0,
                             'redundancy_penalty': 20.0,
-                            'loner_multi_system_weight': 10.0,
+                            'out_of_cluster_weight': 10.0,
                             }
         conf_file = self.find_data('conf_files', 'model_conf.xml')
         tree = Et.parse(conf_file)
@@ -154,7 +154,7 @@ class TestModelConfParser(MacsyTest):
                 mcp.parse_filtering(filtering_node)
 
         self.assertEqual(str(ctx.exception),
-                        f"cannot parse 'cut_ga' element in '{conf_file}' expect True, 1, False, 0 got : 'FOO'"
+                         f"cannot parse 'cut_ga' element in '{conf_file}' expect True, 1, False, 0 got : 'FOO'"
                          )
 
         # test no cut_ga element
