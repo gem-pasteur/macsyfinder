@@ -640,8 +640,9 @@ class System(AbstractSetOfHits):
         # but several ModelGene can exist on the same gene
         # So to know if two systems share same genes we have to work on the CoreHit
         # which is hold by the ModelHit hit attribute
-        other_hits = {mh.hit for mh in other.hits if (not mh.loner and not mh.multi_system)}
-        my_hits = {mh.hit for mh in self.hits if (not mh.loner and not mh.multi_system)}
+        from macsypy.hit import Loner, MultiSystem, LonerMultiSystem
+        other_hits = {mh.hit for mh in other.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
+        my_hits = {mh.hit for mh in self.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
         return not (my_hits & other_hits)
 
 
