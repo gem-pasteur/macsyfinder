@@ -583,7 +583,7 @@ class SystemTest(MacsyTest):
         c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
         gene_flgB = ModelGene(c_gene_flgB, model_B)
         c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
-        gene_tadZ = ModelGene(c_gene_tadZ, model_B)
+        gene_tadZ = ModelGene(c_gene_tadZ, model_B, loner=True)
 
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
         gene_sctn = ModelGene(c_gene_sctn, model_A, multi_system=True)
@@ -605,7 +605,7 @@ class SystemTest(MacsyTest):
         gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
         gene_abc.add_exchangeable(gene_abc_ho)
 
-        model_A.add_mandatory_gene(gene_sctn)
+        model_A.add_mandatory_gene(gene_sctn)  # multi system
         model_A.add_mandatory_gene(gene_sctj)
         model_A.add_accessory_gene(gene_gspd)
         model_A.add_forbidden_gene(gene_abc)
@@ -613,7 +613,7 @@ class SystemTest(MacsyTest):
         model_B.add_mandatory_gene(gene_sctn_flg)
         model_B.add_mandatory_gene(gene_sctj_flg)
         model_B.add_accessory_gene(gene_flgB)
-        model_B.add_accessory_gene(gene_tadZ)
+        model_B.add_accessory_gene(gene_tadZ)  # loner
 
         model_C.add_mandatory_gene(gene_sctn_flg)
         model_C.add_mandatory_gene(gene_sctj_flg)
@@ -637,13 +637,13 @@ class SystemTest(MacsyTest):
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
         c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      MultiSystem(h_sctn, gene_sctn, GeneStatus.MANDATORY),
                       ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
                      model_A, self.hit_weights)
 
         c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+                      MultiSystem(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
                      model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
@@ -662,7 +662,7 @@ class SystemTest(MacsyTest):
         model_D._min_mandatory_genes_required = 1
         model_D._min_genes_required = 1
         c5 = Cluster([ModelHit(h_abc, gene_abc, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
+                      MultiSystem(h_sctn, gene_sctn, GeneStatus.ACCESSORY)],
                      model_D, self.hit_weights)
 
         sys_A = System(model_A, [c1, c2], self.cfg.redundancy_penalty())
