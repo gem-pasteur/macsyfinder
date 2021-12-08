@@ -67,34 +67,34 @@ class Test(MacsyTest):
         except:
             pass
 
-    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
-    def test_gembase(self):
-        """
-
-        """
-        expected_result_dir = self.find_data("functional_test_gembase")
-        args = "--db-type=gembase " \
-               f"--models-dir={self.find_data('models')} " \
-               "--models TFF-SF all " \
-               "--out-dir={out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-
-        self._macsyfinder_run(args)
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.loners,
-                          self.summary):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
-
-        expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
-        get_results = os.path.join(self.out_dir, self.rejected_clusters)
-        self.assertFileEqual(expected_result, get_results, comment="#")
+    # @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    # def test_gembase(self):
+    #     """
+    #
+    #     """
+    #     expected_result_dir = self.find_data("functional_test_gembase")
+    #     args = "--db-type=gembase " \
+    #            f"--models-dir={self.find_data('models')} " \
+    #            "--models TFF-SF all " \
+    #            "--out-dir={out_dir} " \
+    #            "--index-dir {out_dir} " \
+    #            f"--previous-run {expected_result_dir} " \
+    #            "--relative-path"
+    #
+    #     self._macsyfinder_run(args)
+    #     for file_name in (self.all_systems_tsv,
+    #                       self.all_best_solutions,
+    #                       self.best_solution,
+    #                       self.loners,
+    #                       self.summary):
+    #         with self.subTest(file_name=file_name):
+    #             expected_result = self.find_data(expected_result_dir, file_name)
+    #             get_results = os.path.join(self.out_dir, file_name)
+    #             self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+    #
+    #     expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
+    #     get_results = os.path.join(self.out_dir, self.rejected_clusters)
+    #     self.assertFileEqual(expected_result, get_results, comment="#")
 
 
     def test_only_loners(self):
@@ -167,7 +167,7 @@ class Test(MacsyTest):
         # gene       abc    mfp    omf    omf    abc    gspd
         # gene id   01397  01398  01548  01562  01399  01400
         # pos        2      3      19     27     37     38
-        # clst    [            ]               [           ]
+        # clst    [  M      A  ]    M     M     [ M      A   ]
         # syst  no system
         # in T12SS-simple-exch omf is not a loner
         expected_result_dir = self.find_data("functional_test_ordered_linear")
@@ -201,8 +201,9 @@ class Test(MacsyTest):
         # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf
         # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
         # pos         2      3     11     12     13      14    23     32     46
-        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]
+        # clst      [ML      M]   [ M      M      M      ME]  [ML]   [ML]   [ML]
         # syst                    [abc    mfp    abc    gspd                omf] with equivalent for omf46 [omf23 omf32]
+        # score                     1      1      0      0                   .7  = 2.7
         # loners      X                                        omf    omf    omf
         # omf2 colocate with mfp3  => not considerde as Loner
         expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners")
@@ -236,11 +237,12 @@ class Test(MacsyTest):
         # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf     abc    mfp   gspd
         # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562   01150  01361  0409
         # pos         2      3     11     12     13      14    23     32     46       55     56    57
-        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]    [ 55     56    57  ]
+        # clst      [ ML     ML]  [M      M      M       ME]  [ML]   [ML]   [ML]    [ M       M    ME]
         # syst                    [abc    mfp    abc    gspd] [omf]  [omf]  [omf]   [abc     mfp  gspd ]
         # 2 systems [abc    mfp    abc    gspd  omf46] with equivalent for omf46 [omf23 omf32]
+        # score       1      1      0      0      .7  = 2.7
         #           [abc     mfp    gspd   omf46] with equivalent for omf46 [omf23 omf32]
-
+        #             1       1      0     .7        =  2.7
         expected_result_dir = self.find_data("functional_test_ordered_2_clusters_3_loners")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
@@ -272,11 +274,12 @@ class Test(MacsyTest):
         # gene       mfp    abc    mfp    abc    gspd   omf    abc    mfp   gspd
         # gene id   01361  01397  01398  01399  01400  01506  01150  01361  00409
         # pos         2      10     11     12     13     22     51    52     53
-        # clst              [                        ]  [  ]   [51    52     53  ]
+        # clst        M    [ M       M      M     ME]   [ML]   [M      M     ME]
         # syst              [abc    mfp    abc   gspd]  [omf]  [abc   mfp   gspd ]
         # 2 systems [abc    mfp    abc    gspd  omf22] with warning 1 loner 2 systems
+        # score       1      1      0      0     .7   = 2.7
         #           [abc     mfp    gspd   omf22] with with warning 1 loner 2 systems
-
+        #             1       1      0      .7   =  2.7
         expected_result_dir = self.find_data("functional_test_ordered_2_clusters_1_loner")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \
@@ -308,8 +311,9 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf    omf
         # gene id   01397  01398  01399  01400  01506  01548  01562
         # pos        8      9      10      11    13     29     43
-        # clst     [                               ]   [  ]   [  ]
+        # clst     [ M      M       M      ME     M]   [ML]   [ML]
         # syst     [abc    mfp    abc    gspd   omf]
+        # score      1      1      0      0      1   = 3.0
 
         expected_result_dir = self.find_data("functional_test_ordered_1_loner_in_clust")
         args = "--db-type ordered_replicon " \
@@ -342,8 +346,9 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   gspf    omf    omf
         # gene id   01397  01398  01399  01400  02599  01548  01562
         # pos        8      9      10      11    13     29     43
-        # clst     [                               ]   [  ]   [  ]
+        # clst     [ M      M      M       ME    MLE]   [ML]  [ML]
         # syst     [abc    mfp    abc    gspd   gspf]
+        # score      1      1      0      0      0.7  = 2.7
 
         expected_result_dir = self.find_data("functional_test_ordered_1_loner_exch_in_clust")
         args = "--db-type ordered_replicon " \
@@ -376,8 +381,9 @@ class Test(MacsyTest):
         # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    gspF
         # gene id   01360  01361  01397  01398  01399  01400  01506  01548  02599
         # pos         2      3     11     12     13      14    23     32     46
-        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]
+        # clst      [ML      M ]  [M       M      M      ME]  [ML]    [LM]  [LM]
         # syst                    [abc    mfp    abc    gspd   omf] with equivalent for omf23 [omf32, gspF46]
+        # score                     1      1      0      0      .7  = 2.7
         # gspF46 have a score (465.3). omf (90, 111.5, 87) but it's an exhangeable so it canot be the "best loner"
 
         expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners_w_exchangeable")
@@ -411,8 +417,9 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]
+        # clst      [M      A]    [M       ME]
         # 1 syst   [abc6, mfp7    abc14, gspd15]
+        # score      1      .5     1      .7  = 1.5 + 1.7 = 3.2 - (1 * 1.5 redundancy penalty) = 2.7
         # in T12SS-simple-exch omf is not a loner
 
         expected_result_dir = self.find_data("functional_test_ordered_multi_loci")
@@ -448,7 +455,7 @@ class Test(MacsyTest):
         # gene       abc    mfp    abc    gspd   omf    omf
         # gene id   01397  01398  01399  01400  01548  01562
         # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]
+        # clst      [M      A]     [M      ME]
         # syst    no system
 
         expected_result_dir = self.find_data("functional_test_ordered_single_loci")
@@ -484,6 +491,7 @@ class Test(MacsyTest):
         # gene id  01398  01400
         # pos        7      15
         # syst     [mfp    gspd]
+        # score    [M        A ]   = 1.5
         # inter_gene_max_space="8"
         expected_result_dir = self.find_data("functional_test_degenerated_systems")
         args = "--db-type ordered_replicon " \
@@ -517,6 +525,7 @@ class Test(MacsyTest):
         # gene id    01398        01400
         # pos         7            15
         # syst       mfp
+        # score      [1]                   = 1
         # inter_gene_max_space="5"
         expected_result_dir = self.find_data("functional_test_uncomplete_degenerated_systems")
         args = "--db-type ordered_replicon " \
@@ -549,9 +558,14 @@ class Test(MacsyTest):
         # gene id  01397 01398  01400  01506  02599
         # pos       9     10      13    15     17
         # syst A   [abc    mfp   gspd]
+        #            A      A     M
+        # score      .5    .5     1   = 2.0
         # syst B                [gspd   omf   gspf]
+        #                         M      A     A
+        # score                   1      .5    .5  = 2.0
         # 2 systems not compatible (share gspd)
         # so 2 solutions
+
         expected_result_dir = self.find_data("functional_test_2_systems_not_compatible")
         args = "--db-type ordered_replicon " \
                "--replicon-topology linear " \

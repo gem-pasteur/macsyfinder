@@ -186,21 +186,23 @@ neutral genes:
         c1 = Cluster([mh_gspd, mh_sctj], model, self.hit_weights)
         c2 = Cluster([mh_sctn], model, self.hit_weights)
         sys_multi_loci = System(model, [c1, c2], self.cfg.redundancy_penalty())
+        # score                         1.5 .35 = 1.85
         hit_multi_sys_tracker = HitSystemTracker([sys_multi_loci])
         system_serializer = TsvSystemSerializer()
 
         sys_tsv = "\t".join(["replicon_id", "h_gspd", "gspD", "10", "foo/T2SS", sys_multi_loci.id, "1", "1",
-                             "1.000", "2.000", "1", "gspD", "mandatory", "803",
+                             "1.000", "1.850", "1", "gspD", "mandatory", "803",
                              "1.0", "1.000", "1.000", "1.000", "10", "20", "", ""])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["replicon_id", "h_sctj", "sctJ", "20", "foo/T2SS", sys_multi_loci.id, "1", "1",
-                              "1.000", "2.000", "1", "sctJ", "accessory", "803",
+                              "1.000", "1.850", "1", "sctJ", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "20", "30", "", ""])
         sys_tsv += "\n"
         sys_tsv += "\t".join(["replicon_id", "h_sctn", "sctN", "80", "foo/T2SS", sys_multi_loci.id, "1", "-1",
-                              "1.000", "2.000", "1", "sctN", "accessory", "803",
+                              "1.000", "1.850", "1", "sctN", "accessory", "803",
                               "1.0", "1.000", "1.000", "1.000", "30", "40", "h_sctn_flg", ""])
         sys_tsv += "\n"
+        self.maxDiff = None
         self.assertEqual(sys_tsv, system_serializer.serialize(sys_multi_loci, hit_multi_sys_tracker))
 
 
@@ -291,8 +293,11 @@ neutral genes:
                      model_B, self.hit_weights)
 
         sys_A = System(model_A, [c1, c2, c3], self.cfg.redundancy_penalty())
+        # score =               2.5, 2 , 0.35 = 4.85 - (2 * 1.5) = 1.85
+
         sys_A.id = "sys_id_A"
         sys_B = System(model_B, [c5], self.cfg.redundancy_penalty())
+        # score =                2.0
         sys_B.id = "sys_id_B"
 
         sol = [sys_A, sys_B]
@@ -302,27 +307,27 @@ neutral genes:
         system_serializer = TsvSolutionSerializer()
 
         sol_tsv = '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                            '2', '1', '1.000', '2.000', '2', 'sctJ', 'mandatory',
+                            '2', '1', '1.000', '1.850', '2', 'sctJ', 'mandatory',
                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
-                             '2', '1', '1.000', '2.000', '2', 'sctN', 'mandatory',
+                             '2', '1', '1.000', '1.850', '2', 'sctN', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
-                             '2', '1', '1.000', '2.000', '2', 'gspD', 'accessory',
+                             '2', '1', '1.000', '1.850', '2', 'gspD', 'accessory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                             '2', '2', '1.000', '2.000', '2', 'sctJ', 'mandatory',
+                             '2', '2', '1.000', '1.850', '2', 'sctJ', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
-                             '2', '2', '1.000', '2.000', '2', 'sctN', 'mandatory',
+                             '2', '2', '1.000', '1.850', '2', 'sctN', 'mandatory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_abc', 'abc', '20', 'foo/A', 'sys_id_A',
-                             '2', '-1', '1.000', '2.000', '2', 'abc', 'accessory',
+                             '2', '-1', '1.000', '1.850', '2', 'abc', 'accessory',
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'hit_tadZ', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
@@ -340,6 +345,7 @@ neutral genes:
         sol_tsv += "\n"
         sol_tsv += "\n"
         ser = system_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
+        self.maxDiff = None
         self.assertEqual(ser, sol_tsv)
 
 
