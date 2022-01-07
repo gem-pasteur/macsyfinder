@@ -32,8 +32,8 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System
-from macsypy.solution import find_best_solutions, combine_clusters
+from macsypy.system import System, RejectedClusters
+from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from tests import MacsyTest
 
     
@@ -250,18 +250,38 @@ def _build_clusters(cfg, profile_factory):
     # model N #
     ###########
     models['N'] = Model("foo/N", 10)
-    mgL_flgB = ModelGene(cg_flgB, models['N'])
-    mgL_sctn_flg = ModelGene(cg_sctn_flg, models['N'])
-    mgL_sctj = ModelGene(cg_sctj, models['N'])
-    mgL_sctj_flg = ModelGene(cg_sctj_flg, models['N'])
-    mgL_sctn = ModelGene(cg_sctn, models['N'], loner=True)
-    mgL_tadZ = ModelGene(cg_tadZ, models['N'], loner=True)
-    models['N'].add_mandatory_gene(mgL_flgB)
-    models['N'].add_mandatory_gene(mgL_sctn_flg)
-    models['N'].add_accessory_gene(mgL_sctj)
-    models['N'].add_accessory_gene(mgL_sctj_flg)
-    models['N'].add_accessory_gene(mgL_sctn)
-    models['N'].add_accessory_gene(mgL_tadZ)
+    mgN_flgB = ModelGene(cg_flgB, models['N'])
+    mgN_sctn_flg = ModelGene(cg_sctn_flg, models['N'])
+    mgN_sctj = ModelGene(cg_sctj, models['N'])
+    mgN_sctj_flg = ModelGene(cg_sctj_flg, models['N'])
+    mgN_sctn = ModelGene(cg_sctn, models['N'], loner=True)
+    mgN_tadZ = ModelGene(cg_tadZ, models['N'], loner=True)
+    models['N'].add_mandatory_gene(mgN_flgB)
+    models['N'].add_mandatory_gene(mgN_sctn_flg)
+    models['N'].add_accessory_gene(mgN_sctj)
+    models['N'].add_accessory_gene(mgN_sctj_flg)
+    models['N'].add_accessory_gene(mgN_sctn)
+    models['N'].add_accessory_gene(mgN_tadZ)
+
+    ###########
+    # model O #
+    ###########
+    models['O'] = Model("foo/O", 10)
+    mgO_sctj = ModelGene(cg_sctj, models['O'], multi_system=True)
+    mgO_sctj_flg = Exchangeable(cg_sctj_flg, mgO_sctj)
+    mgO_sctj.add_exchangeable(mgO_sctj_flg)
+    mgO_gspd = ModelGene(cg_gspd, models['O'], loner=True, multi_system=True)
+    mgO_sctn = ModelGene(cg_sctn, models['O'], multi_system=True)
+    mgO_sctn_flg = Exchangeable(cg_sctn_flg, mgO_sctn)
+    mgO_sctn.add_exchangeable(mgO_sctn_flg)
+    mgO_tadZ = ModelGene(cg_tadZ, models['O'], loner=True)
+    mgO_abc = ModelGene(cg_abc, models['O'])
+
+    models['O'].add_mandatory_gene(mgO_sctj)
+    models['O'].add_mandatory_gene(mgO_gspd)
+    models['O'].add_accessory_gene(mgO_sctn)
+    models['O'].add_accessory_gene(mgO_tadZ)
+    models['O'].add_neutral_gene(mgO_abc)
 
     ch_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_sctn = CoreHit(cg_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
@@ -341,15 +361,30 @@ def _build_clusters(cfg, profile_factory):
     clusters['c17'] = Cluster([ModelHit(ch_flgB, mgL_flgB, GeneStatus.MANDATORY),
                                ModelHit(ch_sctn_flg, mgL_sctn_flg, GeneStatus.MANDATORY)],
                                models['N'], hit_weights)
-    clusters['c18'] = Cluster([ModelHit(ch_sctj, mgL_sctj, GeneStatus.MANDATORY),
+    clusters['c18'] = Cluster([ModelHit(ch_sctj, mgN_sctj, GeneStatus.MANDATORY),
                                ModelHit(ch_sctj_flg, mgL_sctj_flg, GeneStatus.MANDATORY)],
                                models['N'], hit_weights)
     clusters['c19'] = Cluster([Loner(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
                               models['N'], hit_weights)
-    clusters['c20'] = Cluster([Loner(ch_tadZ, mgL_tadZ, GeneStatus.ACCESSORY)],
+    clusters['c20'] = Cluster([Loner(ch_tadZ, mgN_tadZ, GeneStatus.ACCESSORY)],
                               models['N'], hit_weights)
+    clusters['c21'] = Cluster([ModelHit(ch_sctj, mgO_sctj, GeneStatus.MANDATORY),
+                               ModelHit(ch_abc, mgO_abc, GeneStatus.NEUTRAL),
+                               ModelHit(ch_tadZ, mgO_tadZ, GeneStatus.ACCESSORY)],
+                              models['O'], hit_weights)
+    clusters['c22'] = Cluster([ModelHit(ch_sctn_flg, mgO_sctn_flg, GeneStatus.ACCESSORY),
+                               ModelHit(ch_gspd, mgO_gspd, GeneStatus.MANDATORY),
+                               ModelHit(ch_tadZ, mgO_tadZ, GeneStatus.ACCESSORY)],
+                              models['O'], hit_weights)
+    clusters['c23'] = Cluster([Loner(ch_gspd, mgO_gspd, gene_status=GeneStatus.MANDATORY)],
+                             models['O'], hit_weights)
+    clusters['c24'] = Cluster([MultiSystem(ch_gspd, mgO_gspd, gene_status=GeneStatus.MANDATORY)],
+                              models['O'], hit_weights)
+    clusters['c25'] = Cluster([MultiSystem(ch_sctn, mgO_sctn, gene_status=GeneStatus.ACCESSORY)],
+                              models['O'], hit_weights)
+    clusters['c26'] = Cluster([MultiSystem(ch_sctj_flg, mgO_sctj_flg, gene_status=GeneStatus.MANDATORY)],
+                              models['O'], hit_weights)
     return models, clusters
-
 
 
 def _build_systems(models, clusters, cfg):
@@ -713,3 +748,54 @@ class SolutionExplorerTest(MacsyTest):
         # for comb in combinations:
         #     print([c.id for c in comb])
         self.assertEqual(combinations, exp_combs)
+
+
+    def test_combine_multisystems(self):
+        # key    id     hits
+        # c21    c47    sctj abc tadz
+        # c22    c48    sctn_flg gspd tadz
+        # c23    c49    Loner gspd
+        # c24    c50    MS gspd
+        # c25    c51    MS sctn
+        # c26    c52    MS sctj_flg
+
+        rejected_clst = RejectedClusters(self.models['O'],
+                                         [self.clusters['c21']],
+                                         'fake_reason')
+        combinations = combine_multisystems(rejected_clst,
+                                            [self.clusters['c24'], self.clusters['c25'], self.clusters['c26']]
+                                            )
+        exp_combs = [
+            (self.clusters['c21'], self.clusters['c24']),
+            (self.clusters['c21'], self.clusters['c25']),
+            (self.clusters['c21'], self.clusters['c24'], self.clusters['c25'])
+            ]
+        self.assertEqual(combinations, exp_combs)
+
+        rejected_clst = RejectedClusters(self.models['O'],
+                                         [self.clusters['c22']],
+                                         'fake_reason')
+        combinations = combine_multisystems([rejected_clst],
+                                            [self.clusters['c24'], self.clusters['c25'], self.clusters['c26']]
+                                            )
+        exp_combs = [
+            (self.clusters['c22'], self.clusters['c26'])
+            ]
+        self.assertEqual(combinations, exp_combs)
+
+        rejected_clst = RejectedClusters(self.models['O'],
+                                         [self.clusters['c21'], self.clusters['c23']],
+                                         'fake_reason')
+        combinations = combine_multisystems([rejected_clst],
+                                            [self.clusters['c24'], self.clusters['c25'], self.clusters['c26']]
+                                            )
+        exp_combs = [
+            (self.clusters['c21'], self.clusters['c23'], self.clusters['c25'])
+            ]
+        self.assertEqual(combinations, exp_combs)
+        # print("\n####################################################################")
+        # for comb in exp_combs:
+        #     print([c.id for c in comb])
+        # print("==============================")
+        # for comb in combinations:
+        #     print([c.id for c in comb])
