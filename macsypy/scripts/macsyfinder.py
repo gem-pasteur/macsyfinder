@@ -561,16 +561,16 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.debug("#" * 80)
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
-            true_clusters, special_clusters = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
+            true_clusters, true_loners = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
             logger.debug("{:#^80}".format(" CLUSTERS "))
             logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
             logger.debug("{:=^50}".format(" LONERS "))
-            logger.debug("\n" + "\n".join([str(c) for c in special_clusters.values() if c.loner]))
-            logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
-            logger.debug("\n" + "\n".join([str(c.hit[0]) for c in special_clusters.values() if c.multi_system]))
+            logger.debug("\n" + "\n".join([str(c) for c in true_loners.values() if c.loner]))
+            # logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
+            # logger.debug("\n" + "\n".join([str(c.hit[0]) for c in special_clusters.values() if c.multi_system]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
-            clusters_combination = combine_clusters(true_clusters, special_clusters, multi_loci=model.multi_loci)
+            clusters_combination = combine_clusters(true_clusters, true_loners, multi_loci=model.multi_loci)
             for one_clust_combination in clusters_combination:
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                 res = ordered_matcher.match(one_clust_combination)
@@ -579,10 +579,14 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
                 else:
                     rejected_clusters.append(res)
 
+            multi_systems_hits = set()  # for the same model (in the loop)
+            for one_sys in systems:
+               multi_systems_hits.update(one_sys.get_multi_systems())
+
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
-    return systems, rejected_clusters, special_clusters
+    return systems, rejected_clusters, true_clusters
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
