@@ -29,7 +29,7 @@ from itertools import chain
 
 from .error import ModelInconsistencyError
 from .registries import DefinitionLocation
-from .hit import ModelHit
+from .hit import ModelHit, MultiSystem
 from .gene import GeneStatus
 
 
@@ -369,8 +369,10 @@ class Model(metaclass=MetaModel):
         for hit in hits:
             if hit.gene.name in all_genes:
                 gene = all_genes[hit.gene.name]
-                compatible_hits.append(ModelHit(hit,
-                                                gene,
-                                                gene.status)
-                                       )
+                if gene.multi_system:
+                    mh = MultiSystem(hit, gene_ref=gene, gene_status=gene.status)
+                else:
+                    mh = ModelHit(hit, gene, gene.status)
+                compatible_hits.append(mh)
+
         return compatible_hits
