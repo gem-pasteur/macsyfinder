@@ -153,54 +153,6 @@ def _clusterize(hits, model, hit_weights, rep_info):
     return clusters
 
 
-def _get_multi_system_hits(clusters):
-    """
-    check all hits in clusters and cast those wich ref_gene is tagged as mullti-system
-    in :class:`macsypy.hit.MultiSystem`
-
-    :param clusters: the clusters
-    :type clusters: list of :class:`macsypy.cluster.Cluster`
-    :return: The clusters with hits which have a gene_ref tagged as multi_system cast in MultiSystem
-             and a register of multi systems hits which are not also Loner (which will use to compute the clusters combination)
-    :rtype: tuple of 2 elts
-
-            * list of :class:`macsypy.cluster.Cluster` objects
-            * dict { str func_name: :class:`macsypy.hit.MultiSystem`}
-    """
-    ms_registry = {}
-    if clusters:
-        model = clusters[0].model
-        hit_weights = clusters[0].hit_weights
-        hit_clst = {}  # get link between hit and clst
-        for clst in clusters:
-            for hit in clst.hits:
-                if hit.gene_ref.alternate_of().multi_system:
-                    func_name = hit.gene_ref.alternate_of().name
-                    if func_name in ms_registry:
-                        ms_registry[func_name].append(hit)
-                    else:
-                        ms_registry[func_name] = [hit]
-                    hit_clst[hit] = clst
-
-        for func_name in ms_registry:
-            ms = ms_registry[func_name]
-            ms_registry[func_name] = []
-            for i in range(len(ms)):
-                counterpart = ms[:]
-                hit = counterpart.pop(i)
-                new_ms_hit = MultiSystem(hit, counterpart=counterpart)
-                clst = hit_clst[hit]
-                clst.replace(hit, new_ms_hit)
-                ms_registry[func_name].append(new_ms_hit)
-
-            # replace List of Loners by the best Loner
-            best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
-            ms_registry[func_name] = best_ms
-
-        ms_registry = {func_name: Cluster([ms], model, hit_weights) for func_name, ms in ms_registry.items()}
-    return clusters, ms_registry
-
-
 def _get_true_loners(clusters):
     """
     A we call a True Loner a Cluster composed of only one gene tagged as loner
@@ -284,28 +236,22 @@ def build_clusters(hits, rep_info, model, hit_weights):
     :rtype: tuple with 2 elements
 
             * true_clusters which is list of :class:`Cluster` objects
-            * special_clusters: a dict { str function: :class:macsypy.hit.Loner |
-                                                       :class:macsypy.hit.MultiSystem |
-                                                       :class:macsypy.hit.LonerMultiSystem object}
+            * true_loners: a dict { str function: :class:macsypy.hit.Loner | :class:macsypy.hit.LonerMultiSystem object}
     """
     if hits:
         clusters = _clusterize(hits, model, hit_weights, rep_info)
-
-        clusters, multi_system = _get_multi_system_hits(clusters)
-        # a LonerMultiSystem must use the multisystem counterpart algo (includ clusterize hit for
-        # counterpart and best hit selection) so multisystem must be compute in first
-        # and the counter part use from the MultiSystem object
+        # The hits in clusters are either ModelHit or MultiSystem
+        # (they are cast during model.filter(hits) method)
+        # the MultiSystem have no yet counterpart
+        # which will compute once System will be computed
+        # to take in account only hits in true system candidates
+        # whereas the counterpart for loner & LonerMultiSystems during get_true_loners
         true_loners, true_clusters = _get_true_loners(clusters)
-        # the order during merge s important
-        # true_loners must be in second
-        # it's during the true_loner computation
-        # that the MultiSystem Loner are cast in LonerMultisystem
-        special_clusters = multi_system | true_loners
 
     else:  # there is not hits
         true_clusters = []
-        special_clusters = {}
-    return true_clusters, special_clusters
+        true_loners = {}
+    return true_clusters, true_loners
 
 
 class Cluster:
@@ -392,10 +338,11 @@ class Cluster:
         """
 
         :param gene: The genes which must be tested.
-        :type genes: :class:`macsypy.gene.ModelGene` object
-        :return: True if the cluster contains one hit which fulfill  the function corresponding of at least one gene
-                 (the gene hitself or an exchageable)
+        :type genes: :class:`macsypy.gene.ModelGene` object or string
+        :return: True if the cluster contains one hit which fulfill the function corresponding of at least one gene
+                 (the gene hitself or an exchangeable)
         """
+        # we do not filter out neutral from the model
         if self._genes_roles is None:
             self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
         functions = set()
