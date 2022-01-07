@@ -26,9 +26,9 @@ import os
 import argparse
 
 from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem, \
-    get_best_hits, get_best_hit_4_func, HitWeight
+    get_best_hits, get_best_hit_4_func, HitWeight, sort_model_hits, compute_best_MSHit, set_multisystem_counterpart
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, GeneStatus
+from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
@@ -247,7 +247,9 @@ class LonerTest(MacsyTest):
         self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-
+        self.mhit_1 = ModelHit(self.chit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_2 = ModelHit(self.chit_2, self.gene_sctj, GeneStatus.ACCESSORY)
+        self.mhit_3 = ModelHit(self.chit_3, self.gene_gspd, GeneStatus.MANDATORY)
 
     def test_init(self):
         # create loner from a CoreHit
@@ -255,7 +257,7 @@ class LonerTest(MacsyTest):
         self.assertEqual(l1.gene_ref, self.gene_gspd)
         self.assertEqual(l1.status, GeneStatus.MANDATORY)
         # create loner from a CoreHit with counterpart
-        _ = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        _ = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
 
         # try to create Loner from cCoreHit but without gene_ref nor gene_status
         with self.assertRaises(MacsypyError) as ctx:
@@ -289,14 +291,14 @@ class LonerTest(MacsyTest):
 
     def test_counterpart(self):
         l1 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
-        self.assertListEqual(l1.counterpart, [])
-        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
-        self.assertListEqual(l2.counterpart, [self.chit_3])
+        self.assertSetEqual(l1.counterpart, set())
+        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
+        self.assertSetEqual(l2.counterpart, set([self.mhit_3]))
 
     def test_len(self):
         l1 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
         self.assertEqual(len(l1), 1)
-        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
         self.assertEqual(len(l2), 2)
 
 
@@ -309,7 +311,7 @@ class LonerTest(MacsyTest):
         self.assertFalse(l1.multi_system)
 
     def test_str(self):
-        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        l2 = Loner(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
         self.assertEqual(str(l2),
                          '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
                                     '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
@@ -342,10 +344,15 @@ class MultiSystemTest(MacsyTest):
         model.add_mandatory_gene(self.gene_gspd)
         model.add_accessory_gene(self.gene_sctj)
 
+        #              CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #                       profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                                   pos     score
         self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-
+        self.mhit_1 = ModelHit(self.chit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_2 = ModelHit(self.chit_2, self.gene_sctj, GeneStatus.ACCESSORY)
+        self.mhit_3 = ModelHit(self.chit_3, self.gene_gspd, GeneStatus.MANDATORY)
 
     def test_init(self):
         # create loner from a CoreHit
@@ -354,7 +361,7 @@ class MultiSystemTest(MacsyTest):
         self.assertEqual(ms1.status, GeneStatus.MANDATORY)
         # create loner from a CoreHit with counterpart
         # test the creation, the content of counterpart is test in test_counterpart
-        _ = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        _ = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
 
         # try to create MS from cCoreHit but without gene_ref nor gene_status
         with self.assertRaises(MacsypyError) as ctx:
@@ -388,14 +395,14 @@ class MultiSystemTest(MacsyTest):
 
     def test_counterpart(self):
         ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
-        self.assertListEqual(ms1.counterpart, [])
-        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
-        self.assertListEqual(ms2.counterpart, [self.chit_3])
+        self.assertSetEqual(ms1.counterpart, set())
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
+        self.assertSetEqual(ms2.counterpart, set([self.mhit_3]))
 
     def test_len(self):
         ms1 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
         self.assertEqual(len(ms1), 1)
-        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
         self.assertEqual(len(ms2), 2)
 
 
@@ -408,11 +415,12 @@ class MultiSystemTest(MacsyTest):
         self.assertTrue(ms1.multi_system)
 
     def test_str(self):
-        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        ms2 = MultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
         self.assertEqual(str(ms2),
                          '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
                                     '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
                          )
+
 
 class LonerMultiSystemTest(MacsyTest):
 
@@ -443,7 +451,9 @@ class LonerMultiSystemTest(MacsyTest):
         self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-
+        self.mhit_1 = ModelHit(self.chit_1, self.gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_2 = ModelHit(self.chit_2, self.gene_sctj, GeneStatus.ACCESSORY)
+        self.mhit_3 = ModelHit(self.chit_3, self.gene_gspd, GeneStatus.MANDATORY)
 
     def test_init(self):
         # create loner from a CoreHit
@@ -452,7 +462,7 @@ class LonerMultiSystemTest(MacsyTest):
         self.assertEqual(lms1.status, GeneStatus.MANDATORY)
         # create loner from a CoreHit with counterpart
         # test the creation, the content of counterpart is test in test_counterpart
-        _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
 
         # try to create MS from CoreHit but without gene_ref nor gene_status
         with self.assertRaises(MacsypyError) as ctx:
@@ -488,11 +498,11 @@ class LonerMultiSystemTest(MacsyTest):
         mh1 = MultiSystem(self.chit_1,
                           gene_ref=self.gene_gspd,
                           gene_status=GeneStatus.MANDATORY,
-                          counterpart=[self.chit_2, self.chit_3])
+                          counterpart=[self.mhit_2, self.mhit_3])
         lms = LonerMultiSystem(mh1)
         self.assertEqual(lms.gene_ref, self.gene_gspd)
         self.assertEqual(lms.status, GeneStatus.MANDATORY)
-        self.assertEqual(lms.counterpart, [self.chit_2, self.chit_3])
+        self.assertSetEqual(set(lms.counterpart), set([self.mhit_2, self.mhit_3]))
 
     def test_loner(self):
         lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
@@ -503,7 +513,9 @@ class LonerMultiSystemTest(MacsyTest):
         self.assertTrue(lms1.multi_system)
 
     def test_str(self):
-        lms2 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.chit_3])
+        lms2 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd,
+                                gene_status=GeneStatus.MANDATORY,
+                                counterpart=[self.mhit_3])
         self.assertEqual(str(lms2),
                          '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
                                     '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
@@ -517,16 +529,56 @@ class GetBestHitTest(MacsyTest):
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
-        self.cfg = Config(MacsyDefaults(), args)
+        cfg = Config(MacsyDefaults(), args)
 
-        self.model_name = 'foo'
-        self.models_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
+        model_name = 'foo'
+        self.models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
 
         # we need to reset the ProfileFactory
         # because it's a like a singleton
         # so other tests are influenced by ProfileFactory and it's configuration
         # for instance search_genes get profile without hmmer_exe
-        self.profile_factory = ProfileFactory(self.cfg)
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model(model_name, 10)
+        self.profile_factory = ProfileFactory(cfg)
+
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(self.models_location, gene_name, self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model, multi_system=True)
+
+        gene_name = "sctJ"
+        c_gene_sctj = CoreGene(self.models_location, gene_name, self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model, multi_system=True)
+
+        gene_name = "sctN"
+        c_gene_sctn = CoreGene(self.models_location, gene_name, self.profile_factory)
+        gene_sctn = Exchangeable(c_gene_sctn, gene_sctj)
+        gene_sctj.add_exchangeable(gene_sctn)
+
+        model.add_mandatory_gene(gene_gspd)
+        model.add_accessory_gene(gene_sctj)
+
+        #        CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #                       profile_coverage, sequence_coverage, begin_match, end_match
+        #                                                        pos      score
+        chit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_3 = CoreHit(c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 3.0, 1.0, 1.0, 10, 20)
+        chit_4 = CoreHit(c_gene_sctn, "hit_4", 803, "replicon_id", 14, 1.0, 4.0, 1.0, 1.0, 10, 20)
+        chit_5 = CoreHit(c_gene_gspd, "hit_5", 803, "replicon_id", 20, 1.0, 2.0, 1.0, 1.0, 10, 20)
+
+        self.mhit_1 = ModelHit(chit_1, gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_2 = ModelHit(chit_2, gene_sctj, GeneStatus.ACCESSORY)
+        self.mhit_3 = ModelHit(chit_3, gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_4 = ModelHit(chit_4, gene_sctn, GeneStatus.ACCESSORY)
+        self.mhit_5 = ModelHit(chit_5, gene_gspd, GeneStatus.MANDATORY)
+
+        self.ms_1 = MultiSystem(chit_1, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.ms_2 = MultiSystem(chit_2, gene_ref=gene_sctj, gene_status=GeneStatus.ACCESSORY)
+        self.ms_3 = MultiSystem(chit_3, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
+        self.ms_4 = MultiSystem(chit_4, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY)
+        self.ms_5 = MultiSystem(chit_5, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
 
 
     def test_get_best_hits(self):
@@ -592,9 +644,10 @@ class GetBestHitTest(MacsyTest):
                      10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, float(3.7e-76),
                      11, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
-
-        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h1])
-        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h0])
+        m0 = ModelHit(h0, gene_gspd, GeneStatus.ACCESSORY)
+        m1 = ModelHit(h1, gene_gspd, GeneStatus.ACCESSORY)
+        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
+        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
         l = get_best_hit_4_func(gene_name, [l0, l1])
         self.assertEqual(l, l1)
 
@@ -605,8 +658,10 @@ class GetBestHitTest(MacsyTest):
                      10, float(1.000000), (741.0 - 104.0 + 1) / 803, 104, 741)
         h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 11,
                      10, float(1.000000), (736.0 - 105.0 + 1) / 759, 105, 736)
-        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h1])
-        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h0])
+        m0 = ModelHit(h0, gene_gspd, GeneStatus.ACCESSORY)
+        m1 = ModelHit(h1, gene_gspd, GeneStatus.ACCESSORY)
+        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
+        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
 
         l = get_best_hit_4_func(gene_name, [l0, l1], key='i_eval')
         self.assertEqual(l, l0)
@@ -618,8 +673,10 @@ class GetBestHitTest(MacsyTest):
                      10, 10, (741.0 - 104.0 + 1) / 803, 104, 741)
         h1 = CoreHit(gene_gspd, "PSAE001c01_013980", 759, "PSAE001c01", 3450, 10,
                      10, 11, (736.0 - 105.0 + 1) / 759, 105, 736)
-        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h1])
-        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[h0])
+        m0 = ModelHit(h0, gene_gspd, GeneStatus.ACCESSORY)
+        m1 = ModelHit(h1, gene_gspd, GeneStatus.ACCESSORY)
+        l0 = Loner(h0, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m1])
+        l1 = Loner(h1, gene_ref=gene_gspd, gene_status=GeneStatus.ACCESSORY, counterpart=[m0])
 
         l = get_best_hit_4_func(gene_name, [l0, l1], key='profile_coverage')
         self.assertEqual(l, l1)
@@ -629,6 +686,42 @@ class GetBestHitTest(MacsyTest):
             get_best_hits([l0, l1], key='nimportnaoik')
         self.assertEqual('The criterion for Hits comparison nimportnaoik does not exist or is not available.\n'
                          'It must be either "score", "i_eval" or "profile_coverage".', str(ctx.exception))
+
+
+    def test_sort_multisystem_hits(self):
+        # scores                        gspd 1.0     sctj 1.0     gspd 3.0  sctn 4.0 Ex sctj gspd 2.0
+        sorted_hits = sort_model_hits([self.mhit_1, self.mhit_2, self.mhit_3, self.mhit_4, self.mhit_5])
+        expected = {'gspD': [self.mhit_1, self.mhit_3, self.mhit_5],
+                    'sctJ': [self.mhit_2, self.mhit_4]}
+        self.assertDictEqual(sorted_hits,
+                             expected)
+
+        sorted_hits = sort_model_hits([])
+        self.assertDictEqual(sorted_hits,
+                             {})
+
+
+    def test_compute_best_MSHit(self):
+        # scores                       gspd 1.0    sctj 1.0   gspd 3.0 sctn 4.0 Ex sctj  gspd 2.0
+        sorted_hits = sort_model_hits([self.ms_1, self.ms_2, self.ms_3, self.ms_4, self.ms_5])
+        best_hits = compute_best_MSHit(sorted_hits)
+        # The order does not matter
+        self.assertSetEqual({self.ms_3, self.ms_2}, set(best_hits))
+
+
+    def test_multisystem_counterpart(self):
+        # scores                       gspd 1.0    sctj 1.0   gspd 3.0 sctn 4.0 Ex sctj gspd 2.0
+        sorted_hits = sort_model_hits([self.ms_1, self.ms_2, self.ms_3, self.ms_4, self.ms_5])
+
+        self.assertEqual(self.ms_1.counterpart, set())
+        self.assertEqual(self.ms_2.counterpart, set())
+        self.assertEqual(self.ms_3.counterpart, set())
+        self.assertEqual(self.ms_4.counterpart, set())
+        set_multisystem_counterpart(sorted_hits)
+        self.assertEqual(self.ms_1.counterpart, {self.ms_3, self.ms_5})
+        self.assertEqual(self.ms_2.counterpart, {self.ms_4})
+        self.assertEqual(self.ms_3.counterpart, {self.ms_1, self.ms_5})
+        self.assertEqual(self.ms_4.counterpart, {self.ms_2})
 
 
 class HitWeightTest(MacsyTest):
