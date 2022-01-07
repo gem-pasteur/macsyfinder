@@ -635,6 +635,7 @@ class System(AbstractSetOfHits):
                  .. note::
                     This method is used to compute the best combination of systems.
         """
+        # self and other are 2 System they can be related to different Model
         # a CoreHit correspond to 1 gene in replicon
         # it can be only one CoreHit by gene
         # but several ModelGene can exist on the same gene
@@ -651,7 +652,17 @@ class System(AbstractSetOfHits):
         :return: The True Loners belonging to the systems
         :rtype: set of :class:`macsypy.hit.Loner` object
         """
+        # a model hit is a loner only if it's a true loner
         return {mh for mh in self.hits if mh.loner}
+
+
+    def get_multi_systems(self):
+        """
+
+        :return: The hits tag as multi systems belongings to this system
+        :rtype: set of :class:`macsypy.hit.MultiSystem` object
+        """
+        return {mh for mh in self.hits if mh.multi_system}
 
 
 class RejectedClusters(AbstractSetOfHits):
