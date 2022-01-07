@@ -263,7 +263,7 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
             super().__init__(hit, gene_ref, gene_status)
         elif isinstance(hit, ModelHit):
             super().__init__(hit.hit, gene_ref=hit.gene_ref, gene_status=hit.gene_ref.status)
-        self._counterpart = counterpart if counterpart is not None else []
+        self.counterpart = counterpart if counterpart is not None else set()
 
 
     def __getattr__(self, item):
@@ -272,8 +272,20 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
 
     @property
     def counterpart(self):
-        """The list of hits that can play the same role"""
-        return self._counterpart[:]
+        """
+        :rreturn: The set of hits that can play the same role
+        """
+        return set(self._counterpart)
+
+
+    @counterpart.setter
+    def counterpart(self, counterparts):
+        """
+
+        :param counterpart:
+        """
+        if all([True for hit in counterparts if hit.gene_ref.name is self.gene_ref]):
+            self._counterpart = set(counterparts)
 
 
     def __str__(self):
@@ -439,9 +451,9 @@ def get_best_hit_4_func(function, hits, key='score'):
         * i_evalue
         * profile_coverage
 
-    :param str function: the name of the function fullfil by the hits
+    :param str function: the name of the function fulfill by the hits (all hits must have same function)
     :param hits: the hits to filter.
-    :type hits: [ :class:`macsypy.hit.Loner` object, ...]
+    :type hits: sequence of :class:`macsypy.hit.ModelHit` object
     :param str key: The criterion used to select the best hit 'score', i_evalue', 'profile_coverage'
     :return: the best hit
     :rtype: :class:`macsypy.hit.ModelHit` object
@@ -466,6 +478,52 @@ def get_best_hit_4_func(function, hits, key='score'):
     else:
         raise MacsypyError(f'The criterion for Loners comparison {key} does not exist or is not available.\n')
     return hits[0]
+
+
+def sort_model_hits(model_hits):
+    """
+    Sort :class:`macsypy.hit.ModelHit` per function
+
+    :param model_hits: a sequence of :class:`macsypy.hit.ModelHit`
+    :return: dict {str function name: [model_hit, ...] }
+    """
+    ms_registry = {}
+    for hit in model_hits:
+        func_name = hit.gene_ref.alternate_of().name
+        if func_name in ms_registry:
+            ms_registry[func_name].append(hit)
+        else:
+            ms_registry[func_name] = [hit]
+
+    return ms_registry
+
+
+def compute_best_MSHit(ms_registry):
+    """
+
+    :param ms_registry:
+    :return:
+    """
+    best_multisystem_hits = []
+    for func_name in ms_registry:
+        best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
+        best_multisystem_hits.append(best_ms)
+    return best_multisystem_hits
+
+
+def set_multisystem_counterpart(ms_registry):
+    """
+
+    :param ms_registry:
+    :return:
+    """
+    for func_name in ms_registry:
+        ms = ms_registry[func_name]
+        ms_registry[func_name] = []
+        for i in range(len(ms)):
+            counterpart = ms[:]
+            hit = counterpart.pop(i)
+            hit.counterpart = counterpart
 
 
 def get_best_hits(hits, key='score'):
