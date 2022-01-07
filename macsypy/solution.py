@@ -25,6 +25,7 @@
 import itertools
 import networkx as nx
 
+from macsypy.system import RejectedClusters
 
 def find_best_solutions(systems):
     """
@@ -95,13 +96,12 @@ def combine_clusters(clusters, true_loners, multi_loci=False):
     """
     generate the combinations of clusters, with loners and multi systems
 
-    :param clusters: the clusters to combinates
+    :param clusters: the clusters to combines
     :type clusters: list of :class:`macsypy.cluster.Cluster` object
-    :param special_clusters: the multi-systems hits
-    :type special_clusterss: dict the name of the function code by hit gene_ref.alternate_of as key
+    :param true_loners: the multi-systems hits
+    :type true_loners: dict the name of the function code by hit gene_ref.alternate_of as key
                               and 1 :class:`macsypy.cluster.Cluster` with the best a
                               :class:`macsypy.hit.Loner` or
-                              :class:`macsypy.hit.MultiSystem` or
                               :class:`macsypy.hit.LonerMultiSsystem` hit  as value
     :param bool multi_loci: True if the model is multi_loci false otherwise
     :return: all available combination of clusters
@@ -141,3 +141,36 @@ def combine_clusters(clusters, true_loners, multi_loci=False):
     cluster_combinations += combination_w_loners
 
     return cluster_combinations
+
+
+def combine_multisystems(rejected_clusters, multi_systems):
+    """
+
+    :param rejected_clusters:
+    :param multi_systems: sequence of :class:`macsypy.cluster.Cluster`
+                          each cluster must be composed of only one :class:`macsypy.hit.MultiSystem` object
+    :return: list of cluster combination with teh multisystem
+    :rtype: [(:class:`macsypy.cluster.Cluster` cluster1, cluster2, ...),
+             (:class:`macsypy.cluster.Cluster` cluster3, cluster4, ...)]
+    """
+    # instead as clusters with loners
+    # we have not to take in account rejected_cluster in new_comb
+    # as they already have been challenged and rejected
+    if isinstance(rejected_clusters, RejectedClusters):
+        rejected_clusters = [rejected_clusters]
+    new_comb = []
+    ms_combinations = [itertools.combinations(multi_systems, i) for i in range(1, len(multi_systems) + 1)]
+    ms_combinations = list(itertools.chain(*ms_combinations))  # tuple of MultiSystem
+    for rej_clust in rejected_clusters:
+        for one_ms_combination in ms_combinations:
+            combination_hits = {h for clst in one_ms_combination for h in clst.hits}
+            functions = [h.gene_ref.alternate_of().name for h in combination_hits]
+            to_add = True
+            for clst in rej_clust.clusters:
+                if clst.fulfilled_function(*functions):
+                    to_add = False
+                    break
+            if to_add:
+                new_comb.append(tuple(rej_clust.clusters + list(one_ms_combination)))
+    return new_comb
+
