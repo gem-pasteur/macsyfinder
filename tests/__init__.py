@@ -141,6 +141,7 @@ class MacsyTest(unittest.TestCase):
                 elif l2:  # and not l1
                     raise self.failureException(f"{fh2.name} is longer than {fh1.name}")
 
+
     def assertTsvEqual(self, f1, f2, tsv_type='best_solution.tsv', comment="#", msg=None):
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
@@ -180,6 +181,10 @@ class MacsyTest(unittest.TestCase):
                     # remove used_in field if present
                     fields_1.pop(-1)
                     fields_2.pop(-1)
+
+                # counterpart order does not matter
+                fields_1[-1] = set(fields_1[-1].split(','))
+                fields_2[-1] = set(fields_2[-1].split(','))
                 self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
 
 
