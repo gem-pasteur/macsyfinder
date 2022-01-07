@@ -180,8 +180,9 @@ neutral genes:
         mh_sctj = ModelHit(ch_sctj, gene_ref=gene_sctj, gene_status=GeneStatus.ACCESSORY)
 
         ch_sctn_flg = CoreHit(c_gene_sctn_flg, "h_sctn_flg", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 30, 40)
+        mh_sctn_flg = ModelHit(ch_sctn_flg, gene_ref=gene_sctn_flg, gene_status=GeneStatus.ACCESSORY)
         ch_sctn = CoreHit(c_gene_sctn, "h_sctn", 803, "replicon_id", 80, 1.0, 1.0, 1.0, 1.0, 30, 40)
-        mh_sctn = Loner(ch_sctn, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY, counterpart=[ch_sctn_flg])
+        mh_sctn = Loner(ch_sctn, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY, counterpart=[mh_sctn_flg])
 
         c1 = Cluster([mh_gspd, mh_sctj], model, self.hit_weights)
         c2 = Cluster([mh_sctn], model, self.hit_weights)
@@ -263,34 +264,30 @@ neutral genes:
         #         profile_coverage, sequence_coverage, begin_match, end_match
         #                                                           pos      score
         h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_sctj = ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
         h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_sctn = ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
         h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
 
         h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_sctj_flg = ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY)
         h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 11, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_flgB = ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)
         h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_tadZ = ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
-        c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
-                      ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
-                      ],
-                     model_A, self.hit_weights)
-
-        c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
-                     model_A, self.hit_weights)
-        c3 = Cluster([Loner(h_abc, gene_ref=gene_abc, gene_status=GeneStatus.ACCESSORY, counterpart=[h_tadZ])],
+        c1 = Cluster([mh_sctj, mh_sctn, mh_gspd], model_A, self.hit_weights)
+        c2 = Cluster([mh_sctj, mh_sctn], model_A, self.hit_weights)
+        c3 = Cluster([Loner(h_abc, gene_ref=gene_abc, gene_status=GeneStatus.ACCESSORY, counterpart=[mh_tadZ])],
                      model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
-        c5 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
-                     model_B, self.hit_weights)
+        c5 = Cluster([mh_sctj_flg, mh_tadZ, mh_flgB], model_B, self.hit_weights)
 
         sys_A = System(model_A, [c1, c2, c3], self.cfg.redundancy_penalty())
         # score =               2.5, 2 , 0.35 = 4.85 - (2 * 1.5) = 1.85
