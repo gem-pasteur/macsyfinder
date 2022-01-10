@@ -30,6 +30,7 @@ import sys
 import tarfile
 import unittest
 
+import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
 
 from tests import MacsyTest
@@ -49,6 +50,16 @@ class TestMacsydata(MacsyTest):
         self._remote_exists = macsydata.RemoteModelIndex.remote_exists
         macsydata.RemoteModelIndex.remote_exists = lambda x: True
         macsydata._log = macsydata.init_logger(20)  # 20 logging.INFO
+        self.definition_1 = """<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+</model>"""
+        self.definition_2 = """<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
+    <gene name="fliE" presence="mandatory" multi_system="True"/>
+    <gene name="tadZ" presence="accessory" loner="True"/>
+    <gene name="sctC" presence="forbidden"/>
+</model>"""
+
 
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
@@ -69,21 +80,14 @@ class TestMacsydata(MacsyTest):
                             license=True,
                             dest=''):
         pack_path = os.path.join(self.tmpdir, dest, model)
-        os.mkdir(pack_path)
+        os.makedirs(pack_path)
         if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
-                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
-    <gene name="flgB" presence="mandatory"/>
-    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
-</model>""")
+                f.write(self.definition_1)
             with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
-                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
-    <gene name="fliE" presence="mandatory" multi_system="True"/>
-    <gene name="tadZ" presence="accessory" loner="True"/>
-    <gene name="sctC" presence="forbidden"/>
-</model>""")
+                f.write(self.definition_2)
 
         if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
@@ -389,6 +393,122 @@ To cite MacSyFinder:
         expected_citation = '# This a README'
 
         self.assertEqual(expected_citation, citation)
+
+
+    def test_definition_all_def(self):
+        pack_name = 'fake_1'
+        self.args.model = [pack_name]
+        self.args.models_dir = None
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_show_definition(self.args)
+                stdout = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+{self.definition_1}
+
+<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+{self.definition_2}"""
+        self.assertEqual(expected_output,
+                         stdout)
+
+
+    def test_definition_one_def(self):
+        pack_name = 'fake_1'
+        self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.models_dir = None
+        fake_pack_path = self.create_fake_package(pack_name)
+
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
+        try:
+            with self.catch_io(out=True):
+                macsydata.do_show_definition(self.args)
+                stdout = sys.stdout.getvalue().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+{self.definition_1}
+
+<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+{self.definition_2}"""
+
+        self.assertEqual(expected_output,
+                         stdout)
+
+
+    def test_definition_models_dir(self):
+        pack_name = 'fake_1'
+        fake_pack_path = self.create_fake_package(pack_name, dest='model_dir')
+        self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.models_dir = os.path.dirname(fake_pack_path)
+
+        with self.catch_io(out=True):
+            macsydata.do_show_definition(self.args)
+            stdout = sys.stdout.getvalue().strip()
+
+        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+{self.definition_1}
+
+<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+{self.definition_2}"""
+
+        self.assertEqual(expected_output,
+                         stdout)
+
+
+    def test_definition_bad_def(self):
+        pack_name = 'fake_1'
+        self.args.model = [pack_name, 'niportnaoik']
+        self.args.models_dir = None
+        fake_pack_path = self.create_fake_package(pack_name)
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                macsydata.do_show_definition(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        self.assertEqual(log_msg, "Model 'fake_1/niportnaoik' not found.")
+
+
+    def test_definition_bad_pack(self):
+        pack_name = 'nimportnaoik'
+        self.args.model = [pack_name]
+        self.args.models_dir = None
+        with self.catch_log(log_name='macsydata') as log:
+            with self.assertRaises(ValueError) as ctx:
+                macsydata.do_show_definition(self.args)
+            log_msg = log.get_value().strip()
+
+        self.assertEqual(log_msg, f"Package '{pack_name}' not found.")
+
+    def test_definition_bad_subfamily(self):
+        pack_name = 'fake_1'
+        self.args.model = ['/'.join([pack_name, 'niportnaoik'])]
+        self.args.models_dir = None
+        fake_pack_path = self.create_fake_package(pack_name)
+        find_local_package = macsydata._find_installed_package
+        macsydata._find_installed_package = lambda x, models_dir: macsypy.registries.ModelLocation(path=fake_pack_path)
+        try:
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError) as ctx:
+                    macsydata.do_show_definition(self.args)
+                log_msg = log.get_value().strip()
+        finally:
+            macsydata._find_installed_package = find_local_package
+
+        self.assertEqual(log_msg,
+                         f"'niportnaoik' not found in package '{pack_name}'.")
 
 
     def test_check(self):

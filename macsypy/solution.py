@@ -91,7 +91,7 @@ def find_best_solutions(systems):
     return solutions, max_score
 
 
-def combine_clusters(clusters, special_clusters, multi_loci=False):
+def combine_clusters(clusters, true_loners, multi_loci=False):
     """
     generate the combinations of clusters, with loners and multi systems
 
@@ -115,22 +115,29 @@ def combine_clusters(clusters, special_clusters, multi_loci=False):
     else:
         cluster_combinations = [(clst,) for clst in clusters]
 
-    # add loners and multisystems
-    combination_w_special_clst = []
-    for func_name, spe_clst in special_clusters.items():
+    # add loners
+    loners_combinations = true_loners.items()
+    loners_combinations = [itertools.combinations(loners_combinations, i) for i in
+                           range(1, len(loners_combinations) + 1)]
+    loners_combinations = itertools.chain(*loners_combinations)
+    combination_w_loners = []
+    for loner_comb in loners_combinations:
+        loner_functions = [item[0] for item in loner_comb]
+        loners = [item[1] for item in loner_comb]
         if cluster_combinations:
             for one_combination in cluster_combinations:
                 to_add = True
                 for clstr in one_combination:
-                    if clstr.fulfilled_function(func_name):
+                    if clstr.fulfilled_function(*loner_functions):
                         to_add = False
                         break
                 if to_add:
-                    combination_w_special_clst.append(tuple(list(one_combination) + [spe_clst]))
-        if spe_clst.loner:
-            # we always add the loner
-            # in case definition may contain only loners (cluster_combinations is empty)
-            # or min_gene_required = 1 with one Loner
-            combination_w_special_clst.append((spe_clst,))
-    cluster_combinations += combination_w_special_clst
+                    combination_w_loners.append(tuple(list(one_combination) + loners))
+        # we always add the loner
+        # in case definition may contain only loners
+        # or min_gene_required = 1 with one Loner
+        combination_w_loners.append(tuple(loners))
+
+    cluster_combinations += combination_w_loners
+
     return cluster_combinations

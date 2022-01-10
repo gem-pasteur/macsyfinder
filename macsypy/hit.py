@@ -220,7 +220,7 @@ class ModelHit:
                  A True Loner is a hit representing a gene with the attribute loner and which does not include in a cluster.
 
                  - a hit representing a loner gene but include in a cluster is not a true loner
-                 - a hit which is not include with other gene in a cluster but does not represnet a gene loner is not a
+                 - a hit which is not include with other gene in a cluster but does not represent a gene loner is not a
                    True loner (This situation may append when min_genes_required = 1)
         :rtype: bool
         """
@@ -421,14 +421,14 @@ class HitWeight:
         * accessory = 0.5
         * neutral = 0
 
-        * loner_multi_system = 0.7
+        * out_of_cluster = 0.7
     """
     itself: float = 1
     exchangeable: float = 0.8
     mandatory: float = 1
     accessory: float = 0.5
     neutral: float = 0
-    loner_multi_system: float = 0.7
+    out_of_cluster: float = 0.7
 
 
 def get_best_hit_4_func(function, hits, key='score'):
