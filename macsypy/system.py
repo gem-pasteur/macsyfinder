@@ -435,11 +435,40 @@ class AbstractSetOfHits(metaclass=MetaSetOfHits):
         # model completude
         # the neutral hit do not participate to the model completude
         score = sum([1 for hits in chain(self._mandatory_occ.values(), self._accessory_occ.values()) if hits]) / \
-                     self.model.max_nb_genes
+                self.model.max_nb_genes
         return score
 
 
-class System(AbstractSetOfHits):
+class AbstractClusterizedHits(AbstractSetOfHits):
+    """
+
+    """
+
+    def __init__(self, model, clusters):
+        if isinstance(clusters, Cluster):
+            self.clusters = [clusters]
+        else:
+            self.clusters = clusters
+        self._replicon_name = clusters[0].replicon_name
+        super().__init__(model)
+
+
+    def fulfilled_function(self, *genes):
+        """
+
+        :param gene: The genes which must be tested.
+        :type genes: :class:`macsypy.gene.ModelGene` object or string representing the gene name
+        :return: the common functions between genes and this system.
+        :rtype: set of string
+        """
+        # we do not filter out neutral from the model
+        common_functions = set()
+        for cluster in self.clusters:
+            common_functions.update(cluster.fulfilled_function(*genes))
+        return common_functions
+
+
+class System(AbstractClusterizedHits):
     """
     Modelize as system. a system is an occurrence of a given model on a replicon.
     """
@@ -458,13 +487,10 @@ class System(AbstractSetOfHits):
         :param clusters: The list of cluster that form this system
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
         """
-        self._replicon_name = clusters[0].replicon_name
+        super().__init__(model, clusters)
         self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"
-        self.clusters = clusters
         self.redundancy_penalty = redundancy_penalty
         self._score = None
-        super().__init__(model)
-
 
 
     @property
@@ -649,23 +675,31 @@ class System(AbstractSetOfHits):
 
     def get_loners(self):
         """
-        :return: The True Loners belonging to the systems
+        :return: The True Loners (Loner which not colocalize with an other hit) belonging to the systems
         :rtype: set of :class:`macsypy.hit.Loner` object
         """
         # a model hit is a loner only if it's a true loner
         return {mh for mh in self.hits if mh.loner}
 
 
-    def get_multi_systems(self):
+    def get_hits_encoding_multisystem(self):
         """
 
-        :return: The hits tag as multi systems belongings to this system
-        :rtype: set of :class:`macsypy.hit.MultiSystem` object
+        :return: The hits codding for a gene taged as multi system
+        :rtype: set of :class:`macsypy.hit.ModelHit` object
+        """
+        return {mh for mh in self.hits if mh.gene_ref.multi_system}
+
+
+    def get_multisystems(self):
+        """
+        :return: The MultiSystem hit (comming from out system (other cluster or loner) and tag as multisystem)
+        :rtype: set of :class:`macsypy.hit.MultiSystem` | :class:`macsypy.hit.LonerMultiSystem` object
         """
         return {mh for mh in self.hits if mh.multi_system}
 
 
-class RejectedClusters(AbstractSetOfHits):
+class RejectedClusters(AbstractClusterizedHits):
     """
     Handle a set of clusters which has been rejected during the :func:`macsypy.system.match`  step
     This clusters (can be one) does not fill the requirements or contains forbidden genes.
@@ -685,13 +719,8 @@ class RejectedClusters(AbstractSetOfHits):
         :param reasons: the reason why these clusters have been rejected
         :type reasons: list of string
         """
-        if isinstance(clusters, Cluster):
-            self.clusters = [clusters]
-        else:
-            self.clusters = clusters
-        self._replicon_name = self.clusters[0].replicon_name
+        super().__init__(model, clusters)
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
-        super().__init__(model)
 
 
     def __str__(self):
