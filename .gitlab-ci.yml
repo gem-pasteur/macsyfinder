@@ -6,7 +6,7 @@ stages:
 variables:
   MACSY_VERSION: ${CI_COMMIT_REF_NAME}
 
-testing37:
+testing38:
   stage: test
   image: registry-gitlab.pasteur.fr/gem/macsyfinder/run_dep
 
