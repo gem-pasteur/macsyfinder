@@ -33,11 +33,13 @@ from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
 
 import colorlog
+
 _log = colorlog.getLogger('macsypy')
 import pandas as pd
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
+from macsypy.cluster import Cluster
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
@@ -45,7 +47,7 @@ from macsypy.database import Indexes, RepliconDB
 from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
-    sort_model_hits, compute_best_MSHit, set_multisystem_counterpart
+    sort_model_hits, compute_best_MSHit
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
 from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
