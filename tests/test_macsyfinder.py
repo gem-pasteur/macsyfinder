@@ -55,7 +55,7 @@ class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
-        System._id = itertools.count(1)
+        self._reset_id()
         AbstractUnordered._id = itertools.count(1)
 
 
@@ -75,6 +75,14 @@ class TestMacsyfinder(MacsyTest):
             for model_loc in models_loc_available:
                 model_registry.add(model_loc)
         return model_registry
+
+
+    def _reset_id(self):
+        """
+        reset System._id and RejectedCluster._id to get predictable ids 
+        """
+        System._id = itertools.count(1)
+        RejectedClusters._id = itertools.count(1)
 
 
     def test_list_models(self):
@@ -899,6 +907,8 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         expected_sys_id = ['VICH001.B.00001.C001_MSH_1',
                            'VICH001.B.00001.C001_T4P_13', 'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
@@ -920,6 +930,7 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
 
@@ -931,10 +942,45 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
 
+        # test multisystems
+        # multisytem hit are not in System (to small cluster)
+        # no system
+        seq_db = self.find_data('base', 'test_12.fasta')
+        model_dir = self.find_data('models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} " \
+               f"--models functional T12SS-multisystem -w 4 -o {out_dir} --index-dir {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+
+        self.assertEqual(systems, [])
+        self.assertEqual([r.id for r in rejected_clst],
+                         ['VICH001.B.00001.C001_T12SS-multisystem_1', 'VICH001.B.00001.C001_T12SS-multisystem_2'])
+
+        # multisystem is in System so it can play role for other cluster
+        # 2 systems found
+        seq_db = self.find_data('base', 'test_13.fasta')
+        model_dir = self.find_data('models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} " \
+               f"--models functional T12SS-multisystem -w 4 -o {out_dir} --index-dir {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+        self.assertEqual([s.id for s in systems],
+                         ['VICH001.B.00001.C001_T12SS-multisystem_2', 'VICH001.B.00001.C001_T12SS-multisystem_1'])
+        self.assertEqual([r.id for r in rejected_clst],
+                         ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
