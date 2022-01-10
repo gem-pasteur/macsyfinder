@@ -369,10 +369,7 @@ class Model(metaclass=MetaModel):
         for hit in hits:
             if hit.gene.name in all_genes:
                 gene = all_genes[hit.gene.name]
-                if gene.multi_system:
-                    mh = MultiSystem(hit, gene_ref=gene, gene_status=gene.status)
-                else:
-                    mh = ModelHit(hit, gene, gene.status)
+                mh = ModelHit(hit, gene, gene.status)
                 compatible_hits.append(mh)
 
         return compatible_hits
