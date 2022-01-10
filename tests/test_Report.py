@@ -37,6 +37,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.config import Config, MacsyDefaults
 from macsypy.database import Indexes, RepliconDB
 from macsypy.registries import ModelLocation
+from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
@@ -424,6 +425,18 @@ class TestOrderedHMMReport(TestReport):
         report.hits = hits
         self.assertIsNone(report.extract())
 
+        index_file = self.cfg.sequence_db() + '.idx'
+        with open(index_file, 'r') as idx_file:
+            idx = idx_file.readlines()
+        idx = idx[:-1]
+        with open(index_file, 'w') as idx_file:
+            idx_file.writelines(idx)
+        report = OrderedHMMReport(c_gene, report_path, self.cfg)
+        with self.assertRaises(MacsypyError) as ctx:
+            with self.catch_log() as log:
+                report.extract()
+            self.assertEqual(str(ctx.exception),
+                             "hit id 'NC_xxxxx_xx_056141' was not indexed, rebuild sequence 'test_base.fa' index")
 
     def test_extract_concurent(self):
         gene_name = "gspD"
