@@ -866,17 +866,21 @@ class TestCluster(MacsyTest):
 
         c = Cluster([mh10, mh20], model, self.hit_weights)
 
-        self.assertTrue(c.fulfilled_function(gene_1))
-        self.assertFalse(c.fulfilled_function(gene_3))
+        self.assertSetEqual(c.fulfilled_function(gene_1),
+                            {'gspD'})
+        self.assertSetEqual(c.fulfilled_function(gene_3),
+                            set())
 
         # test with several genes
-        self.assertTrue(c.fulfilled_function(gene_3, gene_1))
+        self.assertSetEqual(c.fulfilled_function(gene_3, gene_1),
+                            {'gspD'})
 
         # The cluster contains exchangeable
         h50 = CoreHit(c_gene_4, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
         mh50 = ModelHit(h50, gene_4, GeneStatus.ACCESSORY)
         c = Cluster([mh10, mh50], model, self.hit_weights)
-        self.assertTrue(c.fulfilled_function(gene_3))
+        self.assertSetEqual(c.fulfilled_function(gene_3),
+                            {'sctJ'})
 
 
     def test_score(self):
@@ -1059,3 +1063,31 @@ class TestCluster(MacsyTest):
 - replicon = replicon_1
 - hits = (h10, gspD, 10), (h20, sctC, 20)"""
         self.assertEqual(str(c1), s)
+
+
+    def test_replace(self):
+        model = Model("foo/T2SS", 11)
+
+        c_gene_1 = CoreGene(self.model_location, "gspD", self.profile_factory)
+        c_gene_2 = CoreGene(self.model_location, "sctC", self.profile_factory)
+        c_gene_3 = CoreGene(self.model_location, "sctJ", self.profile_factory)
+
+        gene_1 = ModelGene(c_gene_1, model)
+        gene_2 = ModelGene(c_gene_2, model)
+        gene_3 = ModelGene(c_gene_3, model)
+
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        h30 = CoreHit(c_gene_3, "h30", 10, "replicon_1", 30, 1.0, 30.0, 1.0, 1.0, 10, 20)
+        h50 = CoreHit(c_gene_3, "h50", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        mh10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        mh20 = ModelHit(h20, gene_2, GeneStatus.MANDATORY)
+        mh30 = ModelHit(h30, gene_3, GeneStatus.ACCESSORY)
+        mh50 = ModelHit(h50, gene_3, GeneStatus.ACCESSORY)
+
+        c1 = Cluster([mh10, mh20, mh30], model, self.hit_weights)
+        c1.replace(mh20, mh50)
+        self.assertEqual(c1.hits,
+                         [mh10, mh50, mh30])
