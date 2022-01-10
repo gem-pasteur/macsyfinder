@@ -44,13 +44,14 @@ from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
 from macsypy.error import MacsypyError, OptionError
 from macsypy import cluster
-from macsypy.hit import get_best_hits, HitWeight
+from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
+    sort_model_hits, compute_best_MSHit, set_multisystem_counterpart
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
 from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.solution import find_best_solutions, combine_clusters
+from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
     TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer
 
@@ -567,7 +568,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.debug("{:=^50}".format(" LONERS "))
             logger.debug("\n" + "\n".join([str(c) for c in true_loners.values() if c.loner]))
             # logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
-            # logger.debug("\n" + "\n".join([str(c.hit[0]) for c in special_clusters.values() if c.multi_system]))
+            # logger.debug("\n" + "\n".join([str(c.hits[0]) for c in special_clusters.values() if c.multi_system]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
             clusters_combination = combine_clusters(true_clusters, true_loners, multi_loci=model.multi_loci)
@@ -579,9 +580,38 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
                 else:
                     rejected_clusters.append(res)
 
-            multi_systems_hits = set()  # for the same model (in the loop)
+            ###############################
+            # MultiSystem Hits Management #
+            ###############################
+
+            # get multi systems from existing systems #
+            hit_encondig_multisystems = set()  # for the same model (in the loop)
             for one_sys in systems:
-               multi_systems_hits.update(one_sys.get_multi_systems())
+                hit_encondig_multisystems.update(one_sys.get_hits_encoding_multisystem())
+
+            logger.debug("{:#^80}".format(" MultiSystems "))
+            logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
+            # Cast these hits in MultiSystem/LonerMultiSystem
+            multi_systems_hits = []
+            for hit in hit_encondig_multisystems:
+                if not hit.loner:
+                    multi_systems_hits .append(MultiSystem(hit))
+                else:
+                    multi_systems_hits .append(LonerMultiSystem(hit))
+            # choose the best one
+            ms_per_function = sort_model_hits(multi_systems_hits)
+            best_ms = compute_best_MSHit(ms_per_function)
+
+            # check if among rejected clusters with the MS they can be create a new system
+            best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
+            new_clst_combination = combine_multisystems(rejected_clusters, best_ms)
+            for one_clust_combination in new_clst_combination:
+                ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
+                res = ordered_matcher.match(one_clust_combination)
+                if isinstance(res, System):
+                    systems.append(res)
+                else:
+                    rejected_clusters.append(res)
 
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
@@ -799,7 +829,6 @@ def loners_to_tsv(systems, hit_system_tracker, sys_file):
 
     if not print_header:
         print("# No loners found", file=sys_file)
-
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
