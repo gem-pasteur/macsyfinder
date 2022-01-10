@@ -33,6 +33,7 @@ from itertools import groupby
 
 from .database import Indexes, RepliconDB
 from .hit import CoreHit
+from .error import MacsypyError
 
 
 class HMMReport(object, metaclass=abc.ABCMeta):
@@ -98,8 +99,13 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                 next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
-                    seq_lg, position_hit = my_db[hit_id]
-
+                    try:
+                        seq_lg, position_hit = my_db[hit_id]
+                    except TypeError as err:
+                        if my_db[hit_id] is None:
+                            msg = f"hit id '{hit_id}' was not indexed, rebuild sequence '{idx.name}' index"
+                            _log.critical(msg)
+                            raise MacsypyError(msg)
                     replicon_name = self._get_replicon_name(hit_id)
 
                     body = next(hmm_hits)
