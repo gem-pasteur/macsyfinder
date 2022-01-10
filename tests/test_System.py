@@ -1041,6 +1041,100 @@ class SystemTest(MacsyTest):
                             s3.get_loners())
 
 
+    def test_get_hits_encoding_multisystem(self):
+        model = Model("foo/T2SS", 10)
+        c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+        gene_sctn = ModelGene(c_gene_sctn, model)
+        c_gene_sctn_flg = CoreGene(self.model_location, "sctN_FLG", self.profile_factory)
+        gene_sctn_flg = Exchangeable(c_gene_sctn_flg, gene_sctn)
+        gene_sctn.add_exchangeable(gene_sctn_flg)
+
+        c_gene_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        gene_sctj = ModelGene(c_gene_sctj, model)
+        c_gene_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+        gene_sctj_flg = Exchangeable(c_gene_sctj_flg, gene_sctj)
+        gene_sctj.add_exchangeable(gene_sctj_flg)
+
+        c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        gene_gspd = ModelGene(c_gene_gspd, model, loner=True)
+        c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd.add_exchangeable(gene_gspd_an)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model, loner=True, multi_system=True)
+        c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc.add_exchangeable(gene_abc_ho)
+
+        c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
+        gene_toto = ModelGene(c_gene_toto, model)
+        c_gene_totote = CoreGene(self.model_location, "totote", self.profile_factory)
+        gene_toto_ho = Exchangeable(c_gene_totote, gene_toto)
+        gene_toto.add_exchangeable(gene_toto_ho)
+
+        model.add_mandatory_gene(gene_sctn)
+        model.add_mandatory_gene(gene_sctj)
+        model.add_accessory_gene(gene_gspd)
+        model.add_accessory_gene(gene_abc)
+        model.add_neutral_gene(gene_toto)
+
+        h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc_ho = CoreHit(c_gene_tadZ, "hit_abc_ho", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        h_toto = CoreHit(c_gene_toto, "hit_toto", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        model._min_mandatory_genes_required = 2
+        model._min_genes_required = 1
+
+        mh_sctj = ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY)
+        mh_sctn = ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)
+        mh_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        l_h_gspd = Loner(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        l_ms_abc = Loner(h_abc, gene_abc, GeneStatus.ACCESSORY)
+        ms_tadZ = ModelHit(h_abc_ho, gene_abc_ho, GeneStatus.ACCESSORY)
+        mh_toto = ModelHit(h_toto, gene_toto, GeneStatus.NEUTRAL)
+
+        c1 = Cluster([mh_sctj,
+                      mh_sctn,
+                      mh_gspd,
+                      mh_toto],
+                     model, self.hit_weights)
+        # 1 cluster
+        s1 = System(model, [c1], self.cfg.redundancy_penalty())
+        self.assertSetEqual(set(),
+                            s1.get_hits_encoding_multisystem())
+
+        c2 = Cluster([mh_sctj,
+                      mh_sctn],
+                     model, self.hit_weights)
+
+        c3 = Cluster([mh_sctj,
+                      mh_sctn,
+                      ms_tadZ,
+                      mh_toto],
+                     model, self.hit_weights)
+        c4 = Cluster([l_h_gspd], model, self.hit_weights)
+        c5 = Cluster([l_ms_abc], model, self.hit_weights)
+
+        # c2 2 regular hits
+        # c3 4 hits with 1 multi_systems (homolog)
+        s2 = System(model, [c2, c3], self.cfg.redundancy_penalty())
+        self.assertSetEqual({ms_tadZ},
+                            s2.get_hits_encoding_multisystem())
+
+        # c2 contains 2 hits
+        # c4 one hit one loner
+        # c5 one hit Loner MultiSystems
+        s3 = System(model, [c2, c4, c5], self.cfg.redundancy_penalty())
+        self.assertSetEqual({l_ms_abc},
+                            s3.get_hits_encoding_multisystem())
+
+
     def test_get_multisystems(self):
         model = Model("foo/T2SS", 10)
         c_gene_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
@@ -1107,7 +1201,7 @@ class SystemTest(MacsyTest):
         # 1 cluster
         s1 = System(model, [c1], self.cfg.redundancy_penalty())
         self.assertSetEqual(set(),
-                            s1.get_multi_systems())
+                            s1.get_multisystems())
 
         c2 = Cluster([mh_sctj,
                       mh_sctn],
@@ -1125,11 +1219,72 @@ class SystemTest(MacsyTest):
         # c3 4 hits with 1 multi_systems (homolog)
         s2 = System(model, [c2, c3], self.cfg.redundancy_penalty())
         self.assertSetEqual({ms_tadZ},
-                            s2.get_multi_systems())
+                            s2.get_multisystems())
 
         # c2 contains 2 hits
         # c4 one hit one loner
         # c5 one hit Loner MultiSystems
         s3 = System(model, [c2, c4, c5], self.cfg.redundancy_penalty())
         self.assertSetEqual({l_ms_abc},
-                            s3.get_multi_systems())
+                            s3.get_multisystems())
+
+    def test_fulfilled_function(self):
+        model = Model("foo/T2SS", 11)
+
+        cg_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
+        cg_sctc = CoreGene(self.model_location, "sctC", self.profile_factory)
+        cg_sctj = CoreGene(self.model_location, "sctJ", self.profile_factory)
+        cg_sctj_flg = CoreGene(self.model_location, "sctJ_FLG", self.profile_factory)
+        cg_tadz = CoreGene(self.model_location, "tadZ", self.profile_factory)
+        cg_sctn = CoreGene(self.model_location, "sctN", self.profile_factory)
+
+        mg_gspd = ModelGene(cg_gspd, model)
+        mg_sctc = ModelGene(cg_sctc, model)
+        mg_sctj = ModelGene(cg_sctj, model)
+        mg_sctj_flg = Exchangeable(cg_sctj_flg, mg_sctj)
+        mg_sctj.add_exchangeable(mg_sctj_flg)
+        mg_tadz = ModelGene(cg_tadz, model)
+        mg_sctn = ModelGene(cg_sctn, model)
+
+        model.add_mandatory_gene(mg_gspd)
+        model.add_mandatory_gene(mg_sctc)
+        model.add_accessory_gene(mg_sctj)
+        model.add_accessory_gene(mg_tadz)
+        model.add_accessory_gene(mg_sctn)
+
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        ch_gspd = CoreHit(cg_gspd, "gspD", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        ch_sctc = CoreHit(cg_sctc, "sctC", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        ch_sctj = CoreHit(cg_sctj, "sctJ", 10, "replicon_1", 30, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        ch_sctj_flg = CoreHit(cg_sctj_flg, "sctJ_FLG", 10, "replicon_1", 40, 1.0, 50.0, 1.0, 1.0, 10, 20)
+        ch_tadz = CoreHit(cg_tadz, "tadZ", 10, "replicon_1", 50, 1.0, 50.0, 1.0, 1.0, 10, 20)
+
+        mh_gspd = ModelHit(ch_gspd, mg_gspd, GeneStatus.MANDATORY)
+        mh_sctc = ModelHit(ch_sctc, mg_sctc, GeneStatus.MANDATORY)
+        mh_sctj = ModelHit(ch_sctj, mg_sctj, GeneStatus.ACCESSORY)
+        mh_sctj_flg = ModelHit(ch_sctj_flg, mg_sctj_flg, GeneStatus.ACCESSORY)
+        mh_tadz = ModelHit(ch_tadz, mg_tadz, GeneStatus.ACCESSORY)
+
+        c1 = Cluster([mh_gspd, mh_sctc], model, self.hit_weights)
+        c2 = Cluster([mh_sctj, mh_tadz], model, self.hit_weights)
+        c3 = Cluster([mh_tadz, mh_sctj_flg], model, self.hit_weights)
+
+        # One system with 2 regular clusters, No exchangeable
+        s1 = System(model, [c1, c2])
+        self.assertSetEqual(s1.fulfilled_function(mg_gspd),
+                            {mg_gspd.name})
+        self.assertFalse(s1.fulfilled_function(mg_sctn))
+
+        # test with several genes
+        self.assertSetEqual(s1.fulfilled_function(mg_gspd, mg_sctn, mg_tadz),
+                            {mg_gspd.name, mg_tadz.name})
+
+        # One cluster contains exchangeable
+        s2 = System(model, [c1, c3])
+        self.assertSetEqual(s2.fulfilled_function(mg_sctj),
+                            {mg_sctj.name})
+
+        # Test with function as string
+        self.assertSetEqual(s1.fulfilled_function(mg_gspd.name),
+                            {mg_gspd.name})
