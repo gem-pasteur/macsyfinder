@@ -338,9 +338,9 @@ class Cluster:
         """
 
         :param gene: The genes which must be tested.
-        :type genes: :class:`macsypy.gene.ModelGene` object or string
-        :return: True if the cluster contains one hit which fulfill the function corresponding of at least one gene
-                 (the gene hitself or an exchangeable)
+        :type genes: :class:`macsypy.gene.ModelGene` object or string representing the gene name
+        :return: the common functions between genes and this cluster.
+        :rtype: set of string
         """
         # we do not filter out neutral from the model
         if self._genes_roles is None:
