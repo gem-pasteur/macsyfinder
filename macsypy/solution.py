@@ -165,12 +165,7 @@ def combine_multisystems(rejected_clusters, multi_systems):
         for one_ms_combination in ms_combinations:
             combination_hits = {h for clst in one_ms_combination for h in clst.hits}
             functions = [h.gene_ref.alternate_of().name for h in combination_hits]
-            to_add = True
-            for clst in rej_clust.clusters:
-                if clst.fulfilled_function(*functions):
-                    to_add = False
-                    break
-            if to_add:
+            if not rej_clust.fulfilled_function(*functions):
                 new_comb.append(tuple(rej_clust.clusters + list(one_ms_combination)))
     return new_comb
 
