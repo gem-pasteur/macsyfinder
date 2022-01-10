@@ -504,9 +504,17 @@ def compute_best_MSHit(ms_registry):
     :param ms_registry:
     :return:
     """
+    def counterpart(ms):
+        for i in range(len(ms)):
+            counterpart = ms[:]
+            _ = counterpart.pop(i)
+        return counterpart
+
     best_multisystem_hits = []
     for func_name in ms_registry:
-        best_ms = get_best_hit_4_func(func_name, ms_registry[func_name], key='score')
+        equivalent_ms = ms_registry[func_name]
+        best_ms = get_best_hit_4_func(func_name, equivalent_ms, key='score')
+        best_ms.countertpart = counterpart(equivalent_ms)
         best_multisystem_hits.append(best_ms)
     return best_multisystem_hits
 
