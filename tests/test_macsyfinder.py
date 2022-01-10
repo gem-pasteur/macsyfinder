@@ -79,7 +79,7 @@ class TestMacsyfinder(MacsyTest):
 
     def _reset_id(self):
         """
-        reset System._id and RejectedCluster._id to get predictable ids 
+        reset System._id and RejectedCluster._id to get predictable ids
         """
         System._id = itertools.count(1)
         RejectedClusters._id = itertools.count(1)
