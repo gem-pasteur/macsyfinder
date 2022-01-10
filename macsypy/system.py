@@ -709,6 +709,8 @@ class RejectedClusters(AbstractClusterizedHits):
                          GeneStatus.NEUTRAL,
                          GeneStatus.FORBIDDEN)
 
+    _id = itertools.count(1)
+
     def __init__(self, model, clusters, reasons):
         """
         :param model:
@@ -720,6 +722,7 @@ class RejectedClusters(AbstractClusterizedHits):
         :type reasons: list of string
         """
         super().__init__(model, clusters)
+        self.id = f"{self.replicon_name}_{model.name}_{next(self._id)}"  # for testing purpose only
         self._reasons = reasons if isinstance(reasons, list) else [reasons]
 
 
