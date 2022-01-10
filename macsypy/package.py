@@ -33,8 +33,8 @@ import tarfile
 import copy
 import abc
 from typing import List, Dict, Tuple, Optional
-import logging
-_log = logging.getLogger(__name__)
+import colorlog
+_log = colorlog.getLogger(__name__)
 
 from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry

@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import CoreHit, ModelHit, Loner, HitWeight
+from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -385,8 +385,16 @@ class SystemTest(MacsyTest):
         model.add_neutral_gene(gene_abc)
 
         c_gene_flie = CoreGene(self.model_location, "fliE", self.profile_factory)
-        gene_flie = ModelGene(c_gene_flie, model, loner=True, multi_system=True)
+        gene_flie = ModelGene(c_gene_flie, model, loner=True)
         model.add_mandatory_gene(gene_flie)
+
+        c_gene_flgb = CoreGene(self.model_location, "flgB", self.profile_factory)
+        gene_flgb = ModelGene(c_gene_flgb, model, multi_system=True)
+        model.add_accessory_gene(gene_flgb)
+
+        c_gene_flgc = CoreGene(self.model_location, "flgC", self.profile_factory)
+        gene_flgc = ModelGene(c_gene_flgb, model, loner=True, multi_system=True)
+        model.add_accessory_gene(gene_flgc)
 
         h_gspd = CoreHit(c_gene_gspd, "h_gspd", 10, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         m_h_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.MANDATORY)
@@ -423,9 +431,18 @@ class SystemTest(MacsyTest):
         h_flie_3 = CoreHit(c_gene_flie, "h_flie_3", 25, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
         m_h_flie_3 = ModelHit(h_flie_3, gene_flie, GeneStatus.MANDATORY)
 
+        # m_h_flgb is used as multi_system in cluster
+        h_flgb = CoreHit(c_gene_flgb, "h_flgb", 60, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_flgb = MultiSystem(h_flgb, gene_flgb, GeneStatus.ACCESSORY)
+
+        # m_h_flgc is used as multi_system in cluster
+        h_flgc = CoreHit(c_gene_flgc, "h_flgc", 80, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        m_h_flgc = LonerMultiSystem(h_flgc, gene_flgc, GeneStatus.ACCESSORY)
+
         # system with
         # 1 cluster
         # 2 mandatory, 2 accessory no analog/homolog sctn is a loner included in cluster
+        #    2 * 1   +     2 * 0.5 = 3
         s = System(model,
                    [Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
@@ -434,6 +451,7 @@ class SystemTest(MacsyTest):
         # system with
         # 2 clusters
         # 2 mandatory, 2 accessory no analog/homolog no duplicates
+        #     [1 + 0.5] + [1 + 0.5] = 3
         s = System(model, [Cluster([m_h_gspd, m_h_tadz], model, self.hit_weights),
                            Cluster([m_h_sctj, m_h_sctn], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
@@ -441,19 +459,21 @@ class SystemTest(MacsyTest):
 
         # system with
         # 1 cluster
-        # 1 mandatory + 1 mandatory duplicated 1 time
-        # 1 accessory + 1 accessory duplicated 1 times
+        # 2 mandatory gspd + tadZ + 1 mandatory duplicated 1 time gspd
+        # 1 accessory sctj + sctn + 1 accessory duplicated 1 times sctn
         # no analog/homolog
+        #  1 + 1 + 0 + 0.5 + 0.5 + 0 = 3
         s = System(model,
                    [Cluster([m_h_gspd, m_h_tadz, m_h_sctj, m_h_sctn, m_h_gspd, m_h_sctn], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 3)
 
         # system with 2 clusters
-        # 1rst cluster 1 mandatory + 1 accessory
+        # 1rst cluster 1 mandatory gspd + 1 accessory sctj
         #                  1       +   0.5
-        # 2nd cluster 1 mandatory + 1 accessory already in first cluster
+        # 2nd cluster 1 mandatory tadZ  + 1 accessory sctj already in first cluster
         #                  1      +    0.5
+        # [1 + .5] + [1 + .5]
         # 3 - (2 - 1) * 1.5 = 1.5
         s = System(model,
                    [Cluster([m_h_gspd, m_h_sctj], model, self.hit_weights),
@@ -462,8 +482,9 @@ class SystemTest(MacsyTest):
         self.assertEqual(s.score, 1.5)
 
         # system with 1 cluster
-        # 2 mandatory
-        # 1 accessory + 1 accessory exchangeable
+        # 2 mandatory gspd + tadZ
+        # 1 accessory sctn + 1 accessory exchangeable sctj_an
+        #  1 + 1 + .5 + (.5 * .8) = 2.9
         s = System(model,
                    [Cluster([m_h_gspd, m_h_tadz, m_h_sctj_an, m_h_sctn], model, self.hit_weights)],
                    self.cfg.redundancy_penalty())
@@ -484,12 +505,13 @@ class SystemTest(MacsyTest):
 
         # system with 2 cluster
         # 1 mandatory + 1 accessory + 1 neutral + same gene as accessory
-        #    1        +      0.5        0             0
-        # 1 cluster of loner multi systems
-        #    + 0.7
+        #    gspd            sctj        abc           sctj
+        #    1        +      0.5          0             0
+        # 1 mandatory true loner (loner alone)
+        #       flie_1
+        #    + (1 * 0.7)
         # system penalty: 0
         #    2.2
-
         s = System(model,
                    [Cluster([m_h_gspd, m_h_sctj, m_h_abc, m_h_sctj], model, self.hit_weights),
                     Cluster([l_h_flie_1], model, self.hit_weights)],
@@ -497,9 +519,9 @@ class SystemTest(MacsyTest):
         self.assertEqual(s.score, 2.2)
 
         # system with 2 cluster
-        # 1 mandatory + 1 accessory + 1 neutral + same gene as accessory + mandatory loner
+        # 1 mandatory + 1 accessory + 1 neutral + same gene as accessory + mandatory "faux loner"
         #    1        +      0.5        0             0                  +   1
-        # 1 cluster of loner multi systems one is already in first cluster
+        # 1 cluster of true loner already in first cluster
         #    + 0
         # system penalty: 0
         #    2.5
@@ -509,6 +531,44 @@ class SystemTest(MacsyTest):
                    self.cfg.redundancy_penalty())
         self.assertEqual(s.score, 2.5)
 
+        # system with 2 clusters
+        # 1 mandatory gspd + 1 accessory sctj
+        #        1                 0.5
+        # 1 mandatory tadz + 1 accessory multisystems (in this cluster)
+        #        1                 0.5
+        # system penalty: 0
+        #      3.0
+        s = System(model,
+                   [Cluster([m_h_gspd, m_h_sctj], model, self.hit_weights),
+                    Cluster([m_h_tadz, m_h_flgb], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
+        self.assertEqual(s.score, 3.0)
+
+        # system with 1 cluster + 1 multi system out of cluster
+        # 1 mandatory gspd + 1 accessory sctj
+        #        1                 0.5
+        # 1 accessory multisystems flgb (out of cluster)
+        #      0.5   *   0.7  = 0.35
+        # system penalty: 0
+        #      1.85
+        s = System(model,
+                   [Cluster([m_h_gspd, m_h_sctj], model, self.hit_weights),
+                    Cluster([m_h_flgb], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
+        self.assertEqual(s.score, 1.85)
+
+        # system with 1 cluster + 1 Loner multi system (out of cluster)
+        # 1 mandatory gspd + 1 accessory sctj
+        #        1                 0.5
+        # 1 accessory multisystems flgc (out of cluster)
+        #      0.5   *   0.7  = 0.35
+        # system penalty: 0
+        #      1.85
+        s = System(model,
+                   [Cluster([m_h_gspd, m_h_sctj], model, self.hit_weights),
+                    Cluster([m_h_flgc], model, self.hit_weights)],
+                   self.cfg.redundancy_penalty())
+        self.assertEqual(s.score, 1.85)
 
     def test_is_compatible(self):
         model_A = Model("foo/A", 10)

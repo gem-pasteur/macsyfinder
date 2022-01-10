@@ -485,13 +485,13 @@ class System(AbstractSetOfHits):
             """
 
             :param clsts: list of clusters
-            :return: return the list of functions which are represented in these clusters.
-            :rtype: set of str
+            :return: return the functions which are represented in these clusters.
+            :rtype: dict with func str as keys and list of :class:`macsypy.cluster.Cluster` as values.
             """
             func_in_clst = {}
             for clst in clsts:
-                for v_hit in clst.hits:
-                    func = v_hit.gene_ref.alternate_of().name
+                for m_hit in clst.hits:
+                    func = m_hit.gene_ref.alternate_of().name
                     if func in func_in_clst:
                         func_in_clst[func].append(clst)
                     else:
@@ -500,12 +500,14 @@ class System(AbstractSetOfHits):
 
         _log.debug(f"=================== score computation for system {self.id} ===================")
         # split clusters in 2
-        # the clusters loners  multi systems
-        # and the others (regular)
+        # the clusters true loners and multi systems (out of regular cluster)
+        # and the others: regular cluster
         regular_clsts = []
         loner_multi_syst_clsts = []
         for clst in self.clusters:
-            if clst.loner and clst.hits[0].multi_system:
+            if clst.loner or clst.multi_system:
+                # clst.multi_system is True
+                # only if the cluster is composed of only one MultiSystemHit
                 loner_multi_syst_clsts.append(clst)
             else:
                 regular_clsts.append(clst)
@@ -525,15 +527,22 @@ class System(AbstractSetOfHits):
                 _log.debug(f"clst_penalty {- clst_penalty}")
                 score -= clst_penalty
 
-        # compute score of loners multi systems
-        loners_multi_syst_functions = clst_func(loner_multi_syst_clsts)
+        # compute score of loners
+        # and multi systems out of regular cluster
+        # loners_multi_syst_functions = clst_func(loner_multi_syst_clsts)
+        # transform keys of dict in set
         regular_functions = set(clst_func(regular_clsts))
-        _log.debug("compute score of loner multi systems")
-        for funct in loners_multi_syst_functions:
+        _log.debug("compute score of loner or multi systems")
+        for clst in loner_multi_syst_clsts:
+            loner_or_ms = clst.hits[0]  # len(clst) == 1
+            funct = loner_or_ms.gene_ref.alternate_of().name
             if not funct in regular_functions:
-                loners_score = max(c.score for c in loners_multi_syst_functions[funct])
-                _log.debug(f"score for {funct} = {loners_score}")
-                score += loners_score
+                _log.debug(f"{funct} is not already in regular clusters {regular_functions}")
+                # call the cluster score
+                # because it's in this method that the out of cluster penalty is applied
+                loner_score = clst.score
+                _log.debug(f"score for {funct} = {loner_score}")
+                score += loner_score
             else:
                 # if the biological funct is already encoded by regular clusters
                 # we do not increase the score
@@ -629,7 +638,7 @@ class System(AbstractSetOfHits):
         # a CoreHit correspond to 1 gene in replicon
         # it can be only one CoreHit by gene
         # but several ModelGene can exist on the same gene
-        # So toknow if two systems share same genes we have to work on the CoreHit
+        # So to know if two systems share same genes we have to work on the CoreHit
         # which is hold by the ModelHit hit attribute
         other_hits = {mh.hit for mh in other.hits if (not mh.loner and not mh.multi_system)}
         my_hits = {mh.hit for mh in self.hits if (not mh.loner and not mh.multi_system)}

@@ -246,14 +246,32 @@ def _build_clusters(cfg, profile_factory):
     models['M'].add_accessory_gene(mgM_tadZ)
     models['M'].add_accessory_gene(mgM_abc)
 
+    ###########
+    # model N #
+    ###########
+    models['N'] = Model("foo/N", 10)
+    mgL_flgB = ModelGene(cg_flgB, models['N'])
+    mgL_sctn_flg = ModelGene(cg_sctn_flg, models['N'])
+    mgL_sctj = ModelGene(cg_sctj, models['N'])
+    mgL_sctj_flg = ModelGene(cg_sctj_flg, models['N'])
+    mgL_sctn = ModelGene(cg_sctn, models['N'], loner=True)
+    mgL_tadZ = ModelGene(cg_tadZ, models['N'], loner=True)
+    models['N'].add_mandatory_gene(mgL_flgB)
+    models['N'].add_mandatory_gene(mgL_sctn_flg)
+    models['N'].add_accessory_gene(mgL_sctj)
+    models['N'].add_accessory_gene(mgL_sctj_flg)
+    models['N'].add_accessory_gene(mgL_sctn)
+    models['N'].add_accessory_gene(mgL_tadZ)
+
     ch_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_sctn = CoreHit(cg_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_gspd = CoreHit(cg_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
     ch_sctn_flg = CoreHit(cg_sctn_flg, "hit_sctn_flg", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    ch_sctj_flg = CoreHit(cg_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    ch_flgB = CoreHit(cg_flgB, "hit_flgB", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    ch_tadZ = CoreHit(cg_tadZ, "hit_tadZ", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
-    ch_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_sctj_flg = CoreHit(cg_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_flgB = CoreHit(cg_flgB, "hit_flgB", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_tadZ = CoreHit(cg_tadZ, "hit_tadZ", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+    ch_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 9, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
     hit_weights = HitWeight(**cfg.hit_weights())
 
@@ -319,6 +337,17 @@ def _build_clusters(cfg, profile_factory):
                               models['M'], hit_weights)
     clusters['c16'] = Cluster([MultiSystem(ch_sctn, gene_ref=mgM_sctn, gene_status=GeneStatus.ACCESSORY)],
                               models['M'], hit_weights)
+
+    clusters['c17'] = Cluster([ModelHit(ch_flgB, mgL_flgB, GeneStatus.MANDATORY),
+                               ModelHit(ch_sctn_flg, mgL_sctn_flg, GeneStatus.MANDATORY)],
+                               models['N'], hit_weights)
+    clusters['c18'] = Cluster([ModelHit(ch_sctj, mgL_sctj, GeneStatus.MANDATORY),
+                               ModelHit(ch_sctj_flg, mgL_sctj_flg, GeneStatus.MANDATORY)],
+                               models['N'], hit_weights)
+    clusters['c19'] = Cluster([Loner(ch_sctn, mgL_sctn, GeneStatus.ACCESSORY)],
+                              models['N'], hit_weights)
+    clusters['c20'] = Cluster([Loner(ch_tadZ, mgL_tadZ, GeneStatus.ACCESSORY)],
+                              models['N'], hit_weights)
     return models, clusters
 
 
@@ -515,7 +544,7 @@ class SolutionExplorerTest(MacsyTest):
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         best_sol, score = find_best_solutions(sorted_syst)
 
-        # check if solution is ordered by woleness average (3rd criterion)
+        # check if solution is ordered by wholeness average (3rd criterion)
         # first criterion nb of hits
         # second citerion nb of systems
         # replicon_id_H ['hit_abc', 'hit_sctn']
@@ -544,7 +573,7 @@ class SolutionExplorerTest(MacsyTest):
                              (self.clusters['c2'],),
                              (self.clusters['c3'],)
                          ])
-
+        # the same in multi loci
         combinations = combine_clusters([self.clusters['c1'], self.clusters['c2'], self.clusters['c3']],
                                         {},
                                         multi_loci=True)
@@ -570,6 +599,7 @@ class SolutionExplorerTest(MacsyTest):
                     (self.clusters['c12'],)
                    ]
         self.assertEqual(combinations, exp_combs)
+        # the same in multi loci
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                        {},
                                        multi_loci=True)
@@ -596,14 +626,10 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c11'], self.clusters['c13']),
             (self.clusters['c13'],),
         ]
-        # ############# DEBUGGING test ######################
-        # print("\n##########################################################")
-        # print('\n'.join([str([clust.id for clust in one_comb]) for one_comb in combinations]))
-        # print("=" * 50)
-        # print('\n'.join([str([clust.id for clust in one_comb]) for one_comb in exp_combs]))
-        # print("##########################################################")
+
         self.assertEqual(combinations, exp_combs)
 
+        # the same in multi loci
         combinations = combine_clusters([self.clusters['c11'], self.clusters['c12']],
                                         {'sctN': self.clusters['c13']},
                                         multi_loci=True)
@@ -615,7 +641,6 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c11'], self.clusters['c13']),
             (self.clusters['c13'],),
         ]
-
         self.assertEqual(combinations, exp_combs)
 
         ###########################################
@@ -631,6 +656,60 @@ class SolutionExplorerTest(MacsyTest):
             (self.clusters['c14'],),
             (self.clusters['c15'],),
             (self.clusters['c14'], self.clusters['c15']),
-            (self.clusters['c15'], self.clusters['c16'])
-            ]
+            (self.clusters['c15'], self.clusters['c16']),
+            (self.clusters['c16'],)]
+        self.assertEqual(combinations, exp_combs)
+
+        ###########################################
+        # with 2 RC + 2 L not included in cluster
+        ###########################################
+        combinations = combine_clusters([self.clusters['c17'], self.clusters['c18']],
+                                        {'sctn': self.clusters['c19'],
+                                         'tadZ': self.clusters['c20']
+                                         },
+                                        multi_loci=False)
+        exp_combs = [
+            (self.clusters['c17'],),
+            (self.clusters['c18'],),
+            (self.clusters['c17'], self.clusters['c19']),
+            (self.clusters['c18'], self.clusters['c19']),
+            (self.clusters['c19'],),
+            (self.clusters['c17'], self.clusters['c20']),
+            (self.clusters['c18'], self.clusters['c20']),
+            (self.clusters['c20'],),
+            (self.clusters['c17'], self.clusters['c19'], self.clusters['c20']),
+            (self.clusters['c18'], self.clusters['c19'], self.clusters['c20']),
+            (self.clusters['c19'], self.clusters['c20'])
+        ]
+
+        self.assertEqual(combinations, exp_combs)
+        # the same in multi loci
+        combinations = combine_clusters([self.clusters['c17'], self.clusters['c18']],
+                                        {'sctn': self.clusters['c19'],
+                                         'tadZ': self.clusters['c20']
+                                         },
+                                        multi_loci=True)
+        exp_combs = [
+            (self.clusters['c17'],),
+            (self.clusters['c18'],),
+            (self.clusters['c17'], self.clusters['c18']),
+            (self.clusters['c17'], self.clusters['c19']),
+            (self.clusters['c18'], self.clusters['c19']),
+            (self.clusters['c17'],self.clusters['c18'], self.clusters['c19']),
+            (self.clusters['c19'],),
+            (self.clusters['c17'], self.clusters['c20']),
+            (self.clusters['c18'], self.clusters['c20']),
+            (self.clusters['c17'],self.clusters['c18'], self.clusters['c20']),
+            (self.clusters['c20'],),
+            (self.clusters['c17'], self.clusters['c19'], self.clusters['c20']),
+            (self.clusters['c18'], self.clusters['c19'], self.clusters['c20']),
+            (self.clusters['c17'], self.clusters['c18'], self.clusters['c19'], self.clusters['c20']),
+            (self.clusters['c19'], self.clusters['c20'])
+        ]
+        # print("\n####################################################################")
+        # for comb in exp_combs:
+        #     print([c.id for c in comb])
+        # print("==============================")
+        # for comb in combinations:
+        #     print([c.id for c in comb])
         self.assertEqual(combinations, exp_combs)

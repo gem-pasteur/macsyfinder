@@ -388,22 +388,25 @@ class Cluster:
         return v_hit in self.hits
 
 
-    def fulfilled_function(self, gene):
+    def fulfilled_function(self, *genes):
         """
 
-        :param gene: The gene which must be tested.
-        :type gene: :class:`macsypy.gene.ModelGene` object
-        :return: True if the cluster contains one hit which fulfill the function corresponding to the gene
-                 (the gene itself or an exchangeable)
+        :param gene: The genes which must be tested.
+        :type genes: :class:`macsypy.gene.ModelGene` object
+        :return: True if the cluster contains one hit which fulfill  the function corresponding of at least one gene
+                 (the gene hitself or an exchageable)
         """
         if self._genes_roles is None:
             self._genes_roles = {h.gene_ref.alternate_of().name for h in self.hits}
-        if isinstance(gene, macsypy.gene.ModelGene):
-            function = gene.name
-        else:
-            # gene is a string
-            function = gene
-        return function in self._genes_roles
+        functions = set()
+        for gene in genes:
+            if isinstance(gene, macsypy.gene.ModelGene):
+                function = gene.name
+            else:
+                # gene is a string
+                function = gene
+            functions.add(function)
+        return self._genes_roles.intersection(functions)
 
 
     def merge(self, cluster, before=False):
@@ -437,53 +440,53 @@ class Cluster:
         else:
             seen_hits = {}
             _log.debug(f"===================== compute score for cluster =====================")
-            for v_hit in self.hits:
-                _log.debug(f"-------------- test hit {v_hit.gene.name} --------------")
+            for m_hit in self.hits:
+                _log.debug(f"-------------- test model hit {m_hit.gene.name} --------------")
 
                 # attribute a score for this hit
                 # according to status of the gene_ref in the model: mandatory/accessory
-                if v_hit.status == GeneStatus.MANDATORY:
+                if m_hit.status == GeneStatus.MANDATORY:
                     hit_score = self._hit_weights.mandatory
-                elif v_hit.status == GeneStatus.ACCESSORY:
+                elif m_hit.status == GeneStatus.ACCESSORY:
                     hit_score = self._hit_weights.accessory
-                elif v_hit.status == GeneStatus.NEUTRAL:
+                elif m_hit.status == GeneStatus.NEUTRAL:
                     hit_score = self._hit_weights.neutral
                 else:
-                    raise MacsypyError(f"a Cluster contains hit {v_hit.gene.name} {v_hit.position}"
-                                       f" which is neither mandatory nor accessory: {v_hit.status}")
-                _log.debug(f"{v_hit.id} is {v_hit.status} hit score = {hit_score}")
+                    raise MacsypyError(f"a Cluster contains hit {m_hit.gene.name} {m_hit.position}"
+                                       f" which is neither mandatory nor accessory: {m_hit.status}")
+                _log.debug(f"{m_hit.id} is {m_hit.status} hit score = {hit_score}")
 
                 # weighted the hit score according to the hit match the gene or
                 # is an exchangeable
-                if v_hit.gene_ref.is_exchangeable:
+                if m_hit.gene_ref.is_exchangeable:
                     hit_score *= self._hit_weights.exchangeable
-                    _log.debug(f"{v_hit.id} is exchangeable hit score = {hit_score}")
+                    _log.debug(f"{m_hit.id} is exchangeable hit score = {hit_score}")
                 else:
                     hit_score *= self._hit_weights.itself
 
-                if v_hit.loner and v_hit.multi_system:
-                    hit_score *= self._hit_weights.loner_multi_system
-                    _log.debug(f"{v_hit.id} is loner and multi_system hit score = {hit_score}")
+                if self.loner or self.multi_system:
+                    hit_score *= self._hit_weights.out_of_cluster
+                    _log.debug(f"{m_hit.id} is out of cluster (Loner) score = {hit_score}")
 
                 # funct is the name of the gene if it code for itself
                 # or the name of the reference gene if it's an exchangeable
-                funct = v_hit.gene_ref.alternate_of().name
+                funct = m_hit.gene_ref.alternate_of().name
                 if funct in seen_hits:
                     # count only one occurrence of each function per cluster
                     # the score use is the max of hit score for this function
                     if hit_score > seen_hits[funct]:
                         seen_hits[funct] = hit_score
-                        _log.debug(f"{v_hit.id} code for {funct} update hit_score to {hit_score}")
+                        _log.debug(f"{m_hit.id} code for {funct} update hit_score to {hit_score}")
                     else:
-                        _log.debug(f"{v_hit.id} code for {funct} which is already take in count in cluster")
+                        _log.debug(f"{m_hit.id} code for {funct} which is already take in count in cluster")
                 else:
-                    _log.debug(f"{v_hit.id} {v_hit.gene_ref.name} is not already in cluster")
+                    _log.debug(f"{m_hit.id} {m_hit.gene_ref.name} is not already in cluster")
                     seen_hits[funct] = hit_score
 
             hits_scores = seen_hits.values()
             score = sum(hits_scores)
             _log.debug(f"cluster score = sum({list(hits_scores)}) = {score}")
-        _log.debug(f"===============================================================")
+        _log.debug("===============================================================")
         self._score = score
         return score
 
