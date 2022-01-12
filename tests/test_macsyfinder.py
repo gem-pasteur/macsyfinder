@@ -221,7 +221,7 @@ neutral genes:
             system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
                                      "sys_loci", "locus_num", "sys_wholeness", "sys_score", "sys_occ",
                                      "hit_gene_ref", "hit_status", "hit_seq_len", "hit_i_eval", "hit_score",
-                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "loner_counterpart", "used_in"])
+                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "counterpart", "used_in"])
             system_tsv += "\n"
             system_tsv += "\t".join([ "replicon_id", "hit_1", "gspD", "1", "foo/T2SS", system_1.id,
                                      "1", "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000",
@@ -425,7 +425,7 @@ neutral genes:
                               "sys_loci", "locus_num",
                               "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
                               "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
-                              "hit_begin_match", "hit_end_match", "loner_counterpart", "used_in"])
+                              "hit_begin_match", "hit_end_match", "counterpart", "used_in"])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
