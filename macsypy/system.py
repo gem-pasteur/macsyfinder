@@ -534,6 +534,8 @@ class System(AbstractClusterizedHits):
             if clst.loner or clst.multi_system:
                 # clst.multi_system is True
                 # only if the cluster is composed of only one MultiSystemHit
+                # that mean the hit come from a loner or an other cluster
+                # So we have to apply a weight
                 loner_multi_syst_clsts.append(clst)
             else:
                 regular_clsts.append(clst)
