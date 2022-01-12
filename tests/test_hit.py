@@ -26,7 +26,7 @@ import os
 import argparse
 
 from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem, \
-    get_best_hits, get_best_hit_4_func, HitWeight, sort_model_hits, compute_best_MSHit, set_multisystem_counterpart
+    get_best_hits, get_best_hit_4_func, HitWeight, sort_model_hits, compute_best_MSHit
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -451,9 +451,11 @@ class LonerMultiSystemTest(MacsyTest):
         self.chit_1 = CoreHit(self.c_gene_gspd, "hit_1", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_2 = CoreHit(self.c_gene_sctj, "hit_2", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.chit_3 = CoreHit(self.c_gene_gspd, "hit_3", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        self.chit_4 = CoreHit(self.c_gene_gspd, "hit_4", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
         self.mhit_1 = ModelHit(self.chit_1, self.gene_gspd, GeneStatus.MANDATORY)
         self.mhit_2 = ModelHit(self.chit_2, self.gene_sctj, GeneStatus.ACCESSORY)
         self.mhit_3 = ModelHit(self.chit_3, self.gene_gspd, GeneStatus.MANDATORY)
+        self.mhit_4 = ModelHit(self.chit_4, self.gene_gspd, GeneStatus.MANDATORY)
 
     def test_init(self):
         # create loner from a CoreHit
@@ -462,7 +464,9 @@ class LonerMultiSystemTest(MacsyTest):
         self.assertEqual(lms1.status, GeneStatus.MANDATORY)
         # create loner from a CoreHit with counterpart
         # test the creation, the content of counterpart is test in test_counterpart
-        _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY, counterpart=[self.mhit_3])
+        _ = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd,
+                             gene_status=GeneStatus.MANDATORY,
+                             counterpart=[self.mhit_3])
 
         # try to create MS from CoreHit but without gene_ref nor gene_status
         with self.assertRaises(MacsypyError) as ctx:
@@ -498,11 +502,11 @@ class LonerMultiSystemTest(MacsyTest):
         mh1 = MultiSystem(self.chit_1,
                           gene_ref=self.gene_gspd,
                           gene_status=GeneStatus.MANDATORY,
-                          counterpart=[self.mhit_2, self.mhit_3])
+                          counterpart=[self.mhit_3, self.mhit_4])
         lms = LonerMultiSystem(mh1)
         self.assertEqual(lms.gene_ref, self.gene_gspd)
         self.assertEqual(lms.status, GeneStatus.MANDATORY)
-        self.assertSetEqual(set(lms.counterpart), set([self.mhit_2, self.mhit_3]))
+        self.assertSetEqual(set(lms.counterpart), set([self.mhit_3, self.mhit_4]))
 
     def test_loner(self):
         lms1 = LonerMultiSystem(self.chit_1, gene_ref=self.gene_gspd, gene_status=GeneStatus.MANDATORY)
@@ -520,6 +524,22 @@ class LonerMultiSystemTest(MacsyTest):
                          '\t'.join(['hit_1', 'replicon_id', '2', '803', 'gspD', '1.000e+00',
                                     '1.000', '1.000', '1.000', '10', '20', 'hit_3'])
                          )
+
+
+    def test_counterpart(self):
+        mh1 = MultiSystem(self.chit_1,
+                          gene_ref=self.gene_gspd,
+                          gene_status=GeneStatus.MANDATORY)
+
+        mh1.counterpart = [self.mhit_3, self.mhit_4]
+        self.assertSetEqual(mh1.counterpart,
+                            {self.mhit_3, self.mhit_4})
+
+        with self.assertRaises(MacsypyError) as ctx:
+            with self.catch_log() as log:
+                mh1.counterpart = [self.mhit_3, self.mhit_2]
+        self.assertEqual(str(ctx.exception),
+                         "Try to set counterpart for hit 'gspD' with non compatible hits: ['gspD', 'sctJ']")
 
 
 class GetBestHitTest(MacsyTest):
@@ -579,7 +599,6 @@ class GetBestHitTest(MacsyTest):
         self.ms_3 = MultiSystem(chit_3, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
         self.ms_4 = MultiSystem(chit_4, gene_ref=gene_sctn, gene_status=GeneStatus.ACCESSORY)
         self.ms_5 = MultiSystem(chit_5, gene_ref=gene_gspd, gene_status=GeneStatus.MANDATORY)
-
 
     def test_get_best_hits(self):
         model = Model("foo/T2SS", 10)
@@ -707,21 +726,10 @@ class GetBestHitTest(MacsyTest):
         best_hits = compute_best_MSHit(sorted_hits)
         # The order does not matter
         self.assertSetEqual({self.ms_3, self.ms_2}, set(best_hits))
-
-
-    def test_multisystem_counterpart(self):
-        # scores                       gspd 1.0    sctj 1.0   gspd 3.0 sctn 4.0 Ex sctj gspd 2.0
-        sorted_hits = sort_model_hits([self.ms_1, self.ms_2, self.ms_3, self.ms_4, self.ms_5])
-
-        self.assertEqual(self.ms_1.counterpart, set())
-        self.assertEqual(self.ms_2.counterpart, set())
-        self.assertEqual(self.ms_3.counterpart, set())
-        self.assertEqual(self.ms_4.counterpart, set())
-        set_multisystem_counterpart(sorted_hits)
-        self.assertEqual(self.ms_1.counterpart, {self.ms_3, self.ms_5})
-        self.assertEqual(self.ms_2.counterpart, {self.ms_4})
-        self.assertEqual(self.ms_3.counterpart, {self.ms_1, self.ms_5})
-        self.assertEqual(self.ms_4.counterpart, {self.ms_2})
+        self.assertSetEqual(self.ms_3.counterpart,
+                            {self.ms_1, self.ms_5})
+        self.assertSetEqual(self.ms_2.counterpart,
+                            {self.ms_4})
 
 
 class HitWeightTest(MacsyTest):
