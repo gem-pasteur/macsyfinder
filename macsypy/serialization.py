@@ -88,7 +88,7 @@ class TsvSystemSerializer(SystemSerializer):
 
     header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
-             "hit_begin_match\thit_end_match\tloner_counterpart\tused_in"
+             "hit_begin_match\thit_end_match\tcounterpart\tused_in"
 
     template = Template("$sys_replicon_name\t$mh_id\t$mh_gene_name\t$mh_position\t$sys_model_fqn\t"
                         "$sys_id\t$sys_loci\t$locus_num\t$sys_wholeness\t$sys_score\t"
@@ -104,7 +104,7 @@ class TsvSystemSerializer(SystemSerializer):
                  each line represent a hit and have the following structure:
                      replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tlocus_num\\tsys_wholeness\\tsys_score
                      \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
-                     \\thit_seq_cov\\tit_begin_match\\thit_end_match\\tloner_counterpart\\tused_in_systems
+                     \\thit_seq_cov\\tit_begin_match\\thit_end_match\\tcounterpart\\tused_in_systems
 
         :rtype: str
         """
