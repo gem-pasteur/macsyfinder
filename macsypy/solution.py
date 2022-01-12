@@ -27,6 +27,7 @@ import networkx as nx
 
 from macsypy.system import RejectedClusters
 
+
 def find_best_solutions(systems):
     """
     Among the systems choose the combination of systems which does not share :class:`macsypy.hit.CoreHit`
