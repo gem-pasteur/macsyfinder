@@ -263,7 +263,7 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
             super().__init__(hit, gene_ref, gene_status)
         elif isinstance(hit, ModelHit):
             super().__init__(hit.hit, gene_ref=hit.gene_ref, gene_status=hit.gene_ref.status)
-        self.counterpart = counterpart if counterpart is not None else set()
+        self.counterpart = counterpart
 
 
     def __getattr__(self, item):
@@ -273,7 +273,7 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
     @property
     def counterpart(self):
         """
-        :rreturn: The set of hits that can play the same role
+        :return: The set of hits that can play the same role
         """
         return set(self._counterpart)
 
@@ -284,9 +284,15 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
 
         :param counterpart:
         """
-        if all([True for hit in counterparts if hit.gene_ref.name is self.gene_ref]):
+        if not counterparts:
+            self._counterpart = set()
+        elif all([hit.gene_ref.alternate_of().name is self.gene_ref.alternate_of().name for hit in counterparts]):
             self._counterpart = set(counterparts)
-
+        else:
+            msg = f"Try to set counterpart for hit '{self.gene_ref.name}' with non compatible hits: " \
+                  f"{[hit.gene_ref.name for hit in counterparts]}"
+            _log.error(msg)
+            raise MacsypyError(msg)
 
     def __str__(self):
         ch_str = str(self._hit)[:-1]
@@ -504,34 +510,15 @@ def compute_best_MSHit(ms_registry):
     :param ms_registry:
     :return:
     """
-    def counterpart(ms):
-        for i in range(len(ms)):
-            counterpart = ms[:]
-            _ = counterpart.pop(i)
-        return counterpart
 
     best_multisystem_hits = []
     for func_name in ms_registry:
         equivalent_ms = ms_registry[func_name]
         best_ms = get_best_hit_4_func(func_name, equivalent_ms, key='score')
-        best_ms.countertpart = counterpart(equivalent_ms)
+        equivalent_ms.remove(best_ms)
+        best_ms.counterpart = equivalent_ms
         best_multisystem_hits.append(best_ms)
     return best_multisystem_hits
-
-
-def set_multisystem_counterpart(ms_registry):
-    """
-
-    :param ms_registry:
-    :return:
-    """
-    for func_name in ms_registry:
-        ms = ms_registry[func_name]
-        ms_registry[func_name] = []
-        for i in range(len(ms)):
-            counterpart = ms[:]
-            hit = counterpart.pop(i)
-            hit.counterpart = counterpart
 
 
 def get_best_hits(hits, key='score'):
