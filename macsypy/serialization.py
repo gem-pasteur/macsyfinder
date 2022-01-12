@@ -315,3 +315,35 @@ wholeness = {likely_system.wholeness:.3f}
 
         s += "\nUse ordered replicon to have better prediction.\n"
         return s
+
+
+class TsvSpecialHitSerializer(SystemSerializer):
+    """
+    Seraialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
+    """
+
+    def serialize(self, best_hits):
+        """
+        :param best_hits: the special hits to serialized
+        :type best_hits: sequence of :class:`macsypy.hit.Loner` or :class:`macsypy.hit.MultiSystem` objects
+        """
+        s = ""
+        if best_hits:
+            header = "replicon\tmodel_fqn\tfunction\tgene_name\t" \
+                     "hit_id\thit_pos\thit_status\thit_seq_len\t" \
+                     "hit_i_eval\thit_score\thit_profile_cov\t" \
+                     "hit_seq_cov\thit_begin_match\thit_end_match\n"
+            s += header
+            special_hits = {h for h in best_hits}
+            for best_hit in best_hits:
+                special_hits.update(best_hit.counterpart)
+            special_hits = list(special_hits)
+            special_hits.sort(key=lambda h: h.position)
+            for one_hit in special_hits:
+                row = f"{one_hit.replicon_name}\t{one_hit.gene_ref.model.fqn}\t{one_hit.gene_ref.alternate_of().name}\t" \
+                      f"{one_hit.gene_ref.name}\t{one_hit.id}\t{one_hit.position:d}\t{one_hit.status}\t" \
+                      f"{one_hit.seq_length:d}\t{one_hit.i_eval:.3e}\t{one_hit.score:.3f}\t" \
+                      f"{one_hit.profile_coverage:.3f}\t{one_hit.sequence_coverage:.3f}\t" \
+                      f"{one_hit.begin_match:d}\t{one_hit.end_match:d}\n"
+                s += row
+        return s
