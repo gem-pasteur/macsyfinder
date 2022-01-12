@@ -56,6 +56,7 @@ class Test(MacsyTest):
         self.rejected_clusters = "rejected_clusters.txt"
         self.uncomplete_systems = "uncomplete_systems.txt"
         self.loners = "best_solution_loners.tsv"
+        self.multisystems = "best_solution_multisystems.tsv"
 
 
     def tearDown(self):
@@ -118,6 +119,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -152,6 +154,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -185,6 +188,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -221,6 +225,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -258,6 +263,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -295,6 +301,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -330,6 +337,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -365,6 +373,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -401,6 +410,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -439,6 +449,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -474,6 +485,87 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_system(self):
+        # genetic organization of test_13.fasta
+        #
+        # gene      abc    mfp    gspd   omf   gspf     abc    omf    gspd   omf
+        # gene id  01397  01398  01400  01360  02599   01399  01506  00409  01562
+        # pos       8       9      19     20    21      34     35      36     43
+        # clst    [ M       A ]  [ M     M_MS    A ]   [M     M_MS     M]
+        # syst 1               [gspd19, omf20, gspf21][abc34, omf35, gspd36]
+        # score                     1       1      .5                            = 2.5
+        # score                                        1       1       1         = 3.0
+        # syst 2   [abc8    mfp9] + [omf20]
+        # score      1       .5       .7                                         = 2.2
+        # The multi system is in system
+        # So it can be used for other clusters to form new occurrence
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-multisystem " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_system_out_system(self):
+        # genetic organization of test_12.fasta
+        #
+        # gene      abc    mfp    gspd   omf    omf    omf
+        # gene id  01397  01398  01400  01360  01506  01562
+        # pos       8       9      19     20    33      39
+        # clst    [ M       A ]  [ M     M_MS ]
+        # syst    no system
+        # The multi system is not in system
+        # So it cannot be used to build new systems
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system_out_system")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-multisystem " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -508,6 +600,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -542,6 +635,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -581,6 +675,7 @@ class Test(MacsyTest):
                           self.all_best_solutions,
                           self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
@@ -808,6 +903,7 @@ class Test(MacsyTest):
             self.assertEqual(str(ctx.exception), '2')
         finally:
             sys.exit = real_exit
+
 
     def _macsyfinder_run(self, args_tpl):
         # get the name of the calling function
