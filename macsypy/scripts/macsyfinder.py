@@ -44,7 +44,7 @@ from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import MacsypyError, OptionError
+from macsypy.error import OptionError
 from macsypy import cluster
 from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
     sort_model_hits, compute_best_MSHit
@@ -532,7 +532,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         models_to_detect = sorted(models_to_detect, key=attrgetter('name'))
         db_type = config.db_type()
         if db_type in ('ordered_replicon', 'gembase'):
-            systems, rejected_clusters, special_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
+            systems, rejected_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
                                                                                        config, logger)
             return systems, rejected_clusters
         elif db_type == "unordered":
@@ -547,6 +547,14 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
 
 
 def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logger):
+    """
+
+    :param hits_by_replicon:
+    :param models_to_detect:
+    :param config:
+    :param logger:
+    :return:
+    """
     systems = []
     rejected_clusters = []
     rep_db = RepliconDB(config)
@@ -603,7 +611,6 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             # choose the best one
             ms_per_function = sort_model_hits(multi_systems_hits)
             best_ms = compute_best_MSHit(ms_per_function)
-
             # check if among rejected clusters with the MS they can be create a new system
             best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
             new_clst_combination = combine_multisystems(rejected_clusters, best_ms)
@@ -618,10 +625,17 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     if systems:
         systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
-    return systems, rejected_clusters, true_clusters
+    return systems, rejected_clusters
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
+    """
+
+    :param hits_by_replicon:
+    :param models_to_detect:
+    :param logger:
+    :return:
+    """
     likely_systems = []
     rejected_hits = []
     for rep_name in hits_by_replicon:
@@ -652,6 +666,10 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
 
 
 def _outfile_header():
+    """
+    :return: The 2 firsts lines of each results file
+    :rtype: str
+    """
     header = f"""# macsyfinder {macsypy.__version__}
 # {' '.join(sys.argv)}"""
     return header
@@ -740,19 +758,30 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
     else:
         print("# No Systems found", file=sys_file)
 
-def _loner_warning(sytems):
+
+def _loner_warning(systems):
+    """
+    :param systems: sequence of systems
+    :return: warning for loner which have less occurrences tham systems occurences in which this lone is used
+             except if the loner is also multi system
+    :rtype: list of string
+    """
     warnings = []
     loner_tracker = {}
-    for syst in sytems:
+    for syst in systems:
         loners = syst.get_loners()
         for loner in loners:
-            if loner in loner_tracker:
+            if loner.multi_system:
+                # the loner multi_systems can appear in several systems
+                continue
+            elif loner in loner_tracker:
                 loner_tracker[loner].append(syst)
             else:
                 loner_tracker[loner] = [syst]
     for loner, systs in loner_tracker.items():
         if len(loner) < len(systs):
-            warnings.append(f"# WARNING Loner: there is only {len(loner)} occurence of loner '{loner.gene.name}' "
+            # len(loners) count the number of loner occurence the loner and its counterpart
+            warnings.append(f"# WARNING Loner: there is only {len(loner)} occurrence(s) of loner '{loner.gene.name}' "
                             f"and {len(systs)} potential systems [{', '.join([s.id for s in systs])}]")
 
     return warnings
@@ -761,8 +790,21 @@ def _loner_warning(sytems):
 def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_names):
     """
     do a summary of best_solution in best_solution_path and write it on out_path
+    a summary compute the number of system occurrence for each model and each replicon
+    .. code-block:: text
 
-    :param str best_solution_path: the path to the best_solution file
+        replicon        model_fqn_1  model_fqn_2  ....
+        rep_name_1           1           2
+        rep_name_2           2           0
+
+    columns are separated by \t character
+
+    :param str best_solution_path: the path to the best_solution file in tsv format
+    :param sys_file: the file where to save the summary
+    :param models_fqn: the fully qualified names of the models
+    :type models_fqn: list of string
+    :param replicon_names: the name of the replicons used
+    :type replicon_names: list of string
     """
     print(_outfile_header(), file=sys_file)
 
@@ -771,7 +813,7 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
         lacking_replicons = set(replicon_names) - computed_replicons
         lacking_replicons = sorted(lacking_replicons)
         for rep in lacking_replicons:
-            row = pd.Series({m:0 for m in summary.columns}, name=rep)
+            row = pd.Series({m: 0 for m in summary.columns}, name=rep)
             summary = summary.append(row)
         return summary
 
@@ -798,7 +840,15 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
     summary.to_csv(sys_file, sep='\t')
 
 
-def loners_to_tsv(systems, hit_system_tracker, sys_file):
+def loners_to_tsv(systems, sys_file):
+    """
+    get loners from valid systems and save them on file
+
+    :param systems: the systems from which the loners are extract
+    :type systems: list of :class:`macsypy.system.System` object
+    :param sys_file: the file where loners are saved
+    :type sys_file: file object open in write mode
+    """
     print(_outfile_header(), file=sys_file)
     print_header = False
     if systems:
@@ -1060,7 +1110,7 @@ def main(args=None, loglevel=None):
 
         loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
         with open(loners_filename, "w") as loners_file:
-            loners_to_tsv(one_best_solution, track_multi_systems_hit, loners_file)
+            loners_to_tsv(one_best_solution, loners_file)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
