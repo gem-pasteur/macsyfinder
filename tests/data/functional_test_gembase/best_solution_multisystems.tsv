@@ -1,0 +1,3 @@
+# macsyfinder 20220112.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --relative-path --sequence-db tests/data/base/gembase.fasta -o functional_test_gembase
+# No Multisystems found
