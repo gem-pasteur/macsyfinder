@@ -22,7 +22,6 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-
 import logging
 _log = logging.getLogger(__name__)
 from enum import Enum
