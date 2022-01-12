@@ -34,7 +34,7 @@ import itertools
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
-from macsypy.system import System, AbstractUnordered
+from macsypy.system import System, AbstractUnordered, RejectedClusters
 
 
 class Test(MacsyTest):
@@ -68,34 +68,34 @@ class Test(MacsyTest):
         except:
             pass
 
-    # @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
-    # def test_gembase(self):
-    #     """
-    #
-    #     """
-    #     expected_result_dir = self.find_data("functional_test_gembase")
-    #     args = "--db-type=gembase " \
-    #            f"--models-dir={self.find_data('models')} " \
-    #            "--models TFF-SF all " \
-    #            "--out-dir={out_dir} " \
-    #            "--index-dir {out_dir} " \
-    #            f"--previous-run {expected_result_dir} " \
-    #            "--relative-path"
-    #
-    #     self._macsyfinder_run(args)
-    #     for file_name in (self.all_systems_tsv,
-    #                       self.all_best_solutions,
-    #                       self.best_solution,
-    #                       self.loners,
-    #                       self.summary):
-    #         with self.subTest(file_name=file_name):
-    #             expected_result = self.find_data(expected_result_dir, file_name)
-    #             get_results = os.path.join(self.out_dir, file_name)
-    #             self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
-    #
-    #     expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
-    #     get_results = os.path.join(self.out_dir, self.rejected_clusters)
-    #     self.assertFileEqual(expected_result, get_results, comment="#")
+    @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
+    def test_gembase(self):
+        """
+
+        """
+        expected_result_dir = self.find_data("functional_test_gembase")
+        args = "--db-type=gembase " \
+               f"--models-dir={self.find_data('models')} " \
+               "--models TFF-SF all " \
+               "--out-dir={out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
+        get_results = os.path.join(self.out_dir, self.rejected_clusters)
+        self.assertFileEqual(expected_result, get_results, comment="#")
 
 
     def test_only_loners(self):
@@ -390,7 +390,7 @@ class Test(MacsyTest):
         # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    gspF
         # gene id   01360  01361  01397  01398  01399  01400  01506  01548  02599
         # pos         2      3     11     12     13      14    23     32     46
-        # clst      [ML      M ]  [M       M      M      ME]  [ML]    [LM]  [LM]
+        # clst      [ML      M ]  [M       M      M      ME]  [ML]    [ML]  [ML]
         # syst                    [abc    mfp    abc    gspd   omf] with equivalent for omf23 [omf32, gspF46]
         # score                     1      1      0      0      .7  = 2.7
         # gspF46 have a score (465.3). omf (90, 111.5, 87) but it's an exhangeable so it canot be the "best loner"
@@ -914,6 +914,8 @@ class Test(MacsyTest):
         # print("\n############################################")
         # print(args)
         # print("##############################################")
+        System._id = itertools.count(1)
+        RejectedClusters._id = itertools.count(1)
         macsyfinder.main(args=args.split(),
                          loglevel='ERROR'
                          )
