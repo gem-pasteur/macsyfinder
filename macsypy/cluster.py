@@ -29,7 +29,7 @@ import macsypy.gene
 
 from .error import MacsypyError
 from .gene import GeneStatus
-from .hit import MultiSystem, Loner, LonerMultiSystem, get_best_hit_4_func
+from .hit import Loner, LonerMultiSystem, get_best_hit_4_func
 
 _log = logging.getLogger(__name__)
 
@@ -307,8 +307,6 @@ class Cluster:
                  - contains several hits
                  - contains one hit but gene is not tag as loner (max_gene_required = 1)
         """
-        # need this method in build_cluster before to transform ModelHit in Loner
-        # so cannot rely on MultiSystem type
 
         # by default gene_ref.multi_system == gene_ref.alternate_of().multi_system
         return len(self) == 1 and self.hits[0].gene_ref.multi_system
