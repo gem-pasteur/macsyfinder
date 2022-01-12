@@ -55,7 +55,7 @@ from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer
+    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer
 
 
 def get_version_message():
@@ -850,37 +850,44 @@ def loners_to_tsv(systems, sys_file):
     :type sys_file: file object open in write mode
     """
     print(_outfile_header(), file=sys_file)
-    print_header = False
     if systems:
-        header = "replicon\tmodel_fqn\tfunction\tgene_name\t" \
-                 "hit_id\thit_pos\tthit_status\thit_seq_len\t" \
-                 "hit_i_eval\thit_score\thit_profile_cov\t" \
-                 "hit_seq_cov\thit_begin_match\thit_end_match\n"
-
-        loners_seen = set()
+        best_loners = set()
         for syst in systems:
-            best_loners = syst.get_loners()
-            if best_loners and not print_header:
-                print("# Loners found:", file=sys_file)
-                print(header, file=sys_file, end='')
-                print_header = True
-            for best_loner in best_loners:
-                if best_loner in loners_seen:
-                    continue
-                loners_seen.add(best_loner)
-                loners = [best_loner]
-                loners += best_loner.counterpart
-                loners.sort(key=lambda h: h.position)
-                for one_loner in loners:
-                    s = f"{one_loner.replicon_name}\t{one_loner.gene_ref.model.fqn}\t{one_loner.gene_ref.alternate_of().name}\t{one_loner.gene_ref.name}\t" \
-                        f"{one_loner.id}\t{one_loner.position:d}\t{one_loner.status}\t{one_loner.seq_length:d}" \
-                        f"{one_loner.i_eval:.3e}\t{one_loner.score:.3f}\t{one_loner.profile_coverage:.3f}\t" \
-                        f"{one_loner.sequence_coverage:.3f}\t{one_loner.begin_match:d}\t{one_loner.end_match:d}"
-                    print(s, file=sys_file)
-                print(file=sys_file)
+            best_loners.update(syst.get_loners())
+        if best_loners:
+            serializer = TsvSpecialHitSerializer()
+            loners = serializer.serialize(best_loners)
+            print("# Loners found:", file=sys_file)
+            print(loners, file=sys_file)
+        else:
+            print("# No Loners found", file=sys_file)
+    else:
+        print("# No Loners found", file=sys_file)
 
-    if not print_header:
-        print("# No loners found", file=sys_file)
+
+def multisystems_to_tsv(systems, sys_file):
+    """
+    get multisystems from valid systems and save them on file
+
+    :param systems: the systems from which the loners are extract
+    :type systems: list of :class:`macsypy.system.System` object
+    :param sys_file: the file where multisystems are saved
+    :type sys_file: file object open in write mode
+    """
+    print(_outfile_header(), file=sys_file)
+    if systems:
+        best_multisystems = set()
+        for syst in systems:
+            best_multisystems.update(syst.get_multisystems())
+        if best_multisystems:
+            serializer = TsvSpecialHitSerializer()
+            multisystems = serializer.serialize(best_multisystems)
+            print("# Multisystems found:", file=sys_file)
+            print(multisystems, file=sys_file)
+        else:
+            print("# No Multisystems found", file=sys_file)
+    else:
+        print("# No Multisystems found", file=sys_file)
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -1111,6 +1118,10 @@ def main(args=None, loglevel=None):
         loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
         with open(loners_filename, "w") as loners_file:
             loners_to_tsv(one_best_solution, loners_file)
+
+        multisystems_filename = os.path.join(config.working_dir(), "best_solution_multisystems.tsv")
+        with open(multisystems_filename, "w") as multisystems_file:
+            multisystems_to_tsv(one_best_solution, multisystems_file)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:

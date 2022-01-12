@@ -35,7 +35,7 @@ from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
-    TxtLikelySystemSerializer, TxtUnikelySystemSerializer
+    TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer
 
 from tests import MacsyTest
 
@@ -454,4 +454,64 @@ forbidden genes:
 
 Use ordered replicon to have better prediction.
 """
+        self.assertEqual(txt, expected_txt)
+
+
+    def test_SpecialHitSerializer_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+        model = Model("foo/T2SS", 10)
+
+        gene_name = "gspD"
+        cg_gspd = CoreGene(models_location, gene_name, profile_factory)
+        mg_gspd = ModelGene(cg_gspd, model, loner=True)
+
+        gene_name = "sctJ"
+        cg_sctj = CoreGene(models_location, gene_name, profile_factory)
+        mg_sctj = ModelGene(cg_sctj, model)
+
+        gene_name = "abc"
+        cg_abc = CoreGene(models_location, gene_name, profile_factory)
+        mg_abc = ModelGene(cg_abc, model)
+
+        model.add_mandatory_gene(mg_gspd)
+        model.add_accessory_gene(mg_sctj)
+        model.add_accessory_gene(mg_abc)
+
+        chit_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_gspd1 = CoreHit(cg_gspd, "hit_gspd1", 803, "replicon_id", 20, 1.0, 2.0, 1.0, 1.0, 10, 20)
+        chit_gspd2 = CoreHit(cg_gspd, "hit_gspd2", 803, "replicon_id", 30, 1.0, 3.0, 1.0, 1.0, 10, 20)
+        mhit_abc = ModelHit(chit_abc, mg_abc, GeneStatus.ACCESSORY)
+        mhit_sctj = ModelHit(chit_sctj, mg_sctj, GeneStatus.ACCESSORY)
+        mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
+        mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
+        l_gspd1 = Loner(mhit_gspd1, counterpart=[mhit_gspd2])
+        l_gspd2 = Loner(mhit_gspd2, counterpart=[mhit_gspd1])
+        ser = TsvSpecialHitSerializer()
+        txt = ser.serialize([l_gspd1, l_gspd2])
+
+        expected_txt = "\t".join(['replicon', 'model_fqn', 'function', 'gene_name', 'hit_id', 'hit_pos', 'hit_status',
+                                'hit_seq_len', 'hit_i_eval', 'hit_score', 'hit_profile_cov',
+                                'hit_seq_cov', 'hit_begin_match', 'hit_end_match'])
+        expected_txt += "\n"
+        expected_txt += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd1', '20', 'mandatory', '803',
+                                '1.000e+00', '2.000', '1.000', '1.000', '10', '20'])
+        expected_txt += "\n"
+        expected_txt += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd2', '30', 'mandatory', '803',
+                                '1.000e+00', '3.000', '1.000', '1.000', '10', '20'])
+        expected_txt += "\n"
+        self.maxDiff = None
         self.assertEqual(txt, expected_txt)
