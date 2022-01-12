@@ -1133,8 +1133,10 @@ Use ordered replicon to have better prediction.
         def_to_detect = get_def_to_detect(config.models(), model_registry)
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
-        self.assertEqual([s.id for s in systems],
-                         ['VICH001.B.00001.C001_T12SS-multisystem_2', 'VICH001.B.00001.C001_T12SS-multisystem_1'])
+        self.assertEqual({s.id for s in systems},
+                         {'VICH001.B.00001.C001_T12SS-multisystem_3',
+                          'VICH001.B.00001.C001_T12SS-multisystem_2',
+                          'VICH001.B.00001.C001_T12SS-multisystem_1'})
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
