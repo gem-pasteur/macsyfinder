@@ -33,7 +33,7 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractSetOfHits, AbstractUnordered
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
     TxtLikelySystemSerializer, TxtUnikelySystemSerializer
 
@@ -271,18 +271,21 @@ neutral genes:
         mh_gspd = ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
 
         h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 10, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        mh_sctj_flg = ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY)
         h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 11, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        mh_flgB = ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)
         h_abc = CoreHit(c_gene_abc, "hit_abc", 803, "replicon_id", 20, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_abc2 = CoreHit(c_gene_abc, "hit_abc2", 803, "replicon_id", 50, 1.0, 1.0, 1.0, 1.0, 10, 20)
         h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 40, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        mh_sctj_flg = ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY)
+        mh_flgB = ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)
+        mh_abc = ModelHit(h_abc, gene_abc, GeneStatus.ACCESSORY)
+        mh_abc2 = ModelHit(h_abc2, gene_abc, GeneStatus.ACCESSORY)
         mh_tadZ = ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
         c1 = Cluster([mh_sctj, mh_sctn, mh_gspd], model_A, self.hit_weights)
         c2 = Cluster([mh_sctj, mh_sctn], model_A, self.hit_weights)
-        c3 = Cluster([Loner(h_abc, gene_ref=gene_abc, gene_status=GeneStatus.ACCESSORY, counterpart=[mh_tadZ])],
+        c3 = Cluster([Loner(h_abc, gene_ref=gene_abc, gene_status=GeneStatus.ACCESSORY, counterpart=[mh_abc2])],
                      model_A, self.hit_weights)
 
         model_B._min_mandatory_genes_required = 1
@@ -325,7 +328,7 @@ neutral genes:
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_abc', 'abc', '20', 'foo/A', 'sys_id_A',
                              '2', '-1', '1.000', '1.850', '2', 'abc', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'hit_tadZ', ''])
+                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'hit_abc2', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '10', 'foo/B', 'sys_id_B',
