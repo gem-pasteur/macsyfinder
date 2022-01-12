@@ -172,10 +172,10 @@ class MacsyTest(unittest.TestCase):
                     fields_2.pop(6)
                 elif tsv_type == 'best_solution_summary.tsv':
                     pass
-                elif tsv_type == 'best_solution_loners.tsv':
+                elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv'):
                     pass
                 else:
-                    raise RuntimeError(f"unknown {tsv_type}")
+                    raise RuntimeError(f"unknown {tsv_type} tsv type file in assertTsvEqual")
 
                 if len(fields_1) == fields_nb - 1:
                     # remove used_in field if present
