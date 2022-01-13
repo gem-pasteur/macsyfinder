@@ -9,7 +9,7 @@
 .. _database:
 
 ********
-Database
+database
 ********
 
 The "database" object handles the indexes of the sequence dataset in fasta format,
@@ -32,11 +32,32 @@ The user can force MacSyFinder to rebuild these indexes with the "--idx" option 
   
 .. _database_api:
 
-database
-========
-.. automodule:: macsypy.database
+database API reference
+======================
+
+Indexes
+=======
+.. autoclass:: macsypy.database.Indexes
    :members:
    :private-members:
    :special-members:
 
+
+RepliconInfo
+============
+.. automodule:: macsypy.database
+   :members: RepliconInfo
+
+
+RepliconDB
+==========
+.. autoclass:: macsypy.database.RepliconDB
+   :members:
+   :private-members:
+   :special-members:
+
+
+fasta_iter
+==========
+.. autofunction:: macsypy.database.fasta_iter
 

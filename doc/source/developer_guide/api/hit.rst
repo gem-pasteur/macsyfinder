@@ -9,7 +9,6 @@
 .. _hit:
 
 
-
 ***
 hit
 ***
@@ -19,7 +18,7 @@ A Hit is created when `hmmsearch` find similarities between a profile and protei
 
 .. figure:: ../../_static/gene_obj_interaction.*
 
-    A diagram showing the interaction between CoreGene, ModelGene, Model, HIt, ValidHit interactions
+    A diagram showing the interaction between CoreGene, ModelGene, Model, Hit, ValidHit interactions
     The diagram above represents the models, genes and hit generated from the definitions below.
 
     .. code-block::
@@ -38,12 +37,88 @@ A Hit is created when `hmmsearch` find similarities between a profile and protei
         </model>
 
 
+This module implements class relative to hit and some functions to do some computation on hit objects.
+
+=========================================== =============================================================================
+:class:`macsypy.hit.CoreHit`                Modelize a hmm hit on the replicon. There is only one Corehit for a CoreGene.
+:class:`macsypy.hit.ModelHit`               Modelize a hit and its relation to the Model.
+:class:`macsypy.hit.AbstractCounterpartHit` Parent class of Loner, MultiSystem. It's inherits from ModelHit.
+:class:`macsypy.hit.Loner`                  Modelize "true" Loner.
+:class:`macsypy.hit.MultiSystem`            Modelize hit which can be used in several Systems (same model)
+:class:`macsypy.hit.LonerMultiSystem`       Modelize a hit representing a gene Loner and MultiSystem at same time.
+:class:`macsypy.hit.HitWeight`              The weights apply to the hit to compute score
+:func:`macsypy.hit.get_best_hit_4_func`     Return the best hit for a given function
+:func:`macsypy.hit.sort_model_hits`         Sort hits
+:func:`macsypy.hit.compute_best_MSHit`      Choose among svereal multisystem hits the best one
+:func:`macsypy.hit.get_best_hits`           If several profile hit the same gene return the best hit
+=========================================== =============================================================================
 
 .. _hit_api:
 
-hit
-===
-.. automodule:: macsypy.hit
+hit API reference
+=================
+
+CoreHit
+=======
+.. autoclass:: macsypy.hit.CoreHit
    :members:
    :private-members:
    :special-members:
+
+ModelHit
+========
+.. autoclass:: macsypy.hit.ModelHit
+   :members:
+   :private-members:
+   :special-members:
+
+AbstractCounterpartHit
+======================
+.. autoclass:: macsypy.hit.AbstractCounterpartHit
+   :members:
+   :private-members:
+   :special-members:
+
+Loner
+=====
+.. autoclass:: macsypy.hit.Loner
+   :members:
+   :private-members:
+   :special-members:
+
+MultiSystem
+===========
+.. autoclass:: macsypy.hit.MultiSystem
+   :members:
+   :private-members:
+   :special-members:
+
+LonerMultiSystem
+================
+.. autoclass:: macsypy.hit.LonerMultiSystem
+   :members:
+   :private-members:
+   :special-members:
+
+HitWeight
+=========
+.. autoclass:: macsypy.hit.HitWeight
+   :members:
+   :private-members:
+   :special-members:
+
+get_best_hit_4_func
+===================
+.. autofunction:: macsypy.hit.get_best_hit_4_func
+
+sort_model_hits
+===============
+.. autofunction:: macsypy.hit.sort_model_hits
+
+compute_best_MSHit
+==================
+.. autofunction:: macsypy.hit.compute_best_MSHit
+
+get_best_hits
+=============
+.. autofunction:: macsypy.hit.get_best_hits
