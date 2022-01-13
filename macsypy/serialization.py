@@ -102,9 +102,12 @@ class TsvSystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tlocus_num\\tsys_wholeness\\tsys_score
-                     \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
-                     \\thit_seq_cov\\tit_begin_match\\thit_end_match\\tcounterpart\\tused_in_systems
+
+        .. code-block:: text
+
+            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score
+            \tsys_occ\thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov
+            \thit_seq_cov\tit_begin_match\thit_end_match\tcounterpart\tused_in_systems
 
         :rtype: str
         """
@@ -243,9 +246,12 @@ class TsvLikelySystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_wholeness
-                     \\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
-                     \\thit_seq_cov\\tit_begin_match\\thit_end_match
+
+        .. code-block:: text
+
+            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_wholeness
+            \thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov
+            \thit_seq_cov\tit_begin_match\thit_end_match\t$used_in_systems
 
         :rtype: str
         """
