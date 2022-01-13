@@ -218,9 +218,30 @@ class Indexes:
                 yield seq_id, length, _rank
 
 
-"""handle name, topology type, and min/max positions in the sequence dataset for a replicon and list of genes.
-each genes is representing by a tuple (seq_id, length)"""
-RepliconInfo = namedtuple('RepliconInfo', 'topology, min, max, genes')
+RepliconInfo = namedtuple('RepliconInfo', ('topology', 'min', 'max', 'genes'))
+"""
+handle information about a replicon
+
+.. py:attribute:: topology
+    :noindex:
+
+    The type of replicon topology 'linear or 'circular'
+     
+.. py:attribute:: min
+    :noindex:
+    
+    The position of the last gene of the replicon in the sequence dataset.
+    
+.. py:attribute:: max 
+    :noindex:
+    
+    The position of the last gene of the replicon in the sequence dataset.
+
+.. py:attribute:: genes
+    :noindex:
+    
+    A list of genes beloging to the replicon. Each genes is representing by a tuple (str seq_id, int length)
+"""
 
 
 class RepliconDB:
