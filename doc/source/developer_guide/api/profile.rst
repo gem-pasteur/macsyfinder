@@ -16,7 +16,10 @@ The :ref:`Profile object <profile-implementation>` is used for the search of the
 A *"Profile"* must match a HMM protein profile file, which name is based on the profile name.
 For instance, the *gspG* gene has the corresponding "gspG.hmm" profile file provided at a dedicated location.
  
-.. _profile_factory_api:
+.. _profile_api:
+
+profile API reference
+=====================
 
 ProfileFactory
 ==============
@@ -25,8 +28,6 @@ ProfileFactory
    :private-members:
    :special-members:
 
-
-.. _profile_api:
 
 Profile
 =======

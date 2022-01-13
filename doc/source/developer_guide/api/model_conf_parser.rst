@@ -17,6 +17,10 @@ This file is optional in package
 
 .. _model_conf_api:
 
+model_conf_parser API reference
+===============================
+
+
 ModelConfParser
 ===============
 .. automodule:: macsypy.model_conf_parser

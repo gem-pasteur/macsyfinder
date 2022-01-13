@@ -15,12 +15,19 @@ cluster
 
 A cluster is an ordered set of hits related to a model which satisfy the model distance constraints.
 
-
 .. _cluster_api:
+
+cluster API reference
+=====================
 
 cluster
 =======
-.. automodule:: macsypy.cluster
+.. autoclass:: macsypy.cluster.Cluster
    :members:
    :private-members:
    :special-members:
+
+
+build_clusters
+==============
+.. autofunction:: macsypy.cluster.build_clusters
