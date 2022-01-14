@@ -295,13 +295,20 @@ class ModelLocation:
         :rtype: a :class:`DefinitionLocation` object.
         :raise: valueError if fqn does not match with any model definition.
         """
-        name_path = fqn.split(_separator)
+        print(f"!!!!!!!!!!!!!!!!!!!!!!!!11 ModelLocation.get_definition('{fqn}') !!!!!!!!!!!!!!!!!!!!!!")
+        name_path = [item for item in fqn.split(_separator) if item]
         def_full_name = name_path[1:]
         defs = self._definitions
         definition = None
+        print("!!!!!!!!!!!!!!!!! name_path", name_path)
+        print("!!!!!!!!!!!!!!!!! def_full_name", def_full_name)
+        print("!!!!!!!!!!!!!!!!! defs", defs)
+        print("!!!!!!!!!!!!!!!!! definition", definition)
         for level in def_full_name:
+            print("~~~~~~~~~~~~~~~~~~~~", level)
             if level in defs:
                 definition = defs[level]
+                print("~~~~~~~~~~~~~ definition", definition)
                 defs = definition.subdefinitions
             else:
                 raise ValueError(f"{level} does not match with any definitions")
@@ -317,9 +324,12 @@ class ModelLocation:
         :rtype: list of :class: DefinitionLocation` object
         :raise ValueError: if root_def_name does not match with any definitions
         """
+        print(f"~~~~~~~~~~~~~~~~~~~~~ L320 ModelLocation.get_all_definitions root_def_name='{root_def_name}' ~~~~~~~~~~~~~~")
         if root_def_name is None:
             all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
         else:
+            print("~~~~~~~~~~~~~ in else")
+            root_def_name = root_def_name.rstrip(_separator)
             root_def = self.get_definition(root_def_name)
             if root_def is not None:
                 all_defs = root_def.all()
