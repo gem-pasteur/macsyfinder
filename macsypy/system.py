@@ -63,7 +63,7 @@ class MatchMaker(metaclass=abc.ABCMeta):
 
         :param genes: The genes to get the exchangeable genes
         :type genes: list of :class:`macsypy.gene.ModelGene` objects
-        :rtype: a dict with keys are the exchangeable gene_name and the value the reference gene name
+        :rtype: a dict with keys are the exchangeable gene_name and the value the reference gene
         """
         map = {}
         for gene in genes:
@@ -74,10 +74,10 @@ class MatchMaker(metaclass=abc.ABCMeta):
 
     def sort_hits_by_status(self, hits):
         """
-        sort :class:`macsypy.hit.CoreHit` according the
+        sort :class:`macsypy.hit.ModelHit` according the
         the status of the gene the hit code for.
 
-        :param hits: list of :class:`macsypy.hit.CoreHit` object
+        :param hits: list of :class:`macsypy.hit.ModelHit` object
         :return: the valid hits according their status
         :rtype: a tuple of 4 lists
 
@@ -126,6 +126,11 @@ class MatchMaker(metaclass=abc.ABCMeta):
                 gene_ref = self.exchangeable_forbidden[gene_name]
                 self.forbidden_counter[gene_ref.name] += 1
                 forbidden_hits.append(hit)
+            else:
+                model = hit.gene_ref.model
+                msg = f"Gene '{gene_name}' not found in model '{model.fqn}'"
+                _log.critical(msg)
+                raise MacsypyError(msg)
 
         return mandatory_hits, accessory_hits, neutral_hits, forbidden_hits
 
@@ -174,13 +179,12 @@ class OrderedMatchMaker(MatchMaker):
         valid_clusters = []
         forbidden_hits = []
         for cluster in clusters:
-            # sort hits between forbidden and the other
-            # and transform hit in ModelHit
+            # sort model hits between forbidden and the other
             *one_clst_allowed_hits, one_clst_forbidden_hits = self.sort_hits_by_status(cluster.hits)
             if one_clst_forbidden_hits:
                 forbidden_hits.extend(one_clst_forbidden_hits)
-            # create cluster of ModelHit
-            one_clst_allowed_hits = [vh for st_hits in one_clst_allowed_hits for vh in st_hits]
+            # merge MANDATORY, ACCESSORY, NEUTRAL ModelHit
+            one_clst_allowed_hits = [mh for hits in one_clst_allowed_hits for mh in hits]
             one_clst_allowed_hits.sort(key=attrgetter('position'))
             valid_clusters.append(Cluster(one_clst_allowed_hits + one_clst_forbidden_hits,
                                           self._model, cluster._hit_weights))
