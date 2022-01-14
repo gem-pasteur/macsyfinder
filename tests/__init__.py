@@ -185,7 +185,7 @@ class MacsyTest(unittest.TestCase):
                 # counterpart order does not matter
                 fields_1[-1] = set(fields_1[-1].split(','))
                 fields_2[-1] = set(fields_2[-1].split(','))
-                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
+                self.assertEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
 
 
     def assertSeqRecordEqual(self, s1, s2):
