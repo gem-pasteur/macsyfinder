@@ -69,15 +69,20 @@ class DefinitionParser:
         :type models_2_detect: list of :class:`macsypy.registry.DefinitionLocation`
         """
         models_2_check = []
+        print("@@@ models_2_detect", models_2_detect)
         _log.info("Models Parsing")
         for def_loc in models_2_detect:
+            print("@@@ def_loc.famillyname", def_loc.family_name)
+            print("@@@ def_loc.fqn", def_loc.fqn)
             path = def_loc.path
+            print("@@@ path", path)
             if path is None:
                 raise MacsypyError(f"{path}: No such model definitions")
             model_node = self._get_model_node(def_loc)
             model = self._create_model(def_loc, model_node)
             self.model_bank.add_model(model)
-            model_location = self.model_registry[def_loc.family_name]
+            print("@@@ def_loc.family_name", def_loc.root_name(def_loc.fqn))
+            model_location = self.model_registry[def_loc.root_name(def_loc.fqn)]
             self._fill_gene_bank(model_node, model_location, def_loc)
 
             self._parse_genes(model, model_node)
