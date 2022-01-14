@@ -34,6 +34,7 @@ from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker
 from macsypy.system import System, RejectedClusters, LikelySystem, UnlikelySystem
+from macsypy.error import MacsypyError
 
 from tests import MacsyTest
 
@@ -151,6 +152,18 @@ class MatchMakerTest(MacsyTest):
         self.assertListEqual([h.gene.name for h in neutral_exp], [h.gene_ref.alternate_of().name for h in neutral])
         self.assertListEqual([h.gene.name for h in forbidden_exp], [h.gene_ref.alternate_of().name for h in forbidden])
 
+        # test if the hit does not refer to gene belonging to the model
+        model2 = Model("foo/model_B", 10)
+        cg_fliE = CoreGene(self.model_location, "fliE", self.profile_factory)
+        ch_fliE = CoreHit(cg_fliE, "hit_fliE", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+
+        mg_fliE = ModelGene(cg_fliE, model2)
+        mh_fliE = ModelHit(ch_fliE, mg_fliE, GeneStatus.NEUTRAL)
+        with self.assertRaises(MacsypyError) as ctx:
+            with self.catch_log():
+                ordered_match_maker.sort_hits_by_status([mh_fliE])
+        self.assertEqual(str(ctx.exception),
+                         "Gene 'fliE' not found in model 'foo/model_B'")
 
     def test_ordered_match(self):
 
