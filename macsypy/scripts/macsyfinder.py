@@ -555,13 +555,15 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     :param logger:
     :return:
     """
-    systems = []
-    rejected_clusters = []
+    all_systems = []
+    all_rejected_clusters = []
     rep_db = RepliconDB(config)
     for rep_name in hits_by_replicon:
         logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
+            one_model_systems = []
+            one_model_rejected_clusters = []
             logger.info(f"Check model {model.fqn}")
             # model.filter filter hit but also cast them in ModelHit
             mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
@@ -586,17 +588,16 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                 res = ordered_matcher.match(one_clust_combination)
                 if isinstance(res, System):
-                    systems.append(res)
+                    one_model_systems.append(res)
                 else:
-                    rejected_clusters.append(res)
+                    one_model_rejected_clusters.append(res)
 
             ###############################
             # MultiSystem Hits Management #
             ###############################
-
             # get multi systems from existing systems #
             hit_encondig_multisystems = set()  # for the same model (in the loop)
-            for one_sys in systems:
+            for one_sys in one_model_systems:
                 hit_encondig_multisystems.update(one_sys.get_hits_encoding_multisystem())
 
             logger.debug("{:#^80}".format(" MultiSystems "))
@@ -613,19 +614,20 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             best_ms = compute_best_MSHit(ms_per_function)
             # check if among rejected clusters with the MS they can be create a new system
             best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
-            new_clst_combination = combine_multisystems(rejected_clusters, best_ms)
+            new_clst_combination = combine_multisystems(one_model_rejected_clusters, best_ms)
             for one_clust_combination in new_clst_combination:
                 ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
                 res = ordered_matcher.match(one_clust_combination)
                 if isinstance(res, System):
-                    systems.append(res)
+                    one_model_systems.append(res)
                 else:
-                    rejected_clusters.append(res)
+                    one_model_rejected_clusters.append(res)
+            all_systems.extend(one_model_systems)
+            all_rejected_clusters.extend(one_model_rejected_clusters)
+    if all_systems:
+        all_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
 
-    if systems:
-        systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-
-    return systems, rejected_clusters
+    return all_systems, all_rejected_clusters
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
