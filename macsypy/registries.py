@@ -116,7 +116,6 @@ class ModelRegistry:
         if name in self._registry:
             return self._registry[name]
         else:
-            print(self)
             raise KeyError(f"No such model definition: '{name}'")
 
 
@@ -160,10 +159,6 @@ class ModelLocation:
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
-        print("##################### ModelLocation __init__ #########################################")
-        print("### path", path)
-        print("### profile_dir", profile_dir)
-        print("### def_dir", def_dir)
         if path and any((profile_dir, def_dir)):
             raise MacsypyError("'path' and '{}' are incompatible arguments".format(
                 'profile_dir' if profile_dir else 'def_dir'))
@@ -182,44 +177,29 @@ class ModelLocation:
 
         self._definitions = {}
         if not def_dir:
-            print("### DEBUG registries L185 not def_dir")
             def_dir = os.path.join(self.path, 'definitions')
-            print("### def_dir", def_dir)
-            print("### os.listdir(def_dir)", os.listdir(def_dir))
             for definition in os.listdir(def_dir):
-                print("================================================================")
                 definition_path = os.path.join(def_dir, definition)
-                print("### definition", definition)
-                print("### definition_path", definition_path)
                 new_def = self._scan_definitions(def_path=definition_path)
-                print("################### AFTER _scan_definitions new_def", new_def.name, new_def.fqn)
+
                 if new_def:  # _scan_definitions can return None if a dir is empty
-                    new_def.fqn = f"{self.name}{_separator}{new_def.fqn}"
-                    print("### set new_def.fqn", new_def.fqn)
-                    if new_def.subdefinitions:
-                        print("### there are subdefinitions")
-                        for def_loc in new_def.subdefinitions.values():
-                            def_loc.fqn = f"{self.name}{_separator}{def_loc.fqn}"
-                            print("### set fqn for subdefinitions", def_loc.name, def_loc.fqn)
-                    print("###", repr(new_def))
                     self._definitions[new_def.name] = new_def
         else:
-            print("### DEBUG registries L197 else")
             import glob
             for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
 
                 model_fqn = os.path.basename(os.path.splitext(model_path)[0])
-
+                model_name = os.path.split(model_fqn)[-1]
                 if not relative_path:
                     model_path = os.path.abspath(model_path)
 
-                new_def = DefinitionLocation(name=model_fqn,
+                new_def = DefinitionLocation(name=model_name,
+                                             fqn=model_fqn,
                                              path=model_path)
                 self._definitions[new_def.name] = new_def
-        print("#################################### FIN ModelLocation __init__ ##################################")
 
 
-    def _scan_definitions(self, model_def=None, def_path=None):
+    def _scan_definitions(self, parent_def=None, def_path=None):
         """
         Scan recursively the definitions tree on the file model and store
         them.
@@ -231,26 +211,31 @@ class ModelLocation:
         :returns: a definition location
         :rtype: :class:`DefinitionLocation` object
         """
-        print("###################################### APPEL de _scan_definitions ################################################")
-        print("### model_def", model_def)
-        print("### def_path", def_path)
-
         if os.path.isfile(def_path):
-            new_def = None
             base, ext = os.path.splitext(def_path)
             if ext == '.xml':
                 name = os.path.basename(base)
+                if parent_def is None:
+                    # it's the root of definitons tree
+                    fqn = f"{self.name}{_separator}{name}"
+                else:
+                    fqn = f"{parent_def.fqn}{_separator}{name}"
                 new_def = DefinitionLocation(name=name,
+                                             fqn=fqn,
                                              path=def_path)
-            return new_def
-
+                return new_def
         elif os.path.isdir(def_path):
             name = os.path.basename(def_path)
-            print("@@@ registries._scan_definitions L249 def_path", def_path)
+            if parent_def is None:
+                # it's the root of definitons tree
+                fqn = f"{self.name}{_separator}{name}"
+            else:
+                fqn = f"{parent_def.fqn}{_separator}{name}"
             new_def = DefinitionLocation(name=name,
+                                         fqn=fqn,
                                          path=def_path)
             for model in os.listdir(def_path):
-                subdef = self._scan_definitions(model_def=new_def, def_path=os.path.join(new_def.path, model))
+                subdef = self._scan_definitions(parent_def=new_def, def_path=os.path.join(new_def.path, model))
                 if subdef is not None:
                     new_def.add_subdefinition(subdef)
             return new_def
@@ -295,20 +280,13 @@ class ModelLocation:
         :rtype: a :class:`DefinitionLocation` object.
         :raise: valueError if fqn does not match with any model definition.
         """
-        print(f"!!!!!!!!!!!!!!!!!!!!!!!!11 ModelLocation.get_definition('{fqn}') !!!!!!!!!!!!!!!!!!!!!!")
         name_path = [item for item in fqn.split(_separator) if item]
         def_full_name = name_path[1:]
         defs = self._definitions
         definition = None
-        print("!!!!!!!!!!!!!!!!! name_path", name_path)
-        print("!!!!!!!!!!!!!!!!! def_full_name", def_full_name)
-        print("!!!!!!!!!!!!!!!!! defs", defs)
-        print("!!!!!!!!!!!!!!!!! definition", definition)
         for level in def_full_name:
-            print("~~~~~~~~~~~~~~~~~~~~", level)
             if level in defs:
                 definition = defs[level]
-                print("~~~~~~~~~~~~~ definition", definition)
                 defs = definition.subdefinitions
             else:
                 raise ValueError(f"{level} does not match with any definitions")
@@ -324,11 +302,9 @@ class ModelLocation:
         :rtype: list of :class: DefinitionLocation` object
         :raise ValueError: if root_def_name does not match with any definitions
         """
-        print(f"~~~~~~~~~~~~~~~~~~~~~ L320 ModelLocation.get_all_definitions root_def_name='{root_def_name}' ~~~~~~~~~~~~~~")
         if root_def_name is None:
             all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
         else:
-            print("~~~~~~~~~~~~~ in else")
             root_def_name = root_def_name.rstrip(_separator)
             root_def = self.get_definition(root_def_name)
             if root_def is not None:
@@ -340,7 +316,9 @@ class ModelLocation:
 
     def get_definitions(self):
         """
-        :return:
+        :return: the list of the definitions of this modelLocation.
+                 It return the 1rst level only (not recursive).
+                 For recursive explorations see :method:`macsypy.registries.ModelLocation.get_all_definitions`
         """
         if self._definitions is not None:
             return sorted(list(self._definitions.values()))
@@ -390,11 +368,9 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     _separator = '/'
 
-    def __init__(self, name=None,subdefinitions=None, path=None):
-        print(f"@@@@@@ DefinitionLocation super name={name} fqn={name} subdefinitions={subdefinitions}, path={path}\n")
-        super().__init__(name=name, fqn=name, subdefinitions=subdefinitions, path=path)
+    def __init__(self, name=None, fqn=None, subdefinitions=None, path=None):
+        super().__init__(name=name, fqn=fqn, subdefinitions=subdefinitions, path=path)
         self.__dict__ = self  # allow to use dot notation to access to property here name or subdefinitions ...
-
 
     @classmethod
     def split_fqn(cls, fqn):
@@ -406,7 +382,6 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     @property
     def family_name(self):
-        print(f"@@@@@@@ L379 DefinitionLocation.family_name name={self.name} fqn={self.fqn}")
         return self.__class__.root_name(self.fqn)
 
     def __hash__(self):
@@ -421,7 +396,6 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
         """
         if self.subdefinitions is None:
             self.subdefinitions = {}
-        subdefinition.fqn = f"{self.name}{_separator}{subdefinition.fqn}"
         self.subdefinitions[subdefinition.name] = subdefinition
 
 
