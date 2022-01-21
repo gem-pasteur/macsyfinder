@@ -22,6 +22,13 @@ This module allow to explore among of all systems which combination seems to be 
 solution API reference
 ======================
 
+Solution
+========
+.. autoclass:: macsypy.solution.Solution
+   :members:
+   :private-members:
+   :special-members:
+
 combine_clusters
 ================
 .. autofunction:: macsypy.solution.combine_clusters

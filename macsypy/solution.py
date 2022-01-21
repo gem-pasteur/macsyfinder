@@ -28,6 +28,98 @@ import networkx as nx
 from macsypy.system import RejectedClusters
 
 
+class Solution:
+    """
+    Handle Solution, a solution is a set of compatible Systems
+
+    when compare solutions we check the following criteria
+
+        1. The number of hits
+        2. The number of systems
+        3. The average of wholeness
+        4. The hits position (is used ti give predictable output for unit tests)
+    """
+
+    def __init__(self, systems):
+        self._systems = self._sorted_systems(systems)
+        self._score = sum([syst.score for syst in self.systems])
+        self._average_woleness = sum([sys.wholeness for sys in self.systems]) / len(self.systems)
+        self._hits_number = sum([len(syst.hits) for syst in self.systems])
+        self._hits_positions = [h.position for syst in self.systems for h in syst.hits]
+
+
+    def _sorted_systems(self, systems):
+        """
+        sort the systems following the positions of th hits that composed the systems
+
+        :param systems: the systems to sort
+        :type systems: list of :class:`mcsypy.system.System` objects
+        :return: a sorted copy of the *systems*
+        :rtype: list of :class:`mcsypy.system.System` objects
+        """
+        sorted_sys = sorted(systems, key=lambda syst: ([h.position for h in syst.hits],
+                                                       syst.model.fqn,
+                                                       - syst.score)
+                            )
+        return sorted_sys
+
+
+    @property
+    def systems(self):
+        """"a sorted list of the *systems* that composed the solution"""
+        return self._systems[:]
+
+
+    @property
+    def score(self):
+        """The score of this solution"""
+        return self._score
+
+
+    @property
+    def average_wholeness(self):
+        """The average of the systems wholeness"""
+        return self._average_woleness
+
+
+    @property
+    def hits_number(self):
+        """The sum of the hits of each systems in this solution"""
+        return self._hits_number
+
+    @property
+    def hits_positions(self):
+        """The list of position of all hits of the soltution"""
+        return self._hits_positions
+
+    def __len__(self):
+        return len(self.systems)
+
+
+    def __gt__(self, other):
+        return (self.hits_number, len(self), self.average_wholeness, self.hits_positions) > \
+               (other.hits_number, len(other), other.average_wholeness, other.hits_positions)
+
+
+    def __lt__(self, other):
+        return (self.hits_number, len(self), self.average_wholeness, self.hits_positions) < \
+               (other.hits_number, len(other), other.average_wholeness, other.hits_positions)
+
+    def __eq__(self, other):
+        return self.hits_number == other.hits_number and \
+               len(self) == len(other) and \
+               self.average_wholeness == other.average_wholeness and \
+               self.hits_positions == other.hits_positions
+
+    def __iter__(self):
+        """
+        Solution allow to iterate over the systems
+        
+        :return: generator
+        """
+        return (s for s in self.systems)
+
+
 def find_best_solutions(systems):
     """
     Among the systems choose the combination of systems which does not share :class:`macsypy.hit.CoreHit`
@@ -40,35 +132,6 @@ def find_best_solutions(systems):
             ([[:class:`macsypy.system.System`, ...], [:class:`macsypy.system.System`, ...]], float score)
             The inner list represent a best solution
     """
-    def sort_cliques(clique):
-        """
-        sort cliques
-
-         - first by the sum of hits of systems composing the solution, most hits in first
-         - second by the number of systems, most system in first
-         - third by the average of wholeness of the systems
-         - and finally by hits position. This criteria is to produce predictable results
-           between two runs and to be testable (functional_test gembase)
-
-        :param clique: the solutions to sort
-        :type clique: List of :class:`macsypy.system.System` objects
-        :return: the clique ordered
-        """
-        l = []
-        for solution in clique:
-            hits_pos = {hit.position for syst in solution for hit in syst.hits}
-            hits_pos = sorted(list(hits_pos))
-            l.append((sorted(solution, key=lambda sys: sys.id), hits_pos))
-
-        sorted_cliques = sorted(l, key=lambda item: (sum([len(sys.hits) for sys in item[0]]),
-                                                     len(item[0]),
-                                                     item[1],
-                                                     sum([sys.wholeness for sys in item[0]]) / len(item[0]),
-                                                     '_'.join([sys.id for sys in item[0]])
-                                                     ),
-                                reverse=True)
-        sorted_cliques = [item[0] for item in sorted_cliques]
-        return sorted_cliques
 
     G = nx.Graph()
     # add nodes (vertices)
@@ -85,11 +148,11 @@ def find_best_solutions(systems):
         current_score = sum([s.score for s in c])
         if max_score is None or (current_score > max_score):
             max_score = current_score
-            max_cliques = [c]
+            max_cliques = [Solution(c)]
         elif current_score == max_score:
-            max_cliques.append(c)
+            max_cliques.append(Solution(c))
     # sort the solutions (cliques)
-    solutions = sort_cliques(max_cliques)
+    solutions = sorted(max_cliques, reverse=True)
     return solutions, max_score
 
 
@@ -103,7 +166,7 @@ def combine_clusters(clusters, true_loners, multi_loci=False):
     :type true_loners: dict the name of the function code by hit gene_ref.alternate_of as key
                               and 1 :class:`macsypy.cluster.Cluster` with the best a
                               :class:`macsypy.hit.Loner` or
-                              :class:`macsypy.hit.LonerMultiSsystem` hit  as value
+                              :class:`macsypy.hit.LonerMultiSystem` hit  as value
     :param bool multi_loci: True if the model is multi_loci false otherwise
     :return: all available combination of clusters
     :rtype: List of combination. a combination is a tuple of :class:`macsypy.cluster.Cluster` objects
