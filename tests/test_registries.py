@@ -70,25 +70,25 @@ def _create_fake_models_tree(root_models_dir, sys_def):
     create_tree(sys_def['not_definitions'], def_dir)
     return models_dir
 
-#
-# class RegitriesUtilsTest(MacsyTest):
-#
-#     def test_split_def_name(self):
-#         items = ['CRISPR-Cas', 'typing', 'cas']
-#         def_name = registries._separator.join(items)
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#         def_name = registries._separator.join(items) + registries._separator
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#         def_name = registries._separator + registries._separator.join(items)
-#         split = registries.split_def_name(def_name)
-#         self.assertListEqual(split, items)
-#
-#
-#     def test_join_def_path(self):
-#         items = ['CRISPR-Cas', 'typing', 'cas']
-#         self.assertEqual('/'.join(items), registries.join_def_path(*items))
+
+class RegitriesUtilsTest(MacsyTest):
+
+    def test_split_def_name(self):
+        items = ['CRISPR-Cas', 'typing', 'cas']
+        def_name = registries._separator.join(items)
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+        def_name = registries._separator.join(items) + registries._separator
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+        def_name = registries._separator + registries._separator.join(items)
+        split = registries.split_def_name(def_name)
+        self.assertListEqual(split, items)
+
+
+    def test_join_def_path(self):
+        items = ['CRISPR-Cas', 'typing', 'cas']
+        self.assertEqual('/'.join(items), registries.join_def_path(*items))
 
 
 class ModelLocationTest(MacsyTest):
