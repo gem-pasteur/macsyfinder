@@ -58,6 +58,10 @@ headers are provided with the content of the lines in the file.
     
     The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
+  * :ref:`best_solution_loners.tsv <best_solution_loners_tsv>` and :ref:`best_solution_systems.tsv <best_solution_multisystems_tsv>` report
+    hits which have been identified as loners or multisystems which means that the corresponding gene is tag 'loner' or 'multisystem' in the model definition
+    and the hit is lot located in a cluster.
+
   * :ref:`best_solution_summary.tsv<best_solution_summary_tsv>` is a summary of the `best_solution.tsv` file, containing the number of systems detected in each replicon analysed.
 
   * :ref:`all_systems.txt<all_systems_txt>` - This file describes the search process of all possible candidate systems given the definitions in systems' models -
@@ -78,7 +82,7 @@ headers are provided with the content of the lines in the file.
 .. _all_systems_txt:
 
 all_systems.txt
-~~~~~~~~~~~~~~~
+---------------
 
 
 The file starts with some comments:
@@ -195,7 +199,7 @@ Here is an example of the `all_systems.txt` file:
 .. _all_systems_tsv:
 
 all_systems.tsv
-~~~~~~~~~~~~~~~
+---------------
 
 
 This corresponds to the tabulated version of the systems listed in `all_systems.txt`. 
@@ -222,6 +226,7 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
+    * **counterpart** - the hit id of some other hit which are equivalent. only Loners and multisystems hits have counterpart
     * **used_in** - whether the hit could be used in another system's occurrence
 
 This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
@@ -253,7 +258,7 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 .. _best_solution_tsv:
 
 best_solution.tsv and all_best_solutions.tsv
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------
 
 	
 Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
@@ -288,6 +293,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
+    * **counterpart** - the hit id of some other hit which are equivalent. only Loners and multisystems hits have counterpart
     * **used_in** - whether the hit could be used in another system's occurrence
 
 .. note::
@@ -311,6 +317,19 @@ Example of `all_best_solutions.tsv files`
     Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
     See above lines for more details. 
 
+.. note::
+    If several systems from same model use a loner (same gene) *msf* check that there is at least one occurrence of
+    this hit for each system. If there are fewer hits than systems occurrence a warning is displayed in
+    `best_solution.tsv` or `all_best_solution.tsv` as comment.
+    So the file can be parsed with pandas without problem.
+
+    .. code-block:: text
+
+        1	GCF_000005845	GCF_000005845_030080	T2SS_gspO	3008	TFF-SF/T2SS	GCF_000005845_T2SS_1	1	1	0.857	9.000	1	T2SS_gspO	mandatory	225	4e-65	220.400	0.978	0.840	26	214
+
+        # WARNING Loner: there is only 1 occurrence(s) of loner 'T4P_pilT' and 2 potential systems [GCF_000005845_T4P_9, GCF_000005845_T4P_13]
+
+        2	GCF_000005845	GCF_000005845_000970	T4P_pilC	97	TFF-SF/T4P	GCF_000005845_T4P_11	2	1	0.389	4.760	1	T4P_pilC	mandatory	400	2.2e-105	353.100	0.991	0.830	62	393
 
 
 .. _sort_eqt_best_solution:
@@ -320,7 +339,7 @@ Example of `all_best_solutions.tsv files`
    is reported in the `best_solution.tsv` and `best_solution.txt` files. 
    The ranking is performed as follow:
    
-   1. by the number of systems' components constituting the solution (most components first)
+   1. by the number of systems' components (hits) constituting the solution (most components first)
    2. by the number of systems (most systems in first)
    3. by the average of systems' wholeness
    4. by hits position. This criterion is mostly introduced to produce reproducible results between two runs.
@@ -330,7 +349,7 @@ Example of `all_best_solutions.tsv files`
 .. _best_solution_summary_tsv:
 
 best_solution_summary.tsv
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 This file is a concise view of which systems have been found in your replicons and how many per replicon. 
 It is based on **best_solution.tsv**.
@@ -385,10 +404,33 @@ as a `tsv` file it can be parsed easily using pandas::
 
 
 
+.. _best_solution_loners_tsv:
+
+best_solution_loners.tsv
+------------------------
+
+This file give an overview of all hits identified as Loner in the best_solution
+
+    .. literalinclude:: ../_static/best_solution_loners.tsv
+       :language: text
+
+
+
+.. _best_solution_multisystems_tsv:
+
+best_solution_multisystems.tsv
+------------------------------
+
+This file give an overview of all hits identified as MultiSystems in the best_solution
+
+    .. literalinclude:: ../_static/best_solution_multisystems.tsv
+       :language: text
+
+
 .. _rejected_clusters_file:
 
 rejected_clusters.txt
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 This file records all clusters or cluster combinations (if the "multi_loci" search mode is on) which have been discarded and the reason
 why they were not selected as systems.
@@ -456,7 +498,7 @@ As for ordered replicons, several output files are provided.
 .. _all_systems_txt_unordered:
 
 all_systems.txt
-~~~~~~~~~~~~~~~
+---------------
 
 This file contains potential systems for unordered replicon in human readable format. 
 
@@ -514,7 +556,7 @@ In this file, for each component of each searched system's model, we report the 
 .. _all_systems_tsv_unordered:
 
 all_systems.tsv
-~~~~~~~~~~~~~~~
+---------------
 
 This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields, see :ref:`above <all_systems_tsv>`. 
 
@@ -559,7 +601,7 @@ This file contains the same information as in `all_systems.txt` but in `tsv` for
 .. _uncomplete_unordered:
 
 uncomplete_systems.txt
-~~~~~~~~~~~~~~~~~~~~~~
+----------------------
 
 This file is created when a search is performed in the `unordered replicon` mode.
 This file list models that probably do not have not full systems in the replicon(s).
