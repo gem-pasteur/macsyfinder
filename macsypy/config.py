@@ -122,7 +122,7 @@ class Config:
                   'out_of_cluster', 'redundancy_penalty',
                   'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
 
-    path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file','models_dir', 'system_models_dir', 'out_dir',
+    path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file', 'models_dir', 'system_models_dir', 'out_dir',
                  'profile_suffix', 'res_search_dir', 'res_search_suffix', 'res_extract_suffix', 'index_dir')
 
     def __init__(self, defaults, parsed_args):
@@ -704,7 +704,7 @@ class Config:
         """
         :param str path: the path to the models (definitions + profiles) are stored.
         """
-        # if models_dir is provide by the user this value mask cannonical ones
+        # if models_dir is provide by the user this value mask canonical ones
         # prefix_data, 'models'
         # os.path.expanduser('~'), '.macsyfinder', 'data'
         # models_dir must return a list of path
@@ -725,13 +725,14 @@ class Config:
     def models_dir(self):
         """
 
-        :return:
+        :return: list of models dir path
+        :rtype: list of str
         """
         if self._options['models_dir']:
             # the models_dir has been set by user
             return self._options['models_dir']
         else:
-            # use cannonical location
+            # use canonical location
             return self._options['system_models_dir']
 
 
