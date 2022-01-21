@@ -34,6 +34,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered
+from macsypy.solution import Solution
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
     TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer
 
@@ -300,11 +301,11 @@ neutral genes:
         # score =                2.0
         sys_B.id = "sys_id_B"
 
-        sol = [sys_A, sys_B]
+        sol = Solution([sys_A, sys_B])
         sol_id = '12'
 
         hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B])
-        system_serializer = TsvSolutionSerializer()
+        sol_serializer = TsvSolutionSerializer()
 
         sol_tsv = '\t'.join([sol_id, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
                             '2', '1', '1.000', '1.850', '2', 'sctJ', 'mandatory',
@@ -336,15 +337,15 @@ neutral genes:
                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_flgB', 'flgB', '11', 'foo/B', 'sys_id_B',
-                             '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
-                             '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id, 'replicon_id', 'hit_tadZ', 'tadZ', '40', 'foo/B', 'sys_id_B',
                               '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
-        ser = system_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
+        ser = sol_serializer.serialize(sol, sol_id, hit_multi_sys_tracker)
         self.maxDiff = None
         self.assertEqual(ser, sol_tsv)
 

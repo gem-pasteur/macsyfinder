@@ -39,7 +39,7 @@ from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
 from macsypy.hit import CoreHit, ModelHit, HitWeight, Loner, MultiSystem
 from macsypy.model import Model
 from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractUnordered, LikelySystem, UnlikelySystem
-
+from macsypy.solution import Solution
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
@@ -525,13 +525,20 @@ neutral genes:
         model_C.add_accessory_gene(gene_tadZ)
         model_C.add_accessory_gene(gene_gspd)
 
+        #                    gene,     hit_id, hit_seq_len, rep_name, pos, i_eval
         h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj2 = CoreHit(c_gene_sctj, "hit_sctj2", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn2 = CoreHit(c_gene_sctn, "hit_sctn2", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg2 = CoreHit(c_gene_sctj_flg, "hit_sctj_flg2", 803, "replicon_id", 14, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ2 = CoreHit(c_gene_tadZ, "hit_tadZ2", 803, "replicon_id", 15, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB2 = CoreHit(c_gene_flgB, "hit_flgB2", 803, "replicon_id", 16, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd2 = CoreHit(c_gene_gspd, "hit_gspd2", 803, "replicon_id", 17, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
@@ -542,8 +549,8 @@ neutral genes:
                       ],
                      model_A, hit_weights)
 
-        c2 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+        c2 = Cluster([ModelHit(h_sctj2, gene_sctj, GeneStatus.MANDATORY),
+                      ModelHit(h_sctn2, gene_sctn, GeneStatus.MANDATORY)],
                      model_A, hit_weights)
 
         model_B._min_mandatory_genes_required = 1
@@ -555,10 +562,10 @@ neutral genes:
 
         model_C._min_mandatory_genes_required = 1
         model_C._min_genes_required = 2
-        c4 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ModelHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                      ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+        c4 = Cluster([ModelHit(h_sctj_flg2, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ModelHit(h_tadZ2, gene_tadZ, GeneStatus.ACCESSORY),
+                      ModelHit(h_flgB2, gene_flgB, GeneStatus.MANDATORY),
+                      ModelHit(h_gspd2, gene_gspd, GeneStatus.ACCESSORY)],
                      model_C, hit_weights)
 
         sys_A = System(model_A, [c1, c2], cfg.redundancy_penalty())
@@ -568,8 +575,8 @@ neutral genes:
         sys_C = System(model_C, [c4], cfg.redundancy_penalty())
         sys_C.id = "sys_id_C"
 
-        sol_1 = [sys_A, sys_B]
-        sol_2 = [sys_A, sys_C]
+        sol_1 = Solution([sys_A, sys_C])
+        sol_2 = Solution([sys_A, sys_B])
         sol_id_1 = '1'
         sol_id_2 = '2'
 
@@ -587,33 +594,37 @@ neutral genes:
                               '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj2', 'sctJ', '4', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn2', 'sctN', '5', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg2', 'sctJ_FLG', '14', 'foo/C', 'sys_id_C',
+                              '1', '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ2', 'tadZ', '15', 'foo/C', 'sys_id_C',
+                              '1', '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB2', 'flgB', '16', 'foo/C', 'sys_id_C',
+                              '1', '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd2', 'gspD', '17', 'foo/C', 'sys_id_C',
+                              '1', '1', '0.800', '3.000', '1', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
@@ -621,44 +632,41 @@ neutral genes:
                               '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj2', 'sctJ', '4', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn2', 'sctN', '5', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
                               '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/C', 'sys_id_C',
-                              '1', '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', 'sys_id_B'])
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '6', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/C', 'sys_id_C',
-                              '1', '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', 'sys_id_B'])
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '7', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/C', 'sys_id_C',
-                              '1', '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', 'sys_id_B'])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/C', 'sys_id_C',
-                              '1', '1', '0.800', '3.000', '1', 'gspD', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', 'sys_id_A'])
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '8', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
 
         f_out = StringIO()
-        hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B])
+        hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B, sys_C])
         solutions_to_tsv([sol_1, sol_2], hit_multi_sys_tracker, f_out)
+        self.maxDiff = None
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
 
