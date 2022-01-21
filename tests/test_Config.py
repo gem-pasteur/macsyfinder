@@ -482,6 +482,11 @@ class TestConfig(MacsyTest):
         cfg = Config(self.defaults, self.parsed_args)
         self.assertEqual(cfg.out_dir(), cfg.working_dir())
 
+    def test_models_dir(self):
+        self.parsed_args.models_dir = self.tmp_dir
+        cfg = Config(self.defaults, self.parsed_args)
+        self.assertEqual(cfg.models_dir(), [self.tmp_dir])
+
     def test_previous_n_sequence_db(self):
         self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results'))
         sequence_db = self.find_data(os.path.join('base', 'test_1.fasta'))
