@@ -56,6 +56,7 @@ The main sub-commands are
 * ``macsydata search`` to search a model given its name or a pattern in its description
 * ``macsydata install`` to install a macsy-model package (the installed version can be set see --help)
 * ``macsydata cite`` to retrieve information on how to cite the model
+* ``macsydata definition`` to display one or a set of model defintion
 * ``macsydata --help`` to get the extended list of available subcommands
 * ``macsydata <subcommand> --help`` to get help about the specified subcommand
 
@@ -91,7 +92,14 @@ The packages installed in user land is added to the system-wide packages.
 project-wide installation
 -------------------------
 
-If you cannot install macsy-model packages in system or user land locations, you can specify a
-specific location with the ``--models-dir`` :ref:`command-line option <path-options>`. The path must point at a directory
-that contains macsy-model packages as described :ref:`above <package_structure>`.
+If you cannot install macsy-model packages in system or user land locations,
+you can install models in specific directory with the `--target` option.
+
+    macsydata install --target <my_models>
+
+The specify this specific location with the ``--models-dir`` :ref:`command-line option <path-options>`.
+
+    macsyfinder --db-type ordered_replicon --models-dir=my_models --models TFF-SF all --sequence-db my_genome.fasta
+
+The path must point at a directory that contains macsy-model packages as described :ref:`above <package_structure>`.
 
