@@ -299,7 +299,7 @@ class ModelLocation:
                         If root_def is None, return all definitions for this set of models
         :param root_def_name: string
         :return: the list of definitions or subdefinitions if root_def is specified for this model.
-        :rtype: list of :class: DefinitionLocation` object
+        :rtype: list of :class:`macsypy.registries.DefinitionLocation` object
         :raise ValueError: if root_def_name does not match with any definitions
         """
         if root_def_name is None:
@@ -318,7 +318,7 @@ class ModelLocation:
         """
         :return: the list of the definitions of this modelLocation.
                  It return the 1rst level only (not recursive).
-                 For recursive explorations see :method:`macsypy.registries.ModelLocation.get_all_definitions`
+                 For recursive explorations see :meth:`macsypy.registries.ModelLocation.get_all_definitions`
         """
         if self._definitions is not None:
             return sorted(list(self._definitions.values()))
