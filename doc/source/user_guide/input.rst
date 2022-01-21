@@ -266,7 +266,7 @@ Configuration file
 ==================
 
 Options to run MacSyFinder can be specified in a configuration file.
-The :ref:`Config object <config>` handles all configuration options for MacSyFinder.
+The :ref:`Config object <configuration>` handles all configuration options for MacSyFinder.
 Three locations are parsed to find configuration files: 
  
  * $PREFIX/etc/macsyfinder/macsyfinder.conf
@@ -287,7 +287,7 @@ options altering the definition of systems found in the command-line or the conf
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
-The :ref:`Config object <config>` provides some default values and performs some validations of the values.
+The :ref:`Config object <configuration>` provides some default values and performs some validations of the values.
  
  
 In MacSyFinder, six sections are defined and stored by default in the configuration file:
