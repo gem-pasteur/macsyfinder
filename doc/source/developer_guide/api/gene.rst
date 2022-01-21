@@ -109,6 +109,7 @@ ModelGene
    :private-members:
    :special-members:
 
+.. _exchangeable_api:
 
 Exchangeable
 ============
