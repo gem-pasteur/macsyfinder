@@ -669,6 +669,7 @@ Available versions: 1.0"""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
+        self.args.target = None
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -683,6 +684,42 @@ Available versions: 1.0"""
             self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
         finally:
             del macsydata.Config.models_dir
+
+
+    def test_install_target(self):
+        pack_name = 'fake_pack'
+        pack_vers = '3.0'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+        macsydata_target = os.path.join(self.tmpdir, 'target')
+
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.target = macsydata_target
+
+
+        with self.catch_log(log_name='macsydata'):
+            macsydata.do_install(self.args)
+        expected_pack_path = os.path.join(macsydata_target, pack_name)
+        self.assertTrue(os.path.exists(expected_pack_path))
+        self.assertTrue(os.path.isdir(expected_pack_path))
+        self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'metadata.yml')))
+        self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'README')))
+        self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'definitions')))
+        self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
+
 
 
     def test_install_local_already_installed(self):
@@ -705,6 +742,7 @@ Available versions: 1.0"""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
+        self.args.target = None
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -740,6 +778,7 @@ To force installation use option -f --force-reinstall."""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
+        self.args.target = None
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -783,6 +822,7 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
+        self.args.target = None
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -813,6 +853,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # functions which do net operations
         # so we need to mock them
@@ -854,6 +895,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # functions which do net operations
         # so we need to mock them
@@ -893,6 +935,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # function which doing net operations
         # so we need to mock them
@@ -933,6 +976,7 @@ To force installation use option -f --force-reinstall.""")
         self.args.upgrade = False
         self.args.force = True
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # function which doing net operations
         # so we need to mock them
@@ -976,6 +1020,7 @@ To force installation use option -f --force-reinstall.""")
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # function which doing net operations
         # so we need to mock them
@@ -1016,6 +1061,7 @@ To install it please run 'macsydata install --upgrade {pack_name}'""")
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # function which doing net operations
         # so we need to mock them
@@ -1057,6 +1103,7 @@ To downgrade to 0.0b1 use option -f --force-reinstall.""")
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
+        self.args.target = None
 
         # functions which do net operations
         # so we need to mock them
