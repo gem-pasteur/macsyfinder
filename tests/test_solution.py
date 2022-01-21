@@ -24,6 +24,7 @@
 
 import os
 import argparse
+import random
 
 from macsypy.hit import CoreHit, ModelHit, Loner, MultiSystem, LonerMultiSystem,  HitWeight
 from macsypy.config import Config, MacsyDefaults
@@ -33,7 +34,7 @@ from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
 from macsypy.system import System, RejectedClusters
-from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
+from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems, Solution
 from tests import MacsyTest
 
     
@@ -418,6 +419,107 @@ def _build_systems(models, clusters, cfg):
     return systems
 
 
+class SolutionTest(MacsyTest):
+
+    def setUp(self) -> None:
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        self.cfg = Config(MacsyDefaults(), args)
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        self.profile_factory = ProfileFactory(self.cfg)
+        self.models, self.clusters = _build_clusters(self.cfg, self.profile_factory)
+        self.systems = _build_systems(self.models, self.clusters, self.cfg)
+
+
+    def test_gt(self):
+        s1 = Solution([self.systems[k] for k in 'AB'])   # 5 + 3     = 8 hits, 2 syst, 0.875, [2, 2, 3, 5, 5, 6, 7, 8]
+        s2 = Solution([self.systems[k] for k in 'HIJ'])  # 2 + 2 + 2 = 6 hits, 3 syst, 0.722, [2, 9, 7, 8, 8, 9]
+        s3 = Solution([self.systems[k] for k in 'DC'])   # 4 + 2     = 6 hits, 2 syst  0.900, [2, 9, 3, 6, 7, 8]
+        s4 = Solution([self.systems[k] for k in 'CF'])   # 4 + 1     = 5 hits, 2 syst, 0.900, [3, 6, 7, 8, 9]
+        s5 = Solution([self.systems[k] for k in 'EC'])   # 1 + 4     = 5 hits, 2 syst, 0.900, [3, 3, 6, 7, 8]
+        s6 = Solution([self.systems[k] for k in 'DB'])   # 2 + 3     = 5 hits, 2 syst, 0.875, [2, 9, 6, 7, 8]
+        self.assertGreater(s1, s2)  # s1 more hits than s2
+        self.assertGreater(s2, s3)  # s2 more systems than s3
+        self.assertGreater(s5, s6)  # s5 greater awholeness than s6
+        self.assertGreater(s4, s5)  # s4 "bigger positions than s5
+
+    def test_lt(self):
+        s1 = Solution([self.systems[k] for k in 'AB'])   # 5 + 3     = 8 hits, 2 syst, 0.875, [2, 2, 3, 5, 5, 6, 7, 8]
+        s2 = Solution([self.systems[k] for k in 'HIJ'])  # 2 + 2 + 2 = 6 hits, 3 syst, 0.722, [2, 9, 7, 8, 8, 9]
+        s3 = Solution([self.systems[k] for k in 'DC'])   # 4 + 2     = 6 hits, 2 syst  0.900, [2, 9, 3, 6, 7, 8]
+        s4 = Solution([self.systems[k] for k in 'CF'])   # 4 + 1     = 5 hits, 2 syst, 0.900, [3, 6, 7, 8, 9]
+        s5 = Solution([self.systems[k] for k in 'EC'])   # 1 + 4     = 5 hits, 2 syst, 0.900, [3, 3, 6, 7, 8]
+        s6 = Solution([self.systems[k] for k in 'DB'])   # 2 + 3     = 5 hits, 2 syst, 0.875, [2, 9, 6, 7, 8]
+        self.assertLess(s2, s1)  # s1 more hits than s2
+        self.assertLess(s3, s2)  # s2 more systems than s3
+        self.assertLess(s6, s5)  # s5 greater awholeness than s6
+        self.assertLess(s5, s4)  # s4 "bigger positions than s5
+
+
+    def test_sorting(self):
+        s1 = Solution([self.systems[k] for k in 'AB'])   # 5 + 3     = 8 hits, 2 syst, 0.875, [2, 2, 3, 5, 5, 6, 7, 8]
+        s2 = Solution([self.systems[k] for k in 'HIJ'])  # 2 + 2 + 2 = 6 hits, 3 syst, 0.722, [2, 9, 7, 8, 8, 9]
+        s3 = Solution([self.systems[k] for k in 'DC'])   # 4 + 2     = 6 hits, 2 syst  0.900, [2, 9, 3, 6, 7, 8]
+        s4 = Solution([self.systems[k] for k in 'CF'])   # 4 + 1     = 5 hits, 2 syst, 0.900, [3, 6, 7, 8, 9]
+        s5 = Solution([self.systems[k] for k in 'EC'])   # 1 + 4     = 5 hits, 2 syst, 0.900, [3, 3, 6, 7, 8]
+        s6 = Solution([self.systems[k] for k in 'DB'])   # 2 + 3     = 5 hits, 2 syst, 0.875, [2, 9, 6, 7, 8]
+
+        expected_order = [s6, s5, s4, s3, s2, s1]
+        shuffled_sol = expected_order[:]
+        random.shuffle(shuffled_sol)
+        sorted_sol = sorted(shuffled_sol)
+        self.assertEqual(expected_order, sorted_sol)
+
+    def test_systems(self):
+        s1 = Solution([self.systems[k] for k in 'CD'])
+        self.assertEqual([self.systems['D'], self.systems['C']],
+                         s1.systems)
+
+    def test_score(self):
+        s = Solution([self.systems[k] for k in 'CD'])
+        self.assertEqual(s.score, 4.5)
+
+        s = Solution([self.systems[k] for k in 'HIJ'])
+        self.assertEqual(s.score, 4.5)
+
+    def test_average_wholeness(self):
+        s = Solution([self.systems[k] for k in 'CD'])
+        self.assertEqual(s.average_wholeness, 0.9)
+
+        s = Solution([self.systems[k] for k in 'HIJ'])
+        self.assertEqual(s.average_wholeness, 0.7222222222222222)
+
+    def test_hits_number(self):
+        s = Solution([self.systems[k] for k in 'CD'])
+        self.assertEqual(s.hits_number, 6)
+
+        s = Solution([self.systems[k] for k in 'AB'])
+        self.assertEqual(s.hits_number, 8)
+
+
+    def test_hits_positions(self):
+        s = Solution([self.systems[k] for k in 'CD'])
+        self.assertEqual(s.hits_positions,
+                         [2, 9, 3, 6, 7, 8])
+
+        s = Solution([self.systems[k] for k in 'AB'])
+        self.assertEqual(s.hits_positions,
+                         [2, 2, 3, 5, 5, 6, 7, 8])
+
+    def test_iteration(self):
+        # be careful the systems are ordered in Solution
+        systems = [self.systems[k] for k in 'HIJ']
+        s = Solution(systems)
+        got = [syst for syst in s]
+        self.assertEqual(systems,
+                         got)
+
+
 class SolutionExplorerTest(MacsyTest):
 
     @classmethod
@@ -458,14 +560,13 @@ class SolutionExplorerTest(MacsyTest):
         # B and D are compatible 3.5
         # So the best Solution expected is C D 4.5
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'CD']]
+        expected_sol = [Solution([self.systems[k] for k in 'CD'])]
         # The order of solutions are not relevant
         # The order of systems in each solutions are not relevant
         # transform list in set to compare them
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'ABC']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -477,11 +578,9 @@ class SolutionExplorerTest(MacsyTest):
         # B and A are compatible 3.5
         # So the best Solution expected is B and A
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'BA']]
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [Solution([self.systems[k] for k in 'BA'])]
         self.assertEqual(score, 3.5)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'BCE']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -493,11 +592,9 @@ class SolutionExplorerTest(MacsyTest):
         # B and E are compatible 2.5
         # So the best Solution expected is C
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'C']]
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [Solution([self.systems[k] for k in 'C'])]
         self.assertEqual(score, 3.0)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
         # systems = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5),
         #            ('replicon_id_D', 1.5), ('replicon_id_E', 0.5)]
@@ -513,11 +610,9 @@ class SolutionExplorerTest(MacsyTest):
         systems = [self.systems[k] for k in 'ABCDE']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'CD']]
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [Solution([self.systems[k] for k in 'CD'])]
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
         # systems = [('replicon_id_C', 3.0), ('replicon_id_B', 2.0), ('replicon_id_A', 1.5),
         #            ('replicon_id_D', 1.5), ('replicon_id_E', 0.5), ('replicon_id_F', 1.0)]
@@ -536,17 +631,14 @@ class SolutionExplorerTest(MacsyTest):
         systems = [self.systems[k] for k in 'ABCDEF']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'BAF'],  # 3 + 5 + 1 = 9 hits
-                        [self.systems[k] for k in 'CD']]   # 4 + 2 = 7 hits
-        best_sol_unordered = {frozenset(sol) for sol in best_sol}
-        expected_sol_unordered = {frozenset(sol) for sol in expected_sol}
-        self.assertEqual(score, 4.5)
+        expected_sol = [Solution([self.systems[k] for k in 'BAF']),  # 3 + 5 + 1 = 9 hits
+                        Solution([self.systems[k] for k in 'CD'])]   # 4 + 2 = 7 hits
+
+        self.assertEqual(best_sol[0].score, 4.5)
+        self.assertEqual(best_sol[1].score, 4.5)
         # test if the composition is right
-        self.assertSetEqual(best_sol_unordered, expected_sol_unordered)
+        self.assertEqual(best_sol, expected_sol)
         # test if solution order is right
-        best_sol_ordered = [frozenset(sol) for sol in best_sol]
-        expected_sol_ordered = [frozenset(sol) for sol in expected_sol]
-        self.assertListEqual(best_sol_ordered, expected_sol_ordered)
 
         systems = [self.systems[k] for k in 'ABCDGH']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -566,14 +658,12 @@ class SolutionExplorerTest(MacsyTest):
         # So the best Solution expected are C D / C H / G D / G H with score 4.5
 
         best_sol, score = find_best_solutions(sorted_syst)
-        expected_sol = [[self.systems[k] for k in 'CD'],  # 4 + 2 hits
-                        [self.systems[k] for k in 'CH'],  # 4 + 2
-                        [self.systems[k] for k in 'GD'],  # 4 + 2
-                        [self.systems[k] for k in 'GH']]  # 4 + 2
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [Solution([self.systems[k] for k in 'CD']),  # 4 + 2 hits
+                        Solution([self.systems[k] for k in 'CH']),  # 4 + 2
+                        Solution([self.systems[k] for k in 'GD']),  # 4 + 2
+                        Solution([self.systems[k] for k in 'GH'])]  # 4 + 2
         self.assertEqual(score, 4.5)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
         systems = [self.systems[k] for k in 'HJKI']
         sorted_syst = sorted(systems, key=lambda s: (- s.score, s.id))
@@ -587,12 +677,10 @@ class SolutionExplorerTest(MacsyTest):
         # replicon_id_J ['hit_abc', 'hit_tadZ']
         # replicon_id_K ['hit_flgB', 'hit_sctn']
         #                                                             score  Nb hits  nb sys wholeness
-        expected_sol = [[self.systems[k] for k in 'HI'],  # 1.5 + 1.5 = 3.0    4        2       1.0
-                        [self.systems[k] for k in 'JK']]  # 1.5 + 1.5 = 3.0    4        2       0.5
-        best_sol = {frozenset(sol) for sol in best_sol}
-        expected_sol = {frozenset(sol) for sol in expected_sol}
+        expected_sol = [Solution([self.systems[k] for k in 'HI']),  # 1.5 + 1.5 = 3.0    4        2       1.0
+                        Solution([self.systems[k] for k in 'JK'])]  # 1.5 + 1.5 = 3.0    4        2       0.5
         self.assertEqual(score, 3.0)
-        self.assertSetEqual(best_sol, expected_sol)
+        self.assertEqual(best_sol, expected_sol)
 
 
     def test_combine_clusters(self):

@@ -750,11 +750,11 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         sol_serializer = TsvSolutionSerializer()
         print("# Systems found:", file=sys_file)
         print(sol_serializer.header, file=sys_file)
+
         for sol_id, solution in enumerate(solutions, 1):
-            solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file, end='')
 
-            warnings = _loner_warning(solution)
+            warnings = _loner_warning(solution.systems)
             if warnings:
                 print("\n".join(warnings) + "\n", file=sys_file)
     else:
@@ -764,7 +764,7 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
 def _loner_warning(systems):
     """
     :param systems: sequence of systems
-    :return: warning for loner which have less occurrences tham systems occurences in which this lone is used
+    :return: warning for loner which have less occurrences than systems occurrences in which this lone is used
              except if the loner is also multi system
     :rtype: list of string
     """
@@ -782,7 +782,7 @@ def _loner_warning(systems):
                 loner_tracker[loner] = [syst]
     for loner, systs in loner_tracker.items():
         if len(loner) < len(systs):
-            # len(loners) count the number of loner occurence the loner and its counterpart
+            # len(loners) count the number of loner occurrence the loner and its counterpart
             warnings.append(f"# WARNING Loner: there is only {len(loner)} occurrence(s) of loner '{loner.gene.name}' "
                             f"and {len(systs)} potential systems [{', '.join([s.id for s in systs])}]")
 
@@ -1067,7 +1067,7 @@ def main(args=None, loglevel=None):
         # select the best systems #
         ###########################
         logger.info("\n{:#^70}".format(" Computing best solutions "))
-        best_solutions = []
+        all_best_solutions = []
         one_best_solution = []
 
         # group systems found by replicon
@@ -1075,15 +1075,15 @@ def main(args=None, loglevel=None):
         import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
-            logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
+            logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
             t0 = time.time()
             best_sol_4_1_replicon, score = find_best_solutions(syst_group)
             t1 = time.time()
             logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
             # if several solutions are equivalent same number of system and score is same
-            # store all equivalent solution in best_solution => all_best_systems
+            # store all equivalent solution in all_best_solution => all_best_systems
             # pick one in one_best_solution => best_systems
-            best_solutions.extend(best_sol_4_1_replicon)
+            all_best_solutions.extend(best_sol_4_1_replicon)
             one_best_solution.append(best_sol_4_1_replicon[0])
 
         ##############################
@@ -1108,11 +1108,10 @@ def main(args=None, loglevel=None):
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
-            solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
+            solutions_to_tsv(all_best_solutions, track_multi_systems_hit, tsv_file)
 
         best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
         with open(best_solution_filename, "w") as best_solution_file:
-            # flattern the list and sort it
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             systems_to_tsv(one_best_solution, track_multi_systems_hit, best_solution_file)
