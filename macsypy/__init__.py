@@ -22,10 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
-from time import strftime, localtime
 import sys
 
-__version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
+__version__ = '2.0rc6'
 
 __MACSY_CONF__ = '$MACSYCONF'
 __MACSY_DATA__ = '$MACSYDATA'
