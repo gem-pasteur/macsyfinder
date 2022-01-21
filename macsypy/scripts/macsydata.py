@@ -211,7 +211,7 @@ def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
-            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix()):
                 registry.add(model_loc)
         except PermissionError as err:
             _log.warning(f"{model_dir} is not readable: {err} : skip it.")
@@ -249,8 +249,15 @@ def do_install(args: argparse.Namespace) -> None:
         remote = True
         user_req = requirements.Requirement(args.package)
 
+    if args.target:
+        dest = os.path.realpath(args.target)
+        if os.path.exists(dest) and not os.path.isdir(dest):
+            raise RuntimeError("'{}' already exist and is not a directory.")
+        elif not os.path.exists(dest):
+            os.makedirs(dest)
+
     pack_name = user_req.name
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.target)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
@@ -333,6 +340,8 @@ def do_install(args: argparse.Namespace) -> None:
             raise RuntimeError("'{}' already exist and is not a directory.")
         elif not os.path.exists(dest):
             os.makedirs(dest)
+    elif args.target:
+        dest = args.target
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
@@ -700,6 +709,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    default=False,
                                    help='Install to the MacSYFinder user install directory for your platform. '
                                         'Typically ~/.macsyfinder/data')
+    install_subparser.add_argument('-t', '--target',
+                                   help="Install packages into <TARGET> dir.")
     install_subparser.add_argument('-U', '--upgrade',
                                    action='store_true',
                                    default=False,
