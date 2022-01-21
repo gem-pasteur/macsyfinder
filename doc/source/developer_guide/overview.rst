@@ -137,7 +137,7 @@ In this section I'll give you an idea of the macsyfinder functioning at very hig
 
 As all program the entrypoint is the main function
 The goal of `macsyfinder.main` is to parse the command line.
-Then to creates a :ref:`config` object and also initialize the logger.
+Then to creates a :ref:`configuration` object and also initialize the logger.
 After that it call main_search_systems which contains the macsyfinder logic
 
 The first main_search_systems task is to create models asked by the user on the command line.
