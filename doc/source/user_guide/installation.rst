@@ -183,6 +183,18 @@ To know how to cite a model package::
 
     macsydata cite <model name>
 
+To show the model definition::
+
+    macsydata definition <package or subpackage> model1 [model2, ...]
+
+for instance to show model definitions T6SSii and T6SSiii in TXSS+/bacterial subpackage::
+
+    macsydata definition TXSS+/bacterial T6SSii T6SSiii
+
+To show all models definitions in TXSS+/bacterial subpackage::
+
+    macsydata definition TXSS+/bacterial
+
 To list all `macsydata` subcommands::
 
     macsydata --help

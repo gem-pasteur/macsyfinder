@@ -36,8 +36,7 @@ from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-class Test(MacsyTest):
-
+class TestIndex(MacsyTest):
 
     def setUp(self):
         args = argparse.Namespace()
@@ -81,77 +80,92 @@ class Test(MacsyTest):
         idx = Indexes(self.cfg)
         # case new style idx
         with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx"), 'w') as idx_file:
-            idx_content_new = f"{self.cfg.sequence_db()}\nVICH001.B.00001.C001_01359;200;1\n"
+            idx_content_new = f"{self.cfg.sequence_db()}\nVICH001.B.00001.C001_01359{idx._field_separator}200{idx._field_separator}1\n"
             idx_file.write(idx_content_new)
         my_idx = idx.build()
         self.assertEqual(os.path.getsize(idx_file.name), len(idx_content_new))
 
-        # case old style
+        # case old style no path as first line
         idx_path = os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx")
         with open(idx_path, 'w') as idx_file:
             idx_content_old = "VICH001.B.00001.C001_01359;200;1\n"
             idx_file.write(idx_content_old)
         with self.catch_log(log_name='macsypy') as log:
-            my_idx = idx.build()
+            _ = idx.build()
             log_msg = log.get_value().strip()
         self.assertEqual(log_msg,
                          f"The '{idx_path}' index file is in old format. Force index building.")
+
+        # case old style bad separator
+        idx_path = os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx")
+        with open(idx_path, 'w') as idx_file:
+            idx_content_old = f"{self.cfg.sequence_db()}\nVICH001.B.00001.C001_01359;200;1\n"
+            idx_file.write(idx_content_old)
+        with self.catch_log(log_name='macsypy') as log:
+            _ = idx.build()
+            log_msg = log.get_value().strip()
+        self.assertEqual(log_msg,
+                         f"The '{idx_path}' index file is in old format. Force index building.")
+
+        # case idx seems valid read it
         with open(os.path.join(os.path.dirname(self.cfg.sequence_db()), idx.name + ".idx")) as idx_file_test:
             data = idx_file_test.read()
 
         new_content = f"""{self.cfg.sequence_db()}
-VICH001.B.00001.C001_01359;200;1
-VICH001.B.00001.C001_01360;484;2
-VICH001.B.00001.C001_01361;406;3
-VICH001.B.00001.C001_01390;326;4
-VICH001.B.00001.C001_01391;54;5
-VICH001.B.00001.C001_01392;206;6
-VICH001.B.00001.C001_01393;477;7
-VICH001.B.00001.C001_01394;126;8
-VICH001.B.00001.C001_01395;405;9
-VICH001.B.00001.C001_01396;572;10
-VICH001.B.00001.C001_01397;721;11
-VICH001.B.00001.C001_01398;467;12
-VICH001.B.00001.C001_01399;720;13
-VICH001.B.00001.C001_01400;559;14
-VICH001.B.00001.C001_01401;153;15
-VICH001.B.00001.C001_01402;4558;16
-VICH001.B.00001.C001_01500;120;17
-VICH001.B.00001.C001_01501;344;18
-VICH001.B.00001.C001_01502;478;19
-VICH001.B.00001.C001_01503;724;20
-VICH001.B.00001.C001_01504;309;21
-VICH001.B.00001.C001_01505;390;22
-VICH001.B.00001.C001_01506;419;23
-VICH001.B.00001.C001_01540;353;24
-VICH001.B.00001.C001_01541;229;25
-VICH001.B.00001.C001_01542;267;26
-VICH001.B.00001.C001_01543;328;27
-VICH001.B.00001.C001_01544;258;28
-VICH001.B.00001.C001_01545;228;29
-VICH001.B.00001.C001_01546;538;30
-VICH001.B.00001.C001_01547;77;31
-VICH001.B.00001.C001_01548;476;32
-VICH001.B.00001.C001_01549;324;33
-VICH001.B.00001.C001_01550;387;34
-VICH001.B.00001.C001_01551;382;35
-VICH001.B.00001.C001_01552;149;36
-VICH001.B.00001.C001_01553;319;37
-VICH001.B.00001.C001_01554;237;38
-VICH001.B.00001.C001_01555;74;39
-VICH001.B.00001.C001_01556;362;40
-VICH001.B.00001.C001_01557;170;41
-VICH001.B.00001.C001_01558;77;42
-VICH001.B.00001.C001_01559;296;43
-VICH001.B.00001.C001_01560;405;44
-VICH001.B.00001.C001_01561;182;45
-VICH001.B.00001.C001_01562;445;46
-VICH001.B.00001.C001_01563;212;47
-VICH001.B.00001.C001_01564;387;48
-VICH001.B.00001.C001_01565;414;49
+VICH001.B.00001.C001_01359{idx._field_separator}200{idx._field_separator}1
+VICH001.B.00001.C001_01360{idx._field_separator}484{idx._field_separator}2
+VICH001.B.00001.C001_01361{idx._field_separator}406{idx._field_separator}3
+VICH001.B.00001.C001_01390{idx._field_separator}326{idx._field_separator}4
+VICH001.B.00001.C001_01391{idx._field_separator}54{idx._field_separator}5
+VICH001.B.00001.C001_01392{idx._field_separator}206{idx._field_separator}6
+VICH001.B.00001.C001_01393{idx._field_separator}477{idx._field_separator}7
+VICH001.B.00001.C001_01394{idx._field_separator}126{idx._field_separator}8
+VICH001.B.00001.C001_01395{idx._field_separator}405{idx._field_separator}9
+VICH001.B.00001.C001_01396{idx._field_separator}572{idx._field_separator}10
+VICH001.B.00001.C001_01397{idx._field_separator}721{idx._field_separator}11
+VICH001.B.00001.C001_01398{idx._field_separator}467{idx._field_separator}12
+VICH001.B.00001.C001_01399{idx._field_separator}720{idx._field_separator}13
+VICH001.B.00001.C001_01400{idx._field_separator}559{idx._field_separator}14
+VICH001.B.00001.C001_01401{idx._field_separator}153{idx._field_separator}15
+VICH001.B.00001.C001_01402{idx._field_separator}4558{idx._field_separator}16
+VICH001.B.00001.C001_01500{idx._field_separator}120{idx._field_separator}17
+VICH001.B.00001.C001_01501{idx._field_separator}344{idx._field_separator}18
+VICH001.B.00001.C001_01502{idx._field_separator}478{idx._field_separator}19
+VICH001.B.00001.C001_01503{idx._field_separator}724{idx._field_separator}20
+VICH001.B.00001.C001_01504{idx._field_separator}309{idx._field_separator}21
+VICH001.B.00001.C001_01505{idx._field_separator}390{idx._field_separator}22
+VICH001.B.00001.C001_01506{idx._field_separator}419{idx._field_separator}23
+VICH001.B.00001.C001_01540{idx._field_separator}353{idx._field_separator}24
+VICH001.B.00001.C001_01541{idx._field_separator}229{idx._field_separator}25
+VICH001.B.00001.C001_01542{idx._field_separator}267{idx._field_separator}26
+VICH001.B.00001.C001_01543{idx._field_separator}328{idx._field_separator}27
+VICH001.B.00001.C001_01544{idx._field_separator}258{idx._field_separator}28
+VICH001.B.00001.C001_01545{idx._field_separator}228{idx._field_separator}29
+VICH001.B.00001.C001_01546{idx._field_separator}538{idx._field_separator}30
+VICH001.B.00001.C001_01547{idx._field_separator}77{idx._field_separator}31
+VICH001.B.00001.C001_01548{idx._field_separator}476{idx._field_separator}32
+VICH001.B.00001.C001_01549{idx._field_separator}324{idx._field_separator}33
+VICH001.B.00001.C001_01550{idx._field_separator}387{idx._field_separator}34
+VICH001.B.00001.C001_01551{idx._field_separator}382{idx._field_separator}35
+VICH001.B.00001.C001_01552{idx._field_separator}149{idx._field_separator}36
+VICH001.B.00001.C001_01553{idx._field_separator}319{idx._field_separator}37
+VICH001.B.00001.C001_01554{idx._field_separator}237{idx._field_separator}38
+VICH001.B.00001.C001_01555{idx._field_separator}74{idx._field_separator}39
+VICH001.B.00001.C001_01556{idx._field_separator}362{idx._field_separator}40
+VICH001.B.00001.C001_01557{idx._field_separator}170{idx._field_separator}41
+VICH001.B.00001.C001_01558{idx._field_separator}77{idx._field_separator}42
+VICH001.B.00001.C001_01559{idx._field_separator}296{idx._field_separator}43
+VICH001.B.00001.C001_01560{idx._field_separator}405{idx._field_separator}44
+VICH001.B.00001.C001_01561{idx._field_separator}182{idx._field_separator}45
+VICH001.B.00001.C001_01562{idx._field_separator}445{idx._field_separator}46
+VICH001.B.00001.C001_01563{idx._field_separator}212{idx._field_separator}47
+VICH001.B.00001.C001_01564{idx._field_separator}387{idx._field_separator}48
+VICH001.B.00001.C001_01565{idx._field_separator}414{idx._field_separator}49
 """
 
         self.assertEqual(data, new_content)
+
+
 
 
     def test_build_force(self):

@@ -15,15 +15,15 @@ model
 
 The model is a formal representation of system.
 The model is describe in terms of components.
-There are 3 component classes:
+There are 4 component classes:
 
     * genes which are mandatory
     * genes which are accessory
+    * genes which are neutral
     * genes which are forbiden
 
-each genes can have homolgs or analogs.
-Analogs and Homolgs refer to genes described in an other model.
-
+Each genes can have Exchangeable.
+An exchangeable is another gene which can paly the same role in the system. Usualy an analog or homolog.
 The models describe also distance constraints between genes:
 
     * inter_gene_max_space
@@ -35,8 +35,14 @@ and quorum constraints
     * min_mandatory_genes_required
     * min_genes_required
 
+and if a gene can be shared by several systems (several occurrences of the same model)
 
-.. _model_bank_api:
+    * multisystem
+
+.. _model_api:
+
+model API reference
+===================
 
 ModelBank
 =========
@@ -45,8 +51,6 @@ ModelBank
    :private-members:
    :special-members:
 
-
-.. _model_api:
 
 Model
 =====

@@ -34,7 +34,7 @@ import itertools
 from tests import MacsyTest, which
 from macsypy.scripts import macsyfinder
 from macsypy.error import OptionError
-from macsypy.system import System, AbstractUnordered
+from macsypy.system import System, AbstractUnordered, RejectedClusters
 
 
 class Test(MacsyTest):
@@ -55,6 +55,8 @@ class Test(MacsyTest):
         self.summary = "best_solution_summary.tsv"
         self.rejected_clusters = "rejected_clusters.txt"
         self.uncomplete_systems = "uncomplete_systems.txt"
+        self.loners = "best_solution_loners.tsv"
+        self.multisystems = "best_solution_multisystems.tsv"
 
 
     def tearDown(self):
@@ -62,6 +64,7 @@ class Test(MacsyTest):
             pass
             # self.out_dir is set in self._macsyfinder_run
             shutil.rmtree(self.out_dir)
+            pass
         except:
             pass
 
@@ -83,20 +86,26 @@ class Test(MacsyTest):
         for file_name in (self.all_systems_tsv,
                           self.all_best_solutions,
                           self.best_solution,
+                          self.loners,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
                 self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
         expected_result = self.find_data(expected_result_dir, self.rejected_clusters)
         get_results = os.path.join(self.out_dir, self.rejected_clusters)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
-
     def test_only_loners(self):
+        # genetic organization of MOBP1_twice.fast
+        # gene        MOBP1          MOBP1
+        # gene_id     0832           0885
+        # pos          8               19
+        #             [ ]             [  ]
         expected_result_dir = self.find_data("functional_test_only_loners")
         args = "--db-type ordered_replicon " \
-               "--replicon-topology linear  " \
+               "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
                "-m test_loners MOB_cf_T5SS " \
                "-o {out_dir} " \
@@ -108,26 +117,30 @@ class Test(MacsyTest):
         for file_name in (self.all_systems_tsv,
                           self.all_best_solutions,
                           self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_circular(self):
         # genetic organization of test_3.fasta
         # gene       abc    mfp    omf    omf    abc    gspd
         # gene id   01397  01398  01548  01562  01399  01400
-        # pos        8      9      19     27     37     38
+        # pos        2      3      19     27     37     38
         # clst                 ]               [
-        # syst (abc,37),  (gspd, 38), (abc,2), (mfp,3)
+        # syst (abc,2), (mfp,3), (abc,37), (gspd, 38)
+        # in T12SS-simple-exch omf is not a loner
 
         expected_result_dir = self.find_data("functional_test_ordered_circular")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
-               "--replicon-topology circular  " \
+               "--replicon-topology circular " \
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
@@ -139,26 +152,29 @@ class Test(MacsyTest):
         for file_name in (self.all_systems_tsv,
                           self.all_best_solutions,
                           self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
 
 
     def test_ordered_linear(self):
         # genetic organization of test_3.fasta
         # gene       abc    mfp    omf    omf    abc    gspd
         # gene id   01397  01398  01548  01562  01399  01400
-        # pos        8      9      19     27     37     38
-        # clst    [            ]               [           ]
+        # pos        2      3      19     27     37     38
+        # clst    [  M      A  ]    M     M     [ M      A   ]
         # syst  no system
-
+        # in T12SS-simple-exch omf is not a loner
         expected_result_dir = self.find_data("functional_test_ordered_linear")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
         args = "--db-type ordered_replicon " \
-               "--replicon-topology linear  " \
+               "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
@@ -170,8 +186,576 @@ class Test(MacsyTest):
         for file_name in (self.all_systems_tsv,
                           self.all_best_solutions,
                           self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_1_cluster_3_loners(self):
+        # genetic organization of test_1.fasta
+        #
+        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf
+        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
+        # pos         2      3     11     12     13      14    23     32     46
+        # clst      [ML      M]   [ M      M      M      ME]  [ML]   [ML]   [ML]
+        # syst                    [abc    mfp    abc    gspd                omf] with equivalent for omf46 [omf23 omf32]
+        # score                     1      1      0      0                   .7  = 2.7
+        # loners      X                                        omf    omf    omf
+        # omf2 colocate with mfp3  => not considerde as Loner
+        expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_2_clusters_3_loners(self):
+        # genetic organization of test_5.fasta
+        #
+        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf     abc    mfp   gspd
+        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562   01150  01361  0409
+        # pos         2      3     11     12     13      14    23     32     46       55     56    57
+        # clst      [ ML     ML]  [M      M      M       ME]  [ML]   [ML]   [ML]    [ M       M    ME]
+        # syst                    [abc    mfp    abc    gspd] [omf]  [omf]  [omf]   [abc     mfp  gspd ]
+        # 2 systems [abc    mfp    abc    gspd  omf46] with equivalent for omf46 [omf23 omf32]
+        # score       1      1      0      0      .7  = 2.7
+        #           [abc     mfp    gspd   omf46] with equivalent for omf46 [omf23 omf32]
+        #             1       1      0     .7        =  2.7
+        expected_result_dir = self.find_data("functional_test_ordered_2_clusters_3_loners")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_2_clusters_1_loner(self):
+        # genetic organization of test_6.fasta
+        #
+        # gene       mfp    abc    mfp    abc    gspd   omf    abc    mfp   gspd
+        # gene id   01361  01397  01398  01399  01400  01506  01150  01361  00409
+        # pos         2      10     11     12     13     22     51    52     53
+        # clst        M    [ M       M      M     ME]   [ML]   [M      M     ME]
+        # syst              [abc    mfp    abc   gspd]  [omf]  [abc   mfp   gspd ]
+        # 2 systems [abc    mfp    abc    gspd  omf22] with warning 1 loner 2 systems
+        # score       1      1      0      0     .7   = 2.7
+        #           [abc     mfp    gspd   omf22] with with warning 1 loner 2 systems
+        #             1       1      0      .7   =  2.7
+        expected_result_dir = self.find_data("functional_test_ordered_2_clusters_1_loner")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_1_loner_in_clust(self):
+        # genetic organization of test_2.fasta
+        #
+        # gene       abc    mfp    abc    gspd   omf    omf    omf
+        # gene id   01397  01398  01399  01400  01506  01548  01562
+        # pos        8      9      10      11    13     29     43
+        # clst     [ M      M       M      ME     M]   [ML]   [ML]
+        # syst     [abc    mfp    abc    gspd   omf]
+        # score      1      1      0      0      1   = 3.0
+
+        expected_result_dir = self.find_data("functional_test_ordered_1_loner_in_clust")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_1_loner_exch_in_clust(self):
+        # genetic organization of test_8.fasta
+        #
+        # gene       abc    mfp    abc    gspd   gspf    omf    omf
+        # gene id   01397  01398  01399  01400  02599  01548  01562
+        # pos        8      9      10      11    13     29     43
+        # clst     [ M      M      M       ME    MLE]   [ML]  [ML]
+        # syst     [abc    mfp    abc    gspd   gspf]
+        # score      1      1      0      0      0.7  = 2.7
+
+        expected_result_dir = self.find_data("functional_test_ordered_1_loner_exch_in_clust")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_1_clusters_3_loners_w_exchangeable(self):
+        # genetic organization of test_7.fasta
+        #
+        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    gspF
+        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  02599
+        # pos         2      3     11     12     13      14    23     32     46
+        # clst      [ML      M ]  [M       M      M      ME]  [ML]    [ML]  [ML]
+        # syst                    [abc    mfp    abc    gspd   omf] with equivalent for omf23 [omf32, gspF46]
+        # score                     1      1      0      0      .7  = 2.7
+        # gspF46 have a score (465.3). omf (90, 111.5, 87) but it's an exhangeable so it canot be the "best loner"
+
+        expected_result_dir = self.find_data("functional_test_ordered_1_cluster_3_loners_w_exchangeable")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-loner-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_loci(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene       abc    mfp    abc    gspd   omf    omf
+        # gene id   01397  01398  01399  01400  01548  01562
+        # pos        6      7      14      15    26     40
+        # clst      [M      A]    [M       ME]
+        # 1 syst   [abc6, mfp7    abc14, gspd15]
+        # score      1      .5     1      .7  = 1.5 + 1.7 = 3.2 - (1 * 1.5 redundancy penalty) = 2.7
+        # in T12SS-simple-exch omf is not a loner
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_loci")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               "--multi-loci functional/T12SS-simple-exch " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_single_loci(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene       abc    mfp    abc    gspd   omf    omf
+        # gene id   01397  01398  01399  01400  01548  01562
+        # pos        6      7      14      15    26     40
+        # clst      [M      A]     [M      ME]
+        # syst    no system
+
+        expected_result_dir = self.find_data("functional_test_ordered_single_loci")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_system(self):
+        # genetic organization of test_13.fasta
+        #
+        # gene      abc    mfp    gspd   omf   gspf     abc    omf    gspd   omf
+        # gene id  01397  01398  01400  01360  02599   01399  01506  00409  01562
+        # pos       8       9      19     20    21      34     35      36     43
+        # clst    [ M       A ]  [ M     M_MS    A ]   [M     M_MS     M]
+        # syst 1               [gspd19, omf20, gspf21][abc34, omf35, gspd36]
+        # score                     1       1      .5                            = 2.5
+        # score                                        1       1       1         = 3.0
+        # syst 2   [abc8    mfp9] + [omf20]
+        # score      1       .5       .7                                         = 2.2
+        # The multi system is in system
+        # So it can be used for other clusters to form new occurrence
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-multisystem " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_system_out_system(self):
+        # genetic organization of test_12.fasta
+        #
+        # gene      abc    mfp    gspd   omf    omf    omf
+        # gene id  01397  01398  01400  01360  01506  01562
+        # pos       8       9      19     20    33      39
+        # clst    [ M       A ]  [ M     M_MS ]
+        # syst    no system
+        # The multi system is not in system
+        # So it cannot be used to build new systems
+
+        expected_result_dir = self.find_data("functional_test_ordered_multi_system_out_system")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-multisystem " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_degenerated_systems(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene      mfp   gspd
+        # gene id  01398  01400
+        # pos        7      15
+        # syst     [mfp    gspd]
+        # score    [M        A ]   = 1.5
+        # inter_gene_max_space="8"
+        expected_result_dir = self.find_data("functional_test_degenerated_systems")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional degenerated_systems " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_uncomplete_degenerated_systems(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene      mfp(Man)   gspd(acce)
+        # gene id    01398        01400
+        # pos         7            15
+        # syst       mfp
+        # score      [1]                   = 1
+        # inter_gene_max_space="5"
+        expected_result_dir = self.find_data("functional_test_uncomplete_degenerated_systems")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  uncomplete_degenerated_systems " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+    def test_2_systems_not_compatible(self):
+        # genetic organization of test_9.fasta
+        #
+        # gene      abc   mfp    gspd   omf    gspf
+        # gene id  01397 01398  01400  01506  02599
+        # pos       9     10      13    15     17
+        # syst A   [abc    mfp   gspd]
+        #            A      A     M
+        # score      .5    .5     1   = 2.0
+        # syst B                [gspd   omf   gspf]
+        #                         M      A     A
+        # score                   1      .5    .5  = 2.0
+        # 2 systems not compatible (share gspd)
+        # so 2 solutions
+
+        expected_result_dir = self.find_data("functional_test_2_systems_not_compatible")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  A B " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_unordered(self):
+        # genetic organization of test_4.fasta
+        #
+        # gene       abc    mfp    abc    gspd   omf    omf
+        # gene id   01397  01398  01399  01400  01548  01562
+        # pos        6      7      14      15    26     40
+        # syst    abc    mfp    abc    gspd   omf    omf
+        expected_result_dir = self.find_data("functional_test_unordered")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-simple-exch " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+    def test_unordered_only_forbidden(self):
+        # genetic organization of test_10.fasta
+        #
+        # gene       omf
+        # gene id   01506
+        # pos        17
+        # syst    no Systems
+        expected_result_dir = self.find_data("functional_test_unordered_only_forbidden")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-forbidden " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertFileEqual(expected_result, get_results, comment="#")
+
+
+    def test_unordered_no_hits(self):
+        # genetic organization of test_11.fasta
+        #
+        # gene
+        # gene id
+        # pos
+        # syst    no Systems
+        expected_result_dir = self.find_data("functional_test_unordered_no_hits")
+        args = "--db-type unordered " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional T12SS-forbidden " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_systems_txt,
+                          self.uncomplete_systems):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
                 get_results = os.path.join(self.out_dir, file_name)
@@ -200,215 +784,6 @@ class Test(MacsyTest):
         self._macsyfinder_run(args)
 
         self.assertTrue(os.path.exists(os.path.join(self.out_dir, "test_3.fasta.idx")))
-
-
-    def test_ordered_multi_system(self):
-        # genetic organization of test_1.fasta
-        #
-        # gene       omf    mfp    abc    mfp    abc    gspd   omf    omf    omf
-        # gene id   01360  01361  01397  01398  01399  01400  01506  01548  01562
-        # pos         2      3     11     12     13      14    23     32     46
-        # clst      [         ]   [                        ]  [  ]   [  ]   [  ]
-        # syst                    [abc    mfp    abc    gspd   omf    omf    omf]
-
-        expected_result_dir = self.find_data("functional_test_ordered_multi_system")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-multi-syst-exch " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_ordered_multi_system_loner_in_clust(self):
-        # genetic organization of test_2.fasta
-        #
-        # gene       abc    mfp    abc    gspd   omf    omf    omf
-        # gene id   01397  01398  01399  01400  01506  01548  01562
-        # pos        8      9      10      11    13     29     43
-        # clst     [                               ]   [  ]   [  ]
-        # syst     [abc    mfp    abc    gspd   omf]
-
-        expected_result_dir = self.find_data("functional_test_ordered_multi_system_loner_in_clust")
-        # TODO how to specify multi_loci = false when multi_loci =True is set in xml
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-multi-syst-exch " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_ordered_multi_loci(self):
-        # genetic organization of test_4.fasta
-        #
-        # gene       abc    mfp    abc    gspd   omf    omf
-        # gene id   01397  01398  01399  01400  01548  01562
-        # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]
-        # syst    abc, mfp, abc, gspd, omf, omf
-
-        expected_result_dir = self.find_data("functional_test_ordered_multi_loci")
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-simple-exch " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               "--multi-loci functional/T12SS-simple-exch " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_ordered_single_loci(self):
-        # genetic organization of test_4.fasta
-        #
-        # gene       abc    mfp    abc    gspd   omf    omf
-        # gene id   01397  01398  01399  01400  01548  01562
-        # pos        6      7      14      15    26     40
-        # clst     [         ]   [           ]
-        # syst    no system
-
-        expected_result_dir = self.find_data("functional_test_ordered_single_loci")
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-simple-exch " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_degenerated_systems(self):
-        # genetic organization of test_4.fasta
-        #
-        # gene      mfp   gspd
-        # gene id  01398  01400
-        # pos        7      15
-        # syst    abc    mfp
-        # inter_gene_max_space="8"
-        expected_result_dir = self.find_data("functional_test_degenerated_systems")
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional  degenerated_systems " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_uncomplete_degenerated_systems(self):
-        # genetic organization of test_4.fasta
-        #
-        # gene      mfp   gspd
-        # gene id  01398  01400
-        # pos        7      15
-        # syst    abc    mfp
-        # inter_gene_max_space="5"
-        expected_result_dir = self.find_data("functional_test_uncomplete_degenerated_systems")
-        args = "--db-type ordered_replicon " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional  uncomplete_degenerated_systems " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
-                          self.summary,
-                          self.rejected_clusters):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
-
-
-    def test_unordered(self):
-        # genetic organization of test_4.fasta
-        #
-        # gene       abc    mfp    abc    gspd   omf    omf
-        # gene id   01397  01398  01399  01400  01548  01562
-        # pos        6      7      14      15    26     40
-        # syst    abc    mfp    abc    gspd   omf    omf
-        expected_result_dir = self.find_data("functional_test_unordered")
-        args = "--db-type unordered " \
-               f"--models-dir {self.find_data('models')} " \
-               "-m functional T12SS-simple-exch " \
-               "-o {out_dir} " \
-               "--index-dir {out_dir} " \
-               f"--previous-run {expected_result_dir} " \
-               "--relative-path"
-        self._macsyfinder_run(args)
-
-        for file_name in (self.all_systems_tsv,
-                          self.all_systems_txt,
-                          self.uncomplete_systems):
-            with self.subTest(file_name=file_name):
-                expected_result = self.find_data(expected_result_dir, file_name)
-                get_results = os.path.join(self.out_dir, file_name)
-                self.assertFileEqual(expected_result, get_results, comment="#")
 
 
     def test_working_dir_exists(self):
@@ -528,6 +903,7 @@ class Test(MacsyTest):
         finally:
             sys.exit = real_exit
 
+
     def _macsyfinder_run(self, args_tpl):
         # get the name of the calling function
         test_name = inspect.stack()[1].function
@@ -537,6 +913,8 @@ class Test(MacsyTest):
         # print("\n############################################")
         # print(args)
         # print("##############################################")
+        System._id = itertools.count(1)
+        RejectedClusters._id = itertools.count(1)
         macsyfinder.main(args=args.split(),
                          loglevel='ERROR'
                          )

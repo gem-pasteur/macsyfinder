@@ -77,7 +77,7 @@ class DefinitionParser:
             model_node = self._get_model_node(def_loc)
             model = self._create_model(def_loc, model_node)
             self.model_bank.add_model(model)
-            model_location = self.model_registry[def_loc.family_name]
+            model_location = self.model_registry[def_loc.root_name(def_loc.fqn)]
             self._fill_gene_bank(model_node, model_location, def_loc)
 
             self._parse_genes(model, model_node)
@@ -161,7 +161,7 @@ class DefinitionParser:
             gene_all_attributes |= set(gene.attrib.keys())
         gene_unallowed_attribute = gene_all_attributes - gene_allowed_attributes
         if gene_unallowed_attribute:
-            msg = f"The model definition {os.path.basename(path)} has an unknow attribute " \
+            msg = f"The model definition {os.path.basename(path)} has an unknown attribute " \
                   f"'{', '.join(gene_unallowed_attribute)}' for a gene." \
                   f" Please fix the definition."
             raise ModelInconsistencyError(msg)
@@ -210,7 +210,7 @@ class DefinitionParser:
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        cfg_max_nb_genes =  self.cfg.max_nb_genes(def_loc.fqn)
+        cfg_max_nb_genes = self.cfg.max_nb_genes(def_loc.fqn)
         if cfg_max_nb_genes is not None:
             max_nb_genes = cfg_max_nb_genes
         else:
@@ -417,3 +417,9 @@ class DefinitionParser:
             # the following test
             # model.min_mandatory_genes_required <= model.min_genes_required
             # is done during the model.__init__
+
+            if len_mandatory_genes == 0 and len_accessory_genes == 1:
+                msg = f"model '{model.name}' is not consistent: there is only one gene in your model. " \
+                      f"So its status should be 'mandatory'."
+                _log.critical(msg)
+                raise ModelInconsistencyError(msg)

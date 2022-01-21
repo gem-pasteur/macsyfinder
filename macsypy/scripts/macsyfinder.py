@@ -33,26 +33,29 @@ from operator import attrgetter  # To be used with "sorted"
 from textwrap import dedent
 
 import colorlog
+
 _log = colorlog.getLogger('macsypy')
 import pandas as pd
 
 import macsypy
 from macsypy.config import MacsyDefaults, Config
+from macsypy.cluster import Cluster
 from macsypy.registries import ModelRegistry, scan_models_dir
 from macsypy.definition_parser import DefinitionParser
 from macsypy.search_genes import search_genes
 from macsypy.database import Indexes, RepliconDB
-from macsypy.error import MacsypyError, OptionError
+from macsypy.error import OptionError
 from macsypy import cluster
-from macsypy.hit import get_best_hits, HitWeight
-from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, HitSystemTracker
+from macsypy.hit import get_best_hits, HitWeight, MultiSystem, LonerMultiSystem, \
+    sort_model_hits, compute_best_MSHit
+from macsypy.system import OrderedMatchMaker, UnorderedMatchMaker, System, LikelySystem, UnlikelySystem, HitSystemTracker
 from macsypy.utils import get_def_to_detect, get_replicon_names
 from macsypy.profile import ProfileFactory
 from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
-from macsypy.solution import find_best_solutions
+from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer
+    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer
 
 
 def get_version_message():
@@ -331,12 +334,14 @@ the hit selection for systems detection.
                                default=None,
                                help=f"""the weight modifier for cluster which bring a component already presents in other 
 clusters (default:{msf_def['redundancy_penalty']})""")
-    score_options.add_argument('--loner-multi-system-weight',
+    score_options.add_argument('--out_of_cluster',
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight modifier for a hit which is a loner and multi-system 
-(default:{msf_def['loner_multi_system_weight']})""")
+                               help=f"""the weight modifier for a hit which is a 
+ - true loner (not in cluster)
+ - or multi-system (from an other system) 
+(default:{msf_def['out_of_cluster_weight']})""")
 
     dir_options = parser.add_argument_group(title="Path options", description=None)
     dir_options.add_argument('--models-dir',
@@ -467,7 +472,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
 
     # build indexes
     idx = Indexes(config)
-    idx.build(force=config.idx)
+    idx.build(force=config.idx())
 
     # create models
     model_bank = ModelBank()
@@ -494,7 +499,6 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable (formerly homologs/analogs) are also added because they can "replace" an important gene...
         ex_genes = []
-
         for g in genes:
             ex_genes += g.exchangeables
         all_genes += (genes + ex_genes)
@@ -529,7 +533,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         db_type = config.db_type()
         if db_type in ('ordered_replicon', 'gembase'):
             systems, rejected_clusters = _search_in_ordered_replicon(hits_by_replicon, models_to_detect,
-                                                                     config, logger)
+                                                                                       config, logger)
             return systems, rejected_clusters
         elif db_type == "unordered":
             likely_systems, rejected_hits = _search_in_unordered_replicon(hits_by_replicon, models_to_detect,
@@ -543,54 +547,97 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
 
 
 def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logger):
-    systems = []
-    rejected_clusters = []
+    """
+
+    :param hits_by_replicon:
+    :param models_to_detect:
+    :param config:
+    :param logger:
+    :return:
+    """
+    all_systems = []
+    all_rejected_clusters = []
     rep_db = RepliconDB(config)
     for rep_name in hits_by_replicon:
         logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
+            one_model_systems = []
+            one_model_rejected_clusters = []
             logger.info(f"Check model {model.fqn}")
-            hits_related_one_model = model.filter(hits_by_replicon[rep_name])
+            # model.filter filter hit but also cast them in ModelHit
+            mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
             logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
-            logger.debug("".join([str(h) for h in hits_related_one_model]))
+            hit_header_str = "id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match"
+            hits_str = "".join([str(h) for h in mhits_related_one_model])
+            logger.debug(f"\n{hit_header_str}\n{hits_str}")
             logger.debug("#" * 80)
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
-            clusters = cluster.build_clusters(hits_related_one_model, rep_info, model, hit_weights)
-            logger.debug("{:#^80}".format("CLUSTERS"))
-            logger.debug("\n" + "\n".join([str(c) for c in clusters]))
+            true_clusters, true_loners = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
+            logger.debug("{:#^80}".format(" CLUSTERS "))
+            logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
+            logger.debug("{:=^50}".format(" LONERS "))
+            logger.debug("\n" + "\n".join([str(c) for c in true_loners.values() if c.loner]))
+            # logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
+            # logger.debug("\n" + "\n".join([str(c.hits[0]) for c in special_clusters.values() if c.multi_system]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
-            if model.multi_loci:
-                # The loners are already in clusters lists with their context
-                # so they are take in account
-                clusters_combination = [itertools.combinations(clusters, i) for i in range(1, len(clusters) + 1)]
-            else:
-                # we must add loners manually
-                # but only if the cluster does not already contains them
-                loners = cluster.get_loners(hits_related_one_model, model, hit_weights)
-                clusters_combination = []
-                for one_cluster in clusters:
-                    one_clust_combination = [one_cluster]
-                    filtered_loners = cluster.filter_loners(one_cluster, loners)
-                    one_clust_combination.extend(filtered_loners)
-                    clusters_combination.append([one_clust_combination])
+            clusters_combination = combine_clusters(true_clusters, true_loners, multi_loci=model.multi_loci)
+            for one_clust_combination in clusters_combination:
+                ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
+                res = ordered_matcher.match(one_clust_combination)
+                if isinstance(res, System):
+                    one_model_systems.append(res)
+                else:
+                    one_model_rejected_clusters.append(res)
 
-            for one_combination_set in clusters_combination:
-                for one_clust_combination in one_combination_set:
-                    ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
-                    res = ordered_matcher.match(one_clust_combination)
-                    if isinstance(res, System):
-                        systems.append(res)
-                    else:
-                        rejected_clusters.append(res)
-    if systems:
-        systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-    return systems, rejected_clusters
+            ###############################
+            # MultiSystem Hits Management #
+            ###############################
+            # get multi systems from existing systems #
+            hit_encondig_multisystems = set()  # for the same model (in the loop)
+            for one_sys in one_model_systems:
+                hit_encondig_multisystems.update(one_sys.get_hits_encoding_multisystem())
+
+            logger.debug("{:#^80}".format(" MultiSystems "))
+            logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
+            # Cast these hits in MultiSystem/LonerMultiSystem
+            multi_systems_hits = []
+            for hit in hit_encondig_multisystems:
+                if not hit.loner:
+                    multi_systems_hits .append(MultiSystem(hit))
+                else:
+                    multi_systems_hits .append(LonerMultiSystem(hit))
+            # choose the best one
+            ms_per_function = sort_model_hits(multi_systems_hits)
+            best_ms = compute_best_MSHit(ms_per_function)
+            # check if among rejected clusters with the MS they can be create a new system
+            best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
+            new_clst_combination = combine_multisystems(one_model_rejected_clusters, best_ms)
+            for one_clust_combination in new_clst_combination:
+                ordered_matcher = OrderedMatchMaker(model, redundancy_penalty=config.redundancy_penalty())
+                res = ordered_matcher.match(one_clust_combination)
+                if isinstance(res, System):
+                    one_model_systems.append(res)
+                else:
+                    one_model_rejected_clusters.append(res)
+            all_systems.extend(one_model_systems)
+            all_rejected_clusters.extend(one_model_rejected_clusters)
+    if all_systems:
+        all_systems.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
+
+    return all_systems, all_rejected_clusters
 
 
 def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
+    """
+
+    :param hits_by_replicon:
+    :param models_to_detect:
+    :param logger:
+    :return:
+    """
     likely_systems = []
     rejected_hits = []
     for rep_name in hits_by_replicon:
@@ -598,7 +645,8 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
         for model in models_to_detect:
             logger.info(f"Check model {model.fqn}")
             hits_related_one_model = model.filter(hits_by_replicon[rep_name])
-            logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+            logger.debug("{:#^80}".format(" hits related to {} \n".format(model.name)))
+            logger.debug("id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match")
             logger.debug("".join([str(h) for h in hits_related_one_model]))
             logger.debug("#" * 80)
             logger.info("Searching systems")
@@ -608,8 +656,10 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
                 res = unordered_matcher.match(hits_related_one_model)
                 if isinstance(res, LikelySystem):
                     likely_systems.append(res)
-                else:
+                elif isinstance(res, UnlikelySystem):
                     rejected_hits.append(res)
+                else:
+                    logger.info(f"No hits related to {model.fqn } found.")
             else:
                 logger.info(f"No hits found for model {model.fqn}")
     if likely_systems:
@@ -618,6 +668,10 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
 
 
 def _outfile_header():
+    """
+    :return: The 2 firsts lines of each results file
+    :rtype: str
+    """
     header = f"""# macsyfinder {macsypy.__version__}
 # {' '.join(sys.argv)}"""
     return header
@@ -642,6 +696,9 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
         for system in systems:
             sys_serializer = TsvSystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
+        warnings = _loner_warning(systems)
+        if warnings:
+            print("\n".join(warnings), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -666,6 +723,10 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
             sys_serializer = TxtSystemSerializer()
             print(sys_serializer.serialize(system, hit_system_tracker), file=sys_file)
             print("=" * 60, file=sys_file)
+
+        warnings = _loner_warning(systems)
+        if warnings:
+            print("\n".join(warnings), file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
 
@@ -689,18 +750,63 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
         sol_serializer = TsvSolutionSerializer()
         print("# Systems found:", file=sys_file)
         print(sol_serializer.header, file=sys_file)
+
         for sol_id, solution in enumerate(solutions, 1):
-            solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             print(sol_serializer.serialize(solution, sol_id, hit_system_tracker), file=sys_file, end='')
+
+            warnings = _loner_warning(solution.systems)
+            if warnings:
+                print("\n".join(warnings) + "\n", file=sys_file)
     else:
         print("# No Systems found", file=sys_file)
+
+
+def _loner_warning(systems):
+    """
+    :param systems: sequence of systems
+    :return: warning for loner which have less occurrences than systems occurrences in which this lone is used
+             except if the loner is also multi system
+    :rtype: list of string
+    """
+    warnings = []
+    loner_tracker = {}
+    for syst in systems:
+        loners = syst.get_loners()
+        for loner in loners:
+            if loner.multi_system:
+                # the loner multi_systems can appear in several systems
+                continue
+            elif loner in loner_tracker:
+                loner_tracker[loner].append(syst)
+            else:
+                loner_tracker[loner] = [syst]
+    for loner, systs in loner_tracker.items():
+        if len(loner) < len(systs):
+            # len(loners) count the number of loner occurrence the loner and its counterpart
+            warnings.append(f"# WARNING Loner: there is only {len(loner)} occurrence(s) of loner '{loner.gene.name}' "
+                            f"and {len(systs)} potential systems [{', '.join([s.id for s in systs])}]")
+
+    return warnings
 
 
 def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_names):
     """
     do a summary of best_solution in best_solution_path and write it on out_path
+    a summary compute the number of system occurrence for each model and each replicon
+    .. code-block:: text
 
-    :param str best_solution_path: the path to the best_solution file
+        replicon        model_fqn_1  model_fqn_2  ....
+        rep_name_1           1           2
+        rep_name_2           2           0
+
+    columns are separated by \t character
+
+    :param str best_solution_path: the path to the best_solution file in tsv format
+    :param sys_file: the file where to save the summary
+    :param models_fqn: the fully qualified names of the models
+    :type models_fqn: list of string
+    :param replicon_names: the name of the replicons used
+    :type replicon_names: list of string
     """
     print(_outfile_header(), file=sys_file)
 
@@ -709,7 +815,7 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
         lacking_replicons = set(replicon_names) - computed_replicons
         lacking_replicons = sorted(lacking_replicons)
         for rep in lacking_replicons:
-            row = pd.Series({m:0 for m in summary.columns}, name=rep)
+            row = pd.Series({m: 0 for m in summary.columns}, name=rep)
             summary = summary.append(row)
         return summary
 
@@ -734,6 +840,56 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
         summary = fill_models(summary)
 
     summary.to_csv(sys_file, sep='\t')
+
+
+def loners_to_tsv(systems, sys_file):
+    """
+    get loners from valid systems and save them on file
+
+    :param systems: the systems from which the loners are extract
+    :type systems: list of :class:`macsypy.system.System` object
+    :param sys_file: the file where loners are saved
+    :type sys_file: file object open in write mode
+    """
+    print(_outfile_header(), file=sys_file)
+    if systems:
+        best_loners = set()
+        for syst in systems:
+            best_loners.update(syst.get_loners())
+        if best_loners:
+            serializer = TsvSpecialHitSerializer()
+            loners = serializer.serialize(best_loners)
+            print("# Loners found:", file=sys_file)
+            print(loners, file=sys_file)
+        else:
+            print("# No Loners found", file=sys_file)
+    else:
+        print("# No Loners found", file=sys_file)
+
+
+def multisystems_to_tsv(systems, sys_file):
+    """
+    get multisystems from valid systems and save them on file
+
+    :param systems: the systems from which the loners are extract
+    :type systems: list of :class:`macsypy.system.System` object
+    :param sys_file: the file where multisystems are saved
+    :type sys_file: file object open in write mode
+    """
+    print(_outfile_header(), file=sys_file)
+    if systems:
+        best_multisystems = set()
+        for syst in systems:
+            best_multisystems.update(syst.get_multisystems())
+        if best_multisystems:
+            serializer = TsvSpecialHitSerializer()
+            multisystems = serializer.serialize(best_multisystems)
+            print("# Multisystems found:", file=sys_file)
+            print(multisystems, file=sys_file)
+        else:
+            print("# No Multisystems found", file=sys_file)
+    else:
+        print("# No Multisystems found", file=sys_file)
 
 
 def rejected_clst_to_txt(rejected_clusters, clst_file):
@@ -901,7 +1057,6 @@ def main(args=None, loglevel=None):
 
     logger.info("\n{:#^70}".format(" Searching systems "))
     all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
-
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
         #############################
@@ -912,7 +1067,7 @@ def main(args=None, loglevel=None):
         # select the best systems #
         ###########################
         logger.info("\n{:#^70}".format(" Computing best solutions "))
-        best_solutions = []
+        all_best_solutions = []
         one_best_solution = []
 
         # group systems found by replicon
@@ -920,15 +1075,15 @@ def main(args=None, loglevel=None):
         import time
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
-            logger.info(f"Computing best solutions for {rep_name} (nb of systems {len(syst_group)})")
+            logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
             t0 = time.time()
             best_sol_4_1_replicon, score = find_best_solutions(syst_group)
             t1 = time.time()
             logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
             # if several solutions are equivalent same number of system and score is same
-            # store all equivalent solution in best_solution => all_best_systems
+            # store all equivalent solution in all_best_solution => all_best_systems
             # pick one in one_best_solution => best_systems
-            best_solutions.extend(best_sol_4_1_replicon)
+            all_best_solutions.extend(best_sol_4_1_replicon)
             one_best_solution.append(best_sol_4_1_replicon[0])
 
         ##############################
@@ -953,14 +1108,21 @@ def main(args=None, loglevel=None):
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
-            solutions_to_tsv(best_solutions, track_multi_systems_hit, tsv_file)
+            solutions_to_tsv(all_best_solutions, track_multi_systems_hit, tsv_file)
 
         best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
         with open(best_solution_filename, "w") as best_solution_file:
-            # flattern the list and sort it
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
             systems_to_tsv(one_best_solution, track_multi_systems_hit, best_solution_file)
+
+        loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
+        with open(loners_filename, "w") as loners_file:
+            loners_to_tsv(one_best_solution, loners_file)
+
+        multisystems_filename = os.path.join(config.working_dir(), "best_solution_multisystems.tsv")
+        with open(multisystems_filename, "w") as multisystems_file:
+            multisystems_to_tsv(one_best_solution, multisystems_file)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:

@@ -33,18 +33,19 @@ import unittest
 import itertools
 
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus, GeneBank
+from macsypy.gene import CoreGene, ModelGene, Exchangeable, GeneStatus
 from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
-from macsypy.hit import Hit, ValidHit, HitWeight
-from macsypy.model import Model, ModelBank
-from macsypy.system import System, HitSystemTracker, RejectedClusters, \
-    AbstractSetOfHits, AbstractUnordered, LikelySystem, UnlikelySystem
+from macsypy.hit import CoreHit, ModelHit, HitWeight, Loner, MultiSystem
+from macsypy.model import Model
+from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractUnordered, LikelySystem, UnlikelySystem
+from macsypy.solution import Solution
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
 from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
-    summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt
+     summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt, \
+     loners_to_tsv, multisystems_to_tsv
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -55,7 +56,7 @@ class TestMacsyfinder(MacsyTest):
 
     def setUp(self):
         self.tmp_dir = tempfile.mkdtemp()
-        System._id = itertools.count(1)
+        self._reset_id()
         AbstractUnordered._id = itertools.count(1)
 
 
@@ -75,6 +76,14 @@ class TestMacsyfinder(MacsyTest):
             for model_loc in models_loc_available:
                 model_registry.add(model_loc)
         return model_registry
+
+
+    def _reset_id(self):
+        """
+        reset System._id and RejectedCluster._id to get predictable ids
+        """
+        System._id = itertools.count(1)
+        RejectedClusters._id = itertools.count(1)
 
 
     def test_list_models(self):
@@ -134,10 +143,10 @@ set_2
         gene_sctj = ModelGene(c_gene_sctj, model)
         model.add_accessory_gene(gene_sctj)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
         system_1 = System(model,
                           [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
@@ -198,10 +207,10 @@ neutral genes:
             gene_sctj = ModelGene(c_gene_sctj, model)
             model.add_accessory_gene(gene_sctj)
 
-            hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-            v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-            hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-            v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+            hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+            hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+            v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
             system_1 = System(model,
                               [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                               cfg.redundancy_penalty())
@@ -213,15 +222,15 @@ neutral genes:
             system_tsv += "\t".join(["replicon", "hit_id", "gene_name", "hit_pos", "model_fqn", "sys_id",
                                      "sys_loci", "locus_num", "sys_wholeness", "sys_score", "sys_occ",
                                      "hit_gene_ref", "hit_status", "hit_seq_len", "hit_i_eval", "hit_score",
-                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "used_in"])
+                                     "hit_profile_cov", "hit_seq_cov", "hit_begin_match", "hit_end_match", "counterpart", "used_in"])
             system_tsv += "\n"
             system_tsv += "\t".join([ "replicon_id", "hit_1", "gspD", "1", "foo/T2SS", system_1.id,
                                      "1", "1", "1.000", "1.500", "1", "gspD", "mandatory", "803", "1.0", "1.000",
-                                     "1.000", "1.000", "10", "20", ""])
+                                     "1.000", "1.000", "10", "20", "", ""])
             system_tsv += "\n"
             system_tsv += "\t".join(["replicon_id", "hit_2", "sctJ", "1", "foo/T2SS", system_1.id,
                                      "1", "1", "1.000", "1.500", "1", "sctJ", "accessory", "803", "1.0", "1.000",
-                                     "1.000", "1.000", "10", "20", ""])
+                                     "1.000", "1.000", "10", "20", "", ""])
             system_tsv += "\n\n"
 
             f_out = StringIO()
@@ -238,6 +247,161 @@ neutral genes:
             track_multi_systems_hit = HitSystemTracker([])
             systems_to_tsv([], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+
+    def test_loners_to_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+        model = Model("foo/T2SS", 10)
+
+        gene_name = "gspD"
+        cg_gspd = CoreGene(models_location, gene_name, profile_factory)
+        mg_gspd = ModelGene(cg_gspd, model, loner=True)
+
+        gene_name = "sctJ"
+        cg_sctj = CoreGene(models_location, gene_name, profile_factory)
+        mg_sctj = ModelGene(cg_sctj, model)
+
+        gene_name = "abc"
+        cg_abc = CoreGene(models_location, gene_name, profile_factory)
+        mg_abc = ModelGene(cg_abc, model)
+
+        model.add_mandatory_gene(mg_gspd)
+        model.add_accessory_gene(mg_sctj)
+        model.add_accessory_gene(mg_abc)
+
+        chit_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_gspd1 = CoreHit(cg_gspd, "hit_gspd1", 803, "replicon_id", 20, 1.0, 2.0, 1.0, 1.0, 10, 20)
+        chit_gspd2 = CoreHit(cg_gspd, "hit_gspd2", 803, "replicon_id", 30, 1.0, 3.0, 1.0, 1.0, 10, 20)
+        mhit_abc = ModelHit(chit_abc, mg_abc, GeneStatus.ACCESSORY)
+        mhit_sctj = ModelHit(chit_sctj, mg_sctj, GeneStatus.ACCESSORY)
+        mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
+        mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
+        l_gspd1 = Loner(mhit_gspd1, counterpart=[mhit_gspd2])
+        l_gspd2 = Loner(mhit_gspd2, counterpart=[mhit_gspd1])
+        system_1 = System(model,
+                          [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
+                           Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
+                          cfg.redundancy_penalty())
+
+        loner_tsv = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Loners found:
+"""
+        loner_tsv += "\t".join(['replicon', 'model_fqn', 'function', 'gene_name', 'hit_id', 'hit_pos', 'hit_status',
+                                 'hit_seq_len', 'hit_i_eval', 'hit_score', 'hit_profile_cov',
+                                 'hit_seq_cov', 'hit_begin_match', 'hit_end_match'])
+        loner_tsv += "\n"
+        loner_tsv += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd1', '20', 'mandatory', '803',
+                                 '1.000e+00', '2.000', '1.000', '1.000', '10', '20'])
+        loner_tsv += "\n"
+        loner_tsv += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd2', '30', 'mandatory', '803',
+                                 '1.000e+00', '3.000', '1.000', '1.000', '10', '20'])
+        loner_tsv += "\n\n"
+
+        f_out = StringIO()
+        loners_to_tsv([system_1], f_out)
+        self.assertMultiLineEqual(loner_tsv, f_out.getvalue())
+
+        # test No system found
+        system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Loners found
+"""
+        f_out = StringIO()
+        loners_to_tsv([], f_out)
+        self.assertMultiLineEqual(system_str, f_out.getvalue())
+
+
+    def test_multisystem_to_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        cfg = Config(MacsyDefaults(), args)
+
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+
+        # we need to reset the ProfileFactory
+        # because it's a like a singleton
+        # so other tests are influenced by ProfileFactory and it's configuration
+        # for instance search_genes get profile without hmmer_exe
+        profile_factory = ProfileFactory(cfg)
+        model = Model("foo/T2SS", 10)
+
+        gene_name = "gspD"
+        cg_gspd = CoreGene(models_location, gene_name, profile_factory)
+        mg_gspd = ModelGene(cg_gspd, model, multi_system=True)
+
+        gene_name = "sctJ"
+        cg_sctj = CoreGene(models_location, gene_name, profile_factory)
+        mg_sctj = ModelGene(cg_sctj, model)
+
+        gene_name = "abc"
+        cg_abc = CoreGene(models_location, gene_name, profile_factory)
+        mg_abc = ModelGene(cg_abc, model)
+
+        model.add_mandatory_gene(mg_gspd)
+        model.add_accessory_gene(mg_sctj)
+        model.add_accessory_gene(mg_abc)
+
+        chit_abc = CoreHit(cg_abc, "hit_abc", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_sctj = CoreHit(cg_sctj, "hit_sctj", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        chit_gspd1 = CoreHit(cg_gspd, "hit_gspd1", 803, "replicon_id", 20, 1.0, 2.0, 1.0, 1.0, 10, 20)
+        chit_gspd2 = CoreHit(cg_gspd, "hit_gspd2", 803, "replicon_id", 30, 1.0, 3.0, 1.0, 1.0, 10, 20)
+        mhit_abc = ModelHit(chit_abc, mg_abc, GeneStatus.ACCESSORY)
+        mhit_sctj = ModelHit(chit_sctj, mg_sctj, GeneStatus.ACCESSORY)
+        mhit_gspd1 = ModelHit(chit_gspd1, mg_gspd, GeneStatus.MANDATORY)
+        mhit_gspd2 = ModelHit(chit_gspd2, mg_gspd, GeneStatus.MANDATORY)
+        l_gspd1 = MultiSystem(mhit_gspd1, counterpart=[mhit_gspd2])
+        l_gspd2 = MultiSystem(mhit_gspd2, counterpart=[mhit_gspd1])
+        system_1 = System(model,
+                          [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
+                           Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
+                          cfg.redundancy_penalty())
+
+        multisystem_tsv = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# Multisystems found:
+"""
+        multisystem_tsv += "\t".join(['replicon', 'model_fqn', 'function', 'gene_name', 'hit_id', 'hit_pos', 'hit_status',
+                                 'hit_seq_len', 'hit_i_eval', 'hit_score', 'hit_profile_cov',
+                                 'hit_seq_cov', 'hit_begin_match', 'hit_end_match'])
+        multisystem_tsv += "\n"
+        multisystem_tsv += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd1', '20', 'mandatory', '803',
+                                 '1.000e+00', '2.000', '1.000', '1.000', '10', '20'])
+        multisystem_tsv += "\n"
+        multisystem_tsv += "\t".join(['replicon_id', 'foo/T2SS', 'gspD', 'gspD', 'hit_gspd2', '30', 'mandatory', '803',
+                                 '1.000e+00', '3.000', '1.000', '1.000', '10', '20'])
+        multisystem_tsv += "\n\n"
+
+        f_out = StringIO()
+        multisystems_to_tsv([system_1], f_out)
+        self.assertMultiLineEqual(multisystem_tsv,
+                                  f_out.getvalue())
+
+        # test No system found
+        system_str = f"""# macsyfinder {macsypy.__version__}
+# {' '.join(sys.argv)}
+# No Multisystems found
+"""
+        f_out = StringIO()
+        multisystems_to_tsv([], f_out)
+        self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
     def test_summary_best_solution(self):
@@ -361,40 +525,47 @@ neutral genes:
         model_C.add_accessory_gene(gene_tadZ)
         model_C.add_accessory_gene(gene_gspd)
 
-        h_sctj = Hit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_sctn = Hit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_gspd = Hit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        #                    gene,     hit_id, hit_seq_len, rep_name, pos, i_eval
+        h_sctj = CoreHit(c_gene_sctj, "hit_sctj", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn = CoreHit(c_gene_sctn, "hit_sctn", 803, "replicon_id", 2, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd = CoreHit(c_gene_gspd, "hit_gspd", 803, "replicon_id", 3, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj2 = CoreHit(c_gene_sctj, "hit_sctj2", 803, "replicon_id", 4, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctn2 = CoreHit(c_gene_sctn, "hit_sctn2", 803, "replicon_id", 5, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
-        h_sctj_flg = Hit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_flgB = Hit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        h_tadZ = Hit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg = CoreHit(c_gene_sctj_flg, "hit_sctj_flg", 803, "replicon_id", 6, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ = CoreHit(c_gene_tadZ, "hit_tadZ", 803, "replicon_id", 7, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB = CoreHit(c_gene_flgB, "hit_flgB", 803, "replicon_id", 8, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_sctj_flg2 = CoreHit(c_gene_sctj_flg, "hit_sctj_flg2", 803, "replicon_id", 14, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_tadZ2 = CoreHit(c_gene_tadZ, "hit_tadZ2", 803, "replicon_id", 15, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_flgB2 = CoreHit(c_gene_flgB, "hit_flgB2", 803, "replicon_id", 16, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        h_gspd2 = CoreHit(c_gene_gspd, "hit_gspd2", 803, "replicon_id", 17, 1.0, 1.0, 1.0, 1.0, 10, 20)
 
         model_A._min_mandatory_genes_required = 2
         model_A._min_genes_required = 2
         hit_weights = HitWeight(**cfg.hit_weights())
-        c1 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
-                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
+        c1 = Cluster([ModelHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
+                      ModelHit(h_sctn, gene_sctn, GeneStatus.MANDATORY),
+                      ModelHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)
                       ],
                      model_A, hit_weights)
 
-        c2 = Cluster([ValidHit(h_sctj, gene_sctj, GeneStatus.MANDATORY),
-                      ValidHit(h_sctn, gene_sctn, GeneStatus.MANDATORY)],
+        c2 = Cluster([ModelHit(h_sctj2, gene_sctj, GeneStatus.MANDATORY),
+                      ModelHit(h_sctn2, gene_sctn, GeneStatus.MANDATORY)],
                      model_A, hit_weights)
 
         model_B._min_mandatory_genes_required = 1
         model_B._min_genes_required = 2
-        c3 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ValidHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
+        c3 = Cluster([ModelHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ModelHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
+                      ModelHit(h_flgB, gene_flgB, GeneStatus.ACCESSORY)],
                      model_B, hit_weights)
 
         model_C._min_mandatory_genes_required = 1
         model_C._min_genes_required = 2
-        c4 = Cluster([ValidHit(h_sctj_flg, gene_sctj_flg, GeneStatus.MANDATORY),
-                      ValidHit(h_tadZ, gene_tadZ, GeneStatus.ACCESSORY),
-                      ValidHit(h_flgB, gene_flgB, GeneStatus.MANDATORY),
-                      ValidHit(h_gspd, gene_gspd, GeneStatus.ACCESSORY)],
+        c4 = Cluster([ModelHit(h_sctj_flg2, gene_sctj_flg, GeneStatus.MANDATORY),
+                      ModelHit(h_tadZ2, gene_tadZ, GeneStatus.ACCESSORY),
+                      ModelHit(h_flgB2, gene_flgB, GeneStatus.MANDATORY),
+                      ModelHit(h_gspd2, gene_gspd, GeneStatus.ACCESSORY)],
                      model_C, hit_weights)
 
         sys_A = System(model_A, [c1, c2], cfg.redundancy_penalty())
@@ -404,8 +575,8 @@ neutral genes:
         sys_C = System(model_C, [c4], cfg.redundancy_penalty())
         sys_C.id = "sys_id_C"
 
-        sol_1 = [sys_A, sys_B]
-        sol_2 = [sys_A, sys_C]
+        sol_1 = Solution([sys_A, sys_C])
+        sol_2 = Solution([sys_A, sys_B])
         sol_id_1 = '1'
         sol_id_2 = '2'
 
@@ -417,84 +588,85 @@ neutral genes:
                               "sys_loci", "locus_num",
                               "sys_wholeness", "sys_score", "sys_occ", "hit_gene_ref", "hit_status",
                               "hit_seq_len", "hit_i_eval", "hit_score", "hit_profile_cov", "hit_seq_cov",
-                              "hit_begin_match", "hit_end_match", "used_in"])
+                              "hit_begin_match", "hit_end_match", "counterpart", "used_in"])
         sol_tsv += "\n"
         sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
                               '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj2', 'sctJ', '4', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctn2', 'sctN', '5', 'foo/A', 'sys_id_A',
                               '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/B', 'sys_id_B',
-                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/A', 'sys_id_A',
-                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
-                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '1', 'foo/A', 'sys_id_A',
-                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', ''])
-        sol_tsv += "\n"
-        sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '1', 'foo/C', 'sys_id_C',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_sctj_flg2', 'sctJ_FLG', '14', 'foo/C', 'sys_id_C',
                               '1', '1', '0.800', '3.000', '1', 'sctJ_FLG', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '1', 'foo/C', 'sys_id_C',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_tadZ2', 'tadZ', '15', 'foo/C', 'sys_id_C',
                               '1', '1', '0.800', '3.000', '1', 'tadZ', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '1', 'foo/C', 'sys_id_C',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_flgB2', 'flgB', '16', 'foo/C', 'sys_id_C',
                               '1', '1', '0.800', '3.000', '1', 'flgB', 'mandatory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_B'])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
-        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '1', 'foo/C', 'sys_id_C',
+        sol_tsv += '\t'.join([sol_id_1, 'replicon_id', 'hit_gspd2', 'gspD', '17', 'foo/C', 'sys_id_C',
                               '1', '1', '0.800', '3.000', '1', 'gspD', 'accessory',
-                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', 'sys_id_A'])
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj', 'sctJ', '1', 'foo/A', 'sys_id_A',
+                              '2', '1', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn', 'sctN', '2', 'foo/A', 'sys_id_A',
+                              '2', '1', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_gspd', 'gspD', '3', 'foo/A', 'sys_id_A',
+                              '2', '1', '1.000', '1.500', '2', 'gspD', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj2', 'sctJ', '4', 'foo/A', 'sys_id_A',
+                              '2', '2', '1.000', '1.500', '2', 'sctJ', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctn2', 'sctN', '5', 'foo/A', 'sys_id_A',
+                              '2', '2', '1.000', '1.500', '2', 'sctN', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_sctj_flg', 'sctJ_FLG', '6', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'sctJ_FLG', 'mandatory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_tadZ', 'tadZ', '7', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'tadZ', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
+        sol_tsv += "\n"
+        sol_tsv += '\t'.join([sol_id_2, 'replicon_id', 'hit_flgB', 'flgB', '8', 'foo/B', 'sys_id_B',
+                              '1', '1', '0.750', '2.000', '1', 'flgB', 'accessory',
+                              '803', '1.0', '1.000', '1.000', '1.000', '10', '20', '', ''])
         sol_tsv += "\n"
         sol_tsv += "\n"
 
         f_out = StringIO()
-        hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B])
+        hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B, sys_C])
         solutions_to_tsv([sol_1, sol_2], hit_multi_sys_tracker, f_out)
+        self.maxDiff = None
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
 
@@ -521,16 +693,16 @@ neutral genes:
         model.add_mandatory_gene(gene_1)
         model.add_accessory_gene(gene_2)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
-        h40 = Hit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
-        h50 = Hit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h40 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h40 = ModelHit(h40, gene_1, GeneStatus.MANDATORY)
+        h50 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h50 = ModelHit(h50, gene_2, GeneStatus.ACCESSORY)
         hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([v_h10, v_h20], model, hit_weights)
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
@@ -602,14 +774,14 @@ These clusters have been rejected because:
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
@@ -691,14 +863,14 @@ Use ordered replicon to have better prediction.
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
@@ -773,14 +945,14 @@ Use ordered replicon to have better prediction.
         gene_tadz = ModelGene(c_gene_tadz, model)
         model.add_forbidden_gene(gene_tadz)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
-        hit_4 = Hit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_4 = ValidHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 804, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctc, "hit_3", 805, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctc, GeneStatus.NEUTRAL)
+        hit_4 = CoreHit(c_gene_tadz, "hit_4", 806, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_4 = ModelHit(hit_4, gene_tadz, GeneStatus.FORBIDDEN)
         reason = "why it not a system"
         system_1 = UnlikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4], reason)
 
@@ -829,7 +1001,7 @@ Use ordered replicon to have better prediction.
 
     def test_parse_args(self):
         command_line = "macsyfinder --sequence-db test_1.fasta --db-type=gembase --models-dir data/models/ " \
-                       "--models functional all -w 4 --out test_1-all"
+                       "--models functional all -w 4 --out-dir test_1-all"
         parser, args = parse_args(command_line.split()[1:])
         self.assertIsNone(args.cfg_file)
         self.assertIsNone(args.coverage_profile)
@@ -862,7 +1034,7 @@ Use ordered replicon to have better prediction.
 
         command_line = "macsyfinder --sequence-db test_1.fasta " \
                        "--db-type=ordered_replicon --models-dir data/models/ " \
-                       "--models functional all -w 4 --out test_1-all " \
+                       "--models functional all -w 4 --out-dir test_1-all " \
                        "--mute --multi-loci TXSscan/T2SS,TXSScan/T3SS --relative-path --index-dir the_idx_dir"
         parser, args = parse_args(command_line.split()[1:])
         self.assertEqual(args.db_type, 'ordered_replicon')
@@ -899,20 +1071,19 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
-        expected_sys_id = ['VICH001.B.00001.C001_MSH_1', 'VICH001.B.00001.C001_MSH_2',
-                           'VICH001.B.00001.C001_T4P_14', 'VICH001.B.00001.C001_T4P_12',
-                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_11',
-                           'VICH001.B.00001.C001_T4P_6', 'VICH001.B.00001.C001_T4P_5',
-                           'VICH001.B.00001.C001_T4bP_15', 'VICH001.B.00001.C001_T4P_13',
+        expected_sys_id = ['VICH001.B.00001.C001_MSH_1',
+                           'VICH001.B.00001.C001_T4P_13', 'VICH001.B.00001.C001_T4P_11', 'VICH001.B.00001.C001_T4P_9',
+                           'VICH001.B.00001.C001_T4P_10', 'VICH001.B.00001.C001_T4P_5', 'VICH001.B.00001.C001_T4P_4',
+                           'VICH001.B.00001.C001_T4bP_14', 'VICH001.B.00001.C001_T4P_12', 'VICH001.B.00001.C001_T4P_6',
                            'VICH001.B.00001.C001_T4P_7', 'VICH001.B.00001.C001_T4P_8',
-                           'VICH001.B.00001.C001_T4P_9',
-                           'VICH001.B.00001.C001_T2SS_4', 'VICH001.B.00001.C001_T2SS_3'
-                           ]
+                           'VICH001.B.00001.C001_T2SS_3', 'VICH001.B.00001.C001_T2SS_2']
 
         self.assertListEqual([s.id for s in systems], expected_sys_id)
 
-        expected_scores = [10.5, 10.0, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.3, 7.5]
+        expected_scores = [10.5, 12.0, 9.5, 9.0, 8.5, 6.0, 5.0, 5.5, 10.5, 7.5, 7.0, 8.0, 8.06, 7.5]
         self.assertListEqual([s.score for s in systems], expected_scores)
         self.assertEqual(len(rejected_clst), 11)
 
@@ -923,6 +1094,7 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
 
@@ -934,10 +1106,47 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
         def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
         self.assertEqual(rejected_clst, [])
 
+        # test multisystems
+        # multisytem hit are not in System (to small cluster)
+        # no system
+        seq_db = self.find_data('base', 'test_12.fasta')
+        model_dir = self.find_data('models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} " \
+               f"--models functional T12SS-multisystem -w 4 -o {out_dir} --index-dir {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+
+        self.assertEqual(systems, [])
+        self.assertEqual([r.id for r in rejected_clst],
+                         ['VICH001.B.00001.C001_T12SS-multisystem_1', 'VICH001.B.00001.C001_T12SS-multisystem_2'])
+
+        # multisystem is in System so it can play role for other cluster
+        # 2 systems found
+        seq_db = self.find_data('base', 'test_13.fasta')
+        model_dir = self.find_data('models')
+        args = f"--sequence-db {seq_db} --db-type=gembase --models-dir {model_dir} " \
+               f"--models functional T12SS-multisystem -w 4 -o {out_dir} --index-dir {out_dir}"
+        _, parsed_args = parse_args(args.split())
+        config = Config(defaults, parsed_args)
+        model_registry = self._fill_model_registry(config)
+        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        self._reset_id()
+        systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
+        self.assertEqual({s.id for s in systems},
+                         {'VICH001.B.00001.C001_T12SS-multisystem_3',
+                          'VICH001.B.00001.C001_T12SS-multisystem_2',
+                          'VICH001.B.00001.C001_T12SS-multisystem_1'})
+        self.assertEqual([r.id for r in rejected_clst],
+                         ['VICH001.B.00001.C001_T12SS-multisystem_1'])
 
     def test_search_systems_unordered(self):
         logger = logging.getLogger('macsypy.macsyfinder')
@@ -963,4 +1172,3 @@ Use ordered replicon to have better prediction.
 
         expected_uncomplete_sys_id = ['Unordered_Archaeal-T4P_1', 'Unordered_ComM_2', 'Unordered_Tad_7']
         self.assertListEqual([s.id for s in uncomplete_sys], expected_uncomplete_sys_id)
-

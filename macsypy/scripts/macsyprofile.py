@@ -245,7 +245,7 @@ class HmmProfile:
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.Hit` objects
+        :rtype: list of :class:`macsypy.report.CoreHit` objects
 
         """
         first_line = next(b_grp)

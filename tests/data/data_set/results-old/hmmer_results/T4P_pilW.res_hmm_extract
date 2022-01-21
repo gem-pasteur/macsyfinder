@@ -1,0 +1,8 @@
+# gene: T4P_pilW extract from results/hmmer_results/T4P_pilW.search_hmm.out hmm output
+# profile length= 120
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00419	VICH001.B.00001.C001	379	256	T4P_pilW	1.400e-08	32.200	0.542	0.254	3	67
+VICH001.B.00001.C001_00852	VICH001.B.00001.C001	783	200	T4P_pilW	1.900e-11	41.500	0.625	0.375	13	87
+VICH001.B.00001.C001_02595	VICH001.B.00001.C001	2484	221	T4P_pilW	2.500e-08	31.400	0.533	0.290	14	77

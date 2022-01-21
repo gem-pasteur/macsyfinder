@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/functional/profiles/T1SS_omf.hmm
 # target sequence database:        tests/data/base/test_4.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-00-40/hmmer_results/T1SS_omf.search_hmm.out
+# output directed to file:         functional_test_unordered/hmmer_results/T1SS_omf.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

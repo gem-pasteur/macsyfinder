@@ -16,6 +16,9 @@ The errors specific to macsyfinder and macsydata
 
 .. _error_api:
 
+error API reference
+===================
+
 error
 =====
 .. automodule:: macsypy.error

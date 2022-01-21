@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG05613.hmm
 # target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
-# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG05613.search_hmm.out
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20211013_10-00-17/hmmer_results/Archaeal-T4P_arCOG05613.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,7 +406,7 @@ Passed Vit filter:                        64  (0.0253165); expected 2.5 (0.001)
 Passed Fwd filter:                        32  (0.0126582); expected 0.0 (1e-05)
 Initial search space (Z):               2528  [actual number of targets]
 Domain search space  (domZ):              17  [number of targets reported over threshold]
-# CPU time: 0.11u 0.00s 00:00:00.11 Elapsed: 00:00:00.11
-# Mc/sec: 1763.70
+# CPU time: 0.12u 0.00s 00:00:00.12 Elapsed: 00:00:00.12
+# Mc/sec: 1616.73
 //
 [ok]

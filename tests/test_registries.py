@@ -114,7 +114,9 @@ class ModelLocationTest(MacsyTest):
                                                             'def_1_2.xml': None
                                                             },
                                                'subdef_2': {'def_2_1.xml': None,
-                                                            'def_2_2.xml': None
+                                                            'def_2_2.xml': None,
+                                                            'sub_subdef': {'def_2_3_1.xml': None,
+                                                                           'def_2_3_2.xml': None}
                                                             },
                                                },
                                'not_definitions': {'subdef_1': {'not_a_def': None},
@@ -151,7 +153,7 @@ class ModelLocationTest(MacsyTest):
         self.assertEqual(str(cm.exception),
                          "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
 
-        # test new way to specify profiles and defitions
+        # test new way to specify profiles and definitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
         self.assertEqual(model_loc.name, self.simple_models['name'])
@@ -252,15 +254,28 @@ class ModelLocationTest(MacsyTest):
         defs_expected = []
         for def_name in self.complex_models['definitions']:
             for subdef_name in self.complex_models['definitions'][def_name]:
-                new_def = DefinitionLocation(name=os.path.splitext(subdef_name)[0],
-                                             path=os.path.join(complex_dir, 'definitions', def_name, subdef_name))
-                new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}'.format(
-                                                                    model_name=model_loc.name,
-                                                                    sep=registries._separator,
-                                                                    subdef_name=os.path.splitext(subdef_name)[0],
-                                                                    def_name=def_name)
-                defs_expected.append(new_def)
-
+                if subdef_name.endswith('.xml'):
+                    new_def = DefinitionLocation(name=os.path.splitext(subdef_name)[0],
+                                                 fqn=os.path.splitext(def_name)[0],
+                                                 path=os.path.join(complex_dir, 'definitions', def_name, subdef_name))
+                    new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}'.format(
+                                                                        model_name=model_loc.name,
+                                                                        sep=registries._separator,
+                                                                        subdef_name=os.path.splitext(subdef_name)[0],
+                                                                        def_name=def_name)
+                    defs_expected.append(new_def)
+                else:
+                    for sub_subdef_name in self.complex_models['definitions'][def_name][subdef_name]:
+                        new_def = DefinitionLocation(name=os.path.splitext(sub_subdef_name)[0],
+                                                     fqn=os.path.splitext(def_name)[0],
+                                                     path=os.path.join(complex_dir, 'definitions', subdef_name, sub_subdef_name))
+                        new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}{sep}{sub_subdef_name}'.format(
+                                                                        model_name=model_loc.name,
+                                                                        sep=registries._separator,
+                                                                        subdef_name=subdef_name,
+                                                                        sub_subdef_name=os.path.splitext(sub_subdef_name)[0],
+                                                                        def_name=def_name)
+                        defs_expected.append(new_def)
         defs_received = model_loc.get_all_definitions()
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
@@ -268,6 +283,7 @@ class ModelLocationTest(MacsyTest):
         def_root_name = 'subdef_1'
         for def_name in self.complex_models['definitions'][def_root_name]:
             new_def = DefinitionLocation(name=os.path.splitext(def_name)[0],
+                                         fqn=os.path.splitext(def_name)[0],
                                          path=os.path.join(complex_dir, 'definitions', def_root_name, def_name))
             new_def.fqn = '{model_name}{sep}{def_root_name}{sep}{def_name}'.format(
                                                                     model_name=model_loc.name,
@@ -287,6 +303,7 @@ class ModelLocationTest(MacsyTest):
         model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
                                   def_dir=os.path.join(simple_dir, 'definitions'))
         defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
+                                            fqn=os.path.splitext(d)[0],
                                             path=os.path.join(simple_dir, 'definitions', d))
                          for d in self.simple_models['definitions']
                          ]
@@ -356,10 +373,13 @@ class DefinitionLocationTest(MacsyTest):
 
     def test_family_name(self):
         model_name = 'foo'
-        model_path = '/path/to/model.xml'
+        model_path = '/path/to/foo.xml'
+        family_name = 'family'
+        model_fqn = f"{family_name}/{model_name}"
         mdfl = DefinitionLocation(name=model_name,
+                                  fqn=model_fqn,
                                   path=model_path)
-        self.assertEqual(mdfl.family_name, model_name)
+        self.assertEqual(mdfl.family_name, family_name)
 
     def test_hash(self):
         mdfl_1 = DefinitionLocation(name='/foo/model_1',
@@ -399,58 +419,77 @@ class DefinitionLocationTest(MacsyTest):
 
 
     def test_str(self):
-        model_name = 'foo'
-        model_path = '/path/to/model.xml'
-        mdfl = DefinitionLocation(name=model_name,
-                                  path=model_path)
+        def_name = 'foo'
+        def_fqn = 'foo'
+        def_path = '/path/to/model.xml'
+        mdfl = DefinitionLocation(name=def_name,
+                                  fqn=def_fqn,
+                                  path=def_path)
         self.assertEqual('foo', str(mdfl))
 
 
     def test_all(self):
-        model_name = 'foo'
-        model_path = '/path/to/systems/Foo_system/models/foo'
-        mdfl = DefinitionLocation(name=model_name,
-                                  path=model_path)
-        submodel_name1 = 'foo/bar'
+        def_name = 'foo'
+        def_fqn = 'foo'
+        def_path = '/path/to/systems/Foo_system/definitions/foo'
+        mdfl = DefinitionLocation(name=def_name,
+                                  fqn=def_fqn,
+                                  path=def_path)
+        submodel_name1 = 'bar'
+        def_fqn1 = 'foo/bar'
         submodel_path1 = '/path/to/systems/Foo_system/models/foo/bar.xml'
         submodel1 = DefinitionLocation(name=submodel_name1,
+                                       fqn=def_fqn1,
                                        path=submodel_path1)
         mdfl.add_subdefinition(submodel1)
-        submodel_name2 = 'foo/baz'
+        submodel_name2 = 'baz'
+        def_fqn2 = 'foo/baz'
         submodel_path2 = '/path/to/systems/Foo_system/models/foo/baz.xml'
         submodel2 = DefinitionLocation(name=submodel_name2,
+                                       fqn=def_fqn2,
                                        path=submodel_path2)
         mdfl.add_subdefinition(submodel2)
         self.assertListEqual(sorted(mdfl.all()), sorted([submodel1, submodel2]))
 
     def test_eq(self):
         model_name = 'foo'
+        model_fqn = 'Foo_system/models/foo'
         model_path = '/path/to/systems/Foo_system/models/foo'
         mdfl_1 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         mdfl_2 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         self.assertEqual(mdfl_1, mdfl_2)
 
     def test_lesser(self):
         model_name = 'aaa'
+        model_fqn = 'Foo_system/models/aaa'
         model_path = '/path/to/systems/Foo_system/models/aaa'
         mdfl_1 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         model_name = 'zzz'
+        model_fqn = 'Foo_system/models/zzz'
         model_path = '/path/to/systems/Foo_system/models/zzz'
         mdfl_2 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         self.assertLess(mdfl_1, mdfl_2)
 
     def test_greater(self):
         model_name = 'aaa'
+        model_fqn = 'Foo_system/models/aaa'
         model_path = '/path/to/systems/Foo_system/models/aaa'
         mdfl_1 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         model_name = 'zzz'
+        model_fqn = 'Foo_system/models/zzz'
         model_path = '/path/to/systems/Foo_system/models/zzz'
         mdfl_2 = DefinitionLocation(name=model_name,
+                                    fqn=model_fqn,
                                     path=model_path)
         self.assertGreater(mdfl_2, mdfl_1)
 

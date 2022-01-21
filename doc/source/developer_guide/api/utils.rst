@@ -19,7 +19,13 @@ Here some useful functions in the rest of macsyfinder code
 
 utils API reference
 ===================
-.. automodule:: macsypy.utils
-   :members:
-   :private-members:
-   :special-members:
+
+
+get_def_to_detect
+=================
+.. autofunction:: macsypy.utils.get_def_to_detect
+
+
+get_replicon_names
+==================
+.. autofunction:: macsypy.utils.get_replicon_names

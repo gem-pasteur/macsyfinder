@@ -19,6 +19,9 @@ in the input dataset.
 
 .. _search_genes_api:
 
+search_genes API reference
+==========================
+
 search_genes
 ============
 .. automodule:: macsypy.search_genes

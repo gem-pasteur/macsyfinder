@@ -17,13 +17,28 @@ all these systems are saved in "all_systems.xxx" files.
 This module allow to explore among of all systems which combination seems to be more probable.
 
 
+.. _solution_api:
+
+solution API reference
+======================
+
 Solution
 ========
-
-
-.. automodule:: macsypy.solution
+.. autoclass:: macsypy.solution.Solution
    :members:
    :private-members:
    :special-members:
+
+combine_clusters
+================
+.. autofunction:: macsypy.solution.combine_clusters
+
+combine_multisystems
+====================
+.. autofunction:: macsypy.solution.combine_multisystems
+
+find_best_solutions
+===================
+.. autofunction:: macsypy.solution.find_best_solutions
 
 
