@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/T4bP_pilP.hmm
 # target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
-# output directed to file:         results/hmmer_results/T4bP_pilP.search_hmm.out
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20211013_10-00-17/hmmer_results/T4bP_pilP.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,7 +56,7 @@ Passed Vit filter:                         9  (0.00356013); expected 2.5 (0.001)
 Passed Fwd filter:                         2  (0.000791139); expected 0.0 (1e-05)
 Initial search space (Z):               2528  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
-# Mc/sec: inf
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 7422.88
 //
 [ok]

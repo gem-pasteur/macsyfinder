@@ -21,8 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
-
+import os.path
 from itertools import groupby
 
 from .registries import DefinitionLocation
@@ -32,7 +31,7 @@ def get_def_to_detect(models, model_registry):
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
-                  [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
+                  [('model_fqn', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: the definitions to parse
@@ -40,6 +39,7 @@ def get_def_to_detect(models, model_registry):
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
     root, def_names = models
+    root = root.rstrip(os.path.sep)
     model_family = DefinitionLocation.root_name(root)
     model_loc = model_registry[model_family]
     if 'all' in [d.lower() for d in def_names]:

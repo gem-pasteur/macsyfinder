@@ -3,9 +3,9 @@
 # Copyright (C) 2015 Howard Hughes Medical Institute.
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# query HMM file:                  tests/data//models/TFF-SF/profiles/ComM_comGF.hmm
+# query HMM file:                  tests/data/models/TFF-SF/profiles/ComM_comGF.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/ComM_comGF.search_hmm.out
+# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20220119_16-51-37/hmmer_results/ComM_comGF.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

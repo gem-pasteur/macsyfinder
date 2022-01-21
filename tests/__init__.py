@@ -132,13 +132,17 @@ class MacsyTest(unittest.TestCase):
                 if l1 and l2:
                     if comment and l1.startswith(comment) and l2.startswith(comment):
                         continue
-                    self.assertEqual(l1, l2, msg)
+                    try:
+                        self.assertEqual(l1, l2, msg)
+                    except AssertionError as err:
+                        raise AssertionError(f"{fh1.name} and {fh2.name} differ:\n {err}")
                 elif l1:  # and not l2
                     raise self.failureException(f"{fh1.name} is longer than {fh2.name}")
                 elif l2:  # and not l1
                     raise self.failureException(f"{fh2.name} is longer than {fh1.name}")
 
-    def assertTsvEqual(self, f1, f2, tsv_type='best_solution', comment="#", msg=None):
+
+    def assertTsvEqual(self, f1, f2, tsv_type='best_solution.tsv', comment="#", msg=None):
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
         from itertools import zip_longest
@@ -168,14 +172,20 @@ class MacsyTest(unittest.TestCase):
                     fields_2.pop(6)
                 elif tsv_type == 'best_solution_summary.tsv':
                     pass
+                elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv'):
+                    pass
                 else:
-                    raise RuntimeError(f"unknown {tsv_type}")
+                    raise RuntimeError(f"unknown {tsv_type} tsv type file in assertTsvEqual")
 
                 if len(fields_1) == fields_nb - 1:
                     # remove used_in field if present
                     fields_1.pop(-1)
                     fields_2.pop(-1)
-                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
+
+                # counterpart order does not matter
+                fields_1[-1] = set(fields_1[-1].split(','))
+                fields_2[-1] = set(fields_2[-1].split(','))
+                self.assertEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
 
 
     def assertSeqRecordEqual(self, s1, s2):

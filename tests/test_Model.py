@@ -32,7 +32,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import CoreGene, ModelGene, Exchangeable
 from macsypy.profile import ProfileFactory
-from macsypy.hit import Hit
+from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from tests import MacsyTest
 
@@ -309,15 +309,15 @@ sctC
 
         hit_to_keep = []
         for gene in (sctJ_FLG, sctN_FLG, sctC, toto, totote):
-            hit_to_keep.append(Hit(gene,
+            hit_to_keep.append(CoreHit(gene,
                                    f"PSAE001c01_{gene.name}",
-                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                                       1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
         for gene in (gspd, tadz):
-            hit_to_filter_out.append(Hit(gene,
+            hit_to_filter_out.append(CoreHit(gene,
                                      f"PSAE001c01_{gene.name}",
-                                     1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                                             1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                      )
 
         filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)

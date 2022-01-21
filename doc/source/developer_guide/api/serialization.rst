@@ -20,10 +20,72 @@ to serialize the results:
    * The rejected clusters
 
 
+.. _serialization_api:
 
-.. automodule:: macsypy.serialization
-   :members: SystemSerializer, TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer
+SystemSerializer
+================
+.. autoclass:: macsypy.serialization.SystemSerializer
+   :members:
    :private-members:
    :special-members:
+
+
+TsvSystemSerializer
+===================
+.. autoclass:: macsypy.serialization.TsvSystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TsvSolutionSerializer
+=====================
+.. autoclass:: macsypy.serialization.TsvSolutionSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TsvLikelySystemSerializer
+=========================
+.. autoclass:: macsypy.serialization.TsvLikelySystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TsvSpecialHitSerializer
+=======================
+.. autoclass:: macsypy.serialization.TsvSpecialHitSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TxtSystemSerializer
+===================
+.. autoclass:: macsypy.serialization.TxtSystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TxtLikelySystemSerializer
+=========================
+.. autoclass:: macsypy.serialization.TxtLikelySystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TxtUnikelySystemSerializer
+==========================
+.. autoclass:: macsypy.serialization.TxtUnikelySystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+
 
 

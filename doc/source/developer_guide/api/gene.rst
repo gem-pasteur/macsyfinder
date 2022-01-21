@@ -62,6 +62,10 @@ In Model_a it appear as an alternative to sctn but in model_B it appear as sctn_
 In one MacSyFinder run several instances of ModelGene and/or Exchangeable with the same name may coexists .
 But in A whole macsyfinder run there is only one instance core_sctn_flg and core_sctn.
 
+.. _gene_api:
+
+gene API reference
+==================
 
 GeneBank
 ========
@@ -88,8 +92,6 @@ The ModelGene is attached to the model and is composed of a CoreGene.
     attribute reference a :class:`macsypy.gene.ModelGene`
 
 
-.. _core_gene_api:
-
 CoreGene
 ========
 
@@ -98,7 +100,6 @@ CoreGene
    :private-members:
    :special-members:
 
-.. _model_gene_api:
 
 ModelGene
 =========
@@ -108,7 +109,6 @@ ModelGene
    :private-members:
    :special-members:
 
-.. _exchangeable_api:
 
 Exchangeable
 ============
@@ -118,8 +118,6 @@ Exchangeable
    :private-members:
    :special-members:
 
-
-.. _gene_status_api:
 
 GeneStatus
 ==========

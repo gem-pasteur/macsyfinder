@@ -198,12 +198,15 @@ def do_download(args: argparse.Namespace) -> str:
         _log.critical(str(err))
 
 
-def _find_all_installed_packages() -> ModelRegistry:
+def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     """
     :return: all models installed
     """
     defaults = MacsyDefaults()
-    config = Config(defaults, argparse.Namespace())
+    args = argparse.Namespace()
+    if models_dir is not None:
+        args.models_dir = models_dir
+    config = Config(defaults, args)
     model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
@@ -215,7 +218,7 @@ def _find_all_installed_packages() -> ModelRegistry:
     return registry
 
 
-def _find_installed_package(pack_name) -> Optional[ModelLocation]:
+def _find_installed_package(pack_name, models_dir=None) -> Optional[ModelLocation]:
     """
     search if a package names *pack_name* is already installed
 
@@ -223,7 +226,7 @@ def _find_installed_package(pack_name) -> Optional[ModelLocation]:
     :return: The model location corresponding to the `pack_name`
     :rtype: :class:`macsypy.registries.ModelLocation` object
     """
-    registry = _find_all_installed_packages()
+    registry = _find_all_installed_packages(models_dir)
     try:
         return registry[pack_name]
     except KeyError:
@@ -504,8 +507,9 @@ def do_help(args: argparse.Namespace) -> None:
 def do_check(args: argparse.Namespace) -> None:
     """
 
-    :param args:
-    :return:
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
     """
     pack = Package(args.path)
     errors, warnings = pack.check()
@@ -540,6 +544,67 @@ I'll be really happy, if you fix warnings above, before to publish these models.
 
         _log.log(25, f"\tgit tag {pack.metadata['vers']}")
         _log.log(25, f"\tgit push --tags")
+
+
+def do_show_definition(args: argparse.Namespace) -> None:
+    """
+    display on stdout the definition if only a package or sub-package is specified
+    display all model definitions in the corresponding package or subpackage
+
+    for instance
+
+    `TXSS+/bacterial T6SSii T6SSiii`
+
+    display models *TXSS+/bacterial/T6SSii* and *TXSS+/bacterial/T6SSiii*
+
+    `TXSS+/bacterial all` or `TXSS+/bacterial`
+
+    display all models contains in *TXSS+/bacterial subpackage*
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    def display_definition(path):
+        return open(path, 'r').read()
+
+    model_family, *models = args.model
+    pack_name, *sub_family = model_family.split('/')
+
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
+
+    if inst_pack_loc:
+        if not models or 'all' in models:
+            root_def_name = model_family if sub_family else None
+            try:
+                path_2_display = sorted(
+                    [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions(root_def_name=root_def_name)]
+                )
+            except ValueError as err:
+                _log.error(f"'{'/'.join(sub_family)}' not found in package '{pack_name}'.")
+                sys.tracebacklimit = 0
+                raise ValueError() from None
+
+            for fqn, def_path in path_2_display:
+                print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+        else:
+            fqn_to_get = [f'{model_family}/{m}' for m in models]
+            for fqn in fqn_to_get:
+                try:
+                    def_path = inst_pack_loc.get_definition(fqn).path
+                    print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+                except ValueError as err:
+                    _log.error(f"Model '{fqn}' not found.")
+                    continue
+    else:
+        _log.error(f"Package '{pack_name}' not found.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
 
 ##################################
 # parsing command line arguments #
@@ -732,6 +797,18 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                  nargs='?',
                                  default=os.getcwd(),
                                  help='the path to root directory models to check')
+
+    ##############
+    # definition #
+    ##############
+    def_subparser = subparsers.add_parser('definition',
+                                            help='show a model definition ')
+    def_subparser.set_defaults(func=do_show_definition)
+    def_subparser.add_argument('model',
+                               nargs='+',
+                               help='the family and name(s) of a model(s) eg: TXSS T6SS T4SS or TFF/bacterial T2SS')
+    def_subparser.add_argument('--models-dir',
+                               help='the path of root directory containing package instead used installed packages')
     return parser
 
 

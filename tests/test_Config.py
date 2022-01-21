@@ -370,7 +370,7 @@ class TestConfig(MacsyTest):
                             'neutral': 0.0,
                             'itself': 11.0,
                             'exchangeable': 12.0,
-                            'loner_multi_system': 10.0}
+                            'out_of_cluster': 10.0}
         self.assertDictEqual(cfg.hit_weights(), expected_weights)
         self.assertEqual(cfg.i_evalue_sel(), 0.012)
         self.assertEqual(cfg.e_value_search(), 0.12)
@@ -521,21 +521,21 @@ class TestConfig(MacsyTest):
     def test_hit_weights(self):
         cfg = Config(self.defaults, self.parsed_args)
         default = {k: self.defaults[f"{k}_weight"] for k in ('mandatory', 'accessory', 'neutral', 'itself',
-                                                             'exchangeable', 'loner_multi_system')}
+                                                             'exchangeable', 'out_of_cluster')}
         self.assertDictEqual(default, cfg.hit_weights())
 
         self.parsed_args.mandatory_weight = 2
         self.parsed_args.accessory_weight = 1
         self.parsed_args.exchangeable_weight = 0.5
-        self.parsed_args.loner_multi_system_weight = 0.2
+        self.parsed_args.out_of_cluster_weight = 0.2
 
         cfg = Config(self.defaults, self.parsed_args)
         expected = {'mandatory': 2,
-                'accessory': 1,
-                'neutral': self.defaults.neutral_weight,
-                'itself': self.defaults.itself_weight,
-                'exchangeable': .5,
-                'loner_multi_system': .2
-                }
+                    'accessory': 1,
+                    'neutral': self.defaults.neutral_weight,
+                    'itself': self.defaults.itself_weight,
+                    'exchangeable': .5,
+                    'out_of_cluster': .2
+                    }
         self.assertDictEqual(cfg.hit_weights(), expected)
 

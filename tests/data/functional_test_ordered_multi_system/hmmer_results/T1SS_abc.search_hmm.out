@@ -4,8 +4,8 @@
 # Freely distributed under the GNU General Public License (GPLv3).
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/functional/profiles/T1SS_abc.hmm
-# target sequence database:        tests/data/base/test_1.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_17-57-17/hmmer_results/T1SS_abc.search_hmm.out
+# target sequence database:        tests/data/base/test_13.fasta
+# output directed to file:         functional_test_multi_system/hmmer_results/T1SS_abc.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,7 +16,7 @@ Scores for complete sequences (score includes all domains):
     E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
     ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
    1.7e-158  520.0   9.5   2.1e-158  519.7   9.5    1.1  1  VICH001.B.00001.C001_01399  abc
-   1.9e-157  516.6   5.5   2.4e-157  516.3   5.5    1.1  1  VICH001.B.00001.C001_01397  abc
+   1.9e-157  516.6   5.5   2.3e-157  516.3   5.5    1.1  1  VICH001.B.00001.C001_01397  abc
 
 
 Domain annotation for each sequence (and alignments):
@@ -65,7 +65,7 @@ Domain annotation for each sequence (and alignments):
 >> VICH001.B.00001.C001_01397  abc
    #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
  ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
-   1 !  516.3   5.5  9.6e-159  2.4e-157       3     501 .]     175     677 ..     173     677 .. 0.99
+   1 !  516.3   5.5  9.6e-159  2.3e-157       3     501 .]     175     677 ..     173     677 .. 0.99
 
   Alignments for each domain:
   == domain 1  score: 516.3 bits;  conditional E-value: 9.6e-159
@@ -109,14 +109,14 @@ Domain annotation for each sequence (and alignments):
 Internal pipeline statistics summary:
 -------------------------------------
 Query model(s):                              1  (501 nodes)
-Target sequences:                           49  (20794 residues searched)
-Passed MSV filter:                         5  (0.102041); expected 1.0 (0.02)
-Passed bias filter:                        5  (0.102041); expected 1.0 (0.02)
-Passed Vit filter:                         3  (0.0612245); expected 0.0 (0.001)
-Passed Fwd filter:                         2  (0.0408163); expected 0.0 (1e-05)
-Initial search space (Z):                 49  [actual number of targets]
+Target sequences:                           48  (20405 residues searched)
+Passed MSV filter:                         5  (0.104167); expected 1.0 (0.02)
+Passed bias filter:                        5  (0.104167); expected 1.0 (0.02)
+Passed Vit filter:                         3  (0.0625); expected 0.0 (0.001)
+Passed Fwd filter:                         2  (0.0416667); expected 0.0 (1e-05)
+Initial search space (Z):                 48  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.00
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
 # Mc/sec: inf
 //
 [ok]

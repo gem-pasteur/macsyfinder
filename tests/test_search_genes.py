@@ -32,7 +32,7 @@ import argparse
 import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene
-from macsypy.hit import Hit
+from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
 from macsypy.database import Indexes
@@ -85,9 +85,9 @@ class TestSearchGenes(MacsyTest):
         gene_name = "abc"
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
         report = search_genes([c_gene_abc], self.cfg)
-        expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
-                            26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
-                            )]
+        expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
+                                26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
+                                )]
         self.assertEqual(len(report), 1)
         self.assertEqual(expected_hit[0], report[0].hits[0])
 
@@ -98,9 +98,9 @@ class TestSearchGenes(MacsyTest):
         gene_name = "abc"
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
         report = search_genes([c_gene_abc], self.cfg)
-        expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
-                            26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
-                            )]
+        expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
+                                26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
+                                )]
 
         # second job using recover
         # disable hmmer to be sure that test use the recover inner function

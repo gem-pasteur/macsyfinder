@@ -17,17 +17,21 @@ This object has methods to extract and filter Hmmer raw outputs (see :ref:`gener
 For matches selected with the filtering parameters, *"Hit"* objects (:class:`macsypy.HMMReport.Hit`) are built. 
 
 
+.. _report_api:
 
-HMMReport API reference
-=======================
+report API reference
+====================
+
+HMMReport
+=========
 
 .. autoclass:: macsypy.report.HMMReport
    :members:
    :private-members:
    :special-members:
 
-GeneralHMMReport API reference
-==============================
+GeneralHMMReport
+================
 
 .. autoclass:: macsypy.report.GeneralHMMReport
    :members:
