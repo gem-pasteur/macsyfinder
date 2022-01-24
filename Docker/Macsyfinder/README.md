@@ -14,5 +14,5 @@ for instance for local image integron_finder:2.0.rc6
 to build the macsyfinder:latest in dockerhub 
 
     docker login --username=<your_docker_login>
-    docker build -f Dockerfile.<tag> -t gempasteur/macsyfinderfinder:<tag>> .
+    DOCKER_BUILDKIT=1 docker build -f Dockerfile.<tag> -t gempasteur/macsyfinderfinder:<tag>> .
     docker push gempasteur/macsyfinderfinder:<tag>
