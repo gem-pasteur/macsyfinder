@@ -71,6 +71,28 @@ or to run a specific test
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 [![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
 
+## Models installation
+
+Models are no longer shipped along macsyfinder package. To install Models you can use `macsydata`.
+*macsydata* allow to manage models stored in [macsy-models](https://github.com/macsy-models). 
+Below some most useful commands.
+
+  * available: List Models available on macsy-models.
+  * search: Discover new packages.
+  * install: Install or upgarde packages.
+  * uninstall: Uninstall packages.
+  * cite: How to cite a package.
+  * ...
+
+For complete documentation see 
+[macsydata section on readthedoc](https://macsyfinder.readthedocs.io/en/latest/user_guide/installation.html#models-installation-with-macsydata)
+
+For models not stored in macsy-models the commands *available*, *search*, *installation from remote* or *upgrade from remote* 
+are **NOT** available.
+
+For models **Not** stored in *macsy-models*, you have to manage them semi-manually. 
+Download the archive (do not unarchive it), then use *macsydata* for the installation.
+
 ## Documentation
 
 You will find complete documentation for setting up your project on readthedocs
@@ -94,7 +116,7 @@ For that we provide a command line tool *macsydata* which is inspired by *pip*
     macsydata search PACKNAME
     macsydata install PACKNAME== or >=, or ... VERSION
 
-To work with Docker you have to install models in a directory which will be mount in the image at run type
+To work with Docker you have to install models in a directory which will be mounted in the image at run time
 
     mkdir shared_dir
     cd shared_dir

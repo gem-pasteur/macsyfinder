@@ -164,6 +164,7 @@ class TestMacsydata(MacsyTest):
     def test_info(self):
         pack_name = "nimportnaoik"
         self.args.package = pack_name
+        self.args.models_dir = None
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError):
                 macsydata.do_info(self.args)
@@ -174,8 +175,11 @@ class TestMacsydata(MacsyTest):
         self.args.package = pack_name
         fake_pack_path = self.create_fake_package(pack_name)
 
+        def fake_find_installed_package(pack_name, models_dir=None):
+            return macsydata.Package(fake_pack_path)
+
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        macsydata._find_installed_package = fake_find_installed_package
         try:
             with self.catch_io(out=True):
                 macsydata.do_info(self.args)
@@ -212,12 +216,17 @@ copyright: 2019, Institut Pasteur, CNRS"""
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
+
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
+
         find_all_packages = macsydata._find_all_installed_packages
-        macsydata._find_all_installed_packages = lambda: registry
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
 
         self.args.verbose = 1
         self.args.outdated = False
         self.args.uptodate = False
+        self.args.models_dir = None
         try:
             with self.catch_io(out=True):
                 macsydata.do_list(self.args)
@@ -236,8 +245,11 @@ copyright: 2019, Institut Pasteur, CNRS"""
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
 
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
+
         find_all_packages = macsydata._find_all_installed_packages
-        macsydata._find_all_installed_packages = lambda: registry
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
 
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
@@ -245,6 +257,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.verbose = 1
         self.args.outdated = True
         self.args.uptodate = False
+        self.args.models_dir = None
 
         try:
             with self.catch_io(out=True):
@@ -263,14 +276,19 @@ copyright: 2019, Institut Pasteur, CNRS"""
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
+
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
+
         find_all_packages = macsydata._find_all_installed_packages
-        macsydata._find_all_installed_packages = lambda: registry
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
                                                                         'fake_2': ['0.0b2']}[name]
         self.args.verbose = 1
         self.args.outdated = False
         self.args.uptodate = True
+        self.args.models_dir = None
 
         try:
             with self.catch_io(out=True):
@@ -289,8 +307,11 @@ copyright: 2019, Institut Pasteur, CNRS"""
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
+
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
         find_all_packages = macsydata._find_all_installed_packages
-        macsydata._find_all_installed_packages = lambda: registry
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
         remote_list_packages_vers = macsydata.RemoteModelIndex.list_package_vers
         macsydata.RemoteModelIndex.list_package_vers = lambda x, name: {'fake_1': ['1.0'],
                                                                         'fake_2': ['0.0b2']}[name]
@@ -298,6 +319,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         self.args.verbose = 2
         self.args.outdated = False
         self.args.uptodate = False
+        self.args.models_dir = None
 
         try:
             with self.catch_io(out=True):
@@ -372,6 +394,7 @@ To cite MacSyFinder:
     def test_help(self):
         pack_name = "nimportnaoik"
         self.args.package = pack_name
+        self.args.models_dir = None
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError):
                 macsydata.do_help(self.args)
@@ -382,8 +405,11 @@ To cite MacSyFinder:
         self.args.package = pack_name
         fake_pack_path = self.create_fake_package(pack_name)
 
+        def fake_find_installed_package(pack_name, models_dir=None):
+            return macsydata.Package(fake_pack_path)
+
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        macsydata._find_installed_package = fake_find_installed_package
         try:
             with self.catch_io(out=True):
                 macsydata.do_help(self.args)
@@ -1139,13 +1165,22 @@ Maybe you can use --user option to install in your HOME.""")
         pack_name = 'fake_1'
         path = self.create_fake_package(pack_name, dest=self.models_dir[0])
         self.args.package = pack_name
+        self.args.models_dir = None
+
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
-        macsydata._find_all_installed_packages = lambda: registry
+
+        def fake_find_all_installed_package(models_dir=None):
+            return registry
+
+        def fake_find_installed_package(pack_name, models_dir=None):
+            return registry[pack_name]
+
+        macsydata._find_all_installed_packages = fake_find_all_installed_package
 
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: registry[x]
+        macsydata._find_installed_package = fake_find_installed_package
         try:
             with self.catch_log(log_name='macsydata') as log:
                 macsydata.do_uninstall(self.args)
@@ -1159,7 +1194,8 @@ Maybe you can use --user option to install in your HOME.""")
 
         self.args.package = 'foo'
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: None
+        def fake_find_installed_package(pack_name, models_dir=None): return None
+        macsydata._find_installed_package = fake_find_installed_package
         try:
             with self.catch_log(log_name='macsydata') as log:
                 with self.assertRaises(ValueError):
@@ -1176,6 +1212,7 @@ Maybe you can use --user option to install in your HOME.""")
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
         self.args.careful = False
         self.args.match_case = False
+        self.args.models_dir = None
 
         # functions which do net operations
         # so we need to mock them
