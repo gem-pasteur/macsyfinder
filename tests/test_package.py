@@ -123,7 +123,7 @@ class TestRemoteModelIndex(MacsyTest):
         elif url == 'https://api.github.com/orgs/remote_exists_unexpected_error':
             raise urllib.error.HTTPError(url, 204, 'No Content', None, None)
         elif url == 'https://api.github.com/orgs/list_packages/repos':
-            resp = [{'name': 'model_1'}, {'name': 'model_2'}]
+            resp = [{'name': 'model_1'}, {'name': 'model_2'}, {'name':'.github'}]
             return MockResponse(json.dumps(resp), 200)
         elif url == 'https://api.github.com/repos/list_package_vers/model_1/tags':
             resp = [{'name': 'v_1'}, {'name': 'v_2'}]

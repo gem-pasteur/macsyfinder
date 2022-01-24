@@ -148,6 +148,7 @@ class RemoteModelIndex(AbstractModelIndex):
     def remote_exists(self) -> bool:
         """
         check if the remote exists and is an organization
+
         :return: True if the Remote url point to a github Organization, False otherwise
         """
         try:
@@ -201,12 +202,13 @@ class RemoteModelIndex(AbstractModelIndex):
     def list_packages(self) -> List[str]:
         """
         list all model packages available on a model repos
+
         :return: The list of package names.
         """
         url = f"{self.base_url}/orgs/{self.org_name}/repos"
         _log.debug(f"get {url}")
         packages = self._url_json(url)
-        return [p['name'] for p in packages]
+        return [p['name'] for p in packages if p['name'] != '.github']
 
 
     def list_package_vers(self, pack_name: str) -> List[str]:
