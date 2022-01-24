@@ -811,12 +811,13 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
     print(_outfile_header(), file=sys_file)
 
     def fill_replicon(summary):
+        index_name = summary.index.name
         computed_replicons = set(summary.index)
         lacking_replicons = set(replicon_names) - computed_replicons
         lacking_replicons = sorted(lacking_replicons)
-        for rep in lacking_replicons:
-            row = pd.Series({m: 0 for m in summary.columns}, name=rep)
-            summary = summary.append(row)
+        rows = pd.DataFrame({models: [0 * len(lacking_replicons)] for models in summary.columns}, index=lacking_replicons)
+        summary = pd.concat([summary, rows], ignore_index=False)
+        summary.index.name = index_name
         return summary
 
     def fill_models(summary):
