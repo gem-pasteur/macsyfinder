@@ -175,9 +175,9 @@ To install a model package::
 
     macsydata install <model name>
 
-To install a model when you have not the right to install it system-wide::
+To install a model when you have not the right to install it system-wide
 
-To install it in your home (*./macsyfinder/data*)
+To install it in your home (*./macsyfinder/data*)::
 
     macsydata install --user <model name>
 
