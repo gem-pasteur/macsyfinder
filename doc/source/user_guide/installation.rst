@@ -153,17 +153,17 @@ Models installation with `macsydata`
 
 Once MacSyFinder is installed you have access to an utility program to manage the models: `macsydata`
 
-This script allows to search, download, install and get information from MacSyFinder models stored on github or locally
-installed. The general syntax for `macsydata` is::
+This script allows to search, download, install and get information from MacSyFinder models stored on
+github (https://github.com/macsy-models) or locally installed. The general syntax for `macsydata` is::
 
     macsydata <general options> <subcommand> <sub command options> <arguments>
 
 
-To list all models available::
+To list all models available on *macsy-models*::
 
     macsydata available
 
-To search for models::
+To search for models on *macsy-models*::
 
     macsydata search TXSS
 
@@ -177,7 +177,13 @@ To install a model package::
 
 To install a model when you have not the right to install it system-wide::
 
+To install it in your home (*./macsyfinder/data*)
+
     macsydata install --user <model name>
+
+To install it in any directory::
+
+    macsydata install --target <model dir> <model_name>
 
 To know how to cite a model package::
 
