@@ -208,3 +208,9 @@ To list all `macsydata` subcommands::
 To list all available options for a subcommand::
 
     macsydata <subcommand> --help
+
+For models not stored in *macsy-models* the commands *available*, *search*,
+*installation* from remote or *upgrade* from remote are **NOT** available.
+
+For models **NOT** stored in *macsy-models*, you have to manage them semi-manually.
+Download the archive (do not unarchive it), then use *macsydata* to install the archive.
