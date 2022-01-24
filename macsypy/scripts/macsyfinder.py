@@ -334,7 +334,7 @@ the hit selection for systems detection.
                                default=None,
                                help=f"""the weight modifier for cluster which bring a component already presents in other 
 clusters (default:{msf_def['redundancy_penalty']})""")
-    score_options.add_argument('--out_of_cluster',
+    score_options.add_argument('--out-of-cluster',
                                action='store',
                                type=float,
                                default=None,
