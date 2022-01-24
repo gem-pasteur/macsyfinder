@@ -385,7 +385,7 @@ def do_uninstall(args: argparse.Namespace) -> None:
     :rtype: None
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         shutil.rmtree(pack.path)
@@ -405,7 +405,7 @@ def do_info(args: argparse.Namespace) -> None:
     :rtype: None
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
 
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
@@ -424,7 +424,7 @@ def do_list(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    registry = _find_all_installed_packages()
+    registry = _find_all_installed_packages(models_dir=args.models_dir)
     for model_loc in registry.models():
         try:
             pack = Package(model_loc.path)
@@ -503,7 +503,7 @@ def do_help(args: argparse.Namespace) -> None:
     :raise ValueError: if the package name is not known.
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         print(pack.help())
@@ -709,8 +709,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    default=False,
                                    help='Install to the MacSYFinder user install directory for your platform. '
                                         'Typically ~/.macsyfinder/data')
-    install_subparser.add_argument('-t', '--target',
-                                   help="Install packages into <TARGET> dir.")
+    install_subparser.add_argument('-t', '--target', '--models-dir',
+                                   dest='target',
+                                   help='Install packages into <TARGET> dir instead in canonical location')
     install_subparser.add_argument('-U', '--upgrade',
                                    action='store_true',
                                    default=False,
@@ -727,6 +728,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
     uninstall_subparser.set_defaults(func=do_uninstall)
     uninstall_subparser.add_argument('package',
                                      help='Package name.')
+    uninstall_subparser.add_argument('--target, --models-dir',
+                                     dest='models_dir',
+                                     help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ##########
     # search #
     ##########
@@ -756,6 +761,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     info_subparser.add_argument('package',
                                 help='Package name.')
     info_subparser.set_defaults(func=do_info)
+    info_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ########
     # list #
     ########
@@ -775,11 +783,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                 help="The name of Model organization"
                                      "(default macsy-models))"
                                 )
+    list_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ##########
     # freeze #
     ##########
     freeze_subparser = subparsers.add_parser('freeze',
                                              help='List installed models in requirements format.')
+    freeze_subparser.add_argument('--models-dir',
+                                   help='the path of the alternative root directory containing package instead used '
+                                        'canonical locations')
     freeze_subparser.set_defaults(func=do_freeze)
     ########
     # cite #
@@ -787,17 +801,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
     cite_subparser = subparsers.add_parser('cite',
                                            help='How to cite a package.')
     cite_subparser.set_defaults(func=do_cite)
+    cite_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     cite_subparser.add_argument('package',
                                 help='Package name.')
     ########
     # help #
     ########
-    cite_subparser = subparsers.add_parser('help',
+    help_subparser = subparsers.add_parser('help',
                                            help='get online documentation.')
-    cite_subparser.set_defaults(func=do_help)
-    cite_subparser.add_argument('package',
+    help_subparser.set_defaults(func=do_help)
+    help_subparser.add_argument('package',
                                 help='Package name.')
-
+    help_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     #########
     # check #
     #########
@@ -819,7 +838,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                nargs='+',
                                help='the family and name(s) of a model(s) eg: TXSS T6SS T4SS or TFF/bacterial T2SS')
     def_subparser.add_argument('--models-dir',
-                               help='the path of root directory containing package instead used installed packages')
+                               help='the path to the alternative root directory containing packages instead to the '
+                                    'canonical locations')
     return parser
 
 
