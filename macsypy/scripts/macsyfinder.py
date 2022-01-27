@@ -272,10 +272,10 @@ To applied the --e-value-search to all profiles use the --no-cut-ga option.
                                action='store_true',
                                default=False,
                                help=f"""By default the Mf try to applied a threshold per profile by using the 
-hmmer -cut-ga option. This is possible only if the Ga bit score is present in the profile otherwise MF switch to use the
-the --e-value-search (-E in hmmsearch). 
-If this option is set the --e-value-search option is used for all profiles regardless 
-the presence of the a GA bit score in the profiles.
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
+MF switch to use the --e-value-search (-E in hmmsearch). 
+If this option is set the --e-value-search option is used for all profiles regardless the presence of 
+the a GA bit score in the profiles.
 (default: {msf_def['no_cut_ga']})""")
 
     hmmer_options.add_argument('--i-evalue-sel',
