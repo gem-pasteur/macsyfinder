@@ -266,22 +266,36 @@ Configuration file
 ==================
 
 Options to run MacSyFinder can be specified in a configuration file.
+
+A macsyfinder utility is provided to generate macsyfinder config file: *macsyconfig*
+
+*macsyconfig* is a conversation menu which guide you and generate a file *macsyfinder.conf* in ini format.
+Once generated put this file in specific locations (see below) to be take in account by MacSyFinder.
+
 The :ref:`Config object <configuration>` handles all configuration options for MacSyFinder.
-Three locations are parsed to find configuration files: 
- 
- * $PREFIX/etc/macsyfinder/macsyfinder.conf
- * $(HOME)/.macsyfinder/macsyfinder.conf
- * ./macsyfinder.conf  
- 
-Moreover these three locations options can be passed on the command-line.
- 
-Each file can define options, and in the end all options are integrated. If an option is specified several times:
- 
+There kind of locations where to put configuration file:
+
+ #. System wide configuration (this configuration is used for all macsyfinder run)
+
+    * */etc/macsyfinder/macsyfinder.conf*
+    * or in *${VIRTUAL_ENV}/etc/macsyfinder.conf* if you installed macsyfinder in a virtualenv
+    * the file pointed by environment variable *MACSY_HOME*
+
+ #. User wide configuration (this configuration is used for all run for a user)
+
+    * *~/.macsyfinder/macsyfinder.conf*
+
+ #. Project configuration
+
+    * *macsyfinder.conf* in the current directory
+    * with command line option *--cfg-file*
+
+
 .. note::
     The precedence rules from the least to the most important priority are:
  
-    $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < macsyfinder.conf < "command-line" options
-   
+    System wide configuration < user wide configuration < project configuration < command line option
+
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
@@ -338,7 +352,7 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     * *accessory_weight* (default= *0.5*)
     * *exchangeable_weight* (default= *0.8*)
     * *redundancy_penalty* (default= *1.5*)
-    * *loner_multi_system_weight* (default= *0.7*)
+    * *out_of_cluster* (default= *0.7*)
 
   
   * **directories**
