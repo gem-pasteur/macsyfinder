@@ -35,6 +35,7 @@ import tempfile
 import uuid
 import colorlog
 import json
+import re
 
 import macsypy
 import macsypy.config
@@ -122,7 +123,7 @@ class MacsyTest(unittest.TestCase):
             return res
         return wrapper
 
-    def assertFileEqual(self, f1, f2, comment=None, msg=None):
+    def assertFileEqual(self, f1, f2, comment=None, skip_line=None, msg=None):
         self.maxDiff = None
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
@@ -132,6 +133,13 @@ class MacsyTest(unittest.TestCase):
                 if l1 and l2:
                     if comment and l1.startswith(comment) and l2.startswith(comment):
                         continue
+                    elif skip_line:
+                        if re.search(skip_line, l1) and re.search(skip_line, l2):
+                            continue
+                        try:
+                            self.assertEqual(l1, l2, msg)
+                        except AssertionError as err:
+                            raise AssertionError(f"{fh1.name} and {fh2.name} differ:\n {err}")
                     try:
                         self.assertEqual(l1, l2, msg)
                     except AssertionError as err:

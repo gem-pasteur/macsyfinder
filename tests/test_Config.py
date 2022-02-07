@@ -29,7 +29,7 @@ from configparser import ConfigParser, ParsingError
 import tempfile
 from time import strftime
 
-from macsypy.config import MacsyDefaults, Config
+from macsypy.config import MacsyDefaults, Config, NoneConfig
 
 from tests import MacsyTest
 
@@ -175,7 +175,7 @@ class TestConfig(MacsyTest):
                                 'multi_loci': {'set_1/Flagellum', 'T4SS'}
                                 }
         hmmer_opts_in_file = {'coverage_profile': 0.8,
-                             'e_value_search': 0.12}
+                              'e_value_search': 0.12}
 
         try:
             shutil.copyfile(self.find_data(os.path.join('conf_files', 'project.conf')),
@@ -218,10 +218,7 @@ class TestConfig(MacsyTest):
             dest_conf_file = os.path.join(tmpdirname, 'macsyfinder.conf')
             with open(dest_conf_file, 'w') as cfg_file:
                 config_parser.write(cfg_file)
-
-            import macsypy.config
-            macsyconf = macsypy.config.__MACSY_CONF__
-            macsypy.config.__MACSY_CONF__ = tmpdirname
+            self.parsed_args.cfg_file = dest_conf_file
             with self.assertRaises(ValueError) as ctx:
                 Config(self.defaults, self.parsed_args)
             self.assertEqual(str(ctx.exception),
@@ -240,9 +237,9 @@ class TestConfig(MacsyTest):
             ori_conf_file = self.find_data(os.path.join('conf_files', 'macsy_models.conf'))
             dest_conf_file = os.path.join(tmpdirname, 'macsyfinder.conf')
             shutil.copy(ori_conf_file, dest_conf_file)
-            import macsypy.config
-            macsyconf = macsypy.config.__MACSY_CONF__
-            macsypy.config.__MACSY_CONF__ = tmpdirname
+            os.environ['MACSY_CONF'] = dest_conf_file
+            virtual_env = os.environ.get("VIRTUAL_ENV")
+            del os.environ["VIRTUAL_ENV"]
             try:
                 cfg = Config(self.defaults, self.parsed_args)
 
@@ -266,7 +263,49 @@ class TestConfig(MacsyTest):
                     else:
                         self.assertEqual(getattr(cfg, opt)(), val)
             finally:
-                macsypy.config.__MACSY_CONF__ = macsyconf
+                os.environ["VIRTUAL_ENV"] = virtual_env
+
+    def test_Config_conf_file_virtualenv(self):
+        methods_needing_args = {'inter_gene_max_space': [('set_1/Flagellum', 4), ('set_1/T2SS', 2)],
+                                'min_mandatory_genes_required': [('set_1/Flagellum', 9), ('set_1/T2SS', 5)]
+                               }
+        modified_args = {'db_type': 'gembase',
+                         'coverage_profile': 0.1,
+                         'replicon_topology': 'circular'
+                        }
+
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            ori_conf_file = self.find_data(os.path.join('conf_files', 'macsy_virtualenv_test.conf'))
+            conf_dir = os.path.join(tmpdirname, 'etc', 'macsyfinder')
+            os.makedirs(conf_dir)
+            dest_conf_file = os.path.join(conf_dir, 'macsyfinder.conf')
+            shutil.copy(ori_conf_file, dest_conf_file)
+            virtual_env = os.environ.get("VIRTUAL_ENV")
+
+            os.environ['VIRTUAL_ENV'] = tmpdirname
+            try:
+                cfg = Config(self.defaults, self.parsed_args)
+
+                expected_values = {k: v for k, v in self.defaults.items()}
+                expected_values.update(methods_needing_args)
+                expected_values.update(modified_args)
+                for opt, val in expected_values.items():
+                    if opt == 'out_dir':
+                        self.assertEqual(cfg.out_dir(),
+                                         os.path.join(cfg.res_search_dir(),
+                                                      f'macsyfinder-{strftime("%Y%m%d_%H-%M-%S")}')
+                                         )
+                    elif opt in ('max_nb_genes', 'min_genes_required', 'multi_loci'):  # not set in cfg file
+                        pass
+                    elif opt in methods_needing_args:
+                        for model, genes in expected_values[opt]:
+                            self.assertEqual(getattr(cfg, opt)(model), genes)
+                    elif opt == 'models_dir':
+                        self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
+                    else:
+                        self.assertEqual(getattr(cfg, opt)(), val)
+            finally:
+                os.environ["VIRTUAL_ENV"] = virtual_env
 
 
     def test_Config_args(self):
@@ -544,3 +583,11 @@ class TestConfig(MacsyTest):
                     }
         self.assertDictEqual(cfg.hit_weights(), expected)
 
+
+class TestNoneConfig(MacsyTest):
+
+    def test_NoneConfig(self):
+        n_cfg = NoneConfig()
+
+        self.assertIsNone(n_cfg.max_nb_genes("model_1"))
+        self.assertIsNone(n_cfg.working_dir())

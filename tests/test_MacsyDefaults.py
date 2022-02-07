@@ -37,6 +37,12 @@ from tests import MacsyTest
 class TestMacsyDefaults(MacsyTest):
 
     def setUp(self):
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        if virtual_env:
+            system_models_dir = os.path.join(virtual_env, 'etc', 'macsyfinder', 'models')
+        else:
+            system_models_dir = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
+
         self.defaults = {'cfg_file': None,
                          'coverage_profile': 0.5,
                          'e_value_search': 0.1,
@@ -53,9 +59,10 @@ class TestMacsyDefaults(MacsyTest):
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
                          'models': [],
-                         'system_models_dir': [path for path in (
-                             os.path.normpath(os.path.join(os.path.dirname(__file__), 'data', 'models')),
-                             os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data')) if os.path.exists(path)],
+                         'system_models_dir': [path for path in
+                                                       (system_models_dir,
+                                                        os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
+                                                                  if os.path.exists(path)],
                          'models_dir': None,
                          'multi_loci': set(),
                          'mute': False,
@@ -66,7 +73,7 @@ class TestMacsyDefaults(MacsyTest):
                          'relative_path': False,
                          'replicon_topology': 'circular',
                          'res_extract_suffix': '.res_hmm_extract',
-                         'res_search_dir': os.getcwd(),
+                         'res_search_dir': ".",
                          'res_search_suffix': '.search_hmm.out',
                          'sequence_db': None,
                          'topology_file': None,
@@ -84,6 +91,7 @@ class TestMacsyDefaults(MacsyTest):
 
     def test_MacsyDefaults(self):
         defaults = MacsyDefaults()
+        self.maxDiff = None
         self.assertDictEqual(defaults, self.defaults)
 
         new_defaults = {k: v for k, v in self.defaults.items()}
@@ -91,22 +99,3 @@ class TestMacsyDefaults(MacsyTest):
         new_defaults['worker'] = 5
         defaults = MacsyDefaults(previous_run=True, worker=5)
         self.assertDictEqual(defaults, new_defaults)
-
-
-    def test_MacsyDefaults_with_MACSY_DATA(self):
-        import macsypy.config
-        self.maxDiff = None
-        macsydata = macsypy.config.__MACSY_DATA__
-        macsypy.config.__MACSY_DATA__ = tempfile.mkdtemp()
-        system_models_dir = os.path.join(macsypy.config.__MACSY_DATA__, 'data', 'models')
-        try:
-            os.makedirs(system_models_dir)
-            self.defaults['system_models_dir'] = [path for path in
-                                                  (system_models_dir,
-                                                   os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
-                                                  if os.path.exists(path)]
-            defaults = MacsyDefaults()
-            self.assertDictEqual(defaults, self.defaults)
-        finally:
-            shutil.rmtree(macsypy.config.__MACSY_DATA__)
-            macsypy.config.__MACSY_DATA__ = macsydata

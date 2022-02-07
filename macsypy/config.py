@@ -27,7 +27,6 @@ from time import strftime
 import logging
 from configparser import ConfigParser, ParsingError, NoSectionError
 
-from macsypy import __MACSY_CONF__, __MACSY_DATA__
 from  macsypy.model_conf_parser import ModelConfParser
 _log = logging.getLogger(__name__)
 
@@ -48,10 +47,12 @@ class MacsyDefaults(dict):
         """
         super().__init__()
         self.__dict__ = self
-        if __MACSY_DATA__ == '$' + 'MACSYDATA':
-            prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        if virtual_env:
+            system_models_dir = os.path.join(virtual_env, 'etc', 'macsyfinder', 'models')
         else:
-            prefix_data = os.path.join(__MACSY_DATA__, 'data')
+            system_models_dir = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
 
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
@@ -70,10 +71,10 @@ class MacsyDefaults(dict):
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', [])
         self.system_models_dir = kwargs.get('system_models_dir', [path for path in
-                                                    (os.path.join(prefix_data, 'models'),
-                                                     os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
-                                                    if os.path.exists(path)]
-                                             )
+                                                       (system_models_dir,
+                                                        os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
+                                                                  if os.path.exists(path)]
+                                            )
         self.models_dir = kwargs.get('models_dir', None)
         self.multi_loci = kwargs.get('multi_loci', set())
         self.mute = kwargs.get('mute', False)
@@ -84,7 +85,7 @@ class MacsyDefaults(dict):
         self.relative_path = kwargs.get('relative_path', False)
         self.replicon_topology = kwargs.get('replicon_topology', 'circular')
         self.res_extract_suffix = kwargs.get('res_extract_suffix', '.res_hmm_extract')
-        self.res_search_dir = kwargs.get('res_search_dir', os.getcwd())
+        self.res_search_dir = kwargs.get('res_search_dir', '.')
         self.res_search_suffix = kwargs.get('res_search_suffix', '.search_hmm.out')
         self.sequence_db = kwargs.get('sequence_db', None)
         self.topology_file = kwargs.get('topology_file', None)
@@ -148,22 +149,22 @@ class Config:
         self.cfg_name = "macsyfinder.conf"
         self._defaults = defaults
 
-        if __MACSY_DATA__ == '$' + 'MACSYDATA':
-            self._prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        if virtual_env:
+            system_wide_config_file = os.path.join(virtual_env, 'etc', 'macsyfinder', self.cfg_name)
         else:
-            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
-
-        if __MACSY_CONF__ == '$' + 'MACSYCONF':
-            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'etc'))
-        else:
-            self._conf_dir = __MACSY_CONF__
+            # not in virtual_env
+            var_env = os.environ.get('MACSY_CONF')
+            if var_env:
+                system_wide_config_file = var_env
+            else:
+                system_wide_config_file = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
 
         self._options = {}
         self._tmp_opts = {}
 
         self._set_default_config()
 
-        system_wide_config_file = os.path.join(self._conf_dir, self.cfg_name)
         if os.path.exists(system_wide_config_file):
             self._set_system_wide_config(system_wide_config_file)
 
@@ -610,7 +611,7 @@ class Config:
                       if value come from command_line
                           ['model1', 'def1', 'def2', 'def3']
                       if value come from config file
-                         'set_1', 'T9SS T3SS T4SS_typeI')]
+                         ['set_1', 'T9SS T3SS T4SS_typeI')]
                          [(model_family, [def_name1, ...]), ... ]
         """
         if isinstance(value, str):
