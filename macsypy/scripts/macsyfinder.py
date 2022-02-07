@@ -271,7 +271,7 @@ To applied the --e-value-search to all profiles use the --no-cut-ga option.
     hmmer_options.add_argument('--no-cut-ga',
                                action='store_true',
                                default=False,
-                               help=f"""By default the Mf try to applied a threshold per profile by using the 
+                               help=f"""By default the MSF try to applied a threshold per profile by using the 
 hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
 MF switch to use the --e-value-search (-E in hmmsearch). 
 If this option is set the --e-value-search option is used for all profiles regardless the presence of 
@@ -303,7 +303,7 @@ the hit selection for systems detection.
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight of a mandatory component in cluster scoring
+                               help=f"""the weight of a accessory component in cluster scoring
 (default:{msf_def['accessory_weight']})""")
 
     # the weight of a mandatory component in cluster scoring
@@ -391,7 +391,7 @@ under the name 'gspG.hmm3'
                                  default=None,
                                  help=f"""Number of workers to be used by MacSyFinder.
 In the case the user wants to run MacSyFinder in a multi-thread mode.
-(0 mean all cores will be used).
+0 mean than one process by type of gene will be launch in parallel.
 (default: {msf_def['worker']})"""
                                  )
     general_options.add_argument("-v", "--verbosity",
