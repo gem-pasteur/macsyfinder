@@ -100,6 +100,7 @@ class MacsyDefaults(dict):
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
 
 
+
 class Config:
     """
     Handle configuration values for macsyfinder.
@@ -243,6 +244,9 @@ class Config:
         """
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in self._defaults.items()}
+        # except for loglevel because log_level can accept int and string as value
+        # need conversion in int which is the internal format
+        self._options['log_level'] = self._convert_log_level(self._defaults.log_level)
 
 
     def _set_system_wide_config(self, config_path):
@@ -345,7 +349,7 @@ class Config:
         """
         Parse a configuration file in ini format in dictionnary
 
-        :param str file: path to the configuartion file
+        :param str file: path to the configuration file
         :return: the parsed options
         :rtype: dict
         """
@@ -365,10 +369,14 @@ class Config:
         for section in sections:
             for option in parser.options(section):
                 opt_type = type(self._defaults.get(option, None))
-                try:
-                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
-                except (ValueError, TypeError) as err:
-                    raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
+
+                if option == 'log_level':
+                    opt_value = self._set_log_level(parser.get(section, option))
+                else:
+                    try:
+                        opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                    except (ValueError, TypeError) as err:
+                        raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
                 opts[option] = opt_value
         return opts
 
@@ -723,6 +731,28 @@ class Config:
         self._options['multi_loci'] = set(models_fqn)
 
 
+    def _convert_log_level(self, value):
+        try:
+            log_level = int(value)
+        except ValueError:
+            value = value.upper()
+            try:
+                log_level = getattr(logging, value)
+            except AttributeError:
+                raise ValueError(f"Invalid value for log_level: {value}.") from None
+        return log_level
+
+
+    def _set_log_level(self, value):
+        """
+
+        :param value:
+        :return:
+        """
+
+        self._options['log_level'] = self._convert_log_level(value)
+
+
     def models_dir(self):
         """
 
@@ -769,12 +799,13 @@ class Config:
                 'out_of_cluster': self._options['out_of_cluster_weight']
                 }
 
+
     def log_level(self):
         """
         :return: the verbosity output level
         :rtype: int
         """
-        level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
+        level = self._options['log_level'] - (10 * self.verbosity()) + (10 * self.quiet())
         level = min(50, max(10, level))
         return level
 

@@ -78,6 +78,19 @@ class TestConfig(MacsyTest):
         self.assertFalse('BAD' in cfg._options)
 
 
+    def test_set_log_level(self):
+        cfg = Config(self.defaults, self.parsed_args)
+        cfg._set_log_level(20)
+        self.assertEqual(cfg.log_level(), 20)
+        cfg._set_log_level('WARNING')
+        self.assertEqual(cfg.log_level(), 30)
+        with self.assertRaises(ValueError) as ctx:
+            cfg._set_log_level('FOO')
+        self.assertEqual(str(ctx.exception),
+                         "Invalid value for log_level: FOO.")
+
+
+
     def test_config_file_2_dict(self):
         cfg = Config(self.defaults, self.parsed_args)
         res = cfg._config_file_2_dict('nimportnaoik')
@@ -116,14 +129,14 @@ class TestConfig(MacsyTest):
                 self.assertFalse(cfg.multi_loci('whatever'))
             elif opt in methods_needing_args:
                 self.assertEqual(getattr(cfg, opt)('whatever'), val,
-                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)('whatever')} !=  got {val}")
+                                 msg=f"test of '{opt}' failed : expected {getattr(cfg, opt)('whatever')} !=  got {val}")
             elif opt == 'models_dir':
                 val = self.defaults['system_models_dir']
                 self.assertEqual(getattr(cfg, opt)(), val,
-                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
+                                 msg=f"test of '{opt}' failed : expected {getattr(cfg, opt)()} !=  got {val}")
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
-                                 msg=f"test of '{opt}' failed : expected{getattr(cfg, opt)()} !=  got {val}")
+                                 msg=f"test of '{opt}' failed : expected {getattr(cfg, opt)()} !=  got {val}")
 
 
     def test_cmd_config_file(self):
@@ -350,7 +363,7 @@ class TestConfig(MacsyTest):
                 self.assertEqual(getattr(cfg, opt)(), self.defaults['system_models_dir'])
             else:
                 self.assertEqual(getattr(cfg, opt)(), val,
-                                 msg=f"{opt} failed: expected: val '{val}' != got '{getattr(cfg, opt)}'")
+                                 msg=f"{opt} failed: expected: val '{val}' != got '{getattr(cfg, opt)()}'")
 
     def test_Config_file_n_args(self):
         cfg_needing_args = {'inter_gene_max_space': [('set_1/Flagellum', '4'), ('set_1/T2SS', '2')],
