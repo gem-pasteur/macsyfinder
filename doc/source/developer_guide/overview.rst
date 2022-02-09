@@ -45,8 +45,9 @@ Below a short glossary to fix the vocabulary used in MacSyFinder
     Solution
 
         It's a systems combination for one replicon.
-        Technically it's a list of Systems. The best solution for a replicon,
-        is the combination of all systems found in this replicon which maximize the score.
+        The best solution for a replicon, is the combination of all systems found in this replicon which
+        maximize the score.
+
 
 MacSyFinder project structure
 -----------------------------
@@ -58,12 +59,6 @@ A brief overview of the files and directory constituting the MacSyFinder project
     doc
         The project is documented using sphinx.
         All sources files needed to generate this documentation is in the directory *doc*
-
-    etc
-        This directory contains a template to configure macsyfinder.
-        It's allow to set some configuration available for each run and avoid to specify them
-        at each run on the command line.
-        This file is in *ini* format.
 
     macsypy
         This the MacSyFinder python library
@@ -97,15 +92,14 @@ A brief overview of the files and directory constituting the MacSyFinder project
     README.md
         Brief information about the project.
 
-    requirements.txt
-        The list of python dependencies needed by macsyfinder.
-        do not forget to install hmmsearch which is not handle by python packet manager `pip`
-
-    requirements_dev.txt
-        The list of extra dependencies needed if you want to contribute to the code.
-
     setup.py
         The installation recipe.
+
+    setup.cfg
+        The installation recipe.
+
+    pyproject.toml
+        tools to use to build the project.
 
 
 MacSyFinder architecture overview
