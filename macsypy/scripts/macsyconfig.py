@@ -21,12 +21,11 @@
 #  along with MacSyFinder (COPYING).                                     #
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
-
+import itertools
 import sys
 import os.path
 import argparse
 import shutil
-import collections
 from dataclasses import dataclass
 from configparser import ConfigParser
 
@@ -43,14 +42,14 @@ class ConfigParserWithComments(ConfigParser):
     Extend ConfigParser to allow comment in serialization
     """
 
-    def add_comment(self, section, comment, add_space_before=False, add_space_after=True):
+    def add_comment(self, section, option, comment, comment_nb=itertools.count(1), add_space_before=False, add_space_after=True):
         """Write a comment in .ini-format (start line with #)"""
         comment = ''.join([f"# {l}\n" for l in comment.split('\n')])
         if add_space_before:
             comment = '\n' + comment
         if add_space_after:
             comment = comment + '\n'
-        self.set(section, comment, '')
+        self.set(section, f"{option}_{next(comment_nb)}_comment", comment)
 
     def write(self, fp):
         """Write an .ini-format representation of the configuration state."""
@@ -62,8 +61,8 @@ class ConfigParserWithComments(ConfigParser):
 
 
     def _write_item(self, fp, key, value):
-        if key.lstrip().startswith('#') and value == '':
-            fp.write(f"{key}")
+        if key.endswith('_comment'):
+            fp.write(f"{value}")
         else:
             fp.write(f"{key} = {value}\n")
 
@@ -333,15 +332,15 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
     print(f"{theme.SECTION}Configuring {sec_name} options:{theme.RESET}\n")
     for opt_name in options:
         option = options[opt_name]
-        config.add_comment(sec_name, option['question'],
+        config.add_comment(sec_name, opt_name, option['question'],
                            add_space_before=True, add_space_after=False)
         if option['explanation']:
             space_after = True if 'expected' in option else False
-            config.add_comment(sec_name, option['explanation'],
+            config.add_comment(sec_name, opt_name, option['explanation'],
                                add_space_before=False, add_space_after=space_after)
         if 'expected' in option:
             expected = f"[{'/'.join([str(i) for i in option['expected']])}]"
-            config.add_comment(sec_name, expected,
+            config.add_comment(sec_name, opt_name, expected,
                                add_space_before=False, add_space_after=True)
         sequence = True if 'sequence' in option and option['sequence'] else False
 
@@ -356,7 +355,7 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
         if value == defaults[opt_name]:
             if isinstance(value, type([])):
                 value = ', '.join([str(item) for item in value])
-            config.add_comment(sec_name, f"{opt_name} = {value}", add_space_before=False, add_space_after=True)
+            config.add_comment(sec_name, opt_name, f"{opt_name} = {value}", add_space_before=False, add_space_after=True)
         else:
             if isinstance(value, type([])):
                 config.set(sec_name, opt_name, ', '.join([str(item) for item in value]))
@@ -383,7 +382,14 @@ def set_path_options(config, defaults, use_defaults=False):
                                      'explanation':
 """This directory will be used as default but could be overwritten on the command line.
 It will be used by macsydata to install models and macsyfinder to find them.
-MacSyFinder will look for models in this directory then in $HOME/.macsyfinder/data and in commandline option.""",
+MacSyFinder will look for models in these directories:
+ - '/share/macsyfinder/models', '/usr/local/share/macsyfinder/models'
+ or
+ - in ${VIRTUAL_ENV}/share/macsyfinder/models
+ or 
+ - values provided specified by macsyfinder.conf file
+ 
+then in $HOME/.macsyfinder/models and in command line option --models-dir.""",
                                      'sequence': True},
                'res_search_dir': {'question': "Results research directory",
                                   'validator': check_dir,
