@@ -30,3 +30,4 @@ MacSyFinder API documentation
     error
     utils
     package
+    scripts

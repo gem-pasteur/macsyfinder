@@ -495,7 +495,7 @@ To cite MacSyFinder:
 def do_help(args: argparse.Namespace) -> None:
     """
     Display on stdout the content of readme file
-    if the readme file does nopt exists display a message to the user see :method:`macsypy.package.help`
+    if the readme file does nopt exists display a message to the user see :meth:`macsypy.package.help`
 
     :param args: the arguments passed on the command line (the package name)
     :type args: :class:`argparse.Namespace` object
