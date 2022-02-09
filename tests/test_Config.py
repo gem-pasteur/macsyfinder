@@ -318,7 +318,8 @@ class TestConfig(MacsyTest):
                     else:
                         self.assertEqual(getattr(cfg, opt)(), val)
             finally:
-                os.environ["VIRTUAL_ENV"] = virtual_env
+                if virtual_env:
+                    os.environ["VIRTUAL_ENV"] = virtual_env
 
 
     def test_Config_args(self):
