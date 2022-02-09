@@ -259,16 +259,16 @@ def ask(question, validator, default=None, expected=None,
         retry=2):
     """
     ask a question on the terminal and return the user response
-    check if the user response is allowed (right type, among allowed values, ...
+    check if the user response is allowed (right type, among allowed values, ...)
 
     :param str question: The question to prompt to the user on the terminal
     :param validator: what validator to be used to check the user response
-    :type validator: a function define in this module starting by check_
+    :type validator: a function define in this module starting by check\_
     :param default: the default value
     :param expected: the values allowed (can be a list of value
     :param str explanation: some explanation about the option
     :param bool sequence: True if the parameter accept a sequence of value (comma separated values)
-    :param question_color: the color of the question diplay to the user
+    :param question_color: the color of the question display to the user
     :type question_color: an attribute of :class:`macsypy.scripts.macsyconfig.Theme`
     :param int retry: The number of time to repeat the question if the response is rejected
     :return: the value casted in right type
