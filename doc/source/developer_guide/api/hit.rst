@@ -13,12 +13,41 @@
 hit
 ***
 
+This module implements class relative to hit and some functions to do some computation on hit objects.
+
+=========================================== =============================================================================
+:class:`macsypy.hit.CoreHit`                Modelize a hmm hit on the replicon. There is only one Corehit for a CoreGene.
+:class:`macsypy.hit.ModelHit`               Modelize a hit and its relation to the Model.
+:class:`macsypy.hit.AbstractCounterpartHit` Parent class of Loner, MultiSystem. It's inherits from ModelHit.
+:class:`macsypy.hit.Loner`                  Modelize "true" Loner.
+:class:`macsypy.hit.MultiSystem`            Modelize hit which can be used in several Systems (same model)
+:class:`macsypy.hit.LonerMultiSystem`       Modelize a hit representing a gene Loner and MultiSystem at same time.
+:class:`macsypy.hit.HitWeight`              The weights apply to the hit to compute score
+:func:`macsypy.hit.get_best_hit_4_func`     Return the best hit for a given function
+:func:`macsypy.hit.sort_model_hits`         Sort hits
+:func:`macsypy.hit.compute_best_MSHit`      Choose among svereal multisystem hits the best one
+:func:`macsypy.hit.get_best_hits`           If several profile hit the same gene return the best hit
+=========================================== =============================================================================
+
 A Hit is created when `hmmsearch` find similarities between a profile and protein of the input dataset
 
+Below the ingheritance diagram of Hits
+
+.. inheritance-diagram::
+      macsypy.hit.CoreHit
+      macsypy.hit.ModelHit
+      macsypy.hit.AbstractCounterpartHit
+      macsypy.hit.Loner
+      macsypy.hit.MultiSystem
+      macsypy.hit.LonerMultiSystem
+   :parts: 1
+
+
+And a diagram showing the interaction between CoreGene, ModelGene, Model, Hit, Loner, ... interactions
 
 .. figure:: ../../_static/gene_obj_interaction.*
 
-    A diagram showing the interaction between CoreGene, ModelGene, Model, Hit, ValidHit interactions
+
     The diagram above represents the models, genes and hit generated from the definitions below.
 
     .. code-block::
@@ -37,21 +66,8 @@ A Hit is created when `hmmsearch` find similarities between a profile and protei
         </model>
 
 
-This module implements class relative to hit and some functions to do some computation on hit objects.
 
-=========================================== =============================================================================
-:class:`macsypy.hit.CoreHit`                Modelize a hmm hit on the replicon. There is only one Corehit for a CoreGene.
-:class:`macsypy.hit.ModelHit`               Modelize a hit and its relation to the Model.
-:class:`macsypy.hit.AbstractCounterpartHit` Parent class of Loner, MultiSystem. It's inherits from ModelHit.
-:class:`macsypy.hit.Loner`                  Modelize "true" Loner.
-:class:`macsypy.hit.MultiSystem`            Modelize hit which can be used in several Systems (same model)
-:class:`macsypy.hit.LonerMultiSystem`       Modelize a hit representing a gene Loner and MultiSystem at same time.
-:class:`macsypy.hit.HitWeight`              The weights apply to the hit to compute score
-:func:`macsypy.hit.get_best_hit_4_func`     Return the best hit for a given function
-:func:`macsypy.hit.sort_model_hits`         Sort hits
-:func:`macsypy.hit.compute_best_MSHit`      Choose among svereal multisystem hits the best one
-:func:`macsypy.hit.get_best_hits`           If several profile hit the same gene return the best hit
-=========================================== =============================================================================
+
 
 .. _hit_api:
 
