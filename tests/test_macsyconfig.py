@@ -31,6 +31,7 @@ from unittest.mock import patch
 
 from tests import MacsyTest
 
+from macsypy import __version__ as msf_vers
 from macsypy.config import MacsyDefaults, Config
 from macsypy.error import MacsypyError
 import macsypy.scripts.macsyconfig as msf_cfg
@@ -616,7 +617,7 @@ run_tests.py: error: argument --dark-bg: not allowed with argument --white-bg"""
                 msf_cfg.main(macsyconfig_args.split()[1:])
                 stdout = sys.stdout.getvalue()
 
-            expected_stdout = f"""Welcome to the MacSyFinder 20220207.dev configuration utility.
+            expected_stdout = f"""Welcome to the MacSyFinder {msf_vers} configuration utility.
 
 Please enter values for the following settings (just press Enter to
 accept a default value, if one is given in brackets).
@@ -643,7 +644,7 @@ Place it in canonical location
 
 
 """
-            # I don't why but ansi color escape sequence are remove when I catch the stdout ???
+            # I don't why but ansi color escape sequence are removed when I catch the stdout ???
 
             self.maxDiff = None
             self.assertEqual(stdout,
