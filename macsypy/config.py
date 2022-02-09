@@ -25,7 +25,7 @@
 import os
 from time import strftime
 import logging
-from configparser import ConfigParser, ParsingError, NoSectionError
+from configparser import ConfigParser, ParsingError
 
 from  macsypy.model_conf_parser import ModelConfParser
 _log = logging.getLogger(__name__)
@@ -48,11 +48,17 @@ class MacsyDefaults(dict):
         super().__init__()
         self.__dict__ = self
 
+        common_path = os.path.join('share', 'macsyfinder')
         virtual_env = os.environ.get('VIRTUAL_ENV')
         if virtual_env:
-            system_models_dir = os.path.join(virtual_env, 'etc', 'macsyfinder', 'models')
+            system_models_dir = os.path.join(virtual_env, common_path, 'models')
         else:
-            system_models_dir = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
+            system_models_dir = ''  # os.path.exists('') -> False
+            prefixes = ('/', os.path.join('usr', 'local'))
+            for root_prefix in prefixes:
+                root_path = os.path.join(root_prefix, common_path)
+                if os.path.exists(root_path) and os.path.isdir(root_path):
+                    system_models_dir = os.path.join(root_path, 'models')
 
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
@@ -71,8 +77,9 @@ class MacsyDefaults(dict):
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', [])
         self.system_models_dir = kwargs.get('system_models_dir', [path for path in
-                                                       (system_models_dir,
-                                                        os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
+                                                                  (system_models_dir,
+                                                                   os.path.join(os.path.expanduser('~'),
+                                                                                '.macsyfinder', 'models'))
                                                                   if os.path.exists(path)]
                                             )
         self.models_dir = kwargs.get('models_dir', None)
@@ -127,6 +134,7 @@ class Config:
     path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file', 'models_dir', 'system_models_dir', 'out_dir',
                  'profile_suffix', 'res_search_dir', 'res_search_suffix', 'res_extract_suffix', 'index_dir')
 
+
     def __init__(self, defaults, parsed_args):
         """
         Store macsyfinder configuration options and propose an interface to access to them.
@@ -147,8 +155,8 @@ class Config:
         :param parsed_args: the command line arguments parsed
         :type parsed_args: a :class:`argspace.Namescape` object
         """
-        self.cfg_name = "macsyfinder.conf"
         self._defaults = defaults
+        self.cfg_name = "macsyfinder.conf"
 
         virtual_env = os.environ.get('VIRTUAL_ENV')
         if virtual_env:
