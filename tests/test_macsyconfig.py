@@ -42,27 +42,28 @@ class TestConfigParserWithComment(MacsyTest):
     def test_add_comment(self):
         cp = msf_cfg.ConfigParserWithComments()
         cp.add_section('section_1')
-        cp.add_comment('section_1', 'comment_1', add_space_before=False, add_space_after=False)
-        self.assertTrue(cp.has_option('section_1', '# comment_1\n'))
-        cp.add_comment('section_1', 'comment_2', add_space_before=True, add_space_after=False)
-        self.assertTrue(cp.has_option('section_1', '\n# comment_2\n'))
-        cp.add_comment('section_1', 'comment_3', add_space_before=True, add_space_after=True)
-        self.assertTrue(cp.has_option('section_1', '\n# comment_3\n\n'))
+        cp.add_comment('section_1', 'opt_1', 'comment_1')
+        self.assertTrue(cp.has_option('section_1', 'opt_1_1_comment'))
+        cp.add_comment('section_1', 'opt_1', 'comment_1')
+        self.assertTrue(cp.has_option('section_1', 'opt_1_2_comment'))
 
 
     def test_write(self):
 
         cp = msf_cfg.ConfigParserWithComments()
         cp.add_section('section_1')
-        cp.add_comment('section_1', 'comment_1', add_space_before=False, add_space_after=False)
+        cp.add_comment('section_1', 'opt_1', 'comment_1\ncomment_1 line 2', add_space_before=False, add_space_after=False)
+        cp.add_comment('section_1', 'opt_1', 'comment_1_2', add_space_before=False, add_space_after=False)
         cp.set('section_1', 'opt_1', 'value_1')
-        cp.add_comment('section_1', 'comment_2', add_space_before=True, add_space_after=False)
+        cp.add_comment('section_1', 'opt_2', 'comment_2', add_space_before=True, add_space_after=False)
         cp.set('section_1', 'opt_2', 'value_2')
-        cp.add_comment('section_1', 'comment_3', add_space_before=True, add_space_after=True)
+        cp.add_comment('section_1', 'opt_3', 'comment_3', add_space_before=True, add_space_after=True)
         cp.set('section_1', 'opt_3', 'value_3')
 
         expected = """[section_1]
 # comment_1
+# comment_1 line 2
+# comment_1_2
 opt_1 = value_1
 
 # comment_2
@@ -706,6 +707,7 @@ Place it in canonical location
                 msf_cfg.ask = lambda *args, **kwargs: "O"
                 msf_cfg.main(macsyconfig_args.split()[1:])
                 # check that the produced file is equal as file in data
+                self.maxDiff = None
                 self.assertFileEqual(expected_conf,
                                      "macsyfinder.conf",
                                      skip_line="# system_models_dir"  # default for models dir differ on each install
