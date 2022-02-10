@@ -118,12 +118,13 @@ class Profile:
                 elif l.startswith('GA'):
                     header, t1, t2 = l.split()
                     if t2.endswith(';'):
-                        try:
-                            t1 = float(t1)
-                            t2 = float(t2[:-1])
-                            ga_threshold = True
-                        except ValueError:
-                            continue
+                        t2 = t2[:-1]
+                    try:
+                        t1 = float(t1)
+                        t2 = float(t2)
+                        ga_threshold = True
+                    except ValueError:
+                        continue
                 elif l.startswith('STATS LOCAL'):
                     break
         return length, ga_threshold
