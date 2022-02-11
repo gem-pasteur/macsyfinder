@@ -37,11 +37,6 @@ from tests import MacsyTest
 class TestMacsyDefaults(MacsyTest):
 
     def setUp(self):
-        virtual_env = os.environ.get('VIRTUAL_ENV')
-        if virtual_env:
-            system_models_dir = os.path.join(virtual_env, 'etc', 'macsyfinder', 'models')
-        else:
-            system_models_dir = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
 
         self.defaults = {'cfg_file': None,
                          'coverage_profile': 0.5,
@@ -59,10 +54,6 @@ class TestMacsyDefaults(MacsyTest):
                          'min_genes_required': None,
                          'min_mandatory_genes_required': None,
                          'models': [],
-                         'system_models_dir': [path for path in
-                                                       (system_models_dir,
-                                                        os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
-                                                                  if os.path.exists(path)],
                          'models_dir': None,
                          'multi_loci': set(),
                          'mute': False,
@@ -89,13 +80,52 @@ class TestMacsyDefaults(MacsyTest):
                          }
 
 
-    def test_MacsyDefaults(self):
-        defaults = MacsyDefaults()
-        self.maxDiff = None
-        self.assertDictEqual(defaults, self.defaults)
+    def test_MacsyDefaults_virtual_env(self):
+        virtual_env = os.environ.get('VIRTUAL_ENV')
 
-        new_defaults = {k: v for k, v in self.defaults.items()}
-        new_defaults['previous_run'] = True
-        new_defaults['worker'] = 5
-        defaults = MacsyDefaults(previous_run=True, worker=5)
-        self.assertDictEqual(defaults, new_defaults)
+        with tempfile.TemporaryDirectory() as fake_virtual_env:
+            os.environ['VIRTUAL_ENV'] = fake_virtual_env
+            system_models_dir = os.path.join(fake_virtual_env, 'share', 'macsyfinder', 'models')
+            os.makedirs(system_models_dir)
+            self.defaults['system_models_dir'] = [path for path in (system_models_dir,
+                                                                    os.path.join(os.path.expanduser('~'),
+                                                                                 '.macsyfinder', 'models'))
+                                                  if os.path.exists(path)]
+            try:
+                defaults = MacsyDefaults()
+                self.maxDiff = None
+                self.assertDictEqual(defaults, self.defaults)
+
+                new_defaults = {k: v for k, v in self.defaults.items()}
+                new_defaults['previous_run'] = True
+                new_defaults['worker'] = 5
+                defaults = MacsyDefaults(previous_run=True, worker=5)
+                self.assertDictEqual(defaults, new_defaults)
+            finally:
+                if virtual_env:
+                    os.environ['VIRTUAL_ENV'] = virtual_env
+
+
+    def test_MacsyDefaults_no_virtual_env(self):
+
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        common_path = os.path.join('share', 'macsyfinder')
+        prefixes = ('/', os.path.join('/', 'usr', 'local'))
+        system_models_dir = [os.path.join(root, common_path) for root in prefixes]
+        system_models_dir.append(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
+        self.defaults['system_models_dir'] = [path for path in system_models_dir if os.path.exists(path)]
+
+        del os.environ['VIRTUAL_ENV']
+        try:
+            defaults = MacsyDefaults()
+            self.maxDiff = None
+            self.assertDictEqual(defaults, self.defaults)
+
+            new_defaults = {k: v for k, v in self.defaults.items()}
+            new_defaults['previous_run'] = True
+            new_defaults['worker'] = 5
+            defaults = MacsyDefaults(previous_run=True, worker=5)
+            self.assertDictEqual(defaults, new_defaults)
+        finally:
+            if virtual_env:
+                os.environ['VIRTUAL_ENV'] = virtual_env
