@@ -64,7 +64,6 @@ class MacsyDefaults(dict):
             # if it's installed with --user
             # install models in ~/.macsyfinder instead of ~/.local/share/macsyfinder
 
-
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
         self.e_value_search = kwargs.get('e_value_search', 0.1)
