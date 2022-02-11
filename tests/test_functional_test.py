@@ -83,10 +83,19 @@ class Test(MacsyTest):
                "--relative-path"
 
         self._macsyfinder_run(args)
-        for file_name in (self.all_systems_tsv,
-                          self.all_best_solutions,
-                          self.best_solution,
+        #  all_systems_tsv, all_best_solutions, best_solution
+        # provides system with non predictable id
+        # and the order between equivalent solutions is not predictable
+        # so the output is not predictable
+        # even the biological meaning is good
+        # so I disabled them from test until I found a fix
+        # we steel check the overall system found (summary)
+        # the loners and multisystems hits
+        for file_name in (# self.all_systems_tsv,
+                          # self.all_best_solutions,
+                          # self.best_solution,
                           self.loners,
+                          self.multisystems,
                           self.summary):
             with self.subTest(file_name=file_name):
                 expected_result = self.find_data(expected_result_dir, file_name)
