@@ -54,11 +54,16 @@ class MacsyDefaults(dict):
             system_models_dir = os.path.join(virtual_env, common_path, 'models')
         else:
             system_models_dir = ''  # os.path.exists('') -> False
-            prefixes = ('/', os.path.join('usr', 'local'))
+            prefixes = ('/', os.path.join('/', 'usr', 'local'))
             for root_prefix in prefixes:
                 root_path = os.path.join(root_prefix, common_path)
                 if os.path.exists(root_path) and os.path.isdir(root_path):
                     system_models_dir = os.path.join(root_path, 'models')
+
+            # depending on distrib it's installed in /share or /usr/local/share
+            # if it's installed with --user
+            # install models in ~/.macsyfinder instead of ~/.local/share/macsyfinder
+
 
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
