@@ -209,7 +209,7 @@ The precedence rules between the different levels of configuration are:
 
  system < home < model < project < --cfg-file | --previous-run < command line options
 
-* **system**: the `macsyfinder.conf` file either in /etc/macsyfinder/ or in virtalenv/etc/macsyfinder/
+* **system**: the `macsyfinder.conf` file either in /etc/macsyfinder/ or in ${VIRTUAL_ENV}/etc/macsyfinder/
   in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
 * **home**:  the `~/.macsyfinder/macsyfinder.conf` file
 * **model**: the `model_conf.xml` file at the root of the model package
