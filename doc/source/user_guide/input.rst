@@ -438,12 +438,16 @@ Example of a configuration file
     `models_dir` is a single path to a directory whre masyfinder can find models.
 
     But the `system_models_dir` can be set in general configuration file
-    $PREFIX/etc/macsyfinder/macsyfinder.conf
+
+    * /etc/macsyfinder/macsyfinder.conf
+    * or ${VIRTUAL_ENV}/etc/macsyfinder/macsyfinder.conf
+    * or anywhere point by $MACSY_CONF environment variable
 
     `system_models_dir` manage a list of locations where macsyfinder can find models.
     The order of locations is important, it reflects the precedence rule (The models found in last location
     superseed models found in previous location).
-    By default `system_models_dir` is set to *$PREFIX/share/macsyfinder/data/models*, *$HOME/.macsyfinder/data*
+    By default look for following directories: */share/macsyfinder/models*, or */usr/sharemacsyfinder/models*
+    and *$HOME/.macsyfinder/models* and `system_models_dir` uses these directories if they exists.
 
 
 In-house input files
