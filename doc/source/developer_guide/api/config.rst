@@ -41,7 +41,7 @@ Config
 
 NoneConfig
 ==========
-.. autoclass:: macsypy.config.Config
+.. autoclass:: macsypy.config.NoneConfig
    :members:
    :private-members:
    :special-members:
