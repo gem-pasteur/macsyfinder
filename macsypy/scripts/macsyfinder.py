@@ -1077,10 +1077,11 @@ def main(args=None, loglevel=None):
         for rep_name, syst_group in itertools.groupby(all_systems, key=lambda s: s.replicon_name):
             syst_group = list(syst_group)
             logger.info(f"Computing best solutions for {rep_name} (nb of candidate systems {len(syst_group)})")
-            t0 = time.time()
+            find_best_solutions_start = time.perf_counter()
             best_sol_4_1_replicon, score = find_best_solutions(syst_group)
-            t1 = time.time()
-            logger.info(f"It took {t1 - t0:.2f}sec to find best solution ({score:.2f}) for replicon {rep_name}")
+            find_best_solutions_stop = time.perf_counter()
+            logger.info(f"It took {find_best_solutions_stop - find_best_solutions_start:.2f}sec to find best solution"
+                        f" ({score:.2f}) for replicon {rep_name}")
             # if several solutions are equivalent same number of system and score is same
             # store all equivalent solution in all_best_solution => all_best_systems
             # pick one in one_best_solution => best_systems
