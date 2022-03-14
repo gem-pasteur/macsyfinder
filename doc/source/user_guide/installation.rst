@@ -15,7 +15,7 @@ Installation
 
 MacSyFinder works with models for macromolecular systems that are not shipped with it, 
 you have to install them separately. See the :ref:`macsydata section <macsydata>` below.
-
+We also provide container so you can use macsyfinder directly.
 
 .. _dependencies:
 
@@ -83,7 +83,7 @@ Perform the installation.
 
 ::
 
-    pip install --no-binary macsyfinder macsyfinder
+    pip install macsyfinder
 
 
 If you do not have the privileges to perform a system-wide installation,
@@ -95,7 +95,7 @@ installation in your home directory
 
 ::
 
-    pip install --user --no-binary macsyfinder macsyfinder
+    pip install --user macsyfinder
 
 
 installation in a virtualenv
@@ -103,10 +103,10 @@ installation in a virtualenv
 
 ::
 
-    python3.7 -m venv macsyfinder
+    python3 -m venv macsyfinder
     cd macsyfinder
     source bin/activate
-    pip install --no-binary macsyfinder macsyfinder
+    pip install macsyfinder
 
 To exit the virtualenv just execute the `deactivate` command.
 To run `macsyfinder`, you need to activate the virtualenv: ::
@@ -138,11 +138,79 @@ To uninstall MacSyFinder (the last version installed), run::
 If you install it in a virtualenv, just delete the virtual environment.
 For instance if you create a virtualenv name macsyfinder::
 
-    python3.7 -m venv macsyfinder
+    python3 -m venv macsyfinder
 
 To delete it, remove the directory::
 
     rm -R macsyfinder
+
+From container
+==============
+
+With Docker
+-----------
+
+The docker image is available on Docker Hub (https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
+The computations are performed under msf user in /home/msf inside the container.
+So You have to mount a directory from the host in the container to exchange data (inputs data, and results) from the host and the container.
+The shared directory must be writable by the *msf* user or overwrite the user in the container by your id (see example below)
+
+Furthermore the models are no longer packaged along macsyfinder.
+So you have to install them by yourself.
+For that we provide a command line tool macsydata which is inspired by pip.
+
+.. code-block:: text
+
+    macsydata search PACKNAME
+    macsydata install PACKNAME== or >=, or ... VERSION
+
+To work with Docker you have to install models in a directory which will be mounted in the image at run time
+
+.. code-block:: shell
+
+    mkdir shared_dir
+    cd shared_dir
+
+install desired models in my_models directory
+
+.. code-block:: shell
+
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> macsydata install --target /home/msf/my_models <MODELS_PACK>
+
+run msf against all models contains in <MODELS_PACK>
+
+.. code-block:: shell
+
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> macsyfinder --db-type unordered_replicon --models-dir=/home/msf/my_models/ --models  <MODELS_PACK>  all --sequence-db my_genome.fasta -w 12
+
+
+
+With Apptainer (formely Singularity)
+------------------------------------
+
+As the docker image is registered in docker hub you can also use it directly with Apptainer (https://apptainer.org/).
+Unlike docker you have not to worry about shared directory, your HOME and /tmp are automatically shared.
+
+.. code-block:: shell
+
+    # install desired models in my_models directory
+    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models <MODELS_PACK>
+
+    # run msf against all models contains in <MODELS_PACK>
+    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type unordered_replicon --models-dir=my_models --models <MODELS_PACK> all --sequence-db my_genome.fasta -w 12
+
+If you intend to run *apptainer* from host which cannot access internet (cluster node for instance),
+you have to
+
+#. download the image locally
+#. transfert the image file on the right file system
+#. and then use it.
+
+.. code-block:: shell
+
+    apptainer build msf-<tag>.simg docker://gempasteur/macsyfinder:<tag>
+    cp msf-<tag>.simg <cluster_file_system>
+    apptainer run -H ${HOME} msf-<tag>.simg macsyfinder --db-type unordered_replicon --models-dir=my_models --models <MODELS_PACK> all --sequence-db my_genome.fasta -w 12
 
 
 .. _macsydata:
