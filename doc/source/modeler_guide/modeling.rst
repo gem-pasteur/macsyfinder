@@ -123,7 +123,12 @@ All these elements and corresponding parameters will parametrize the search of S
 
    * **loner**: a *boolean*. A *loner* gene can be isolated on the genome and does not have to be part of a cluster of genes to be considered for system's assessment ( *default false* ).
    * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
-     it means that it can be used to fill multiple systems' occurrences - and thus be considered part of several systems. ( *default false* ).
+     it means that it can be used to fill multiple systems' occurrences (but for the same model) - and thus be considered part of several systems. ( *default false* ).
+
+     .. image:: ../_static/multi_system.*
+        :height: 1000px
+        :align: left
+
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
 .. _exchangeables_label:
