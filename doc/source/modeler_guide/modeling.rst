@@ -94,7 +94,6 @@ All these elements and corresponding parameters will parametrize the search of S
     :height: 1000px
     :align: left
 
-
 * The element root of a System's model is "model".
 
   * It has a mandatory attribute: "inter_gene_max_space", an integer representing the maximal number of components
@@ -122,12 +121,30 @@ All these elements and corresponding parameters will parametrize the search of S
  The element "gene" may have other attributes:
 
    * **loner**: a *boolean*. A *loner* gene can be isolated on the genome and does not have to be part of a cluster of genes to be considered for system's assessment ( *default false* ).
+
+     .. figure:: ../_static/loner.*
+        :align: left
+
+        How to *loner* works.
+
+        **A**) The *cluster 1* can be fill up with the loner *D50* to reach the quorum defined in *model A* and form a system occurence.
+        **B**) There are 2 clusters and 2 loners (D50 and D60) *msf* cannot assign which loner to each cluster. So *msf* pick the best loner (based on score) and set the others are counterpart. 2 systems occurences are created which this best loner. The user as to choose which effective hit can be assign to corresponding cluster. All loners found in best solution are rported in *best_solution_loners.tsv* file.
+        **C**) There are 2 clusters but only 1 loner. *msf* cannot decide to assign loner to which cluster. So the 2 occurences systems are proposed to the user in the output but with a warning indcating that the user should pick one.
+        **D**) There are 2 clusters with one loner, but this loner is also *multi_system*. So the 2 clusters can be filled up with the loner.
+
+
    * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
      it means that it can be used to fill multiple systems' occurrences (but for the same model) - and thus be considered part of several systems. ( *default false* ).
 
-     .. image:: ../_static/multi_system.*
-        :height: 1000px
+     .. figure:: ../_static/multi_system.*
         :align: left
+
+        How to *multi_system* works.
+
+        **A**) The hit encoding for gene D in position 13 belong to the system 1 (encoding model A). So it is used to fill up some other cluster for instance cluster 2 which lack this functionality. The cluster2 is also a system.
+        **B**) The hit encoding for gene D in position 13 does not belong to a system. It cannot be used to fill up other clusters. In this example ther is no system encoding the model A
+        **C**) The gene D is present in the definition of model A and B. The hit encoding for gene D in position 13 belong to the system 1 (encoding model A). But it cannot be used to fill up the cluster 2 which code for model B.
+
 
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
