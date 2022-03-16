@@ -155,7 +155,7 @@ class DefinitionParser:
                   f"'{', '.join(model_unallowed_attribute)}'. Please fix the definition."
             raise ModelInconsistencyError(msg)
 
-        gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'inter_gene_max_space'}
+        gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'multi_model', 'inter_gene_max_space'}
         gene_all_attributes = set()
         for gene in model_node.iter('gene'):
             gene_all_attributes |= set(gene.attrib.keys())
@@ -297,7 +297,7 @@ class DefinitionParser:
         for gene_node in gene_nodes:
             name = gene_node.get("name")
             attrs = {}
-            for attr in ('loner', 'multi_system'):
+            for attr in ('loner', 'multi_system', 'multi_model'):
                 val = gene_node.get(attr)
                 if val in ("1", "true", "True"):
                     val = True

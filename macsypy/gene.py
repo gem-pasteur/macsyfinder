@@ -144,7 +144,7 @@ class ModelGene:
     Handle Gene describe in a Model
     """
 
-    def __init__(self, gene, model, loner=False, multi_system=False, inter_gene_max_space=None):
+    def __init__(self, gene, model, loner=False, multi_system=False, inter_gene_max_space=None, multi_model=False):
         """
         Handle gene described in a Model
 
@@ -152,12 +152,10 @@ class ModelGene:
         :type gene: a :class:`macsypy.gene.CoreGene` object.
         :param model: the model that owns this Gene
         :type model: :class:`macsypy.model.Model` object.
-        :param loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
-        :type loner: boolean.
-        :param multi_system: True if this Gene can belong to different occurrences of this System.
-        :type multi_system: boolean.
-        :param inter_gene_max_space: the maximum space between this Gene and another gene of the System.
-        :type inter_gene_max_space: integer
+        :param bool loner: True if the Gene can be isolated on the genome (with no contiguous genes), False otherwise.
+        :param bool multi_system: True if this Gene can belong to different occurrences of this System.
+        :param int inter_gene_max_space: the maximum space between this Gene and another gene of the System.
+        :param bool multi_model: True if this Gene is allowing to appear in several system occurence from diferent model.
         """
         if not isinstance(gene, CoreGene):
             raise MacsypyError(f"The ModeleGene gene argument must be a CoreGene not {type(gene)}.")
@@ -166,6 +164,7 @@ class ModelGene:
         self._model = model
         self._loner = loner
         self._multi_system = multi_system
+        self._multi_model = multi_model
         self._inter_gene_max_space = inter_gene_max_space
         self._status = None
 
@@ -280,6 +279,16 @@ class ModelGene:
 
 
     @property
+    def multi_model(self):
+        """
+        :return: True if this Gene can belong to different occurrences of systems from different model :class:`macsypy.model.Model`
+                (and can be used for multiple System assessments), False otherwise.
+        :rtype: boolean.
+        """
+        return self._multi_model
+
+
+    @property
     def inter_gene_max_space(self):
         """
         :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized. 
@@ -350,6 +359,7 @@ class Exchangeable(ModelGene):
         super().__init__(c_gene, gene_ref.model,
                          loner=gene_ref.loner,
                          multi_system=gene_ref.multi_system,
+                         multi_model=gene_ref.multi_model,
                          inter_gene_max_space=gene_ref.inter_gene_max_space)
         self._ref = gene_ref
 
