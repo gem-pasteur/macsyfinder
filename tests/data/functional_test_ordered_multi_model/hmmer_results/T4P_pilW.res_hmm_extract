@@ -1,0 +1,6 @@
+# gene: T4P_pilW extract from functional_test_ordered_multi_model/hmmer_results/T4P_pilW.search_hmm.out hmm output
+# profile length= 120
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000005845_025680	UserReplicon	13	187	T4P_pilW	4.900e-11	34.500	0.625	0.401	6	80
