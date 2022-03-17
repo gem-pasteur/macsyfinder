@@ -312,6 +312,18 @@ class TestModelParser(MacsyTest):
         self.assertTrue(fliE.multi_system)
 
 
+    def test_multi_model(self):
+        model_fqn = 'foo/model_5'
+        model_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(model_2_detect)
+
+        m = self.model_bank[model_fqn]
+        flgC = m.get_gene('flgC')
+        self.assertFalse(flgC.multi_model)
+        abc = m.get_gene('abc')
+        self.assertTrue(abc.multi_model)
+
+
     def test_gene_inter_gene_max_space(self):
         model_fqn = ['foo/model_5', 'foo/model_6']
         models_2_detect = [self.model_registry['foo'].get_definition(fqn) for fqn in model_fqn]
