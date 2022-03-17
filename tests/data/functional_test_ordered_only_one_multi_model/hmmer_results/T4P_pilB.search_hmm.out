@@ -1,0 +1,69 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T4P_pilB.hmm
+# target sequence database:        tests/data/base/test_14.fasta
+# output directed to file:         functional_test_ordered_only_one_multi_model/hmmer_results/T4P_pilB.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilB  [M=420]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+   1.1e-154  506.3   0.0   1.3e-154  506.1   0.0    1.0  1  GCF_000005845_000980  pilB
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000005845_000980  pilB
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  506.1   0.0  2.9e-156  1.3e-154      23     420 .]      62     453 ..      41     453 .. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: 506.1 bits;  conditional E-value: 2.9e-156
+              T4P_pilB  23 eleeeeeleeleeeaedapivklvnkilekavkeraSDiHiepqeeelrvryriDGvLkeaaklpkklaaalisrlKilskldiaekrl 111
+                           ++++++++   + +++++p  +l+ ++l++a+++raSDiHiep+++++r+r+riDGvL+   +++ ++  al++rlK+l +ldiae+rl
+  GCF_000005845_000980  62 HASRTQQTLPVAVQEKHQPKAELLTRTLQSALEQRASDIHIEPADNAYRIRLRIDGVLHPLPDVSPDAGVALTARLKVLGNLDIAEHRL 150
+                           2344666666778999************************************************************************* PP
+
+              T4P_pilB 112 pQdGriklkleekkidlRvstlPtvfgekvvlRiLdkssaqleleklgleeeelelleelikrpeGlilvtGPtgSGKtttLysaLnel 200
+                           pQdG+++++l ++++ +R++tlP++ gekvvlR+L++  ++l++++lg+++ +l+ + +++++p+Gl+lvtGPtgSGKt+tLysaL++l
+  GCF_000005845_000980 151 PQDGQFTVELAGNAVSFRIATLPCRGGEKVVLRLLQQVGQALDVNTLGMQPLQLADFAHALQQPQGLVLVTGPTGSGKTVTLYSALQKL 239
+                           ***************************************************************************************** PP
+
+              T4P_pilB 201 nkeevniitvEDPvEyeleginqvqvnekagltFaaaLrsllRqdpdiilvGEiRDleTAeiaikaalTGHlvlstLHtndaasaitRL 289
+                           n+ ++ni++vEDPvE+ ++g+nq q++++agltF+ +Lr+llRqdpd+i++GEiRD eTAeiaikaa+TGHlvlstLHtn+++++++RL
+  GCF_000005845_000980 240 NTADINICSVEDPVEIPIAGLNQTQIHPRAGLTFQGVLRALLRQDPDVIMIGEIRDGETAEIAIKAAQTGHLVLSTLHTNSTCETLVRL 328
+                           ***************************************************************************************** PP
+
+              T4P_pilB 290 ldmgvepfliassllgvvaQRLvRklckeckeeyeaseeeleelgleaeeeeevklykakgceecnetGykGRvaiyevlkvteelrel 378
+                           ++mgv++++++s+l++v+aQRLvRklc++c++++ +  +  +++       + +  ++a gc +c  +G+ GR+a++evl++t  +r+l
+  GCF_000005845_000980 329 QQMGVARWMLSSALTLVIAQRLVRKLCPHCRRQQGEPIHIPDNVWP-----SPLPHWQAPGCVHCY-HGFYGRTALFEVLPITPVIRQL 411
+                           *******************************999887666544433.....468999********9.9********************* PP
+
+              T4P_pilB 379 ilekasaeeikelakkegmktlresglekvleglttleEvlr 420
+                           i++++++e+++++a++ gm+tl e+g+  v++gltt+eE++r
+  GCF_000005845_000980 412 ISANTDVESLETHARQAGMRTLFENGCLAVEQGLTTFEELIR 453
+                           ***************************************976 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (420 nodes)
+Target sequences:                           45  (18710 residues searched)
+Passed MSV filter:                         5  (0.111111); expected 0.9 (0.02)
+Passed bias filter:                        1  (0.0222222); expected 0.9 (0.02)
+Passed Vit filter:                         1  (0.0222222); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0222222); expected 0.0 (1e-05)
+Initial search space (Z):                 45  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]
