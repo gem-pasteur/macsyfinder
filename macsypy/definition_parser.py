@@ -105,10 +105,10 @@ class DefinitionParser:
 
     def _check_syntax(self, model_node, path):
         """
-        Check if the definition does not contains logical error which is allow by syntax
+        Check if the definition does not contains logical error which is allowed by syntax
         and absence of explicit grammar.
 
-        :param model_node: the node correponding to the model
+        :param model_node: the node corresponding to the model
         :type model_node:  :class:`Et.Element` object
         :param str path: the path of the definition.
         :return: None
