@@ -123,6 +123,7 @@ All these elements and corresponding parameters will parametrize the search of S
    * **loner**: a *boolean*. A *loner* gene can be isolated on the genome and does not have to be part of a cluster of genes to be considered for system's assessment ( *default false* ).
 
      .. figure:: ../_static/loner.*
+        :height: 1500px
         :align: left
 
         How to *loner* works.
@@ -137,6 +138,7 @@ All these elements and corresponding parameters will parametrize the search of S
      it means that it can be used to fill multiple systems' occurrences (but for the same model) - and thus be considered part of several systems. ( *default false* ).
 
      .. figure:: ../_static/multi_system.*
+        :height: 1200px
         :align: left
 
         How to *multi_system* works.
@@ -145,6 +147,19 @@ All these elements and corresponding parameters will parametrize the search of S
         **B**) The hit encoding for gene D in position 13 does not belong to a system. It cannot be used to fill up other clusters. In this example ther is no system encoding the model A
         **C**) The gene D is present in the definition of model A and B. The hit encoding for gene D in position 13 belong to the system 1 (encoding model A). But it cannot be used to fill up the cluster 2 which code for model B.
 
+   * **multi_model**: a *boolean*. If a genehast the feature "multi_model" (value set to "1", "true" or "True"),
+     it means that two systems from different model can cohexist in the best solution even if they share the same hit.
+     the gen must be tagged as multi_model in both model definitions.
+
+     .. figure:: ../_static/multi_model.*
+        :height: 1000px
+        :align: left
+
+        How to *multi_model* works.
+
+        The hit encoding for gene D in position13 is part of 2 systems one for Model A one for Model B.
+        **A**) In the both model definitions the gene D is tagged as multi_model. So the 2 systems can coexist in same solution.
+        **B**) The gene D is tagged as multi_model **only** in model A definition. The 2 systems are not compatible. So *msf* build 2 solutions and choose the best one.
 
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above). It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
 
