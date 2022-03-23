@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -35,6 +35,7 @@ import tempfile
 import uuid
 import colorlog
 import json
+import re
 
 import macsypy
 import macsypy.config
@@ -122,7 +123,7 @@ class MacsyTest(unittest.TestCase):
             return res
         return wrapper
 
-    def assertFileEqual(self, f1, f2, comment=None, msg=None):
+    def assertFileEqual(self, f1, f2, comment=None, skip_line=None, msg=None):
         self.maxDiff = None
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
@@ -132,13 +133,24 @@ class MacsyTest(unittest.TestCase):
                 if l1 and l2:
                     if comment and l1.startswith(comment) and l2.startswith(comment):
                         continue
-                    self.assertEqual(l1, l2, msg)
+                    elif skip_line:
+                        if re.search(skip_line, l1) and re.search(skip_line, l2):
+                            continue
+                        try:
+                            self.assertEqual(l1, l2, msg)
+                        except AssertionError as err:
+                            raise AssertionError(f"{fh1.name} and {fh2.name} differ:\n {err}")
+                    try:
+                        self.assertEqual(l1, l2, msg)
+                    except AssertionError as err:
+                        raise AssertionError(f"{fh1.name} and {fh2.name} differ:\n {err}")
                 elif l1:  # and not l2
                     raise self.failureException(f"{fh1.name} is longer than {fh2.name}")
                 elif l2:  # and not l1
                     raise self.failureException(f"{fh2.name} is longer than {fh1.name}")
 
-    def assertTsvEqual(self, f1, f2, comment="#", msg=None):
+
+    def assertTsvEqual(self, f1, f2, tsv_type='best_solution.tsv', comment="#", msg=None):
         # the StringIO does not support context in python2.7
         # so we can use the following statement only in python3
         from itertools import zip_longest
@@ -156,23 +168,32 @@ class MacsyTest(unittest.TestCase):
 
                 # the system_id may change from one run to another
                 # So I have to remove them before to compare each row
+                filename = os.path.basename(fh1.name)
                 if header:
                     fields_nb = len(fields_1)
                     header = False
-                if fields_nb == 20:  # all_systems.tsv
+                if tsv_type in ('all_systems.tsv', 'best_solution.tsv'):
                     fields_1.pop(5)
                     fields_2.pop(5)
-                elif fields_nb == 21:  # all_best_systems best_systems
+                elif tsv_type == 'all_best_solutions.tsv':
                     fields_1.pop(6)
                     fields_2.pop(6)
+                elif tsv_type == 'best_solution_summary.tsv':
+                    pass
+                elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv'):
+                    pass
                 else:
-                    raise RuntimeError(f"{fh1.name} {len(fields_1)}")
+                    raise RuntimeError(f"unknown {tsv_type} tsv type file in assertTsvEqual")
 
                 if len(fields_1) == fields_nb - 1:
                     # remove used_in field if present
                     fields_1.pop(-1)
                     fields_2.pop(-1)
-                self.assertListEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
+
+                # counterpart order does not matter
+                fields_1[-1] = set(fields_1[-1].split(','))
+                fields_2[-1] = set(fields_2[-1].split(','))
+                self.assertEqual(fields_1, fields_2, f"{fh1.name} differ from {fh2.name} at line {i}:\n{l1}{l2}")
 
 
     def assertSeqRecordEqual(self, s1, s2):

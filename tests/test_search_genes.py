@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,7 +32,7 @@ import argparse
 import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene
-from macsypy.hit import Hit
+from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
 from macsypy.database import Indexes
@@ -60,6 +60,7 @@ class TestSearchGenes(MacsyTest):
         args.out_dir = os.path.join(self.tmp_dir, 'job_1')
         args.res_search_dir = args.out_dir
         args.no_cut_ga = True
+        args.index_dir = os.path.join(self.tmp_dir)
         os.mkdir(args.out_dir)
 
         self.cfg = Config(MacsyDefaults(), args)
@@ -68,12 +69,12 @@ class TestSearchGenes(MacsyTest):
         self.model_location = ModelLocation(path=os.path.join(args.models_dir, self.model_name))
 
         idx = Indexes(self.cfg)
-        idx._build_my_indexes()
+        idx.build()
         self.profile_factory = ProfileFactory(self.cfg)
 
     def tearDown(self):
         try:
-            shutil.rmtree(self.cfg.working_dir())
+            shutil.rmtree(self.tmp_dir)
             #pass
         except:
             pass
@@ -84,9 +85,9 @@ class TestSearchGenes(MacsyTest):
         gene_name = "abc"
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
         report = search_genes([c_gene_abc], self.cfg)
-        expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
-                            26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
-                            )]
+        expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
+                                26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
+                                )]
         self.assertEqual(len(report), 1)
         self.assertEqual(expected_hit[0], report[0].hits[0])
 
@@ -97,9 +98,9 @@ class TestSearchGenes(MacsyTest):
         gene_name = "abc"
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
         report = search_genes([c_gene_abc], self.cfg)
-        expected_hit = [Hit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
-                            26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
-                            )]
+        expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
+                                26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
+                                )]
 
         # second job using recover
         # disable hmmer to be sure that test use the recover inner function

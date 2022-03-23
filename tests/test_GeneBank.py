@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -107,6 +107,13 @@ class Test(MacsyTest):
             self.gene_bank.add_new_gene(self.model_location, g, self.profile_factory)
         self.assertListEqual([g.name for g in self.gene_bank],
                              genes_names)
+
+    def test_genes_fqn(self):
+        genes_names = ['sctJ_FLG', 'abc']
+        for g in genes_names:
+            self.gene_bank.add_new_gene(self.model_location, g, self.profile_factory)
+        self.assertSetEqual(set(self.gene_bank.genes_fqn()),
+                             {f"{self.model_location.name}/{g.name}" for g in self.gene_bank})
 
 
     def test_get_uniq_object(self):

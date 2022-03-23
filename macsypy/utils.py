@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -21,10 +21,8 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
-import contextlib
-import os
-import sys
+import os.path
+from itertools import groupby
 
 from .registries import DefinitionLocation
 
@@ -33,7 +31,7 @@ def get_def_to_detect(models, model_registry):
     """
     :param models: the list of models to detect as returned by config.models.
     :type models: list of tuple with the following structure:
-                  [('model_1', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
+                  [('model_fqn', ('def1, def2, ...)), ('model_2', ('def1', ...)), ...]
     :param model_registry: the models registry for this run.
     :type model_registry: :class:`macsypy.registries.ModelRegistry` object.
     :return: the definitions to parse
@@ -41,6 +39,7 @@ def get_def_to_detect(models, model_registry):
     :raise ValueError: if a model name provided in models is not in model_registry.
     """
     root, def_names = models
+    root = root.rstrip(os.path.sep)
     model_family = DefinitionLocation.root_name(root)
     model_loc = model_registry[model_family]
     if 'all' in [d.lower() for d in def_names]:
@@ -51,3 +50,28 @@ def get_def_to_detect(models, model_registry):
         def_to_detect = [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_names]
     return def_to_detect
 
+
+def get_replicon_names(genome_path):
+    """
+    parse gembase file and the list of replicon identifiers
+
+    :param str genome_path: The path to a file containing sequence in **gembase** format
+    :return: the list of replicon identifiers
+    :rtype: list of str
+    """
+    def grp_replicon(ids):
+        """
+        in gembase the identifier of fasta sequence follows the following schema:
+        <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
+        but not in the <seq-name>.
+        so grp_replicon allow to group sequences belonging to the same replicon.
+        """
+        return "_".join(ids.split('_')[: -1])
+
+    seq_ids = []
+    with open(genome_path, 'r') as fh:
+        for line in fh:
+            if line.startswith('>'):
+                seq_ids.append(line.split()[0][1:])
+    replicons = [rep_name for rep_name, _ in groupby(seq_ids, key=grp_replicon)]
+    return replicons

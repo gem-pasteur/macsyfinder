@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -26,6 +26,7 @@ import abc
 from string import Template
 
 from macsypy.gene import GeneStatus
+
 
 class SystemSerializer(metaclass=abc.ABCMeta):
     """
@@ -56,7 +57,7 @@ replicon = {system.replicon_name}
 clusters = {clst}
 occ = {system.occurrence()}
 wholeness = {system.wholeness:.3f}
-loci nb = {system.loci}
+loci nb = {system.loci_nb}
 score = {system.score:.3f}
 """
         for title, genes in (("mandatory", system.mandatory_occ),
@@ -85,15 +86,15 @@ class TsvSystemSerializer(SystemSerializer):
     Handle System serialization in tsv format
     """
 
-    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tsys_wholeness\tsys_score\tsys_occ" \
+    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
-             "hit_begin_match\thit_end_match\tused_in"
+             "hit_begin_match\thit_end_match\tcounterpart\tused_in"
 
-    template = Template("$sys_replicon_name\t$vh_id\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
-                        "$sys_id\t$sys_loci\t$sys_wholeness\t$sys_score\t"
-                        "$sys_occurrence\t$vh_gene_role\t$vh_status\t$vh_seq_length\t$vh_i_eval\t"
-                        "$vh_score\t$vh_profile_coverage\t$vh_sequence_coverage\t$vh_begin_match"
-                        "\t$vh_end_match\t$used_in_systems\n")
+    template = Template("$sys_replicon_name\t$mh_id\t$mh_gene_name\t$mh_position\t$sys_model_fqn\t"
+                        "$sys_id\t$sys_loci\t$locus_num\t$sys_wholeness\t$sys_score\t"
+                        "$sys_occurrence\t$mh_gene_role\t$mh_status\t$mh_seq_length\t$mh_i_eval\t"
+                        "$mh_score\t$mh_profile_coverage\t$mh_sequence_coverage\t$mh_begin_match"
+                        "\t$mh_end_match\t$mh_counterpart\t$used_in_systems\n")
 
 
     def serialize(self, system, hit_system_tracker):
@@ -101,40 +102,45 @@ class TsvSystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_loci\\tsys_wholeness\\tsys_score
-                     \\tsys_occ\\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
-                     \\thit_seq_cov\\tit_begin_match\\thit_end_match
+
+        .. code-block:: text
+
+            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score
+            \tsys_occ\thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov
+            \thit_seq_cov\tit_begin_match\thit_end_match\tcounterpart\tused_in_systems
 
         :rtype: str
         """
         tsv = ''
-        for cluster in system.clusters:
-            for vh in sorted(cluster.hits, key=lambda vh: vh.position):
-                used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != system.model.fqn]
+        loci_num = system.loci_num
+        for locus_num, cluster in zip(loci_num, system.clusters):
+            for mh in sorted(cluster.hits, key=lambda mh: mh.position):
+                used_in_systems = [s.id for s in hit_system_tracker[mh.hit] if s.model.fqn != system.model.fqn]
                 used_in_systems.sort()
                 tsv += self.template.substitute(
                     sys_replicon_name=system.replicon_name,
-                    vh_id=vh.id,
-                    vh_gene_name=vh.gene.name,
-                    vh_position=vh.position,
+                    mh_id=mh.id,
+                    mh_gene_name=mh.gene.name,
+                    mh_position=mh.position,
                     sys_model_fqn=system.model.fqn,
                     sys_id=system.id,
-                    sys_loci=system.loci,
+                    sys_loci=system.loci_nb,
+                    locus_num=locus_num,
                     sys_wholeness=f"{system.wholeness:.3f}",
                     sys_score=f"{system.score:.3f}",
                     sys_occurrence=system.occurrence(),
-                    vh_gene_role=vh.gene_ref.alternate_of().name,
-                    vh_status=vh.status,
-                    vh_seq_length=vh.seq_length,
-                    vh_i_eval=vh.i_eval,
-                    vh_score=f"{vh.score:.3f}",
-                    vh_profile_coverage=f"{vh.profile_coverage:.3f}",
-                    vh_sequence_coverage=f"{vh.sequence_coverage:.3f}",
-                    vh_begin_match=vh.begin_match,
-                    vh_end_match=vh.end_match,
+                    mh_gene_role=mh.gene_ref.alternate_of().name,
+                    mh_status=mh.status,
+                    mh_seq_length=mh.seq_length,
+                    mh_i_eval=mh.i_eval,
+                    mh_score=f"{mh.score:.3f}",
+                    mh_profile_coverage=f"{mh.profile_coverage:.3f}",
+                    mh_sequence_coverage=f"{mh.sequence_coverage:.3f}",
+                    mh_begin_match=mh.begin_match,
+                    mh_end_match=mh.end_match,
+                    mh_counterpart=','.join([h.id for h in mh.counterpart]),
                     used_in_systems=','.join(used_in_systems)
                 )
-
         return tsv
 
 
@@ -153,6 +159,7 @@ class TsvSolutionSerializer:
         """
         :param solution: the solution to serialize
         :type solution: list of :class:`macsypy.system.System` object
+        :param int sol_id: the solution identifier
         :param hit_system_tracker:
         :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this solution (a list of systems) in tabulated separated value format
@@ -227,11 +234,11 @@ class TsvLikelySystemSerializer(SystemSerializer):
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
              "hit_begin_match\thit_end_match\tused_in"
 
-    template = Template("$sys_replicon_name\t$vh_id\t$vh_gene_name\t$vh_position\t$sys_model_fqn\t"
+    template = Template("$sys_replicon_name\t$mh_id\t$mh_gene_name\t$mh_position\t$sys_model_fqn\t"
                         "$sys_id\t$sys_wholeness\t"
-                        "$vh_gene_role\t$vh_status\t$vh_seq_length\t$vh_i_eval\t"
-                        "$vh_score\t$vh_profile_coverage\t$vh_sequence_coverage\t$vh_begin_match"
-                        "\t$vh_end_match\t$used_in_systems\n")
+                        "$mh_gene_role\t$mh_status\t$mh_seq_length\t$mh_i_eval\t"
+                        "$mh_score\t$mh_profile_coverage\t$mh_sequence_coverage\t$mh_begin_match"
+                        "\t$mh_end_match\t$used_in_systems\n")
 
 
     def serialize(self, likely_system, hit_system_tracker):
@@ -239,9 +246,12 @@ class TsvLikelySystemSerializer(SystemSerializer):
 
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
-                     replicon\\thit_id\\tgene_name\\thit_pos\\tmodel_fqn\\tsys_id\\tsys_wholeness
-                     \\thit_gene_ref.alternate_of\\thit_status\\thit_seq_len\\thit_i_eval\\thit_score\\thit_profile_cov
-                     \\thit_seq_cov\\tit_begin_match\\thit_end_match
+
+        .. code-block:: text
+
+            replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_wholeness
+            \thit_gene_ref.alternate_of\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov
+            \thit_seq_cov\tit_begin_match\thit_end_match\t$used_in_systems
 
         :rtype: str
         """
@@ -249,29 +259,29 @@ class TsvLikelySystemSerializer(SystemSerializer):
         for status in (s.lower() for s in GeneStatus.__members__.keys()):
             try:
                 hits = getattr(likely_system, f"{status}_hits")
-                hits = sorted(hits, key=lambda vh: vh.gene.name)
+                hits = sorted(hits, key=lambda mh: mh.gene.name)
             except AttributeError:
                 continue
-            for vh in hits:
-                used_in_systems = [s.id for s in hit_system_tracker[vh.hit] if s.model.fqn != likely_system.model.fqn]
+            for mh in hits:
+                used_in_systems = [s.id for s in hit_system_tracker[mh.hit] if s.model.fqn != likely_system.model.fqn]
                 used_in_systems.sort()
                 tsv += self.template.substitute(
                     sys_replicon_name=likely_system.replicon_name,
-                    vh_id=vh.id,
-                    vh_gene_name=vh.gene.name,
-                    vh_position=vh.position,
+                    mh_id=mh.id,
+                    mh_gene_name=mh.gene.name,
+                    mh_position=mh.position,
                     sys_model_fqn=likely_system.model.fqn,
                     sys_id=likely_system.id,
                     sys_wholeness=f"{likely_system.wholeness:.3f}",
-                    vh_gene_role=vh.gene_ref.alternate_of().name,
-                    vh_status=vh.status,
-                    vh_seq_length=vh.seq_length,
-                    vh_i_eval=vh.i_eval,
-                    vh_score=f"{vh.score:.3f}",
-                    vh_profile_coverage=f"{vh.profile_coverage:.3f}",
-                    vh_sequence_coverage=f"{vh.sequence_coverage:.3f}",
-                    vh_begin_match=vh.begin_match,
-                    vh_end_match=vh.end_match,
+                    mh_gene_role=mh.gene_ref.alternate_of().name,
+                    mh_status=mh.status,
+                    mh_seq_length=mh.seq_length,
+                    mh_i_eval=mh.i_eval,
+                    mh_score=f"{mh.score:.3f}",
+                    mh_profile_coverage=f"{mh.profile_coverage:.3f}",
+                    mh_sequence_coverage=f"{mh.sequence_coverage:.3f}",
+                    mh_begin_match=mh.begin_match,
+                    mh_end_match=mh.end_match,
                     used_in_systems=','.join(used_in_systems)
                 )
 
@@ -310,4 +320,36 @@ wholeness = {likely_system.wholeness:.3f}
                 s += f'({", ".join(all_hits_str)})\n'
 
         s += "\nUse ordered replicon to have better prediction.\n"
+        return s
+
+
+class TsvSpecialHitSerializer(SystemSerializer):
+    """
+    Seraialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
+    """
+
+    def serialize(self, best_hits):
+        """
+        :param best_hits: the special hits to serialized
+        :type best_hits: sequence of :class:`macsypy.hit.Loner` or :class:`macsypy.hit.MultiSystem` objects
+        """
+        s = ""
+        if best_hits:
+            header = "replicon\tmodel_fqn\tfunction\tgene_name\t" \
+                     "hit_id\thit_pos\thit_status\thit_seq_len\t" \
+                     "hit_i_eval\thit_score\thit_profile_cov\t" \
+                     "hit_seq_cov\thit_begin_match\thit_end_match\n"
+            s += header
+            special_hits = {h for h in best_hits}
+            for best_hit in best_hits:
+                special_hits.update(best_hit.counterpart)
+            special_hits = list(special_hits)
+            special_hits.sort(key=lambda h: h.position)
+            for one_hit in special_hits:
+                row = f"{one_hit.replicon_name}\t{one_hit.gene_ref.model.fqn}\t{one_hit.gene_ref.alternate_of().name}\t" \
+                      f"{one_hit.gene_ref.name}\t{one_hit.id}\t{one_hit.position:d}\t{one_hit.status}\t" \
+                      f"{one_hit.seq_length:d}\t{one_hit.i_eval:.3e}\t{one_hit.score:.3f}\t" \
+                      f"{one_hit.profile_coverage:.3f}\t{one_hit.sequence_coverage:.3f}\t" \
+                      f"{one_hit.begin_match:d}\t{one_hit.end_match:d}\n"
+                s += row
         return s

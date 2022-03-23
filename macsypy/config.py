@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -25,9 +25,8 @@
 import os
 from time import strftime
 import logging
-from configparser import ConfigParser, ParsingError, NoSectionError
+from configparser import ConfigParser, ParsingError
 
-from macsypy import __MACSY_CONF__, __MACSY_DATA__
 from  macsypy.model_conf_parser import ModelConfParser
 _log = logging.getLogger(__name__)
 
@@ -48,10 +47,23 @@ class MacsyDefaults(dict):
         """
         super().__init__()
         self.__dict__ = self
-        if __MACSY_DATA__ == '$' + 'MACSYDATA':
-            prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+
+        common_path = os.path.join('share', 'macsyfinder')
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        if virtual_env:
+            system_models_dir = os.path.join(virtual_env, common_path, 'models')
         else:
-            prefix_data = os.path.join(__MACSY_DATA__, 'data')
+            system_models_dir = ''  # os.path.exists('') -> False
+            prefixes = ('/', os.path.join('/', 'usr', 'local'))
+            for root_prefix in prefixes:
+                root_path = os.path.join(root_prefix, common_path)
+                if os.path.exists(root_path) and os.path.isdir(root_path):
+                    system_models_dir = os.path.join(root_path, 'models')
+
+            # depending on distrib it's installed in /share or /usr/local/share
+            # if it's installed with --user
+            # install models in ~/.macsyfinder instead of ~/.local/share/macsyfinder
+
         self.cfg_file = kwargs.get('cfg_file', None)
         self.coverage_profile = kwargs.get('coverage_profile', 0.5)
         self.e_value_search = kwargs.get('e_value_search', 0.1)
@@ -60,6 +72,7 @@ class MacsyDefaults(dict):
         self.hmmer = kwargs.get('hmmer', 'hmmsearch')
         self.i_evalue_sel = kwargs.get('i_evalue_sel', 0.001)
         self.idx = kwargs.get('idx', False)
+        self.index_dir = kwargs.get('index_dir', None)
         self.inter_gene_max_space = kwargs.get('inter_gene_max_space', None)
         self.log_level = kwargs.get('log_level', logging.INFO)
         self.log_file = kwargs.get('log_file', 'macsyfinder.log')
@@ -67,7 +80,13 @@ class MacsyDefaults(dict):
         self.min_genes_required = kwargs.get('min_genes_required', None)
         self.min_mandatory_genes_required = kwargs.get('min_mandatory_genes_required', None)
         self.models = kwargs.get('models', [])
-        self.models_dir = kwargs.get('models_dir', os.path.join(prefix_data, 'models'))
+        self.system_models_dir = kwargs.get('system_models_dir', [path for path in
+                                                                  (system_models_dir,
+                                                                   os.path.join(os.path.expanduser('~'),
+                                                                                '.macsyfinder', 'models'))
+                                                                  if os.path.exists(path)]
+                                            )
+        self.models_dir = kwargs.get('models_dir', None)
         self.multi_loci = kwargs.get('multi_loci', set())
         self.mute = kwargs.get('mute', False)
         self.out_dir = kwargs.get('out_dir', None)
@@ -77,7 +96,7 @@ class MacsyDefaults(dict):
         self.relative_path = kwargs.get('relative_path', False)
         self.replicon_topology = kwargs.get('replicon_topology', 'circular')
         self.res_extract_suffix = kwargs.get('res_extract_suffix', '.res_hmm_extract')
-        self.res_search_dir = kwargs.get('res_search_dir', os.getcwd())
+        self.res_search_dir = kwargs.get('res_search_dir', '.')
         self.res_search_suffix = kwargs.get('res_search_suffix', '.search_hmm.out')
         self.sequence_db = kwargs.get('sequence_db', None)
         self.topology_file = kwargs.get('topology_file', None)
@@ -87,9 +106,10 @@ class MacsyDefaults(dict):
         self.accessory_weight = kwargs.get('accessory_weight', .5)
         self.neutral_weight = kwargs.get('neutral_weight', 0.0)
         self.exchangeable_weight = kwargs.get('exchangeable_weight', .8)
-        self.loner_multi_system_weight = kwargs.get('loner_multi_system_weight', .7)
+        self.out_of_cluster_weight = kwargs.get('out_of_cluster_weight', .7)
         self.itself_weight = kwargs.get('itself_weight', 1.0)
         self.redundancy_penalty = kwargs.get('redundancy_penalty', 1.5)
+
 
 
 class Config:
@@ -104,15 +124,19 @@ class Config:
                 ('models', tuple()),
                 ('hmmer', ('coverage_profile', 'e_value_search', 'no_cut_ga', 'i_evalue_sel', 'hmmer')),
                 ('score_opt', ('mandatory_weight', 'accessory_weight', 'neutral_weight', 'exchangeable_weight',
-                               'itself_weight', 'redundancy_penalty', 'loner_multi_system_weight')),
-                ('directories', ('models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
-                                 'res_search_suffix', 'res_extract_suffix')),
+                               'itself_weight', 'redundancy_penalty', 'out_of_cluster_weight')),
+                ('directories', ('models_dir', 'system_models_dir', 'out_dir', 'profile_suffix', 'res_search_dir',
+                                 'res_search_suffix', 'res_extract_suffix', 'index_dir')),
                 ('general', ('cfg_file', 'log_file', 'log_level', 'previous_run', 'relative_path',
                              'verbosity', 'quiet', 'mute', 'worker')),
                 ]
 
-    model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral', 'loner_multi_system',
+    model_opts = ('itself', 'exchangeable', 'mandatory', 'accessory', 'neutral',
+                  'out_of_cluster', 'redundancy_penalty',
                   'e_value_search', 'e_value_sel', 'coverage_profile', 'cut_ga')
+
+    path_opts = ('sequence_db', 'topology_file', 'cfg_file', 'log_file', 'models_dir', 'system_models_dir', 'out_dir',
+                 'profile_suffix', 'res_search_dir', 'res_search_suffix', 'res_extract_suffix', 'index_dir')
 
 
     def __init__(self, defaults, parsed_args):
@@ -135,25 +159,25 @@ class Config:
         :param parsed_args: the command line arguments parsed
         :type parsed_args: a :class:`argspace.Namescape` object
         """
-        self.cfg_name = "macsyfinder.conf"
         self._defaults = defaults
+        self.cfg_name = "macsyfinder.conf"
 
-        if __MACSY_DATA__ == '$' + 'MACSYDATA':
-            self._prefix_data = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+        virtual_env = os.environ.get('VIRTUAL_ENV')
+        if virtual_env:
+            system_wide_config_file = os.path.join(virtual_env, 'etc', 'macsyfinder', self.cfg_name)
         else:
-            self._prefix_data = os.path.join(__MACSY_DATA__, 'data')
-
-        if __MACSY_CONF__ == '$' + 'MACSYCONF':
-            self._conf_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'etc'))
-        else:
-            self._conf_dir = __MACSY_CONF__
+            # not in virtual_env
+            var_env = os.environ.get('MACSY_CONF')
+            if var_env:
+                system_wide_config_file = var_env
+            else:
+                system_wide_config_file = os.path.join('/', 'etc', 'macsyfinder', self.cfg_name)
 
         self._options = {}
         self._tmp_opts = {}
 
         self._set_default_config()
 
-        system_wide_config_file = os.path.join(self._conf_dir, self.cfg_name)
         if os.path.exists(system_wide_config_file):
             self._set_system_wide_config(system_wide_config_file)
 
@@ -193,9 +217,14 @@ class Config:
             # the config is also used for macsydata
             # in this case the models are not necessary
             model_family_root, _ = models
-            models_config_file = os.path.join(self.models_dir(), model_family_root, 'model_conf.xml')
-            if os.path.exists(models_config_file):
-                self._set_model_config(models_config_file)
+            # create list of model_root respecting precedence
+            model_family_root_path = [os.path.join(p, model_family_root) for p in self.models_dir()]
+            model_family_root_path = [p for p in model_family_root_path if os.path.exists(p)]
+            # check if the last model_family_root_path (with higher precedence) as a model config file
+            if model_family_root_path:
+                model_config_file = os.path.join(model_family_root_path[-1], 'model_conf.xml')
+                if os.path.exists(model_config_file):
+                    self._set_model_config(model_config_file)
 
         # superseed options (potentially in model_conf)
         # by the values provided by previous-run, project conf, the users on the commandline
@@ -210,7 +239,7 @@ class Config:
         :type options: a dictionary with option name as keys and values as values
         """
         for opt, val in options.items():
-            if val is not None:
+            if val not in (None, [], set()):
                 met_name = f'_set_{opt}'
                 if hasattr(self, met_name):
                     # config has a specific method to parse and store the value
@@ -227,6 +256,9 @@ class Config:
         """
         # the special methods are not used to fill with defaults values
         self._options = {k: v for k, v in self._defaults.items()}
+        # except for loglevel because log_level can accept int and string as value
+        # need conversion in int which is the internal format
+        self._options['log_level'] = self._convert_log_level(self._defaults.log_level)
 
 
     def _set_system_wide_config(self, config_path):
@@ -236,6 +268,10 @@ class Config:
         :param str config_path:
         """
         system_wide_config = self._config_file_2_dict(config_path)
+        if 'models_dir' in system_wide_config:
+            # models_dir cannot be modified in general configuration
+            # set system_model_dir instead
+            del system_wide_config['models_dir']
         self._set_options(system_wide_config)
 
 
@@ -325,7 +361,7 @@ class Config:
         """
         Parse a configuration file in ini format in dictionnary
 
-        :param str file: path to the configuartion file
+        :param str file: path to the configuration file
         :return: the parsed options
         :rtype: dict
         """
@@ -345,10 +381,14 @@ class Config:
         for section in sections:
             for option in parser.options(section):
                 opt_type = type(self._defaults.get(option, None))
-                try:
-                    opt_value = parse_meth.get(opt_type, parser.get)(section, option)
-                except (ValueError, TypeError) as err:
-                    raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
+
+                if option == 'log_level':
+                    opt_value = self._set_log_level(parser.get(section, option))
+                else:
+                    try:
+                        opt_value = parse_meth.get(opt_type, parser.get)(section, option)
+                    except (ValueError, TypeError) as err:
+                        raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
                 opts[option] = opt_value
         return opts
 
@@ -403,15 +443,17 @@ class Config:
                 else:
                     for opt in options:
                         opt_value = self._options[opt]
-                        if opt_value is None:
+                        if opt_value in (None, [], set()):
                             continue
                         elif isinstance(opt_value, dict):
                             value = ""
                             for model, v in opt_value.items():
                                 value += f"{model} {v} "
                             opt_value = value
-                        elif isinstance(opt_value, set):
+                        elif isinstance(opt_value, set) or isinstance(opt_value, list):
                             opt_value = ', '.join(opt_value)
+                        elif opt_value in self.path_opts and self.relative_path:
+                            opt_value = os.path.relpath(opt_value)
                         conf_str += f"{opt} = {opt_value}\n"
             return conf_str
 
@@ -589,7 +631,7 @@ class Config:
                       if value come from command_line
                           ['model1', 'def1', 'def2', 'def3']
                       if value come from config file
-                         'set_1', 'T9SS T3SS T4SS_typeI')]
+                         ['set_1', 'T9SS T3SS T4SS_typeI')]
                          [(model_family, [def_name1, ...]), ... ]
         """
         if isinstance(value, str):
@@ -666,12 +708,29 @@ class Config:
             raise ValueError(f"topology_file '{path}' does not exists or is not a file.")
 
 
+    def _set_system_models_dir(self, value):
+        """
+
+        :param value: the path of the models dir set by the system (vs set by the user)
+        :type value: list of string or a single string
+        :return:
+        """
+        if isinstance(value, str):
+            # it comes from a config_file
+            # value = path1, path2
+            value = value.split(', ')
+        self._options['system_models_dir'] = value
+
     def _set_models_dir(self, path):
         """
         :param str path: the path to the models (definitions + profiles) are stored.
         """
+        # if models_dir is provide by the user this value mask canonical ones
+        # prefix_data, 'models'
+        # os.path.expanduser('~'), '.macsyfinder', 'data'
+        # models_dir must return a list of path
         if os.path.exists(path) and os.path.isdir(path):
-            self._options['models_dir'] = path
+            self._options['models_dir'] = [path]
         else:
             raise ValueError(f"models_dir '{path}' does not exists or is not a directory.")
 
@@ -682,6 +741,42 @@ class Config:
         """
         models_fqn = {v for v in [v.strip() for v in value.split(',')] if v}
         self._options['multi_loci'] = set(models_fqn)
+
+
+    def _convert_log_level(self, value):
+        try:
+            log_level = int(value)
+        except ValueError:
+            value = value.upper()
+            try:
+                log_level = getattr(logging, value)
+            except AttributeError:
+                raise ValueError(f"Invalid value for log_level: {value}.") from None
+        return log_level
+
+
+    def _set_log_level(self, value):
+        """
+
+        :param value:
+        :return:
+        """
+
+        self._options['log_level'] = self._convert_log_level(value)
+
+
+    def models_dir(self):
+        """
+
+        :return: list of models dir path
+        :rtype: list of str
+        """
+        if self._options['models_dir']:
+            # the models_dir has been set by user
+            return self._options['models_dir']
+        else:
+            # use canonical location
+            return self._options['system_models_dir']
 
 
     def multi_loci(self, model_fqn):
@@ -705,7 +800,7 @@ class Config:
         """
 
         :return: the options used in scoring systems (mandatory_weight, accessory_weight, itself_weight,
-                 exchangeable_weight, loner_multi_system_weight)
+                 exchangeable_weight, out_of_cluster_weight)
         :rtype: dict
         """
         return {'mandatory': self._options['mandatory_weight'],
@@ -713,15 +808,16 @@ class Config:
                 'neutral': self._options['neutral_weight'],
                 'itself': self._options['itself_weight'],
                 'exchangeable': self._options['exchangeable_weight'],
-                'loner_multi_system': self._options['loner_multi_system_weight']
+                'out_of_cluster': self._options['out_of_cluster_weight']
                 }
+
 
     def log_level(self):
         """
         :return: the verbosity output level
         :rtype: int
         """
-        level = self._defaults.log_level - (10 * self.verbosity()) + (10 * self.quiet())
+        level = self._options['log_level'] - (10 * self.verbosity()) + (10 * self.quiet())
         level = min(50, max(10, level))
         return level
 

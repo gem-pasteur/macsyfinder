@@ -1,4 +1,0 @@
-colorlog
-pyyaml
-packaging
-networkx

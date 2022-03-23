@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -29,7 +29,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry, scan_models_dir
-from macsypy.utils import get_def_to_detect
+from macsypy.utils import get_def_to_detect, get_replicon_names
 from tests import MacsyTest
 
 
@@ -73,3 +73,8 @@ class TestUtils(MacsyTest):
             get_def_to_detect(('set_1', ['FOO', 'BAR']), registry)
 
 
+    def test_get_replicon_names(self):
+        replicon_names = get_replicon_names(self.find_data('base', 'gembase.fasta'))
+        self.assertListEqual(replicon_names,
+                             ['GCF_000005845', 'GCF_000006725', 'GCF_000006745', 'GCF_000006765', 'GCF_000006845',
+                              'GCF_000006905', 'GCF_000006925', 'GCF_000006945'])

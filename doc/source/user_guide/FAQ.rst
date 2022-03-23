@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -30,6 +30,66 @@ To ensure we have all elements to help, please provide:
 - if applicable, this would also include the macsy-models (XML models plus HMM profiles) used (or precise version of the models if there are publicly available). Same as above, if possible, please provide the smallest set possible of models and HMM profiles. 
 
 All these will definitely help us to help you! ;-) 
+
+
+.. _citations:
+
+How to cite MacSyFinder and published macy-models?
+--------------------------------------------------
+
+- `Abby et al. 2014 <https://doi.org/10.1371/journal.pone.0110726>`_, *PLoS ONE* for the **general principles of MacSyFinder** (version 1), and the corresponding set of Cas systems (CasFinder, 1st version). 
+
+- `Abby and Rocha 2012 <https://doi.org/10.1371/journal.pgen.1002983>`_, *PLoS Genetics*, for the study of the evolutionary relationship between the T3SS and the bacterial flagellum, and how were designed the corresponding HMM protein profiles. 
+
+- `Abby et al. 2016 <https://www.nature.com/articles/srep23080>`_, *Scientific Reports*, for the description of bacterial protein secretion systems' models (TXSScan: T1SS, T2SS, T5SS, T6SS, T9SS, Tad, T4P). 
+
+- `Denise et al. 2019 <https://doi.org/10.1371/journal.pbio.3000390>`_, *PLoS Biology*, for the description of type IV-filament super-family models (TFF-SF: T2SS, T4aP, T4bP, Com, Tad, archaeal T4P). 
+
+- `Rendueles et al. 2017 <https://doi.org/10.1371/journal.ppat.1006525>`_, *PLoS Pathogens*, for the CapsuleFinder set of models. 
+
+- `Couvin, Bernheim et al. 2018 <https://doi.org/10.1093/nar/gky425>`_, *Nucleic Acids Research*, for the updated version of the set of Cas systems' models, CasFinder.
+
+.. add CONJscan? Which ref?
+
+
+.. _cmd-line-examples:
+
+What do MacSyFinder command lines look like?
+--------------------------------------------
+
+
+Here are a few examples of command line formation: 
+
+
+To browse interactive help:
+   
+ :code:`macsyfinder -h`
+
+
+The minimal command line, to search all systems with models from the "TFF-SF" set of models (installed with `macsydata`):
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all`
+
+To search for several systems (ModelA and ModelB) from the "model_family" set of models that can be found in the "./my-models" folder:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models model_family ModelA ModelB --models-dir ./my-models`
+
+To alter the search parameters and allow a maximal distance between components of 20 for the T2SS and 15 for the Tad pilus:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --inter-gene-max-space T2SS 20 --inter-gene-max-space Tad 15`
+
+To alter the search parameters and allow the Tad pilus to be made of multiple loci:
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --models TFF-SF all --multi-loci Tad`
+  
+In `gembase` or `ordered_replicon` mode `macsyfinder` need to index the sequence\-db. By default, this index is write
+beside the sequence-db file. But sometimes the directory where the sequence-db is located is not writable,
+in centralized shared data in multi user environement for instance. To avoid to copy sequences in other location,
+you could specify an alternate directory for the index with \-\-index\-dir (This directory must exists):
+
+ :code:`macsyfinder --db-type ordered_replicon --sequence-db genome.fasta --index-dir my-indexes --models TFF-SF all`
+
+See also the :ref:`quickstart` section for more examples.
 
 
 What search mode to be used?
@@ -110,9 +170,51 @@ This also means that there are a number of options that are incompatible with  `
 Which output file to be used to get ONE solution?
 -------------------------------------------------
 
-Since version 2 of MacSyFinder, a combinatorial exploration of the possible sets of systems is performed. A scoring scheme has been set up to differentiate between solutions, in order to provide the user with the most complete set of systems as possible given the searched models. This score is maximal for the "best solution". This also means that some solutions might get the same maximal score. In this case, one can wonder how to find all the equivalent solutions, and an other, how to simply pick one solution among the best, whichever it is. 
+Since version 2 of MacSyFinder, a combinatorial exploration of the possible sets of systems is performed.
+A scoring scheme has been set up to differentiate between solutions,
+in order to provide the user with the most complete set of systems as possible given the searched models.
+This score is maximal for the "best solution". This also means that some solutions might get the same maximal score.
+In this case, one can wonder how to find all the equivalent solutions, and an other,
+how to simply pick one solution among the best, whichever it is.
 We thus propose several kind of :ref:`output files <ordered_outputs>`. 
 
 - All equivalent best solutions are found in the `all_best_solutions.tsv` file. 
 - One best solution is given in the `best_solution.tsv` file. 
+
+.. note:: 
+
+   For those more familiar with the output files from MacSyFinder v1, the file `best_solution.tsv` is the closest from 
+   the previous output file `macsyfinder.report`.
+
+
+Where to find MacSyFinder models?
+---------------------------------
+
+Since version 2, there is a tool to enable the download and installation of published models from a repository: the `macsydata` tool. 
+
+See :ref:`here for details <macsydata>` on how to use it. 
+
+
+
+What are the rules for options precedence?
+------------------------------------------
+
+MacSyFinder offers many ways to parametrize the systems' search: through the command-line, through various configuration files (for the models, for the run, etc...). It offers a large control over the search engine. But it also means you can get lost in configuration. ;-) 
+
+Here is a recap of the rules for options precedence. In a general manner, the command line always wins. 
+
+The precedence rules between the different levels of configuration are:
+
+.. code-block:: text
+
+ system < home < model < project < --cfg-file | --previous-run < command line options
+
+* **system**: the `macsyfinder.conf` file either in /etc/macsyfinder/ or in virtalenv/etc/macsyfinder/
+  in case of a *virtualenv* this configuration affects only the MacSyFinder version installed in this virtualenv
+* **home**:  the `~/.macsyfinder/macsyfinder.conf` file
+* **model**: the `model_conf.xml` file at the root of the model package
+* **project**: the `macsyfinder.conf` file found in the directory where the `macsyfinder` command was run
+* **cfgfile**: any configuration file specified by the user on the command line (conflicts with the `--previous-run` option)
+* **previous-run**: the `macsyfinder.conf` file found in the results directory of the previous run (conflicts with the `--cfg-file` option)
+* **command line**: any option specified directly in the command line
 

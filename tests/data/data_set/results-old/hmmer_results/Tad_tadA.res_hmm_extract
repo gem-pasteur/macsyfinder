@@ -1,0 +1,11 @@
+# gene: Tad_tadA extract from results/hmmer_results/Tad_tadA.search_hmm.out hmm output
+# profile length= 246
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00412	VICH001.B.00001.C001	372	575	Tad_tadA	1.600e-18	64.200	0.667	0.273	277	433
+VICH001.B.00001.C001_00476	VICH001.B.00001.C001	427	345	Tad_tadA	1.200e-16	58.000	0.516	0.362	119	243
+VICH001.B.00001.C001_00477	VICH001.B.00001.C001	428	368	Tad_tadA	7.400e-19	65.300	0.537	0.356	112	242
+VICH001.B.00001.C001_00829	VICH001.B.00001.C001	760	503	Tad_tadA	1.300e-13	48.100	0.512	0.254	231	358
+VICH001.B.00001.C001_02306	VICH001.B.00001.C001	2203	562	Tad_tadA	6.500e-14	49.100	0.663	0.278	279	434
+VICH001.B.00001.C001_02600	VICH001.B.00001.C001	2489	503	Tad_tadA	7.000e-17	58.800	0.687	0.320	214	374

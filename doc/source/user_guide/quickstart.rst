@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -11,18 +11,19 @@
 
 MacSyFinder Quick Start 
 =======================
+..
+    This block is commented (does not apear in compile version)
+    .. only:: html
 
-.. only:: html
+        .. figure:: ../_static/under_construction.gif
 
-    .. figure:: ../_static/under_construction.gif
+            This page is still under construction
 
-        This page is still under construction
+    .. only:: latex
 
-.. only:: latex
+        .. figure:: ../_static/under_construction.jpeg
 
-    .. figure:: ../_static/under_construction.jpeg
-
-        This page is still under construction
+            This page is still under construction
 
 
 1. We recommend to install MacSyFinder using `pip` in a virtual environment (for further details see :ref:`installation`).
@@ -51,21 +52,29 @@ MacSyFinder Quick Start
       :code:`macsyfinder -h`
 
       To see all options available. All command-line options are described in the :ref:`Command-line options section <command-line-label>`.
-      In order to run MacSyFinder on your favorite dataset as soon as you have installed it, you can simply follow the following steps:
+      In order to run MacSyFinder on your favorite dataset as soon as you have :ref:`installed it <macsydata>`,
+      you can simply follow the following steps:
 
     * On a "metagenomic" (unordered) dataset for example:
-      :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models-dir my-models --models model_family all`
+      :code:`macsyfinder --db-type unordered --sequence-db metagenome.fasta --models model_family all`
 
       will detect all models of model_family modelled in .xml files placed in the *"my-models"* folder without taking into account any gene order.
 
 
     * On a completely assembled genome (where the gene order is known, and is relevant for systems' detection):
 
-      :code:`macsyfinder --db-type ordered-replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
+      :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models model_family ModelA ModelB`
 
       will detect the macromolecular systems described in the two models *"ModelA"* and *"ModelB"*
       in a complete genome from the *"ModelA.xml"* and *"ModelB.xml"*
       definition files placed in the folder *"my-models/model_family/definitions"*.
+
+    * If you want to run the same analysis as above but with models not installed by macsydata:
+
+      :code:`macsyfinder --db-type ordered_replicon --sequence-db mygenome.fasta --models-dir my-models --models model_family ModelA ModelB`
+
+      `my-models` is the directory containing  the model packages.
+      The models must follow the :ref:`macsy-models package<package_structure>` structure.
 
 .. note::
 

@@ -1,4 +1,4 @@
-<model inter_gene_max_space="5" min_genes_required="3" min_mandatory_genes_required="2" vers="2.0">
+<model inter_gene_max_space="5" min_genes_required="3" min_mandatory_genes_required="2"  vers="2.0">
 
     <gene name="csf1_TypeU" presence="mandatory" />
     <gene name="csf2_TypeU" presence="mandatory">
