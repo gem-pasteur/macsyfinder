@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,7 +32,8 @@ from threading import Lock
 from itertools import groupby
 
 from .database import Indexes, RepliconDB
-from .hit import Hit
+from .hit import CoreHit
+from .error import MacsypyError
 
 
 class HMMReport(object, metaclass=abc.ABCMeta):
@@ -86,9 +87,8 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                 return
 
             idx = Indexes(self.cfg)
-            macsyfinder_idx = idx.find_my_indexes()
             my_db = self._build_my_db(self._hmmer_raw_out)
-            self._fill_my_db(macsyfinder_idx, my_db)
+            self._fill_my_db(my_db)
 
             with open(self._hmmer_raw_out, 'r') as hmm_out:
                 i_evalue_sel = self.cfg.i_evalue_sel()
@@ -99,8 +99,13 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                 next(hmm_hits)
                 for hmm_hit in hmm_hits:
                     hit_id = self._parse_hmm_header(hmm_hit)
-                    seq_lg, position_hit = my_db[hit_id]
-
+                    try:
+                        seq_lg, position_hit = my_db[hit_id]
+                    except TypeError as err:
+                        if my_db[hit_id] is None:
+                            msg = f"hit id '{hit_id}' was not indexed, rebuild sequence '{idx.name}' index"
+                            _log.critical(msg)
+                            raise MacsypyError(msg)
                     replicon_name = self._get_replicon_name(hit_id)
 
                     body = next(hmm_hits)
@@ -179,20 +184,18 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         return d
 
 
-    def _fill_my_db(self, macsyfinder_idx, db):
+    def _fill_my_db(self, db):
         """
         Fill the dictionary with information on the matched sequences
 
-        :param macsyfinder_idx: the path the macsyfinder index corresponding to the dataset
-        :type  macsyfinder_idx: string
         :param db: the database containing all sequence id of the hits.
         :type db: dict
         """
-        with open(macsyfinder_idx, 'r') as idx:
-            for l in idx:
-                seqid, length, rank = l.split(';')
-                if seqid in db:
-                    db[seqid] = (int(length), int(rank))
+        idx = Indexes(self.cfg)
+        idx.build()
+        for seqid, length, rank in idx:
+            if seqid in db:
+                db[seqid] = (int(length), int(rank))
 
 
     def _parse_hmm_header(self, h_grp):
@@ -224,7 +227,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.Hit` objects
+        :rtype: list of :class:`macsypy.report.CoreHit` objects
 
         """
         first_line = next(b_grp)
@@ -254,17 +257,17 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                             if cov_profile >= coverage_threshold:
                                 i_eval = float(fields[5])
                                 score = float(fields[2])
-                                hits.append(Hit(self.gene,
-                                                hit_id,
-                                                seq_lg,
-                                                replicon_name,
-                                                position_hit,
-                                                i_eval,
-                                                score,
-                                                cov_profile,
-                                                cov_gene,
-                                                begin,
-                                                end))
+                                hits.append(CoreHit(self.gene,
+                                                    hit_id,
+                                                    seq_lg,
+                                                    replicon_name,
+                                                    position_hit,
+                                                    i_eval,
+                                                    score,
+                                                    cov_profile,
+                                                    cov_gene,
+                                                    begin,
+                                                    end))
                     except ValueError as err:
                         msg = f"Invalid line to parse :{line}:{err}"
                         _log.debug(msg)

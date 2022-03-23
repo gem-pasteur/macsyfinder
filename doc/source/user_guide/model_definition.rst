@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -31,6 +31,9 @@ The models are grouped by *family* possibly gathering *sub-families* (multiple l
 A set of models from a same family (coherent set) of systems to detect is called hereafter a **macsy-model package** ``NEW in V2``.
 
 
+.. note:: 
+  For details on how to create your own macsy-models, have a look at the :ref:`modeler_guide`. 
+
 
 
 ******************
@@ -53,6 +56,7 @@ The main sub-commands are
 * ``macsydata search`` to search a model given its name or a pattern in its description
 * ``macsydata install`` to install a macsy-model package (the installed version can be set see --help)
 * ``macsydata cite`` to retrieve information on how to cite the model
+* ``macsydata definition`` to display one or a set of model defintion
 * ``macsydata --help`` to get the extended list of available subcommands
 * ``macsydata <subcommand> --help`` to get help about the specified subcommand
 
@@ -88,7 +92,14 @@ The packages installed in user land is added to the system-wide packages.
 project-wide installation
 -------------------------
 
-If you cannot install macsy-model packages in system or user land locations, you can specify a
-specific location with the ``--models-dir`` :ref:`command-line option <path-options>`. The path must point at a directory
-that contains macsy-model packages as described :ref:`above <package_structure>`.
+If you cannot install macsy-model packages in system or user land locations,
+you can install models in specific directory with the `--target` option.
+
+    macsydata install --target <my_models>
+
+The specify this specific location with the ``--models-dir`` :ref:`command-line option <path-options>`.
+
+    macsyfinder --db-type ordered_replicon --models-dir=my_models --models TFF-SF all --sequence-db my_genome.fasta
+
+The path must point at a directory that contains macsy-model packages as described :ref:`above <package_structure>`.
 

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,10 +32,12 @@ import shutil
 import tarfile
 import glob
 import yaml
+import colorlog
 from unittest.mock import patch
 
 import macsypy
 from macsypy import package
+from macsypy import model_conf_parser
 from macsypy.error import MacsydataError, MacsyDataLimitError
 
 from tests import MacsyTest
@@ -121,7 +123,7 @@ class TestRemoteModelIndex(MacsyTest):
         elif url == 'https://api.github.com/orgs/remote_exists_unexpected_error':
             raise urllib.error.HTTPError(url, 204, 'No Content', None, None)
         elif url == 'https://api.github.com/orgs/list_packages/repos':
-            resp = [{'name': 'model_1'}, {'name': 'model_2'}]
+            resp = [{'name': 'model_1'}, {'name': 'model_2'}, {'name':'.github'}]
             return MockResponse(json.dumps(resp), 200)
         elif url == 'https://api.github.com/repos/list_package_vers/model_1/tags':
             resp = [{'name': 'v_1'}, {'name': 'v_2'}]
@@ -411,7 +413,10 @@ class TestPackage(MacsyTest):
 
         macsypy.init_logger()
         macsypy.logger_set_level(30)
-
+        logger = colorlog.getLogger('macsypy.package')
+        package._log = logger
+        logger = colorlog.getLogger('macsypy.model_conf_parser')
+        model_conf_parser._log = logger
         self.metadata = {"maintainer": {"name": "auth_name",
                                     "email": "auth_name@mondomain.fr"},
                          "short_desc": "this is a short description of the repos",
@@ -433,8 +438,13 @@ ligne 3 et bbbbb
             shutil.rmtree(self.tmpdir)
         except:
             pass
+        logger = colorlog.getLogger('macsypy.package')
+        del logger.manager.loggerDict['macsypy.package']
+        del logger.manager.loggerDict['macsypy.model_conf_parser']
+        del logger.manager.loggerDict['macsypy']
 
-    def create_fake_package(self, model, definitions=True, profiles=True,
+
+    def create_fake_package(self, model, definitions=True, bad_definitions=False, profiles=True, skip_hmm=None,
                             metadata=True, readme=True, license=True, conf=True, bad_conf=False):
         pack_path = os.path.join(self.tmpdir, model)
         os.mkdir(pack_path)
@@ -442,21 +452,28 @@ ligne 3 et bbbbb
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
             with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="flgB" presence="mandatory"/>
     <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
-</system>""")
+</model>""")
             with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
-                f.write("""<system inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2">
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="fliE" presence="mandatory" multi_system="True"/>
     <gene name="tadZ" presence="accessory" loner="True"/>
     <gene name="sctC" presence="forbidden"/>
-</system>""")
-
+</model>""")
+        if bad_definitions:
+            with open(os.path.join(def_dir, "model_3.xml"), 'w') as f:
+                f.write("""<model inter_gene_max_space="20" min_mandatory_genes_required="2" min_genes_required="1" vers="2.0">
+    <gene name="flgB" presence="mandatory"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+</model>""")
         if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
             for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
+                if skip_hmm and name in skip_hmm:
+                    continue
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
             meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
@@ -477,7 +494,7 @@ ligne 3 et bbbbb
         <mandatory>13</mandatory>
         <accessory>14</accessory>
         <neutral>0</neutral>
-        <loner_multi_system>10</loner_multi_system>
+        <out_of_cluster>10</out_of_cluster>
     </weights>
     <filtering>
         <e_value_search>0.12</e_value_search>
@@ -629,6 +646,51 @@ ligne 3 et bbbbb
         self.assertEqual(warnings, ["The package 'fake_model' have not any LICENSE file. "
                                     "May be you have not right to use it."])
 
+
+    def test_check_model_consistency(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, [])
+
+
+    def test_check_model_consistency_extra_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model')
+        pack = package.Package(fake_pack_path)
+        open(os.path.join(fake_pack_path, 'profiles', 'extra_profile.hmm'), 'w').close()
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, ['The extra_profile profiles are not referenced in any definitions.'])
+        self.assertEqual(errors, [])
+
+
+    def test_check_model_consistency_lack_one_profile(self):
+        fake_pack_path = self.create_fake_package('fake_model', skip_hmm=['flgB', 'fliE'])
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+
+        self.assertEqual(warnings, [])
+        self.assertSetEqual(set(errors),
+                            set(["'fake_model/flgB': No such profile",
+                                 "'fake_model/fliE': No such profile"])
+                            )
+
+
+    def test_check_model_consistency_bad_definitions(self):
+        fake_pack_path = self.create_fake_package('fake_model', bad_definitions=True)
+        pack = package.Package(fake_pack_path)
+        with self.catch_log(log_name='macsypy'):
+            errors, warnings = pack._check_model_consistency()
+        self.assertEqual(warnings, [])
+        self.assertEqual(errors, ["fake_model/model_3: min_genes_required '1' must be greater or equal than "
+                                  "min_mandatory_genes_required '2'"])
+
+
     def test_check_no_readme_n_no_license(self):
         fake_pack_path = self.create_fake_package('fake_model', readme=False, license=False)
         pack = package.Package(fake_pack_path)
@@ -659,8 +721,8 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'maintainer' is mandatory in metadata_path."])
-        self.assertEqual(warnings, [])
+        self.assertListEqual(errors, [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml."])
+        self.assertListEqual(warnings, [])
 
         #################
         # No short desc #
@@ -673,7 +735,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'short_desc' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'short_desc' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -687,7 +749,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'vers' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
         ###########
@@ -702,7 +764,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'cite' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##########
         # No doc #
@@ -716,7 +778,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'doc' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'doc' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##############
         # No license #
@@ -730,7 +792,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'license' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
 
         ################
         # No copyright #
@@ -744,7 +806,7 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertEqual(errors, [])
-        self.assertEqual(warnings, ["It's better if the field 'copyright' is setup in metadata_path file"])
+        self.assertEqual(warnings, [f"It's better if the field 'copyright' is setup in {fake_pack_path}/metadata.yml file"])
 
         ##################
         # No maintainer name #
@@ -762,7 +824,7 @@ ligne 3 et bbbbb
             errors, warnings = pack._check_metadata()
         finally:
             package.Package._load_metadata = load_metadata_meth
-        self.assertEqual(errors, ["field 'maintainer.name' is mandatory in metadata_path."])
+        self.assertEqual(errors, [f"field 'maintainer.name' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertEqual(warnings, [])
 
 
@@ -780,11 +842,11 @@ ligne 3 et bbbbb
         finally:
             package.Package._load_metadata = load_metadata_meth
         self.assertListEqual(errors,
-                             ["field 'maintainer' is mandatory in metadata_path.",
-                              "field 'vers' is mandatory in metadata_path."])
+                             [f"field 'maintainer' is mandatory in {fake_pack_path}/metadata.yml.",
+                              f"field 'vers' is mandatory in {fake_pack_path}/metadata.yml."])
         self.assertListEqual(warnings,
-                             ["It's better if the field 'cite' is setup in metadata_path file",
-                              "It's better if the field 'license' is setup in metadata_path file"])
+                             [f"It's better if the field 'cite' is setup in {fake_pack_path}/metadata.yml file",
+                              f"It's better if the field 'license' is setup in {fake_pack_path}/metadata.yml file"])
 
     def test_help(self):
         fake_pack_path = self.create_fake_package('fake_model', license=False)

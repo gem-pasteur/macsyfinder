@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -77,7 +77,7 @@ class DefinitionParser:
             model_node = self._get_model_node(def_loc)
             model = self._create_model(def_loc, model_node)
             self.model_bank.add_model(model)
-            model_location = self.model_registry[def_loc.family_name]
+            model_location = self.model_registry[def_loc.root_name(def_loc.fqn)]
             self._fill_gene_bank(model_node, model_location, def_loc)
 
             self._parse_genes(model, model_node)
@@ -114,6 +114,7 @@ class DefinitionParser:
         :return: None
         :raises ModelInconsistencyError: if an error is encountered in the document.
         """
+
         vers = model_node.get('vers')
         msg = None
         if vers is None:
@@ -139,6 +140,30 @@ class DefinitionParser:
         # you can use | xpath OR operator only if you are using lxml
         if model_node.findall(".//homologs") + model_node.findall(".//analogs"):
             msg = f"The model definition {os.path.basename(path)} is obsolete. Please update your model."
+            raise ModelInconsistencyError(msg)
+
+        model_allowed_attributes = {'inter_gene_max_space',
+                                    'min_mandatory_genes_required',
+                                    'min_genes_required',
+                                    'max_nb_genes',
+                                    'multi_loci',
+                                    'vers'}
+        model_all_attributes = set(model_node.attrib.keys())
+        model_unallowed_attribute = model_all_attributes - model_allowed_attributes
+        if model_unallowed_attribute:
+            msg = f"The model definition {os.path.basename(path)} has an unknow attribute " \
+                  f"'{', '.join(model_unallowed_attribute)}'. Please fix the definition."
+            raise ModelInconsistencyError(msg)
+
+        gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'inter_gene_max_space'}
+        gene_all_attributes = set()
+        for gene in model_node.iter('gene'):
+            gene_all_attributes |= set(gene.attrib.keys())
+        gene_unallowed_attribute = gene_all_attributes - gene_allowed_attributes
+        if gene_unallowed_attribute:
+            msg = f"The model definition {os.path.basename(path)} has an unknown attribute " \
+                  f"'{', '.join(gene_unallowed_attribute)}' for a gene." \
+                  f" Please fix the definition."
             raise ModelInconsistencyError(msg)
 
 
@@ -185,15 +210,18 @@ class DefinitionParser:
                 _log.critical(msg)
                 raise SyntaxError(msg)
 
-        max_nb_genes = model_node.get('max_nb_genes')
-        if max_nb_genes is not None:
-            try:
-                max_nb_genes = int(max_nb_genes)
-            except ValueError:
-                msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
-                _log.critical(msg)
-                raise SyntaxError(msg)
-
+        cfg_max_nb_genes = self.cfg.max_nb_genes(def_loc.fqn)
+        if cfg_max_nb_genes is not None:
+            max_nb_genes = cfg_max_nb_genes
+        else:
+            max_nb_genes = model_node.get('max_nb_genes')
+            if max_nb_genes is not None:
+                try:
+                    max_nb_genes = int(max_nb_genes)
+                except ValueError:
+                    msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
+                    _log.critical(msg)
+                    raise SyntaxError(msg)
         multi_loci = model_node.get('multi_loci')
         if multi_loci is not None:
             multi_loci = multi_loci.lower() in ("1", "true")
@@ -389,3 +417,9 @@ class DefinitionParser:
             # the following test
             # model.min_mandatory_genes_required <= model.min_genes_required
             # is done during the model.__init__
+
+            if len_mandatory_genes == 0 and len_accessory_genes == 1:
+                msg = f"model '{model.name}' is not consistent: there is only one gene in your model. " \
+                      f"So its status should be 'mandatory'."
+                _log.critical(msg)
+                raise ModelInconsistencyError(msg)

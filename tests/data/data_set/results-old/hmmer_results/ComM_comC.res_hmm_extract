@@ -1,0 +1,7 @@
+# gene: ComM_comC extract from results/hmmer_results/ComM_comC.search_hmm.out hmm output
+# profile length= 206
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+VICH001.B.00001.C001_00833	VICH001.B.00001.C001	764	253	ComM_comC	6.900e-31	105.100	0.937	0.798	43	244
+VICH001.B.00001.C001_02308	VICH001.B.00001.C001	2205	291	ComM_comC	1.800e-40	136.400	0.942	0.708	62	267

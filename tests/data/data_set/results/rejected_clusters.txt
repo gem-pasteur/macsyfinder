@@ -1,5 +1,5 @@
-# macsyfinder 2.0rc1
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results --relative-path
+# macsyfinder 20211013.dev
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type gembase --models-dir tests/data/data_set/models --models set_1 all -w 4 --relative-path
 # Rejected clusters:
 
 Cluster:
@@ -21,38 +21,10 @@ These clusters have been rejected because:
 Cluster:
 - model = ComM
 - replicon = VICH001.B.00001.C001
-- hits = (VICH001.B.00001.C001_00857, ComM_comEB, 788)
-Cluster:
-- model = ComM
-- replicon = VICH001.B.00001.C001
-- hits = (VICH001.B.00001.C001_01796, ComM_comEC, 1714)
-These clusters have been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-	- The quorum of genes required (4) is not reached: 2
-============================================================
-Cluster:
-- model = ComM
-- replicon = VICH001.B.00001.C001
 - hits = (VICH001.B.00001.C001_01796, ComM_comEC, 1714)
 These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = MSH
-- replicon = VICH001.B.00001.C001
-- hits = (VICH001.B.00001.C001_00512, MSH_mshA, 463)
-These clusters have been rejected because:
-	- The quorum of mandatory genes required (3) is not reached: 1
-	- The quorum of genes required (4) is not reached: 1
-============================================================
-Cluster:
-- model = T2SS
-- replicon = VICH001.B.00001.C001
-- hits = (VICH001.B.00001.C001_02308, T4P_pilD, 2205)
-These clusters have been rejected because:
-	- The quorum of mandatory genes required (4) is not reached: 1
-	- The quorum of genes required (6) is not reached: 1
 ============================================================
 Cluster:
 - model = T4P

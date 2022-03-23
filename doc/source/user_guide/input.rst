@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2020 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -129,6 +129,11 @@ Systems detection options:
                         The first value must correspond to a model fully qualified name, the second value to an integer.
                         This option can be repeated several times:
                             "--min-genes-required TXSS/T2SS 15 --min-genes-required TXSS/Flagellum 10
+  --max-nb-genes MAX_NB_GENES MAX_NB_GENES
+                        The maximal number of genes to consider a system as full.
+                        The first value must correspond to a model name, the second value to an integer.
+                        This option can be repeated several times:
+                            "--max-nb-genes TXSS/T2SS 5 --max-nb-genes TXSS/Flagellum 10"
   --multi-loci MULTI_LOCI
                         Specifies if the system can be detected as a 'scattered' system.
                         The models are specified as a comma separated list of fully qualified name
@@ -205,6 +210,9 @@ Path options:
   -o OUT_DIR, --out-dir OUT_DIR
                         Path to the directory where to store results.
                         if out-dir is specified res-search-dir will be ignored.
+  --index-dir INDEX_DIR
+                        Specifies the path to a directory to store/read the sequence index when the sequence-db dir
+                        is not writable.
   --res-search-suffix RES_SEARCH_SUFFIX
                         The suffix to give to Hmmer raw output files. (default: .search_hmm.out)
   --res-extract-suffix RES_EXTRACT_SUFFIX
@@ -245,34 +253,55 @@ General options:
                             --config, --sequence-db, --profile-suffix, --res-extract-suffix, --e-value-res, --db-type, --hmmer
 
 
+
+.. note:: 
+  For some command line examples, have a look :ref:`here<cmd-line-examples>`, or at the :ref:`quickstart` section.
+
+
+
+
 .. _config-definition-label:
 
 Configuration file
 ==================
 
 Options to run MacSyFinder can be specified in a configuration file.
-The :ref:`Config object <config>` handles all configuration options for MacSyFinder.
-Three locations are parsed to find configuration files: 
- 
- * $PREFIX/etc/macsyfinder/macsyfinder.conf
- * $(HOME)/.macsyfinder/macsyfinder.conf
- * ./macsyfinder.conf  
- 
-Moreover these three locations options can be passed on the command-line.
- 
-Each file can define options, and in the end all options are integrated. If an option is specified several times:
- 
+
+A macsyfinder utility is provided to generate macsyfinder config file: *macsyconfig*
+
+*macsyconfig* is a conversation menu which guide you and generate a file *macsyfinder.conf* in ini format.
+Once generated put this file in specific locations (see below) to be take in account by MacSyFinder.
+
+The :ref:`Config object <configuration>` handles all configuration options for MacSyFinder.
+There kind of locations where to put configuration file:
+
+ #. System wide configuration (this configuration is used for all macsyfinder run)
+
+    * */etc/macsyfinder/macsyfinder.conf*
+    * or in *${VIRTUAL_ENV}/etc/macsyfinder.conf* if you installed macsyfinder in a virtualenv
+    * the file pointed by environment variable *MACSY_HOME*
+
+ #. User wide configuration (this configuration is used for all run for a user)
+
+    * *~/.macsyfinder/macsyfinder.conf*
+
+ #. Project configuration
+
+    * *macsyfinder.conf* in the current directory
+    * with command line option *--cfg-file*
+
+
 .. note::
     The precedence rules from the least to the most important priority are:
  
-    $PREFIX/etc/macsyfinder/macsyfinder.conf < $(HOME)/.macsyfinder/macsyfinder.conf < ./macsyfinder.conf < "command-line" options
-   
+    System wide configuration < user wide configuration < project configuration < command line option
+
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
  
 The configuration files must follow the Python "ini" file syntax.
-The :ref:`Config object <config>` provides some default values and performs some validations of the values.
+The :ref:`Config object <configuration>` provides some default values and performs some validations of the values.
  
  
 In MacSyFinder, six sections are defined and stored by default in the configuration file:
@@ -307,7 +336,9 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
       These values will supersede the values found in the model definition file.
     * *min_genes_required* = list of models' fully qualified name and integer separated by spaces.
       These values will supersede the values found in the model definition file.
-    
+    * *max_nb_genes* = list of models' fully qualified names and integer separated by spaces.
+      These values will supersede the values found in the model definition file.
+
   * **hmmer**
     
     * *hmmer_exe* (default= *hmmsearch* )
@@ -321,15 +352,16 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     * *accessory_weight* (default= *0.5*)
     * *exchangeable_weight* (default= *0.8*)
     * *redundancy_penalty* (default= *1.5*)
-    * *loner_multi_system_weight* (default= *0.7*)
+    * *out_of_cluster* (default= *0.7*)
 
   
   * **directories**
     
     * *res_search_dir* = (default= *./datatest/res_search* )
     * *res_search_suffix* = (default= *.search_hmm.out* )
-    * *models_dir* = (default= *./models* )
+    * *system_models_dir* = (default= *./models* )
     * *res_extract_suffix* = (default= *.res_hmm_extract* )
+    * *index_dir* = (default= beside the sequence_db)
 
   * **general**
     
@@ -363,7 +395,8 @@ Example of a configuration file
     inter_gene_max_space = TXSS/T2SS 22 TXSS/Flagellum 44
     min_mandatory_genes_required = TXSS/T2SS 6 TXSS/Flagellum 4
     min_genes_required = TXSS/T2SS 8 TXSS/Flagellum 4
-    
+    max_nb_genes = TXSS/T2SS 12 TXSS/Flagellum 8
+
     [hmmer]
     hmmer = hmmsearch
     e_value_res = 1
@@ -382,9 +415,10 @@ Example of a configuration file
     data_dir = %(prefix)s/data/
     res_search_dir = %(prefix)s/dataset/res_search/
     res_search_suffix = .raw_hmm
-    models_dir = %(data_dir)/data/models
+    system_models_dir = %(data_dir)/data/models, ~/.macsyfinder/data
     profile_suffix = .fasta-aln.hmm
     res_extract_suffix = .res_hmm
+    index_dir = path/where/I/store/my_indexes
 
    [general]
    log_level = debug
@@ -395,6 +429,21 @@ Example of a configuration file
     After a run, the corresponding configuration file ("macsyfinder.conf") is generated as a (re-usable)
     output file that stores every options used in the run.
     It is stored in the results' directory (see :ref:`the output section <outputs>`).
+
+.. warning::
+
+    The configuration variable `models_dir` cannot be set in general configuration file.
+    `models_dir`` can be set only in configuration under user control.
+    ```$(HOME)/.macsyfinder/macsyfinder.conf < macsyfinder.conf < "command-line" options```
+    `models_dir` is a single path to a directory whre masyfinder can find models.
+
+    But the `system_models_dir` can be set in general configuration file
+    $PREFIX/etc/macsyfinder/macsyfinder.conf
+
+    `system_models_dir` manage a list of locations where macsyfinder can find models.
+    The order of locations is important, it reflects the precedence rule (The models found in last location
+    superseed models found in previous location).
+    By default `system_models_dir` is set to *$PREFIX/share/macsyfinder/data/models*, *$HOME/.macsyfinder/data*
 
 
 In-house input files

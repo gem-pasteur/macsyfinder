@@ -52,14 +52,14 @@ log*
 test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
-macsyfinder-*
+macsyfinder-*/
 macsyfinder.egg-info/
 
 ####################
 # MacSyFinder data #
 ####################
 data/macsyfinder/models/TXSS/*
-data/models/TXSScan
+data/models/*
 data/base/*
 sandbox/
 

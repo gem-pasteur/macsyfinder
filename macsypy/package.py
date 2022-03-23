@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -33,8 +33,8 @@ import tarfile
 import copy
 import abc
 from typing import List, Dict, Tuple, Optional
-import logging
-_log = logging.getLogger(__name__)
+import colorlog
+_log = colorlog.getLogger(__name__)
 
 from .config import NoneConfig
 from .registries import ModelLocation, ModelRegistry
@@ -148,6 +148,7 @@ class RemoteModelIndex(AbstractModelIndex):
     def remote_exists(self) -> bool:
         """
         check if the remote exists and is an organization
+
         :return: True if the Remote url point to a github Organization, False otherwise
         """
         try:
@@ -201,12 +202,13 @@ class RemoteModelIndex(AbstractModelIndex):
     def list_packages(self) -> List[str]:
         """
         list all model packages available on a model repos
+
         :return: The list of package names.
         """
         url = f"{self.base_url}/orgs/{self.org_name}/repos"
         _log.debug(f"get {url}")
         packages = self._url_json(url)
-        return [p['name'] for p in packages]
+        return [p['name'] for p in packages if p['name'] != '.github']
 
 
     def list_package_vers(self, pack_name: str) -> List[str]:
@@ -385,6 +387,8 @@ class Package:
         :return:
         """
         _log.info(f"Checking '{self.name}' Model definitions")
+        errors = []
+        warnings = []
         model_loc = ModelLocation(path=self.path)
         all_def = model_loc.get_all_definitions()
         model_bank = ModelBank()
@@ -397,12 +401,26 @@ class Package:
             model_registry = ModelRegistry()
             model_registry.add(model_loc)
             parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
-            parser.parse(all_def)
+            for one_def in all_def:
+                try:
+                    parser.parse([one_def])
+                except MacsypyError as err:
+                    errors.append(str(err))
+
+            if not errors:
+                # if some def cannot be parsed
+                # I skip testing profile not in def
+                # may be there are in the unparsable def
+                genes_in_def = {fqn.split('/')[-1] for fqn in gene_bank.genes_fqn()}
+                profiles_fqn = set(model_loc.get_profiles_names())
+                profiles_not_in_def = profiles_fqn - genes_in_def
+                if profiles_not_in_def:
+                    warnings.append(f"The {', '.join(profiles_not_in_def)} profiles are not referenced in any definitions.")
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")
         # to respect same api as _check_metadata and _check_structure
-        return [], []
+        return errors, warnings
 
 
     def _check_model_conf(self) -> Tuple[List[str], List[str]]:
@@ -434,7 +452,7 @@ class Package:
         :return: errors and warnings
         :rtype: tuple of 2 lists ([str error_1, ...], [str warning_1, ...])
         """
-        _log.info(f"Checking '{self.name}' metadata_path")
+        _log.info(f"Checking '{self.name}' {self.metadata_path}")
         errors = []
         warnings = []
         data = self._load_metadata()
@@ -442,14 +460,14 @@ class Package:
         nice_to_have = ("cite", "doc", "license", "copyright")
         for item in must_have:
             if item not in data:
-                errors.append(f"field '{item}' is mandatory in metadata_path.")
+                errors.append(f"field '{item}' is mandatory in {self.metadata_path}.")
         for item in nice_to_have:
             if item not in data:
-                warnings.append(f"It's better if the field '{item}' is setup in metadata_path file")
+                warnings.append(f"It's better if the field '{item}' is setup in {self.metadata_path} file")
         if "maintainer" in data:
             for item in ("name", "email"):
                 if item not in data["maintainer"]:
-                    errors.append(f"field 'maintainer.{item}' is mandatory in metadata_path.")
+                    errors.append(f"field 'maintainer.{item}' is mandatory in {self.metadata_path}.")
         return errors, warnings
 
 

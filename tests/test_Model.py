@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -32,7 +32,7 @@ from macsypy.config import Config, MacsyDefaults
 from macsypy.model import Model
 from macsypy.gene import CoreGene, ModelGene, Exchangeable
 from macsypy.profile import ProfileFactory
-from macsypy.hit import Hit
+from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from tests import MacsyTest
 
@@ -122,9 +122,19 @@ class TestModel(MacsyTest):
         max_nb_genes_xml = 10
         model = Model(model_fqn, inter_gene_max_space, max_nb_genes=max_nb_genes_xml)
         self.assertEqual(model.max_nb_genes, max_nb_genes_xml)
-        model = Model(model_fqn, inter_gene_max_space)
-        self.assertIsNone(model.max_nb_genes)
 
+        model = Model(model_fqn, inter_gene_max_space)
+        self.assertEqual(model.max_nb_genes, 0)
+
+        c_gene_sctc = CoreGene(self.model_location, "sctC", self.profile_factory)
+        gene_sctc = ModelGene(c_gene_sctc, model)
+
+        c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
+        gene_abc = ModelGene(c_gene_abc, model)
+
+        model.add_mandatory_gene(gene_sctc)
+        model.add_accessory_gene(gene_abc)
+        self.assertEqual(model.max_nb_genes, 2)
         self.clean_working_dir()
 
 
@@ -299,15 +309,15 @@ sctC
 
         hit_to_keep = []
         for gene in (sctJ_FLG, sctN_FLG, sctC, toto, totote):
-            hit_to_keep.append(Hit(gene,
+            hit_to_keep.append(CoreHit(gene,
                                    f"PSAE001c01_{gene.name}",
-                                   1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                                       1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                )
         hit_to_filter_out = []
         for gene in (gspd, tadz):
-            hit_to_filter_out.append(Hit(gene,
+            hit_to_filter_out.append(CoreHit(gene,
                                      f"PSAE001c01_{gene.name}",
-                                     1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
+                                             1, "PSAE001c01", 1, 1.0, 1.0, 1.0, 1.0, 1, 2)
                                      )
 
         filtered_hits = model.filter(hit_to_keep + hit_to_filter_out)

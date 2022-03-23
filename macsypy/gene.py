@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -21,7 +21,6 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
-
 
 import logging
 _log = logging.getLogger(__name__)
@@ -76,6 +75,14 @@ class GeneBank:
         Return an iterator object on the genes contained in the bank
         """
         return iter(self._genes_bank.values())
+
+
+    def genes_fqn(self):
+        """
+        :return: the fully qualified name for all genes in the bank
+        :rtype: str
+        """
+        return [f"{fam}/{gen_nam}" for fam, gen_nam in self._genes_bank.keys()]
 
 
     def add_new_gene(self, model_location, name, profile_factory):
@@ -160,6 +167,7 @@ class ModelGene:
         self._loner = loner
         self._multi_system = multi_system
         self._inter_gene_max_space = inter_gene_max_space
+        self._status = None
 
 
     def __getattr__(self, item):
@@ -168,12 +176,13 @@ class ModelGene:
         except AttributeError:
             raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
 
+
     def __str__(self):
         """
         Print the name of the gene and of its exchangeable genes.
         """
         s = f"name : {self.name}"
-        s += f"\ninter_gene_max_space: {self.inter_gene_max_space:d}"
+        s += f"\ninter_gene_max_space: {self.inter_gene_max_space}"
         if self.loner:
             s += "\nloner"
         if self.multi_system:
@@ -184,6 +193,25 @@ class ModelGene:
                 s += h.name + ", "
             s = s[:-2]
         return s
+
+
+    @property
+    def status(self):
+        """
+        :return: The status of this gene
+        :rtype: :class:`macsypy.gene.GeneStatus` object
+        """
+        return self._status
+
+
+    def set_status(self, status):
+        """
+        Set the status for this gene
+
+        :param status: the status of this gene
+        :type status: :class:`macsypy.gene.GeneStatus` object
+        """
+        self._status = status
 
 
     @property
@@ -255,13 +283,10 @@ class ModelGene:
     def inter_gene_max_space(self):
         """
         :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized. 
-                 If the value is not set at the Gene level, return the value set at the System level.
-        :rtype: integer.
+                 If the value is not set at the Gene level, return None.
+        :rtype: integer. or None
         """
-        if self._inter_gene_max_space is not None:
-            return self._inter_gene_max_space
-        else:
-            return self._model.inter_gene_max_space
+        return self._inter_gene_max_space
 
 
     def __hash__(self):
@@ -354,6 +379,18 @@ class Exchangeable(ModelGene):
         :raise MacsypyError:
         """
         raise MacsypyError("Cannot add 'Exchangeable' to an Exchangeable")
+
+    @property
+    def status(self):
+        """
+        :return: The status of this gene. if the status is not define for this gene itself,
+                 return the status of the reference gene.
+        :rtype: :class:`macsypy.gene.GeneStatus` object
+        """
+        if self._status:
+            return self.status
+        else:
+            return self._ref.status
 
 
 class GeneStatus(Enum):
