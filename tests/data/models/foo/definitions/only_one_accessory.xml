@@ -1,0 +1,3 @@
+<model inter_gene_max_space="1" vers="2.0">
+    <gene name="flgB" presence="accessory" />
+</model>

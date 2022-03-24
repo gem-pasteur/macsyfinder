@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshM.hmm
 # target sequence database:        tests/data/base/one_replicon.fasta
-# output directed to file:         results/hmmer_results/MSH_mshM.search_hmm.out
+# output directed to file:         results_2/hmmer_results/MSH_mshM.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,7 +68,7 @@ Passed Vit filter:                         9  (0.004772); expected 1.9 (0.001)
 Passed Fwd filter:                         2  (0.00106045); expected 0.0 (1e-05)
 Initial search space (Z):               1886  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
-# Mc/sec: 14625.90
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 7312.95
 //
 [ok]

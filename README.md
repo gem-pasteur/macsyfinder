@@ -71,6 +71,28 @@ or to run a specific test
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 [![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
 
+## Models installation
+
+Models are no longer shipped along macsyfinder package. To install Models you can use `macsydata`.
+*macsydata* allow to manage models stored in [macsy-models](https://github.com/macsy-models). 
+Below some most useful commands.
+
+  * available: List Models available on macsy-models.
+  * search: Discover new packages.
+  * install: Install or upgarde packages.
+  * uninstall: Uninstall packages.
+  * cite: How to cite a package.
+  * ...
+
+For complete documentation see 
+[macsydata section on readthedoc](https://macsyfinder.readthedocs.io/en/latest/user_guide/installation.html#models-installation-with-macsydata)
+
+For models not stored in macsy-models the commands *available*, *search*, *installation from remote* or *upgrade from remote* 
+are **NOT** available.
+
+For models **Not** stored in *macsy-models*, you have to manage them semi-manually. 
+Download the archive (do not unarchive it), then use *macsydata* for the installation.
+
 ## Documentation
 
 You will find complete documentation for setting up your project on readthedocs
@@ -83,21 +105,34 @@ MacSyFinder is also available as [Docker container](https://hub.docker.com/repos
 
 ### how to use macsyfinder container with docker
 
-The computaion are perform under `msf` user in `/home/msf` inside the container.
+The computations are performed under `msf` user in `/home/msf` inside the container.
 So You have to mount a directory from the host in the container to exchange data (inputs data, and results)
 from the host and the container.
 The shared directory must be writable by the `msf` user or overwrite the user in the container by your id (see example below)
 
+Furthermore the models are no longer packaged along macsyfinder. So you have to install them by yourself.
+For that we provide a command line tool *macsydata* which is inspired by *pip*
+
+    macsydata search PACKNAME
+    macsydata install PACKNAME== or >=, or ... VERSION
+
+To work with Docker you have to install models in a directory which will be mounted in the image at run time
+
     mkdir shared_dir
     cd shared_dir
-    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:2.0rc1  --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+    # install desired models in my_models
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> macsydata install --target /home/msf/my_models MODELS
+    # run msf with these models
+    docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> --db-type gembase --models-dir=/home/msf/my_models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+
 
 ### how to use with singularity
 
 As the docker image is registered in docker hub you can also use it directly with [Singularity](https://sylabs.io/docs/).
 Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
 
-    singularity run -H ${HOME} docker://gempasteur/macsyfinder:2.0rc1 --db-type gembase --models-dir=/models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+    singularity run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models MODELS
+    singularity run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type gembase --models-dir=my_models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 ## Licence:
 

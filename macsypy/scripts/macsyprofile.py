@@ -1,5 +1,6 @@
+#########################################################################
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -244,7 +245,7 @@ class HmmProfile:
         :param b_grp: the Hmmer output lines to deal with (grouped by hit)
         :type b_grp: list of list of strings
         :returns: a sequence of hits
-        :rtype: list of :class:`macsypy.report.Hit` objects
+        :rtype: list of :class:`macsypy.report.CoreHit` objects
 
         """
         first_line = next(b_grp)
@@ -319,7 +320,6 @@ def init_logger(level='INFO', out=True):
     :rtype: :class:`logging.Logger` instance
     """
     logger = colorlog.getLogger('macsyprofile')
-    logging = colorlog.logging.logging
     if isinstance(level, str):
         level = getattr(logging, level)
     if out:

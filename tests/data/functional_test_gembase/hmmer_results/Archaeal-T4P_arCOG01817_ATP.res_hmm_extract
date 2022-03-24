@@ -1,4 +1,4 @@
-# gene: Archaeal-T4P_arCOG01817_ATP extract from /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20201209_19-08-32/hmmer_results/Archaeal-T4P_arCOG01817_ATP.search_hmm.out hmm output
+# gene: Archaeal-T4P_arCOG01817_ATP extract from /tmp/macsyfinder_test_gembase/hmmer_results/Archaeal-T4P_arCOG01817_ATP.search_hmm.out hmm output
 # profile length= 354
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500

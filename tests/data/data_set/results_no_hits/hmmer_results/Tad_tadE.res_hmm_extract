@@ -1,4 +1,4 @@
-# gene: Tad_tadE extract from results/hmmer_results/Tad_tadE.search_hmm.out hmm output
+# gene: Tad_tadE extract from results_no_hits/hmmer_results/Tad_tadE.search_hmm.out hmm output
 # profile length= 142
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500

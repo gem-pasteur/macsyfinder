@@ -11,9 +11,9 @@
    inkscape:version="0.91 r13725"
    id="svg8"
    version="1.1"
-   viewBox="0 0 319.99516 212.23054"
-   height="21.223053cm"
-   width="31.999516cm">
+   viewBox="0 0 320.70072 226.65931"
+   height="642.49878pt"
+   width="909.07288pt">
   <defs
      id="defs2">
     <marker
@@ -120,22 +120,22 @@
     </marker>
   </defs>
   <sodipodi:namedview
-     units="cm"
-     fit-margin-bottom="0"
-     fit-margin-right="0"
-     fit-margin-left="0"
-     fit-margin-top="0"
+     units="pt"
+     fit-margin-bottom="1"
+     fit-margin-right="1"
+     fit-margin-left="1"
+     fit-margin-top="1"
      inkscape:window-maximized="0"
      inkscape:window-y="119"
      inkscape:window-x="330"
-     inkscape:window-height="1047"
-     inkscape:window-width="1899"
+     inkscape:window-height="1102"
+     inkscape:window-width="2211"
      showgrid="false"
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="mm"
-     inkscape:cy="253.35348"
-     inkscape:cx="460.51249"
+     inkscape:cy="604.11808"
+     inkscape:cx="453.02462"
      inkscape:zoom="1.03"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
@@ -151,15 +151,23 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(87.666495,-528.97072)"
+     transform="translate(88.019272,-514.89473)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
+    <rect
+       style="fill:#ffe7e4;fill-opacity:1;stroke:#000000;stroke-width:0.19039601"
+       id="rect4216"
+       width="319.80475"
+       height="14.097239"
+       x="-87.571297"
+       y="-529.43994"
+       transform="scale(1,-1)" />
     <rect
        style="fill:#ffb5b5;fill-opacity:1;stroke:#000000;stroke-width:0.16724101"
        id="rect33554-5"
@@ -4964,15 +4972,15 @@
     </g>
     <text
        id="text33573"
-       y="539.06598"
-       x="222.38455"
+       y="525.33295"
+       x="-86.415878"
        style="font-style:normal;font-weight:normal;font-size:10.58329964px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
        xml:space="preserve"><tspan
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458299"
-         y="539.06598"
-         x="222.38455"
+         y="525.33295"
+         x="-86.415878"
          id="tspan33571"
-         sodipodi:role="line">E</tspan></text>
+         sodipodi:role="line">E- Computing solutions</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.93889999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"

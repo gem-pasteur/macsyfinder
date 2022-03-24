@@ -1,0 +1,69 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T1SS_omf.hmm
+# target sequence database:        tests/data/base/test_6.fasta
+# output directed to file:         functional_test_ordered_2_clusters_1_loner/hmmer_results/T1SS_omf.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       omf_cyano  [M=400]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    9.4e-35  111.7  27.2    1.1e-34  111.5  27.2    1.0  1  VICH001.B.00001.C001_01506  omf
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01506  omf
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  111.5  27.2   1.9e-36   1.1e-34       2     400 .]      25     406 ..      24     406 .. 0.95
+
+  Alignments for each domain:
+  == domain 1  score: 111.5 bits;  conditional E-value: 1.9e-36
+                   omf_cyano   2 LleayelAlesnpdLrasaaerdaaqeevneAraallPqlslsageaynyssgkredediesratsssltLtqsLfdsgawar 84 
+                                 + +a+++A +++pd   + +  +  +     A++ llP+ls sag   n+s++++ +        s  +t  q+L+ds +w +
+  VICH001.B.00001.C001_01506  25 IEQAWQQAKQQSPDAHIAELSVQLSEQDKYLAKSDLLPSLSGSAG--MNWSESQNGS-------SSYGATIEQTLWDSRKWSA 98 
+                                 569******************************************..*****99987.......45567889*********** PP
+
+                   omf_cyano  85 lqaaeaqvkiadetyrrkeqdllvrvtnAYyevlkareqlrlaqaqkeaaqrqLkdterrlsaGlgtitDVqeaqarlataea 167
+                                 l +a a    a+ + +++ ++l+ ++  AY+ +++a+  l laq++++   + L+++e+r+ aG+     + e +++    e 
+  VICH001.B.00001.C001_01506  99 LDKADADWVLAQLERNQAYNQLAHQLLSAYFALAEAQSNLTLAQQKQADGAQLLAIAEQRYLAGKIKSVELEELRVNQLDEES 181
+                                 *********************************************************************************** PP
+
+                   omf_cyano 168 qeveardaldaalaqLaqllGvqlqelavlapdplkdarlep..qsleqllkeAeqrnpsLlaarasqdaaraqveqaragll 248
+                                    +a+++l++ + qL  l+     +++v ++d+  + + +p   +l+++l  A+ + p+Ll a +++++++   +q + g+ 
+  VICH001.B.00001.C001_01506 182 TILNAQAELETKRSQLSILINA--SAPQVDEVDTQTPTPSWPfsAELDDWLTAAKDHSPELLIAIQKVAISQIAKQQSQSGYY 262
+                                 ********************99..7888888888888888985468************************************* PP
+
+                   omf_cyano 249 PtvdlvastrnsdsesdgvrnqkydtvsvglqltlpLYsGGavnasvrqAraevqraeaeldsarrsvvaevrrafnnlrasr 331
+                                 P++ ++a+++ +d+ +        ++ ++gl+l++p+   Ga+++    A  +   a+++  +      +++r++ +++    
+  VICH001.B.00001.C001_01506 263 PSLRASAGYQDGDQRN--------GEFNAGLTLSIPIDLNGATRSDNEKAHLNWLMAQQQQRKVEIGLHQNLRQQIQQVEIEW 337
+                                 **********999864........467889***************************************************** PP
+
+                   omf_cyano 332 asieayeqavkaArealratrqryqaGvrtnvdVLnAeqelynAkqelvearynylkaqlnLlsavGtl 400
+                                 ++i  + q+v    + lr+ +q + aG+    d+++  + l  Ak +l++  y y +++++Ll+  G+l
+  VICH001.B.00001.C001_01506 338 QQITMADQQVTHRDKVLRSKQQLFDAGLAEASDLIDVHNSLFRAKHNLASRWYSYWRQRIELLKLTGQL 406
+                                 ***************************************************************988876 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (400 nodes)
+Target sequences:                           58  (24928 residues searched)
+Passed MSV filter:                        10  (0.172414); expected 1.2 (0.02)
+Passed bias filter:                        3  (0.0517241); expected 1.2 (0.02)
+Passed Vit filter:                         2  (0.0344828); expected 0.1 (0.001)
+Passed Fwd filter:                         1  (0.0172414); expected 0.0 (1e-05)
+Initial search space (Z):                 58  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

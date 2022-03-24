@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2020  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -29,6 +29,7 @@ import argparse
 from typing import List
 
 import colorlog
+import pandas as pd
 
 from macsypy.config import MacsyDefaults
 
@@ -51,6 +52,7 @@ def merge_files(files, out, ignore=None, keep_first=None, header=""):
             first = False
         else:
             first = True
+        results = False
         for file in files:
             _log.debug(f"Merging {file}")
             with open(file) as fh_in:
@@ -61,22 +63,28 @@ def merge_files(files, out, ignore=None, keep_first=None, header=""):
                         continue
                     elif keep_first and line.startswith(keep_first):
                         continue
+                    else:
+                        f_out.write(line)
+                        results = True
+        if not results:
+            f_out.write(f"{ignore} No systems found:\n")
 
-                    f_out.write(line)
 
-
-def merge_and_reindex(files, out, header=""):
+def merge_and_reindex(files, out, ignore=None, header=""):
     """
     merge all_best_solutions and reindex the sol_id column
 
     :param files: the list of files to merge
     :type files: list of str
     :param str out: the path to the merged file
+    :param str ignore: a string which start the lines to ignore
+    :param str header: The header of the merged file
     """
     with open(out, 'w') as f_out:
         f_out.write(header)
         last_sol_id = 0
         first = True
+        results = False
         for file in files:
             _log.debug(f"Merging {file}")
             with open(file) as fh_in:
@@ -86,7 +94,7 @@ def merge_and_reindex(files, out, header=""):
                         new_line = line
                     elif line.startswith('sol_id'):
                         continue
-                    elif line.startswith('#'):
+                    elif ignore and line.startswith(ignore):
                         continue
                     elif line.startswith('\n'):
                         new_line = line
@@ -99,8 +107,30 @@ def merge_and_reindex(files, out, header=""):
                             raise ValueError() from None
                         fields[0] = str(new_sol_id)
                         new_line = '\t'.join(fields)
-                    f_out.write(new_line)
+                    else:
+                        f_out.write(new_line)
+                        results = True
             last_sol_id = new_sol_id
+        if not results:
+            f_out.write(f"{ignore} No systems found:\n")
+
+
+def merge_summary(files, out, header=""):
+    """
+
+    :param files: the list of files to merge
+    :param str out: the path to the merged file
+    :param str header: The header of the merged file
+    :return:
+    """
+    data = []
+    for one_file in files:
+        datum = pd.read_csv(one_file, sep="\t", comment="#", index_col="replicon")
+        data.append(datum)
+    merged = pd.concat(data, axis=0)
+    with open(out, 'w') as f_out:
+        f_out.write(header)
+        merged.to_csv(f_out, sep="\t")
 
 
 def merge_results(results_dirs, out_dir='.'):
@@ -110,50 +140,50 @@ def merge_results(results_dirs, out_dir='.'):
     :type results_dirs: list of str
     :param str out_dir: the path to the directory where to store the merged files
     """
-    out_file = os.path.join(out_dir, 'merged_all_best_solutions.tsv')
-    _log.info(f"Merging 'all_best_solutions.tsv' in to '{out_file}'")
-    all_best_solutions_files = [os.path.join(d, 'all_best_solutions.tsv') for d in results_dirs]
+    filename_to_merge, ext = 'all_best_solutions', 'tsv'
+    out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+    _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
+    all_best_solutions_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     header = f"""# parallel_msf {macsypy.__version__}
-# merged all_best_solutions.tsv
-# systems found:
+# merged {filename_to_merge}.{ext}
+# Systems found:
 """
-    merge_and_reindex(all_best_solutions_files, out_file, header=header)
+    merge_and_reindex(all_best_solutions_files, out_file, ignore= "#", header=header)
 
-    out_file = os.path.join(out_dir, 'merged_best_solution.tsv')
-    _log.info(f"Merging 'best_solution.tsv' in to '{out_file}'")
-    best_solution_files = [os.path.join(d, 'best_solution.tsv') for d in results_dirs]
-    header = f"""# parallel_msf {macsypy.__version__}
-# merged best_solution.tsv
-# systems found:
+    for filename_to_merge, ext, header in [('best_solution', 'tsv', 'Systems found'),
+                                           ('all_systems', 'tsv', 'Systems found'),
+                                           ('best_solution_multisystems', 'tsv', 'Multisystems found'),
+                                           ('best_solution_loners', 'tsv', 'Loners found'),
+                                           ]:
+        out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+        _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
+        best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
+        header = f"""# parallel_msf {macsypy.__version__}
+# merged {filename_to_merge}.{ext}
+# {header}:
 """
-    merge_files(best_solution_files, out_file, ignore="#", keep_first="replicon", header=header)
+        merge_files(best_solution_files, out_file, ignore="#", keep_first="replicon", header=header)
 
-    out_file = os.path.join(out_dir, "merged_all_systems.tsv")
-    _log.info(f"Merging 'all_systems.tsv' in to '{out_file}'")
-    all_systems_files = [os.path.join(d, 'all_systems.tsv') for d in results_dirs]
-    header = f"""# parallel_msf {macsypy.__version__}
-# merged all_systems.tsv
-# systems found:
+    for filename_to_merge, ext, header in [('all_systems', 'txt', 'Systems found'),
+                                           ('rejected_clusters', 'txt', 'Rejected clusters'),
+                                           ]:
+        out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+        _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
+        best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
+        header = f"""# parallel_msf {macsypy.__version__}
+# merged {filename_to_merge}.{ext}
+# {header}:
 """
-    merge_files(all_systems_files, out_file, ignore="#", keep_first="replicon", header=header)
+        merge_files(best_solution_files, out_file, ignore="#", header=header)
 
-    out_file = os.path.join(out_dir, 'merged_all_systems.txt')
-    _log.info(f"Merging 'all_systems.txt' in to '{out_file}'")
-    all_systems_files = [os.path.join(d, 'all_systems.txt') for d in results_dirs]
+    filename_to_merge, ext = 'best_solution_summary', 'tsv'
+    out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+    _log.info(f"Merging '{filename_to_merge}' in to '{out_file}'")
+    all_summary_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
     header = f"""# parallel_msf {macsypy.__version__}
-# merged all_systems.txt
-# systems found:
+# merged {filename_to_merge}.{ext}
 """
-    merge_files(all_systems_files, out_file, ignore="#", header=header)
-
-    out_file = os.path.join(out_dir, 'merged_rejected_clusters.txt')
-    _log.info(f"Merging 'rejected_clusters.txt' in to '{out_file}'")
-    all_rejected_files = [os.path.join(d, 'rejected_clusters.txt') for d in results_dirs]
-    header = f"""# parallel_msf {macsypy.__version__}
-# merged rejected_clusters.txt
-# Rejected clusters:
-"""
-    merge_files(all_rejected_files, out_file, ignore="#", header=header)
+    merge_summary(all_summary_files, out_file, header=header)
 
 
 def parse_args(args:  List[str]) -> argparse.Namespace:

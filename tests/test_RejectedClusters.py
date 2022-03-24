@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -25,7 +25,7 @@
 import os
 import argparse
 
-from macsypy.hit import Hit, ValidHit, HitWeight
+from macsypy.hit import CoreHit, ModelHit, HitWeight
 from macsypy.config import Config, MacsyDefaults
 from macsypy.gene import CoreGene, ModelGene, GeneStatus
 from macsypy.profile import ProfileFactory
@@ -63,12 +63,12 @@ class TestRejectedCluster(MacsyTest):
         gene_2 = ModelGene(c_gene_2, model)
         model.add_accessory_gene(gene_2)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         r_c = RejectedClusters(model, c1, ["bla"])
         self.assertListEqual(r_c.clusters, [c1])
@@ -85,16 +85,16 @@ class TestRejectedCluster(MacsyTest):
         gene_2 = ModelGene(c_gene_2, model)
         model.add_accessory_gene(gene_2)
 
-        #     Hit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #     CoreHit(gene, model, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
         #         profile_coverage, sequence_coverage, begin_match, end_match
-        h10 = Hit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h10 = ValidHit(h10, gene_1, GeneStatus.MANDATORY)
-        h20 = Hit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h20 = ValidHit(h20, gene_2, GeneStatus.ACCESSORY)
-        h40 = Hit(c_gene_1, "h40", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
-        v_h40 = ValidHit(h40, gene_1, GeneStatus.MANDATORY)
-        h50 = Hit(c_gene_2, "h50", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
-        v_h50 = ValidHit(h50, gene_2, GeneStatus.ACCESSORY)
+        h10 = CoreHit(c_gene_1, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_2, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h40 = CoreHit(c_gene_1, "h40", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        v_h40 = ModelHit(h40, gene_1, GeneStatus.MANDATORY)
+        h50 = CoreHit(c_gene_2, "h50", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        v_h50 = ModelHit(h50, gene_2, GeneStatus.ACCESSORY)
         c1 = Cluster([v_h10, v_h20], model, self.hit_weights)
         c2 = Cluster([v_h40, v_h50], model, self.hit_weights)
         r_c = RejectedClusters(model, [c1, c2], ["bla"])
@@ -125,12 +125,12 @@ These clusters have been rejected because:
         gene_sctn = ModelGene(c_gene_sctn, model)
         model.add_accessory_gene(gene_sctn)
 
-        hit_1 = Hit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_1 = ValidHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
-        hit_2 = Hit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_2 = ValidHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
-        hit_3 = Hit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
-        v_hit_3 = ValidHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
+        hit_1 = CoreHit(c_gene_gspd, "hit_1", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_1 = ModelHit(hit_1, gene_gspd, GeneStatus.MANDATORY)
+        hit_2 = CoreHit(c_gene_sctj, "hit_2", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_2 = ModelHit(hit_2, gene_sctj, GeneStatus.ACCESSORY)
+        hit_3 = CoreHit(c_gene_sctn, "hit_3", 803, "replicon_id", 1, 1.0, 1.0, 1.0, 1.0, 10, 20)
+        v_hit_3 = ModelHit(hit_3, gene_sctn, GeneStatus.ACCESSORY)
         rc = RejectedClusters(model, [Cluster([v_hit_1, v_hit_2], model, self.hit_weights),
                                       Cluster([v_hit_3], model, self.hit_weights)],
                                       ["bla bla"])

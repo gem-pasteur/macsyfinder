@@ -1,0 +1,6 @@
+# macsyfinder 20220323.dev
+# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results_1 --relative-path
+# Loners found:
+replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
+VICH001.B.00001.C001	set_1/T2SS	T2SS_gspO	T4P_pilD	VICH001.B.00001.C001_02308	2205	mandatory	291	2.600e-89	295.800	1.000	0.832	28	269
+

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -198,24 +198,27 @@ def do_download(args: argparse.Namespace) -> str:
         _log.critical(str(err))
 
 
-def _find_all_installed_packages() -> ModelRegistry:
+def _find_all_installed_packages(models_dir=None) -> ModelRegistry:
     """
     :return: all models installed
     """
     defaults = MacsyDefaults()
-    config = Config(defaults, argparse.Namespace())
+    args = argparse.Namespace()
+    if models_dir is not None:
+        args.models_dir = models_dir
+    config = Config(defaults, args)
     model_dirs = config.models_dir()
     registry = ModelRegistry()
     for model_dir in model_dirs:
         try:
-            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix):
+            for model_loc in scan_models_dir(model_dir, profile_suffix=config.profile_suffix()):
                 registry.add(model_loc)
         except PermissionError as err:
             _log.warning(f"{model_dir} is not readable: {err} : skip it.")
     return registry
 
 
-def _find_installed_package(pack_name) -> Optional[ModelLocation]:
+def _find_installed_package(pack_name, models_dir=None) -> Optional[ModelLocation]:
     """
     search if a package names *pack_name* is already installed
 
@@ -223,7 +226,7 @@ def _find_installed_package(pack_name) -> Optional[ModelLocation]:
     :return: The model location corresponding to the `pack_name`
     :rtype: :class:`macsypy.registries.ModelLocation` object
     """
-    registry = _find_all_installed_packages()
+    registry = _find_all_installed_packages(models_dir)
     try:
         return registry[pack_name]
     except KeyError:
@@ -246,8 +249,15 @@ def do_install(args: argparse.Namespace) -> None:
         remote = True
         user_req = requirements.Requirement(args.package)
 
+    if args.target:
+        dest = os.path.realpath(args.target)
+        if os.path.exists(dest) and not os.path.isdir(dest):
+            raise RuntimeError("'{}' already exist and is not a directory.")
+        elif not os.path.exists(dest):
+            os.makedirs(dest)
+
     pack_name = user_req.name
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.target)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         try:
@@ -330,6 +340,8 @@ def do_install(args: argparse.Namespace) -> None:
             raise RuntimeError("'{}' already exist and is not a directory.")
         elif not os.path.exists(dest):
             os.makedirs(dest)
+    elif args.target:
+        dest = args.target
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
@@ -373,7 +385,7 @@ def do_uninstall(args: argparse.Namespace) -> None:
     :rtype: None
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         shutil.rmtree(pack.path)
@@ -393,7 +405,7 @@ def do_info(args: argparse.Namespace) -> None:
     :rtype: None
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
 
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
@@ -412,7 +424,7 @@ def do_list(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
-    registry = _find_all_installed_packages()
+    registry = _find_all_installed_packages(models_dir=args.models_dir)
     for model_loc in registry.models():
         try:
             pack = Package(model_loc.path)
@@ -483,7 +495,7 @@ To cite MacSyFinder:
 def do_help(args: argparse.Namespace) -> None:
     """
     Display on stdout the content of readme file
-    if the readme file does nopt exists display a message to the user see :method:`macsypy.package.help`
+    if the readme file does nopt exists display a message to the user see :meth:`macsypy.package.help`
 
     :param args: the arguments passed on the command line (the package name)
     :type args: :class:`argparse.Namespace` object
@@ -491,7 +503,7 @@ def do_help(args: argparse.Namespace) -> None:
     :raise ValueError: if the package name is not known.
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         print(pack.help())
@@ -504,8 +516,9 @@ def do_help(args: argparse.Namespace) -> None:
 def do_check(args: argparse.Namespace) -> None:
     """
 
-    :param args:
-    :return:
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
     """
     pack = Package(args.path)
     errors, warnings = pack.check()
@@ -540,6 +553,67 @@ I'll be really happy, if you fix warnings above, before to publish these models.
 
         _log.log(25, f"\tgit tag {pack.metadata['vers']}")
         _log.log(25, f"\tgit push --tags")
+
+
+def do_show_definition(args: argparse.Namespace) -> None:
+    """
+    display on stdout the definition if only a package or sub-package is specified
+    display all model definitions in the corresponding package or subpackage
+
+    for instance
+
+    `TXSS+/bacterial T6SSii T6SSiii`
+
+    display models *TXSS+/bacterial/T6SSii* and *TXSS+/bacterial/T6SSiii*
+
+    `TXSS+/bacterial all` or `TXSS+/bacterial`
+
+    display all models contains in *TXSS+/bacterial subpackage*
+
+    :param args: the arguments passed on the command line
+    :type args: :class:`argparse.Namespace` object
+    :rtype: None
+    """
+    def display_definition(path):
+        return open(path, 'r').read()
+
+    model_family, *models = args.model
+    pack_name, *sub_family = model_family.split('/')
+
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
+
+    if inst_pack_loc:
+        if not models or 'all' in models:
+            root_def_name = model_family if sub_family else None
+            try:
+                path_2_display = sorted(
+                    [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions(root_def_name=root_def_name)]
+                )
+            except ValueError as err:
+                _log.error(f"'{'/'.join(sub_family)}' not found in package '{pack_name}'.")
+                sys.tracebacklimit = 0
+                raise ValueError() from None
+
+            for fqn, def_path in path_2_display:
+                print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+        else:
+            fqn_to_get = [f'{model_family}/{m}' for m in models]
+            for fqn in fqn_to_get:
+                try:
+                    def_path = inst_pack_loc.get_definition(fqn).path
+                    print(f"""<!-- {fqn} {def_path} -->
+{display_definition(def_path)}
+""", file=sys.stdout)
+                except ValueError as err:
+                    _log.error(f"Model '{fqn}' not found.")
+                    continue
+    else:
+        _log.error(f"Package '{pack_name}' not found.")
+        sys.tracebacklimit = 0
+        raise ValueError() from None
+
 
 ##################################
 # parsing command line arguments #
@@ -635,6 +709,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    default=False,
                                    help='Install to the MacSYFinder user install directory for your platform. '
                                         'Typically ~/.macsyfinder/data')
+    install_subparser.add_argument('-t', '--target', '--models-dir',
+                                   dest='target',
+                                   help='Install packages into <TARGET> dir instead in canonical location')
     install_subparser.add_argument('-U', '--upgrade',
                                    action='store_true',
                                    default=False,
@@ -651,6 +728,10 @@ def build_arg_parser() -> argparse.ArgumentParser:
     uninstall_subparser.set_defaults(func=do_uninstall)
     uninstall_subparser.add_argument('package',
                                      help='Package name.')
+    uninstall_subparser.add_argument('--target, --models-dir',
+                                     dest='models_dir',
+                                     help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ##########
     # search #
     ##########
@@ -680,6 +761,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     info_subparser.add_argument('package',
                                 help='Package name.')
     info_subparser.set_defaults(func=do_info)
+    info_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ########
     # list #
     ########
@@ -699,11 +783,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                 help="The name of Model organization"
                                      "(default macsy-models))"
                                 )
+    list_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     ##########
     # freeze #
     ##########
     freeze_subparser = subparsers.add_parser('freeze',
                                              help='List installed models in requirements format.')
+    freeze_subparser.add_argument('--models-dir',
+                                   help='the path of the alternative root directory containing package instead used '
+                                        'canonical locations')
     freeze_subparser.set_defaults(func=do_freeze)
     ########
     # cite #
@@ -711,17 +801,22 @@ def build_arg_parser() -> argparse.ArgumentParser:
     cite_subparser = subparsers.add_parser('cite',
                                            help='How to cite a package.')
     cite_subparser.set_defaults(func=do_cite)
+    cite_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     cite_subparser.add_argument('package',
                                 help='Package name.')
     ########
     # help #
     ########
-    cite_subparser = subparsers.add_parser('help',
+    help_subparser = subparsers.add_parser('help',
                                            help='get online documentation.')
-    cite_subparser.set_defaults(func=do_help)
-    cite_subparser.add_argument('package',
+    help_subparser.set_defaults(func=do_help)
+    help_subparser.add_argument('package',
                                 help='Package name.')
-
+    help_subparser.add_argument('--models-dir',
+                                help='the path of the alternative root directory containing package instead used '
+                                     'canonical locations')
     #########
     # check #
     #########
@@ -732,6 +827,19 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                  nargs='?',
                                  default=os.getcwd(),
                                  help='the path to root directory models to check')
+
+    ##############
+    # definition #
+    ##############
+    def_subparser = subparsers.add_parser('definition',
+                                            help='show a model definition ')
+    def_subparser.set_defaults(func=do_show_definition)
+    def_subparser.add_argument('model',
+                               nargs='+',
+                               help='the family and name(s) of a model(s) eg: TXSS T6SS T4SS or TFF/bacterial T2SS')
+    def_subparser.add_argument('--models-dir',
+                               help='the path to the alternative root directory containing packages instead to the '
+                                    'canonical locations')
     return parser
 
 
@@ -761,8 +869,8 @@ def init_logger(level='INFO', out=True):
     :return: logger
     :rtype: :class:`logging.Logger` instance
     """
+
     logger = colorlog.getLogger('macsydata')
-    logging = colorlog.logging.logging
     handlers = []
     if out:
         stdout_handler = colorlog.StreamHandler(sys.stderr)

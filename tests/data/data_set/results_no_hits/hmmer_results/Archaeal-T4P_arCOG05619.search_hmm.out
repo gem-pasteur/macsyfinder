@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG05619.hmm
 # target sequence database:        tests/data/base/test_1.fasta
-# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG05619.search_hmm.out
+# output directed to file:         results_no_hits/hmmer_results/Archaeal-T4P_arCOG05619.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

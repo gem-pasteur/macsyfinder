@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG08272.hmm
 # target sequence database:        tests/data/base/one_replicon.fasta
-# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG08272.search_hmm.out
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG08272.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

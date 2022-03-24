@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.
     Authors: Sophie Abby, Bertrand Néron
-    Copyright © 2014-2021  Institut Pasteur (Paris), and CNRS.
+    Copyright © 2014-2022  Institut Pasteur (Paris), and CNRS.
     See the COPYRIGHT file for details
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
     See the COPYING file for details.
@@ -17,17 +17,21 @@ This object has methods to extract and filter Hmmer raw outputs (see :ref:`gener
 For matches selected with the filtering parameters, *"Hit"* objects (:class:`macsypy.HMMReport.Hit`) are built. 
 
 
+.. _report_api:
 
-HMMReport API reference
-=======================
+report API reference
+====================
+
+HMMReport
+=========
 
 .. autoclass:: macsypy.report.HMMReport
    :members:
    :private-members:
    :special-members:
 
-GeneralHMMReport API reference
-==============================
+GeneralHMMReport
+================
 
 .. autoclass:: macsypy.report.GeneralHMMReport
    :members:
