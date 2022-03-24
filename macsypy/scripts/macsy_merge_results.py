@@ -34,7 +34,7 @@ import pandas as pd
 from macsypy.config import MacsyDefaults
 
 
-def merge_files(files, out, ignore=None, keep_first=None, header=""):
+def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str = None, header: str = "") -> None:
     """
 
     :param files: the list of files to merge
@@ -70,7 +70,7 @@ def merge_files(files, out, ignore=None, keep_first=None, header=""):
             f_out.write(f"{ignore} No systems found:\n")
 
 
-def merge_and_reindex(files, out, ignore=None, header=""):
+def merge_and_reindex(files: List[str], out: str, ignore: str = None, header: str = "") -> None:
     """
     merge all_best_solutions and reindex the sol_id column
 
@@ -83,6 +83,7 @@ def merge_and_reindex(files, out, ignore=None, header=""):
     with open(out, 'w') as f_out:
         f_out.write(header)
         last_sol_id = 0
+        new_sol_id = None
         first = True
         results = False
         for file in files:
@@ -103,19 +104,21 @@ def merge_and_reindex(files, out, ignore=None, header=""):
                         try:
                             new_sol_id = int(fields[0]) + last_sol_id
                         except ValueError as err:
-                            _log.critical(f"Cannot reindex int({fields[0]}) + {last_sol_id}: {err}")
-                            raise ValueError() from None
+                            msg = f"Cannot reindex int({fields[0]}) + {last_sol_id}: {err}"
+                            _log.critical(msg)
+                            raise ValueError(msg) from None
                         fields[0] = str(new_sol_id)
                         new_line = '\t'.join(fields)
-                    else:
-                        f_out.write(new_line)
-                        results = True
-            last_sol_id = new_sol_id
+
+                    f_out.write(new_line)
+                    results = True
+            if new_sol_id is not None:  # The previous results are empty
+                last_sol_id = new_sol_id
         if not results:
             f_out.write(f"{ignore} No systems found:\n")
 
 
-def merge_summary(files, out, header=""):
+def merge_summary(files: List[str], out: str, header: str = "") -> None:
     """
 
     :param files: the list of files to merge
@@ -133,7 +136,7 @@ def merge_summary(files, out, header=""):
         merged.to_csv(f_out, sep="\t")
 
 
-def merge_results(results_dirs, out_dir='.'):
+def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     """
 
     :param results_dirs: The list of macsyfinder results directories to merge
@@ -148,7 +151,7 @@ def merge_results(results_dirs, out_dir='.'):
 # merged {filename_to_merge}.{ext}
 # Systems found:
 """
-    merge_and_reindex(all_best_solutions_files, out_file, ignore= "#", header=header)
+    merge_and_reindex(all_best_solutions_files, out_file, ignore="#", header=header)
 
     for filename_to_merge, ext, header in [('best_solution', 'tsv', 'Systems found'),
                                            ('all_systems', 'tsv', 'Systems found'),
@@ -197,6 +200,8 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     description = """Merge the different files from several macsyfinder results in one.
     
     - merge the 'best_solution.tsv' in to 'merged_best_solution.tsv'
+    - merge the 'best_multisystems.tsv' in to 'merged_best_multisystems.tsv'
+    - merge the 'best_loners.tsv' in to 'merged_best_loners.tsv'
     - merge the 'all_best_solutions.tsv' in to `merged_all_best_solutions'
     - merge the 'all_systems.tsv' in to 'merged_all_systems.tsv'
     - merge the 'all_systems.txt' in to 'merged_all_systems.txt'
