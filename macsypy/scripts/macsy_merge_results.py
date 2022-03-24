@@ -29,6 +29,7 @@ import argparse
 from typing import List
 
 import colorlog
+import pandas as pd
 
 from macsypy.config import MacsyDefaults
 
@@ -69,13 +70,14 @@ def merge_files(files, out, ignore=None, keep_first=None, header=""):
             f_out.write(f"{ignore} No systems found:\n")
 
 
-def merge_and_reindex(files, out, header=""):
+def merge_and_reindex(files, out, ignore=None, header=""):
     """
     merge all_best_solutions and reindex the sol_id column
 
     :param files: the list of files to merge
     :type files: list of str
     :param str out: the path to the merged file
+    :param str ignore: a string which start the lines to ignore
     :param str header: The header of the merged file
     """
     with open(out, 'w') as f_out:
@@ -92,7 +94,7 @@ def merge_and_reindex(files, out, header=""):
                         new_line = line
                     elif line.startswith('sol_id'):
                         continue
-                    elif line.startswith('#'):
+                    elif ignore and line.startswith(ignore):
                         continue
                     elif line.startswith('\n'):
                         new_line = line
@@ -128,7 +130,7 @@ def merge_summary(files, out, header=""):
     merged = pd.concat(data, axis=0)
     with open(out, 'w') as f_out:
         f_out.write(header)
-        data.to_csv(f_out, sep="\t")
+        merged.to_csv(f_out, sep="\t")
 
 
 def merge_results(results_dirs, out_dir='.'):
@@ -146,7 +148,7 @@ def merge_results(results_dirs, out_dir='.'):
 # merged {filename_to_merge}.{ext}
 # Systems found:
 """
-    merge_and_reindex(all_best_solutions_files, out_file, header=header)
+    merge_and_reindex(all_best_solutions_files, out_file, ignore= "#", header=header)
 
     for filename_to_merge, ext, header in [('best_solution', 'tsv', 'Systems found'),
                                            ('all_systems', 'tsv', 'Systems found'),
@@ -157,19 +159,19 @@ def merge_results(results_dirs, out_dir='.'):
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
         header = f"""# parallel_msf {macsypy.__version__}
-# merged {best_solution}.{ext}
+# merged {filename_to_merge}.{ext}
 # {header}:
 """
         merge_files(best_solution_files, out_file, ignore="#", keep_first="replicon", header=header)
 
-    for filename_to_merge, ext, header in [('merged_all_systems', 'txt', 'Systems found'),
+    for filename_to_merge, ext, header in [('all_systems', 'txt', 'Systems found'),
                                            ('rejected_clusters', 'txt', 'Rejected clusters'),
                                            ]:
         out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
         header = f"""# parallel_msf {macsypy.__version__}
-# merged {best_solution}.{ext}
+# merged {filename_to_merge}.{ext}
 # {header}:
 """
         merge_files(best_solution_files, out_file, ignore="#", header=header)
@@ -181,7 +183,7 @@ def merge_results(results_dirs, out_dir='.'):
     header = f"""# parallel_msf {macsypy.__version__}
 # merged {filename_to_merge}.{ext}
 """
-    merge_summary(all_rejected_files, out_file, ignore="#", header=header)
+    merge_summary(all_summary_files, out_file, header=header)
 
 
 def parse_args(args:  List[str]) -> argparse.Namespace:

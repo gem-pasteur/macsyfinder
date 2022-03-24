@@ -1,0 +1,143 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilU.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T4P_pilU.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       pilU.mafft-edit  [M=342]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+   1.9e-170  562.8   0.1   2.2e-170  562.6   0.1    1.0  1  GCF_000006845_003200  
+   1.2e-127  422.1   0.1   1.5e-127  421.8   0.1    1.0  1  GCF_000006845_016440  
+    6.7e-96  317.7   0.8    7.9e-96  317.5   0.8    1.0  1  GCF_000006845_016430  
+    6.2e-29   97.6   0.0      1e-28   96.9   0.0    1.3  1  GCF_000006845_014310  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_003200  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  562.6   0.1  4.7e-173  2.2e-170       5     341 ..      16     352 ..      12     353 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 562.6 bits;  conditional E-value: 4.7e-173
+       pilU.mafft-edit   5 llkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqelvGm 93 
+                            l+++ ++kgsdlf+t+ +ppa+k+dGk+t++++epl+ e++++++ +i+s kq ++f+ t+ecnfais  ++ rfrv+a++q++ + +
+  GCF_000006845_003200  16 WLRHMNKNKGSDLFVTTHFPPAMKLDGKITRITDEPLTAEKCMEIAFSIMSAKQAEEFSSTNECNFAISLPDTSRFRVNAMIQRGATAL 104
+                           6899************************************************************************************* PP
+
+       pilU.mafft-edit  94 vlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGldte 182
+                           v+r i+ kip +++l+lp+ lk+val+krGlv++vG tGsGkst+la+l++yrnens+Ghi+t+edp+efvhehk+c++tqrevG+dte
+  GCF_000006845_003200 105 VFRAITSKIPKFESLNLPPALKDVALKKRGLVIFVGGTGSGKSTSLASLIDYRNENSFGHIITIEDPIEFVHEHKNCIITQREVGVDTE 193
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 183 sfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrlipkk 271
+                            + +alkn+lrqapdviliGeirdretm+yaiafaetGhlc+atlhans+nqaldrii+++peerreqll dlslnl+a+++qrl+p+ 
+  GCF_000006845_003200 194 NWMAALKNTLRQAPDVILIGEIRDRETMDYAIAFAETGHLCMATLHANSTNQALDRIINFFPEERREQLLTDLSLNLQAFISQRLVPRD 282
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 272 dgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsa 341
+                           +gkgr+aavevlln+pl+s+li++G++he+kevmkks+ lGmqtfdq l++lye+g+is +dal+nadsa
+  GCF_000006845_003200 283 GGKGRVAAVEVLLNSPLISELIHNGNIHEIKEVMKKSTTLGMQTFDQHLYQLYEKGEISLQDALKNADSA 352
+                           ********************************************************************97 PP
+
+>> GCF_000006845_016440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  421.8   0.1  3.2e-130  1.5e-127       3     342 .]      40     379 ..      38     379 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 421.8 bits;  conditional E-value: 3.2e-130
+       pilU.mafft-edit   3 ekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqelv 91 
+                           + l ++  ++++sd+ i+ ++pp+lk++  +t++ +++l+ ee++ ++ ++++ +q + f+r  e n+++++++  r+r +a++ q+ +
+  GCF_000006845_016440  40 DRLCETAEAQNASDILISKGFPPSLKINSALTPQPQKALTGEETAAIAASTMNAEQSEIFRRDGEINYSVQSRSGTRYRANAYYSQGSA 128
+                           56666777899****************************************************************************** PP
+
+       pilU.mafft-edit  92 GmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGld 180
+                           G+vlrri+  ip + el lpe lk++a+a rGl+++vG tGsGkstt+a+++++rn+   Ghi+t+edp+ef+++ +rc+ tqre+G+d
+  GCF_000006845_016440 129 GLVLRRINHVIPQMRELGLPEKLKDLAVAPRGLLIIVGPTGSGKSTTMATMLEHRNKTLPGHIVTIEDPIEFIYKPRRCIFTQREIGVD 217
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 181 tesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrlip 269
+                           t  ++ a++n++rq+pdv+ iGe+r+re+meya++ a+tGhlc+ tlhan+a q+l+ri++++p+e+++q+l+d++lnl ++++qrl  
+  GCF_000006845_016440 218 TINWQTAVQNAMRQSPDVVCIGEVRSRESMEYAMQLAQTGHLCIFTLHANTAPQSLERILNFYPKEQHNQILIDIALNLTGIICQRLAL 306
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 270 kkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrnadsan 342
+                           kkd+ gr+a+v++l+ntp + d+i kG++ ++ ++m+ ++  Gmqt+dq lfely +g isye+alr++ san
+  GCF_000006845_016440 307 KKDKTGRTAVVDLLINTPAIQDFILKGDLMNISKIMETAKTDGMQTMDQNLFELYRHGIISYEEALRQSVSAN 379
+                           ********************************************************************99988 PP
+
+>> GCF_000006845_016430  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  317.5   0.8   1.7e-98   7.9e-96       2     338 ..       3     339 ..       2     343 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 317.5 bits;  conditional E-value: 1.7e-98
+       pilU.mafft-edit   2 lekllkllverkgsdlfitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGrfrvsaflqqel 90 
+                           + +ll+   ++k+sdl+++ ++ p+++v+G +++++  ++s ee+ ++v+++++++q++ ++++ e +f+ +  ++ rfrv+af     
+  GCF_000006845_016430   3 ITDLLAFGAKNKASDLHLSSGISPMIRVHGDMRRINLPEMSAEEVGNMVTSVMNDHQRKIYQQNLEVDFSFELPNVARFRVNAFNTGRG 91 
+                           7789999999******************************************************************************* PP
+
+       pilU.mafft-edit  91 vGmvlrrietkiptldelklpevlkevalakrGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvhehkrcvvtqrevGl 179
+                           + +v+r+i+ ++ +l+elk p++++++a + rG+vl+ G tGsGksttlaa+++y ne +  hilt+edp+efvh+ k++++ qre+  
+  GCF_000006845_016430  92 PAAVFRTIPSTVLSLEELKAPSIFQKIAESPRGMVLVTGPTGSGKSTTLAAMINYINETQPAHILTIEDPIEFVHQSKKSLINQRELHQ 180
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 180 dtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihlvpeerreqllldlslnlralvaqrli 268
+                            t sf  al ++lr+ pdvil+Ge+rd et+  a++ aetGhl + tlh+  a +++dri++++p+ ++e +   ls  l a+++q+l+
+  GCF_000006845_016430 181 HTLSFANALSSALREDPDVILVGEMRDPETIGLALTAAETGHLVFGTLHTTGAAKTVDRIVDVFPAGEKEMVRSMLSESLTAVISQNLL 269
+                           ***************************************************************************************** PP
+
+       pilU.mafft-edit 269 pkkdgkgraaavevllntplvsdlirkGevhelkevmkksrelGmqtfdqalfelyeagkisyedalrna 338
+                           +++dg gr+a  e+l+  p v +lir  +++++ +v++  r  Gmqt+dq+l +l+ +g i+ e + r+a
+  GCF_000006845_016430 270 KTHDGDGRVASHEILIANPAVRNLIRENKITQINSVLQTGRASGMQTMDQSLQSLVRQGLIAPEATRRRA 339
+                           *************************************************************998877776 PP
+
+>> GCF_000006845_014310  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   96.9   0.0   2.1e-31     1e-28       2     242 ..     176     424 ..     175     452 .. 0.86
+
+  Alignments for each domain:
+  == domain 1  score: 96.9 bits;  conditional E-value: 2.1e-31
+       pilU.mafft-edit   2 lekllkllverkgsdl...fitaevppalkvdGkvtkvskeplskeealtlvrailsekqladfertkecnfaisaegiGr...frvsa 84 
+                           ++k l   + +++sd+   f   ++   ++vdG++++v + p++    l    +++s   +++ +  +++ + ++ ++ G+   frvs+
+  GCF_000006845_014310 176 IHKTLSDALRSGASDIhfeFYEHNARIRFRVDGQLREVVQPPIAVRGQLASRIKVMSRLDISEKRIPQDGRMQLTFQKGGKpvdFRVST 264
+                           67788888889999983334456778889***************9999999999********************9999997777***** PP
+
+       pilU.mafft-edit  85 flqqelvGmvlrrietkip..tldelklpevlkevala...k.rGlvllvGatGsGksttlaalvgyrnenssGhiltvedpvefvheh 167
+                           +       +v+r ++       +d+l + +  k++ l+   +  G+vl+ G tGsGk+ +l + ++  n++s   i t edp e     
+  GCF_000006845_014310 265 LPTLFGEKVVMRILNSDAAslNIDQLGFEPFQKKLLLEaihRpYGMVLVTGPTGSGKTVSLYTCLNILNTESV-NIATAEDPAEINLPG 352
+                           98766666666666665541168999999998888554111336*************************9987.79*********9999 PP
+
+       pilU.mafft-edit 168 krcvvtqrevGldtesfevalknslrqapdviliGeirdretmeyaiafaetGhlclatlhansanqaldriihl 242
+                            + v  + + Gl   +f +alk+ lrq pd+i++Geird et + ai+ a+tGh+ ++tlh+n+a  +l r++++
+  GCF_000006845_014310 353 INQVNVNDKQGL---TFAAALKSFLRQDPDIIMVGEIRDLETADIAIKAAQTGHMVFSTLHTNNAPATLSRMLNM 424
+                           999999999999...699******************************************************997 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (342 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        83  (0.0440085); expected 37.7 (0.02)
+Passed bias filter:                       77  (0.0408271); expected 37.7 (0.02)
+Passed Vit filter:                        15  (0.00795334); expected 1.9 (0.001)
+Passed Fwd filter:                         4  (0.00212089); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               4  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.03
+# Mc/sec: 6268.24
+//
+[ok]

@@ -1,0 +1,4 @@
+# macsyfinder 20220323.dev
+# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results_2 --relative-path
+replicon	set_1/T4P	set_1/Archaeal-T4P	set_1/ComM	set_1/MSH	set_1/T2SS	set_1/T4bP	set_1/Tad
+GCF_000006845	1	0	0	0	0	0	0

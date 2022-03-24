@@ -1,0 +1,56 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilO.hmm
+# target sequence database:        tests/data/base/test_1.fasta
+# output directed to file:         results_no_hits/hmmer_results/T4P_pilO.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilO  [M=152]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    0.00015   13.4   0.0    0.00015   13.4   0.0    1.4  2  VICH001.B.00001.C001_01390  
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01390  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -6.8   2.9         1        49       3      22 ..       7      26 ..       6      26 .. 0.73
+   2 !   13.4   0.0     3e-06   0.00015      26      79 ..      88     140 ..      59     231 .. 0.84
+
+  Alignments for each domain:
+  == domain 1  score: -6.8 bits;  conditional E-value: 1
+                    T4P_pilO  3 llviilllllllalgyflll 22
+                                l++i++ +++ll+ +  l++
+  VICH001.B.00001.C001_01390  7 LWIIVITVGTLLGCAILLVW 26
+                                68888888888887766665 PP
+
+  == domain 2  score: 13.4 bits;  conditional E-value: 3e-06
+                    T4P_pilO  26 leelkqleaeeaqleaeiaqkqkklkqlkqakeelaeaeaelaevlaqlpsrkd 79 
+                                 +++ +q   ++++ +a+ia  q++ kql q+ +el++aea++ e+ ++l+ +  
+  VICH001.B.00001.C001_01390  88 WQSSDQTVRSLEESRASIAAAQQN-KQLVQYSKELDDAEAYYGEAFKRLAYQDG 140
+                                 77888999999**********888.******************99999988543 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (152 nodes)
+Target sequences:                           49  (20794 residues searched)
+Passed MSV filter:                        14  (0.285714); expected 1.0 (0.02)
+Passed bias filter:                        8  (0.163265); expected 1.0 (0.02)
+Passed Vit filter:                         3  (0.0612245); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0204082); expected 0.0 (1e-05)
+Initial search space (Z):                 49  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 316.07
+//
+[ok]
