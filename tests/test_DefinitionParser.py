@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -114,6 +114,25 @@ class TestModelParser(MacsyTest):
         sctJ = m1.get_gene('sctJ')
         self.assertTrue(sctJ.is_exchangeable)
 
+    def test_model_w_unkown_attr(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/model_w_unknown_attribute')]
+        with self.assertRaises(MacsypyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         "unable to parse model definition 'foo/model_w_unknown_attribute' : "
+                         "The model definition model_w_unknown_attribute.xml has an unknow attribute 'multi-loci'. "
+                         "Please fix the definition.")
+
+    def test_gene_w_unkown_attr(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/gene_w_unknown_attribute')]
+        with self.assertRaises(MacsypyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         "unable to parse model definition 'foo/gene_w_unknown_attribute' : "
+                         "The model definition gene_w_unknown_attribute.xml has an unknown attribute 'multi-system' for a gene."
+                         " Please fix the definition.")
 
     def test_wo_presence(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/fail_wo_presence')]
@@ -212,7 +231,16 @@ class TestModelParser(MacsyTest):
                          " 'min_mandatory_genes_required': 6 must be lesser or equal than the number of 'mandatory' "
                          "components in the model: 5")
 
-#
+    def test_only_one_accessory(self):
+        model_2_detect = [self.model_registry['foo'].get_definition('foo/only_one_accessory')]
+        with self.assertRaises(ModelInconsistencyError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         f"model 'only_one_accessory' is not consistent: there is only one gene in your model. " \
+                         f"So its status should be 'mandatory'.")
+
+
     def test_bad_max_nb_genes(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_max_nb_genes')]
         with self.assertRaises(SyntaxError) as context:
@@ -295,7 +323,7 @@ class TestModelParser(MacsyTest):
         self.assertEqual(m5.inter_gene_max_space, 20)
         m5_flgB = m5.get_gene('flgB')
         m5_flgC = m5.get_gene('flgC')
-        self.assertEqual(m5_flgB.inter_gene_max_space, 20)
+        self.assertIsNone(m5_flgB.inter_gene_max_space)
         self.assertEqual(m5_flgC.inter_gene_max_space, 2)
         m6 = self.model_bank['foo/model_6']
         m6_flgC = m6.get_gene('flgC')
@@ -388,15 +416,16 @@ class TestModelParser(MacsyTest):
         # max_nb_genes is specified in xml
         # no user configuration on this
         self.cfg = Config(MacsyDefaults(), self.args)
-        model_fqn = 'foo/model_6'  # 4 genes in this model
+        model_fqn = 'foo/model_6'  # 4 genes in this model but xml specify 3
         self.cfg = Config(MacsyDefaults(), self.args)
         self.parser = DefinitionParser(self.cfg, self.model_bank, self.gene_bank,
                                        self.model_registry, self.profile_factory)
 
+
         models_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
         self.parser.parse(models_2_detect)
         m = self.model_bank[model_fqn]
-        self.assertEqual(m.max_nb_genes, 4)
+        self.assertEqual(m.max_nb_genes, 3)
 
         # max_nb_genes is specified from configuration
         # so this value must overload the value read from xml

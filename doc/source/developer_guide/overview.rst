@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2021  Institut Pasteur (Paris),and CNRS.
+    Copyright © 2014-2022  Institut Pasteur (Paris),and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -45,8 +45,9 @@ Below a short glossary to fix the vocabulary used in MacSyFinder
     Solution
 
         It's a systems combination for one replicon.
-        Technically it's a list of Systems. The best solution for a replicon,
-        is the combination of all systems found in this replicon which maximize the score.
+        The best solution for a replicon, is the combination of all systems found in this replicon which
+        maximize the score.
+
 
 MacSyFinder project structure
 -----------------------------
@@ -58,12 +59,6 @@ A brief overview of the files and directory constituting the MacSyFinder project
     doc
         The project is documented using sphinx.
         All sources files needed to generate this documentation is in the directory *doc*
-
-    etc
-        This directory contains a template to configure macsyfinder.
-        It's allow to set some configuration available for each run and avoid to specify them
-        at each run on the command line.
-        This file is in *ini* format.
 
     macsypy
         This the MacSyFinder python library
@@ -97,15 +92,14 @@ A brief overview of the files and directory constituting the MacSyFinder project
     README.md
         Brief information about the project.
 
-    requirements.txt
-        The list of python dependencies needed by macsyfinder.
-        do not forget to install hmmsearch which is not handle by python packet manager `pip`
-
-    requirements_dev.txt
-        The list of extra dependencies needed if you want to contribute to the code.
-
     setup.py
         The installation recipe.
+
+    setup.cfg
+        The installation recipe.
+
+    pyproject.toml
+        tools to use to build the project.
 
 
 MacSyFinder architecture overview
@@ -137,7 +131,7 @@ In this section I'll give you an idea of the macsyfinder functioning at very hig
 
 As all program the entrypoint is the main function
 The goal of `macsyfinder.main` is to parse the command line.
-Then to creates a :ref:`config` object and also initialize the logger.
+Then to creates a :ref:`configuration` object and also initialize the logger.
 After that it call main_search_systems which contains the macsyfinder logic
 
 The first main_search_systems task is to create models asked by the user on the command line.

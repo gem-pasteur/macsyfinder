@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG01818.hmm
 # target sequence database:        tests/data/base/one_replicon.fasta
-# output directed to file:         results/hmmer_results/Archaeal-T4P_arCOG01818.search_hmm.out
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG01818.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -288,7 +288,7 @@ Passed Vit filter:                        57  (0.0302227); expected 1.9 (0.001)
 Passed Fwd filter:                        13  (0.0068929); expected 0.0 (1e-05)
 Initial search space (Z):               1886  [actual number of targets]
 Domain search space  (domZ):              13  [number of targets reported over threshold]
-# CPU time: 0.04u 0.00s 00:00:00.04 Elapsed: 00:00:00.05
-# Mc/sec: 4783.66
+# CPU time: 0.06u 0.00s 00:00:00.06 Elapsed: 00:00:00.07
+# Mc/sec: 3416.90
 //
 [ok]

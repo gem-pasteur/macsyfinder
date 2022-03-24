@@ -1,0 +1,135 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/models/functional/profiles/T1SS_omf.hmm
+# target sequence database:        tests/data/base/test_12.fasta
+# output directed to file:         functional_test_multi_system_out_system/hmmer_results/T1SS_omf.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       omf_cyano  [M=400]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    2.8e-53  172.4  20.4    4.4e-53  171.7  20.4    1.3  1  VICH001.B.00001.C001_01562  omf
+    7.3e-35  111.7  27.2    8.6e-35  111.5  27.2    1.0  1  VICH001.B.00001.C001_01506  omf
+    5.5e-29   92.4  25.2      3e-28   90.0  23.4    2.1  1  VICH001.B.00001.C001_01360  omf
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01562  omf
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  171.7  20.4   2.9e-54   4.4e-53       1     400 []      31     427 ..      23     427 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 171.7 bits;  conditional E-value: 2.9e-54
+                   omf_cyano   1 tLleayelAlesnpdLrasaaerdaaqeevneAraallPqlslsageaynyssgk..redediesratsssltLtqsLfdsga 81 
+                                 tL +a++  l snp+L+ +  + + ++   +    a+lP++ l ag  y+  +      +++++ +   ++ltLtq ++d +a
+  VICH001.B.00001.C001_01562  31 TLEQAVSITLASNPELKSAFNQFKSREYDAEASSGAYLPKIDLDAGIGYEAINPAesSGNRNTDLTRKDATLTLTQLIWDGSA 113
+                                 689*********************99999999999******9999964443333200233455999999************** PP
+
+                   omf_cyano  82 w.arlqaaeaqvkiadetyrrkeqdllvrvtnAYyevlkareqlrlaqaqkeaaqrqLkdterrlsaGlgtitDVqeaqarla 163
+                                     +    a++++ + ++ ++  +++++v++ Y ++ ka e+l l++ + ++ +   +d ++r+  G g+  DV + +arla
+  VICH001.B.00001.C001_01562 114 TlNDMDRTAAEAEADRYQLLADASNMALEVAKIYLDATKASEILTLSENNLAIHKDIYRDIKKRADSGIGSTADVTQVEARLA 196
+                                 *9********************************************************************************* PP
+
+                   omf_cyano 164 taeaqeveardaldaalaqLaqllGvqlqelavlapdplkdarlepqsleqllkeAeqrnpsLlaarasqdaaraqveqarag 246
+                                 +a+ + v a+++l    +q++ l+G+   e+ +l+  +  ++  +p +le++l+ A++++p++++a+a +daar q +q +a 
+  VICH001.B.00001.C001_01562 197 KAHSNLVAAQNNLFDIYTQFRRLVGQ---EPVSLEFPRADQN-AIPPTLENALNMAQENHPVIKVAQADVDAARFQYKQSKAP 275
+                                 **************************...7777776555444.6999************************************ PP
+
+                   omf_cyano 247 llPtvdlvastrnsdsesdgvrnqkydtvsvglqltlpLYsGGavnasvrqAraevqraeaeldsarrsvvaevrrafnnlra 329
+                                   Pt+++ a    s  ++ g   +++d+ s+ l+l+ +LY+GG  + ++  A+++ +r++ + ++  r+v   +r ++  l  
+  VICH001.B.00001.C001_01562 276 NYPTLSFEAAQ--SWRNDAGGIEGSSDELSAMLRLRYNLYNGGSDSDRTESAAYQLNRSKDLREKTFRTVEEGLRLSWSALDL 356
+                                 *******9975..5567788889999********************************************************* PP
+
+                   omf_cyano 330 srasieayeqavkaArealratrqryqaGvrtnvdVLnAeqelynAkqelvearynylkaqlnLlsavGtl 400
+                                  +++ + +   v +A + + + r++yq+G+rt +d+Ln e+el +A++ + +ary +  a+  +  a+G l
+  VICH001.B.00001.C001_01562 357 TLQQKQFLADHVDSASKTVVSYRKQYQIGQRTLLDLLNTENELFEARKDYLDARYAEQYAKYRVMNASGNL 427
+                                 ********************************************************999999998888876 PP
+
+>> VICH001.B.00001.C001_01506  omf
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  111.5  27.2   5.7e-36   8.6e-35       2     400 .]      25     406 ..      24     406 .. 0.95
+
+  Alignments for each domain:
+  == domain 1  score: 111.5 bits;  conditional E-value: 5.7e-36
+                   omf_cyano   2 LleayelAlesnpdLrasaaerdaaqeevneAraallPqlslsageaynyssgkredediesratsssltLtqsLfdsgawar 84 
+                                 + +a+++A +++pd   + +  +  +     A++ llP+ls sag   n+s++++ +        s  +t  q+L+ds +w +
+  VICH001.B.00001.C001_01506  25 IEQAWQQAKQQSPDAHIAELSVQLSEQDKYLAKSDLLPSLSGSAG--MNWSESQNGS-------SSYGATIEQTLWDSRKWSA 98 
+                                 569******************************************..*****99987.......45567889*********** PP
+
+                   omf_cyano  85 lqaaeaqvkiadetyrrkeqdllvrvtnAYyevlkareqlrlaqaqkeaaqrqLkdterrlsaGlgtitDVqeaqarlataea 167
+                                 l +a a    a+ + +++ ++l+ ++  AY+ +++a+  l laq++++   + L+++e+r+ aG+     + e +++    e 
+  VICH001.B.00001.C001_01506  99 LDKADADWVLAQLERNQAYNQLAHQLLSAYFALAEAQSNLTLAQQKQADGAQLLAIAEQRYLAGKIKSVELEELRVNQLDEES 181
+                                 *********************************************************************************** PP
+
+                   omf_cyano 168 qeveardaldaalaqLaqllGvqlqelavlapdplkdarlep..qsleqllkeAeqrnpsLlaarasqdaaraqveqaragll 248
+                                    +a+++l++ + qL  l+     +++v ++d+  + + +p   +l+++l  A+ + p+Ll a +++++++   +q + g+ 
+  VICH001.B.00001.C001_01506 182 TILNAQAELETKRSQLSILINA--SAPQVDEVDTQTPTPSWPfsAELDDWLTAAKDHSPELLIAIQKVAISQIAKQQSQSGYY 262
+                                 ********************99..7888888888888888985468************************************* PP
+
+                   omf_cyano 249 PtvdlvastrnsdsesdgvrnqkydtvsvglqltlpLYsGGavnasvrqAraevqraeaeldsarrsvvaevrrafnnlrasr 331
+                                 P++ ++a+++ +d+ +        ++ ++gl+l++p+   Ga+++    A  +   a+++  +      +++r++ +++    
+  VICH001.B.00001.C001_01506 263 PSLRASAGYQDGDQRN--------GEFNAGLTLSIPIDLNGATRSDNEKAHLNWLMAQQQQRKVEIGLHQNLRQQIQQVEIEW 337
+                                 **********999864........467889***************************************************** PP
+
+                   omf_cyano 332 asieayeqavkaArealratrqryqaGvrtnvdVLnAeqelynAkqelvearynylkaqlnLlsavGtl 400
+                                 ++i  + q+v    + lr+ +q + aG+    d+++  + l  Ak +l++  y y +++++Ll+  G+l
+  VICH001.B.00001.C001_01506 338 QQITMADQQVTHRDKVLRSKQQLFDAGLAEASDLIDVHNSLFRAKHNLASRWYSYWRQRIELLKLTGQL 406
+                                 ***************************************************************988876 PP
+
+>> VICH001.B.00001.C001_01360  omf
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   90.0  23.4     2e-29     3e-28       5     398 ..      80     476 ..      77     477 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 90.0 bits;  conditional E-value: 2e-29
+                   omf_cyano   5 ayelAlesnpdLrasaaerdaaqeevneAraallPqlslsage.aynyssgkredediesratsssltLtqsLfdsgaw.... 82 
+                                  +e Al+++p L  ++a+++ aq    +A a     l+l a    ++ s+ ++ +   ++ +  ++ltL ++ +d   w    
+  VICH001.B.00001.C001_01360  80 LIEEALQHSPSLEMAMARLKGAQGFARQAGAIRSFDLGLAASAtESKVSERYQSATPPDGWNDYGTLTLNFQ-YDFDFWgknr 161
+                                 5899*************************99999899888886677777777777777999999*****987.5555443203 PP
+
+                   omf_cyano  83 arlqaaeaqvkiadetyrrkeqdllvrvtnAYyevlkareqlrlaqaqkeaaqrqLkdterrlsaGlgtitDVqeaqarlata 165
+                                 a++ aa  ++ +a+ +  ++   +  +++nAY e+++     ++ +a+ ++  +++++ e+r++ Gl t++ V++a+a  a++
+  VICH001.B.00001.C001_01360 162 AAVVAATSELAAAEAESVAARLMISTSIANAYAELARLYANQETVHAALQVRNKTVELLEKRYANGLETLGSVSQAKAVAASV 244
+                                 55555555555565555566666667889*******99888899999999999****************************** PP
+
+                   omf_cyano 166 eaqeveardaldaalaqLaqllGvqlqelavlapdplkdarlepqsleqllkeAeqrnpsLlaarasqdaaraqveqaragll 248
+                                 ea+    ++  +   + La l+G+ ++  a+ + +p ++ + +    +++      +++ + aar   +aa +qv  a+a++ 
+  VICH001.B.00001.C001_01360 245 EAELLGIQESIQLQKNALAALVGQGPDRAASIE-EPHITLTSRYGLPSEAGVGLLGHRADITAARWRAEAAAQQVGIAQAQFY 326
+                                 ************************666655555.5555553444444677777899*************************** PP
+
+                   omf_cyano 249 PtvdlvastrnsdsesdgvrnqkydtvsvglqltlpLYsGGavnasvrqAraevqraeaeldsarrsvvaevrrafnnlrasr 331
+                                 P v l+a    +    d  +    d   +g  + lpL++GG ++ +   A a++q+a a+ +    + + ev+   ++ +a  
+  VICH001.B.00001.C001_01360 327 PDVTLSAFIGYQAFGLDHLFDSGNDAGAIGPAIYLPLFTGGRLEGQLTSAEARYQEAVAQYNGTLVQALYEVADVVTSSQALQ 409
+                                 ********9999999999999999*********************************************************** PP
+
+                   omf_cyano 332 asieayeqavkaArealratrqryqaGvrtnvdVLnAeqelynAkqelvearynylkaqlnLlsavG 398
+                                 a i+  eqav++A++al+ + +ryq+G+ t +dVL Ae+ l+n ++ lv+ + +     l+L  a+G
+  VICH001.B.00001.C001_01360 410 ARINKTEQAVQQAEQALHIATNRYQGGLATYLDVLVAEESLLNNQRALVNLQSRAFSLDLALIHALG 476
+                                 **************************************************99998888888877776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (400 nodes)
+Target sequences:                           45  (18720 residues searched)
+Passed MSV filter:                         9  (0.2); expected 0.9 (0.02)
+Passed bias filter:                        4  (0.0888889); expected 0.9 (0.02)
+Passed Vit filter:                         3  (0.0666667); expected 0.0 (0.001)
+Passed Fwd filter:                         3  (0.0666667); expected 0.0 (1e-05)
+Initial search space (Z):                 45  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 374.40
+//
+[ok]

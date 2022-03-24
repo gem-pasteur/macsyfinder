@@ -1,7 +1,7 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
     using systems modelling and similarity search.            
     Authors: Sophie Abby, Bertrand Néron                                 
-    Copyright © 2014-2021 Institut Pasteur (Paris) and CNRS.
+    Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
     See the COPYRIGHT file for details                                    
     MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
     See the COPYING file for details.  
@@ -30,6 +30,12 @@ For those who had designed MacSyFinder's models for Version 1 and would like to 
  
  "exchangeable" is not a feature anymore, but is replaced by the keyword "exchangeables". 
 
+
+.. note::
+ 
+ These changes in the grammar used to specify model is also accompanied by a change on how to organize folders with models and profiles.
+ In particular, the new file architecture enables an :ref:`easier shipping<publish_package>` of the developed macsy-models. See :ref:`here<model_package>` for more details.
+  
 
 Here follow some examples of updates from v1 to v2.
 

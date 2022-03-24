@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshN.hmm
 # target sequence database:        tests/data/base/test_1.fasta
-# output directed to file:         results/hmmer_results/MSH_mshN.search_hmm.out
+# output directed to file:         results_no_hits/hmmer_results/MSH_mshN.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -55,7 +55,7 @@ Passed Vit filter:                         1  (0.0204082); expected 0.0 (0.001)
 Passed Fwd filter:                         1  (0.0204082); expected 0.0 (1e-05)
 Initial search space (Z):                 49  [actual number of targets]
 Domain search space  (domZ):               1  [number of targets reported over threshold]
-# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
-# Mc/sec: inf
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 422.12
 //
 [ok]

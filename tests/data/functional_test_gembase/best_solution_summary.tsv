@@ -1,11 +1,11 @@
-# macsyfinder 20210420.dev
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type=gembase --models-dir=tests/data//models/ --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --relative-path --sequence-db tests/data/base/gembase.fasta -w 12 --previous-run tests/data/functional_test_gembase/ -o functional_test_gembase
-replicon	TFF-SF/MSH	TFF-SF/T2SS	TFF-SF/T4P	TFF-SF/T4bP	TFF-SF/Tad
-GCF_000005845	0	1	1	0	0
-GCF_000006725	0	1	1	0	0
-GCF_000006745	1	1	2	1	0
-GCF_000006765	0	3	1	0	1
-GCF_000006845	0	0	1	0	0
-GCF_000006905	0	1	0	0	1
-GCF_000006925	0	0	1	0	0
-GCF_000006945	0	0	1	0	0
+# macsyfinder 20220120.dev
+# tests/run_tests.py -vv
+replicon	TFF-SF/MSH	TFF-SF/T2SS	TFF-SF/T4P	TFF-SF/T4bP	TFF-SF/Tad	TFF-SF/Archaeal-T4P	TFF-SF/ComM
+GCF_000005845	0	1	2	0	0	0	0
+GCF_000006725	0	1	2	0	0	0	0
+GCF_000006745	1	1	2	1	0	0	0
+GCF_000006765	0	3	1	0	1	0	0
+GCF_000006845	0	0	1	0	0	0	0
+GCF_000006905	0	1	0	0	1	0	0
+GCF_000006925	0	0	1	0	0	0	0
+GCF_000006945	0	0	2	0	0	0	0

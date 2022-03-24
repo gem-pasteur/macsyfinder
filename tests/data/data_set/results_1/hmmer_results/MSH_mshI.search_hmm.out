@@ -1,0 +1,92 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshI.hmm
+# target sequence database:        tests/data/base/VICH001.B.00001.C001.prt
+# output directed to file:         results_1/hmmer_results/MSH_mshI.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshI  [M=159]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    3.9e-36  121.9   5.9    9.1e-36  120.7   5.9    1.7  1  VICH001.B.00001.C001_00406  D ATG TGA 425296 426735 Valid VC0
+    0.00031   18.2   1.3    0.00057   17.3   1.3    1.4  1  VICH001.B.00001.C001_02508  C GTG TAG 2804001 2804591 Valid V
+     0.0079   13.6   3.2     0.0097   13.4   0.0    2.4  2  VICH001.B.00001.C001_00545  C ATG TAG 565832 568420 Valid VC0
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_00406  D ATG TGA 425296 426735 Valid VC0399 1440 @NP_230053.1@ VC0399 1 425296 426735 | MSHA bio
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  120.7   5.9   1.1e-38   9.1e-36       1     159 []     287     445 ..     287     445 .. 1.00
+
+  Alignments for each domain:
+  == domain 1  score: 120.7 bits;  conditional E-value: 1.1e-38
+                    MSH_mshI   1 vnLYqaeLrPerellslrrlalailgllvllllasavvewqnseleaqlaqleselqaleaelseLearlaarqpdaelvqel 83 
+                                 +n+Yq+ L+P+re  +l +l+la+l+l v+lll  a v +qn  +++q ++ +++ q+l+ +++ L +++a + p+++ ++++
+  VICH001.B.00001.C001_00406 287 INFYQDHLKPKREKFTLTNLLLAWLALSVVLLLGYAGVGYQNWVIQQQWQEQQQHNQSLTEQAAHLRQQVAVHLPSPAKQAAI 369
+                                 8********************************************************************************** PP
+
+                    MSH_mshI  84 elleeeleakqkLlgkLsqlelleskgyaslmadLArvadkdvsLqriqlnekavtleGlarsaaaVPaWierlkq 159
+                                  ++++e+ +kq+ l  ++q  + ++ gy+ +++ LA++a +d+sL  i l+ ++++++Glar++aa+P Wi ++kq
+  VICH001.B.00001.C001_00406 370 GRIKQEISSKQQALDAIGQFDVAQQTGYSGVLNSLAQLARSDISLSSITLDSSQLNVQGLARDPAAIPNWISQFKQ 445
+                                 **************************************************************************98 PP
+
+>> VICH001.B.00001.C001_02508  C GTG TAG 2804001 2804591 Valid VC2633 591 @NP_232261.1@ VC2633 1 2804001 2804591 | fimbr
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   17.3   1.3   6.8e-07   0.00057      24     158 ..      25     148 ..       4     149 .. 0.70
+
+  Alignments for each domain:
+  == domain 1  score: 17.3 bits;  conditional E-value: 6.8e-07
+                    MSH_mshI  24 ilgllvllllasavvewqnseleaqlaqleselqaleaelseLearlaarqpdaelvqelelleeeleakqkLlgkLsqlell 106
+                                  + + + +lla+ +   + + l  q+a  ++    l++++ +L++++a+ + ++e         + l ++   +++L+q + +
+  VICH001.B.00001.C001_02508  25 LGLVTLGVLLAVLMQFAAGEYLGGQMALQQERIGYLQQHIFSLDQQIAKLKIAEEEH-------KALLTRLTVVEQLQQ-KRN 99 
+                                 333334455555555566677888888888889999999999999996555554444.......445577777888888.556 PP
+
+                    MSH_mshI 107 eskgyaslmadLArvadkdvsLqriqlnekavtleGlarsaaaVPaWierlk 158
+                                 +   + ++m +   ++++ v  ++i++n++++ ++G+  s a   + +++l+
+  VICH001.B.00001.C001_02508 100 KTTEFMNQMPN---LIPEGVYVDKIKMNGHQIEITGISDSTARLATMLDNLE 148
+                                 66677666665...589**********************9999888888775 PP
+
+>> VICH001.B.00001.C001_00545  C ATG TAG 565832 568420 Valid VC0535 2589 @NP_230186.1@ VC0535 1 565832 568420 | DNA mism
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   13.4   0.0   1.1e-05    0.0097      63     126 ..     355     418 ..     340     438 .. 0.91
+   2 ?   -1.7   1.7      0.48     4e+02      44      90 ..     520     565 ..     502     588 .. 0.61
+
+  Alignments for each domain:
+  == domain 1  score: 13.4 bits;  conditional E-value: 1.1e-05
+                    MSH_mshI  63 lseLearlaarqpdaelvqelelleeeleakqkLlgkLsqlelleskgyaslmadLArvadkdv 126
+                                 ++++ arla r++++++ ++l+ + ++l   +  + +L+q +l+e    a+ m +L  + ++ +
+  VICH001.B.00001.C001_00545 355 IERILARLALRSARPRDLARLRHAMQQLPELHSVMSELKQPHLTELRTHAEPMDELCDLLERAI 418
+                                 677889**************************************************98877666 PP
+
+  == domain 2  score: -1.7 bits;  conditional E-value: 0.48
+                    MSH_mshI  44 eleaqlaqleselqaleaelseLearlaarqpdaelvqelelleeel 90 
+                                  l+++ ++l  e+q  e     L  +l + q+ a+ v++l+ l ++l
+  VICH001.B.00001.C001_00545 520 VLNSKSRALALEKQLWEELFDLLMPHLEQLQQLAASVAQLDVL-QNL 565
+                                 4455555555555555555555555555555555555555533.333 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (159 nodes)
+Target sequences:                         2528  (843509 residues searched)
+Passed MSV filter:                       267  (0.105617); expected 50.6 (0.02)
+Passed bias filter:                      129  (0.0510285); expected 50.6 (0.02)
+Passed Vit filter:                        25  (0.00988924); expected 2.5 (0.001)
+Passed Fwd filter:                         7  (0.00276899); expected 0.0 (1e-05)
+Initial search space (Z):               2528  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.03
+# Mc/sec: 4470.60
+//
+[ok]

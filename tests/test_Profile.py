@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -79,22 +79,31 @@ class TestProfile(MacsyTest):
 
 
     def test_ga_threshold(self):
+        # No GA threshold
         model = Model("foo/T2SS", 10)
         gene_name = 'abc'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
-
         path = self.model_location.get_profile("abc")
         profile = Profile(gene, self.cfg, path)
         self.assertFalse(profile.ga_threshold)
 
+        # GA threshold line ends with ;
         gene_name = 'T5aSS_PF03797'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
-
         path = self.model_location.get_profile("T5aSS_PF03797")
         profile = Profile(gene, self.cfg, path)
         self.assertTrue(profile.ga_threshold)
+
+        # GA threshold line do NOT ends with ;
+        gene_name = 'PF05930.13'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+        path = self.model_location.get_profile("PF05930.13")
+        profile = Profile(gene, self.cfg, path)
+        self.assertTrue(profile.ga_threshold)
+
 
     def test_str(self):
         model = Model("foo/T2SS", 10)

@@ -2,7 +2,7 @@
 # MacSyFinder - Detection of macromolecular systems in protein dataset  #
 #               using systems modelling and similarity search.          #
 # Authors: Sophie Abby, Bertrand Neron                                  #
-# Copyright (c) 2014-2021  Institut Pasteur (Paris) and CNRS.           #
+# Copyright (c) 2014-2022  Institut Pasteur (Paris) and CNRS.           #
 # See the COPYRIGHT file for details                                    #
 #                                                                       #
 # This file is part of MacSyFinder package.                             #
@@ -106,7 +106,7 @@ class Profile:
         """
         Parse the HMM profile to extract the length and the presence of GA bit threshold
 
-        :return: the lentgh, presence of ga bit threshold
+        :return: the length, presence of ga bit threshold
         :rtype: tuple(int length, bool ga_threshold)
         """
         length = None
@@ -118,12 +118,13 @@ class Profile:
                 elif l.startswith('GA'):
                     header, t1, t2 = l.split()
                     if t2.endswith(';'):
-                        try:
-                            t1 = float(t1)
-                            t2 = float(t2[:-1])
-                            ga_threshold = True
-                        except ValueError:
-                            continue
+                        t2 = t2[:-1]
+                    try:
+                        t1 = float(t1)
+                        t2 = float(t2)
+                        ga_threshold = True
+                    except ValueError:
+                        continue
                 elif l.startswith('STATS LOCAL'):
                     break
         return length, ga_threshold

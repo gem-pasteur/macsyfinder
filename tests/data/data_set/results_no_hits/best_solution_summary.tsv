@@ -1,0 +1,4 @@
+# macsyfinder 20220323.dev
+# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --sequence-db tests/data/base/test_1.fasta --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results_no_hits --relative-path
+replicon	set_1/T2SS	set_1/ComM	set_1/MSH	set_1/T4P	set_1/T4bP	set_1/Tad	set_1/Archaeal-T4P
+VICH001.B.00001.C001	0	0	0	0	0	0	0

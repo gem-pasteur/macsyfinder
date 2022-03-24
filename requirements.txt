@@ -1,5 +1,0 @@
-colorlog
-pyyaml
-packaging
-networkx
-pandas
