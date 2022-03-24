@@ -1,0 +1,24 @@
+INFO     : macsy_merge_results: L 145 : Merging 'all_best_solutions.tsv' in to 'merged_results_one_res_no_hits/merged_all_best_solutions.tsv'
+DEBUG    : macsy_merge_results: L 89 : Merging tests/data/data_set/results_no_hits/all_best_solutions.tsv
+INFO     : macsy_merge_results: L 147 : Merging 'all_best_solutions.tsv' in to 'merged_results_one_res_no_hits/merged_all_best_solutions.tsv'
+DEBUG    : macsy_merge_results: L 90 : Merging tests/data/data_set/results_no_hits/all_best_solutions.tsv
+DEBUG    : macsy_merge_results: L 90 : Merging tests/data/data_set/results_2/all_best_solutions.tsv
+INFO     : macsy_merge_results: L 161 : Merging 'best_solution.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution.tsv'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/best_solution.tsv
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/best_solution.tsv
+INFO     : macsy_merge_results: L 161 : Merging 'all_systems.tsv' in to 'merged_results_one_res_no_hits/merged_all_systems.tsv'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/all_systems.tsv
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/all_systems.tsv
+INFO     : macsy_merge_results: L 161 : Merging 'best_solution_multisystems.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution_multisystems.tsv'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/best_solution_multisystems.tsv
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/best_solution_multisystems.tsv
+INFO     : macsy_merge_results: L 161 : Merging 'best_solution_loners.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution_loners.tsv'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/best_solution_loners.tsv
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/best_solution_loners.tsv
+INFO     : macsy_merge_results: L 173 : Merging 'all_systems.txt' in to 'merged_results_one_res_no_hits/merged_all_systems.txt'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/all_systems.txt
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/all_systems.txt
+INFO     : macsy_merge_results: L 173 : Merging 'rejected_clusters.txt' in to 'merged_results_one_res_no_hits/merged_rejected_clusters.txt'
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_no_hits/rejected_clusters.txt
+DEBUG    : macsy_merge_results: L 57 : Merging tests/data/data_set/results_2/rejected_clusters.txt
+INFO     : macsy_merge_results: L 183 : Merging 'best_solution_summary' in to 'merged_results_one_res_no_hits/merged_best_solution_summary.tsv'
