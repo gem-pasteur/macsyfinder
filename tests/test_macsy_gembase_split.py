@@ -107,6 +107,22 @@ class TestSplit(MacsyTest):
         #####################################
 
         os.mkdir(seq_dir, mode=0o444)
+        try:
+            with self.catch_io(out=True):
+                with self.assertRaises(IOError):
+                    macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
+                stdout = sys.stdout.getvalue().strip()
+                # remove ANSI color code
+                stdout = stdout[8:-4]
+            self.assertEqual(stdout,
+                             f'{seq_dir} is not writable')
+        finally:
+            shutil.rmtree(seq_dir)
+
+        ######################################
+        # the -o option parent is NOT writable
+        ######################################
+        os.chmod(self.test_dir, mode=0o444)
         with self.catch_io(out=True):
             with self.assertRaises(IOError):
                 macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
@@ -114,4 +130,4 @@ class TestSplit(MacsyTest):
             # remove ANSI color code
             stdout = stdout[8:-4]
         self.assertEqual(stdout,
-                         f'{seq_dir} is not writable')
+                         f"Cannot create {seq_dir} : [Errno 13] Permission denied: '{seq_dir}'")
