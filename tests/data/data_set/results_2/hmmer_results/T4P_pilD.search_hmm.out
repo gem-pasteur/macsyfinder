@@ -1,0 +1,59 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilD.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T4P_pilD.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilD  [M=218]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    2.2e-82  272.7   8.5    2.8e-82  272.3   8.5    1.1  1  GCF_000006845_014280  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_014280  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  272.3   8.5   1.5e-85   2.8e-82       1     218 []      28     264 ..      28     264 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 272.3 bits;  conditional E-value: 1.5e-85
+              T4P_pilD   1 vviyrlPk........................klslvvprsrcpkCghklkpleniPvlSylllrGkCraCkekislrYplvElltgll 65 
+                           vviyr+P                         +++l+ p+s+cpkC+ ++++++niP++SylllrGkC +C++kis+rYpl+Elltg+l
+  GCF_000006845_014280  28 VVIYRVPVmmergwtvfakehlnlpltddesrTFNLMKPDSCCPKCRVPIRAWQNIPIVSYLLLRGKCASCQTKISIRYPLIELLTGVL 116
+                           9**************************************************************************************** PP
+
+              T4P_pilD  66 fllvalkyglsletlalllllsilialaviDldtqllpdkltlpllvlglifsllelkevslkesllgavaglllllliyllfklllkk 154
+                           f lva++yg+s+ tl  l+l+++li+l++iD+dtq+lpd++tlpl++lglif+l    +v+l++++lgavag+ +l+l++ ++kll++k
+  GCF_000006845_014280 117 FGLVAWQYGWSWITLGGLILTAFLISLTFIDADTQYLPDSMTLPLIWLGLIFNLDG-GFVPLQSAVLGAVAGYSSLWLLCAVYKLLTGK 204
+                           *******************************************************5.******************************** PP
+
+              T4P_pilD 155 egmGlGDikLlaalGawlglkalllaillsslvGavvgiillllkkkkkkekipFgpflalggl 218
+                            gmG+GD+kL+aalGawlg++al++ i++ssl+G v +i+++++k     ++++Fgp l+++g+
+  GCF_000006845_014280 205 TGMGNGDFKLIAALGAWLGISALPVLIFVSSLIGLVAAIVMRVAKG----RHFAFGPALTVSGW 264
+                           ****************************************987776....89*********998 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (218 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                       130  (0.068929); expected 37.7 (0.02)
+Passed bias filter:                       44  (0.0233298); expected 37.7 (0.02)
+Passed Vit filter:                         3  (0.00159067); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 11986.64
+//
+[ok]

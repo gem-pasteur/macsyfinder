@@ -1,0 +1,101 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilX.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T4P_pilX.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilX  [M=59]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    1.6e-18   63.4   1.0    2.8e-18   62.6   1.0    1.4  1  GCF_000006845_004220  
+    3.9e-16   55.7   0.7    7.3e-16   54.9   0.7    1.5  1  GCF_000006845_004230  
+    1.9e-08   31.1   0.5    2.9e-08   30.5   0.5    1.3  1  GCF_000006845_012440  
+    1.7e-07   28.1   0.2    2.4e-07   27.6   0.2    1.2  1  GCF_000006845_010160  
+     0.0025   14.7   0.4     0.0038   14.1   0.4    1.3  1  GCF_000006845_004190  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_004220  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   62.6   1.0   7.3e-21   2.8e-18       1      58 [.      17      74 ..      17      75 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 62.6 bits;  conditional E-value: 7.3e-21
+              T4P_pilX  1 kGaaLvivLivlliltilgvaaiqlstseirisanyndqqqaylaAeggleiaeaqil 58
+                          +G+aL+ivL+v++++ +l+v+a q++++e+risan++d+++a+ +Ae++l+++e q+l
+  GCF_000006845_004220 17 RGSALFIVLMVMIVVAFLVVTAAQSYNTEQRISANESDRKLALSLAEAALREGEFQVL 74
+                          8****************************************************98876 PP
+
+>> GCF_000006845_004230  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   54.9   0.7   1.9e-18   7.3e-16       1      59 []       9      63 ..       9      63 .. 0.99
+
+  Alignments for each domain:
+  == domain 1  score: 54.9 bits;  conditional E-value: 1.9e-18
+              T4P_pilX  1 kGaaLvivLivlliltilgvaaiqlstseirisanyndqqqaylaAeggleiaeaqilk 59
+                          kG++L++++iv+ il+i++v+ai++++s+i+++    +q+q+y++++g+++  +++ilk
+  GCF_000006845_004230  9 KGFTLIEMMIVVTILGIISVIAIPSYQSYIEKG----YQSQLYTEMVGINNVLKQFILK 63
+                          8********************************....********************96 PP
+
+>> GCF_000006845_012440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   30.5   0.5   7.7e-11   2.9e-08       1      42 [.       6      47 ..       6      52 .. 0.88
+
+  Alignments for each domain:
+  == domain 1  score: 30.5 bits;  conditional E-value: 7.7e-11
+              T4P_pilX  1 kGaaLvivLivlliltilgvaaiqlstseirisanyndqqqa 42
+                          kG++L++ +i ++il+il+++a++++ ++ir+++  + ++ +
+  GCF_000006845_012440  6 KGFTLLELMIAVAILGILTLIAYPSYKTYIRRARLSEVKSTL 47
+                          8********************************877666655 PP
+
+>> GCF_000006845_010160  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   27.6   0.2   6.3e-10   2.4e-07       1      46 [.       5      50 ..       5      51 .. 0.90
+
+  Alignments for each domain:
+  == domain 1  score: 27.6 bits;  conditional E-value: 6.3e-10
+              T4P_pilX  1 kGaaLvivLivlliltilgvaaiqlstseirisanyndqqqaylaA 46
+                          +G++Lv+ + v+lil++l++++++++++++++++ ++ +  ++++A
+  GCF_000006845_010160  5 RGFTLVELISVVLILSVLALIVYPSYRNYVEKAKINAVRAALLENA 50
+                          8********************************8877777666665 PP
+
+>> GCF_000006845_004190  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.1   0.4     1e-05    0.0038       2      27 ..       8      33 ..       7      47 .. 0.93
+
+  Alignments for each domain:
+  == domain 1  score: 14.1 bits;  conditional E-value: 1e-05
+              T4P_pilX  2 GaaLvivLivlliltilgvaaiqlst 27
+                          G++L + Liv++i+ i +++a+++++
+  GCF_000006845_004190  8 GFTLTELLIVMAIAAIMATIALPNMS 33
+                          9*********************9986 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (59 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                       123  (0.0652174); expected 37.7 (0.02)
+Passed bias filter:                       86  (0.0455992); expected 37.7 (0.02)
+Passed Vit filter:                        16  (0.00848356); expected 1.9 (0.001)
+Passed Fwd filter:                         7  (0.00371156); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               5  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

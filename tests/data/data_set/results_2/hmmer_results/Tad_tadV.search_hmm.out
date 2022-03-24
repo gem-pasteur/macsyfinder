@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Tad_tadV.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Tad_tadV.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       Tad_tadV  [M=132]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    2.8e-19   66.3  14.1    2.8e-19   66.3  14.1    2.1  2  GCF_000006845_014280  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_014280  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.4   0.3      0.13   2.4e+02      27      38 ..      14      25 ..       6      45 .. 0.53
+   2 !   66.3  14.1   1.5e-22   2.8e-19       6     131 ..     134     263 ..     129     264 .. 0.94
+
+  Alignments for each domain:
+  == domain 1  score: -1.4 bits;  conditional E-value: 0.13
+              Tad_tadV 27 nklvlplllvgl 38
+                           ++vl ll++++
+  GCF_000006845_014280 14 LAAVLGLLVGSF 25
+                          223333332222 PP
+
+  == domain 2  score: 66.3 bits;  conditional E-value: 1.5e-22
+              Tad_tadV   6 lvllllllaaaltDlrerripnklvlplllvgllasavg..valagallalvvgfllllllal......llggmGaGDvKLlavlglwl 86 
+                           l+l+++l+ + ++D +++ +p+ ++lpl+ +gl++ + g  v l+ a+l++v+g+  l+ll +       + gmG GD KL+a+lg+wl
+  GCF_000006845_014280 134 LILTAFLISLTFIDADTQYLPDSMTLPLIWLGLIFNLDGgfVPLQSAVLGAVAGYSSLWLLCAvyklltGKTGMGNGDFKLIAALGAWL 222
+                           7999********************************999*99999999999999998888877789999999***************** PP
+
+              Tad_tadV  87 glsgvlvalllsallglvlaigllllrrstkkkslPygvaiaaGa 131
+                           g s++ v++++s l+glv ai++++ +     + +++g+a++++ 
+  GCF_000006845_014280 223 GISALPVLIFVSSLIGLVAAIVMRVAKG----RHFAFGPALTVSG 263
+                           ************************9998....9********9975 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (132 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                       200  (0.106045); expected 37.7 (0.02)
+Passed bias filter:                       36  (0.019088); expected 37.7 (0.02)
+Passed Vit filter:                         3  (0.00159067); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 7257.97
+//
+[ok]

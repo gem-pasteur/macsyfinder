@@ -1,0 +1,80 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4P_pilM.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T4P_pilM.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4P_pilM  [M=162]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    1.5e-43  145.5   1.4    3.3e-43  144.3   1.4    1.6  1  GCF_000006845_001070  
+     0.0025   14.7   0.0     0.0032   14.4   0.0    1.1  1  GCF_000006845_002010  
+     0.0038   14.1   0.4     0.0098   12.8   0.3    1.8  1  GCF_000006845_013100  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_001070  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  144.3   1.4   5.3e-46   3.3e-43       1     160 [.      30     188 ..      30     190 .. 0.98
+
+  Alignments for each domain:
+  == domain 1  score: 144.3 bits;  conditional E-value: 5.3e-46
+              T4P_pilM   1 iGidigsesvkvvelkr.kkeklkLekyaeeplpegiiedgnvkdpdalaqalkellkklkvktkkvvlavpasaviirtlelp.klne 87 
+                           iGidi+++s+k+v+l++ + ++++Leky++++lp++ii++++v+++d+l+++l+++++kl++++k++v++vp++ ++i +l++  k +e
+  GCF_000006845_001070  30 IGIDIDQHSIKMVQLSGrSLNQIQLEKYVIAKLPKNIIQGNKVQNYDQLVTYLQQAYAKLGTSCKNIVASVPQNLATIEQLTYTaKDAE 118
+                           8**************99899********************************************************************* PP
+
+              T4P_pilM  88 deleeaikweaekyipfpleevslDyqvldekeednekvevllvAtrkevvesylelleeaGlkpkvvDvesf 160
+                            +l+ ++++ +++ + ++lee+++Dyqvl   +++  +  vl vA+rk+ +e +++++++aG+k++++Dv+ f
+  GCF_000006845_001070 119 LDLQGFVESSISEASSISLEEANYDYQVL---SQSAVGEAVLSVASRKDEIEPLIDAFNAAGMKLSALDVDIF 188
+                           *****************************...789999********************************987 PP
+
+>> GCF_000006845_002010  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   14.4   0.0     5e-06    0.0032      53     106 ..       3      56 ..       3      74 .. 0.92
+
+  Alignments for each domain:
+  == domain 1  score: 14.4 bits;  conditional E-value: 5e-06
+              T4P_pilM  53 kellkklkvktkkvvlavpasaviirtlelpklnedeleeaikweaekyipfpl 106
+                           k ll+  k+ +k  v+a+ + a + r+l++ ++n + l++ +++ +++y   ++
+  GCF_000006845_002010   3 KNLLEAVKFDEKGLVCAIAQDAETKRVLMVAWMNAEALQKTVETGFAHYYSRSR 56 
+                           6799999***************************************99987665 PP
+
+>> GCF_000006845_013100  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.8   0.3   1.6e-05    0.0098       3      75 ..      11      86 ..       9     141 .. 0.78
+
+  Alignments for each domain:
+  == domain 1  score: 12.8 bits;  conditional E-value: 1.6e-05
+              T4P_pilM  3 idigsesvkvvelkrkkeklkLekyaeeplpegiiedgnvkdpdalaqalkellkklkv....ktkkvvlavpasav 75
+                          +dig+++v +++ + ++++ k++ ++  + p   ++ g+v+++da +qa++++++++++    k  +v +++ ++++
+  GCF_000006845_013100 11 LDIGTSKVLALIGEVQDDD-KINIIGLGQAPSRGLRAGMVTNIDATVQAIRQAVNDAELmadtKITHVTTGIAGNHI 86
+                          7999999999999875555.77777777788889**********************998666677788888877765 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (162 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        67  (0.0355249); expected 37.7 (0.02)
+Passed bias filter:                       53  (0.0281018); expected 37.7 (0.02)
+Passed Vit filter:                         7  (0.00371156); expected 1.9 (0.001)
+Passed Fwd filter:                         3  (0.00159067); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 8907.51
+//
+[ok]

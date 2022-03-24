@@ -1,0 +1,6 @@
+# gene: T2SS_gspD extract from results_2/hmmer_results/T2SS_gspD.search_hmm.out hmm output
+# profile length= 188
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006845_001030	GCF_000006845	103	723	T2SS_gspD	1.600e-39	131.900	0.910	0.231	551	717

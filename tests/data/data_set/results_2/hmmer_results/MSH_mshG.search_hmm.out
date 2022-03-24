@@ -1,0 +1,92 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshG.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/MSH_mshG.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshG  [M=335]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    2.6e-81  270.1   5.4    3.1e-81  269.9   5.4    1.0  1  GCF_000006845_014270  
+  ------ inclusion threshold ------
+      0.037    9.9   1.8       0.64    5.9   0.1    2.7  3  GCF_000006845_012100  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_014270  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  269.9   5.4   3.3e-84   3.1e-81       2     334 ..      73     406 ..      72     407 .. 0.97
+
+  Alignments for each domain:
+  == domain 1  score: 269.9 bits;  conditional E-value: 3.3e-84
+              MSH_mshG   2 vifsrqlysltkaGvPllralkGlaesaeskklkealedvaeelenGrslsaalqahpkvfselfvslvevGentGrldeallqlaeyl 90 
+                            +f+rql +++kaG+Pl++a++ +a    + ++ e l ++  ++e+G+sls a+ +hpk f++++ +lv  Ge  G l+  l +la y 
+  GCF_000006845_014270  73 TVFTRQLSTMIKAGLPLMQAFEIVARGHGNPSMTEMLMEIRGQVEQGSSLSRAFSNHPKYFDRFYCNLVAAGETGGVLESLLDKLAIYK 161
+                           69*************************************************************************************** PP
+
+              MSH_mshG  91 eleletrkrikaalryPtfvliaivlalvvlnilviPkfaelfarlGadlPlatriliatsnffvnywlllllal.valllalkawvkt 178
+                           e+ +  rk++k+al yP+ v+ + +  ++v+ i+v+P+f e++a +Ga+lP  t+ ++ +s+ffv+y +++l+al  a++  lk   ++
+  GCF_000006845_014270 162 EKTQAIRKKVKTALTYPVSVIAVAIGLVFVMMIFVLPAFKEVYANMGAELPPLTQTVMDMSDFFVSYGWMVLIALgFAIYGFLKLKARS 250
+                           ********************999999999**************************************6666666515566677899999 PP
+
+              MSH_mshG 179 ekGklkwdklklrlPivGsiverallsrfarsfalmlkaGvPlnqalslvaeavdnaylekrikemregiesGeslsrtaeeselftPl 267
+                            k + ++d + lr+Pi G+iv + +++r+ r+ a +++aGvPl  +l  +a a +n   e+  +e+r+ + +G s++   +++elf  +
+  GCF_000006845_014270 251 IKIQRRMDAILLRMPIFGDIVRKGTIARWGRTTATLFAAGVPLVDVLDSTAGAAGNLIYEEATREIRTRVIQGLSMTSGMRATELFPNM 339
+                           9**************************************************************************************** PP
+
+              MSH_mshG 268 vlqmlavGeetGrvdelllevadfyerevdydlktltariePillvivaalvlvlalGiflPmwdll 334
+                           +lqm ++Gee+G++d++l+++a+fye+evd  + +l+a +ePi++vi++ ++  l + ++lP+++l 
+  GCF_000006845_014270 340 MLQMSSIGEESGSLDDMLNKAAEFYEDEVDNAVGRLSAMMEPIIIVILGLVIGTLLVAMYLPLFNLG 406
+                           ***************************************************************9985 PP
+
+>> GCF_000006845_012100  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -0.6   0.0     0.063        60      33      89 ..     115     170 ..     106     175 .. 0.85
+   2 ?    2.0   0.0      0.01       9.9     190     260 ..     249     316 ..     241     327 .. 0.77
+   3 ?    5.9   0.1   0.00068      0.64      13      86 ..     336     410 ..     326     414 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: -0.6 bits;  conditional E-value: 0.063
+              MSH_mshG  33 klkealedvaeelenGrslsaalqahpkvfselfvslvevGentGrldeallqlaey 89 
+                           ++k+a+++  e+ + G +l a +q+  +v +e+      vGen+  +  a ++lae 
+  GCF_000006845_012100 115 QIKDAVRAAQEQESMGAKLNALFQKTFSVAKEVRTD-TAVGENSVSMASASVKLAEQ 170
+                           688899999999999999999999999999998766.589***99999999999975 PP
+
+  == domain 2  score: 2.0 bits;  conditional E-value: 0.01
+              MSH_mshG 190 lrlPivGs.iverallsrfarsfalmlkaGvPlnqalslvaeavdnaylekrikemregiesGeslsrtaee 260
+                            +lPivG+ +veral  r +  + +ml   vP    ++     +++ayl   +++m + ++sG+   + a++
+  GCF_000006845_012100 249 SQLPIVGKgMVERALKQRQSMPL-FMLDLAVPR--DIEAEVGDLNDAYLY-TVDDMVNIVQSGKEARQKAAA 316
+                           589****7699***999999887.578888885..456666678889986.689999999999887766654 PP
+
+  == domain 3  score: 5.9 bits;  conditional E-value: 0.00068
+              MSH_mshG  13 kaGvPllralkGlaesaeskklkealedvaeelenGrslsa.alqahpkvfselfvslvevGentGrldeallql 86 
+                           +  vPl++al+   e+a++++l++a++++a+  ++ + l   ++q   k++++   +l + Ge+   l +a+ q+
+  GCF_000006845_012100 336 RQSVPLIKALRDEGEKARKQVLENAMKQLAKGATAEEVLERlSVQLTNKLLHSPTQTLNKAGEEDKDLVHAVAQI 410
+                           7789*******9999999999999999999988888877533677777777777777777777777777776665 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (335 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        64  (0.0339343); expected 37.7 (0.02)
+Passed bias filter:                       45  (0.02386); expected 37.7 (0.02)
+Passed Vit filter:                         4  (0.00212089); expected 1.9 (0.001)
+Passed Fwd filter:                         2  (0.00106045); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 18419.84
+//
+[ok]

@@ -1,0 +1,461 @@
+# macsyfinder 20220323.dev
+# /home/bneron/Projects/GEM/macsyfinder/py39/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results_1 --relative-path
+# Systems found:
+
+system id = VICH001.B.00001.C001_MSH_1
+model = set_1/MSH
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00406', 'MSH_mshI', 366), ('VICH001.B.00001.C001_00407', 'MSH_mshJ', 367), ('VICH001.B.00001.C001_00408', 'MSH_mshK', 368), ('VICH001.B.00001.C001_00409', 'MSH_mshL', 369), ('VICH001.B.00001.C001_00410', 'MSH_mshM', 370), ('VICH001.B.00001.C001_00411', 'MSH_mshN', 371), ('VICH001.B.00001.C001_00412', 'MSH_mshE', 372), ('VICH001.B.00001.C001_00413', 'MSH_mshG', 373), ('VICH001.B.00001.C001_00414', 'MSH_mshF', 374), ('VICH001.B.00001.C001_00415', 'MSH_mshB', 375), ('VICH001.B.00001.C001_00416', 'MSH_mshA', 376), ('VICH001.B.00001.C001_00417', 'MSH_mshC', 377), ('VICH001.B.00001.C001_00418', 'MSH_mshD', 378), ('VICH001.B.00001.C001_00419', 'MSH_mshO', 379), ('VICH001.B.00001.C001_00420', 'MSH_mshP', 380), ('VICH001.B.00001.C001_00421', 'MSH_mshQ', 381)]
+occ = 1
+wholeness = 0.941
+loci nb = 1
+score = 10.500
+
+mandatory genes:
+	- MSH_mshA: 1 (MSH_mshA)
+	- MSH_mshE: 1 (MSH_mshE)
+	- MSH_mshG: 1 (MSH_mshG)
+	- MSH_mshL: 1 (MSH_mshL)
+	- MSH_mshM: 1 (MSH_mshM)
+
+accessory genes:
+	- MSH_mshB: 1 (MSH_mshB)
+	- MSH_mshC: 1 (MSH_mshC)
+	- MSH_mshD: 1 (MSH_mshD)
+	- MSH_mshF: 1 (MSH_mshF)
+	- MSH_mshI: 1 (MSH_mshI)
+	- MSH_mshI2: 0 ()
+	- MSH_mshJ: 1 (MSH_mshJ)
+	- MSH_mshK: 1 (MSH_mshK)
+	- MSH_mshN: 1 (MSH_mshN)
+	- MSH_mshO: 1 (MSH_mshO)
+	- MSH_mshQ: 1 (MSH_mshQ)
+	- MSH_mshP: 1 (MSH_mshP)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_13
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.944
+loci nb = 4
+score = 12.000
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 2 (T4P_pilO, T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_11
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.667
+loci nb = 3
+score = 9.500
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_9
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)]
+occ = 1
+wholeness = 0.667
+loci nb = 3
+score = 9.000
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 0 ()
+	- T4P_pilN: 0 ()
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 0 ()
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_10
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.722
+loci nb = 3
+score = 8.500
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 0 ()
+	- T4P_pilC: 0 ()
+	- T4P_pilO: 2 (T4P_pilO, T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 0 ()
+
+accessory genes:
+	- T4P_pilA: 0 ()
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_5
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.444
+loci nb = 2
+score = 6.000
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 0 ()
+	- T4P_pilC: 0 ()
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 0 ()
+
+accessory genes:
+	- T4P_pilA: 0 ()
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_4
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00476', 'T4P_pilT', 427), ('VICH001.B.00001.C001_00477', 'T4P_pilU', 428)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)]
+occ = 1
+wholeness = 0.333
+loci nb = 2
+score = 5.000
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 0 ()
+	- T4P_pilQ: 0 ()
+	- T4P_pilN: 0 ()
+	- T4P_pilT: 1 (T4P_pilT)
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 0 ()
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 1 (T4P_pilU)
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4bP_14
+model = set_1/T4bP
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00822', 'T4bP_pilA', 753), ('VICH001.B.00001.C001_00823', 'T4bP_pilE', 754), ('VICH001.B.00001.C001_00825', 'T4bP_pilQ', 756), ('VICH001.B.00001.C001_00829', 'T4bP_pilB', 760), ('VICH001.B.00001.C001_00830', 'T4bP_pilC', 761), ('VICH001.B.00001.C001_00833', 'T4bP_pilD', 764)]
+occ = 1
+wholeness = 0.750
+loci nb = 1
+score = 5.500
+
+mandatory genes:
+	- T4bP_pilA: 1 (T4bP_pilA)
+	- T4bP_pilB: 1 (T4bP_pilB)
+	- T4bP_pilC: 1 (T4bP_pilC)
+	- T4bP_pilD: 1 (T4bP_pilD)
+	- T4bP_pilQ: 1 (T4bP_pilQ)
+	- T4bP_pilT: 0 ()
+
+accessory genes:
+	- T4bP_pilE: 1 (T4bP_pilE)
+	- T4bP_pilP: 0 ()
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_12
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.833
+loci nb = 3
+score = 10.500
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 2 (T4P_pilO, T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_6
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)]
+occ = 1
+wholeness = 0.556
+loci nb = 2
+score = 7.500
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 0 ()
+	- T4P_pilN: 0 ()
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 0 ()
+	- T4P_pilP: 0 ()
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 0 ()
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_7
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_00847', 'T4P_pilO', 778), ('VICH001.B.00001.C001_00850', 'T4P_pilE', 781), ('VICH001.B.00001.C001_00851', 'T4P_fimT', 782), ('VICH001.B.00001.C001_00852', 'T4P_pilW', 783), ('VICH001.B.00001.C001_00853', 'T4P_pilX', 784), ('VICH001.B.00001.C001_00854', 'T4P_pilV', 785)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.611
+loci nb = 2
+score = 7.000
+
+mandatory genes:
+	- T4P_pilE: 1 (T4P_pilE)
+	- T4P_pilB: 0 ()
+	- T4P_pilC: 0 ()
+	- T4P_pilO: 2 (T4P_pilO, T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 0 ()
+
+accessory genes:
+	- T4P_pilA: 0 ()
+	- T4P_pilV: 1 (T4P_pilV)
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 1 (T4P_pilW)
+	- T4P_pilX: 1 (T4P_pilX)
+	- T4P_fimT: 1 (T4P_fimT)
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T4P_8
+model = set_1/T4P
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_02305', 'T4P_pilA', 2202), ('VICH001.B.00001.C001_02306', 'T4P_pilB', 2203), ('VICH001.B.00001.C001_02307', 'T4P_pilC', 2204), ('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)], [('VICH001.B.00001.C001_02502', 'MSH_mshM', 2391), ('VICH001.B.00001.C001_02505', 'T4P_pilQ', 2394), ('VICH001.B.00001.C001_02506', 'T4P_pilP', 2395), ('VICH001.B.00001.C001_02507', 'T4P_pilO', 2396), ('VICH001.B.00001.C001_02508', 'T4P_pilN', 2397), ('VICH001.B.00001.C001_02509', 'T4P_pilM', 2398)]
+occ = 1
+wholeness = 0.556
+loci nb = 2
+score = 8.000
+
+mandatory genes:
+	- T4P_pilE: 0 ()
+	- T4P_pilB: 1 (T4P_pilB)
+	- T4P_pilC: 1 (T4P_pilC)
+	- T4P_pilO: 1 (T4P_pilO)
+	- T4P_pilQ: 1 (T4P_pilQ)
+	- T4P_pilN: 1 (T4P_pilN)
+	- T4P_pilT: 0 ()
+	- T4P_pilD: 1 (T4P_pilD [VICH001.B.00001.C001_T2SS_3])
+
+accessory genes:
+	- T4P_pilA: 1 (T4P_pilA)
+	- T4P_pilV: 0 ()
+	- T4P_pilY: 0 ()
+	- T4P_pilW: 0 ()
+	- T4P_pilX: 0 ()
+	- T4P_fimT: 0 ()
+	- T4P_pilM: 1 (T4P_pilM)
+	- T4P_pilP: 1 (T4P_pilP)
+	- T4P_pilU: 0 ()
+	- MSH_mshM: 1 (MSH_mshM)
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T2SS_3
+model = set_1/T2SS
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_02591', 'T2SS_gspN', 2480), ('VICH001.B.00001.C001_02592', 'T2SS_gspM', 2481), ('VICH001.B.00001.C001_02593', 'T2SS_gspL', 2482), ('VICH001.B.00001.C001_02594', 'T2SS_gspK', 2483), ('VICH001.B.00001.C001_02595', 'T2SS_gspJ', 2484), ('VICH001.B.00001.C001_02596', 'T2SS_gspI', 2485), ('VICH001.B.00001.C001_02597', 'T2SS_gspH', 2486), ('VICH001.B.00001.C001_02598', 'T2SS_gspG', 2487), ('VICH001.B.00001.C001_02599', 'T2SS_gspF', 2488), ('VICH001.B.00001.C001_02600', 'T2SS_gspE', 2489), ('VICH001.B.00001.C001_02601', 'T2SS_gspC', 2490)], [('VICH001.B.00001.C001_02308', 'T4P_pilD', 2205)]
+occ = 1
+wholeness = 0.857
+loci nb = 1
+score = 8.060
+
+mandatory genes:
+	- T2SS_gspD: 0 ()
+	- T2SS_gspE: 1 (T2SS_gspE)
+	- T2SS_gspF: 1 (T2SS_gspF)
+	- T2SS_gspG: 1 (T2SS_gspG)
+	- T2SS_gspC: 1 (T2SS_gspC)
+	- T2SS_gspO: 1 (T4P_pilD [VICH001.B.00001.C001_T4P_11, VICH001.B.00001.C001_T4P_12, VICH001.B.00001.C001_T4P_13, VICH001.B.00001.C001_T4P_4, VICH001.B.00001.C001_T4P_6, VICH001.B.00001.C001_T4P_8, VICH001.B.00001.C001_T4P_9])
+
+accessory genes:
+	- T2SS_gspM: 1 (T2SS_gspM)
+	- T2SS_gspH: 1 (T2SS_gspH)
+	- T2SS_gspI: 1 (T2SS_gspI)
+	- T2SS_gspJ: 1 (T2SS_gspJ)
+	- T2SS_gspK: 1 (T2SS_gspK)
+	- T2SS_gspN: 1 (T2SS_gspN)
+	- T2SS_gspL: 1 (T2SS_gspL)
+	- Tad_tadD: 0 ()
+
+neutral genes:
+
+============================================================
+system id = VICH001.B.00001.C001_T2SS_2
+model = set_1/T2SS
+replicon = VICH001.B.00001.C001
+clusters = [('VICH001.B.00001.C001_02591', 'T2SS_gspN', 2480), ('VICH001.B.00001.C001_02592', 'T2SS_gspM', 2481), ('VICH001.B.00001.C001_02593', 'T2SS_gspL', 2482), ('VICH001.B.00001.C001_02594', 'T2SS_gspK', 2483), ('VICH001.B.00001.C001_02595', 'T2SS_gspJ', 2484), ('VICH001.B.00001.C001_02596', 'T2SS_gspI', 2485), ('VICH001.B.00001.C001_02597', 'T2SS_gspH', 2486), ('VICH001.B.00001.C001_02598', 'T2SS_gspG', 2487), ('VICH001.B.00001.C001_02599', 'T2SS_gspF', 2488), ('VICH001.B.00001.C001_02600', 'T2SS_gspE', 2489), ('VICH001.B.00001.C001_02601', 'T2SS_gspC', 2490)]
+occ = 1
+wholeness = 0.786
+loci nb = 1
+score = 7.500
+
+mandatory genes:
+	- T2SS_gspD: 0 ()
+	- T2SS_gspE: 1 (T2SS_gspE)
+	- T2SS_gspF: 1 (T2SS_gspF)
+	- T2SS_gspG: 1 (T2SS_gspG)
+	- T2SS_gspC: 1 (T2SS_gspC)
+	- T2SS_gspO: 0 ()
+
+accessory genes:
+	- T2SS_gspM: 1 (T2SS_gspM)
+	- T2SS_gspH: 1 (T2SS_gspH)
+	- T2SS_gspI: 1 (T2SS_gspI)
+	- T2SS_gspJ: 1 (T2SS_gspJ)
+	- T2SS_gspK: 1 (T2SS_gspK)
+	- T2SS_gspN: 1 (T2SS_gspN)
+	- T2SS_gspL: 1 (T2SS_gspL)
+	- Tad_tadD: 0 ()
+
+neutral genes:
+
+============================================================

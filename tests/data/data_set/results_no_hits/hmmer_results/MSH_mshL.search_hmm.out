@@ -1,0 +1,59 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshL.hmm
+# target sequence database:        tests/data/base/test_1.fasta
+# output directed to file:         results_no_hits/hmmer_results/MSH_mshL.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshL  [M=202]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+   1.3e-106  345.9   1.4   2.4e-106  345.0   1.4    1.5  1  VICH001.B.00001.C001_01400  gspd
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01400  gspd
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  345.0   1.4  4.9e-108  2.4e-106       1     202 []     353     554 ..     353     554 .. 1.00
+
+  Alignments for each domain:
+  == domain 1  score: 345.0 bits;  conditional E-value: 4.9e-108
+                    MSH_mshL   1 FsavlellktqgdvnvLssPRvtaannqkavikvGtdeyfvtdvssttetgdtsettpdveltpffsGisldvtpqidedgsv 83 
+                                 F+av+++++tqgd+nvLssPRvta+nnqkavikvGtdey+vtd+ss + tgd+++++pd+ ltpffsGisldvtpqid++g+v
+  VICH001.B.00001.C001_01400 353 FDAVISFMATQGDLNVLSSPRVTASNNQKAVIKVGTDEYYVTDLSSVVGTGDNAQASPDITLTPFFSGISLDVTPQIDDQGNV 435
+                                 99********************************************************************************* PP
+
+                    MSH_mshL  84 lLhvhpsvieveeqekqiklgseelelplakssiresdtviraksgdvvviGGLmktskeelvskvpllgdiPllGelFrnrr 166
+                                 lLhvhp+vieve+q+k+i + see+elpla+ssiresd+virak+gdvvviGGLmk+++ ++vskvp+lgd+P+lG+lFrn++
+  VICH001.B.00001.C001_01400 436 LLHVHPAVIEVEQQTKKILYRSEEIELPLARSSIRESDSVIRAKDGDVVVIGGLMKSNTVDQVSKVPFLGDVPALGHLFRNTT 518
+                                 *********************************************************************************** PP
+
+                    MSH_mshL 167 ektekteLvillkptvveentwqkelersrellekw 202
+                                 + t+kteLvillkptvv++ntwqkelersr+ll++w
+  VICH001.B.00001.C001_01400 519 KLTQKTELVILLKPTVVGVNTWQKELERSRSLLQEW 554
+                                 ***********************************9 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (202 nodes)
+Target sequences:                           49  (20794 residues searched)
+Passed MSV filter:                         3  (0.0612245); expected 1.0 (0.02)
+Passed bias filter:                        3  (0.0612245); expected 1.0 (0.02)
+Passed Vit filter:                         1  (0.0204082); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0204082); expected 0.0 (1e-05)
+Initial search space (Z):                 49  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 420.04
+//
+[ok]
