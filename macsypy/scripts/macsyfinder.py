@@ -606,9 +606,9 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             multi_systems_hits = []
             for hit in hit_encondig_multisystems:
                 if not hit.loner:
-                    multi_systems_hits .append(MultiSystem(hit))
+                    multi_systems_hits.append(MultiSystem(hit))
                 else:
-                    multi_systems_hits .append(LonerMultiSystem(hit))
+                    multi_systems_hits.append(LonerMultiSystem(hit))
             # choose the best one
             ms_per_function = sort_model_hits(multi_systems_hits)
             best_ms = compute_best_MSHit(ms_per_function)
