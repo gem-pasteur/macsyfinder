@@ -33,6 +33,7 @@
 build/
 dist/
 doc/_build/
+MacSyFinder.egg-info/
 
 ###########################
 # coverage files
@@ -53,15 +54,17 @@ test/datatest/DEF_svg/
 bin/formatdb.err
 macsypy/*_svg
 macsyfinder-*/
-macsyfinder.egg-info/
 
 ####################
 # MacSyFinder data #
 ####################
-data/macsyfinder/models/TXSS/*
-data/models/*
-data/base/*
+data/
 sandbox/
+
+######################################
+# Singularity/Apptainer def and simg #
+######################################
+Singularity/
 
 ##############################
 # MacsyFinder generated file #
@@ -70,6 +73,7 @@ MANIFEST
 
 uninstall.cfg
 uninstall_files
+macsyfinder.egg-info/
 
 *\.idx
 *\.phr
