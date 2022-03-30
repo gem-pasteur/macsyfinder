@@ -83,3 +83,9 @@ macsyfinder.egg-info/
 *\.psi
 *\.psq
 *\formatdb\.err
+
+#############
+# nextflow  #
+#############
+.nextflow/
+work/
