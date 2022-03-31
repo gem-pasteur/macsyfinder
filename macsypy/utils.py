@@ -21,6 +21,7 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+import os
 import os.path
 from itertools import groupby
 
@@ -75,3 +76,18 @@ def get_replicon_names(genome_path):
                 seq_ids.append(line.split()[0][1:])
     replicons = [rep_name for rep_name, _ in groupby(seq_ids, key=grp_replicon)]
     return replicons
+
+
+def threads_available():
+    """
+
+    :return: The maximal number of threads available.
+             It's nice with cluster scheduler or linux.
+             On Mac it use the number of physical cores
+    :rtype: int
+    """
+    if hasattr(os, "sched_getaffinity"):
+        threads_nb = len(os.sched_getaffinity(0))
+    else:
+        threads_nb = os.cpu_count()
+    return threads_nb

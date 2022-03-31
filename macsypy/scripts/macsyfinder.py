@@ -391,7 +391,7 @@ under the name 'gspG.hmm3'
                                  default=None,
                                  help=f"""Number of workers to be used by MacSyFinder.
 In the case the user wants to run MacSyFinder in a multi-thread mode.
-0 mean than one process by type of gene will be launch in parallel.
+0 mean that all threads available will be used.
 (default: {msf_def['worker']})"""
                                  )
     general_options.add_argument("-v", "--verbosity",
