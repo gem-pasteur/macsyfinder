@@ -234,7 +234,7 @@ General options:
   -w WORKER, --worker WORKER
                         Number of workers to be used by MacSyFinder.
                         In the case the user wants to run MacSyFinder in a multi-thread mode.
-                        (0 mean all cores will be used).
+                        (0 mean all threads available will be used).
                         (default: 1)
   -v, --verbosity       Increases the verbosity level. There are 4 levels:
                         Error messages (default), Warning (-v), Info (-vv) and Debug.(-vvv)
