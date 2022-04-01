@@ -80,7 +80,7 @@ class TestUtils(MacsyTest):
                               'GCF_000006905', 'GCF_000006925', 'GCF_000006945'])
 
 
-    def test_threads_avalilable(self):
+    def test_threads_available(self):
         if hasattr(os, "sched_getaffinity"):
             sched_getaffinity_ori = os.sched_getaffinity
         else:
