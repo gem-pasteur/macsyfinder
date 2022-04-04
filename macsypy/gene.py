@@ -186,6 +186,8 @@ class ModelGene:
             s += "\nloner"
         if self.multi_system:
             s += "\nmulti_system"
+        if self.multi_model:
+            s += "\nmulti_model"
         if self._exchangeables:
             s += "\n    exchangeables: "
             for h in self.exchangeables:
@@ -349,7 +351,7 @@ class Exchangeable(ModelGene):
     Biologically it can be Homolog or Analog
     """
 
-    def __init__(self, c_gene, gene_ref):
+    def __init__(self, c_gene, gene_ref, loner=False, multi_system=False, multi_model=False, inter_gene_max_space=None):
         """
         :param c_gene: the gene
         :type c_gene: :class:`macsypy.gene.CoreGene` object.
@@ -357,10 +359,11 @@ class Exchangeable(ModelGene):
         :type gene_ref: :class:`macsypy.gene.ModelGene` object.
         """
         super().__init__(c_gene, gene_ref.model,
-                         loner=gene_ref.loner,
-                         multi_system=gene_ref.multi_system,
-                         multi_model=gene_ref.multi_model,
-                         inter_gene_max_space=gene_ref.inter_gene_max_space)
+                         loner=loner if loner else gene_ref.loner,
+                         multi_system=multi_system if multi_system else gene_ref.multi_system,
+                         multi_model=multi_model if multi_model else gene_ref.multi_model,
+                         inter_gene_max_space=inter_gene_max_space if inter_gene_max_space is not None \
+                             else gene_ref.inter_gene_max_space)
         self._ref = gene_ref
 
 
