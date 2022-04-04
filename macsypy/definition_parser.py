@@ -289,7 +289,7 @@ class DefinitionParser:
             val = gene_node.get(attr)
             if val in ("1", "true", "True"):
                 val = True
-            elif val in (None, "0", "false", "False"):
+            elif val in ("0", "false", "False"):
                 val = False
             attrs[attr] = val
         inter_gene_max_space = gene_node.get("inter_gene_max_space")
@@ -316,6 +316,7 @@ class DefinitionParser:
         :param model_node: the element 'model'
         :type model_node: :class"`Et.ElementTree` object
         """
+
         gene_nodes = model_node.findall("./gene")
         for gene_node in gene_nodes:
             name = gene_node.get("name")
@@ -328,7 +329,8 @@ class DefinitionParser:
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
 
             for exchangeable_node in gene_node.findall("exchangeables/gene"):
-                new_gene.add_exchangeable(self._parse_exchangeable(exchangeable_node, new_gene, model))
+                ex = self._parse_exchangeable(exchangeable_node, new_gene, model)
+                new_gene.add_exchangeable(ex)
 
             presence = gene_node.get("presence")
             if not presence:
@@ -358,7 +360,7 @@ class DefinitionParser:
         :rtype: :class:`macsypy.gene.Exchangeable` object
         """
         name = gene_node.get("name")
-        model_name = split_def_name(curr_model.fqn)[0]
+        family_name, model_name = split_def_name(curr_model.fqn)
         try:
             attrs = self._parse_gene_attrs(gene_node)
         except SyntaxError as err:
@@ -366,7 +368,7 @@ class DefinitionParser:
             _log.critical(msg)
             raise SyntaxError(msg)
 
-        key = (model_name, name)
+        key = (family_name, name)
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
         c_gene = self.gene_bank[key]
