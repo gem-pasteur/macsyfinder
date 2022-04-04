@@ -30,6 +30,7 @@ import sys
 import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
+from .utils import threads_available
 
 
 def search_genes(genes, cfg):
@@ -47,7 +48,7 @@ def search_genes(genes, cfg):
     """
     worker_nb = cfg.worker()
     if not worker_nb:
-        worker_nb = len(genes)
+        worker_nb = min(len(genes), threads_available())
     _log.debug(f"worker_nb = {worker_nb:d}")
     all_reports = []
 

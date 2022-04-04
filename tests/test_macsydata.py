@@ -29,6 +29,7 @@ import argparse
 import sys
 import tarfile
 import unittest
+import io
 
 import macsypy.registries
 from macsypy.registries import scan_models_dir, ModelRegistry
@@ -735,7 +736,6 @@ Available versions: 1.0"""
         self.args.force = False
         self.args.target = macsydata_target
 
-
         with self.catch_log(log_name='macsydata'):
             macsydata.do_install(self.args)
         expected_pack_path = os.path.join(macsydata_target, pack_name)
@@ -746,6 +746,36 @@ Available versions: 1.0"""
         self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'definitions')))
         self.assertTrue(os.path.exists(os.path.join(expected_pack_path, 'profiles')))
 
+
+    def test_install_bad_target(self):
+        pack_name = 'fake_pack'
+        pack_vers = '3.0'
+        macsydata_cache = os.path.join(self.tmpdir, 'cache')
+        os.mkdir(macsydata_cache)
+        macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
+        os.mkdir(macsydata_tmp)
+        macsydata_target = os.path.join(self.tmpdir, 'target')
+        open(macsydata_target, 'w').close()
+
+        unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
+        arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
+
+        with tarfile.open(arch_path, "w:gz") as arch:
+            arch.add(unarch_pack_path, arcname=pack_name)
+        shutil.rmtree(unarch_pack_path)
+
+        self.args.package = arch_path
+        self.args.cache = macsydata_cache
+        self.args.user = False
+        self.args.upgrade = False
+        self.args.force = False
+        self.args.target = macsydata_target
+
+        with self.assertRaises(RuntimeError) as ctx:
+            macsydata.do_install(self.args)
+        self.assertEqual(str(ctx.exception),
+                         f"'{macsydata_target}' already exist and is not a directory."
+                         )
 
 
     def test_install_local_already_installed(self):
@@ -1477,4 +1507,16 @@ Maybe you can use --user option to install in your HOME.""")
         self.assertEqual(level, 10)
         level = macsydata.verbosity_to_log_level(5)
         self.assertEqual(level, 1)
+
+    def test_no_subcommand(self):
+        cmd = "macsydata"
+        parser = macsydata.build_arg_parser()
+        out = io.StringIO()
+        parser.print_help(file=out)
+
+        with self.catch_io(out=True):
+            macsydata.main(args=cmd.split()[1:])
+            stdout = sys.stdout.getvalue().strip()
+        self.assertEqual(stdout,
+                         out.getvalue().strip())
 

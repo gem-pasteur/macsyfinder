@@ -47,7 +47,7 @@ class TestProfile(MacsyTest):
         args.db_type = 'gembase'
         args.models_dir = self.find_data('models')
         args.res_search_dir = tempfile.gettempdir()
-        args.log_level = 0
+        args.log_level = 50
         self.cfg = Config(MacsyDefaults(), args)
 
         if os.path.exists(self.cfg.working_dir()):
@@ -81,10 +81,11 @@ class TestProfile(MacsyTest):
     def test_ga_threshold(self):
         # No GA threshold
         model = Model("foo/T2SS", 10)
+
         gene_name = 'abc'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
-        path = self.model_location.get_profile("abc")
+        path = self.model_location.get_profile(gene_name)
         profile = Profile(gene, self.cfg, path)
         self.assertFalse(profile.ga_threshold)
 
@@ -92,7 +93,7 @@ class TestProfile(MacsyTest):
         gene_name = 'T5aSS_PF03797'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
-        path = self.model_location.get_profile("T5aSS_PF03797")
+        path = self.model_location.get_profile(gene_name)
         profile = Profile(gene, self.cfg, path)
         self.assertTrue(profile.ga_threshold)
 
@@ -100,10 +101,43 @@ class TestProfile(MacsyTest):
         gene_name = 'PF05930.13'
         c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
         gene = ModelGene(c_gene, model)
-        path = self.model_location.get_profile("PF05930.13")
+        path = self.model_location.get_profile(gene_name)
         profile = Profile(gene, self.cfg, path)
         self.assertTrue(profile.ga_threshold)
 
+        # GA threshold invalid format string instead float
+        gene_name = 'bad_GA'
+        with self.catch_log(log_name='macsypy'):
+            # When a CoreGene is created a Profile is automatically instanciated
+            # So I mute the log to do not polute output
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+        path = self.model_location.get_profile(gene_name)
+
+        with self.catch_log(log_name='macsypy') as log:
+            profile = Profile(gene, self.cfg, path)
+            catch_msg = log.get_value().strip()
+        self.assertFalse(profile.ga_threshold)
+        self.assertEqual(catch_msg,
+                         "bad_GA GA score is not well formatted expected 2 floats got ''22.00'' ''23.00''.\n"
+                         "GA score will not used for gene 'bad_GA'.")
+
+        # GA threshold invalid format only one score
+        gene_name = 'bad_GA_2'
+        with self.catch_log(log_name='macsypy'):
+            # When a CoreGene is created a Profile is automatically instanciated
+            # So I mute the log to do not polute output
+            c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        gene = ModelGene(c_gene, model)
+        path = self.model_location.get_profile(gene_name)
+
+        with self.catch_log(log_name='macsypy') as log:
+            profile = Profile(gene, self.cfg, path)
+            catch_msg = log.get_value().strip()
+        self.assertFalse(profile.ga_threshold)
+        self.assertEqual(catch_msg,
+                         "bad_GA_2 GA score is not well formatted. expected: 'GA float float' got 'GA    22.00'.\n"
+                         "GA score will not used for gene 'bad_GA_2'.")
 
     def test_str(self):
         model = Model("foo/T2SS", 10)
