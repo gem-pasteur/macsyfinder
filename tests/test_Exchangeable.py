@@ -130,6 +130,7 @@ class TestExchangeable(MacsyTest):
         self.assertFalse(homolog_1.loner)
         self.assertTrue(homolog_2.loner)
 
+
     def test_multi_system(self):
         model = Model("T2SS", 10)
         gene_name = 'sctJ_FLG'

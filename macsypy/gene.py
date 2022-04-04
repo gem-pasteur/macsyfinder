@@ -162,9 +162,9 @@ class ModelGene:
         self._gene = gene
         self._exchangeables = []
         self._model = model
-        self._loner = loner
-        self._multi_system = multi_system
-        self._multi_model = multi_model
+        self._loner = loner if loner else False
+        self._multi_system = multi_system if multi_system else False
+        self._multi_model = multi_model if multi_model else False
         self._inter_gene_max_space = inter_gene_max_space
         self._status = None
 
@@ -351,7 +351,7 @@ class Exchangeable(ModelGene):
     Biologically it can be Homolog or Analog
     """
 
-    def __init__(self, c_gene, gene_ref, loner=False, multi_system=False, multi_model=False, inter_gene_max_space=None):
+    def __init__(self, c_gene, gene_ref, loner=None, multi_system=None, multi_model=None, inter_gene_max_space=None):
         """
         :param c_gene: the gene
         :type c_gene: :class:`macsypy.gene.CoreGene` object.
@@ -359,9 +359,9 @@ class Exchangeable(ModelGene):
         :type gene_ref: :class:`macsypy.gene.ModelGene` object.
         """
         super().__init__(c_gene, gene_ref.model,
-                         loner=loner if loner else gene_ref.loner,
-                         multi_system=multi_system if multi_system else gene_ref.multi_system,
-                         multi_model=multi_model if multi_model else gene_ref.multi_model,
+                         loner=loner if loner is not None else gene_ref.loner,
+                         multi_system=multi_system if multi_system is not None else gene_ref.multi_system,
+                         multi_model=multi_model if multi_model is not None else gene_ref.multi_model,
                          inter_gene_max_space=inter_gene_max_space if inter_gene_max_space is not None \
                              else gene_ref.inter_gene_max_space)
         self._ref = gene_ref

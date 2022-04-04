@@ -2,6 +2,7 @@
     <gene name="sctJ_FLG" presence="mandatory" loner="true" multi_system="1">
        <exchangeables>
            <gene name="sctJ" />
+           <gene name="abc" multi_system="False" />
        </exchangeables>
     </gene>
     <gene name="sctN_FLG" presence="mandatory">

@@ -590,7 +590,7 @@ class SystemTest(MacsyTest):
         cg_abc = CoreGene(self.model_location, "abc", self.profile_factory)
 
         mg_A_sctn = ModelGene(cg_sctn, model_A, multi_system=True)
-        mg_A_sctn_hom = Exchangeable(cg_sctn_flg, mg_A_sctn)
+        mg_A_sctn_hom = Exchangeable(cg_sctn_flg, mg_A_sctn, multi_system=True)
         mg_A_sctn.add_exchangeable(mg_A_sctn_hom)
         mg_A_sctj = ModelGene(cg_sctj, model_A)
         mg_A_sctj_an = Exchangeable(cg_sctj_flg, mg_A_sctj)
@@ -950,7 +950,7 @@ class SystemTest(MacsyTest):
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model, loner=True)
         c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
-        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd, loner=True)
         gene_gspd.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
@@ -1127,13 +1127,13 @@ class SystemTest(MacsyTest):
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model, loner=True)
         c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
-        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd, loner=True)
         gene_gspd.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model, loner=True, multi_system=True)
         c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
-        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc, loner=True, multi_system=True)
         gene_abc.add_exchangeable(gene_abc_ho)
 
         c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
@@ -1221,13 +1221,13 @@ class SystemTest(MacsyTest):
         c_gene_gspd = CoreGene(self.model_location, "gspD", self.profile_factory)
         gene_gspd = ModelGene(c_gene_gspd, model, loner=True)
         c_gene_flgB = CoreGene(self.model_location, "flgB", self.profile_factory)
-        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd)
+        gene_gspd_an = Exchangeable(c_gene_flgB, gene_gspd, loner=True)
         gene_gspd.add_exchangeable(gene_gspd_an)
 
         c_gene_abc = CoreGene(self.model_location, "abc", self.profile_factory)
         gene_abc = ModelGene(c_gene_abc, model, loner=True, multi_system=True)
         c_gene_tadZ = CoreGene(self.model_location, "tadZ", self.profile_factory)
-        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc)
+        gene_abc_ho = Exchangeable(c_gene_tadZ, gene_abc, loner=True, multi_system=True)
         gene_abc.add_exchangeable(gene_abc_ho)
 
         c_gene_toto = CoreGene(self.model_location, "toto", self.profile_factory)
