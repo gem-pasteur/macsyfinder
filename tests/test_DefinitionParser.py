@@ -103,16 +103,45 @@ class TestModelParser(MacsyTest):
         self.assertListEqual(forbidden_genes_name, theoric_list)
 
         sctJ_FLG = m1.get_gene('sctJ_FLG')
-        sctJ_FLG_homologs = sctJ_FLG.exchangeables
-        self.assertEqual(len(sctJ_FLG_homologs), 1)
-        self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0], Exchangeable))
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0]._gene, CoreGene))
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0].alternate_of(), ModelGene))
-        self.assertTrue(sctJ_FLG_homologs[0].loner)
+        sctJ_FLG_exchangeables = sctJ_FLG.exchangeables
+        self.assertEqual(len(sctJ_FLG_exchangeables), 1)
+        self.assertEqual(sctJ_FLG_exchangeables[0].name, 'sctJ')
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0], Exchangeable))
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0]._gene, CoreGene))
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0].alternate_of(), ModelGene))
+        self.assertTrue(sctJ_FLG_exchangeables[0].loner)
         self.assertFalse(sctJ_FLG.is_exchangeable)
         sctJ = m1.get_gene('sctJ')
         self.assertTrue(sctJ.is_exchangeable)
+
+
+    def test_exchangeable_inheritance(self):
+        def_2_parse = set()
+        def_2_parse.add('foo/model_1')
+        models_2_detect = [self.model_registry['foo'].get_definition('foo/model_1')]
+        self.parser.parse(models_2_detect)
+        m1 = self.model_bank['foo/model_1']
+
+        sctJ = m1.get_gene('sctJ')
+        self.assertTrue(sctJ.is_exchangeable)
+        self.assertTrue(sctJ.loner)
+        self.assertTrue(sctJ.multi_system)
+        self.assertFalse(sctJ.multi_model)
+
+        sctN = m1.get_gene('sctN')
+        sctN_FLG = m1.get_gene('sctN_FLG')
+
+        self.assertFalse(sctN_FLG.loner)
+        self.assertTrue(sctN.loner)
+        self.assertIsNone(sctN_FLG.inter_gene_max_space)
+        self.assertEqual(sctN.inter_gene_max_space, 10)
+        self.assertFalse(sctN_FLG.multi_model)
+        self.assertFalse(sctN.multi_model)
+        gspD = m1.get_gene('gspD')
+        self.assertFalse(sctN_FLG.multi_system)
+        self.assertTrue(gspD.multi_model)
+        self.assertTrue(gspD.multi_system)
+
 
     def test_model_w_unkown_attr(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/model_w_unknown_attribute')]
