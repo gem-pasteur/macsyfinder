@@ -106,6 +106,7 @@ class Test(MacsyTest):
         get_results = os.path.join(self.out_dir, self.rejected_clusters)
         self.assertFileEqual(expected_result, get_results, comment="#")
 
+
     def test_only_loners(self):
         # genetic organization of MOBP1_twice.fast
         # gene        MOBP1          MOBP1

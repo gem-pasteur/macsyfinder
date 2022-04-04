@@ -116,7 +116,13 @@ class Profile:
                 if l.startswith('LENG'):
                     length = int(l.split()[1])
                 elif l.startswith('GA'):
-                    header, t1, t2 = l.split()
+                    try:
+                        header, t1, t2 = l.split()
+                    except ValueError:
+                        _log.warning(f"{self.gene.name} GA score is not well formatted. expected: "
+                                     f"'GA float float' got '{l.rstrip()}'.")
+                        _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
+                        continue
                     if t2.endswith(';'):
                         t2 = t2[:-1]
                     try:
@@ -124,6 +130,8 @@ class Profile:
                         t2 = float(t2)
                         ga_threshold = True
                     except ValueError:
+                        _log.warning(f"{self.gene.name} GA score is not well formatted expected 2 floats got '{t1}' '{t2}'.")
+                        _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
                         continue
                 elif l.startswith('STATS LOCAL'):
                     break

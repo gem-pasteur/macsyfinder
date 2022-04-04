@@ -252,7 +252,7 @@ def do_install(args: argparse.Namespace) -> None:
     if args.target:
         dest = os.path.realpath(args.target)
         if os.path.exists(dest) and not os.path.isdir(dest):
-            raise RuntimeError("'{}' already exist and is not a directory.")
+            raise RuntimeError(f"'{dest}' already exist and is not a directory.")
         elif not os.path.exists(dest):
             os.makedirs(dest)
 
@@ -926,7 +926,6 @@ def main(args=None) -> None:
     args = sys.argv[1:] if args is None else args
     parser = build_arg_parser()
     parsed_args = parser.parse_args(args)
-
     log_level = verbosity_to_log_level(parsed_args.verbose)
     # set logger for module 'package'
     macsypy.init_logger()
@@ -938,6 +937,7 @@ def main(args=None) -> None:
         parsed_args.func(parsed_args)
         _log.debug("'{}' command completed successfully.".format(cmd_name(parsed_args)))
     else:
+        # macsydata command is run without any subcommand
         parser.print_help()
 
 

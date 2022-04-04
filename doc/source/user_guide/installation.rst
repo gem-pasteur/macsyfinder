@@ -33,9 +33,10 @@ Otherwise, the paths to this executable must be specified in the command-line:
 see the :ref:`command-line options <hmmer-options>`.
  
  
-MacSyFinder also relies on five Python library dependencies:
+MacSyFinder also relies on six Python library dependencies:
 
  - colorlog
+ - colorama
  - pyyaml
  - packaging
  - networkx
@@ -54,12 +55,11 @@ Archive overview
 ================
 
 * **doc** => the documentation in html and pdf
-* **etc** => a template of macsyfinder configuration file
 * **test** => all what is needed for unitary tests
 * **macsypy** => the macsyfinder python library
 * **setup.py** => the installation script
-* **requirements.txt** => the python dependencies
-* **requirements_dev.txt** => the python dependencies for developers
+* **setup.cfg** => the installation script
+* **pyproject.toml** => the project installation build tool
 * **COPYING** => the licensing
 * **COPYRIGHT** => the copyright
 * **README.md** => very brief macsyfinder overview

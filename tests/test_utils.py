@@ -29,7 +29,7 @@ import argparse
 
 from macsypy.config import Config, MacsyDefaults
 from macsypy.registries import ModelRegistry, scan_models_dir
-from macsypy.utils import get_def_to_detect, get_replicon_names
+from macsypy.utils import get_def_to_detect, get_replicon_names, threads_available
 from tests import MacsyTest
 
 
@@ -78,3 +78,28 @@ class TestUtils(MacsyTest):
         self.assertListEqual(replicon_names,
                              ['GCF_000005845', 'GCF_000006725', 'GCF_000006745', 'GCF_000006765', 'GCF_000006845',
                               'GCF_000006905', 'GCF_000006925', 'GCF_000006945'])
+
+
+    def test_threads_available(self):
+        if hasattr(os, "sched_getaffinity"):
+            sched_getaffinity_ori = os.sched_getaffinity
+        else:
+            sched_getaffinity_ori = None
+        cpu_count_ori = os.cpu_count
+
+        threads_nb = 7
+        cpu_nb = 8
+
+        os.cpu_count = lambda : cpu_nb
+
+        try:
+            del os.sched_getaffinity
+            self.assertEqual(threads_available(), cpu_nb)
+            os.sched_getaffinity = lambda x: [None] * threads_nb
+            self.assertEqual(threads_available(), threads_nb)
+        finally:
+            os.cpu_count = cpu_count_ori
+            if sched_getaffinity_ori:
+                os.sched_getaffinity = sched_getaffinity_ori
+            else:
+                del os.sched_getaffinity
