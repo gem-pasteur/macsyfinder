@@ -22,9 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+from enum import Enum
 import logging
 _log = logging.getLogger(__name__)
-from enum import Enum
 
 from .error import MacsypyError
 
@@ -82,7 +82,7 @@ class GeneBank:
         :return: the fully qualified name for all genes in the bank
         :rtype: str
         """
-        return [f"{fam}/{gen_nam}" for fam, gen_nam in self._genes_bank.keys()]
+        return [f"{fam}/{gen_nam}" for fam, gen_nam in self._genes_bank]
 
 
     def add_new_gene(self, model_location, name, profile_factory):
@@ -173,26 +173,26 @@ class ModelGene:
     def __getattr__(self, item):
         try:
             return getattr(self._gene, item)
-        except AttributeError:
-            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+        except AttributeError as err:
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'") from err
 
 
     def __str__(self):
         """
         Print the name of the gene and of its exchangeable genes.
         """
-        s = f"name : {self.name}"
-        s += f"\ninter_gene_max_space: {self.inter_gene_max_space}"
+        rep = f"name : {self.name}"
+        rep += f"\ninter_gene_max_space: {self.inter_gene_max_space}"
         if self.loner:
-            s += "\nloner"
+            rep += "\nloner"
         if self.multi_system:
-            s += "\nmulti_system"
+            rep += "\nmulti_system"
         if self._exchangeables:
-            s += "\n    exchangeables: "
-            for h in self.exchangeables:
-                s += h.name + ", "
-            s = s[:-2]
-        return s
+            rep += "\n    exchangeables: "
+            for m_hit in self.exchangeables:
+                rep += m_hit.name + ", "
+            rep = rep[:-2]
+        return rep
 
 
     @property
@@ -282,7 +282,7 @@ class ModelGene:
     @property
     def inter_gene_max_space(self):
         """
-        :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized. 
+        :return: The maximum distance allowed between this gene and another gene for them to be considered co-localized.
                  If the value is not set at the Gene level, return None.
         :rtype: integer. or None
         """
@@ -302,10 +302,7 @@ class ModelGene:
         :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in model.mandatory_genes:
-            return True
-        else:
-            return False
+        return self in model.mandatory_genes
 
 
     def is_accessory(self, model):
@@ -315,10 +312,7 @@ class ModelGene:
         :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in model.accessory_genes:
-            return True
-        else:
-            return False
+        return self in model.accessory_genes
 
 
     def is_forbidden(self, model):
@@ -328,10 +322,7 @@ class ModelGene:
         :type model: :class:`macsypy.model.Model` object.
         :rtype: boolean.
         """
-        if self in model.forbidden_genes:
-            return True
-        else:
-            return False
+        return self in model.forbidden_genes
 
 
 class Exchangeable(ModelGene):
@@ -389,8 +380,7 @@ class Exchangeable(ModelGene):
         """
         if self._status:
             return self.status
-        else:
-            return self._ref.status
+        return self._ref.status
 
 
 class GeneStatus(Enum):
