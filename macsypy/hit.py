@@ -181,7 +181,8 @@ class ModelHit:
             raise MacsypyError(f"The {self.__class__.__name__} 'hit' argument must be a CoreHit not {type(hit)}.")
         self._hit = hit
         if not isinstance(gene_ref, ModelGene):
-            raise MacsypyError(f"The {self.__class__.__name__} 'gene_ref' argument must be a ModelGene not {type(gene_ref)}.")
+            raise MacsypyError(f"The {self.__class__.__name__} 'gene_ref' argument must be a ModelGene "
+                               f"not {type(gene_ref)}.")
         self.gene_ref = gene_ref
         self.status = gene_status
 
@@ -257,7 +258,8 @@ class AbstractCounterpartHit(ModelHit, metaclass=abc.ABCMeta):
 
     def __init__(self, hit, gene_ref=None, gene_status=None, counterpart=None):
         if isinstance(hit, CoreHit) and not (gene_ref and gene_status):
-            raise MacsypyError(f"Cannot Create a {self.__class__.__name__} hit from CoreHit ({hit.gene.name}, {hit.position}) "
+            raise MacsypyError(f"Cannot Create a {self.__class__.__name__} hit from "
+                               f"CoreHit ({hit.gene.name}, {hit.position}) "
                                 "without specifying 'gene_ref' and 'gene_status'")
         elif isinstance(hit, CoreHit):
             super().__init__(hit, gene_ref, gene_status)
