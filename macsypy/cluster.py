@@ -22,6 +22,11 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Module to build and manage Clusters of Hit
+A cluster is a set of hits each of which hits less than inter_gene_max_space from its neighbor
+"""
+
 import itertools
 import logging
 
@@ -35,38 +40,38 @@ _log = logging.getLogger(__name__)
 
 
 def _colocates(h1, h2, rep_info):
-        """
-        compute the distance (in number of gene between) between 2 hits
+    """
+    compute the distance (in number of gene between) between 2 hits
 
-        :param :class:`macsypy.hit.ModelHit` h1: the first hit to compute inter hit distance
-        :param :class:`macsypy.hit.ModelHit` h2: the second hit to compute inter hit distance
-        :return: True if the 2 hits spaced by lesser or equal genes than inter_gene_max_space.
-                 Managed circularity.
-        """
-        # compute the number of genes between h1 and h2
-        dist = h2.get_position() - h1.get_position() - 1
-        g1 = h1.gene_ref
-        g2 = h2.gene_ref
-        model = g1.model
-        d1 = g1.inter_gene_max_space
-        d2 = g2.inter_gene_max_space
+    :param :class:`macsypy.hit.ModelHit` h1: the first hit to compute inter hit distance
+    :param :class:`macsypy.hit.ModelHit` h2: the second hit to compute inter hit distance
+    :return: True if the 2 hits spaced by lesser or equal genes than inter_gene_max_space.
+             Managed circularity.
+    """
+    # compute the number of genes between h1 and h2
+    dist = h2.get_position() - h1.get_position() - 1
+    g1 = h1.gene_ref
+    g2 = h2.gene_ref
+    model = g1.model
+    d1 = g1.inter_gene_max_space
+    d2 = g2.inter_gene_max_space
 
-        if d1 is None and d2 is None:
-            inter_gene_max_space = model.inter_gene_max_space
-        elif d1 is None:
-            inter_gene_max_space = d2
-        elif d2 is None:
-            inter_gene_max_space = d1
-        else:  # d1 and d2 are defined
-            inter_gene_max_space = min(d1, d2)
+    if d1 is None and d2 is None:
+        inter_gene_max_space = model.inter_gene_max_space
+    elif d1 is None:
+        inter_gene_max_space = d2
+    elif d2 is None:
+        inter_gene_max_space = d1
+    else:  # d1 and d2 are defined
+        inter_gene_max_space = min(d1, d2)
 
-        if 0 <= dist <= inter_gene_max_space:
-            return True
-        elif dist <= 0 and rep_info.topology == 'circular':
-            # h1 and h2 overlap the ori
-            dist = rep_info.max - h1.get_position() + h2.get_position() - rep_info.min
-            return dist <= inter_gene_max_space
-        return False
+    if 0 <= dist <= inter_gene_max_space:
+        return True
+    elif dist <= 0 and rep_info.topology == 'circular':
+        # h1 and h2 overlap the ori
+        dist = rep_info.max - h1.get_position() + h2.get_position() - rep_info.min
+        return dist <= inter_gene_max_space
+    return False
 
 
 def _clusterize(hits, model, hit_weights, rep_info):
@@ -191,11 +196,10 @@ def _get_true_loners(clusters):
                 # min_genes_required == 1
                 true_clusters.append(clstr)
 
-        for func_name in true_loners:
+        for func_name, loners in true_loners.items():
             # transform ModelHit in Loner
-            loners = true_loners[func_name]
             true_loners[func_name] = []
-            for i in range(len(loners)):
+            for i, _ in enumerate(loners):
                 if loners[i].multi_system:
                     # the counterpart have been already computed during the MS hit instanciation
                     # instead of the Loner not multisystem it include the hits which clusterize
@@ -285,6 +289,10 @@ class Cluster:
 
     @property
     def hit_weights(self):
+        """
+        :return: the different weight for the hits used to compute the score
+        :rtype: :class:`macsypy.hit.HitWeight`
+        """
         return self._hit_weights
 
     @property
@@ -375,16 +383,26 @@ class Cluster:
 
     @property
     def replicon_name(self):
+        """
+
+        :return: The name of the replicon where this cluster is located
+        :rtype: str
+        """
         return self.hits[0].replicon_name
 
 
     @property
     def score(self):
+        """
+
+        :return: The score for this cluster
+        :rtype: float
+        """
         if self._score is not None:
             return self._score
         else:
             seen_hits = {}
-            _log.debug(f"===================== compute score for cluster =====================")
+            _log.debug("===================== compute score for cluster =====================")
             for m_hit in self.hits:
                 _log.debug(f"-------------- test model hit {m_hit.gene.name} --------------")
 
@@ -441,11 +459,11 @@ class Cluster:
 
         :return: a string representation of this cluster
         """
-        s = f"""Cluster:
+        rep = f"""Cluster:
 - model = {self.model.name}
 - replicon = {self.replicon_name}
 - hits = {', '.join([f"({h.id}, {h.gene.name}, {h.position})" for h in self.hits])}"""
-        return s
+        return rep
 
     def replace(self, old, new):
         """
