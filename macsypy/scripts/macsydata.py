@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+This is the entrypoint to the macsydata command
+macsydata allow the user to manage the MacSyFinder models
+"""
 
 import sys
 import os
@@ -50,8 +54,8 @@ def get_version_message():
     :return: the long description of the macsyfinder version
     :rtype: str
     """
-    version = macsypy.__version__
-    vers_msg = f"""Macsydata {version}
+    msf_ver = macsypy.__version__
+    vers_msg = f"""Macsydata {msf_ver}
 Python {sys.version}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
@@ -355,7 +359,7 @@ def do_install(args: argparse.Namespace) -> None:
         shutil.move(cached_pack, dest)
     except PermissionError as err:
         _log.error(f"{dest} is not writable: {err}")
-        _log.warning(f"Maybe you can use --user option to install in your HOME.")
+        _log.warning("Maybe you can use --user option to install in your HOME.")
         sys.tracebacklimit = 0
         raise ValueError() from None
 
@@ -455,7 +459,7 @@ def do_freeze(args: argparse.Namespace) -> None:
             pack = Package(model_loc.path)
             pack_vers = pack.metadata['vers']
             print(f"{model_loc.name}=={pack_vers}")
-        except:
+        except Exception:
             pass
 
 
@@ -552,7 +556,7 @@ I'll be really happy, if you fix warnings above, before to publish these models.
             _log.log(25, "\tgit remote add origin https://github.com/macsy-models/")
 
         _log.log(25, f"\tgit tag {pack.metadata['vers']}")
-        _log.log(25, f"\tgit push --tags")
+        _log.log(25, "\tgit push --tags")
 
 
 def do_show_definition(args: argparse.Namespace) -> None:
@@ -589,7 +593,7 @@ def do_show_definition(args: argparse.Namespace) -> None:
                 path_2_display = sorted(
                     [(p.fqn, p.path) for p in inst_pack_loc.get_all_definitions(root_def_name=root_def_name)]
                 )
-            except ValueError as err:
+            except ValueError:
                 _log.error(f"'{'/'.join(sub_family)}' not found in package '{pack_name}'.")
                 sys.tracebacklimit = 0
                 raise ValueError() from None
@@ -606,7 +610,7 @@ def do_show_definition(args: argparse.Namespace) -> None:
                     print(f"""<!-- {fqn} {def_path} -->
 {display_definition(def_path)}
 """, file=sys.stdout)
-                except ValueError as err:
+                except ValueError:
                     _log.error(f"Model '{fqn}' not found.")
                     continue
     else:
@@ -630,7 +634,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=dedent('''
+        description=dedent(r'''
 
          *            *               *                   * *       * 
     *           *               *   *   *  *    **                *  
@@ -857,7 +861,7 @@ def cmd_name(args: argparse.Namespace) -> str:
     """
     assert 'func' in args
     func_name = args.func.__name__.replace('do_', '')
-    return "macsydata {}".format(func_name)
+    return f"macsydata {func_name}"
 
 
 def init_logger(level='INFO', out=True):
@@ -935,7 +939,7 @@ def main(args=None) -> None:
 
     if 'func' in parsed_args:
         parsed_args.func(parsed_args)
-        _log.debug("'{}' command completed successfully.".format(cmd_name(parsed_args)))
+        _log.debug(f"'{cmd_name(parsed_args)}' command completed successfully.")
     else:
         # macsydata command is run without any subcommand
         parser.print_help()
