@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Module use to parse XML model defintion and create a python Model and Genes, ...
+"""
+
 import os.path
 import xml.etree.ElementTree as Et
 import logging
@@ -185,30 +189,30 @@ class DefinitionParser:
             raise SyntaxError(msg)
         try:
             inter_gene_max_space = int(inter_gene_max_space)
-        except ValueError:
+        except ValueError as err:
             msg = f"Invalid model definition ({def_loc.path}): " \
                   f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
             _log.critical(msg)
-            raise SyntaxError(msg)
+            raise SyntaxError(msg) from err
         min_mandatory_genes_required = model_node.get('min_mandatory_genes_required')
         if min_mandatory_genes_required is not None:
             try:
                 min_mandatory_genes_required = int(min_mandatory_genes_required)
-            except ValueError:
+            except ValueError as err:
                 msg = f"Invalid model definition ({def_loc.path}): " \
                       f"min_mandatory_genes_required must be an integer: {min_mandatory_genes_required}"
                 _log.critical(msg)
-                raise SyntaxError(msg)
+                raise SyntaxError(msg) from err
 
         min_genes_required = model_node.get('min_genes_required')
         if min_genes_required is not None:
             try:
                 min_genes_required = int(min_genes_required)
-            except ValueError:
+            except ValueError as err:
                 msg = f"Invalid model definition ({def_loc.path}):\
  min_genes_required must be an integer: {min_genes_required}"
                 _log.critical(msg)
-                raise SyntaxError(msg)
+                raise SyntaxError(msg) from err
 
         cfg_max_nb_genes = self.cfg.max_nb_genes(def_loc.fqn)
         if cfg_max_nb_genes is not None:
@@ -218,10 +222,10 @@ class DefinitionParser:
             if max_nb_genes is not None:
                 try:
                     max_nb_genes = int(max_nb_genes)
-                except ValueError:
+                except ValueError as err:
                     msg = f"Invalid model definition ({def_loc.path}): max_nb_genes must be an integer: {max_nb_genes}"
                     _log.critical(msg)
-                    raise SyntaxError(msg)
+                    raise SyntaxError(msg) from err
         multi_loci = model_node.get('multi_loci')
         if multi_loci is not None:
             multi_loci = multi_loci.lower() in ("1", "true")
@@ -307,11 +311,11 @@ class DefinitionParser:
             inter_gene_max_space = gene_node.get("inter_gene_max_space")
             try:
                 inter_gene_max_space = int(inter_gene_max_space)
-            except ValueError:
+            except ValueError as err:
                 msg = f"Invalid model definition '{model.name}': " \
                       f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
                 _log.critical(msg)
-                raise SyntaxError(msg)
+                raise SyntaxError(msg) from err
             except TypeError:
                 pass
             else:
@@ -360,43 +364,43 @@ class DefinitionParser:
 
     def check_consistency(self, models):
         """
-        Check the consistency of the co-localization features between the different values given as an input: 
+        Check the consistency of the co-localization features between the different values given as an input:
         between XML definitions, configuration file, and command-line options.
-        
+
         :param models: the list of models to check
         :type models: list of `class:macsypy.model.Model` object
         :raise: :class:`macsypy.error.ModelInconsistencyError` if one test fails
 
         (see `feature <https://projets.pasteur.fr/issues/1850>`_)
-          
+
         In the different possible situations, different requirements need to be fulfilled
         ("mandatory_genes" and "accessory_genes" consist of lists of genes defined as such in the model definition):
-          
+
           - **If:** min_mandatory_genes_required = None  ; min_genes_required = None
           - **Then:** min_mandatory_genes_required = min_genes_required = len(mandatory_genes)
-          
+
           *always True by Models design*
 
           - **If:** min_mandatory_genes_required = value  ; min_genes_required = None
-          - **Then:** min_mandatory_genes_required <= len(mandatory_genes) 
+          - **Then:** min_mandatory_genes_required <= len(mandatory_genes)
           - AND min_genes_required = min_mandatory_genes_required
-          
+
           *always True by design*
 
           - **If:** min_mandatory_genes_required =  None ; min_genes_required = Value
           - **Then:** min_mandatory_genes_required = len(mandatory_genes)
-          - AND min_genes_required >= min_mandatory_genes_required 
+          - AND min_genes_required >= min_mandatory_genes_required
           - AND min_genes_required <= len(mandatory_genes+accessory_genes)
-          
+
           *to be checked*
 
           - **If:** min_mandatory_genes_required =  Value ; min_genes_required = Value
           - **Then:** min_genes_required <= len(accessory_genes+mandatory_genes)
           - AND min_genes_required >= min_mandatory_genes_required
           - AND min_mandatory_genes_required <= len(mandatory_genes)
-           
-          *to be checked*   
-                 
+
+          *to be checked*
+
         """
         for model in models:
             len_accessory_genes = len(model.accessory_genes)
