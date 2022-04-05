@@ -22,44 +22,43 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Manage MacSyFinder specific errors
+"""
 
 class MacsypyError(Exception):
     """
     The base class for MacSyFinder specific exceptions.
     """
-    pass
+
 
 
 class MacsydataError(MacsypyError):
     """
     Raised when error is encounter during model package handling
     """
-    pass
+
 
 
 class MacsyDataLimitError(MacsydataError):
     """
     Raised when the maximum number of github api call is reached
     """
-    pass
 
 
 class OptionError(MacsypyError):
     """
     Raised when command line option is not set properly
     """
-    pass
 
 
 class ModelInconsistencyError(MacsypyError):
     """
     Raised when a definition model is not consistent.
     """
-    pass
 
 
 class SystemDetectionError(MacsypyError):
     """
     Raised when the detection of systems from Hits encountered a problem.
     """
-    pass
