@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Module to manage both default values and configuration needed by macsyfinder
+"""
+
 import os
 from time import strftime
 import logging
@@ -255,7 +259,7 @@ class Config:
         set the value comming from MacsyDefaults
         """
         # the special methods are not used to fill with defaults values
-        self._options = {k: v for k, v in self._defaults.items()}
+        self._options = self._defaults.copy()
         # except for loglevel because log_level can accept int and string as value
         # need conversion in int which is the internal format
         self._options['log_level'] = self._convert_log_level(self._defaults.log_level)
@@ -291,8 +295,8 @@ class Config:
 
         :param str model_conf_path: The path to the model_conf.xml file
         """
-        mp = ModelConfParser(model_conf_path)
-        model_conf = mp.parse()
+        mcp = ModelConfParser(model_conf_path)
+        model_conf = mcp.parse()
 
         self._set_options(model_conf)
 
@@ -307,7 +311,7 @@ class Config:
         for opt in self.model_opts:
             if opt in project_config:
                 self._tmp_opts[opt] = project_config[opt]
-                del(project_config[opt])
+                del project_config[opt]
         self._set_options(project_config)
 
 
@@ -321,7 +325,7 @@ class Config:
         for opt in self.model_opts:
             if opt in user_config:
                 self._tmp_opts[opt] = user_config[opt]
-                del (user_config[opt])
+                del user_config[opt]
         self._set_options(user_config)
 
     def _set_previous_run_config(self, prev_config_path):
@@ -333,11 +337,11 @@ class Config:
         previous_conf = self._config_file_2_dict(prev_config_path)
         if 'out_dir' in previous_conf:
             # set the out_dir from the previous_run is a non sense
-            del(previous_conf['out_dir'])
+            del previous_conf['out_dir']
         for opt in self.model_opts:
             if opt in previous_conf:
                 self._tmp_opts[opt] = previous_conf[opt]
-                del (previous_conf[opt])
+                del previous_conf[opt]
         self._set_options(previous_conf)
 
 
@@ -353,7 +357,7 @@ class Config:
         for opt in self.model_opts:
             if opt in args_dict:
                 self._tmp_opts[opt] = args_dict[opt]
-                del (args_dict[opt])
+                del args_dict[opt]
         self._set_options(args_dict)
 
 
@@ -376,20 +380,20 @@ class Config:
         except ParsingError as err:
             raise ParsingError(f"The macsyfinder configuration file '{file}' is not well formed: {err}") from None
         opts = {}
-        sections = [s for s in parser.sections()]
+        sections = list(parser.sections())
 
         for section in sections:
             for option in parser.options(section):
                 opt_type = type(self._defaults.get(option, None))
 
                 if option == 'log_level':
-                    opt_value = self._set_log_level(parser.get(section, option))
+                    self._set_log_level(parser.get(section, option))
                 else:
                     try:
                         opt_value = parse_meth.get(opt_type, parser.get)(section, option)
                     except (ValueError, TypeError) as err:
                         raise ValueError(f"Invalid value in config_file for option '{option}': {err}")
-                opts[option] = opt_value
+                    opts[option] = opt_value
         return opts
 
 
@@ -450,7 +454,7 @@ class Config:
                             for model, v in opt_value.items():
                                 value += f"{model} {v} "
                             opt_value = value
-                        elif isinstance(opt_value, set) or isinstance(opt_value, list):
+                        elif isinstance(opt_value, (set, list)):
                             opt_value = ', '.join(opt_value)
                         elif opt_value in self.path_opts and self.relative_path:
                             opt_value = os.path.relpath(opt_value)
@@ -823,9 +827,13 @@ class Config:
 
 
 class NoneConfig:
+    """
+    Minimalist Config object just use in some special case wher config is require by api
+    but not used for instance in :class:`macsypy.package.Package`
+    """
 
-    def __getattr__(self, property):
-        if property in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
+    def __getattr__(self, prop):
+        if prop in ('multi_loci', 'min_mandatory_genes_required', 'max_nb_genes',
                         'inter_gene_max_space', 'min_genes_required'):
             return lambda x: None
         else:
