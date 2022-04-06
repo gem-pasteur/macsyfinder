@@ -75,13 +75,13 @@ class RegitriesUtilsTest(MacsyTest):
 
     def test_split_def_name(self):
         items = ['CRISPR-Cas', 'typing', 'cas']
-        def_name = registries._separator.join(items)
+        def_name = registries._SEPARATOR.join(items)
         split = registries.split_def_name(def_name)
         self.assertListEqual(split, items)
-        def_name = registries._separator.join(items) + registries._separator
+        def_name = registries._SEPARATOR.join(items) + registries._SEPARATOR
         split = registries.split_def_name(def_name)
         self.assertListEqual(split, items)
-        def_name = registries._separator + registries._separator.join(items)
+        def_name = registries._SEPARATOR + registries._SEPARATOR.join(items)
         split = registries.split_def_name(def_name)
         self.assertListEqual(split, items)
 
@@ -181,7 +181,7 @@ class ModelLocationTest(MacsyTest):
 
             self.assertSetEqual({ssm.fqn for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {"{m_name}{sep}{sub_d_name}{sep}{d_name}".format(m_name=self.complex_models['name'],
-                                                                                 sep=registries._separator,
+                                                                                 sep=registries._SEPARATOR,
                                                                                  sub_d_name=subdef_name,
                                                                                  d_name=os.path.splitext(ss_name)[0]) for ss_name in subdef.keys()})
 
@@ -206,13 +206,13 @@ class ModelLocationTest(MacsyTest):
         model_loc = ModelLocation(path=simple_dir)
 
         def_fqn = '{}{}{}'.format(model_loc.name,
-                                  registries._separator,
+                                  registries._SEPARATOR,
                                   os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
         defloc_expected_name = os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0]
         defloc_expected = DefinitionLocation(name=defloc_expected_name,
                                              path=os.path.join(simple_dir, 'definitions', defloc_expected_name + '.xml'))
         defloc_expected.fqn = "{}{}{}".format(model_loc.name,
-                                              registries._separator,
+                                              registries._SEPARATOR,
                                               os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
 
         defloc_received = model_loc.get_definition(def_fqn)
@@ -225,7 +225,7 @@ class ModelLocationTest(MacsyTest):
         def_name = 'def_1_1'
         def_fqn = '{model_name}{sep}{subdef_name}{sep}{def_name}'.format(
                                                                     model_name=model_loc.name,
-                                                                    sep=registries._separator,
+                                                                    sep=registries._SEPARATOR,
                                                                     subdef_name=subdef_name,
                                                                     def_name=def_name)
 
@@ -260,7 +260,7 @@ class ModelLocationTest(MacsyTest):
                                                  path=os.path.join(complex_dir, 'definitions', def_name, subdef_name))
                     new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}'.format(
                                                                         model_name=model_loc.name,
-                                                                        sep=registries._separator,
+                                                                        sep=registries._SEPARATOR,
                                                                         subdef_name=os.path.splitext(subdef_name)[0],
                                                                         def_name=def_name)
                     defs_expected.append(new_def)
@@ -271,7 +271,7 @@ class ModelLocationTest(MacsyTest):
                                                      path=os.path.join(complex_dir, 'definitions', subdef_name, sub_subdef_name))
                         new_def.fqn = '{model_name}{sep}{def_name}{sep}{subdef_name}{sep}{sub_subdef_name}'.format(
                                                                         model_name=model_loc.name,
-                                                                        sep=registries._separator,
+                                                                        sep=registries._SEPARATOR,
                                                                         subdef_name=subdef_name,
                                                                         sub_subdef_name=os.path.splitext(sub_subdef_name)[0],
                                                                         def_name=def_name)
@@ -287,14 +287,14 @@ class ModelLocationTest(MacsyTest):
                                          path=os.path.join(complex_dir, 'definitions', def_root_name, def_name))
             new_def.fqn = '{model_name}{sep}{def_root_name}{sep}{def_name}'.format(
                                                                     model_name=model_loc.name,
-                                                                    sep=registries._separator,
+                                                                    sep=registries._SEPARATOR,
                                                                     def_root_name=def_root_name,
                                                                     def_name=os.path.splitext(def_name)[0])
             defs_expected.append(new_def)
 
         defs_received = model_loc.get_all_definitions(root_def_name="{model_name}{sep}{def_root_name}".format(
                                                                                            model_name=model_loc.name,
-                                                                                           sep=registries._separator,
+                                                                                           sep=registries._SEPARATOR,
                                                                                            def_root_name=def_root_name))
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
@@ -363,7 +363,7 @@ class ModelLocationTest(MacsyTest):
 class DefinitionLocationTest(MacsyTest):
 
     def test_separator(self):
-        self.assertEqual(DefinitionLocation.separator, DefinitionLocation._separator)
+        self.assertEqual(DefinitionLocation.separator, DefinitionLocation._SEPARATOR)
 
     def test_split_fqn(self):
         self.assertListEqual(DefinitionLocation.split_fqn('/foo/bar'), ['foo', 'bar'])
