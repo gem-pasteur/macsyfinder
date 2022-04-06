@@ -21,6 +21,11 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+
+"""
+Some macsyfinder helper functions
+"""
+
 import os
 import os.path
 from itertools import groupby
