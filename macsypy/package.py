@@ -22,17 +22,22 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+This module allow to manage Packages of MacSyFinder models
+"""
+
 import os
+import abc
 import tempfile
 import urllib.request
 import urllib.parse
 import json
-import yaml
 import shutil
 import tarfile
 import copy
-import abc
 from typing import List, Dict, Tuple, Optional
+
+import yaml
 import colorlog
 _log = colorlog.getLogger(__name__)
 
@@ -83,9 +88,11 @@ class AbstractModelIndex(metaclass=abc.ABCMeta):
         if os.path.exists(dest_unarchive_path):
             _log.info(f"Removing old models {dest_unarchive_path}")
             shutil.rmtree(dest_unarchive_path)
-        tar = tarfile.open(path, 'r:gz')
-        tar_dir_name = tar.next().name
-        tar.extractall(path=dest_dir)
+
+        with tarfile.open(path, 'r:gz') as tar:
+            tar_dir_name = tar.next().name
+            tar.extractall(path=dest_dir)
+
         # github prefix the archive root directory with the organization name
         # add suffix with a random suffix
         # for instance for TXSS models
@@ -134,15 +141,15 @@ class RemoteModelIndex(AbstractModelIndex):
         :return: the json corresponding to the response url
         """
         try:
-            r = urllib.request.urlopen(url).read()
+            req = urllib.request.urlopen(url).read()
         except urllib.error.HTTPError as err:
             if err.code == 403:
                 raise MacsyDataLimitError("You reach the maximum number of request per hour to github.\n"
                                           "Please wait before to try again.") from None
             else:
                 raise err
-        j = json.loads(r.decode('utf-8'))
-        return j
+        data = json.loads(req.decode('utf-8'))
+        return data
 
 
     def remote_exists(self) -> bool:
@@ -415,7 +422,8 @@ class Package:
                 profiles_fqn = set(model_loc.get_profiles_names())
                 profiles_not_in_def = profiles_fqn - genes_in_def
                 if profiles_not_in_def:
-                    warnings.append(f"The {', '.join(profiles_not_in_def)} profiles are not referenced in any definitions.")
+                    warnings.append(
+                        f"The {', '.join(profiles_not_in_def)} profiles are not referenced in any definitions.")
         finally:
             del config.models_dir
         _log.info("Definitions are consistent")
