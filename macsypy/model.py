@@ -29,7 +29,7 @@ from itertools import chain
 
 from .error import ModelInconsistencyError
 from .registries import DefinitionLocation
-from .hit import ModelHit, MultiSystem
+from .hit import ModelHit
 from .gene import GeneStatus
 
 
@@ -59,7 +59,7 @@ class ModelBank:
     def __contains__(self, model):
         """
         Implement the membership test operator
-        
+
         :param model: the model to test
         :type model: :class:`macsypy.model.Model` object
         :return: True if the model is in the Model factory, False otherwise
@@ -81,8 +81,8 @@ class ModelBank:
         :rtype: integer
         """
         return len(self._model_bank)
-    
-    
+
+
     def add_model(self, model):
         """
         :param model: the model to add
@@ -169,7 +169,7 @@ class Model(metaclass=MetaModel):
                              Used to compute the wholeness.
                              If None the mx_nb_genes = mandatory + accessory
         :type max_nb_genes: integer
-        :param multi_loci: 
+        :param multi_loci:
         :type multi_loci: boolean
         :raise ModelInconsistencyError: if an error is found in model logic.
                                         For instance *genes_required* > *min_mandatory_genes_required*
@@ -190,14 +190,14 @@ class Model(metaclass=MetaModel):
 
 
     def __str__(self):
-        s = f"name: {self.name}\n"
-        s += f"fqn: {self.fqn}\n"
+        rep = f"name: {self.name}\n"
+        rep += f"fqn: {self.fqn}\n"
         for cat in self._gene_category:
-            s += f"==== {cat} genes ====\n"
-            for g in getattr(self, f"{cat}_genes"):
-                s += f"{g.name}\n"
-        s += "============== end pprint model ================\n"
-        return s
+            rep += f"==== {cat} genes ====\n"
+            for gene in getattr(self, f"{cat}_genes"):
+                rep += f"{gene.name}\n"
+        rep += "============== end pprint model ================\n"
+        return rep
 
 
     def __hash__(self):
@@ -325,8 +325,8 @@ class Model(metaclass=MetaModel):
         if gene_name in all_genes:
             return all_genes[gene_name]
         else:
-            for g in all_genes.values():
-                for ex in g.exchangeables:
+            for gene in all_genes.values():
+                for ex in gene.exchangeables:
                     if ex.name == gene_name:
                         return ex
         raise KeyError(f"Model {self.name} does not contain gene {gene_name}")
@@ -345,7 +345,7 @@ class Model(metaclass=MetaModel):
                          for g in sublist}
         if exchangeable:
             exchangeable_genes = [g_ex for g in primary_genes for g_ex in g.exchangeables]
-            all_genes = {g for g in chain(primary_genes, exchangeable_genes)}
+            all_genes = set(chain(primary_genes, exchangeable_genes))
         else:
             all_genes = primary_genes
         return all_genes
