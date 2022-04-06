@@ -21,6 +21,12 @@
 #  along with MacSyFinder (COPYING).                                     #
 #  If not, see <https://www.gnu.org/licenses/>.                          #
 ##########################################################################
+"""
+Entrypoint for macsyconfig command
+which generate a MacSyFinder config file
+"""
+
+
 import itertools
 import sys
 import os.path
@@ -42,8 +48,20 @@ class ConfigParserWithComments(ConfigParser):
     Extend ConfigParser to allow comment in serialization
     """
 
-    def add_comment(self, section, option, comment, comment_nb=itertools.count(1), add_space_before=False, add_space_after=True):
-        """Write a comment in .ini-format (start line with #)"""
+    def add_comment(self, section, option, comment,
+                    comment_nb=itertools.count(1),
+                    add_space_before=False,
+                    add_space_after=True):
+        """
+        Write a comment in .ini-format (start line with #)
+
+        :param section: the name of the sction
+        :param str option: the name of the option
+        :param str comment: the comment linked to this option
+        :param int comment_nb: the identifier of the comment by default an integer
+        :param bool add_space_before:
+        :param bool add_space_after:
+        """
         comment = ''.join([f"# {l}\n" for l in comment.split('\n')])
         if add_space_before:
             comment = '\n' + comment
@@ -51,20 +69,24 @@ class ConfigParserWithComments(ConfigParser):
             comment = comment + '\n'
         self.set(section, f"{option}_{next(comment_nb)}_comment", comment)
 
-    def write(self, fp):
-        """Write an .ini-format representation of the configuration state."""
+    def write(self, file):
+        """
+        Write an .ini-format representation of the configuration state.
+
+        :param file file: the file object wher to write the configuration
+        """
         for section in self._sections:
-            fp.write(f"[{section}]\n")
+            file.write(f"[{section}]\n")
             for key, value in self._sections[section].items():
-                self._write_item(fp, key, value)
-        fp.write("\n")
+                self._write_item(file, key, value)
+        file.write("\n")
 
 
-    def _write_item(self, fp, key, value):
+    def _write_item(self, file, key, value):
         if key.endswith('_comment'):
-            fp.write(f"{value}")
+            file.write(f"{value}")
         else:
-            fp.write(f"{key} = {value}\n")
+            file.write(f"{key} = {value}\n")
 
 
 @dataclass(frozen=True)
@@ -100,7 +122,7 @@ def _validator(cast_func, raw, default, sequence=False):
         else:
             value = cast_func(raw)
     except ValueError as err:
-        raise MacsypyError(f'Invalid value: {err}')
+        raise MacsypyError(f'Invalid value: {err}') from err
     return value
 
 
@@ -335,14 +357,14 @@ def set_section(sec_name, options, config, defaults, use_defaults=False):
         config.add_comment(sec_name, opt_name, option['question'],
                            add_space_before=True, add_space_after=False)
         if option['explanation']:
-            space_after = True if 'expected' in option else False
+            space_after = 'expected' in option
             config.add_comment(sec_name, opt_name, option['explanation'],
                                add_space_before=False, add_space_after=space_after)
         if 'expected' in option:
             expected = f"[{'/'.join([str(i) for i in option['expected']])}]"
             config.add_comment(sec_name, opt_name, expected,
                                add_space_before=False, add_space_after=True)
-        sequence = True if 'sequence' in option and option['sequence'] else False
+        sequence = 'sequence' in option and option['sequence']
 
         if use_defaults:
             value = defaults[opt_name]
@@ -386,9 +408,9 @@ MacSyFinder will look for models in these directories:
  - '/share/macsyfinder/models', '/usr/local/share/macsyfinder/models'
  or
  - in ${VIRTUAL_ENV}/share/macsyfinder/models
- or 
+ or
  - values provided specified by macsyfinder.conf file
- 
+
 then in $HOME/.macsyfinder/models and in command line option --models-dir.""",
                                      'sequence': True},
                'res_search_dir': {'question': "Results research directory",
@@ -421,7 +443,7 @@ this option specify where to create these directories."""},
                     explanation="where are models, default file suffix, ...",
                     question_color=theme.EMPHASIZE + theme.SECTION
                     )
-        use_defaults = True if enter == "no" else False
+        use_defaults = enter == "no"
     set_section('directories', options, config, defaults, use_defaults=use_defaults)
 
 
@@ -444,17 +466,17 @@ def set_hmmer_options(config, defaults, use_defaults=False):
                              'default': 'No',
                              'expected': ['Yes', 'No'],
                              'explanation':
-"""By default the MSF try to applied a threshold per profile by using the 
-hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
-MF switch to use the --e-value-search (-E in hmmsearch). 
-If this option is set the --e-value-search option is used for all profiles regardless the presence of 
+"""By default the MSF try to applied a threshold per profile by using the
+hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise
+MF switch to use the --e-value-search (-E in hmmsearch).
+If this option is set the --e-value-search option is used for all profiles regardless the presence of
 the a GA bit score in the profiles."""},
 
                'e_value_search': {'question': "Maximal e-value for hits to be reported during hmmsearch search.",
                                   'validator': check_float,
                                   'default': defaults.e_value_search,
                                   'explanation':
-"""By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option) 
+"""By default MSF set per profile threshold for hmmsearch run (hmmsearch --cut_ga option)
 for profiles containing the GA bit score threshold.
 If a profile does not contains the GA bit score the --e-value-search (-E in hmmsearch) is applied to this profile.
 To applied the --e-value-search to all profiles use the --no-cut-ga option."""},
@@ -478,7 +500,7 @@ with the profile to allow the hit selection for systems detection."""}
                     explanation="where to find hmmsearch, evalue, coverage, ...",
                     question_color=theme.EMPHASIZE + theme.SECTION
                     )
-        use_defaults = True if enter == "n" else False
+        use_defaults = enter == "n"
     set_section('hmmer', options, config, defaults, use_defaults=use_defaults)
 
 
@@ -518,7 +540,7 @@ def set_general_options(config, defaults, use_defaults=False):
                     explanation="number of cpu used, verbosity, ...",
                     question_color=theme.EMPHASIZE + theme.SECTION
                     )
-        use_defaults = True if enter == "n" else False
+        use_defaults = enter == "n"
     set_section('general', options, config, defaults, use_defaults=use_defaults)
 
 
@@ -553,7 +575,7 @@ def set_score_options(config, defaults, use_defaults=False):
                'out_of_cluster_weight': {'question': "The weight modifier for a hit which is not in a cluster",
                                          'validator': check_float,
                                          'default': defaults.out_of_cluster_weight,
-                                         'explanation': """The hit is a 
+                                         'explanation': """The hit is a
     - true loner (not in any cluster)
     - or multi-system (in a cluster but from an other system)"""}
                }
@@ -565,7 +587,7 @@ def set_score_options(config, defaults, use_defaults=False):
                     explanation="The weights for mandatory, accessory, ...",
                     question_color=theme.EMPHASIZE + theme.SECTION
                     )
-        use_defaults = True if enter == "n" else False
+        use_defaults = enter == "n"
     set_section('score_opt', options, config, defaults, use_defaults=use_defaults)
 
 
@@ -604,23 +626,23 @@ But you can still specify another sequence file with --sequence-db option."""}
                     explanation="Type of sequence to analyze, replicon topology, ...",
                     question_color=theme.EMPHASIZE + theme.SECTION
                     )
-        use_defaults = True if enter == "n" else False
+        use_defaults = enter == "n"
     set_section('base', options, config, defaults, use_defaults=use_defaults)
 
 
 def prolog():
     """return the text displayed to the user when the configuration file is generated"""
-    s = f"""{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
+    rep = f"""{theme.EMPHASIZE}Welcome to the MacSyFinder {msf_vers} configuration utility.{theme.RESET}
 
 Please enter values for the following settings (just press Enter to
 accept a default value, if one is given in brackets).
 """
-    return s
+    return rep
 
 
 def epilog(path):
     """return the text to the user before to start the configuration"""
-    s = f"""A configuration file '{theme.EMPHASIZE}{path}{theme.RESET}' has been generated..
+    rep = f"""A configuration file '{theme.EMPHASIZE}{path}{theme.RESET}' has been generated..
 Place it in canonical location
  {theme.QUESTION}*{theme.RESET} in /etc/macsyfinder for system wide configuration {theme.WARN}(must named macsyfinder.conf){theme.RESET}
  {theme.QUESTION}*{theme.RESET} in <VIRTUALENV>/etc if you use a virtualenv {theme.WARN}(must named macsyfinder.conf){theme.RESET}
@@ -631,7 +653,7 @@ Place it in canonical location
    can be named as you want.
 
 """
-    return s
+    return rep
 
 
 def serialize(config, path):
@@ -642,8 +664,8 @@ def serialize(config, path):
     :type config: :class:`ConfigParserWithComments` object
     :param str path: where to store the configuration
     """
-    with open(path, 'w') as f:
-        config.write(f)
+    with open(path, 'w') as file:
+        config.write(file)
 
 
 def parse_args(args):
