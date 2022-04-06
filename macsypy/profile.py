@@ -22,6 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Manage HMM profiles and hmmsearch execution
+"""
 
 import os
 import logging
@@ -81,7 +84,7 @@ class Profile:
 
         :param gene: the gene corresponding to this profile
         :type gene: :class:`macsypy.secretion.Gene` object
-        :param cfg: the configuration 
+        :param cfg: the configuration
         :type cfg: :class:`macsypy.config.Config` object
         :param path: the path to the hmm profile.
         :type path: string
@@ -89,7 +92,7 @@ class Profile:
         self.gene = gene
         self.path = path
         self.len, self.ga_threshold = self._profile_features()
-        self.cfg = cfg 
+        self.cfg = cfg
         self.hmm_raw_output = None
         self._report = None
         self._lock = Lock()
@@ -111,29 +114,30 @@ class Profile:
         """
         length = None
         ga_threshold = False
-        with open(self.path) as f:
-            for l in f:
-                if l.startswith('LENG'):
-                    length = int(l.split()[1])
-                elif l.startswith('GA'):
+        with open(self.path) as hmm_file:
+            for line in hmm_file:
+                if line.startswith('LENG'):
+                    length = int(line.split()[1])
+                elif line.startswith('GA'):
                     try:
-                        header, t1, t2 = l.split()
+                        header, thld_1, thld_2 = line.split()
                     except ValueError:
                         _log.warning(f"{self.gene.name} GA score is not well formatted. expected: "
-                                     f"'GA float float' got '{l.rstrip()}'.")
+                                     f"'GA float float' got '{line.rstrip()}'.")
                         _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
                         continue
-                    if t2.endswith(';'):
-                        t2 = t2[:-1]
+                    if thld_2.endswith(';'):
+                        thld_2 = thld_2[:-1]
                     try:
-                        t1 = float(t1)
-                        t2 = float(t2)
+                        thld_1 = float(thld_1)
+                        thld_2 = float(thld_2)
                         ga_threshold = True
                     except ValueError:
-                        _log.warning(f"{self.gene.name} GA score is not well formatted expected 2 floats got '{t1}' '{t2}'.")
+                        _log.warning(f"{self.gene.name} GA score is not well formatted "
+                                     f"expected 2 floats got '{thld_1}' '{thld_2}'.")
                         _log.warning(f"GA score will not used for gene '{self.gene.name}'.")
                         continue
-                elif l.startswith('STATS LOCAL'):
+                elif line.startswith('STATS LOCAL'):
                     break
         return length, ga_threshold
 
@@ -171,7 +175,7 @@ class Profile:
                 if self.cfg.no_cut_ga():
                     hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
                 elif not self.cfg.no_cut_ga() and self.ga_threshold:
-                    hmmer_threshold = f"--cut_ga"
+                    hmmer_threshold = "--cut_ga"
                 else:
                     # no_cut_ga is not set but there is not self.ga_threshold:
                     hmmer_threshold = f"-E {self.cfg.e_value_search():f}"
