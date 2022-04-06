@@ -69,10 +69,10 @@ def get_profile_len(path: str) -> int:
     :return: the length, presence of ga bit threshold
     :rtype: tuple(int length, bool ga_threshold)
     """
-    with open(path) as f:
-        for l in f:
-            if l.startswith("LENG"):
-                length = int(l.split()[1])
+    with open(path) as file:
+        for line in file:
+            if line.startswith("LENG"):
+                length = int(line.split()[1])
                 break
     return length
 
@@ -85,8 +85,8 @@ def get_gene_name(path: str, suffix: str) -> str:
     :return: the name of the analysed gene
     :rtype: str
     """
-    f = os.path.basename(path)
-    gene_name = f.replace(suffix, '')
+    file_name = os.path.basename(path)
+    gene_name = file_name.replace(suffix, '')
     return gene_name
 
 
@@ -116,6 +116,9 @@ class LightHit:
 
 
 class HmmProfile:
+    """
+    Handle the HMM output files
+    """
 
     def __init__(self, gene_name, gene_profile_lg, hmmer_output, cfg):
         """
@@ -157,9 +160,9 @@ class HmmProfile:
                 replicon_name = self._get_replicon_name(hit_id)
 
                 body = next(hmm_hits)
-                h = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg, coverage_threshold,
+                l_hit = self._parse_hmm_body(hit_id, self.gene_profile_lg, seq_lg, coverage_threshold,
                                          replicon_name, position_hit, i_evalue_sel, body)
-                all_hits += h
+                all_hits += l_hit
             hits = sorted(all_hits, key=lambda h: - h.score)
         return hits
 
@@ -173,12 +176,12 @@ class HmmProfile:
         :return: a dictionary containing a key for each sequence id of the hits
         :rtype: dict
         """
-        d = {}
+        db = {}
         with open(hmm_output) as hmm_file:
             hits = (x[1] for x in groupby(hmm_file, self._hit_start) if x[0])
-            for h in hits:
-                d[self._parse_hmm_header(h)] = None
-        return d
+            for hit in hits:
+                db[self._parse_hmm_header(hit)] = None
+        return db
 
 
     def _fill_my_db(self, macsyfinder_idx: str, db: Dict) -> None:
@@ -295,7 +298,7 @@ class HmmProfile:
                     except ValueError as err:
                         msg = f"Invalid line to parse :{line}:{err}"
                         _log.debug(msg)
-                        raise ValueError(msg)
+                        raise ValueError(msg) from err
 
 
 def header(cmd: List[str]) -> str:
@@ -372,7 +375,7 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description=dedent('''
+        description=dedent(r'''
 
          *            *               *                   * *       * 
     *           *               *   *   *  *    **                *  
@@ -399,14 +402,14 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
                         action='store',
                         default=-1.,
                         type=float,
-                        help=f"""Minimal profile coverage required for the hit alignment  with the profile to allow
+                        help="""Minimal profile coverage required for the hit alignment  with the profile to allow
 the hit selection for systems detection. (default no threshold)"""
                         )
     parser.add_argument('--i-evalue-sel',
                         action='store',
                         type=float,
                         default=1.0e9,
-                        help=f"""Maximal independent e-value for Hmmer hits to be selected for systems detection.
+                        help="""Maximal independent e-value for Hmmer hits to be selected for systems detection.
 (default: no selection based on i-evalue)""")
     parser.add_argument('--best-hits',
                         choices=['score', 'i_eval', 'profile_coverage'],
@@ -546,7 +549,7 @@ def main(args=None, log_level=None) -> None:
                 print(hit, file=prof_out)
             _log.info(f"result is in '{profile_report_path}'")
         else:
-            _log.info(f"No hit found")
+            _log.info("No hit found")
 
 
 if __name__ == '__main__':
