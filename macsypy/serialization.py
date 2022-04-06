@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+This module focus on the way to serialize the different macsyfinder modules
+"""
+
 import abc
 from string import Template
 
@@ -86,7 +90,8 @@ class TsvSystemSerializer(SystemSerializer):
     Handle System serialization in tsv format
     """
 
-    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score\tsys_occ" \
+    header = "replicon\thit_id\tgene_name\thit_pos\tmodel_fqn" \
+             "\tsys_id\tsys_loci\tlocus_num\tsys_wholeness\tsys_score\tsys_occ" \
              "\thit_gene_ref\thit_status\thit_seq_len\thit_i_eval\thit_score\thit_profile_cov\thit_seq_cov\t" \
              "hit_begin_match\thit_end_match\tcounterpart\tused_in"
 
@@ -99,7 +104,10 @@ class TsvSystemSerializer(SystemSerializer):
 
     def serialize(self, system, hit_system_tracker):
         r"""
-
+        :param :class:`macsypy.system.System` system: The system to serialize.
+        :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
+               in which system it is implied.
+        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
 
@@ -183,35 +191,40 @@ class TxtLikelySystemSerializer(SystemSerializer):
     """
 
 
-    def serialize(self, likely_system, hit_system_tracker):
+    def serialize(self, system, hit_system_tracker):
         """
+        :param :class:`macsypy.system.LikelySystem` system: The likely system to serialize.
+                                                            Use only for unordered db-type
+        :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
+               in which system it is implied.
+        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a string representation of system readable by human
         """
-        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in likely_system.hits])
-        if likely_system.forbidden_hits:
+        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in system.hits])
+        if system.forbidden_hits:
             warning = "WARNING there quorum is reached but there is also some forbidden genes.\n"
         else:
             warning = '\n'
 
-        s = f"""This replicon contains genetic materials needed for system {likely_system.model.fqn}
+        s = f"""This replicon contains genetic materials needed for system {system.model.fqn}
 {warning}
-system id = {likely_system.id}
-model = {likely_system.model.fqn}
-replicon = {likely_system.replicon_name}
+system id = {system.id}
+model = {system.model.fqn}
+replicon = {system.replicon_name}
 hits = [{hits}]
-wholeness = {likely_system.wholeness:.3f}
+wholeness = {system.wholeness:.3f}
 """
-        for title, genes in (("mandatory", likely_system.mandatory_occ),
-                             ("accessory", likely_system.accessory_occ),
-                             ("neutral", likely_system.neutral_occ),
-                             ("forbidden", likely_system.forbidden_occ)):
+        for title, genes in (("mandatory", system.mandatory_occ),
+                             ("accessory", system.accessory_occ),
+                             ("neutral", system.neutral_occ),
+                             ("forbidden", system.forbidden_occ)):
             s += f"\n{title} genes:\n"
             for g_name, hits in genes.items():
                 s += f"\t- {g_name}: {len(hits)} "
                 all_hits_str = []
                 for h in hits:
                     used_in_systems = [s.id for s in hit_system_tracker[h.hit]
-                                       if s.model.fqn != likely_system.model.fqn]
+                                       if s.model.fqn != system.model.fqn]
                     used_in_systems.sort()
                     if used_in_systems:
                         hit_str = f"{h.gene.name} [{', '.join(used_in_systems)}]"
@@ -241,9 +254,13 @@ class TsvLikelySystemSerializer(SystemSerializer):
                         "\t$mh_end_match\t$used_in_systems\n")
 
 
-    def serialize(self, likely_system, hit_system_tracker):
+    def serialize(self, system, hit_system_tracker):
         r"""
-
+        :param :class:`macsypy.system.LikelySystem` system: The likely system to serialize.
+                                                            Use only for unordered db-type
+        :param hit_system_tracker: The hit_system_tracker which allow to know for each hit
+               in which system it is implied.
+        :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
         :return: a serialisation of this system in tabulated separated value format
                  each line represent a hit and have the following structure:
 
@@ -256,23 +273,23 @@ class TsvLikelySystemSerializer(SystemSerializer):
         :rtype: str
         """
         tsv = ''
-        for status in (s.lower() for s in GeneStatus.__members__.keys()):
+        for status in (s.lower() for s in GeneStatus.__members__):
             try:
-                hits = getattr(likely_system, f"{status}_hits")
+                hits = getattr(system, f"{status}_hits")
                 hits = sorted(hits, key=lambda mh: mh.gene.name)
             except AttributeError:
                 continue
             for mh in hits:
-                used_in_systems = [s.id for s in hit_system_tracker[mh.hit] if s.model.fqn != likely_system.model.fqn]
+                used_in_systems = [s.id for s in hit_system_tracker[mh.hit] if s.model.fqn != system.model.fqn]
                 used_in_systems.sort()
                 tsv += self.template.substitute(
-                    sys_replicon_name=likely_system.replicon_name,
+                    sys_replicon_name=system.replicon_name,
                     mh_id=mh.id,
                     mh_gene_name=mh.gene.name,
                     mh_position=mh.position,
-                    sys_model_fqn=likely_system.model.fqn,
-                    sys_id=likely_system.id,
-                    sys_wholeness=f"{likely_system.wholeness:.3f}",
+                    sys_model_fqn=system.model.fqn,
+                    sys_id=system.id,
+                    sys_wholeness=f"{system.wholeness:.3f}",
                     mh_gene_role=mh.gene_ref.alternate_of().name,
                     mh_status=mh.status,
                     mh_seq_length=mh.seq_length,
@@ -294,25 +311,27 @@ class TxtUnikelySystemSerializer(SystemSerializer):
     """
 
 
-    def serialize(self, likely_system):
+    def serialize(self, system):
         """
+        :param system: The unlikely system to serialize. (used only if db-type is "unordered_replicon")
+        :type system: :class:`macsypy.system.UnlikelySystem` object
         :return: a string representation of system readable by human
         """
-        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in likely_system.hits])
-        reasons = '\n'.join(likely_system.reasons)
-        s = f"""This replicon probably not contains a system {likely_system.model.fqn}:
+        hits = ", ".join([str((h.id, h.gene.name, h.position)) for h in system.hits])
+        reasons = '\n'.join(system.reasons)
+        s = f"""This replicon probably not contains a system {system.model.fqn}:
 {reasons}
 
-system id = {likely_system.id}
-model = {likely_system.model.fqn}
-replicon = {likely_system.replicon_name}
+system id = {system.id}
+model = {system.model.fqn}
+replicon = {system.replicon_name}
 hits = [{hits}]
-wholeness = {likely_system.wholeness:.3f}
+wholeness = {system.wholeness:.3f}
 """
-        for title, genes in (("mandatory", likely_system.mandatory_occ),
-                             ("accessory", likely_system.accessory_occ),
-                             ("neutral", likely_system.neutral_occ),
-                             ("forbidden", likely_system.forbidden_occ)):
+        for title, genes in (("mandatory", system.mandatory_occ),
+                             ("accessory", system.accessory_occ),
+                             ("neutral", system.neutral_occ),
+                             ("forbidden", system.forbidden_occ)):
             s += f"\n{title} genes:\n"
             for g_name, hits in genes.items():
                 s += f"\t- {g_name}: {len(hits)} "
@@ -323,7 +342,7 @@ wholeness = {likely_system.wholeness:.3f}
         return s
 
 
-class TsvSpecialHitSerializer(SystemSerializer):
+class TsvSpecialHitSerializer:
     """
     Seraialize special hits: :class:`macsypy.hit.Loner` and :class:`macsypy.hit.MultiSystem` in tsv format
     """
@@ -340,7 +359,7 @@ class TsvSpecialHitSerializer(SystemSerializer):
                      "hit_i_eval\thit_score\thit_profile_cov\t" \
                      "hit_seq_cov\thit_begin_match\thit_end_match\n"
             s += header
-            special_hits = {h for h in best_hits}
+            special_hits = set(best_hits)
             for best_hit in best_hits:
                 special_hits.update(best_hit.counterpart)
             special_hits = list(special_hits)
