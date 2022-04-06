@@ -245,6 +245,12 @@ def do_install(args: argparse.Namespace) -> None:
     :type args: :class:`argparse.Namespace` object
     :rtype: None
     """
+    def clean_cache(model_index):
+        try:
+            shutil.rmtree(model_index.cache)
+        except Exception:
+            _log.warning(f"Cannot clean cache '{model_index.cache}': {err}")
+
     if os.path.exists(args.package):
         remote = False
         pack_name, inst_vers = parse_arch_path(args.package)
@@ -339,8 +345,9 @@ def do_install(args: argparse.Namespace) -> None:
     cached_pack = model_index.unarchive_package(arch_path)
 
     if args.user:
-        dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'data'))
+        dest = os.path.realpath(os.path.join(os.path.expanduser('~'), '.macsyfinder', 'models'))
         if os.path.exists(dest) and not os.path.isdir(dest):
+            clean_cache(model_index)
             raise RuntimeError("'{}' already exist and is not a directory.")
         elif not os.path.exists(dest):
             os.makedirs(dest)
@@ -349,7 +356,22 @@ def do_install(args: argparse.Namespace) -> None:
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
-        dest = config.models_dir()[0]
+        models_dirs = config.models_dir()
+        if not models_dirs:
+            clean_cache(model_index)
+            msg = """There is no cannonical directories to store models:
+You can create one in youre HOME to enable the models for the user 
+       macsydata install --user <PACK_NAME>
+or for a project 
+       macsydata install --models <PACK_NAME>
+In this latter case you have to specify --models-dir <path_to_models_dir> on the macsyfinder command line
+for the system wide models installation please refer to the documentation.
+"""
+            _log.error(msg)
+            sys.tracebacklimit = 0
+            raise ValueError() from None
+        else:
+            dest = config.models_dir()[0]
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
@@ -358,6 +380,7 @@ def do_install(args: argparse.Namespace) -> None:
     try:
         shutil.move(cached_pack, dest)
     except PermissionError as err:
+        clean_cache(model_index)
         _log.error(f"{dest} is not writable: {err}")
         _log.warning("Maybe you can use --user option to install in your HOME.")
         sys.tracebacklimit = 0
@@ -368,6 +391,7 @@ def do_install(args: argparse.Namespace) -> None:
     if inst_pack_loc:
         shutil.rmtree(old_pack_path)
     _log.info(f"The models {pack_name} ({target_vers}) have been installed successfully.")
+    clean_cache(model_index)
 
 
 def _get_remote_available_versions(pack_name, org):
