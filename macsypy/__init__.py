@@ -21,11 +21,15 @@
 # along with MacSyFinder (COPYING).                                     #
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
+"""
+MacSypy package contains mainly variable used in library as __version_
+and functions to intialize the logger uses by entrypoints
+"""
 
 from time import strftime, localtime
 import sys
 
-__version__ = '{}.dev'.format(strftime("%Y%m%d", localtime()))
+__version__ = f'{strftime("%Y%m%d", localtime())}.dev'
 
 
 __citation__ = """Abby SS, Néron B, Ménager H, Touchon M, Rocha EPC (2014)
@@ -39,7 +43,8 @@ def init_logger(log_file=None, out=True):
 
     :param str log_file: The path toward a file log
     :param out:
-    :return:
+    :return: the logger handlers
+    :rtype: list of :class:`logging.Handler` object
     """
     import logging
     import colorlog
@@ -78,6 +83,11 @@ def init_logger(log_file=None, out=True):
 
 
 def logger_set_level(level='INFO'):
+    """
+    Set the level and the formatter to the logger 'macsypy'
+    :param level:
+    :type level: str among (NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL) or a positive integer
+    """
     # default value must be a string
     # cannot be logging.WARNING for instance
     # because setup import __init__ to get __version__
