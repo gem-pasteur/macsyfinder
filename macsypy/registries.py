@@ -22,11 +22,16 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Manage the Models locations: Profiles and defintions
+"""
+
 import os
+import glob
 from macsypy.error import MacsypyError
 
 
-_separator = '/'
+_SEPARATOR = '/'
 
 
 def split_def_name(fqn):
@@ -39,7 +44,7 @@ def split_def_name(fqn):
              ['CRISPR-Cas', 'typing', 'cas']
     :rtype: list of string
     """
-    split = fqn.split(_separator)
+    split = fqn.split(_SEPARATOR)
     if split[0] == '':  # '/foo/bar'
         split = split[1:]
     if split[-1] == '':
@@ -55,7 +60,7 @@ def join_def_path(*args):
     separator
     :rtype: string
     """
-    return _separator.join(args)
+    return _SEPARATOR.join(args)
 
 
 def scan_models_dir(models_dir, profile_suffix=".hmm", relative_path=False):
@@ -120,7 +125,7 @@ class ModelRegistry:
 
 
     def __str__(self):
-        s = ''
+        rep = ''
 
         def model_to_str(model, pad):
             if model.subdefinitions:
@@ -133,11 +138,11 @@ class ModelRegistry:
             return model_s
 
         for model in sorted(self.models()):
-            s += model.name + '\n'
+            rep += model.name + '\n'
             pad = len(model.name) + 1
             for definition in model.get_definitions():
-                s += model_to_str(definition, pad)
-        return s
+                rep += model_to_str(definition, pad)
+        return rep
 
 
 class ModelLocation:
@@ -160,8 +165,7 @@ class ModelLocation:
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
         if path and any((profile_dir, def_dir)):
-            raise MacsypyError("'path' and '{}' are incompatible arguments".format(
-                'profile_dir' if profile_dir else 'def_dir'))
+            raise MacsypyError(f"'path' and '{'profile_dir' if profile_dir else 'def_dir'}' are incompatible arguments")
         elif not path and not all((profile_dir, def_dir)):
             raise MacsypyError("if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
         self.path = path
@@ -185,7 +189,6 @@ class ModelLocation:
                 if new_def:  # _scan_definitions can return None if a dir is empty
                     self._definitions[new_def.name] = new_def
         else:
-            import glob
             for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
 
                 model_fqn = os.path.basename(os.path.splitext(model_path)[0])
@@ -217,9 +220,9 @@ class ModelLocation:
                 name = os.path.basename(base)
                 if parent_def is None:
                     # it's the root of definitons tree
-                    fqn = f"{self.name}{_separator}{name}"
+                    fqn = f"{self.name}{_SEPARATOR}{name}"
                 else:
-                    fqn = f"{parent_def.fqn}{_separator}{name}"
+                    fqn = f"{parent_def.fqn}{_SEPARATOR}{name}"
                 new_def = DefinitionLocation(name=name,
                                              fqn=fqn,
                                              path=def_path)
@@ -228,9 +231,9 @@ class ModelLocation:
             name = os.path.basename(def_path)
             if parent_def is None:
                 # it's the root of definitons tree
-                fqn = f"{self.name}{_separator}{name}"
+                fqn = f"{self.name}{_SEPARATOR}{name}"
             else:
-                fqn = f"{parent_def.fqn}{_separator}{name}"
+                fqn = f"{parent_def.fqn}{_SEPARATOR}{name}"
             new_def = DefinitionLocation(name=name,
                                          fqn=fqn,
                                          path=def_path)
@@ -280,7 +283,7 @@ class ModelLocation:
         :rtype: a :class:`DefinitionLocation` object.
         :raise: valueError if fqn does not match with any model definition.
         """
-        name_path = [item for item in fqn.split(_separator) if item]
+        name_path = [item for item in fqn.split(_SEPARATOR) if item]
         def_full_name = name_path[1:]
         defs = self._definitions
         definition = None
@@ -305,7 +308,7 @@ class ModelLocation:
         if root_def_name is None:
             all_defs = [def_loc for all_loc in self._definitions.values() for def_loc in all_loc.all()]
         else:
-            root_def_name = root_def_name.rstrip(_separator)
+            root_def_name = root_def_name.rstrip(_SEPARATOR)
             root_def = self.get_definition(root_def_name)
             if root_def is not None:
                 all_defs = root_def.all()
@@ -353,7 +356,7 @@ class MetaDefLoc(type):
 
     @property
     def separator(cls):
-        return cls._separator
+        return cls._SEPARATOR
 
 
 class DefinitionLocation(dict, metaclass=MetaDefLoc):
@@ -366,7 +369,7 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
     subdefinitions: the subdefintions if it exists
     """
 
-    _separator = '/'
+    _SEPARATOR = '/'
 
     def __init__(self, name=None, fqn=None, subdefinitions=None, path=None):
         super().__init__(name=name, fqn=fqn, subdefinitions=subdefinitions, path=path)
@@ -374,14 +377,25 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
     @classmethod
     def split_fqn(cls, fqn):
+        """
+        :param str fqn: the fully qualified name of a defintion
+        :return: each member of the fully qn in list.
+        """
         return [f for f in fqn.split(cls.separator) if f]
 
     @classmethod
     def root_name(cls, fqn):
+        """
+        :param str fqn: the fully qualified name of a defintion
+        :return: the root name of this definition (family name)
+        """
         return cls.split_fqn(fqn)[0]
 
     @property
     def family_name(self):
+        """
+        :return: the models family name which is the name of the package
+        """
         return self.__class__.root_name(self.fqn)
 
     def __hash__(self):
@@ -400,6 +414,9 @@ class DefinitionLocation(dict, metaclass=MetaDefLoc):
 
 
     def all(self):
+        """
+        :return: the defintion and all recursivelly all subdefintions
+        """
         if not self.subdefinitions:
             return [self]
         else:

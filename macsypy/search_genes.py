@@ -22,6 +22,10 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Manage the hmm step (hmmsearch or recover results from previous run) in parallele
+"""
+
 import concurrent.futures
 import logging
 _log = logging.getLogger(__name__)

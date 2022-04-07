@@ -22,6 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Main entrypoint to macsyfinder
+"""
 
 import sys
 import os
@@ -113,7 +116,7 @@ def parse_args(args):
         epilog="For more details, visit the MacSyFinder website and see the MacSyFinder documentation.",
         # formatter_class=ArgumentDefaultsHelpRawTextFormatter,
         formatter_class=argparse.RawTextHelpFormatter,
-        description=dedent('''
+        description=dedent(r'''
 
 
 
@@ -164,7 +167,7 @@ If the name 'all' is in the list of models, all models from the family will be s
     genome_options.add_argument("--db-type",
                                 choices=['ordered_replicon', 'gembase', 'unordered'],
                                 default=None,
-                                help='''The type of dataset to deal with. 
+                                help='''The type of dataset to deal with.
 "unordered" corresponds to a non-assembled genome or set of unassembled genes,
 "ordered_replicon" to an assembled genome,
 "gembase" to a set of replicons where sequence identifiers
@@ -226,7 +229,7 @@ This option can be repeated several times:
                                 action='append',
                                 nargs=2,
                                 default=None,
-                                help="""The minimal number of genes required for model assessment 
+                                help="""The minimal number of genes required for model assessment
 (includes both 'mandatory' and 'accessory' components).
 The first value must correspond to a model fully qualified name, the second value to an integer.
 This option can be repeated several times:
@@ -271,7 +274,7 @@ To applied the --e-value-search to all profiles use the --no-cut-ga option.
     hmmer_options.add_argument('--no-cut-ga',
                                action='store_true',
                                default=False,
-                               help=f"""By default the MSF try to applied a threshold per profile by using the 
+                               help=f"""By default the MSF try to applied a threshold per profile by using the
 hmmer -cut-ga option. This is possible only if the GA bit score is present in the profile otherwise 
 MF switch to use the --e-value-search (-E in hmmsearch). 
 If this option is set the --e-value-search option is used for all profiles regardless the presence of 
@@ -332,13 +335,13 @@ the hit selection for systems detection.
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight modifier for cluster which bring a component already presents in other 
+                               help=f"""the weight modifier for cluster which bring a component already presents in other
 clusters (default:{msf_def['redundancy_penalty']})""")
     score_options.add_argument('--out-of-cluster',
                                action='store',
                                type=float,
                                default=None,
-                               help=f"""the weight modifier for a hit which is a 
+                               help=f"""the weight modifier for a hit which is a
  - true loner (not in cluster)
  - or multi-system (from an other system) 
 (default:{msf_def['out_of_cluster_weight']})""")
@@ -379,7 +382,7 @@ if out-dir is specified, res-search-dir will be ignored.""")
 searched in the 'profile_dir', in a file which name is based on the
 Gene name + the profile suffix.
 For instance, if the Gene is named 'gspG' and the suffix is '.hmm3',
-then the profile should be placed at the specified location 
+then the profile should be placed at the specified location
 under the name 'gspG.hmm3'
 (default: {msf_def['profile_suffix']})"""
                              )
@@ -490,8 +493,8 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
     logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
     logger.info(f"Analysis launched on {config.sequence_db()} for model(s):")
 
-    for m in models_def_to_detect:
-        logger.info(f"\t- {m.fqn}")
+    for model in models_def_to_detect:
+        logger.info(f"\t- {model.fqn}")
 
     models_to_detect = [model_bank[model_loc.fqn] for model_loc in models_def_to_detect]
     all_genes = []
@@ -499,8 +502,8 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
         genes = model.mandatory_genes + model.accessory_genes + model.neutral_genes + model.forbidden_genes
         # Exchangeable (formerly homologs/analogs) are also added because they can "replace" an important gene...
         ex_genes = []
-        for g in genes:
-            ex_genes += g.exchangeables
+        for m_gene in genes:
+            ex_genes += m_gene.exchangeables
         all_genes += (genes + ex_genes)
     #############################################
     # this part of code is executed in parallel
@@ -508,6 +511,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
     try:
         all_reports = search_genes(all_genes, config)
     except Exception as err:
+        raise err
         sys.exit(str(err))
     #############################################
     # end of parallel code
@@ -559,7 +563,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
     all_rejected_clusters = []
     rep_db = RepliconDB(config)
     for rep_name in hits_by_replicon:
-        logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
+        logger.info(f"\n{f' Hits analysis for replicon {rep_name} ':#^60}")
         rep_info = rep_db[rep_name]
         for model in models_to_detect:
             one_model_systems = []
@@ -567,7 +571,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.info(f"Check model {model.fqn}")
             # model.filter filter hit but also cast them in ModelHit
             mhits_related_one_model = model.filter(hits_by_replicon[rep_name])
-            logger.debug("{:#^80}".format(" hits related to {} ".format(model.name)))
+            logger.debug(f"{f' hits related to {model.name} ':#^80}")
             hit_header_str = "id\trep_name\tpos\tseq_len\tgene_name\ti_eval\tscore\tprofile_cov\tseq_cov\tbeg_match\tend_match"
             hits_str = "".join([str(h) for h in mhits_related_one_model])
             logger.debug(f"\n{hit_header_str}\n{hits_str}")
@@ -575,9 +579,9 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             logger.info("Building clusters")
             hit_weights = HitWeight(**config.hit_weights())
             true_clusters, true_loners = cluster.build_clusters(mhits_related_one_model, rep_info, model, hit_weights)
-            logger.debug("{:#^80}".format(" CLUSTERS "))
+            logger.debug(f"{' CLUSTERS ':#^80}")
             logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
-            logger.debug("{:=^50}".format(" LONERS "))
+            logger.debug(f"{' LONERS ':=^50}")
             logger.debug("\n" + "\n".join([str(c) for c in true_loners.values() if c.loner]))
             # logger.debug("{:=^50}".format(" MULTI-SYSTEMS hits "))
             # logger.debug("\n" + "\n".join([str(c.hits[0]) for c in special_clusters.values() if c.multi_system]))
@@ -600,7 +604,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             for one_sys in one_model_systems:
                 hit_encondig_multisystems.update(one_sys.get_hits_encoding_multisystem())
 
-            logger.debug("{:#^80}".format(" MultiSystems "))
+            logger.debug(f"{' MultiSystems ':#^80}")
             logger.debug("\n" + "\n".join([str(c) for c in true_clusters]))
             # Cast these hits in MultiSystem/LonerMultiSystem
             multi_systems_hits = []
@@ -641,7 +645,7 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
     likely_systems = []
     rejected_hits = []
     for rep_name in hits_by_replicon:
-        logger.info("\n{:#^60}".format(f" Hits analysis for replicon {rep_name} "))
+        logger.info(f"\n{f' Hits analysis for replicon {rep_name} ':#^60}")
         for model in models_to_detect:
             logger.info(f"Check model {model.fqn}")
             hits_related_one_model = model.filter(hits_by_replicon[rep_name])
@@ -914,6 +918,16 @@ def rejected_clst_to_txt(rejected_clusters, clst_file):
 
 
 def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
+    """
+    print likely systems occurrences (from unordered replicon)
+    in a file in text human readable format
+    :param likely_systems: list of systems found
+    :type likely_systems: list of :class:`macsypy.system.LikelySystem` objects
+    :param hit_system_tracker: a filled HitSystemTracker.
+    :type hit_system_tracker: :class:`macsypy.system.HitSystemTracker` object
+    :param sys_file: file object
+    :return: None
+    """
     print(_outfile_header(), file=sys_file)
     if likely_systems:
         print("# Systems found:\n", file=sys_file)
@@ -927,7 +941,7 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
 def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
     """
     print likely systems occurrences (from unordered replicon)
-    in a file in human readable format
+    in a file in tabulated separeted value (tsv) format
 
     :param likely_systems: list of systems found
     :type likely_systems: list of :class:`macsypy.system.LikelySystem` objects
@@ -1056,7 +1070,7 @@ def main(args=None, loglevel=None):
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
 
-    logger.info("\n{:#^70}".format(" Searching systems "))
+    logger.info(f"\n{f' Searching systems ':#^70}")
     all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
     if config.db_type() in ('gembase', 'ordered_replicon'):
@@ -1067,7 +1081,7 @@ def main(args=None, loglevel=None):
         ###########################
         # select the best systems #
         ###########################
-        logger.info("\n{:#^70}".format(" Computing best solutions "))
+        logger.info(f"\n{f' Computing best solutions ':#^70}")
         all_best_solutions = []
         one_best_solution = []
 
@@ -1091,7 +1105,7 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        logger.info("\n{:#^70}".format(f" Writing down results in '{os.path.basename(config.working_dir())}' "))
+        logger.info(f"""\n{f" Writing down results in '{os.path.basename(config.working_dir())}' ":#^70}""")
         system_filename = os.path.join(config.working_dir(), "all_systems.txt")
         tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
 
@@ -1144,7 +1158,7 @@ def main(args=None, loglevel=None):
         ##############################
         # Write the results in files #
         ##############################
-        logger.info("\n{:#^70}".format(f" Writing down results in '{os.path.basename(config.working_dir())}' "))
+        logger.info(f"""\n{f" Writing down results in '{os.path.basename(config.working_dir())}' ":#^70}""")
 
         system_filename = os.path.join(config.working_dir(), "all_systems.txt")
         with open(system_filename, "w") as sys_file:

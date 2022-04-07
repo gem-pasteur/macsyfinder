@@ -22,6 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Extract informations from the results of hmmsearch
+"""
 
 import os
 import logging
@@ -36,7 +39,7 @@ from .hit import CoreHit
 from .error import MacsypyError
 
 
-class HMMReport(object, metaclass=abc.ABCMeta):
+class HMMReport(metaclass=abc.ABCMeta):
     """
     Handle the results from the HMM search. Extract a synthetic report from the raw hmmer output,
     after having applied a hit filtering.
@@ -70,7 +73,6 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :param str hit_id: the id of the current hit extract from hmm output.
         :return: The name of the replicon
         """
-        pass
 
 
     def extract(self):
@@ -105,13 +107,13 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                         if my_db[hit_id] is None:
                             msg = f"hit id '{hit_id}' was not indexed, rebuild sequence '{idx.name}' index"
                             _log.critical(msg)
-                            raise MacsypyError(msg)
+                            raise MacsypyError(msg) from err
                     replicon_name = self._get_replicon_name(hit_id)
 
                     body = next(hmm_hits)
-                    h = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
-                                             replicon_name, position_hit, i_evalue_sel, body)
-                    self.hits += h
+                    c_hit = self._parse_hmm_body(hit_id, gene_profile_lg, seq_lg, coverage_threshold,
+                                                 replicon_name, position_hit, i_evalue_sel, body)
+                    self.hits += c_hit
                 self.hits.sort()
                 return self.hits
 
@@ -121,16 +123,16 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :return: string representation of this report
         :rtype: str
         """
-        s = f"""# gene: {self.gene.name} extract from {self._hmmer_raw_out} hmm output
+        rep = f"""# gene: {self.gene.name} extract from {self._hmmer_raw_out} hmm output
 # profile length= {len(self.gene.profile):d}
 # i_evalue threshold= {self.cfg.i_evalue_sel():.3f}
 # coverage threshold= {self.cfg.coverage_profile():.3f}
 # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
 """
-        
-        for h in self.hits:
-            s += str(h)
-        return s
+
+        for c_hit in self.hits:
+            rep += str(c_hit)
+        return rep
 
 
     def save_extract(self):
@@ -176,12 +178,12 @@ class HMMReport(object, metaclass=abc.ABCMeta):
         :return: a dictionary containing a key for each sequence id of the hits
         :rtype: dict
         """
-        d = {}
+        db = {}
         with open(hmm_output) as hmm_file:
             hits = (x[1] for x in groupby(hmm_file, self._hit_start) if x[0])
-            for h in hits:
-                d[self._parse_hmm_header(h)] = None
-        return d
+            for hit in hits:
+                db[self._parse_hmm_header(hit)] = None
+        return db
 
 
     def _fill_my_db(self, db):
@@ -200,7 +202,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
 
     def _parse_hmm_header(self, h_grp):
         """
-        :param h_grp: the sequence of string return by groupby function representing the header of a hit 
+        :param h_grp: the sequence of string return by groupby function representing the header of a hit
         :type h_grp: sequence of string (<itertools._grouper object at 0x7ff9912e3b50>)
         :returns: the sequence identifier from a set of lines that corresponds to a single hit
         :rtype: string
@@ -271,7 +273,7 @@ class HMMReport(object, metaclass=abc.ABCMeta):
                     except ValueError as err:
                         msg = f"Invalid line to parse :{line}:{err}"
                         _log.debug(msg)
-                        raise ValueError(msg)
+                        raise ValueError(msg) from err
 
 
 class GeneralHMMReport(HMMReport):
@@ -305,4 +307,3 @@ class GembaseHMMReport(HMMReport):
     def _get_replicon_name(self, hit_id):
         replicon_name = "_".join(hit_id.split('_')[:-1])
         return replicon_name
-

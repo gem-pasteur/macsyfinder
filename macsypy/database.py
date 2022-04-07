@@ -22,6 +22,9 @@
 # If not, see <https://www.gnu.org/licenses/>.                          #
 #########################################################################
 
+"""
+Module to handle sequences and their indexes
+"""
 
 from itertools import groupby
 from collections import namedtuple
@@ -66,10 +69,10 @@ class Indexes:
     def __init__(self, cfg):
         """
         The constructor retrieves the file of indexes in the case they are not present
-        or the user asked for build indexes (--idx) 
-        Launch the indexes building. 
+        or the user asked for build indexes (--idx)
+        Launch the indexes building.
 
-        :param cfg: the configuration 
+        :param cfg: the configuration
         :type cfg: :class:`macsypy.config.Config` object
         """
         self.cfg = cfg
@@ -88,7 +91,7 @@ class Indexes:
         :rtype: str
         """
         my_indexes = self.find_my_indexes()  # check read
-        
+
         ###########################
         # build indexes if needed #
         ###########################
@@ -130,7 +133,7 @@ class Indexes:
 
     def find_my_indexes(self):
         """
-        :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise. 
+        :return: the file of macsyfinder indexes if it exists in the dataset folder, None otherwise.
         :rtype: string
         """
         index_dir = self._index_dir(build=False)
@@ -192,7 +195,7 @@ class Indexes:
         except Exception as err:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
-            raise MacsypyError(msg)
+            raise MacsypyError(msg) from err
         return index_file
 
 
@@ -207,12 +210,14 @@ class Indexes:
         if path is None:
             raise MacsypyError("Build index before to use it.")
         with open(path) as idx_file:
-            seq_target = next(idx_file)
+            # The first line of index is the path to the data
+            # It is not an index
+            _ = next(idx_file)
             for line in idx_file:
                 try:
                     seq_id, length, _rank = line.split(self._field_separator)
                 except Exception as err:
-                    raise MacsypyError(f"fail to parse database index {path} at line: {line}", err)
+                    raise MacsypyError(f"fail to parse database index {path} at line: {line}", err) from err
                 length = int(length)
                 _rank = int(_rank)
                 yield seq_id, length, _rank
@@ -226,20 +231,20 @@ handle information about a replicon
     :noindex:
 
     The type of replicon topology 'linear or 'circular'
-     
+
 .. py:attribute:: min
     :noindex:
-    
+
     The position of the last gene of the replicon in the sequence dataset.
-    
-.. py:attribute:: max 
+
+.. py:attribute:: max
     :noindex:
-    
+
     The position of the last gene of the replicon in the sequence dataset.
 
 .. py:attribute:: genes
     :noindex:
-    
+
     A list of genes beloging to the replicon. Each genes is representing by a tuple (str seq_id, int length)
 """
 
@@ -258,7 +263,7 @@ class RepliconDB:
         :type cfg: :class:`macsypy.config.Config` object
 
         .. note ::
-            This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon' 
+            This class can be instanciated only if the db_type is 'gembase' or 'ordered_replicon'
         """
         self.cfg = cfg
         assert self.cfg.db_type() in ('gembase', 'ordered_replicon')
@@ -295,7 +300,7 @@ class RepliconDB:
         """
         For the replicon_name of the ordered_replicon sequence base, fill the internal dict with RepliconInfo
 
-        :param default_topology: the topology provided by config.replicon_topology 
+        :param default_topology: the topology provided by config.replicon_topology
         :type default_topology: string
         """
         _min = 1
@@ -311,15 +316,15 @@ class RepliconDB:
         """
         For each replicon_name of a gembase dataset, it fills the internal dictionary with a namedtuple RepliconInfo
 
-        :param topology: the topologies for each replicon 
+        :param topology: the topologies for each replicon
                          (parsed from the file specified with the option --topology-file)
         :type topology: dict
-        :param default_topology: the topology provided by the config.replicon_topology 
+        :param default_topology: the topology provided by the config.replicon_topology
         :type default_topology: string
         """
         def grp_replicon(entry):
             """
-            in gembase the identifier of fasta sequence follows the following schema: 
+            in gembase the identifier of fasta sequence follows the following schema:
             <replicon-name>_<seq-name> with eventually '_' inside the <replicon_name>
             but not in the <seq-name>.
             so grp_replicon allow to group sequences belonging to the same replicon.
@@ -375,7 +380,7 @@ class RepliconDB:
         """
         :param replicon_name: the name of the replicon to get information on
         :type replicon_name: string
-        :returns: the RepliconInfo for the provided replicon_name 
+        :returns: the RepliconInfo for the provided replicon_name
         :rtype: :class:`RepliconInfo` object
         :raise: KeyError if replicon_name is not in repliconDB
         """
