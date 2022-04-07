@@ -182,7 +182,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
             <exchangeables>
                 <gene name="B" />
                 <gene name="C" />
-            </exchageables>
+            </exchangeables>
         </gene>
 
     In the snippet code above, the genes A/B/C are multi_model but not loner or multi_system
@@ -193,7 +193,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
             <exchangeables>
                 <gene name="B" multi_model="True"/>
                 <gene name="C" />
-            </exchageables>
+            </exchangeables>
         </gene>
 
     In the snippet code above, The gene B is multi_model but not A and C
@@ -204,10 +204,10 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
             <exchangeables>
                 <gene name="B" />
                 <gene name="C" multi_system="False"/>
-            </exchageables>
+            </exchangeables>
         </gene>
 
-    In the snippet code above, The genes A and B are multi_system, but NOT C
+    In the snippet code above, The genes A and B are multi_system, but **not** C
 
     .. code-block:: XML
 
@@ -215,15 +215,15 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
             <exchangeables>
                 <gene name="B" inter_gene_max_space="5"/>
                 <gene name="C" />
-            </exchageables>
+            </exchangeables>
         </gene>
 
-    In the snippet code above, The genes A and C have an inter_gene_max_space = 10
+    In the snippet code above, The genes A and C have an *inter_gene_max_space = 10*
     whereas the gene B is 5
 
 .. warning::
 
-    The *presence* attribute is inevitably the same for the exchangeable genes than the reference gene
+    The *presence* attribute is inevitably the same for the exchangeable genes than the reference gene.
 
 
 
