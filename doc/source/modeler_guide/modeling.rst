@@ -165,11 +165,65 @@ All these elements and corresponding parameters will parametrize the search of S
 
 .. _exchangeables_label:
 
- The element "gene" may have one "exchangeables" child element:
+The element "gene" may have one "exchangeables" child element:
 
-   * The element "exchangeables" can contain one or more elements "gene".
+    * The element "exchangeables" can contain one or more elements "gene".
 
-   For a Gene to have "exchangeables" Genes listed, means that this Gene can be replaced *in the quorum* by the listed child Genes.
+For a Gene to have "exchangeables" Genes listed, means that this Gene can be replaced *in the quorum* by the listed child Genes.
+
+.. note::
+
+    If the attributes *inter_gene_max_space*, *loner*, *multi_model*, *multi_system* are not specified for the exchangeable genes,
+    then they inherit the values from the reference gene. Below some examples of attributes inheritance.
+
+    .. code-block:: XML
+
+        <gene name="A" presence="mandatory" multi_model="True">
+            <exchangeables>
+                <gene name="B" />
+                <gene name="C" />
+            </exchageables>
+        </gene>
+
+    In the snippet code above, the genes A/B/C are multi_model but not loner or multi_system
+
+    .. code-block:: XML
+
+        <gene name="A" presence="mandatory">
+            <exchangeables>
+                <gene name="B" multi_model="True"/>
+                <gene name="C" />
+            </exchageables>
+        </gene>
+
+    In the snippet code above, The gene B is multi_model but not A and C
+
+    .. code-block:: XML
+
+        <gene name="A" presence="mandatory" multi_system="True">
+            <exchangeables>
+                <gene name="B" />
+                <gene name="C" multi_system="False"/>
+            </exchageables>
+        </gene>
+
+    In the snippet code above, The genes A and B are multi_system, but NOT C
+
+    .. code-block:: XML
+
+        <gene name="A" presence="mandatory" inter_gene_max_space="10">
+            <exchangeables>
+                <gene name="B" inter_gene_max_space="5"/>
+                <gene name="C" />
+            </exchageables>
+        </gene>
+
+    In the snippet code above, The genes A and C have an inter_gene_max_space = 10
+    whereas the gene B is 5
+
+.. warning::
+
+    The *presence* attribute is inevitably the same for the exchangeable genes than the reference gene
 
 
 
