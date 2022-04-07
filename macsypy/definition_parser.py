@@ -318,7 +318,7 @@ class DefinitionParser:
         :param model: the Model currently parsing
         :type model: :class:`macsypy.model.Model` object
         :param model_node: the element 'model'
-        :type model_node: :class"`Et.ElementTree` object
+        :type model_node: :class:`Et.ElementTree` object
         """
 
         gene_nodes = model_node.findall("./gene")
