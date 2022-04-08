@@ -8,6 +8,11 @@
 
     Macsyfinder documentation master file, created by sphinx-quickstart
 
+.. image:: _static/logo_macsyfinder.png
+   :align: center
+   :alt: MacSyFinder logo
+
+
 
 Welcome to MacSyFinder's documentation!
 =======================================
