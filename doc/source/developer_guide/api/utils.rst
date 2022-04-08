@@ -29,3 +29,8 @@ get_def_to_detect
 get_replicon_names
 ==================
 .. autofunction:: macsypy.utils.get_replicon_names
+
+
+threads_available
+=================
+.. autofunction:: macsypy.utils.threads_available
