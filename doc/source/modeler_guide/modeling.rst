@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _modeling:
 
 *********************
@@ -13,11 +13,11 @@ Macromolecular models
 *********************
 
 
-MacSyFinder relies on the definition of models of macromolecular systems as a **set of models' components** 
-to be searched by similarity search, and a **set of rules** regarding their genomic organization and 
-their requirement level to make a complete system (mandatory, accessory components, number of components required). 
+MacSyFinder relies on the definition of models of macromolecular systems as a **set of models' components**
+to be searched by similarity search, and a **set of rules** regarding their genomic organization and
+their requirement level to make a complete system (mandatory, accessory components, number of components required).
 
-See :ref:`below<model-definition-grammar-label>` for more details on MacSyFinder's modelling scheme and the section 
+See :ref:`below<model-definition-grammar-label>` for more details on MacSyFinder's modelling scheme and the section
 on :ref:`Functioning <functioning>` for the principles of the MacSyFinder's search engine.
 
 
@@ -25,7 +25,7 @@ A **MacSyFinder model** (macsy-model for short) is the association of several el
 
     * a **definition** which describes the system to detect with a specific **XML grammar**
       that is described :ref:`below<model-definition-grammar-label>`.
-    
+
     * a set of :ref:`HMM profiles <provide-hmm_label>`  (one per component/gene in the model) to enable
       the similarity search of the systems' components with the HMMER program.
 
@@ -135,41 +135,42 @@ in terms of Gene content and genomic architecture criteria.
         :height: 1500px
         :align: left
 
-        How to *loner* works.
+        How *loner* works.
 
-        **A**) The *cluster 1* can be fill up with the loner *D50* to reach the quorum defined in *model A* and form a system occurrence.
-        **B**) There are 2 clusters and 2 loners (D50 and D60) *msf* cannot assign which loner to each cluster. So *msf* pick the best loner (based on score) and set the others are counterpart. 2 systems occurences are created which this best loner. The user as to choose which effective hit can be assign to corresponding cluster. All loners found in best solution are rported in *best_solution_loners.tsv* file.
-        **C**) There are 2 clusters but only 1 loner. *msf* cannot decide to assign loner to which cluster. So the 2 occurences systems are proposed to the user in the output but with a warning indicating that the user should pick one.
+        **A**) The *cluster 1* can be filled up with the loner *D50* to reach the quorum defined in *model A* and form a system occurrence.
+        **B**) There are 2 clusters and 2 loners (D50 and D60) and *msf* cannot assign which loner goes to which cluster. So *msf* picks the best loner (based on score) and sets the others as "counterpart". 2 system occurrences are created whith the best loner. The user has to choose which loner hit can be assigned to which cluster. All loners found in the best solution are reported in *best_solution_loners.tsv* file.
+        **C**) There are 2 clusters but only 1 loner. *msf* cannot decide to which cluster assign the loner. So the 2 system occurrences are proposed to the user in the output and a warning is raised to indicate the user should pick one.
         **D**) There are 2 clusters with one loner, but this loner is also *multi_system*. So the 2 clusters can be filled up with the loner.
 
 
    * **multi_system**: a *boolean*. If a gene has the feature "multi_system" (value set to "1", "true" or "True"),
-     it means that it can be used to fill multiple systems' occurrences (but for the same model) -
-     and thus be considered part of several systems. ( *default false* ).
+     it means that it can be used to fill multiple system occurrences (from a same model) -
+     and thus be considered as part of several systems ( *default false* ).
 
      .. figure:: ../_static/multi_system.*
         :height: 1200px
         :align: left
 
-        How to *multi_system* works.
+        How *multi_system* works.
 
-        **A**) The hit encoding for gene D in position 13 belong to the system 1 (encoding model A). So it is used to fill up some other cluster for instance cluster 2 which lack this functionality. The cluster2 is also a system.
-        **B**) The hit encoding for gene D in position 13 does not belong to a system. It cannot be used to fill up other clusters. In this example ther is no system encoding the model A
-        **C**) The gene D is present in the definition of model A and B. The hit encoding for gene D in position 13 belong to the system 1 (encoding model A). But it cannot be used to fill up the cluster 2 which code for model B.
+        **A**) The hit encoding for gene D in position 13 belongs to the system 1 (encoding model A). So it is used to fill up some other cluster, for instance cluster 2, which lacks this functionality. The cluster 2 then also fulfil the requirement of a system.
+        **B**) The hit encoding for gene D in position 13 does not belong to a system. It cannot be used to fill up other clusters. In this example there is no system that satisfies the rules of model A.
+        **C**) The gene D is present in the definition of model A and B. The hit encoding for gene D in position 13 belongs to the system 1 (encoding model A). It cannot be used to fill up the cluster 2 which codes for model B.
 
-   * **multi_model**: a *boolean*. If a genehast the feature "multi_model" (value set to "1", "true" or "True"),
-     it means that two systems from different model can cohexist in the best solution even if they share the same hit.
-     the gen must be tagged as multi_model in both model definitions.
+   * **multi_model**: a *boolean*. If a gene has the feature "multi_model" (value set to "1", "true" or "True"),
+     it means that two systems from different models can coexist in the best solution (they are said "compatible") even if they share a component.
+     The gene must be tagged as multi_model in both model definitions.
 
      .. figure:: ../_static/multi_model.*
         :height: 1000px
         :align: left
 
-        How to *multi_model* works.
+        How *multi_model* works.
 
-        The hit encoding for gene D in position13 is part of 2 systems one for Model A one for Model B.
-        **A**) In the both model definitions the gene D is tagged as multi_model. So the 2 systems can coexist in same solution.
+        The hit encoding for gene D in position 13 is part of 2 systems: one for Model A, one for Model B.
+        **A**) In both model definitions the gene D is tagged as multi_model. So the 2 systems can coexist in a same solution (they are "compatible").
         **B**) The gene D is tagged as multi_model **only** in model A definition. The 2 systems are not compatible. So *msf* build 2 solutions and choose the best one.
+        It has to be noted that this behaviour would actually be the same if gene D was not declared multi_model in either definitions.
 
    * **inter_gene_max_space**: an *integer* that defines gene-wise value of system's "inter_gene_max_space" parameter (see above).
      It supersedes the system-wise parameter to give the gene a specific co-localization parameter.
@@ -233,7 +234,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
         </gene>
 
     In the snippet code above, The genes A and C have an *inter_gene_max_space = 10*
-    whereas it's *5* for the gene B .
+    whereas its value is *5* for the gene B .
 
 .. warning::
 
@@ -253,7 +254,7 @@ For a Gene to have "exchangeables" Genes listed, means that this Gene can be rep
 
 
 
-Example of a macsy-model definition in XML:
+Example of a macsy-model definition in XML (more examples in our :ref:`gallery of examples <gallery_models>`):
 
 .. code-block:: xml
 
@@ -319,4 +320,3 @@ The names are **case-sensitive**. All HMM profiles must be placed in the `profil
 
     For a detailed tutorial on how to define your macsy-model's features, parameters and HMM profiles,
     you can have a look at our cookbook in `this book chapter <https://link.springer.com/protocol/10.1007/978-1-4939-7033-9_1>`_ .
-
