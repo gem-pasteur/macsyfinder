@@ -5,8 +5,8 @@
  *************************/
 
 params['models'] = false
-params.['sequence-db'] = false
-params.['db-type'] = false
+params['sequence-db'] = false
+params['db-type'] = false
 params['replicon-topoloy']= false
 params['topology-file']= false
 params['inter-gene-max-space']= false
@@ -23,9 +23,9 @@ params['mandatory-weight']= false
 params['accessory-weight']= false
 params['exchangeable-weight']= false
 params['redundancy-penalty']= false
-params['out-of-cluster-weight']= false
+params['out-of-cluster']= false
 params['models-dir']= false
-params['index-dir']= False
+params['index-dir']= false
 params['res-search-suffix']= false
 params['res-extract-suffix']= false
 params['profile-suffix']= false
@@ -45,11 +45,12 @@ params.profile = false
 /****************************************
 *             real parameters           *
 *****************************************/
+
 models = params.models ? "--models ${params['models']}" : ''
-sequence_db = params.['sequence-db'] ? "--sequence-db ${params['sequence-db']}": ''
-db_type = params.['db-type'] ? "--db-type ${params['db-type']}": ''
+sequence_db = params['sequence-db'] ? "--sequence-db ${params['sequence-db']}": ''
+db_type = params['db-type'] ? "--db-type ${params['db-type']}": ''
 replicon_topology = params['replicon-topoloy'] ? "--replicon-topology ${params['replicon-topoloy']}" : ''
-topology_file = params['topology-file'] ? "--topology-file ${params['topology-file']}"" : ''
+topology_file = params['topology-file'] ? "--topology-file ${params['topology-file']}" : ''
 inter_gene_max_space = params['inter-gene-max-space'] ? "--inter-gene-max-space ${params['inter-gene-max-space']}" : ''
 min_mandatory_genes_required = params['min-mandatory-genes-required'] ? "--min-mandatory-genes-required ${params['min-mandatory-genes-required']}": ''
 min_genes_required = params['min-genes-required'] ? "--min-genes-required ${params['min-genes-required']}" : ''
@@ -104,9 +105,8 @@ parallel_macsyfinder available options:
  --res-search-suffix
  --res-extract-suffix
  --profile-suffix
- --worker
  --cfg-file
-
+ --worker
 Please refer to the MacSyFinder documentation (https://macsyfinder.readthedocs.io) for the meaning of each options.
 '''
     println(msg)
@@ -116,22 +116,24 @@ if (params.profile){
     throw new Exception("The macsyfinder option '--profile' does not exists. May be you want to use the nextflow option '-profile'.")
 }
 
-if (! params[sequence_db] and ! params['cfg-file']){
-    throw new Exception("The option '--sequence_db' is mandatory.")
+if (! params['sequence-db'] and ! params['cfg-file']){
+    throw new Exception("The option '--sequence-db' is mandatory.")
 }
-if (! params[db_type] and ! params['cfg-file']){
+if (! params['db-type'] and ! params['cfg-file']){
     throw new Exception("The option '--db-type' is mandatory.")
 }
-if (! params[models] and ! params['cfg-file']){
+if (! params['models'] and ! params['cfg-file']){
     throw new Exception("The option '--models' is mandatory.")
 }
 
-if (params.replicons.contains(',')){
-    paths = params.replicons.tokenize(',')
-    replicons_file = Channel.fromPath(paths)
-} else {
-    replicons_file = Channel.fromPath(params.replicons)
-}
+// if (params.replicons.contains(',')){
+//     paths = params.replicons.tokenize(',')
+//     replicons_file = Channel.fromPath(paths)
+// } else {
+//     replicons_file = Channel.fromPath(params.replicons)
+// }
+
+replicons_file = Channel.fromPath(params['sequence-db'])
 
 /****************************************
  *           The workflow               *
@@ -143,7 +145,7 @@ process split{
         file(replicons) from replicons_file
 
     output:
-        set val("${replicons.baseName}"), stdout, file("*.fst") into chunk_files mode flatten
+        set val("${replicons.baseName}"), stdout, file("*.fasta") into chunk_files mode flatten
     script:
         """
         macsysplit --mute ${replicons} | wc -w
@@ -188,7 +190,7 @@ process macsyfinder{
 
     script:
         """
-        macsyfinder ${sequence_db} ${--db-type} ${replicon_toplogy} ${topology_file} ${models_dir} ${models} \
+        macsyfinder --sequence-db ${one_replicon} ${db_type} ${replicon_topology} ${topology_file} ${models_dir} ${models} \
  ${inter_gene_max_space} ${min_mandatory_genes_required} ${min_genes_required} ${max_nb_genes} ${multi_loci} \
  ${hmmer} ${e_value_search} ${no_cut_ga} ${i_value_sel} ${coverage_profile} \
  ${mandatory_weight} ${accessory_weight} ${exchangeable_weight} ${redundancy_penalty} ${out_of_cluster} \
