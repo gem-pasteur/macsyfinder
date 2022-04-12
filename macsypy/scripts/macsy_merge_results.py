@@ -44,7 +44,8 @@ def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str 
     :param str ignore: a string which start the lines to ignore
     :param str keep_first: a string which start the line which must be keep
                        only the first time
-    :param skip_until: 
+    :param skip_until: skip all lines until the condition is True
+    :type skip_until: a fonction which test the line
     :param str header: The header of the merged file
     :return:
     """
