@@ -66,7 +66,7 @@ accessory_weight = params['accessory-weight'] ? "--accessory-weight ${params['ac
 exchangeable_weight = params['exchangeable-weight'] ? "--exchangeable-weight ${params['exchangeable-weight']}" : ''
 redundancy_penalty = params['redundancy-penalty'] ? "--redundancy-penalty ${params['redundancy-penalty']}" : ''
 out_of_cluster = params['out-of-cluster'] ? "--out-of-cluster ${params['out-of-cluster']}" : ''
-models_dir = params['models-dir'] ? "--models-dir ${params['models-dir']}" : ''
+models_dir = params['models-dir'] ? "--models-dir ${file(params['models-dir'])}" : ''
 index_dir = params['index-dir'] ? "--index-dir ${params['index-dir']}" : ''
 res_search_suffix = params['res-search-suffix'] ? "--res-search-suffix ${params['res-search-suffix']}" : ''
 res_extract_suffix = params['res-extract-suffix'] ? "--res-extract-suffix ${params['res-extract-suffix']}" : ''
@@ -195,7 +195,7 @@ process macsyfinder{
  ${hmmer} ${e_value_search} ${no_cut_ga} ${i_value_sel} ${coverage_profile} \
  ${mandatory_weight} ${accessory_weight} ${exchangeable_weight} ${redundancy_penalty} ${out_of_cluster} \
  ${index_dir} ${res_search_suffix} ${res_extract_suffix} ${profile_suffix} \
- --worker ${task.cpus} --mute ${debug}
+ --worker ${task.cpus} --mute ${debug} --out-dir macsyfinder-${one_replicon.baseName}
  """
 }
 
@@ -212,16 +212,16 @@ process merge{
         set val(input_id), file ("${result_dir}/*") into final_res mode flatten
 
     script:
-        result_dir = "Results_MacSyFinder_${input_id}"
+        result_dir = "merged_macsyfinder_results"
         """
-        macsymerge "${result_dir}" "${input_id}" ${all_replicons_results}
+        macsymerge --outdir merged_macsyfinder_results ${all_replicons_results}
         """
 }
 
 
 final_res.subscribe{
     input_id, result ->
-        result_dir = "Results_MacSyFinder_${input_id}"
+        result_dir = "merged_macsyfinder_results"
         result.copyTo("${result_dir}/" + result.name);
 }
 
