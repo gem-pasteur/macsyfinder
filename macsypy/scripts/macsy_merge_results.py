@@ -34,7 +34,8 @@ import pandas as pd
 from macsypy.config import MacsyDefaults
 
 
-def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str = None, header: str = "") -> None:
+def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str = None,
+                skip_until=None, header: str = "") -> None:
     """
 
     :param files: the list of files to merge
@@ -43,6 +44,7 @@ def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str 
     :param str ignore: a string which start the lines to ignore
     :param str keep_first: a string which start the line which must be keep
                        only the first time
+    :param skip_until: 
     :param str header: The header of the merged file
     :return:
     """
@@ -55,19 +57,25 @@ def merge_files(files: List[str], out: str, ignore: str = None, keep_first: str 
         results = False
         for file in files:
             _log.debug(f"Merging {file}")
+            skip = bool(skip_until)
             with open(file) as fh_in:
                 for line in fh_in:
+                    if skip:
+                        if skip_until(line):
+                            skip = False
+                        else:
+                            continue
                     if first and line.startswith(keep_first):
                         first = False
                     elif ignore and line.startswith(ignore):
                         continue
                     elif keep_first and line.startswith(keep_first):
                         continue
-                    else:
-                        f_out.write(line)
-                        results = True
+                    f_out.write(line)
+                    results = True
+                f_out.write('\n')
         if not results:
-            f_out.write(f"{ignore} No systems found:\n")
+            f_out.write(f"# No systems found:\n")
 
 
 def merge_and_reindex(files: List[str], out: str, ignore: str = None, header: str = "") -> None:
@@ -165,7 +173,9 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
 # merged {filename_to_merge}.{ext}
 # {header}:
 """
-        merge_files(best_solution_files, out_file, ignore="#", keep_first="replicon", header=header)
+        merge_files(best_solution_files, out_file,
+                    skip_until=lambda l: l.startswith('replicon'),
+                    keep_first="replicon", header=header)
 
     for filename_to_merge, ext, header in [('all_systems', 'txt', 'Systems found'),
                                            ('rejected_clusters', 'txt', 'Rejected clusters'),
@@ -212,7 +222,7 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     parser.add_argument('results_dirs',
                          nargs='+',
                          help='Path to the macsyfinder results directories to merge eg : path/to/macsyfinder-date-hour')
-    parser.add_argument('-o', '--outdir',
+    parser.add_argument('-o', '--out-dir',
                         default='.',
                         help='The path to the directory where to write merged files.')
     parser.add_argument("--mute",
@@ -250,15 +260,15 @@ def main(args=None, log_level=None) -> None:
     parsed_args = parse_args(args)
 
     outdir_err = None
-    if not os.path.exists(parsed_args.outdir):
+    if not os.path.exists(parsed_args.out_dir):
         try:
-            os.mkdir(parsed_args.outdir)
+            os.mkdir(parsed_args.out_dir)
         except PermissionError as err:
-            outdir_err = f"Cannot create {parsed_args.outdir} : {err}"
-    elif not os.path.isdir(parsed_args.outdir):
-        outdir_err = f"{parsed_args.outdir} is not a directory"
-    elif not os.access(parsed_args.outdir, os.W_OK):
-        outdir_err = f"{parsed_args.outdir} is not writable"
+            outdir_err = f"Cannot create {parsed_args.out_dir} : {err}"
+    elif not os.path.isdir(parsed_args.out_dir):
+        outdir_err = f"{parsed_args.out_dir} is not a directory"
+    elif not os.access(parsed_args.out_dir, os.W_OK):
+        outdir_err = f"{parsed_args.out_dir} is not writable"
     if outdir_err:
         log = colorlog.getLogger('macsypy.merge')
         stdout_handler = colorlog.StreamHandler(sys.stdout)
@@ -275,7 +285,7 @@ def main(args=None, log_level=None) -> None:
         sys.tracebacklimit = 0
         raise IOError() from None
 
-    macsypy.init_logger(log_file=os.path.join(parsed_args.outdir, 'macsy_merge_results.out'),
+    macsypy.init_logger(log_file=os.path.join(parsed_args.out_dir, 'macsy_merge_results.out'),
                         out=not parsed_args.mute)
     _log = colorlog.getLogger('macsypy.merge')
 
@@ -288,7 +298,7 @@ def main(args=None, log_level=None) -> None:
         # used by unit tests to mute or unmute logs
         macsypy.logger_set_level(log_level)
 
-    merge_results(parsed_args.results_dirs, out_dir=parsed_args.outdir)
+    merge_results(parsed_args.results_dirs, out_dir=parsed_args.out_dir)
 
 
 if __name__ == '__main__':
