@@ -1,6 +1,3 @@
-# parallel_msf 20220324.dev
-# merged rejected_clusters.txt
-# Rejected clusters:
 
 Cluster:
 - model = ComM
@@ -144,3 +141,5 @@ These clusters have been rejected because:
 	- The quorum of mandatory genes required (4) is not reached: 1
 	- The quorum of genes required (5) is not reached: 2
 ============================================================
+
+
