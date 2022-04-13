@@ -1,6 +1,3 @@
-# parallel_msf 20220412.dev
-# merged all_systems.txt
-# Systems found:
 
 system id = VICH001.B.00001.C001_MSH_1
 model = set_1/MSH
