@@ -1,6 +1,3 @@
-# parallel_msf 20220412.dev
-# merged rejected_clusters.txt
-# Rejected clusters:
 
 Cluster:
 - model = Archaeal-T4P
