@@ -1,3 +1,5 @@
+![MacSyFinder banner](https://github.com/gem-pasteur/macsyfinder/blob/master/.github/logo_macsyfinder.png "MacSyFinder")
+
 # MacSyFinder
 
 [![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
