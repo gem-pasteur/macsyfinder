@@ -12,6 +12,10 @@
 Modeller Guide
 ==============
 
+.. image:: ../_static/logo_macsymodels.png
+   :align: center
+   :alt: MacSyModels logo
+
 
 Modelling Systems with MacSyFinder
 ==================================
