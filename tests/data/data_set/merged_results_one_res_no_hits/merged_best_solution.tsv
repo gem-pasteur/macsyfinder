@@ -1,6 +1,7 @@
-# parallel_msf 20220324.dev
+# parallel_msf 20220413.dev
 # merged best_solution.tsv
 # Systems found:
+replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
 GCF_000006845	GCF_000006845_001030	T4P_pilQ	103	set_1/T4P	GCF_000006845_T4P_8	4	1	0.833	11.000	1	T4P_pilQ	mandatory	723	1.9e-62	206.600	0.935	0.238	548	719		
 GCF_000006845	GCF_000006845_001040	T4P_pilP	104	set_1/T4P	GCF_000006845_T4P_8	4	1	0.833	11.000	1	T4P_pilP	accessory	181	2.7e-34	115.600	1.000	0.735	13	145		
 GCF_000006845	GCF_000006845_001050	T4P_pilO	105	set_1/T4P	GCF_000006845_T4P_8	4	1	0.833	11.000	1	T4P_pilO	mandatory	215	2.9e-37	124.800	0.980	0.693	23	171		
@@ -16,4 +17,6 @@ GCF_000006845	GCF_000006845_014280	T4P_pilD	1428	set_1/T4P	GCF_000006845_T4P_8	4
 GCF_000006845	GCF_000006845_014310	T4P_pilB	1431	set_1/T4P	GCF_000006845_T4P_8	4	3	0.833	11.000	1	T4P_pilB	mandatory	558	3.8e-178	589.000	0.964	0.731	146	553		
 GCF_000006845	GCF_000006845_016430	T4P_pilT	1643	set_1/T4P	GCF_000006845_T4P_8	4	4	0.833	11.000	1	T4P_pilT	mandatory	347	6.9e-167	551.400	0.997	0.983	2	342		
 GCF_000006845	GCF_000006845_016440	T4P_pilU	1644	set_1/T4P	GCF_000006845_T4P_8	4	4	0.833	11.000	1	T4P_pilU	accessory	408	1.5e-127	421.800	0.994	0.833	40	379		
+
+
 

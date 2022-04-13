@@ -1,6 +1,3 @@
-# parallel_msf 20220324.dev
-# merged all_systems.txt
-# Systems found:
 
 system id = GCF_000006845_T4P_8
 model = set_1/T4P
@@ -410,3 +407,5 @@ accessory genes:
 neutral genes:
 
 ============================================================
+
+
