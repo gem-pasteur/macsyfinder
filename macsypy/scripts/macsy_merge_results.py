@@ -87,7 +87,9 @@ def merge_files(files: List[str], out: str, header: str,
         if not results:
             f_out.write(get_header(False) + '\n')
 
-def merge_and_reindex(files: List[str], out: str, ignore: str = None, header: str = "") -> None:
+
+def merge_and_reindex(files: List[str], out: str,  header: str,
+                      comment: str = None,  skip_until=None) -> None:
     """
     merge all_best_solutions and reindex the sol_id column
 
@@ -97,22 +99,37 @@ def merge_and_reindex(files: List[str], out: str, ignore: str = None, header: st
     :param str ignore: a string which start the lines to ignore
     :param str header: The header of the merged file
     """
+    def get_header(result: bool):
+        res_or_not = header if result else f"No {header}"
+        header_str = f"""# parallel_msf {macsypy.__version__}
+# merged {os.path.basename(files[0])}
+# {res_or_not} found:
+"""
+        return header_str
+
     with open(out, 'w') as f_out:
-        f_out.write(header)
         last_sol_id = 0
         new_sol_id = None
         first = True
         results = False
         for file in files:
             _log.debug(f"Merging {file}")
+            skip = bool(skip_until)
             with open(file) as fh_in:
                 for line in fh_in:
+                    if skip:
+                        if skip_until(line):
+                            skip = False
+                        else:
+                            continue
                     if first and line.startswith('sol_id'):
                         first = False
+                        f_out.write(get_header(True))
                         new_line = line
                     elif line.startswith('sol_id'):
                         continue
-                    elif ignore and line.startswith(ignore):
+                    elif comment and line.startswith(comment):
+                        f_out.write(line)
                         continue
                     elif line.startswith('\n'):
                         new_line = line
@@ -132,7 +149,7 @@ def merge_and_reindex(files: List[str], out: str, ignore: str = None, header: st
             if new_sol_id is not None:  # The previous results are empty
                 last_sol_id = new_sol_id
         if not results:
-            f_out.write(f"{ignore} No systems found:\n")
+            f_out.write(get_header(False) + '\n')
 
 
 def merge_summary(files: List[str], out: str, header: str = "") -> None:
@@ -169,11 +186,10 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     all_best_solutions_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
-    header = f"""# parallel_msf {macsypy.__version__}
-# merged {filename_to_merge}.{ext}
-# Systems found:
-"""
-    merge_and_reindex(all_best_solutions_files, out_file, ignore="#", header=header)
+    header = "Systems"
+    merge_and_reindex(all_best_solutions_files, out_file, header,
+                      skip_until=lambda l: l.startswith('sol_id'),
+                      comment='#')
 
     for filename_to_merge, ext, header in [('best_solution', 'tsv', 'Systems'),
                                            ('all_systems', 'tsv', 'Systems'),
@@ -187,13 +203,23 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
                     skip_until=lambda l: l.startswith('replicon'),
                     keep_first="replicon")
 
-    for filename_to_merge, ext, header in [('all_systems', 'txt', 'Systems'),
-                                           ('rejected_clusters', 'txt', 'Rejected clusters'),
-                                           ]:
-        out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
-        _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
-        best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
-        merge_files(best_solution_files, out_file, ignore="#", header=header)
+    filename_to_merge = 'all_systems'
+    ext = 'txt'
+    out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+    _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
+    filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
+    merge_files(filename_to_merge, out_file, 'Systems',
+                skip_until=lambda l: l.startswith('system id'),
+                keep_first='system id')
+
+    filename_to_merge = 'rejected_clusters'
+    ext = 'txt'
+    out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
+    _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
+    filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
+    merge_files(filename_to_merge, out_file, 'Rejected clusters',
+                skip_until=lambda l: l.startswith('Cluster:'),
+                keep_first='Cluster:')
 
     filename_to_merge, ext = 'best_solution_summary', 'tsv'
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
