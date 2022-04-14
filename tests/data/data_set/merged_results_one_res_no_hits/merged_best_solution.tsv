@@ -1,4 +1,4 @@
-# parallel_msf 20220413.dev
+# parallel_msf 20220414.dev
 # merged best_solution.tsv
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
@@ -17,6 +17,5 @@ GCF_000006845	GCF_000006845_014280	T4P_pilD	1428	set_1/T4P	GCF_000006845_T4P_8	4
 GCF_000006845	GCF_000006845_014310	T4P_pilB	1431	set_1/T4P	GCF_000006845_T4P_8	4	3	0.833	11.000	1	T4P_pilB	mandatory	558	3.8e-178	589.000	0.964	0.731	146	553		
 GCF_000006845	GCF_000006845_016430	T4P_pilT	1643	set_1/T4P	GCF_000006845_T4P_8	4	4	0.833	11.000	1	T4P_pilT	mandatory	347	6.9e-167	551.400	0.997	0.983	2	342		
 GCF_000006845	GCF_000006845_016440	T4P_pilU	1644	set_1/T4P	GCF_000006845_T4P_8	4	4	0.833	11.000	1	T4P_pilU	accessory	408	1.5e-127	421.800	0.994	0.833	40	379		
-
 
 

@@ -1,4 +1,4 @@
-# parallel_msf 20220413.dev
+# parallel_msf 20220414.dev
 # merged all_systems.tsv
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
@@ -129,5 +129,4 @@ GCF_000006845	GCF_000006845_016430	T4P_pilT	1643	set_1/T4P	GCF_000006845_T4P_3	2
 GCF_000006845	GCF_000006845_016440	T4P_pilU	1644	set_1/T4P	GCF_000006845_T4P_3	2	2	0.278	4.500	1	T4P_pilU	accessory	408	1.5e-127	421.800	0.994	0.833	40	379		
 
 # WARNING Loner: there is only 2 occurrence(s) of loner 'T4P_pilA' and 4 potential systems [GCF_000006845_T4P_12, GCF_000006845_T4P_9, GCF_000006845_T4P_10, GCF_000006845_T4P_11]
-
 

@@ -1,4 +1,4 @@
-# parallel_msf 20220324.dev
+# parallel_msf 20220414.dev
 # merged rejected_clusters.txt
-# Rejected clusters:
-# No systems found:
+# No Rejected clusters found:
+
