@@ -13,7 +13,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title13252">MacsyFinder how &quot;multi_system&quot; works</title>
   <sodipodi:namedview
      id="namedview7"
      pagecolor="#ffffff"
@@ -26,11 +31,11 @@
      showgrid="false"
      inkscape:snap-grids="false"
      inkscape:snap-to-guides="false"
-     inkscape:zoom="0.8117387"
-     inkscape:cx="458.27555"
-     inkscape:cy="198.95565"
+     inkscape:zoom="2.8616351"
+     inkscape:cx="476.30112"
+     inkscape:cy="450.79123"
      inkscape:window-width="3840"
-     inkscape:window-height="1151"
+     inkscape:window-height="2088"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -153,7 +158,7 @@
     <rect
        style="display:inline;opacity:1;fill:#c8f8e8;fill-opacity:0.779357;fill-rule:nonzero;stroke:#020202;stroke-width:0.233311;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
        id="rect272832"
-       width="174.26308"
+       width="174.26305"
        height="51.588173"
        x="1.289089"
        y="80.869766"
@@ -812,42 +817,41 @@
          y="62.400063">System 2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:2.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:86.5748;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="179.74741"
        y="26.872728"
        id="text147865"><tspan
-         sodipodi:role="line"
          x="179.74741"
          y="26.872728"
-         id="tspan313412">&lt;model min_mandatory_genes_required=&quot;1&quot; </tspan><tspan
-         sodipodi:role="line"
+         id="tspan13479">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan><tspan
          x="179.74741"
-         y="31.723429"
-         id="tspan17516">             min_genes_required=&quot;4&quot;&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="35.603989"
+         id="tspan13481">             min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
          x="179.74741"
-         y="36.574127"
-         id="tspan237927">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="44.335248"
+         id="tspan13483">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
          x="179.74741"
-         y="41.424828"
-         id="tspan237929">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="53.06651"
+         id="tspan13485">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="179.74741"
-         y="46.275528"
-         id="tspan237931">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="61.797772"
+         id="tspan13487">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="179.74741"
-         y="51.126228"
-         id="tspan237933">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; </tspan><tspan
-         sodipodi:role="line"
+         y="70.529034"
+         id="tspan13489">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
+</tspan><tspan
          x="179.74741"
-         y="55.976929"
-         id="tspan1246">                                 multi_system=&quot;1&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="79.260296"
+         id="tspan13491">                                 multi_system=&quot;1&quot;/&gt;
+</tspan><tspan
          x="179.74741"
-         y="60.827629"
-         id="tspan237935">&lt;/model&gt;</tspan></text>
+         y="87.991559"
+         id="tspan13493">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
@@ -855,42 +859,41 @@
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect225661);fill:#000000;fill-opacity:1;stroke:none" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;line-height:1.45;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:90.6265;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="178.68909"
        y="149.11002"
        id="text257358"><tspan
-         sodipodi:role="line"
          x="178.68909"
          y="149.11002"
-         id="tspan257346">&lt;model min_mandatory_genes_required=&quot;1&quot; </tspan><tspan
-         sodipodi:role="line"
+         id="tspan13495">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan><tspan
          x="178.68909"
-         y="154.40167"
-         id="tspan57480">             min_genes_required=&quot;4&quot;&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="155.24833"
+         id="tspan13497">             min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
          x="178.68909"
-         y="159.69334"
-         id="tspan257348">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="161.38667"
+         id="tspan13499">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="164.985"
-         id="tspan257350">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="167.52501"
+         id="tspan13501">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="170.27666"
-         id="tspan257352">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="173.66334"
+         id="tspan13503">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="175.56833"
-         id="tspan257354">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; </tspan><tspan
-         sodipodi:role="line"
+         y="179.80168"
+         id="tspan13505">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
+</tspan><tspan
          x="178.68909"
-         y="180.85999"
-         id="tspan57482">                                           multi_system=&quot;1&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="185.94001"
+         id="tspan13507">                                           multi_system=&quot;1&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="186.15166"
-         id="tspan257356">&lt;/model&gt;</tspan></text>
+         y="192.07835"
+         id="tspan13509">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
@@ -1199,24 +1202,24 @@
          y="183.78214">System 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333331px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="201.71725"
        y="18.045622"
        id="text330092"><tspan
          sodipodi:role="line"
          id="tspan330090"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583;font-size:4.23333331px"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
          x="201.71725"
          y="18.045622">Model A Definition</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333331px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="201.71725"
        y="139.75386"
        id="text338710"><tspan
          sodipodi:role="line"
          id="tspan338708"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583;font-size:4.23333331px"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
          x="201.71725"
          y="139.75386">Model B Definition</tspan></text>
     <text
@@ -1305,64 +1308,75 @@
          y="154.73767">Cluster 2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.259308"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.16;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:82.8531;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.259308"
        x="82.691513"
        y="111.67811"
        id="text372716"
        transform="scale(1.0203417,0.98006383)"><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.259308"
          x="82.691513"
          y="111.67811"
-         id="tspan401990" /><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.86;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.259308"
+         id="tspan13511">
+</tspan><tspan
          x="82.691513"
-         y="115.02773"
-         id="tspan401994">Cluster1 and 2 does not fullfiled the quorum. </tspan><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.86;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.259308"
+         y="115.36111"
+         id="tspan13513">Cluster 1 and 2 does not fullfil the quorum for model A. </tspan><tspan
          x="82.691513"
-         y="117.75823"
-         id="tspan403930">They do not encode a system.</tspan><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.86;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.259308"
+         y="119.04411"
+         id="tspan13515">They do not encode a system.
+</tspan><tspan
          x="82.691513"
-         y="120.48873"
-         id="tspan401996">hit D13 is part of a cluster but NOT a system</tspan><tspan
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:0.86;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.259308"
+         y="122.72711"
+         id="tspan13517">
+</tspan><tspan
          x="82.691513"
-         y="123.21923"
-         id="tspan372720">so it cannot be used to fullfiled the cluster3 to encode a system</tspan></text>
+         y="126.4101"
+         id="tspan13519">Hit D13 is part of a cluster but NOT a system, thus it </tspan><tspan
+         x="82.691513"
+         y="130.0931"
+         id="tspan13521">cannot be used to fullfil with the Cluster 3 the quorum for a  </tspan><tspan
+         x="82.691513"
+         y="133.7761"
+         id="tspan13523">system.</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.35;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="83.383049"
-       y="72.40876"
+       x="72.799706"
+       y="70.821259"
        id="text430810"><tspan
          sodipodi:role="line"
-         x="83.383049"
-         y="72.40876"
-         id="tspan489546">D13 belong to a system. It is tagged as multi_system.</tspan><tspan
+         x="72.799706"
+         y="72.08886"
+         id="tspan489548">Hit for gene D &quot;D13&quot; belongs to a system taht is tagged &quot;multi_system&quot;</tspan><tspan
          sodipodi:role="line"
-         x="83.383049"
-         y="76.695007"
-         id="tspan489548">So it can be used to fill up the cluster 2 to create a other system.</tspan></text>
+         x="72.799706"
+         y="80.661362"
+         id="tspan98967">It thus can be used with Cluster2 to fill up another system of &quot;A&quot; type.</tspan><tspan
+         sodipodi:role="line"
+         x="72.799706"
+         y="84.947617"
+         id="tspan96717" /></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.05;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.175px;line-height:1.05;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:104.064;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="70.281059"
        y="186.51212"
-       id="text512746"><tspan
-         sodipodi:role="line"
-         id="tspan549458"
+       id="text512746"
+       transform="translate(2.1166667,-7.9375004)"><tspan
          x="70.281059"
-         y="186.51212">Hit D13 belong to a system. It is tagged a multi_system. </tspan><tspan
-         sodipodi:role="line"
-         id="tspan549462"
+         y="186.51212"
+         id="tspan13525">Hit D13 belongs to a system and is tagged as &quot;multi_system&quot;.
+</tspan><tspan
          x="70.281059"
-         y="189.84587">But it cannot be used to fill up the Cluster2 as it encodes a different model.</tspan></text>
+         y="189.84588"
+         id="tspan13527">
+</tspan><tspan
+         x="70.281059"
+         y="193.17963"
+         id="tspan13529">It nevertheless cannot be used with Cluster 2 to form a system of B type </tspan><tspan
+         x="70.281059"
+         y="196.51339"
+         id="tspan13531">as it is assigned to a system from different model.  
+</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -1397,4 +1411,48 @@
          x="2.2263775"
          y="142.40291">C</tspan></text>
   </g>
+  <metadata
+     id="metadata13250">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>MacsyFinder how &quot;multi_system&quot; works</dc:title>
+        <dc:date>2022/04/14</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Bertrand NERON</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Institut Pasteur Paris, CNRS</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Sophie ABBY</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
 </svg>

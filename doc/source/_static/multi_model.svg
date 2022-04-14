@@ -13,7 +13,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title11715">How &quot;multi_model&quot; works</title>
   <sodipodi:namedview
      id="namedview7"
      pagecolor="#ffffff"
@@ -26,9 +31,9 @@
      showgrid="false"
      inkscape:snap-grids="false"
      inkscape:snap-to-guides="false"
-     inkscape:zoom="2.3232521"
-     inkscape:cx="367.15774"
-     inkscape:cy="395.99663"
+     inkscape:zoom="2.0153513"
+     inkscape:cx="367.18164"
+     inkscape:cy="443.09893"
      inkscape:window-width="3840"
      inkscape:window-height="2088"
      inkscape:window-x="0"
@@ -171,8 +176,8 @@
   <g
      inkscape:label="Layer 1"
      id="layer1"
-     inkscape:groupmode="layer"
-     style="display:inline">
+     style="display:inline"
+     inkscape:groupmode="layer">
     <rect
        style="display:inline;opacity:1;fill:#c8f7f8;fill-opacity:0.779357;fill-rule:nonzero;stroke:#020202;stroke-width:0.31133;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
        id="rect271924"
@@ -209,43 +214,6 @@
        y="106.46098"
        ry="0.1034047"
        inkscape:label="fond cas 3" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="179.74741"
-       y="26.872728"
-       id="text147865"><tspan
-         x="179.74741"
-         y="26.872728"
-         id="tspan2035">&lt;model min_mandatory_genes_required=&quot;2&quot; 
-</tspan><tspan
-         x="179.74741"
-         y="31.335373"
-         id="tspan2037">                                        min_genes_required=&quot;4&quot;&gt;
-</tspan><tspan
-         x="179.74741"
-         y="35.798016"
-         id="tspan2039">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="40.260659"
-         id="tspan2041">    &lt;gene name=&quot;B&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="44.723301"
-         id="tspan2043">    &lt;gene name=&quot;C&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="49.185944"
-         id="tspan2045">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
-</tspan><tspan
-         x="179.74741"
-         y="53.648587"
-         id="tspan2047">                                                   multi_model=&quot;1&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="58.111229"
-         id="tspan2049">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
@@ -920,52 +888,109 @@
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="27.769531"
-       y="87.985741"
+       y="93.081314"
        id="text25974"
        transform="scale(0.96294233,1.0384838)"><tspan
          sodipodi:role="line"
          id="tspan25972"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
          x="27.769531"
-         y="87.985741">The 2 systems from the 2 models may belong to the same solution </tspan></text>
+         y="93.081314">The 2 systems from the 2 models may belong to the same solution </tspan></text>
+    <rect
+       style="fill:#ff4e12;fill-opacity:0.853815;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect2148"
+       width="31.68891"
+       height="5.1260638"
+       x="232.91597"
+       y="94.422394"
+       ry="0.33698547"
+       inkscape:label="higlignt def B fig A" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="179.74741"
        y="26.872728"
        id="text89196"
-       transform="translate(0,44.450022)"><tspan
+       transform="translate(0,44.450022)"
+       inkscape:label="xml def model B fig A"><tspan
          x="179.74741"
          y="26.872728"
-         id="tspan2051">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+         id="tspan11990">&lt;model min_mandatory_genes_required=&quot;1&quot; 
 </tspan><tspan
          x="179.74741"
          y="31.335373"
-         id="tspan2053">                                        min_genes_required=&quot;4&quot;&gt;
+         id="tspan11992">                                        min_genes_required=&quot;4&quot;&gt;
 </tspan><tspan
          x="179.74741"
          y="35.798016"
-         id="tspan2055">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
+         id="tspan11994">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="40.260659"
-         id="tspan2057">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
+         id="tspan11996">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="44.723301"
-         id="tspan2059">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
+         id="tspan11998">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="49.185944"
-         id="tspan2061">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
+         id="tspan12000">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
 </tspan><tspan
          x="179.74741"
          y="53.648587"
-         id="tspan2063">                                                   multi_model=&quot;1&quot;/&gt;
+         id="tspan12002">                                                   multi_model=&quot;1&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="58.111229"
-         id="tspan2065">&lt;/model&gt;</tspan></text>
+         id="tspan12004">&lt;/model&gt;</tspan></text>
+    <rect
+       style="fill:#ff4e12;fill-opacity:0.853815;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect5830"
+       width="31.68891"
+       height="5.1260638"
+       x="232.91597"
+       y="49.972401"
+       ry="0.33698547"
+       inkscape:label="higlignt def A fig A" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="179.74741"
+       y="26.872728"
+       id="text147865"
+       inkscape:label="xml def A fig A"><tspan
+         x="179.74741"
+         y="26.872728"
+         id="tspan12006">&lt;model min_mandatory_genes_required=&quot;2&quot; 
+</tspan><tspan
+         x="179.74741"
+         y="31.335373"
+         id="tspan12008">                                        min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
+         x="179.74741"
+         y="35.798016"
+         id="tspan12010">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="40.260659"
+         id="tspan12012">    &lt;gene name=&quot;B&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="44.723301"
+         id="tspan12014">    &lt;gene name=&quot;C&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="49.185944"
+         id="tspan12016">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
+</tspan><tspan
+         x="179.74741"
+         y="53.648587"
+         id="tspan12018">                                                   multi_model=&quot;1&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="58.111229"
+         id="tspan12020">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -977,44 +1002,6 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
          x="201.71725"
          y="65.141495">Model B Definition</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="179.74741"
-       y="26.872728"
-       id="text31923"
-       transform="translate(0,96.837555)"><tspan
-         x="179.74741"
-         y="26.872728"
-         id="tspan2067">&lt;model min_mandatory_genes_required=&quot;2&quot; 
-</tspan><tspan
-         x="179.74741"
-         y="31.335373"
-         id="tspan2069">                                        min_genes_required=&quot;4&quot;&gt;
-</tspan><tspan
-         x="179.74741"
-         y="35.798016"
-         id="tspan2071">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="40.260659"
-         id="tspan2073">    &lt;gene name=&quot;B&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="44.723301"
-         id="tspan2075">    &lt;gene name=&quot;C&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="49.185944"
-         id="tspan2077">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
-</tspan><tspan
-         x="179.74741"
-         y="53.648587"
-         id="tspan2079">                                                   multi_model=&quot;1&quot;/&gt;
-</tspan><tspan
-         x="179.74741"
-         y="58.111229"
-         id="tspan2081">&lt;/model&gt;</tspan></text>
     <g
        id="g31927"
        inkscape:label="genome 1"
@@ -1296,11 +1283,12 @@
          y="130.94193">D13</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="32.165783"
        y="149.1326"
        id="text32009"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="System 1 B"><tspan
          sodipodi:role="line"
          id="tspan32007"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1308,22 +1296,12 @@
          y="149.1326">System 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
-       x="201.71725"
-       y="114.88319"
-       id="text32013"><tspan
-         sodipodi:role="line"
-         id="tspan32011"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
-         x="201.71725"
-         y="114.88319">Model A Definition</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="33.264843"
        y="120.08801"
        id="text32017"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="Culster 1 B"><tspan
          sodipodi:role="line"
          id="tspan32015"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1340,11 +1318,12 @@
        inkscape:label="rect sys 1" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="127.23448"
        y="120.08801"
        id="text32023"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="Cluster 2 B"><tspan
          sodipodi:role="line"
          id="tspan32021"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1440,11 +1419,12 @@
          y="130.94193">D13</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="106.35234"
        y="149.1326"
        id="text32051"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="System 2 B"><tspan
          sodipodi:role="line"
          id="tspan32049"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1673,68 +1653,119 @@
          y="172.77988">D13</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="179.74741"
        y="26.872728"
        id="text32127"
-       transform="translate(0,141.28782)"><tspan
+       transform="translate(0,141.28782)"
+       inkscape:label="xml def B B"><tspan
          x="179.74741"
          y="26.872728"
-         id="tspan2083">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+         id="tspan12022">&lt;model min_mandatory_genes_required=&quot;1&quot; 
 </tspan><tspan
          x="179.74741"
          y="31.335373"
-         id="tspan2085">                                        min_genes_required=&quot;4&quot;&gt;
+         id="tspan12024">                                        min_genes_required=&quot;4&quot;&gt;
 </tspan><tspan
          x="179.74741"
          y="35.798016"
-         id="tspan2087">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
+         id="tspan12026">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="40.260659"
-         id="tspan2089">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
+         id="tspan12028">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="44.723301"
-         id="tspan2091">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
+         id="tspan12030">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="49.185944"
-         id="tspan2093">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot;/&gt;
+         id="tspan12032">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot;/&gt;
 </tspan><tspan
          x="179.74741"
          y="53.648587"
-         id="tspan2095">&lt;/model&gt;</tspan></text>
+         id="tspan12034">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="201.71725"
        y="161.97856"
-       id="text32131"><tspan
+       id="text32131"
+       inkscape:label="Model B def B"><tspan
          sodipodi:role="line"
          id="tspan32129"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
          x="201.71725"
          y="161.97856">Model B Definition</tspan></text>
+    <rect
+       style="display:inline;fill:#ff4e12;fill-opacity:0.853815;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect13428"
+       width="31.68891"
+       height="5.1260638"
+       x="232.91597"
+       y="146.80965"
+       ry="0.33698547"
+       inkscape:label="higlignt def A fig B" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
-       x="159.65675"
-       y="76.265869"
-       id="text42925"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:88.941;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="179.74741"
+       y="26.872728"
+       id="text31923"
+       transform="translate(0,96.837555)"
+       inkscape:label="xml def A B"><tspan
+         x="179.74741"
+         y="26.872728"
+         id="tspan12036">&lt;model min_mandatory_genes_required=&quot;2&quot; 
+</tspan><tspan
+         x="179.74741"
+         y="31.335373"
+         id="tspan12038">                                        min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
+         x="179.74741"
+         y="35.798016"
+         id="tspan12040">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="40.260659"
+         id="tspan12042">    &lt;gene name=&quot;B&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="44.723301"
+         id="tspan12044">    &lt;gene name=&quot;C&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="49.185944"
+         id="tspan12046">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; 
+</tspan><tspan
+         x="179.74741"
+         y="53.648587"
+         id="tspan12048">                                                   multi_model=&quot;1&quot;/&gt;
+</tspan><tspan
+         x="179.74741"
+         y="58.111229"
+         id="tspan12050">&lt;/model&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="201.71725"
+       y="114.88319"
+       id="text32013"
+       inkscape:label="Model A def B"><tspan
          sodipodi:role="line"
-         id="tspan42923"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
-         x="159.65675"
-         y="76.265869">Solution 1</tspan></text>
+         id="tspan32011"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.23333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="201.71725"
+         y="114.88319">Model A Definition</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="159.65675"
        y="76.265869"
        id="text44161"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="Sol 1 A"><tspan
          sodipodi:role="line"
          id="tspan44159"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1742,11 +1773,12 @@
          y="76.265869">Solution 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="88.21785"
        y="164.41916"
        id="text45813"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="Sol 1 B"><tspan
          sodipodi:role="line"
          id="tspan45811"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1754,11 +1786,12 @@
          y="164.41916">Solution 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="88.21785"
        y="183.78214"
        id="text48059"
-       transform="scale(0.96294233,1.0384838)"><tspan
+       transform="scale(0.96294233,1.0384838)"
+       inkscape:label="Sol 2 B"><tspan
          sodipodi:role="line"
          id="tspan48057"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
@@ -1766,21 +1799,63 @@
          y="183.78214">Solution 2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:4.23333px;line-height:1.15;font-family:sans-serif;white-space:pre;inline-size:55.608;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;line-height:1.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:71.1187;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="113.5267"
        y="174.93771"
        id="text53133"
-       transform="translate(-1.0583333,2.6458334)"><tspan
+       transform="translate(-4.2333331,-1.5874998)"
+       inkscape:label="text B"><tspan
          x="113.5267"
          y="174.93771"
-         id="tspan2097">The 2 systems cannot 
-</tspan><tspan
+         id="tspan12052">The 2 systems cannot coexist in a </tspan><tspan
          x="113.5267"
          y="179.80605"
-         id="tspan2099">coexists in the same solution
-</tspan><tspan
+         id="tspan12054">same solution, MacSyFinder will </tspan><tspan
          x="113.5267"
          y="184.67438"
-         id="tspan2101">msf will select the best one.</tspan></text>
+         id="tspan12056">select the best one.</tspan></text>
   </g>
+  <metadata
+     id="metadata11713">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Bertrand NERON</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Institut Pasteur Paris, CNRS</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Sophie ABBY</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <dc:title>How &quot;multi_model&quot; works</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
 </svg>
