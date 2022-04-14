@@ -1,4 +1,4 @@
-# parallel_msf 20220413.dev
+# parallel_msf 20220414.dev
 # merged all_best_solutions.tsv
 # Systems found:
 sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
@@ -58,6 +58,10 @@ sol_id	replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys
 1	VICH001.B.00001.C001	VICH001.B.00001.C001_02600	T2SS_gspE	2489	set_1/T2SS	VICH001.B.00001.C001_T2SS_3	1	1	0.857	8.060	1	T2SS_gspE	mandatory	503	9.3e-206	680.500	0.998	0.837	78	498		
 1	VICH001.B.00001.C001	VICH001.B.00001.C001_02601	T2SS_gspC	2490	set_1/T2SS	VICH001.B.00001.C001_T2SS_3	1	1	0.857	8.060	1	T2SS_gspC	mandatory	305	5.4e-21	72.200	0.938	0.318	67	163		
 1	VICH001.B.00001.C001	VICH001.B.00001.C001_02308	T4P_pilD	2205	set_1/T2SS	VICH001.B.00001.C001_T2SS_3	1	-1	0.857	8.060	1	T2SS_gspO	mandatory	291	2.6e-89	295.800	1.000	0.832	28	269		VICH001.B.00001.C001_T4P_11,VICH001.B.00001.C001_T4P_12,VICH001.B.00001.C001_T4P_13,VICH001.B.00001.C001_T4P_4,VICH001.B.00001.C001_T4P_6,VICH001.B.00001.C001_T4P_8,VICH001.B.00001.C001_T4P_9
+
+# WARNING Loner: line 1 to keep when merging for unit or functional tests [GCF_000006725_T4P_19, GCF_000006725_T4P_52]
+# WARNING Loner: line 2 to keep when merging for unit or functional tests [GCF_000005845_T4P_11, GCF_000005845_T4P_10]
+
 
 2	GCF_000006845	GCF_000006845_001030	T4P_pilQ	103	set_1/T4P	GCF_000006845_T4P_8	4	1	0.833	11.000	1	T4P_pilQ	mandatory	723	1.9e-62	206.600	0.935	0.238	548	719		
 2	GCF_000006845	GCF_000006845_001040	T4P_pilP	104	set_1/T4P	GCF_000006845_T4P_8	4	1	0.833	11.000	1	T4P_pilP	accessory	181	2.7e-34	115.600	1.000	0.735	13	145		

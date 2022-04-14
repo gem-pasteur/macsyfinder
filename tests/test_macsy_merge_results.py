@@ -216,7 +216,9 @@ class TestMerge(MacsyTest):
         merge_dir = os.path.join(self.test_dir, 'merged_results')
 
         with self.assertRaises(ValueError) as ctx:
-            macsy_merge_results.merge_and_reindex([res1, res2], out=merge_dir, ignore="#")
+            macsy_merge_results.merge_and_reindex([res1, res2], merge_dir, "Systems",
+                                                  skip_until=lambda l: l.startswith('sol_id'),
+                                                  comment='#')
         self.assertEqual(str(ctx.exception),
                          "Cannot reindex int(GCF_000006845) + 1:"
                          " invalid literal for int() with base 10: 'GCF_000006845'")
