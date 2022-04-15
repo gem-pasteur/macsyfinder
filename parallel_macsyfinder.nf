@@ -214,7 +214,7 @@ process merge{
     script:
         result_dir = "merged_macsyfinder_results"
         """
-        macsymerge --outdir merged_macsyfinder_results ${all_replicons_results}
+        macsymerge --out-dir merged_macsyfinder_results ${all_replicons_results}
         """
 }
 
