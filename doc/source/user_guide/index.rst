@@ -22,6 +22,7 @@ Running MacSyFinder
    quickstart
    input
    outputs
+   big_data
 
 
 MacSyFinder functioning
