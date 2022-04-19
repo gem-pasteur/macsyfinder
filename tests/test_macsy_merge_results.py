@@ -28,6 +28,8 @@ import os
 import argparse
 import sys
 import colorlog
+import unittest
+import platform
 
 from tests import MacsyTest
 from macsypy.scripts import macsy_merge_results
@@ -180,10 +182,22 @@ class TestMerge(MacsyTest):
                          f'{self.red_beg}{merge_dir} is not a directory{self.red_end}')
 
         os.unlink(merge_dir)
+
+
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
+    def test_functional_merge_out_not_writable(self):
+        res_1 = 'results_1'
+        src_res_1 = self.find_data('data_set', res_1)
+        dest_res_1 = os.path.join(self.test_dir, res_1)
+        res_2 = 'results_no_hits'
+        src_res_2 = self.find_data('data_set', res_2)
+        dest_res_2 = os.path.join(self.test_dir, res_2)
+        merge_dir = os.path.join(self.test_dir, 'merged_results')
         ######################################
         # the -o option is a dir NOT writable
         #####################################
         os.mkdir(merge_dir, mode=0o444)
+        cmd = f"macsy_merge_results -o {merge_dir} {dest_res_1} {dest_res_2}"
         try:
             with self.catch_io(out=True):
                 with self.assertRaises(IOError):
