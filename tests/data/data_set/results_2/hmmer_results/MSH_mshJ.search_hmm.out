@@ -1,0 +1,61 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/MSH_mshJ.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/MSH_mshJ.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       MSH_mshJ  [M=175]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+     0.0058   13.4   5.2      0.008   12.9   1.7    2.2  2  GCF_000006845_003960  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_003960  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.9   1.7   4.2e-06     0.008       2     114 ..      23     140 ..      22     153 .. 0.77
+   2 ?    1.5   0.1     0.013        25      41      72 ..     172     203 ..     161     208 .. 0.67
+
+  Alignments for each domain:
+  == domain 1  score: 12.9 bits;  conditional E-value: 4.2e-06
+              MSH_mshJ   2 rvLivltglvlilllllslllepalkqnqklqsqlqsl..eqenqqleaekaelqqkLakdpnkevrkrlarlekelakldek...lad 85 
+                           ++L +l  l ++ +l++++  + a  qnq+  + l ++  +++n+  + e++    kL+++  + +++  a+l +  ++ d++   +a+
+  GCF_000006845_003960  23 KWLFALLILAALGYLGYTVYQNRAASQNQEAAAVLANIveKAQNKAPQSEINAELSKLQQSYPHSISAAQATLMAAATEFDAQrydVAE 111
+                           8999**************************99999988334455566788888889999887777776666666555555554222777 PP
+
+              MSH_mshJ  86 ltadLiapeqMaalLedvLsrskglkLls 114
+                              + + ++q  +l++++ ++  g+ Ll+
+  GCF_000006845_003960 112 GHLKWVLSNQKDSLIQALAAQRLGVVLLQ 140
+                           77788999999999999888888888776 PP
+
+  == domain 2  score: 1.5 bits;  conditional E-value: 0.013
+              MSH_mshJ  41 qenqqleaekaelqqkLakdpnkevrkrlarl 72 
+                           +++++++   +++ q+L+k p++ v ++l ++
+  GCF_000006845_003960 172 AAQEKSQEALKNYGQALEKMPQDSVGRELLQM 203
+                           45566666667777777777777777776655 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (175 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        93  (0.0493107); expected 37.7 (0.02)
+Passed bias filter:                       67  (0.0355249); expected 37.7 (0.02)
+Passed Vit filter:                        11  (0.00583245); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 9622.31
+//
+[ok]

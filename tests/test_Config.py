@@ -541,7 +541,7 @@ class TestConfig(MacsyTest):
         self.assertEqual(cfg.models_dir(), [self.tmp_dir])
 
     def test_previous_n_sequence_db(self):
-        self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results'))
+        self.parsed_args.previous_run = self.find_data(os.path.join('data_set', 'results_1'))
         sequence_db = self.find_data(os.path.join('base', 'test_1.fasta'))
         self.parsed_args.sequence_db = sequence_db
         with self.catch_log() as log:

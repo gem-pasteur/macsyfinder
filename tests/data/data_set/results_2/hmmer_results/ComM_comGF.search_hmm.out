@@ -1,0 +1,63 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/ComM_comGF.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/ComM_comGF.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       ComM_comGF  [M=105]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.036   11.3   1.4      0.088   10.0   1.3    1.6  1  GCF_000006845_012440  
+      0.051   10.8   3.4      0.084   10.1   3.4    1.3  1  GCF_000006845_010570  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_012440  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.0   1.3   9.3e-05     0.088       2      68 ..       8      72 ..       7      79 .. 0.62
+
+  Alignments for each domain:
+  == domain 1  score: 10.0 bits;  conditional E-value: 9.3e-05
+            ComM_comGF  2 FTLlEslialavlivsllllealvevlsknvkvvsqqqqdidwelfvqqlee.elertqfkkvdgnkl 68
+                          FTLlE +ia+a+l +  l+     +  +   +  s+ +++   ++  q+le+   ++ +f+k d++kl
+  GCF_000006845_012440  8 FTLLELMIAVAILGILTLIAYPSYKTYIRRAR-LSEVKST--LLMNAQNLERyYRQKGTFEKYDSTKL 72
+                          *************9888887544444444422.2233333..56666666663334556777777766 PP
+
+>> GCF_000006845_010570  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.1   3.4   8.9e-05     0.084      31     103 ..      65     144 ..      50     146 .. 0.75
+
+  Alignments for each domain:
+  == domain 1  score: 10.1 bits;  conditional E-value: 8.9e-05
+            ComM_comGF  31 nvkvvsqqqqdidwelfvqqlee.....elertqfkkvdgnklelkqdnq...asgerielelgnnkasdfiktvadgrGy 103
+                            +k+ ++q  +id ++f++ +++     e++ t+ + ++    ++ q++q    + ++++ +  ++k + f+k +a  +G 
+  GCF_000006845_010570  65 SLKQMKEQGAEIDLKVFTDAMQAvydgkEIKMTEEQAQEVMM-KFLQEQQakaVEKHKADAKANKEKGEAFLKENAAKDGV 144
+                           579999***************998977766666554444332.22233333446778899999999999*******99995 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (105 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        42  (0.0222694); expected 37.7 (0.02)
+Passed bias filter:                       35  (0.0185578); expected 37.7 (0.02)
+Passed Vit filter:                         7  (0.00371156); expected 1.9 (0.001)
+Passed Fwd filter:                         2  (0.00106045); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 5773.38
+//
+[ok]

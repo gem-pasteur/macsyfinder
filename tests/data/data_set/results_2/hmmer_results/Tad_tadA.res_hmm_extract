@@ -1,0 +1,9 @@
+# gene: Tad_tadA extract from results_2/hmmer_results/Tad_tadA.search_hmm.out hmm output
+# profile length= 246
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006845_003200	GCF_000006845	320	376	Tad_tadA	1.700e-21	73.500	0.520	0.335	128	253
+GCF_000006845_014310	GCF_000006845	1431	558	Tad_tadA	9.600e-16	54.700	0.557	0.235	295	425
+GCF_000006845_016430	GCF_000006845	1643	347	Tad_tadA	5.700e-17	58.700	0.923	0.631	28	246
+GCF_000006845_016440	GCF_000006845	1644	408	Tad_tadA	3.700e-16	56.000	0.520	0.309	154	279

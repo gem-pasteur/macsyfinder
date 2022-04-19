@@ -1,0 +1,8 @@
+# parallel_msf 20220413.dev
+# merged best_solution_loners.tsv
+# Loners found:
+replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
+VICH001.B.00001.C001	set_1/T2SS	T2SS_gspO	T4P_pilD	VICH001.B.00001.C001_02308	2205	mandatory	291	2.600e-89	295.800	1.000	0.832	28	269
+
+
+

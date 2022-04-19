@@ -1,0 +1,92 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Tad_tadZ.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Tad_tadZ.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       Tad_tadZ  [M=190]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    1.5e-08   31.3   0.8    1.6e-07   27.9   0.8    2.1  1  GCF_000006845_015360  
+      9e-08   28.7   0.4    3.1e-07   26.9   0.1    1.9  2  GCF_000006845_000710  
+     0.0072   12.7   0.2      0.015   11.6   0.2    1.5  1  GCF_000006845_003410  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_015360  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   27.9   0.8   2.5e-10   1.6e-07      10     140 ..       3     136 ..       1     175 [. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 27.9 bits;  conditional E-value: 2.5e-10
+              Tad_tadZ  10 grviavvsakGGvGtStvAanlAlalaeekkkpvlLldldqasgdadlllgqdpaatlsdalaslerldeklLdsaltelepn.l.... 93 
+                           ++++a+   kGGvG +t+  nlA +la++ +k+vl +dld + g+a    g d+ a+l++ ++++  l ++  +sa+++++++      
+  GCF_000006845_015360   3 ANILAIANQKGGVGKTTTTVNLAASLASR-GKRVLVVDLDPQ-GNATTGSGIDK-AGLQSGVYQVL-LGDADVQSAAVRSKEGgYgvlg 87 
+                           567788888********************.*********977.66666654444.44554555543.4455556666666654231112 PP
+
+              Tad_tadZ  94 ..dllaatkdelstleieaaeleallgalaekydvvivDlpsslkeesr 140
+                             + la+++ el ++      l+++l+a+ae yd++ +D p sl+  ++
+  GCF_000006845_015360  88 anRALAGAEIELVQEIAREVRLKNALKAVAEDYDFILIDCPPSLTLLTL 136
+                           224444445455554445567899999999***********66554433 PP
+
+>> GCF_000006845_000710  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   26.9   0.1     5e-10   3.1e-07      11      51 ..      97     136 ..      92     168 .. 0.86
+   2 ?   -1.0   0.0      0.18   1.2e+02      43      75 ..     207     239 ..     189     251 .. 0.82
+
+  Alignments for each domain:
+  == domain 1  score: 26.9 bits;  conditional E-value: 5e-10
+              Tad_tadZ  11 rviavvsakGGvGtStvAanlAlalaeekkkpvlLldldqa 51 
+                           ++iav s+kGGvG St+ anlA a+a + + +v  ld+d+ 
+  GCF_000006845_000710  97 NIIAVASGKGGVGKSTTTANLAAAMARM-GARVGVLDADLY 136
+                           79*************************9.****99999985 PP
+
+  == domain 2  score: -1.0 bits;  conditional E-value: 0.18
+              Tad_tadZ  43 vlLldldqasgdadlllgqdpaatlsdalasle 75 
+                            l++dl  ++gd++l l q  + t s ++  ++
+  GCF_000006845_000710 207 YLFIDLPPGTGDIQLTLSQRIPVTGSVIVTTPQ 239
+                           578999999999999999988888887776665 PP
+
+>> GCF_000006845_003410  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   11.6   0.2   2.4e-05     0.015      13     105 ..      92     180 ..      89     259 .. 0.66
+
+  Alignments for each domain:
+  == domain 1  score: 11.6 bits;  conditional E-value: 2.4e-05
+              Tad_tadZ  13 iavvsakGGvGtStvAanlAlalaeekkkpvlLldldqasgdadlllgqdpaatlsdalaslerldeklLdsaltelepnldllaatkd 101
+                           ++++++ +G+G St+ ++   ++a++  ++vl++ ++  +++ +l    +     ++ +  l ++  +++++al++ +p + +  + + 
+  GCF_000006845_003410  92 VILLGGDPGIGKSTLLLQTIAKMAQS--RKVLYVSGEESAQQVALRS--QRLELHAEGVNLLAEIRMEAIQAALKQHQPEVVVIDSIQT 176
+                           899***********999887788877..8**********99888877..4444455677888888999999999999999988877654 PP
+
+              Tad_tadZ 102 elst 105
+                             s+
+  GCF_000006845_003410 177 MYSD 180
+                           4433 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (190 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        89  (0.0471898); expected 37.7 (0.02)
+Passed bias filter:                       77  (0.0408271); expected 37.7 (0.02)
+Passed Vit filter:                        11  (0.00583245); expected 1.9 (0.001)
+Passed Fwd filter:                         3  (0.00159067); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               3  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 10447.07
+//
+[ok]

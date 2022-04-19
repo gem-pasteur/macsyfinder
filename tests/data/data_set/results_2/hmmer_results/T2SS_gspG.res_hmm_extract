@@ -1,0 +1,9 @@
+# gene: T2SS_gspG extract from results_2/hmmer_results/T2SS_gspG.search_hmm.out hmm output
+# profile length= 88
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006845_004190	GCF_000006845	419	221	T2SS_gspG	6.300e-06	23.200	0.511	0.204	7	51
+GCF_000006845_004230	GCF_000006845	423	162	T2SS_gspG	8.500e-11	38.800	0.636	0.346	9	64
+GCF_000006845_010160	GCF_000006845	1016	149	T2SS_gspG	4.800e-10	36.400	0.739	0.436	5	69
+GCF_000006845_012440	GCF_000006845	1244	129	T2SS_gspG	1.200e-07	28.700	0.670	0.457	6	64

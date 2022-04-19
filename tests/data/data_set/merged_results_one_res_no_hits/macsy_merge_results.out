@@ -1,0 +1,8 @@
+INFO     : Merging 'all_best_solutions.tsv' in to 'merged_results_one_res_no_hits/merged_all_best_solutions.tsv'
+INFO     : Merging 'best_solution.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution.tsv'
+INFO     : Merging 'all_systems.tsv' in to 'merged_results_one_res_no_hits/merged_all_systems.tsv'
+INFO     : Merging 'best_solution_multisystems.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution_multisystems.tsv'
+INFO     : Merging 'best_solution_loners.tsv' in to 'merged_results_one_res_no_hits/merged_best_solution_loners.tsv'
+INFO     : Merging 'all_systems.txt' in to 'merged_results_one_res_no_hits/merged_all_systems.txt'
+INFO     : Merging 'rejected_clusters.txt' in to 'merged_results_one_res_no_hits/merged_rejected_clusters.txt'
+INFO     : Merging 'best_solution_summary' in to 'merged_results_one_res_no_hits/merged_best_solution_summary.tsv'
