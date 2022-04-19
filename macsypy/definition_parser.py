@@ -109,10 +109,10 @@ class DefinitionParser:
 
     def _check_syntax(self, model_node, path):
         """
-        Check if the definition does not contains logical error which is allow by syntax
+        Check if the definition does not contains logical error which is allowed by syntax
         and absence of explicit grammar.
 
-        :param model_node: the node correponding to the model
+        :param model_node: the node corresponding to the model
         :type model_node:  :class:`Et.Element` object
         :param str path: the path of the definition.
         :return: None
@@ -159,7 +159,7 @@ class DefinitionParser:
                   f"'{', '.join(model_unallowed_attribute)}'. Please fix the definition."
             raise ModelInconsistencyError(msg)
 
-        gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'inter_gene_max_space'}
+        gene_allowed_attributes = {'name', 'presence', 'loner', 'multi_system', 'multi_model', 'inter_gene_max_space'}
         gene_all_attributes = set()
         for gene in model_node.iter('gene'):
             gene_all_attributes |= set(gene.attrib.keys())
@@ -287,6 +287,29 @@ class DefinitionParser:
             self.gene_bank.add_new_gene(model_location, gene_name, self.profile_factory)
 
 
+    def _parse_gene_attrs(self, gene_node):
+        attrs = {}
+        for attr in ('loner', 'multi_system', 'multi_model'):
+            val = gene_node.get(attr)
+            if val in ("1", "true", "True"):
+                val = True
+            elif val in ("0", "false", "False"):
+                val = False
+            attrs[attr] = val
+        inter_gene_max_space = gene_node.get("inter_gene_max_space")
+        try:
+            inter_gene_max_space = int(inter_gene_max_space)
+        except ValueError:
+            msg = f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
+            raise SyntaxError(msg)
+        except TypeError:
+            # no attribute inter_gene_max_space
+            pass
+        else:
+            attrs['inter_gene_max_space'] = inter_gene_max_space
+        return attrs
+
+
     def _parse_genes(self, model, model_node):
         """
         Create genes belonging to the models.
@@ -295,35 +318,23 @@ class DefinitionParser:
         :param model: the Model currently parsing
         :type model: :class:`macsypy.model.Model` object
         :param model_node: the element 'model'
-        :type model_node: :class"`Et.ElementTree` object
+        :type model_node: :class:`Et.ElementTree` object
         """
+
         gene_nodes = model_node.findall("./gene")
         for gene_node in gene_nodes:
             name = gene_node.get("name")
-            attrs = {}
-            for attr in ('loner', 'multi_system'):
-                val = gene_node.get(attr)
-                if val in ("1", "true", "True"):
-                    val = True
-                elif val in (None, "0", "false", "False"):
-                    val = False
-                attrs[attr] = val
-            inter_gene_max_space = gene_node.get("inter_gene_max_space")
             try:
-                inter_gene_max_space = int(inter_gene_max_space)
-            except ValueError as err:
-                msg = f"Invalid model definition '{model.name}': " \
-                      f"inter_gene_max_space must be an integer: {inter_gene_max_space}"
+                attrs = self._parse_gene_attrs(gene_node)
+            except SyntaxError as err:
+                msg = f"Invalid model definition '{model.name}': {err}"
                 _log.critical(msg)
-                raise SyntaxError(msg) from err
-            except TypeError:
-                pass
-            else:
-                attrs['inter_gene_max_space'] = inter_gene_max_space
+                raise SyntaxError(msg)
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
 
             for exchangeable_node in gene_node.findall("exchangeables/gene"):
-                new_gene.add_exchangeable(self._parse_exchangeable(exchangeable_node, new_gene, model))
+                ex = self._parse_exchangeable(exchangeable_node, new_gene, model)
+                new_gene.add_exchangeable(ex)
 
             presence = gene_node.get("presence")
             if not presence:
@@ -339,12 +350,12 @@ class DefinitionParser:
                 raise SyntaxError(msg)
 
 
-    def _parse_exchangeable(self, node, gene_ref, curr_model):
+    def _parse_exchangeable(self, gene_node, gene_ref, curr_model):
         """
         Parse a xml element gene child of exchangeable and build the corresponding object
 
-        :param node: a "node" corresponding to the gene element in the XML hierarchy
-        :type node: :class:`xml.etree.ElementTree.Element` object.
+        :param gene_node: a "node" corresponding to the gene element in the XML hierarchy
+        :type gene_node: :class:`xml.etree.ElementTree.Element` object.
         :param gene_ref: the gene which this gene is homolog to
         :type gene_ref: class:`macsypy.gene.ModelGene` object
         :param curr_model: the model being parsed .
@@ -352,13 +363,20 @@ class DefinitionParser:
         :return: the gene object corresponding to the node
         :rtype: :class:`macsypy.gene.Exchangeable` object
         """
-        name = node.get("name")
-        model_name = split_def_name(curr_model.fqn)[0]
-        key = (model_name, name)
+        name = gene_node.get("name")
+        family_name, model_name = split_def_name(curr_model.fqn)
+        try:
+            attrs = self._parse_gene_attrs(gene_node)
+        except SyntaxError as err:
+            msg = f"Invalid model definition '{model_name}': {err}"
+            _log.critical(msg)
+            raise SyntaxError(msg)
+
+        key = (family_name, name)
         # It cannot fail
         # all genes in the xml are created and insert in GeneBank before this step
         c_gene = self.gene_bank[key]
-        ex = Exchangeable(c_gene, gene_ref)
+        ex = Exchangeable(c_gene, gene_ref, **attrs)
         return ex
 
 

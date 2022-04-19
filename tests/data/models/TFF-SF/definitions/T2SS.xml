@@ -17,13 +17,6 @@
 	    <gene name="ComM_comC"/>
 	</exchangeables>
     </gene>
-    
-
     <gene name="T4P_pilT" presence="forbidden"/>
-
-    #Bug macsyfinder => Remi to check if now with v2 of MacSyFinder, it can be removed?
     <gene name="Tad_tadD" presence="accessory"/>
-
-    # tadV could be in the exchangeable of the peptidase
-
 </model>

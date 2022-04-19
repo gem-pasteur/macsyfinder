@@ -68,15 +68,18 @@ class TestModelParser(MacsyTest):
 
 
     def test_parse_with_exchangeable(self):
-        def_2_parse = set()
-        def_2_parse.add('foo/model_1')
-        models_2_detect = [self.model_registry['foo'].get_definition('foo/model_1')]
+        model_name = 'model_1'
+        model_family = 'foo'
+        fqn = f"{model_family}/{model_name}"
+        #def_2_parse = set()
+        #def_2_parse.add(fqn)
+        models_2_detect = [self.model_registry['foo'].get_definition(fqn)]
         self.parser.parse(models_2_detect)
         self.assertEqual(len(self.model_bank), 1)
 
-        m1 = self.model_bank['foo/model_1']
-        self.assertEqual(m1.name, 'model_1')
-        self.assertEqual(m1.fqn, 'foo/model_1')
+        m1 = self.model_bank[fqn]
+        self.assertEqual(m1.name, model_name)
+        self.assertEqual(m1.fqn, fqn)
         self.assertEqual(m1.inter_gene_max_space, 20)
         self.assertEqual(m1.min_mandatory_genes_required, 2)
         self.assertEqual(m1.min_genes_required, 4)
@@ -103,16 +106,50 @@ class TestModelParser(MacsyTest):
         self.assertListEqual(forbidden_genes_name, theoric_list)
 
         sctJ_FLG = m1.get_gene('sctJ_FLG')
-        sctJ_FLG_homologs = sctJ_FLG.exchangeables
-        self.assertEqual(len(sctJ_FLG_homologs), 1)
-        self.assertEqual(sctJ_FLG_homologs[0].name, 'sctJ')
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0], Exchangeable))
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0]._gene, CoreGene))
-        self.assertTrue(isinstance(sctJ_FLG_homologs[0].alternate_of(), ModelGene))
-        self.assertTrue(sctJ_FLG_homologs[0].loner)
+        sctJ_FLG_exchangeables = sctJ_FLG.exchangeables
+        self.assertEqual(len(sctJ_FLG_exchangeables), 2)
+        self.assertEqual(sctJ_FLG_exchangeables[0].name, 'sctJ')
+        self.assertEqual(sctJ_FLG_exchangeables[1].name, 'abc')
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0], Exchangeable))
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0]._gene, CoreGene))
+        self.assertTrue(isinstance(sctJ_FLG_exchangeables[0].alternate_of(), ModelGene))
+        self.assertTrue(sctJ_FLG_exchangeables[0].loner)
         self.assertFalse(sctJ_FLG.is_exchangeable)
         sctJ = m1.get_gene('sctJ')
         self.assertTrue(sctJ.is_exchangeable)
+
+
+    def test_exchangeable_inheritance(self):
+        def_2_parse = set()
+        def_2_parse.add('foo/model_1')
+        models_2_detect = [self.model_registry['foo'].get_definition('foo/model_1')]
+        self.parser.parse(models_2_detect)
+        m1 = self.model_bank['foo/model_1']
+
+        sctJ = m1.get_gene('sctJ')
+        self.assertTrue(sctJ.is_exchangeable)
+        self.assertTrue(sctJ.loner)
+        self.assertTrue(sctJ.multi_system)
+        self.assertFalse(sctJ.multi_model)
+        sctJ_FLG = m1.get_gene('sctJ_FLG')
+        self.assertTrue(sctJ_FLG.multi_system)
+        abc = m1.get_gene('abc')
+        self.assertFalse(abc.multi_system)
+
+        sctN = m1.get_gene('sctN')
+        sctN_FLG = m1.get_gene('sctN_FLG')
+
+        self.assertFalse(sctN_FLG.loner)
+        self.assertTrue(sctN.loner)
+        self.assertIsNone(sctN_FLG.inter_gene_max_space)
+        self.assertEqual(sctN.inter_gene_max_space, 10)
+        self.assertFalse(sctN_FLG.multi_model)
+        self.assertFalse(sctN.multi_model)
+        gspD = m1.get_gene('gspD')
+        self.assertFalse(sctN_FLG.multi_system)
+        self.assertTrue(gspD.multi_model)
+        self.assertTrue(gspD.multi_system)
+
 
     def test_model_w_unkown_attr(self):
         model_2_detect = [self.model_registry['foo'].get_definition('foo/model_w_unknown_attribute')]
@@ -256,13 +293,16 @@ class TestModelParser(MacsyTest):
 
 
     def test_bad_inter_gene_max_space(self):
-        model_2_detect = [self.model_registry['foo'].get_definition('foo/bad_inter_gene_max_space')]
+        fqn = 'foo/bad_inter_gene_max_space'
+        model_family, model_name = fqn.split('/')
+        model_2_detect = [self.model_registry['foo'].get_definition(fqn)]
         with self.assertRaises(SyntaxError) as context:
             with self.catch_log():
                 self.parser.parse(model_2_detect)
         self.assertEqual(str(context.exception),
                          "Invalid model definition ({}): inter_gene_max_space must be an integer: 12.5".format(
-                             os.path.join(self.cfg.models_dir()[0], "foo/definitions/bad_inter_gene_max_space.xml")
+                             os.path.join(self.cfg.models_dir()[0],
+                                          model_family, 'definitions', model_name + ".xml")
                          )
                          )
 
@@ -310,6 +350,18 @@ class TestModelParser(MacsyTest):
         self.assertFalse(flgC.multi_system)
         fliE = m.get_gene('fliE')
         self.assertTrue(fliE.multi_system)
+
+
+    def test_multi_model(self):
+        model_fqn = 'foo/model_5'
+        model_2_detect = [self.model_registry['foo'].get_definition(model_fqn)]
+        self.parser.parse(model_2_detect)
+
+        m = self.model_bank[model_fqn]
+        flgC = m.get_gene('flgC')
+        self.assertFalse(flgC.multi_model)
+        abc = m.get_gene('abc')
+        self.assertTrue(abc.multi_model)
 
 
     def test_gene_inter_gene_max_space(self):
@@ -474,6 +526,17 @@ class TestModelParser(MacsyTest):
 
         self.assertEqual(str(ctx.exception), "Invalid model definition 'bad_inter_gene_max_space_2': "
                                              "inter_gene_max_space must be an integer: 2.5")
+
+
+    def test_bad_exchangeable_inter_gene_max_space(self):
+        fqn = 'foo/bad_exchangeable_inter_gene_max_space'
+        model_2_detect = [self.model_registry['foo'].get_definition(fqn)]
+        with self.assertRaises(SyntaxError) as context:
+            with self.catch_log():
+                self.parser.parse(model_2_detect)
+        self.assertEqual(str(context.exception),
+                         "Invalid model definition 'bad_exchangeable_inter_gene_max_space': "
+                         "inter_gene_max_space must be an integer: 1.5")
 
 
     def test_parse_model_old_syntax(self):

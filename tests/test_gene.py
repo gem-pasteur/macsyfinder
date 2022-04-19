@@ -297,6 +297,23 @@ class TestModelGene(MacsyTest):
         self.assertTrue(sctJ.multi_system)
 
 
+    def test_multi_model(self):
+        """
+        test getter for multi_modelproperty
+        """
+        model_foo = Model("foo", 10)
+
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctJ_FLG = ModelGene(c_gene, model_foo)
+        self.assertFalse(sctJ_FLG.multi_model)
+
+        gene_name = 'sctJ'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctJ = ModelGene(c_gene, model_foo, multi_model=True)
+        self.assertTrue(sctJ.multi_model)
+
+
     def test_inter_gene_max_space(self):
         """
         test getter for inter_gene_max_space property
