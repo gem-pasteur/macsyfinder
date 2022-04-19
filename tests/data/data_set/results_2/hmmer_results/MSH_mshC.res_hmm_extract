@@ -1,0 +1,6 @@
+# gene: MSH_mshC extract from results_2/hmmer_results/MSH_mshC.search_hmm.out hmm output
+# profile length= 76
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006845_004190	GCF_000006845	419	221	MSH_mshC	3.900e-07	27.300	0.526	0.181	7	46

@@ -1,0 +1,56 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG01822.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG01822.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG01822  [M=154]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+     0.0012   15.4   0.0      0.025   11.1   0.0    2.0  2  GCF_000006845_018210  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_018210  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -1.0   0.1     0.068   1.3e+02      66      66 ..     461     461 ..      82     836 .. 0.70
+   2 !   11.1   0.0   1.3e-05     0.025      62      87 ..     984    1009 ..     902    1012 .. 0.76
+
+  Alignments for each domain:
+  == domain 1  score: -1.0 bits;  conditional E-value: 0.068
+            arCOG01822  66 v 66 
+                           +
+  GCF_000006845_018210 461 K 461
+                           0 PP
+
+  == domain 2  score: 11.1 bits;  conditional E-value: 1.3e-05
+            arCOG01822   62 lydsvggtitvyvkntGnatvtlevs 87  
+                            l +s++gt+t+ v ntGn+ v+le++
+  GCF_000006845_018210  984 LAESSEGTYTLAVNNTGNEPVSLEQL 1009
+                            335799****************9985 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (154 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        73  (0.0387063); expected 37.7 (0.02)
+Passed bias filter:                       62  (0.0328738); expected 37.7 (0.02)
+Passed Vit filter:                        10  (0.00530223); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 8467.63
+//
+[ok]

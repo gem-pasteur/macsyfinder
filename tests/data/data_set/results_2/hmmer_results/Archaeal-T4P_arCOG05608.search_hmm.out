@@ -1,0 +1,57 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG05608.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG05608.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG05608  [M=233]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+  ------ inclusion threshold ------
+      0.014   11.9   0.4      0.038   10.4   0.1    1.9  2  GCF_000006845_015360  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_015360  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   10.4   0.1     2e-05     0.038       6      38 ..       5      41 ..       1      84 [. 0.86
+   2 ?   -0.9   0.0     0.058   1.1e+02     119     150 ..     119     151 ..      90     174 .. 0.68
+
+  Alignments for each domain:
+  == domain 1  score: 10.4 bits;  conditional E-value: 2e-05
+            arCOG05608  6 vvvvssldGGvGktt....laavlavekgltllvdmd 38
+                          +  +    GGvGktt    laa la + +++l+vd+d
+  GCF_000006845_015360  5 ILAIANQKGGVGKTTttvnLAASLASRGKRVLVVDLD 41
+                          56778889*****98555567777778889*****99 PP
+
+  == domain 2  score: -0.9 bits;  conditional E-value: 0.058
+            arCOG05608 119 PvDtvviDttaalrvelleklqkl.gvytifva 150
+                             D ++iD + +l + +l+ l +  gv+  +++
+  GCF_000006845_015360 119 DYDFILIDCPPSLTLLTLNGLVAAgGVIVPMLC 151
+                           468899999999999999988754144444445 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (233 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        46  (0.0243902); expected 37.7 (0.02)
+Passed bias filter:                       42  (0.0222694); expected 37.7 (0.02)
+Passed Vit filter:                         4  (0.00212089); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.01
+# Mc/sec: 12811.41
+//
+[ok]

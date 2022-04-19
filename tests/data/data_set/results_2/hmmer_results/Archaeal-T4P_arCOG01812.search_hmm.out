@@ -1,0 +1,84 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG01812.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG01812.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG01812  [M=245]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    1.2e-07   27.8  19.2    5.1e-05   19.1   7.1    3.5  2  GCF_000006845_014270  
+     0.0066   12.2   0.1     0.0067   12.2   0.1    1.0  1  GCF_000006845_014860  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_014270  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   19.1   7.1   5.4e-08   5.1e-05      63     210 ..      59     196 ..      54     240 .. 0.75
+   2 !    3.3  16.9    0.0038       3.6      12     207 ..     176     398 ..     160     407 .. 0.63
+
+  Alignments for each domain:
+  == domain 1  score: 19.1 bits;  conditional E-value: 5.4e-08
+            arCOG01812  63 iklgsrrseiekelpyalrymasllsaGvglaealrslaeneeygeiseEfkliireikvlGssfeeALerasertpSpslrelvqqli 151
+                           +k +s+r+  + +++++ r+++++++aG +l +a++ +a+   +  + e +  i  +++  Gss+ +A++++ +      + +++  l+
+  GCF_000006845_014270  59 VKTSSKRKITQEDITVFTRQLSTMIKAGLPLMQAFEIVARGHGNPSMTEMLMEIRGQVE-QGSSLSRAFSNHPKY-----FDRFYCNLV 141
+                           4556666666788**************************77777777666666666777.***********9986.....79******* PP
+
+            arCOG01812 152 ravksGgnlaevLeklaedilrekrsklksylqklsllaeiyvvvavilPilliilili 210
+                           +a ++Gg l+++L kla  i  ek++ +++ +++  +l+  + v+av++ ++++++i +
+  GCF_000006845_014270 142 AAGETGGVLESLLDKLA--IYKEKTQAIRKKVKT--ALTYPVSVIAVAIGLVFVMMIFV 196
+                           ******99999998887..566777777666665..44445555555555555555443 PP
+
+  == domain 2  score: 3.3 bits;  conditional E-value: 0.0038
+            arCOG01812  12 rylallllvsiivallllalil.......................lllgpiiiglll.gllafllvllillfypkiklgsrrseiekel 76 
+                            y + +++v+i  ++++++++l                       + ++ + +g ++ ++l+f++  ++ l   +ik+++r + i  ++
+  GCF_000006845_014270 176 TYPVSVIAVAIGLVFVMMIFVLpafkevyanmgaelppltqtvmdMSDFFVSYGWMVlIALGFAIYGFLKLKARSIKIQRRMDAILLRM 264
+                           4555556565555555555555999*****************85544444444433303333333333445567899************ PP
+
+            arCOG01812  77 pya........l....rymasllsaGvglaealrslaeneeygeiseEfkliireikvlGssfeeALerasertpSpslrelvqqlira 153
+                           p++        +    r+ a+l +aGv+l ++l+s a  +    i eE+++   ei+      ++ ++ +s+ +  +  + + + +++ 
+  GCF_000006845_014270 265 PIFgdivrkgtIarwgRTTATLFAAGVPLVDVLDSTA-GAAGNLIYEEATR---EIR------TRVIQGLSMTSGMRATELFPNMMLQM 343
+                           *984443333314444789******************.6777777888765...555......44444455555555555555555555 PP
+
+            arCOG01812 154 vksGgnlaevLeklaedilrekrsklksylqklsllae..iyvvvavilPilliil 207
+                            ++G + +  L +++++ ++ ++ ++++ + +ls+++e  i+v++++++ +ll+ +
+  GCF_000006845_014270 344 SSIG-EESGSLDDMLNKAAEFYEDEVDNAVGRLSAMMEpiIIVILGLVIGTLLVAM 398
+                           5555.445555555555555566677777777777777334555566666666655 PP
+
+>> GCF_000006845_014860  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   12.2   0.1   7.1e-06    0.0067     125     171 ..       7      53 ..       2      70 .. 0.89
+
+  Alignments for each domain:
+  == domain 1  score: 12.2 bits;  conditional E-value: 7.1e-06
+            arCOG01812 125 ssfeeALerasertpSpslrelvqqliravksGgnlaevLeklaedi 171
+                           +sfeeAL+r+++ t+S + +  ++ +++a++ G +l  + ++++ ++
+  GCF_000006845_014860   7 KSFEEALSRLESLTQSMQGEMPLEDALAAYQEGNELVRYCQTKLAQV 53 
+                           79************************************999998776 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (245 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                       185  (0.0980912); expected 37.7 (0.02)
+Passed bias filter:                       70  (0.0371156); expected 37.7 (0.02)
+Passed Vit filter:                         5  (0.00265111); expected 1.9 (0.001)
+Passed Fwd filter:                         2  (0.00106045); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               2  [number of targets reported over threshold]
+# CPU time: 0.02u 0.00s 00:00:00.02 Elapsed: 00:00:00.02
+# Mc/sec: 6735.61
+//
+[ok]

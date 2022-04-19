@@ -1,0 +1,56 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T4bP_pilP.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T4bP_pilP.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T4bP_pilP  [M=88]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+     0.0093   13.2   0.0      0.056   10.7   0.0    2.1  2  GCF_000006845_001040  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_001040  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 ?   -0.5   0.0     0.096   1.8e+02      61      78 ..      68      85 ..      62      90 .. 0.81
+   2 !   10.7   0.0   2.9e-05     0.056      47      87 ..     104     144 ..      95     145 .. 0.85
+
+  Alignments for each domain:
+  == domain 1  score: -0.5 bits;  conditional E-value: 0.096
+             T4bP_pilP 61 vadvkaGdkipGgyrVas 78
+                            ++k+G++ p + r+++
+  GCF_000006845_001040 68 METAKKGENAPDTKRIKE 85
+                          56789******9999875 PP
+
+  == domain 2  score: 10.7 bits;  conditional E-value: 2.9e-05
+             T4bP_pilP  47 eqklsArlsledgavadvkaGdkipG.gy.rVasIrpdavvlq 87 
+                           +qk+s  ++ ++g+v++v +G+ + G +y r+ sI++d++ l+
+  GCF_000006845_001040 104 GQKVSGFIE-AEGYVYTVGVGNYL-GqNYgRIESITDDSIILN 144
+                           678888888.99************.55555**********997 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (88 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        77  (0.0408271); expected 37.7 (0.02)
+Passed bias filter:                       49  (0.0259809); expected 37.7 (0.02)
+Passed Vit filter:                         6  (0.00318134); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 4838.64
+//
+[ok]

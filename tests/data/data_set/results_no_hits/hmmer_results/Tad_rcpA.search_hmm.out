@@ -1,0 +1,64 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Tad_rcpA.hmm
+# target sequence database:        tests/data/base/test_1.fasta
+# output directed to file:         results_no_hits/hmmer_results/Tad_rcpA.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       Tad_rcpA  [M=225]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence                   Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------                   -----------
+    1.4e-32  104.4   2.0    2.4e-32  103.7   2.0    1.3  1  VICH001.B.00001.C001_01400  gspd
+
+
+Domain annotation for each sequence (and alignments):
+>> VICH001.B.00001.C001_01400  gspd
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  103.7   2.0   4.9e-34   2.4e-32       2     223 ..     284     535 ..     283     537 .. 0.77
+
+  Alignments for each domain:
+  == domain 1  score: 103.7 bits;  conditional E-value: 4.9e-34
+                    Tad_rcpA   2 vvevsrkvlkqlGvslsavig..gvngslansatgsgF...................gtaekiesgaleigakklkallnale 63 
+                                 + ev  +   q G+++s+ ++  g+n +++++++ ++                    g      +    i++ ++ a++ ++ 
+  VICH001.B.00001.C001_01400 284 ILEVTLSDGYQQGINWSKAFSsnGANYKIGSGSITQDSngnpitsvlpgldaignllG-----GQSNVVISSGSFDAVISFMA 361
+                                 5666666777889999999876645555555444434345555555555444422211.....12223446777********* PP
+
+                    Tad_rcpA  64 ekglvkvLaepnLvalsgesAkflvGGelpiptgnetn........gsvtieykey..GvkLnltptvlsngrisLkvstevS 136
+                                 ++g  +vL+ p ++a + ++A + vG + + +t  +           s+ i+  ++  G++L +tp++ ++g + L+v + v 
+  VICH001.B.00001.C001_01400 362 TQGDLNVLSSPRVTASNNQKAVIKVGTDEYYVTDLSSVvgtgdnaqASPDITLTPFfsGISLDVTPQIDDQGNVLLHVHPAVI 444
+                                 **************************97665554332234444477899999999999************************* PP
+
+                    Tad_rcpA 137 elds.egsvsl.gggstvpslrt..rrvettvelasgeslvlaGllsseekesidklPllgdiPilGalfrsketlknqteLv 215
+                                 e+++ ++++   ++ + +p  r+  r+ ++ +  ++g+++v++Gl++s++   ++k+P+lgd+P lG+lfr+++ l ++teLv
+  VICH001.B.00001.C001_01400 445 EVEQqTKKILYrSEEIELPLARSsiRESDSVIRAKDGDVVVIGGLMKSNTVDQVSKVPFLGDVPALGHLFRNTTKLTQKTELV 527
+                                 **98433333313447888765333********************************************************** PP
+
+                    Tad_rcpA 216 iivtpelv 223
+                                 i++ p +v
+  VICH001.B.00001.C001_01400 528 ILLKPTVV 535
+                                 *****998 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (225 nodes)
+Target sequences:                           49  (20794 residues searched)
+Passed MSV filter:                         3  (0.0612245); expected 1.0 (0.02)
+Passed bias filter:                        3  (0.0612245); expected 1.0 (0.02)
+Passed Vit filter:                         1  (0.0204082); expected 0.0 (0.001)
+Passed Fwd filter:                         1  (0.0204082); expected 0.0 (1e-05)
+Initial search space (Z):                 49  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.00
+# Mc/sec: inf
+//
+[ok]

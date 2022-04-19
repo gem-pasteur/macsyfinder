@@ -1,0 +1,7 @@
+# gene: T4P_pilY extract from results_2/hmmer_results/T4P_pilY.search_hmm.out hmm output
+# profile length= 544
+# i_evalue threshold= 0.001
+# coverage threshold= 0.500
+# hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score profile_coverage sequence_coverage begin end
+GCF_000006845_000250	GCF_000006845	25	1006	T4P_pilY	2.200e-57	191.700	0.728	0.389	463	853
+GCF_000006845_000700	GCF_000006845	70	1047	T4P_pilY	1.900e-57	191.900	0.721	0.362	516	894

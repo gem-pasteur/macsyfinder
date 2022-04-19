@@ -226,6 +226,7 @@ Path options:
                         and be named 'gspG.hmm3'
                         (default: .hmm)
 
+.. _general-options:
 
 General options:
 

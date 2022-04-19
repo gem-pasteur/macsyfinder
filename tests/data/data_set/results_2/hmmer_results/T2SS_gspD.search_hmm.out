@@ -1,0 +1,54 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/T2SS_gspD.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/T2SS_gspD.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       T2SS_gspD  [M=188]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+      7e-40  133.1   1.7    1.6e-39  131.9   1.7    1.6  1  GCF_000006845_001030  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_001030  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !  131.9   1.7   8.4e-43   1.6e-39       4     174 ..     551     717 ..     548     722 .. 0.92
+
+  Alignments for each domain:
+  == domain 1  score: 131.9 bits;  conditional E-value: 8.4e-43
+             T2SS_gspD   4 llnalksesdvnilstPsiltldneeAeiaVgqevpiltgskktsagdnifatvqrkdvgikLkvkPqinegdsvtLeieqevssvaea 92 
+                            l+a +s s+++ l++P +lt + +eA+i+ g e+p+++++++  +     ++ + k+  + L+v+P+i+ ++++ ++++ + +s a+ 
+  GCF_000006845_001030 551 ELSASESLSKTKTLANPRVLTQNRKEAKIESGYEIPFTVTTASGGG---NSTNTELKKAVLGLTVTPNITPDGQIIMTVKINKDSPAQC 636
+                           678899999*****************************99888844...4566788888899***********************9998 PP
+
+             T2SS_gspD  93 assaaalgptvnkrsikttvlvkdgetvviGGLiqdetsesvskvPlLgdiPllGkLFrsksrekkktnLlvfitPtiirda 174
+                            +s +++ + ++++s++t+++v++g t+++GG+ ++++ ++ +kvPlLgdiP++G+LF+++ +++++++Ll+fitP+ii++a
+  GCF_000006845_001030 637 -ASGNNTILCISTKSLNTQAMVENGGTLIVGGIYEENNGNTLTKVPLLGDIPVIGNLFKTRGKKTDRRELLIFITPRIIDTA 717
+                           .5555699***********************************************************************986 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (188 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                        40  (0.0212089); expected 37.7 (0.02)
+Passed bias filter:                       37  (0.0196182); expected 37.7 (0.02)
+Passed Vit filter:                         3  (0.00159067); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00.01
+# Mc/sec: 10337.10
+//
+[ok]

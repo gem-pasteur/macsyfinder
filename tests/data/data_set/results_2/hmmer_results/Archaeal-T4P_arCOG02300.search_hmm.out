@@ -1,0 +1,54 @@
+# hmmsearch :: search profile(s) against a sequence database
+# HMMER 3.1b2 (February 2015); http://hmmer.org/
+# Copyright (C) 2015 Howard Hughes Medical Institute.
+# Freely distributed under the GNU General Public License (GPLv3).
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# query HMM file:                  tests/data/data_set/models/set_1/profiles/Archaeal-T4P_arCOG02300.hmm
+# target sequence database:        tests/data/base/one_replicon.fasta
+# output directed to file:         results_2/hmmer_results/Archaeal-T4P_arCOG02300.search_hmm.out
+# sequence reporting threshold:    E-value <= 0.1
+# number of worker threads:        0
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Query:       arCOG02300  [M=359]
+Scores for complete sequences (score includes all domains):
+   --- full sequence ---   --- best 1 domain ---    -#dom-
+    E-value  score  bias    E-value  score  bias    exp  N  Sequence             Description
+    ------- ------ -----    ------- ------ -----   ---- --  --------             -----------
+    0.00059   16.0  10.5    0.00095   15.3  10.5    1.4  1  GCF_000006845_014280  
+
+
+Domain annotation for each sequence (and alignments):
+>> GCF_000006845_014280  
+   #    score  bias  c-Evalue  i-Evalue hmmfrom  hmm to    alifrom  ali to    envfrom  env to     acc
+ ---   ------ ----- --------- --------- ------- -------    ------- -------    ------- -------    ----
+   1 !   15.3  10.5     5e-07   0.00095       3      96 ..     131     225 ..     129     248 .. 0.81
+
+  Alignments for each domain:
+  == domain 1  score: 15.3 bits;  conditional E-value: 5e-07
+            arCOG02300   3 liplilglivlilasytDiKtgiIpnkltfpllalgillnlllglks..gnilfalsaiiglfvifilgliLyvlggwagGDVklltal 89 
+                           l +lil+ +++ l+ + D  t++ p+ +t+pl+ lg+++nl  g++   + +l a++++ +l +  ++  +L    g++ GD kl +al
+  GCF_000006845_014280 131 LGGLILTAFLISLT-FIDADTQYLPDSMTLPLIWLGLIFNLDGGFVPlqSAVLGAVAGYSSLWLLCAVYKLLTGKTGMGNGDFKLIAAL 218
+                           55677777777775.88************************99997643777888899999999999999999999************* PP
+
+            arCOG02300  90 sallpya 96 
+                           +a l + 
+  GCF_000006845_014280 219 GAWLGIS 225
+                           **99763 PP
+
+
+
+Internal pipeline statistics summary:
+-------------------------------------
+Query model(s):                              1  (359 nodes)
+Target sequences:                         1886  (549846 residues searched)
+Passed MSV filter:                       103  (0.0546129); expected 37.7 (0.02)
+Passed bias filter:                       35  (0.0185578); expected 37.7 (0.02)
+Passed Vit filter:                         4  (0.00212089); expected 1.9 (0.001)
+Passed Fwd filter:                         1  (0.000530223); expected 0.0 (1e-05)
+Initial search space (Z):               1886  [actual number of targets]
+Domain search space  (domZ):               1  [number of targets reported over threshold]
+# CPU time: 0.01u 0.00s 00:00:00.01 Elapsed: 00:00:00.02
+# Mc/sec: 9869.74
+//
+[ok]
