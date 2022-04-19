@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/ComM_comGC.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/src/MacSyFinder/macsyfinder-20220119_16-51-37/hmmer_results/ComM_comGC.search_hmm.out
+# output directed to file:         functional_test_gembase/hmmer_results/ComM_comGC.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

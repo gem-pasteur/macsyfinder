@@ -673,10 +673,31 @@ class System(AbstractClusterizedHits):
         # but several ModelGene can exist on the same gene
         # So to know if two systems share same genes we have to work on the CoreHit
         # which is hold by the ModelHit hit attribute
-        from macsypy.hit import Loner, MultiSystem, LonerMultiSystem
-        other_hits = {mh.hit for mh in other.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
-        my_hits = {mh.hit for mh in self.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
-        return not (my_hits & other_hits)
+        if self.model == other.model:
+            # The Multi_systems are allowed to be "shared" by several oocurences of the same Model
+            # The loners not but msf cannot decide which occurence is the right, so all occurences
+            # are proposed to the user with eventually a warning
+            from macsypy.hit import Loner, MultiSystem, LonerMultiSystem
+            other_hits = {mh.hit for mh in other.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
+            my_hits = {mh.hit for mh in self.hits if not isinstance(mh, (Loner, MultiSystem, LonerMultiSystem))}
+            return not (my_hits & other_hits)
+        else:
+            # When we conpare 2 systems from 2 diffrent models
+            # Only multi_model gene are allowed in same combination
+            # to be allowed the hit from self and other must be multi_model
+            other_hits = {mh.hit: mh for mh in other.hits}
+            my_hits = {mh.hit: mh for mh in self.hits}
+            common_hits = set(my_hits.keys()) & set(other_hits.keys())
+
+            for ch in common_hits:
+                other_hit = other_hits[ch]
+                my_hit = my_hits[ch]
+                if not(other_hit.multi_model and my_hit.multi_model):
+                    return False
+            return True
+
+
+
 
 
     def get_loners(self):

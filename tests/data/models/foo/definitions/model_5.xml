@@ -3,5 +3,6 @@
     <gene inter_gene_max_space="2" name="flgC" presence="mandatory" />
     <gene multi_system="True" name="fliE" presence="mandatory" />
     <gene loner="True" name="tadZ" presence="accessory" />
+    <gene multi_model="True" name="abc" presence="accessory" />
     <gene name="sctC" presence="forbidden" />
 </model>

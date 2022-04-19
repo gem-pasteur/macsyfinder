@@ -13,7 +13,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <title
+     id="title10380">macsyfinder how &quot;loner&quot; works</title>
   <sodipodi:namedview
      id="namedview7"
      pagecolor="#ffffff"
@@ -26,14 +31,14 @@
      showgrid="false"
      inkscape:snap-grids="false"
      inkscape:snap-to-guides="false"
-     inkscape:zoom="1.1575153"
+     inkscape:zoom="2.3150307"
      inkscape:cx="550.74864"
-     inkscape:cy="517.48774"
-     inkscape:window-width="2605"
-     inkscape:window-height="1130"
+     inkscape:cy="341.24817"
+     inkscape:window-width="3840"
+     inkscape:window-height="2088"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0"
+     inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      height="769px"
      width="1025px" />
@@ -455,91 +460,110 @@
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.163978"
          x="89.31691"
          y="43.654205">System 1</tspan></text>
+    <rect
+       style="fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect2351"
+       width="18.658222"
+       height="5.6752853"
+       x="251.89954"
+       y="52.660954"
+       ry="0"
+       inkscape:label="higlight model A " />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:2.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:94.2504;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="178.68909"
        y="15.231052"
-       id="text147865"><tspan
-         sodipodi:role="line"
+       id="text147865"
+       inkscape:label="xml def model A"><tspan
          x="178.68909"
-         y="16.586321"
-         id="tspan313412">&lt;model min_mandatory_genes_required=&quot;1&quot; </tspan><tspan
-         sodipodi:role="line"
+         y="15.231052"
+         id="tspan53385">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan><tspan
          x="178.68909"
-         y="26.28772"
-         id="tspan17516">             min_genes_required=&quot;4&quot;&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="23.574257"
+         id="tspan53387">             min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
          x="178.68909"
-         y="35.98912"
-         id="tspan237927">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="31.917461"
+         id="tspan53389">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="45.690521"
-         id="tspan237929">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="40.260666"
+         id="tspan53391">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="55.391918"
-         id="tspan237931">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="48.60387"
+         id="tspan53393">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="65.093323"
-         id="tspan2138">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="56.947075"
+         id="tspan53395">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="69.944023"
-         id="tspan237935">&lt;/model&gt;</tspan></text>
+         y="65.290279"
+         id="tspan53397">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
        id="text225659"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect225661);fill:#000000;fill-opacity:1;stroke:none" />
+    <rect
+       style="display:inline;fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect2655"
+       width="18.658222"
+       height="5.6752853"
+       x="251.89954"
+       y="234.04463"
+       ry="0"
+       inkscape:label="higlight model multi_system B" />
+    <rect
+       style="display:inline;fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.80716;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       id="rect2653"
+       width="30.88385"
+       height="5.505125"
+       x="238.09021"
+       y="242.83044"
+       ry="0"
+       inkscape:label="higlight model loner B" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055px;line-height:2.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:93.6675;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="178.68909"
        y="196.73438"
-       id="text257358"><tspan
-         sodipodi:role="line"
+       id="text257358"
+       inkscape:label="xml model B"><tspan
          x="178.68909"
-         y="198.08965"
-         id="tspan257346"
-         style="font-size:3.88055px">&lt;model min_mandatory_genes_required=&quot;1&quot; </tspan><tspan
-         sodipodi:role="line"
+         y="196.73438"
+         id="tspan53399">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan><tspan
          x="178.68909"
-         y="207.79102"
-         id="tspan57480"
-         style="font-size:3.88055px">             min_genes_required=&quot;4&quot;&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="205.07756"
+         id="tspan53401">             min_genes_required=&quot;4&quot;&gt;
+</tspan><tspan
          x="178.68909"
-         y="217.49239"
-         id="tspan257348"
-         style="font-size:3.88055px">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="213.42075"
+         id="tspan53403">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="227.19377"
-         id="tspan257350"
-         style="font-size:3.88055px">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="221.76393"
+         id="tspan53405">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="236.89514"
-         id="tspan257352"
-         style="font-size:3.88055px">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="230.10712"
+         id="tspan53407">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="246.59651"
-         id="tspan57482"
-         style="font-size:3.88055px">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1</tspan><tspan
-         sodipodi:role="line"
+         y="238.4503"
+         id="tspan53409">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1
+</tspan><tspan
          x="178.68909"
-         y="256.29788"
-         id="tspan2101"
-         style="font-size:3.88055px">                                                        multi_system=&quot;1&quot;/&gt;</tspan><tspan
-         sodipodi:role="line"
+         y="246.79349"
+         id="tspan53411">                                                        multi_system=&quot;1&quot;/&gt;
+</tspan><tspan
          x="178.68909"
-         y="261.14859"
-         id="tspan257356"
-         style="font-size:3.88055px">&lt;/model&gt;</tspan></text>
+         y="255.13667"
+         id="tspan53413">&lt;/model&gt;</tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
@@ -2202,7 +2226,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.93547px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.163978"
        x="112.9467"
        y="236.77554"
        id="text51114"
@@ -2213,4 +2237,48 @@
          x="112.9467"
          y="236.77554">System 2</tspan></text>
   </g>
+  <metadata
+     id="metadata1194">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Bertrand NERON</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Institut Pasteur Paris, CNRS</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date>2022</dc:date>
+        <dc:title>macsyfinder how &quot;loner&quot; works</dc:title>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Sophie Abby</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
 </svg>

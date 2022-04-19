@@ -208,10 +208,19 @@ class ModelHit:
     @property
     def multi_system(self):
         """
-        :return: True if the hit represent a `multi_systems` :class:`macsypy.Gene.ModelGene`, False otherwise.
+        :return: True if the hit represent a `multi_system` :class:`macsypy.Gene.ModelGene`, False otherwise.
         :rtype: bool
         """
         return self.gene_ref.multi_system
+
+
+    @property
+    def multi_model(self):
+        """
+        :return: True if the hit represent a `multi_model` :class:`macsypy.Gene.ModelGene`, False otherwise.
+        :rtype: bool
+        """
+        return self.gene_ref.multi_model
 
 
     @property

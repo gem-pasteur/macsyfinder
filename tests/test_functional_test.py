@@ -76,7 +76,7 @@ class Test(MacsyTest):
         expected_result_dir = self.find_data("functional_test_gembase")
         args = "--db-type=gembase " \
                f"--models-dir={self.find_data('models')} " \
-               "--models TFF-SF all " \
+               "--models  " \
                "--out-dir={out_dir} " \
                "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
@@ -563,6 +563,85 @@ class Test(MacsyTest):
                "--replicon-topology linear " \
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multisystem " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_multi_model(self):
+        # genetic organization of test_14.fasta
+        #
+        # gene      omf    mfp    abc   gspd    pilB    pilW
+        # gene id  01506  01398  01399  01400  000980  025680
+        # pos        8      9      10    11      12      13
+        # clst     [        model C         ]
+        #                                [      model D       ]
+        # syst     [omf8, mfp9, abc10, gspd11]                   model C score = 2.5
+        #                             [gspd11, pilB12, pilW13]   model D score = 2.0
+        # gspd is multi_model in C_multi_model and D_multi_model
+        # So the 2 systems are in the solution
+        expected_result_dir = self.find_data("functional_test_ordered_multi_model")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  C_multi_model D_multi_model " \
+               "-o {out_dir} " \
+               "--index-dir {out_dir} " \
+               f"--previous-run {expected_result_dir} " \
+               "--relative-path"
+
+        self._macsyfinder_run(args)
+
+        for file_name in (self.all_systems_tsv,
+                          self.all_best_solutions,
+                          self.best_solution,
+                          self.loners,
+                          self.multisystems,
+                          self.summary):
+            with self.subTest(file_name=file_name):
+                expected_result = self.find_data(expected_result_dir, file_name)
+                get_results = os.path.join(self.out_dir, file_name)
+                self.assertTsvEqual(expected_result, get_results, comment="#", tsv_type=file_name)
+
+        self.assertFileEqual(self.find_data(expected_result_dir, self.rejected_clusters),
+                             os.path.join(self.out_dir, self.rejected_clusters), comment="#")
+
+
+    def test_ordered_only_one_multi_model(self):
+        # genetic organization of test_14.fasta
+        #
+        # gene      omf    mfp    abc   gspd    pilB    pilW
+        # gene id  01506  01398  01399  01400  000980  025680
+        # pos        8      9      10    11      12      13
+        # clst     [        model C         ]
+        #                                [      model D       ]
+        # syst     [omf8, mfp9, abc10, gspd11]                   model C score = 2.5
+        #                             [gspd11, pilB12, pilW13]   model D score = 2.0
+        # gspd is multi_model in D_multi_model but NOT in C_no_multi_model
+        # So the 2 systems are excllusive. msf pick the best system for the best solution (sys c score 2.5)
+
+        expected_result_dir = self.find_data("functional_test_ordered_only_one_multi_model")
+        args = "--db-type ordered_replicon " \
+               "--replicon-topology linear " \
+               f"--models-dir {self.find_data('models')} " \
+               "-m functional  C_no_multi_model D_multi_model " \
                "-o {out_dir} " \
                "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \
