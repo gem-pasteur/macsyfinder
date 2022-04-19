@@ -29,6 +29,8 @@ import argparse
 import sys
 import colorlog
 import glob
+import unittest
+import platform
 
 from tests import MacsyTest
 from macsypy.scripts import macsy_gembase_split
@@ -100,13 +102,20 @@ class TestSplit(MacsyTest):
             stdout = sys.stdout.getvalue().strip()
         self.assertEqual(stdout,
                          f'{self.red_beg}{seq_dir} is not a directory{self.red_end}')
-
         os.unlink(seq_dir)
+
+
+    @unittest.skipIf(platform.system() == 'Windows' or os.getuid() == 0, 'Skip test on Windows or if run as root')
+    def test_functional_split_out_not_writable(self):
+        gembase = self.find_data('base', 'gembase_short.fa')
+        seq_dir = os.path.join(self.test_dir, 'base')
+
         ######################################
         # the -o option is a dir NOT writable
         #####################################
 
         os.mkdir(seq_dir, mode=0o444)
+        cmd = f"macsy_gembase_split -o {seq_dir} {gembase}"
         try:
             with self.catch_io(out=True):
                 with self.assertRaises(IOError):
