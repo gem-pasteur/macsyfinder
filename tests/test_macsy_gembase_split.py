@@ -42,7 +42,9 @@ class TestSplit(MacsyTest):
         os.mkdir(self.test_dir)
 
         self.args = argparse.Namespace()
-
+        self.red_beg = "\x1b[1;31m"
+        self.red_end = "\x1b[0m"
+        
     def tearDown(self):
         try:
             shutil.rmtree(self.tmpdir)
@@ -96,10 +98,8 @@ class TestSplit(MacsyTest):
             with self.assertRaises(IOError):
                 macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()
-            # remove ANSI color code
-            stdout = stdout[8:-4]
         self.assertEqual(stdout,
-                         f'{seq_dir} is not a directory')
+                         f'{self.red_beg}{seq_dir} is not a directory{self.red_end}')
 
         os.unlink(seq_dir)
         ######################################
@@ -112,10 +112,8 @@ class TestSplit(MacsyTest):
                 with self.assertRaises(IOError):
                     macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
                 stdout = sys.stdout.getvalue().strip()
-                # remove ANSI color code
-                stdout = stdout[8:-4]
             self.assertEqual(stdout,
-                             f'{seq_dir} is not writable')
+                             f'{self.red_beg}{seq_dir} is not writable{self.red_end}')
         finally:
             shutil.rmtree(seq_dir)
 
@@ -127,7 +125,5 @@ class TestSplit(MacsyTest):
             with self.assertRaises(IOError):
                 macsy_gembase_split.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()
-            # remove ANSI color code
-            stdout = stdout[8:-4]
         self.assertEqual(stdout,
-                         f"Cannot create {seq_dir} : [Errno 13] Permission denied: '{seq_dir}'")
+                         f"{self.red_beg}Cannot create {seq_dir} : [Errno 13] Permission denied: '{seq_dir}'{self.red_end}")
