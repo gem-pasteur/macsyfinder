@@ -192,6 +192,7 @@ class Indexes:
                     for seq_id, comment, length in f_iter:
                         seq_nb += 1
                         my_base.write(f"{seq_id}{self._field_separator}{length:d}{self._field_separator}{seq_nb:d}\n")
+                    my_base.flush()
         except Exception as err:
             msg = f"unable to index the sequence dataset: {self.cfg.sequence_db()} : {err}"
             _log.critical(msg, exc_info=True)
