@@ -41,6 +41,8 @@ class TestMerge(MacsyTest):
         os.mkdir(self.test_dir)
 
         self.args = argparse.Namespace()
+        self.red_beg = "\x1b[1;31m"
+        self.red_end = "\x1b[0m"
 
     def tearDown(self):
         try:
@@ -174,10 +176,8 @@ class TestMerge(MacsyTest):
             with self.assertRaises(IOError):
                 macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()
-            # remove ANSI color code
-            stdout = stdout[8:-4]
         self.assertEqual(stdout,
-                         f'{merge_dir} is not a directory')
+                         f'{self.red_beg}{merge_dir} is not a directory{self.red_end}')
 
         os.unlink(merge_dir)
         ######################################
@@ -189,10 +189,8 @@ class TestMerge(MacsyTest):
                 with self.assertRaises(IOError):
                     macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
                 stdout = sys.stdout.getvalue().strip()
-                # remove ANSI color code
-                stdout = stdout[8:-4]
             self.assertEqual(stdout,
-                             f'{merge_dir} is not writable')
+                             f'{self.red_beg}{merge_dir} is not writable{self.red_end}')
         finally:
             shutil.rmtree(merge_dir)
 
@@ -204,10 +202,8 @@ class TestMerge(MacsyTest):
             with self.assertRaises(IOError):
                 macsy_merge_results.main(args=cmd.split()[1:], log_level='WARNING')
             stdout = sys.stdout.getvalue().strip()
-            # remove ANSI color code
-            stdout = stdout[8:-4]
         self.assertEqual(stdout,
-                         f"Cannot create {merge_dir} : [Errno 13] Permission denied: '{merge_dir}'")
+                         f"{self.red_beg}Cannot create {merge_dir} : [Errno 13] Permission denied: '{merge_dir}'{self.red_end}")
 
 
     def test_merge_and_reindex_invalid_solid(self):
