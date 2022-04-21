@@ -647,6 +647,10 @@ class Config:
             # value = ['model_family_name', 'model1', 'model2']
             model_family_name = value[0]
             models_name = value[1:]
+
+        if model_family_name and not models_name:
+            models_name = ['all']
+            
         self._options['models'] = (model_family_name, models_name)
 
 
