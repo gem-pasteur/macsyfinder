@@ -123,6 +123,13 @@ class MacsyTest(unittest.TestCase):
             return res
         return wrapper
 
+    @staticmethod
+    def remove_red_ansi_color(colored_msg):
+        red_pattern = "^\\x1b\[0?1;31m(.*)\\x1b\[0m$"
+        msg = re.match(red_pattern, colored_msg).groups()[0]
+        return msg
+
+
     def assertFileEqual(self, f1, f2, comment=None, skip_line=None, msg=None):
         self.maxDiff = None
         # the StringIO does not support context in python2.7
