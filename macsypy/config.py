@@ -650,7 +650,7 @@ class Config:
 
         if model_family_name and not models_name:
             models_name = ['all']
-            
+
         self._options['models'] = (model_family_name, models_name)
 
 
