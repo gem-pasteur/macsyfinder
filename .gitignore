@@ -58,8 +58,9 @@ macsyfinder-*/
 ####################
 # MacSyFinder data #
 ####################
-./data/
+data/
 sandbox/
+!/tests/data
 
 ######################################
 # Singularity/Apptainer def and simg #
