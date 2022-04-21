@@ -17,11 +17,27 @@ Parallelization
 ---------------
 
 The time limiting part are HMMER (search genes).
-If you want to deal with a gembase file with a lot of replicons (from 10 to more than thousand)
+If you want to deal with a large gembase file (with a lot of replicons, from ten to more than thousand),
 we provide a workflow to parallelize the execution by the data.
-This mean that we cut the data input into chunks containing one replicon each, then execute
-MacSyFinder in parallel on each replicon (the number of parallel tasks can be limited) then aggregate the results
-in one global summary.
+This mean that
+
+    #. We split the data input into chunks containing one replicon each.
+    #. Then execute MacSyFinder in parallel on each replicon (the number of parallel tasks can be limited)
+    #. Then aggregate the results in one global summary.
+
+.. digraph:: parallel_macsyfinder
+    :caption: Diagram of the parallel_macsyfinder workflow
+
+    "split input" -> "MSF on replicon 1";
+    "split input" -> "MSF on replicon 2";
+    "split input" -> "MSF on replicon 3";
+    "split input" -> "MSF on replicon n";
+    "MSF on replicon 1" -> "merge results";
+    "MSF on replicon 2" -> "merge results";
+    "MSF on replicon 3" -> "merge results";
+    "MSF on replicon n" -> "merge results";
+
+
 The workflow use the `nextflow <https://www.nextflow.io/>`_ framework and can be run on a single machine or a cluster.
 
 First, you have to install `nextflow <https://www.nextflow.io/>`_ first, and  :ref:`macsyfinder <installation>`.
@@ -30,38 +46,16 @@ Then we provide 2 files (you need to download them from the IntegronFinder githu
 - `parallel_macsyfinder.nf` which is the workflow itself in nextflow syntax
 - `nextflow.config` which is a configuration file to execute the workflow.
 
-The workflow file should not be modified. Whereas the profile must be adapted to the local architecture.
+The workflow file should not be modified.
+Whereas the profile **must** be adapted to the **local** architecture.
 
 The file `nextflow.config` provide five profiles:
-    - a standard profile for local use
-    - an apptainer profile using docker image with apptainer executor
-    - a docker profile using docker image
-    - a cluster profile
-    - a cluster profile using apptainer container
+    - a standard profile for local use (single machine).
+    - an apptainer profile using docker image with apptainer executor (on a single machine).
+    - a docker profile using docker image with docker executor (on a single machine).
+    - a cluster profile.
+    - a cluster profile using apptainer container system with the docker image.
 
-.. warning::
-
-    On Ubuntu Bionic Beaver (18.04) The default java is not suitable to run nextflow
-    So you have to install another jvm
-
-        sudo add-apt-repository ppa:webupd8team/java
-        sudo apt-get update
-        sudo apt-get install oracle-java8-installer
-
-    for more details see: https://medium.com/coderscorner/installing-oracle-java-8-in-ubuntu-16-10-845507b13343
-
-    so now install nextflow.
-    If you have  capsule error like ::
-
-        CAPSULE EXCEPTION: Error resolving dependencies. while processing attribute Allow-Snapshots: false (for stack trace, run with -Dcapsule.log=verbose)
-        Unable to initialize nextflow environment
-
-    install nextflow (>=0.29.0) as follow (change the nextflow version with the last release) ::
-
-        wget -O nextflow http://www.nextflow.io/releases/v0.30.2/nextflow-0.30.2-all
-        chmod 777 nextflow
-
-    for more details see: https://github.com/nextflow-io/nextflow/issues/770#issuecomment-400384617
 
 How to get parallel_macsyfinder
 """""""""""""""""""""""""""""""
@@ -89,6 +83,15 @@ to execute it directly on a local host with macsyfinder already installed and wi
 or::
 
     nextflow run -r release_2.0 gem-pasteur/macsyfinder -profile standard --models "TFF-SF all" --sequence-db <path/to/my/gembase.fasta>
+
+
+
+.. warning::
+    See the double quote surrounding the models value *--models "TFF-SF all"* with out quoting
+    macsyfinder will not received the right argument.
+
+.. note::
+    In
 
 
 standard profile
@@ -128,9 +131,6 @@ A typical command line will be::
     The options starting with one dash are for nextflow workflow engine,
     whereas the options starting by two dashes are for macsyfinder workflow.
 
-.. warning::
-    See the double quote surrounding the models value *--models "TFF-SF all"* with out quoting
-    macsyfinder will not received the right argument.
 
 
 If you execute this line, 2 kinds of directories will be created.
@@ -209,14 +209,14 @@ cluster profile
 """""""""""""""
 
 The cluster profile is intended to work on a cluster managed by SLURM.
-If You cluster is managed by an other drm change executor name by the right value
+If your cluster is managed by an other drm replace executor name by the right value
 (see `nextflow supported cluster <https://www.nextflow.io/docs/latest/executor.html>`_ )
 
-You can also managed
+You can also manage
 
-- The number of task in parallel with the `executor.queueSize` parameter (here 500).
+- The number of tasks in parallel with the `executor.queueSize` parameter (here 500).
   If you remove this line, the system will send in parallel as many jobs as there are replicons in your data set.
-- The queue with `process.queue` parameter (here common,dedicated)
+- The queue (or partition in *Slurm* teminology) with `process.queue` parameter (here *common,dedicated*)
 - and some options specific to your cluster management systems with `process.clusterOptions` parameter
 
 .. code-block:: javascript
@@ -241,8 +241,9 @@ To run the parallel version on cluster, for instance on a cluster managed by slu
 I can launch the main nextflow process in one slot. The parallelization and the submission on the other slots
 is made by nextflow itself.
 Below a command line to run parallel_macsyfinder and use 3 cpus per macsyfinder task,
-each macsyfinder task can be executed on different machines, each macsyfinder task claim 2 cpus to speed up
-the genes search
+each macsyfinder task can be executed on different machine, each macsyfinder task claim 2 cpus/cores
+(cpu in *nextflow* terminology/ cores for hardware) to speed up the genes search.
+
 
 .. code-block:: bash
 
