@@ -34,3 +34,4 @@ jobs:
         with:
           name: code-coverage-report
           path: coverage_html
+        if: ${{ always() }}
