@@ -1,14 +1,14 @@
 ![MacSyFinder banner](https://github.com/gem-pasteur/macsyfinder/blob/master/.github/logo_macsyfinder.png "MacSyFinder")
 
 # MacSyFinder
-
-[![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
-[![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
+https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master
+[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+[![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/macsyfinder)](https://pypi.org/project/macsyfinder/)
 [![Open Source License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 [![Doc](https://readthedocs.org/projects/macsyfinder/badge/?version=latest)](http://macsyfinder.readthedocs.org/en/latest/#)
 [![PyPI](https://img.shields.io/pypi/v/macsyfinder)](https://pypi.org/project/macsyfinder/)
-[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder/latest)](https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/gempasteur/macsyfinder/2.0rc7)](https://hub.docker.com/r/gempasteur/macsyfinder)
 ![Conda](https://img.shields.io/conda/pn/bioconda/macsyfinder)
 [![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/gem-pasteur/macsyfinder/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/gem-pasteur/macsyfinder)
 
@@ -70,8 +70,8 @@ or to run a specific test
      
 ### with travis-ci
 
-[![Build Status](https://travis-ci.org/gem-pasteur/macsyfinder.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
-[![Coverage Status](https://coveralls.io/repos/github/gem-pasteur/macsyfinder/badge.svg?branch=master)](https://coveralls.io/github/gem-pasteur/macsyfinder?branch=master)
+[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+[![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
 
 ## Models installation
 
@@ -103,7 +103,7 @@ You will find complete documentation for setting up your project on readthedocs
 
 ## Docker
 
-MacSyFinder is also available as [Docker container](https://hub.docker.com/repository/docker/gempasteur/macsyfinder)
+MacSyFinder is also available as [Docker container](https://hub.docker.com/r/gempasteur/macsyfinder)
 
 ### how to use macsyfinder container with docker
 
@@ -130,11 +130,11 @@ To work with Docker you have to install models in a directory which will be moun
 
 ### how to use with singularity
 
-As the docker image is registered in docker hub you can also use it directly with [Singularity](https://sylabs.io/docs/).
+As the docker image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/)(formely Singularity).
 Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
 
-    singularity run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models MODELS
-    singularity run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type gembase --models-dir=my_models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
+    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models MODELS
+    apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsyfinder --db-type gembase --models-dir=my_models --models TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 ## Licence:
 
