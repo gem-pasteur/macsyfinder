@@ -1,4 +1,4 @@
-![MacSyFinder banner](https://github.com/gem-pasteur/macsyfinder/blob/master/.github/logo_macsyfinder.png "MacSyFinder")
+![MacSyFinder banner](./.github/logo_macsyfinder.png "MacSyFinder")
 
 # MacSyFinder
 
