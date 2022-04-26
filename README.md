@@ -2,7 +2,7 @@
 
 # MacSyFinder
 
-[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml)
 [![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/macsyfinder)](https://pypi.org/project/macsyfinder/)
 [![Open Source License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
