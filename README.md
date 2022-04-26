@@ -70,7 +70,7 @@ or to run a specific test
      
 ### with github actions / coverage / codecov
 
-[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
+[![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml)
 [![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
 
 ## Models installation
