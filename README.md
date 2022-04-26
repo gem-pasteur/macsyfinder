@@ -1,7 +1,7 @@
 ![MacSyFinder banner](https://github.com/gem-pasteur/macsyfinder/blob/master/.github/logo_macsyfinder.png "MacSyFinder")
 
 # MacSyFinder
-https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master
+
 [![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 [![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/macsyfinder)](https://pypi.org/project/macsyfinder/)
@@ -68,7 +68,7 @@ or to run a specific test
     python3 tests/run_tests.py -vv tests/test_xxx.py
         
      
-### with travis-ci
+### with github actions / coverage / codecov
 
 [![Build Status](https://github.com/gem-pasteur/macsyfinder/actions/workflows/testing.yml/badge.svg?branch=master)](https://travis-ci.org/gem-pasteur/macsyfinder)
 [![codecov](https://codecov.io/gh/gem-pasteur/macsyfinder/branch/master/graph/badge.svg?token=q31HWcV3SM)](https://codecov.io/gh/gem-pasteur/macsyfinder)
@@ -128,9 +128,9 @@ To work with Docker you have to install models in a directory which will be moun
     docker run -v ${PWD}/:/home/msf -u $(id -u ${USER}):$(id -g ${USER})  gempasteur/macsyfinder:<tag> --db-type gembase --models-dir=/home/msf/my_models/ --models  TFF-SF Archaeal-T4P ComM MSH T2SS T4bP T4P Tad --sequence-db my_genome.fasta -w 12
 
 
-### how to use with singularity
+### how to use with apptainer (formely Singularity)
 
-As the docker image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/)(formely Singularity).
+As the docker image is registered in docker hub you can also use it directly with [apptainer](https://apptainer.org/docs/user/main/).
 Unlike docker you have not to worry about shared directory, your `home` and `/tmp` are automatically shared.
 
     apptainer run -H ${HOME} docker://gempasteur/macsyfinder:<tag> macsydata install --target my_models MODELS
