@@ -15,6 +15,7 @@ exclude .coverage
 exclude coverage_html/
 exclude .gitignore
 exclude .travis.yml
+exclude .github/
 
 include README.md
 include COPYING
