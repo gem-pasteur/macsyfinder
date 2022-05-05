@@ -40,6 +40,7 @@ MacSyFinder.egg-info/
 ##########################
 htmlcov/
 .coverage
+!/.github/workflows/.coverage
 coverage_html/
 
 ###################################
