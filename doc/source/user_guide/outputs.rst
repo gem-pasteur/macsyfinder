@@ -88,6 +88,7 @@ all_systems.txt
 The file starts with some comments:
 
     - the version of MacSyFinder used
+    - the name of model package and version used
     - the command line used to produce this file
 
 Then for each replicon, the systems detected are listed along with their description:
@@ -118,6 +119,7 @@ Here is an example of the `all_systems.txt` file:
 .. code-block:: text
 
     # macsyfinder 20200217.dev
+    # models: TFF-SF_final-0.1
     # macsyfinder --sequence-db DATA_TEST/sequences.prt --db-type=gembase --models-dir data/models/ --models TFF-SF_final all -w 4
     # Systems found:
 
@@ -442,6 +444,7 @@ at the end of the cluster or clusters' combination, followed by the reason why i
 .. code-block:: text
 
     # macsyfinder 20200511.dev
+    # models : TFF-SF-0.1b
     # /macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
     # Rejected clusters:
 
@@ -511,6 +514,7 @@ In this file, for each component of each searched system's model, we report the 
 .. code-block:: text
 
     # macsyfinder 20201028.dev
+    # models : TFF-SF-0.1b
     # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
     # Systems found:
 
@@ -572,6 +576,7 @@ This file contains the same information as in `all_systems.txt` but in `tsv` for
 .. code-block:: text
 
     # macsyfinder 20201028.dev
+    # models : TFF-SF-0.1b
     # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF T4P_single_locus
     # Likely Systems found:
 
@@ -611,6 +616,7 @@ followed by the model description and the components found.
 .. code-block:: text
 
     # macsyfinder 20201113.dev
+    # models : TFF-SF-0.1b
     # macsyfinder --sequence-db tests/data/base/one_replicon.fasta --db-type unordered --models-dir tests/data/models -m TFF-SF all
     # Unlikely Systems found:
 
