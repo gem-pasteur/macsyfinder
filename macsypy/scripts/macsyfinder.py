@@ -483,11 +483,6 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
     profile_factory = ProfileFactory(config)
 
     parser = DefinitionParser(config, model_bank, gene_bank, model_registry, profile_factory)
-    # try:
-    #     models_def_to_detect = get_def_to_detect(config.models(), registry)
-    # except KeyError as err:
-    #     sys.exit(f"macsyfinder: {err}")
-
     parser.parse(models_def_to_detect)
 
     logger.info(f"MacSyFinder's results will be stored in working_dir{working_dir}")
@@ -616,7 +611,7 @@ def _search_in_ordered_replicon(hits_by_replicon, models_to_detect, config, logg
             # choose the best one
             ms_per_function = sort_model_hits(multi_systems_hits)
             best_ms = compute_best_MSHit(ms_per_function)
-            # check if among rejected clusters with the MS they can be create a new system
+            # check if among rejected clusters with the MS, they can be created a new system
             best_ms = [Cluster([ms], model, hit_weights) for ms in best_ms]
             new_clst_combination = combine_multisystems(one_model_rejected_clusters, best_ms)
             for one_clust_combination in new_clst_combination:
@@ -671,17 +666,18 @@ def _search_in_unordered_replicon(hits_by_replicon, models_to_detect, logger):
     return likely_systems, rejected_hits
 
 
-def _outfile_header():
+def _outfile_header(models_fam_name, models_version):
     """
-    :return: The 2 firsts lines of each results file
+    :return: The 2 first lines of each result file
     :rtype: str
     """
     header = f"""# macsyfinder {macsypy.__version__}
+# models : {models_fam_name}-{models_version}
 # {' '.join(sys.argv)}"""
     return header
 
 
-def systems_to_tsv(systems, hit_system_tracker, sys_file):
+def systems_to_tsv(models_fam_name, models_version, systems, hit_system_tracker, sys_file):
     """
     print systems occurrences in a file in tabulated  format
 
@@ -693,7 +689,7 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
         print("# Systems found:", file=sys_file)
         print(TsvSystemSerializer.header, file=sys_file)
@@ -707,7 +703,7 @@ def systems_to_tsv(systems, hit_system_tracker, sys_file):
         print("# No Systems found", file=sys_file)
 
 
-def systems_to_txt(systems, hit_system_tracker, sys_file):
+def systems_to_txt(models_fam_name, models_version, systems, hit_system_tracker, sys_file):
     """
     print systems occurrences in a file in human readable format
 
@@ -720,7 +716,7 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
     :return: None
     """
 
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
         print("# Systems found:\n", file=sys_file)
         for system in systems:
@@ -735,7 +731,7 @@ def systems_to_txt(systems, hit_system_tracker, sys_file):
         print("# No Systems found", file=sys_file)
 
 
-def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
+def solutions_to_tsv(models_fam_name, models_version, solutions, hit_system_tracker, sys_file):
     """
     print solution in a file in tabulated format
     A solution is a set of systems which represents an optimal combination of
@@ -749,7 +745,7 @@ def solutions_to_tsv(solutions, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if solutions:
         sol_serializer = TsvSolutionSerializer()
         print("# Systems found:", file=sys_file)
@@ -793,7 +789,7 @@ def _loner_warning(systems):
     return warnings
 
 
-def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_names):
+def summary_best_solution(models_fam_name, models_version, best_solution_path, sys_file, models_fqn, replicon_names):
     """
     do a summary of best_solution in best_solution_path and write it on out_path
     a summary compute the number of system occurrence for each model and each replicon
@@ -812,7 +808,7 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
     :param replicon_names: the name of the replicons used
     :type replicon_names: list of string
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
 
     def fill_replicon(summary):
         index_name = summary.index.name
@@ -847,7 +843,7 @@ def summary_best_solution(best_solution_path, sys_file, models_fqn, replicon_nam
     summary.to_csv(sys_file, sep='\t')
 
 
-def loners_to_tsv(systems, sys_file):
+def loners_to_tsv(models_fam_name, models_version, systems, sys_file):
     """
     get loners from valid systems and save them on file
 
@@ -856,7 +852,7 @@ def loners_to_tsv(systems, sys_file):
     :param sys_file: the file where loners are saved
     :type sys_file: file object open in write mode
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
         best_loners = set()
         for syst in systems:
@@ -872,7 +868,7 @@ def loners_to_tsv(systems, sys_file):
         print("# No Loners found", file=sys_file)
 
 
-def multisystems_to_tsv(systems, sys_file):
+def multisystems_to_tsv(models_fam_name, models_version, systems, sys_file):
     """
     get multisystems from valid systems and save them on file
 
@@ -881,7 +877,7 @@ def multisystems_to_tsv(systems, sys_file):
     :param sys_file: the file where multisystems are saved
     :type sys_file: file object open in write mode
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if systems:
         best_multisystems = set()
         for syst in systems:
@@ -897,7 +893,7 @@ def multisystems_to_tsv(systems, sys_file):
         print("# No Multisystems found", file=sys_file)
 
 
-def rejected_clst_to_txt(rejected_clusters, clst_file):
+def rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, clst_file):
     """
     print rejected clusters in a file
 
@@ -907,7 +903,7 @@ def rejected_clst_to_txt(rejected_clusters, clst_file):
     :type clst_file: file object
     :return: None
     """
-    print(_outfile_header(), file=clst_file)
+    print(_outfile_header(models_fam_name, models_version), file=clst_file)
     if rejected_clusters:
         print("# Rejected clusters:\n", file=clst_file)
         for rej_clst in rejected_clusters:
@@ -917,7 +913,7 @@ def rejected_clst_to_txt(rejected_clusters, clst_file):
         print("# No Rejected clusters", file=clst_file)
 
 
-def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
     """
     print likely systems occurrences (from unordered replicon)
     in a file in text human readable format
@@ -928,7 +924,7 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
     :param sys_file: file object
     :return: None
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if likely_systems:
         print("# Systems found:\n", file=sys_file)
         for system in likely_systems:
@@ -938,7 +934,7 @@ def likely_systems_to_txt(likely_systems, hit_system_tracker, sys_file):
         print("# No Likely Systems found", file=sys_file)
 
 
-def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
+def likely_systems_to_tsv(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
     """
     print likely systems occurrences (from unordered replicon)
     in a file in tabulated separeted value (tsv) format
@@ -951,7 +947,7 @@ def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if likely_systems:
         print("# Likely Systems found:\n", file=sys_file)
         print(TsvLikelySystemSerializer.header, file=sys_file)
@@ -962,7 +958,7 @@ def likely_systems_to_tsv(likely_systems, hit_system_tracker, sys_file):
         print("# No Likely Systems found", file=sys_file)
 
 
-def unlikely_systems_to_txt(unlikely_systems, sys_file):
+def unlikely_systems_to_txt(models_fam_name, models_version, unlikely_systems, sys_file):
     """
     print hits (from unordered replicon) which probably does not make a system occurrences
     in a file in human readable format
@@ -972,7 +968,7 @@ def unlikely_systems_to_txt(unlikely_systems, sys_file):
     :type sys_file: file object
     :return: None
     """
-    print(_outfile_header(), file=sys_file)
+    print(_outfile_header(models_fam_name, models_version), file=sys_file)
     if unlikely_systems:
         print("# Unlikely Systems found:\n", file=sys_file)
         for system in unlikely_systems:
@@ -1049,6 +1045,7 @@ def main(args=None, loglevel=None):
     #############################
     # command seems Ok Let's go #
     #############################
+    _log.info(get_version_message())
     _log.info(f"command used: {' '.join(sys.argv)}")
 
     ########################################
@@ -1066,10 +1063,10 @@ def main(args=None, loglevel=None):
             _log.warning(f"{model_dir} is not readable: {err} : skip it.")
 
     try:
-        models_def_to_detect = get_def_to_detect(config.models(), model_registry)
+        models_def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
     except KeyError as err:
         sys.exit(f"macsyfinder: {err}")
-
+    _log.info(f"\nmodels used: {models_fam_name}-{models_version}")
     logger.info(f"\n{f' Searching systems ':#^70}")
     all_systems, rejected_clusters = search_systems(config, model_registry, models_def_to_detect, logger)
     track_multi_systems_hit = HitSystemTracker(all_systems)
@@ -1110,35 +1107,35 @@ def main(args=None, loglevel=None):
         tsv_filename = os.path.join(config.working_dir(), "all_systems.tsv")
 
         with open(system_filename, "w") as sys_file:
-            systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
+            systems_to_txt(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file)
 
         with open(tsv_filename, "w") as tsv_file:
-            systems_to_tsv(all_systems, track_multi_systems_hit, tsv_file)
+            systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, tsv_file)
 
         cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.txt")
         with open(cluster_filename, "w") as clst_file:
             rejected_clusters.sort(key=lambda clst: (clst.replicon_name, clst.model, clst.hits))
-            rejected_clst_to_txt(rejected_clusters, clst_file)
+            rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, clst_file)
         if not (all_systems or rejected_clusters):
             logger.info("No Systems found in this dataset.")
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
-            solutions_to_tsv(all_best_solutions, track_multi_systems_hit, tsv_file)
+            solutions_to_tsv(models_fam_name, models_version, all_best_solutions, track_multi_systems_hit, tsv_file)
 
         best_solution_filename = os.path.join(config.working_dir(), "best_solution.tsv")
         with open(best_solution_filename, "w") as best_solution_file:
             one_best_solution = [syst for sol in one_best_solution for syst in sol]
             one_best_solution.sort(key=lambda syst: (syst.replicon_name, syst.position[0], syst.model.fqn, - syst.score))
-            systems_to_tsv(one_best_solution, track_multi_systems_hit, best_solution_file)
+            systems_to_tsv(models_fam_name, models_version, one_best_solution, track_multi_systems_hit, best_solution_file)
 
         loners_filename = os.path.join(config.working_dir(), "best_solution_loners.tsv")
         with open(loners_filename, "w") as loners_file:
-            loners_to_tsv(one_best_solution, loners_file)
+            loners_to_tsv(models_fam_name, models_version, one_best_solution, loners_file)
 
         multisystems_filename = os.path.join(config.working_dir(), "best_solution_multisystems.tsv")
         with open(multisystems_filename, "w") as multisystems_file:
-            multisystems_to_tsv(one_best_solution, multisystems_file)
+            multisystems_to_tsv(models_fam_name, models_version, one_best_solution, multisystems_file)
 
         summary_filename = os.path.join(config.working_dir(), "best_solution_summary.tsv")
         with open(summary_filename, "w") as summary_file:
@@ -1148,7 +1145,7 @@ def main(args=None, loglevel=None):
             else:
                 # it's an ordered_replicon
                 replicons_names = [RepliconDB.ordered_replicon_name]
-            summary_best_solution(best_solution_filename, summary_file, models_fqn, replicons_names)
+            summary_best_solution(models_fam_name, models_version, best_solution_filename, summary_file, models_fqn, replicons_names)
 
     else:
         #######################
@@ -1162,7 +1159,7 @@ def main(args=None, loglevel=None):
 
         system_filename = os.path.join(config.working_dir(), "all_systems.txt")
         with open(system_filename, "w") as sys_file:
-            likely_systems_to_txt(all_systems, track_multi_systems_hit, sys_file)
+            likely_systems_to_txt(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file)
 
         # forbidden = [s for s in all_systems if s.forbidden_occ]
         # system_filename = os.path.join(config.working_dir(), "forbidden_components.tsv")
@@ -1171,11 +1168,11 @@ def main(args=None, loglevel=None):
 
         system_filename = os.path.join(config.working_dir(), "all_systems.tsv")
         with open(system_filename, "w") as sys_file:
-            likely_systems_to_tsv(all_systems, track_multi_systems_hit, sys_file)
+            likely_systems_to_tsv(models_fam_name, models_version, all_systems, track_multi_systems_hit, sys_file)
 
         cluster_filename = os.path.join(config.working_dir(), "uncomplete_systems.txt")
         with open(cluster_filename, "w") as clst_file:
-            unlikely_systems_to_txt(rejected_clusters, clst_file)
+            unlikely_systems_to_txt(models_fam_name, models_version, rejected_clusters, clst_file)
 
         if not (all_systems or rejected_clusters):
             logger.info("No Systems found in this dataset.")
