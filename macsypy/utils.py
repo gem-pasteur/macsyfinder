@@ -48,13 +48,14 @@ def get_def_to_detect(models, model_registry):
     root = root.rstrip(os.path.sep)
     model_family = DefinitionLocation.root_name(root)
     model_loc = model_registry[model_family]
+    model_vers = model_loc.version
     if 'all' in [d.lower() for d in def_names]:
         if root == model_loc.name:
             root = None
         def_to_detect = model_loc.get_all_definitions(root_def_name=root)
     else:
         def_to_detect = [model_loc.get_definition(f'{root}/{one_def}') for one_def in def_names]
-    return def_to_detect
+    return def_to_detect, model_family, model_vers
 
 
 def get_replicon_names(genome_path):

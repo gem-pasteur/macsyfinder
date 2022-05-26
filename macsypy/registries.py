@@ -27,8 +27,10 @@ Manage the Models locations: Profiles and defintions
 """
 
 import os
-import glob
-from macsypy.error import MacsypyError
+import colorlog
+_log = colorlog.getLogger(__name__)
+
+import yaml
 
 
 _SEPARATOR = '/'
@@ -152,7 +154,7 @@ class ModelLocation:
     and the paths to corresponding to the profiles.
     """
 
-    def __init__(self, path=None, profile_dir=None, def_dir=None, profile_suffix='.hmm', relative_path=False):
+    def __init__(self, path=None, profile_suffix='.hmm', relative_path=False):
         """
         :param str path: if it's an installed model, path is the absolute path to a model family.
                      otherwise path is None, and profile_dir and def_dir must be specified.
@@ -164,41 +166,21 @@ class ModelLocation:
         :raise: MacsypyError if path is set and profile_dir or def_dir is set
         :raise: MacsypyError if profile_dir is set but not def_dir and vice versa
         """
-        if path and any((profile_dir, def_dir)):
-            raise MacsypyError(f"'path' and '{'profile_dir' if profile_dir else 'def_dir'}' are incompatible arguments")
-        elif not path and not all((profile_dir, def_dir)):
-            raise MacsypyError("if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
-        self.path = path
-        if path is not None:
-            self.name = os.path.basename(path)
-        else:
-            self.name = os.path.basename(def_dir)
-        if not profile_dir:
-            profile_dir = os.path.join(path, 'profiles')
+        self._path = path
+        self.name = os.path.basename(path)
+        self._version = self._get_version(path)
+        profile_dir = os.path.join(path, 'profiles')
         self._profiles = self._scan_profiles(profile_dir,
                                              profile_suffix=profile_suffix,
                                              relative_path=relative_path)
 
         self._definitions = {}
-        if not def_dir:
-            def_dir = os.path.join(self.path, 'definitions')
-            for definition in os.listdir(def_dir):
-                definition_path = os.path.join(def_dir, definition)
-                new_def = self._scan_definitions(def_path=definition_path)
+        def_dir = os.path.join(self._path, 'definitions')
+        for definition in os.listdir(def_dir):
+            definition_path = os.path.join(def_dir, definition)
+            new_def = self._scan_definitions(def_path=definition_path)
 
-                if new_def:  # _scan_definitions can return None if a dir is empty
-                    self._definitions[new_def.name] = new_def
-        else:
-            for model_path in glob.glob(os.path.join(def_dir, '*.xml')):
-
-                model_fqn = os.path.basename(os.path.splitext(model_path)[0])
-                model_name = os.path.split(model_fqn)[-1]
-                if not relative_path:
-                    model_path = os.path.abspath(model_path)
-
-                new_def = DefinitionLocation(name=model_name,
-                                             fqn=model_fqn,
-                                             path=model_path)
+            if new_def:  # _scan_definitions can return None if a dir is empty
                 self._definitions[new_def.name] = new_def
 
 
@@ -264,8 +246,31 @@ class ModelLocation:
         return self.name > other.name
 
     def __eq__(self, other):
-        return self.path, self.name, self._profiles, self._definitions == \
+        return self._path, self.name, self._profiles, self._definitions == \
                other.path, other.name, other._profiles, other._definitions
+
+    @property
+    def path(self):
+        return self._path
+
+
+    def _get_version(self, path):
+        metadata_path = os.path.join(path, "metadata.yml")
+        try:
+            with open(metadata_path) as file:
+                metadata = yaml.safe_load(file)
+            return metadata['vers']
+        except (FileNotFoundError, KeyError):
+            _log.warning(f"The models package '{self.name}' is not versioned contact the package manager to fix it.")
+            return None
+
+    @property
+    def version(self):
+        """
+
+        :return: The version of the models
+        """
+        return self._version
 
 
     def get_definition(self, fqn):
