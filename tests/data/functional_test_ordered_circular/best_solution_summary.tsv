@@ -1,4 +1,5 @@
 # macsyfinder 20211008.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology circular --models-dir tests/data/models/ -m functional T12SS-simple-exch --relative-path --sequence-db tests/data/base/test_3.fasta -o functional_test_ordered_circular
 replicon	functional/T12SS-simple-exch
 UserReplicon	1

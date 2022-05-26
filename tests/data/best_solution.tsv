@@ -1,4 +1,5 @@
 # macsyfinder 2.0rc1
+# models : set_1-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results --relative-path
 # Systems found:
 replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	used_in

@@ -1,3 +1,4 @@
 # macsyfinder 20220112.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --models-dir tests/data/models/ -m functional A B --relative-path --sequence-db tests/data/base/test_9.fasta
 # No Multisystems found

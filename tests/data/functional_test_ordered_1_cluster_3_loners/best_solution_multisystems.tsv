@@ -1,3 +1,4 @@
 # macsyfinder 20220112.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner --relative-path --sequence-db tests/data/base/test_1.fasta -o functional_test_ordered_1_cluster_3_loners
 # No Multisystems found

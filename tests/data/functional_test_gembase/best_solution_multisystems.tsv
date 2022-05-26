@@ -1,3 +1,4 @@
 # macsyfinder 20220317.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/gembase.fasta --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --replicon-topology circular -w 4 --relative-path -o functional_test_gembase
 # No Multisystems found

@@ -241,7 +241,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_list_outdated(self):
         fake_packs = ('fake_1', 'fake_2')
         for name in fake_packs:
-            self.create_fake_package(name, dest=self.models_dir[0])
+            self.create_fake_package(name, dest=self.models_dir[0], metadata=True)
         registry = ModelRegistry()
         for model_loc in scan_models_dir(self.models_dir[0]):
             registry.add(model_loc)
