@@ -1,4 +1,5 @@
 # macsyfinder 20220317.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/gembase.fasta --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --replicon-topology circular -w 4 --relative-path -o functional_test_gembase
 replicon	TFF-SF/MSH	TFF-SF/T2SS	TFF-SF/T4P	TFF-SF/T4bP	TFF-SF/Tad	TFF-SF/Archaeal-T4P	TFF-SF/ComM
 GCF_000005845	0	1	2	0	0	0	0

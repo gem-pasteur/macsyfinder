@@ -1,3 +1,4 @@
 # macsyfinder 2.0rc1
+# models : set_1-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 -o results --relative-path
 # No Systems found
