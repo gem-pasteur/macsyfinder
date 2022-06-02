@@ -359,8 +359,8 @@ def do_install(args: argparse.Namespace) -> None:
         models_dirs = config.models_dir()
         if not models_dirs:
             clean_cache(model_index)
-            msg = """There is no cannonical directories to store models:
-You can create one in youre HOME to enable the models for the user 
+            msg = """There is no canonical directories to store models:
+You can create one in your HOME to enable the models for the user 
        macsydata install --user <PACK_NAME>
 or for a project 
        macsydata install --models <PACK_NAME>
