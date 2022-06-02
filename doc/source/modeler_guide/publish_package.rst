@@ -61,6 +61,20 @@ Several steps are needed to publish your model:
    If your package is in version *2.0.1* the tag must be `2.0.1`.
    The version or tag must **NOT** start with letter as `v2.0.1` or `my_package-2.0.1`.
 
+   .. warning::
+
+        Check that the tag match with the version defined in `metadata.yml`.
+        To avoid inadvertent mistake place the script below in `.git/hooks/` directory.
+        Check that the hook is well named pre-push and it is executable (`chmod 755 .git/hooks/pre-push`)
+        This script check if you push a tag and if the tag match the version in metadata.yml
+        If it does not match it prevent the push.
+
+        .. literalinclude:: ../_static/code/pre-push
+           :language: shell
+
+        :download:`pre-push <../_static/code/pre-push>` .
+
+
 3. When your pull request (PR) is accepted, the model package becomes automatically available to the community through the `macsydata` tool.
 
 If you don't want to submit a PR you can provide the tag release tarball (tar.gz) as is to your collaborators.
