@@ -108,13 +108,16 @@ set_2
 
 
     def test_systems_to_txt(self):
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
 """
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([])
-        systems_to_txt([], track_multi_systems_hit, f_out)
+        systems_to_txt(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
         args = argparse.Namespace()
@@ -152,6 +155,7 @@ set_2
                           cfg.redundancy_penalty())
 
         system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
 
@@ -177,7 +181,7 @@ neutral genes:
 
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([system_1])
-        systems_to_txt([system_1], track_multi_systems_hit, f_out)
+        systems_to_txt(model_fam_name, model_vers, [system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
@@ -214,8 +218,10 @@ neutral genes:
             system_1 = System(model,
                               [Cluster([v_hit_1, v_hit_2], model, HitWeight(**cfg.hit_weights()))],
                               cfg.redundancy_penalty())
-
+            model_fam_name = 'foo'
+            model_vers = '0.0b2'
             system_tsv = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
 """
@@ -235,17 +241,18 @@ neutral genes:
 
             f_out = StringIO()
             track_multi_systems_hit = HitSystemTracker([system_1])
-            systems_to_tsv([system_1], track_multi_systems_hit, f_out)
+            systems_to_tsv(model_fam_name, model_vers, [system_1], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_tsv, f_out.getvalue())
 
             # test No system found
             system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Systems found
 """
             f_out = StringIO()
             track_multi_systems_hit = HitSystemTracker([])
-            systems_to_tsv([], track_multi_systems_hit, f_out)
+            systems_to_tsv(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
             self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
@@ -296,8 +303,10 @@ neutral genes:
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
-
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         loner_tsv = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Loners found:
 """
@@ -313,16 +322,17 @@ neutral genes:
         loner_tsv += "\n\n"
 
         f_out = StringIO()
-        loners_to_tsv([system_1], f_out)
+        loners_to_tsv(model_fam_name, model_vers, [system_1], f_out)
         self.assertMultiLineEqual(loner_tsv, f_out.getvalue())
 
         # test No system found
         system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Loners found
 """
         f_out = StringIO()
-        loners_to_tsv([], f_out)
+        loners_to_tsv(model_fam_name, model_vers, [], f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
@@ -373,8 +383,10 @@ neutral genes:
                           [Cluster([mhit_abc, mhit_sctj], model, HitWeight(**cfg.hit_weights())),
                            Cluster([l_gspd1], model, HitWeight(**cfg.hit_weights()))],
                           cfg.redundancy_penalty())
-
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         multisystem_tsv = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Multisystems found:
 """
@@ -390,17 +402,18 @@ neutral genes:
         multisystem_tsv += "\n\n"
 
         f_out = StringIO()
-        multisystems_to_tsv([system_1], f_out)
+        multisystems_to_tsv(model_fam_name, model_vers, [system_1], f_out)
         self.assertMultiLineEqual(multisystem_tsv,
                                   f_out.getvalue())
 
         # test No system found
         system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Multisystems found
 """
         f_out = StringIO()
-        multisystems_to_tsv([], f_out)
+        multisystems_to_tsv(model_fam_name, model_vers, [], f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
 
@@ -408,17 +421,22 @@ neutral genes:
         best_solution_path = self.find_data('best_solution.tsv')
         expected_summary_path = self.find_data('best_solution_summary.tsv')
         computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        model_fam_name = 'set_1'
+        model_vers = '0.0b2'
         with open(computed_summary_path, 'w') as computed_summary_file:
             models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
             replicon_names= ['VICH001.B.00001.C001']
-            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+            summary_best_solution(model_fam_name, model_vers, best_solution_path, computed_summary_file, models_fqn, replicon_names)
         self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
     def test_summary_best_solution_empty(self):
         best_solution_path = self.find_data('best_solution_empty.tsv')
         expected_summary_path = os.path.join(self.tmp_dir, 'expected_best_sol_summary.tsv')
+        model_fam_name = 'set_1'
+        model_vers = '0.0b2'
         with open(expected_summary_path, 'w') as expected_summary_file:
             expected_summary_file.write("# macsyfinder vers\n")
+            expected_summary_file.write("# models: set_1-0.0b2\n")
             expected_summary_file.write("# msf command line\n")
             expected_summary_file.write('\t'.join(['replicon', 'set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']) + '\n')
             expected_summary_file.write('\t'.join(['VICH001.B.00001.C001',	'0', '0', '0', '0']) + '\n')
@@ -427,37 +445,43 @@ neutral genes:
         with open(computed_summary_path, 'w') as f:
             models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
             replicon_names = ['VICH001.B.00001.C001']
-            summary_best_solution(best_solution_path, f, models_fqn, replicon_names)
+            summary_best_solution(model_fam_name, model_vers, best_solution_path, f, models_fqn, replicon_names)
         self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
     def test_summary_best_solution_lack_models(self):
         best_solution_path = self.find_data('best_solution.tsv')
         expected_summary_path = self.find_data('summary_best_solution_lack_models.tsv')
         computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        model_fam_name = 'set_1'
+        model_vers = '0.0b2'
         with open(computed_summary_path, 'w') as computed_summary_file:
             models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP', "empty/model"]
             replicon_names = ['VICH001.B.00001.C001']
-            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+            summary_best_solution(model_fam_name, model_vers, best_solution_path, computed_summary_file, models_fqn, replicon_names)
         self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
     def test_summary_best_solution_lack_replicon(self):
         best_solution_path = self.find_data('best_solution.tsv')
         expected_summary_path = self.find_data('summary_best_solution_lack_replicon.tsv')
         computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        model_fam_name = 'set_1'
+        model_vers = '0.0b2'
         with open(computed_summary_path, 'w') as computed_summary_file:
             models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP']
             replicon_names = ['VICH001.B.00001.C001', 'added_replicon']
-            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+            summary_best_solution(model_fam_name, model_vers, best_solution_path, computed_summary_file, models_fqn, replicon_names)
         self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
     def test_summary_best_solution_lack_models_replicons(self):
         best_solution_path = self.find_data('best_solution.tsv')
         expected_summary_path = self.find_data('summary_best_solution_lack_models_replicons.tsv')
         computed_summary_path = os.path.join(self.tmp_dir, 'summary.tsv')
+        model_fam_name = 'set_1'
+        model_vers = '0.0b2'
         with open(computed_summary_path, 'w') as computed_summary_file:
             models_fqn = ['set_1/MSH', 'set_1/T2SS', 'set_1/T4P', 'set_1/T4bP', "empty/model"]
             replicon_names = ['VICH001.B.00001.C001', 'added_replicon']
-            summary_best_solution(best_solution_path, computed_summary_file, models_fqn, replicon_names)
+            summary_best_solution(model_fam_name, model_vers, best_solution_path, computed_summary_file, models_fqn, replicon_names)
         self.assertTsvEqual(expected_summary_path, computed_summary_path, tsv_type='best_solution_summary.tsv')
 
 
@@ -580,7 +604,10 @@ neutral genes:
         sol_id_1 = '1'
         sol_id_2 = '2'
 
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         sol_tsv = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
 """
@@ -665,7 +692,7 @@ neutral genes:
 
         f_out = StringIO()
         hit_multi_sys_tracker = HitSystemTracker([sys_A, sys_B, sys_C])
-        solutions_to_tsv([sol_1, sol_2], hit_multi_sys_tracker, f_out)
+        solutions_to_tsv(model_fam_name, model_vers, [sol_1, sol_2], hit_multi_sys_tracker, f_out)
         self.maxDiff = None
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
@@ -708,7 +735,10 @@ neutral genes:
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
         r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
 
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Rejected clusters:
 
@@ -726,16 +756,17 @@ These clusters have been rejected because:
 """
 
         f_out = StringIO()
-        rejected_clst_to_txt([r_c], f_out)
+        rejected_clst_to_txt(model_fam_name, model_vers, [r_c], f_out)
         self.maxDiff = None
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
         rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Rejected clusters
 """
         f_out = StringIO()
-        rejected_clst_to_txt([], f_out)
+        rejected_clst_to_txt(model_fam_name, model_vers, [], f_out)
         self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
 
 
@@ -785,7 +816,10 @@ These clusters have been rejected because:
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         system_str = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Systems found:
 
@@ -816,12 +850,13 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([system_1])
-        likely_systems_to_txt([system_1], track_multi_systems_hit, f_out)
+        likely_systems_to_txt(model_fam_name, model_vers, [system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(system_str, f_out.getvalue())
 
         f_out = StringIO()
-        likely_systems_to_txt([], track_multi_systems_hit, f_out)
+        likely_systems_to_txt(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
         expected_out = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
 """
@@ -874,7 +909,10 @@ Use ordered replicon to have better prediction.
 
         system_1 = LikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4])
 
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
         sol_tsv = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Likely Systems found:"""
         sol_tsv += "\n\n"
@@ -898,12 +936,13 @@ Use ordered replicon to have better prediction.
 
         f_out = StringIO()
         track_multi_systems_hit = HitSystemTracker([system_1])
-        likely_systems_to_tsv([system_1], track_multi_systems_hit, f_out)
+        likely_systems_to_tsv(model_fam_name, model_vers, [system_1], track_multi_systems_hit, f_out)
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
         f_out = StringIO()
-        likely_systems_to_tsv([], track_multi_systems_hit, f_out)
+        likely_systems_to_tsv(model_fam_name, model_vers, [], track_multi_systems_hit, f_out)
         expected_out = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Likely Systems found
 """
@@ -956,7 +995,11 @@ Use ordered replicon to have better prediction.
         reason = "why it not a system"
         system_1 = UnlikelySystem(model, [v_hit_1], [v_hit_2], [v_hit_3], [v_hit_4], reason)
 
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
+
         exp_txt = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # Unlikely Systems found:
 
@@ -987,12 +1030,13 @@ Use ordered replicon to have better prediction.
 """
 
         f_out = StringIO()
-        unlikely_systems_to_txt([system_1], f_out)
+        unlikely_systems_to_txt(model_fam_name, model_vers, [system_1], f_out)
         self.assertMultiLineEqual(exp_txt, f_out.getvalue())
 
         f_out = StringIO()
-        unlikely_systems_to_txt([], f_out)
+        unlikely_systems_to_txt(model_fam_name, model_vers, [], f_out)
         expected_out = f"""# macsyfinder {macsypy.__version__}
+# models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
 # No Unlikely Systems found
 """
@@ -1070,7 +1114,7 @@ Use ordered replicon to have better prediction.
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
 
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
@@ -1093,7 +1137,7 @@ Use ordered replicon to have better prediction.
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
@@ -1105,7 +1149,7 @@ Use ordered replicon to have better prediction.
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual(systems, [])
@@ -1121,7 +1165,7 @@ Use ordered replicon to have better prediction.
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
 
@@ -1129,7 +1173,7 @@ Use ordered replicon to have better prediction.
         self.assertEqual([r.id for r in rejected_clst],
                          ['VICH001.B.00001.C001_T12SS-multisystem_1', 'VICH001.B.00001.C001_T12SS-multisystem_2'])
 
-        # multisystem is in System so it can play role for other cluster
+        # multisystem is in System, so it can play role for other cluster
         # 2 systems found
         seq_db = self.find_data('base', 'test_13.fasta')
         model_dir = self.find_data('models')
@@ -1138,7 +1182,7 @@ Use ordered replicon to have better prediction.
         _, parsed_args = parse_args(args.split())
         config = Config(defaults, parsed_args)
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         self._reset_id()
         systems, rejected_clst = search_systems(config, model_registry, def_to_detect, logger)
         self.assertEqual({s.id for s in systems},
@@ -1165,7 +1209,7 @@ Use ordered replicon to have better prediction.
         config = Config(defaults, parsed_args)
 
         model_registry = self._fill_model_registry(config)
-        def_to_detect = get_def_to_detect(config.models(), model_registry)
+        def_to_detect, models_fam_name, models_version = get_def_to_detect(config.models(), model_registry)
         systems, uncomplete_sys = search_systems(config, model_registry, def_to_detect, logger)
         expected_sys_id = ['Unordered_T2SS_4', 'Unordered_MSH_3', 'Unordered_T4P_5', 'Unordered_T4bP_6']
         self.assertListEqual([s.id for s in systems], expected_sys_id)

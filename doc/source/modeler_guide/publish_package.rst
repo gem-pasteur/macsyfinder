@@ -51,9 +51,15 @@ Several steps are needed to publish your model:
 
 2. Create a **tag**, and submit a **pull request** to the https://github.com/macsy-models organization.
    This step is **very important**: without a tag, there is no package.
-   `macsydata checks` only tagged packages.
+   `macsydata check` only tagged packages.
    It is also the duty of the model provider to setup a tag with the same name as the version in the `metadata.yml` file.
-   It is recommended to follow a versioning scheme describe here: https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
+   It is **Mandatory** to follow a versioning scheme described here:
+
+        * https://www.python.org/dev/peps/pep-0440/#public-version-identifiers
+        * https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/specification.html#standard-versioning-schemes
+
+   If your package is in version *2.0.1* the tag must be `2.0.1`.
+   The version or tag must **NOT** start with letter as `v2.0.1` or `my_package-2.0.1`.
 
 3. When your pull request (PR) is accepted, the model package becomes automatically available to the community through the `macsydata` tool.
 

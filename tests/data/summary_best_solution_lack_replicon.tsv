@@ -1,4 +1,5 @@
 # macsyfinder 20210423.dev
+# models : set_1-0.0b2
 # tests/run_tests.py -vv tests/test_macsyfinder.py
 replicon	set_1/MSH	set_1/T2SS	set_1/T4P	set_1/T4bP
 VICH001.B.00001.C001	1	1	2	1

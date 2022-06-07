@@ -50,21 +50,23 @@ class TestUtils(MacsyTest):
         cmd_args = argparse.Namespace()
         cmd_args.models_dir = os.path.join(self._data_dir, 'fake_model_dir')
         cmd_args.models = ('set_1', 'def_1_1', 'def_1_2', 'def_1_3')
-        config = Config(MacsyDefaults(models_dir=os.path.join(self._data_dir, 'fake_model_dir')),
-                        cmd_args)
         registry = ModelRegistry()
         models_location = scan_models_dir(cmd_args.models_dir)
         for ml in models_location:
             registry.add(ml)
 
         # case where models are specified on command line
-        res = get_def_to_detect(('set_1', ['def_1_1', 'def_1_2', 'def_1_3']), registry)
+        res, model_family, model_vers = get_def_to_detect(('set_1', ['def_1_1', 'def_1_2', 'def_1_3']), registry)
         model_loc = registry['set_1']
+        self.assertEqual(model_family, 'set_1')
+        self.assertEqual(model_vers, '0.0b2')
         exp = [model_loc.get_definition(name) for name in ('set_1/def_1_1', 'set_1/def_1_2', 'set_1/def_1_3')]
         self.assertListEqual(res, exp)
 
         # case we search all models
-        res = get_def_to_detect(('set_1', ['all']), registry)
+        res, model_family, model_vers = get_def_to_detect(('set_1', ['all']), registry)
+        self.assertEqual(model_family, 'set_1')
+        self.assertEqual(model_vers, '0.0b2')
         exp = model_loc.get_all_definitions()
         self.assertListEqual(res, exp)
 
