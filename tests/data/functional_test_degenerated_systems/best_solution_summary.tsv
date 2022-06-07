@@ -1,4 +1,5 @@
 # macsyfinder 20211008.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional degenerated_systems --relative-path --sequence-db tests/data/base/test_4.fasta -o functional_test_degenerated_systems
 replicon	functional/degenerated_systems
 UserReplicon	1

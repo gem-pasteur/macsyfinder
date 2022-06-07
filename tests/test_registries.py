@@ -27,30 +27,17 @@ import os
 import shutil
 import tempfile
 import argparse
+import yaml
+import colorlog
 
+import macsypy
 from macsypy.config import Config, MacsyDefaults
 from macsypy import registries
 from macsypy.registries import ModelLocation, DefinitionLocation, ModelRegistry, scan_models_dir
-from macsypy.error import MacsypyError
 from tests import MacsyTest
 
 
-def _create_fake_models_tree(root_models_dir, sys_def):
-    models_dir = os.path.join(root_models_dir, sys_def['name'])
-    os.mkdir(models_dir)
-
-    profiles_dir = os.path.join(models_dir, 'profiles')
-    os.mkdir(profiles_dir)
-    for profile in sys_def['profiles']:
-        fh = open(os.path.join(profiles_dir, profile), 'w')
-        fh.close()
-    for filename in sys_def['not_profiles']:
-        fh = open(os.path.join(profiles_dir, filename), 'w')
-        fh.close()
-
-    def_dir = os.path.join(models_dir, 'definitions')
-    os.mkdir(def_dir)
-
+def _create_fake_models_tree(root_models_dir, sys_def, metadata=True):
     def create_tree(definitions, path):
         for level_n in definitions:
             if isinstance(level_n, str):
@@ -66,8 +53,29 @@ def _create_fake_models_tree(root_models_dir, sys_def):
                 create_tree(definitions[level_n], path)
             else:
                 assert False, "error in modeling \"definitions\" {} {} ".format(level_n, type(level_n))
+
+    models_dir = os.path.join(root_models_dir, sys_def['name'])
+    os.mkdir(models_dir)
+
+    profiles_dir = os.path.join(models_dir, 'profiles')
+    os.mkdir(profiles_dir)
+    for profile in sys_def['profiles']:
+        fh = open(os.path.join(profiles_dir, profile), 'w')
+        fh.close()
+    for filename in sys_def['not_profiles']:
+        fh = open(os.path.join(profiles_dir, filename), 'w')
+        fh.close()
+
+    def_dir = os.path.join(models_dir, 'definitions')
+    os.mkdir(def_dir)
     create_tree(sys_def['definitions'], def_dir)
     create_tree(sys_def['not_definitions'], def_dir)
+
+    if metadata:
+        with open(os.path.join(models_dir, "metadata.yml"), 'w') as file:
+            metadata = {'vers': '1.0'}
+            yaml.dump(metadata, file)
+
     return models_dir
 
 
@@ -94,6 +102,9 @@ class RegitriesUtilsTest(MacsyTest):
 class ModelLocationTest(MacsyTest):
 
     def setUp(self):
+        macsypy.init_logger()
+        logger = colorlog.getLogger('macsypy.registries')
+        registries._log = logger
         self.tmp_dir = tempfile.mkdtemp()
         self.root_models_dir = os.path.join(self.tmp_dir, 'models')
         os.mkdir(self.root_models_dir)
@@ -130,29 +141,11 @@ class ModelLocationTest(MacsyTest):
             shutil.rmtree(self.tmp_dir)
         except Exception as err:
             pass
-
+        logger = colorlog.getLogger('macsypy.registries')
+        del logger.manager.loggerDict['macsypy.registries']
+        del logger.manager.loggerDict['macsypy']
 
     def test_ModelLocation(self):
-        with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(path='foo', profile_dir='bar')
-        self.assertEqual(str(cm.exception),
-                         "'path' and 'profile_dir' are incompatible arguments")
-
-        with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(path='foo', def_dir='bar')
-        self.assertEqual(str(cm.exception),
-                         "'path' and 'def_dir' are incompatible arguments")
-
-        with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(def_dir='foo')
-        self.assertEqual(str(cm.exception),
-                         "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
-
-        with self.assertRaises(MacsypyError) as cm:
-            ModelLocation(profile_dir='foo')
-        self.assertEqual(str(cm.exception),
-                         "if 'profile_dir' is specified 'def_dir' must be specified_too and vice versa")
-
         # test new way to specify profiles and definitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
@@ -188,20 +181,26 @@ class ModelLocationTest(MacsyTest):
             self.assertSetEqual({ssm.path for ssm in model_loc._definitions[subdef_name].subdefinitions.values()},
                                 {os.path.join(complex_dir, 'definitions', subdef_name, ssm) for ssm in subdef})
 
-        # test old way to specify profiles and definitions
-        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
-                                  def_dir=os.path.join(simple_dir, 'definitions'))
+    def test_version(self):
+        # test new way to specify profiles and definitions
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
+        model_loc = ModelLocation(path=simple_dir)
+        self.assertEqual(model_loc.version, '1.0')
 
-        self.assertDictEqual(model_loc._profiles,
-                             {os.path.splitext(p)[0]: os.path.join(simple_dir, 'profiles', p)
-                              for p in self.simple_models['profiles']})
 
-        self.assertSetEqual(set(model_loc._definitions.keys()),
-                            {os.path.splitext(m)[0] for m in self.simple_models['definitions']})
+    def test_version_no_metadata(self):
+        # test new way to specify profiles and definitions
+        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models, metadata=False)
+        with self.catch_log(log_name='macsypy') as log:
+            model_loc = ModelLocation(path=simple_dir)
+            log_msg = log.get_value().strip()
+        self.assertEqual(model_loc.version, None)
+        self.assertEqual(log_msg,
+                         "The models package 'simple' is not versioned contact the package manager to fix it.")
 
 
     def test_get_definition(self):
-        # test new way to specify profiles and defitions
+        # test new way to specify profiles and definitions
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
 
@@ -232,17 +231,6 @@ class ModelLocationTest(MacsyTest):
         defloc_expected = DefinitionLocation(name=def_name,
                                              path=os.path.join(complex_dir, 'definitions', subdef_name, def_name + '.xml'))
         defloc_expected.fqn = def_fqn
-        defloc_received = model_loc.get_definition(def_fqn)
-        self.assertEqual(defloc_expected, defloc_received)
-
-        # test old way to specify profiles and defitions
-        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
-                                  def_dir=os.path.join(simple_dir, 'definitions'))
-
-        def_fqn = "definitions/{0}".format(os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0])
-        def_name = os.path.splitext(list(self.simple_models['definitions'].keys())[0])[0]
-        defloc_expected = DefinitionLocation(name=def_name,
-                                             path=os.path.join(simple_dir, 'definitions', def_name + '.xml'))
         defloc_received = model_loc.get_definition(def_fqn)
         self.assertEqual(defloc_expected, defloc_received)
 
@@ -298,32 +286,11 @@ class ModelLocationTest(MacsyTest):
                                                                                            def_root_name=def_root_name))
         self.assertEqual(sorted(defs_expected), sorted(defs_received))
 
-        # test old way to specify profiles and defitions
-        simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
-        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
-                                  def_dir=os.path.join(simple_dir, 'definitions'))
-        defs_expected = [DefinitionLocation(name=os.path.splitext(d)[0],
-                                            fqn=os.path.splitext(d)[0],
-                                            path=os.path.join(simple_dir, 'definitions', d))
-                         for d in self.simple_models['definitions']
-                         ]
-        defs_received = model_loc.get_all_definitions()
-        self.assertEqual(sorted(defs_expected), sorted(defs_received))
-
-        with self.assertRaises(ValueError) as ctx:
-            model_loc.get_all_definitions(root_def_name='foobar')
-        self.assertEqual(str(ctx.exception), "root_def_name foobar does not match with any definitions")
-
 
     def test_get_profile(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)
         model_loc = ModelLocation(path=simple_dir)
 
-        self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
-                         os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
-
-        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
-                                  def_dir=os.path.join(simple_dir, 'definitions'))
         self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
                          os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
 
@@ -335,10 +302,6 @@ class ModelLocationTest(MacsyTest):
         self.assertEqual(model_loc.get_profile(os.path.splitext(self.simple_models['profiles'][0])[0]),
                          os.path.join(simple_dir, 'profiles', self.simple_models['profiles'][0]))
 
-        model_loc = ModelLocation(profile_dir=os.path.join(simple_dir, 'profiles'),
-                                  def_dir=os.path.join(simple_dir, 'definitions'))
-        self.assertSetEqual(set(model_loc.get_profiles_names()),
-                            {os.path.splitext(prof)[0] for prof in self.simple_models['profiles']})
 
     def test_str(self):
         simple_dir = _create_fake_models_tree(self.root_models_dir, self.simple_models)

@@ -78,10 +78,10 @@ class DefinitionParser:
             path = def_loc.path
             if path is None:
                 raise MacsypyError(f"{path}: No such model definitions")
+            model_location = self.model_registry[def_loc.root_name(def_loc.fqn)]
             model_node = self._get_model_node(def_loc)
             model = self._create_model(def_loc, model_node)
             self.model_bank.add_model(model)
-            model_location = self.model_registry[def_loc.root_name(def_loc.fqn)]
             self._fill_gene_bank(model_node, model_location, def_loc)
 
             self._parse_genes(model, model_node)

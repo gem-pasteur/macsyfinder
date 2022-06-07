@@ -1,4 +1,5 @@
 # macsyfinder 20211008.dev
+# models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py37/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m test_loners MOB_cf_T5SS --relative-path --sequence-db tests/data/base/MOBP1_twice.fasta -o functional_test_only_loners
 replicon	test_loners/MOB_cf_T5SS
 UserReplicon	1
