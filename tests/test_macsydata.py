@@ -357,6 +357,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_cite(self):
         pack_name = "nimportnaoik"
         self.args.package = pack_name
+        self.args.models_dir = None
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError):
                 macsydata.do_cite(self.args)
@@ -368,7 +369,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         fake_pack_path = self.create_fake_package(pack_name)
 
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        macsydata._find_installed_package = lambda x, models_dir: macsydata.Package(fake_pack_path)
         try:
             with self.catch_io(out=True):
                 macsydata.do_cite(self.args)

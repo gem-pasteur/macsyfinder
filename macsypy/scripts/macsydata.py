@@ -496,7 +496,7 @@ def do_cite(args: argparse.Namespace) -> None:
     :rtype: None
     """
     pack_name = args.package
-    inst_pack_loc = _find_installed_package(pack_name)
+    inst_pack_loc = _find_installed_package(pack_name, models_dir=args.models_dir)
     if inst_pack_loc:
         pack = Package(inst_pack_loc.path)
         pack_citations = pack.metadata['cite']
