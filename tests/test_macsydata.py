@@ -885,13 +885,16 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         try:
             with self.catch_log(log_name='macsydata'):
                 macsydata.do_install(self.args)
-            with self.catch_log(log_name='macsydata')as log:
-                with self.assertRaises(RuntimeError):
-                    macsydata.do_install(self.args)
-                msg_log = log.get_value().strip()
-            expected_log = f"""{pack_name} locally installed is corrupted.
+            with self.catch_log(log_name='macsypy'):
+                # macsypy.registry throw a warning if metadata is not found
+                # silenced it
+                with self.catch_log(log_name='macsydata') as log:
+                    with self.assertRaises(RuntimeError):
+                        macsydata.do_install(self.args)
+                    msg_log = log.get_value().strip()
+                expected_log = f"""{pack_name} locally installed is corrupted.
 You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
-            self.assertEqual(msg_log, expected_log)
+                self.assertEqual(msg_log, expected_log)
         finally:
             del macsydata.Config.models_dir
 
