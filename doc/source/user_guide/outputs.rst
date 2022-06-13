@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _outputs:
 
 *************
@@ -18,9 +18,9 @@ MacSyFinder output files are stored in this run-specific folder.
 
 
 
-There are three types of output files: 
-  1. The main output files for the systems' search. They differ with the search mode (:ref:`ordered<ordered_outputs>` or :ref:`unordered<unordered_outputs>`). 
-  2. The :ref:`HMMER output files<hmmer-outputs-label>` (search of each systems' components), located in the `hmmer_results` folder. 
+There are three types of output files:
+  1. The main output files for the systems' search. They differ with the search mode (:ref:`ordered<ordered_outputs>` or :ref:`unordered<unordered_outputs>`).
+  2. The :ref:`HMMER output files<hmmer-outputs-label>` (search of each systems' components), located in the `hmmer_results` folder.
   3. The internal :ref:`configuration and log files<logs_and_conf>`.
 
 
@@ -36,8 +36,8 @@ Output files for the "ordered replicon(s)" search modes
 -------------------------------------------------------
 
 
-These output files are provided when MacSyFinder search proceeds on a set of proteins that are deemed to follow the order of their genes on replicons. 
-This corresponds to the two search modes *gembase* and *ordered_replicon*. 
+These output files are provided when MacSyFinder search proceeds on a set of proteins that are deemed to follow the order of their genes on replicons.
+This corresponds to the two search modes *gembase* and *ordered_replicon*.
 
 
 -------------------------
@@ -49,17 +49,17 @@ headers are provided with the content of the lines in the file.
 
 
   * :ref:`best_solution.tsv<best_solution_tsv>` - This file contains the **best solution found by MacSyFinder** in terms of systems detected,
-    under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed). 
+    under the form of a per-component, tabulated report file. A **solution** consists in a set of compatible systems (no components' overlap allowed).
     If multiple solutions showed a maximal score, a :ref:`ranking <sort_eqt_best_solution>` is established.
 
-    To see potential other best solutions (in case several obtained the same highest score), see file :ref:`all_best_solutions.tsv<best_solution_tsv>`. 
+    To see potential other best solutions (in case several obtained the same highest score), see file :ref:`all_best_solutions.tsv<best_solution_tsv>`.
 
-    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`. 
-    
+    To see all possible, candidate systems without further processing, see files `all_systems.txt` and `all_systems.tsv`.
+
     The `best_solution.tsv` file is the most similar to former V1 file `macsyfinder.report`.
 
-  * :ref:`best_solution_loners.tsv <best_solution_loners_tsv>` and :ref:`best_solution_systems.tsv <best_solution_multisystems_tsv>` report
-    hits which have been identified as loners or multisystems which means that the corresponding gene is tag 'loner' or 'multisystem' in the model definition
+  * :ref:`best_solution_loners.tsv <best_solution_loners_tsv>` and :ref:`best_solution_multisystems.tsv <best_solution_multisystems_tsv>` report
+    hits which have been identified as loners or multi-systems which means that the corresponding gene is tagged as a 'loner' or 'multi-system' in the model definition
     and the hit is lot located in a cluster.
 
   * :ref:`best_solution_summary.tsv<best_solution_summary_tsv>` is a summary of the `best_solution.tsv` file, containing the number of systems detected in each replicon analysed.
@@ -75,8 +75,8 @@ headers are provided with the content of the lines in the file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
 
   * :ref:`all_systems.tsv<all_systems_tsv>` - This file contains all possible candidate systems given the definitions -
-    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds 
-    to the tabulated version of the `all_systems.txt` file.  
+    without processing of the potential overlaps between candidate systems, under the form of a per-component, tabulated report file. It corresponds
+    to the tabulated version of the `all_systems.txt` file.
 
 
 .. _all_systems_txt:
@@ -110,7 +110,7 @@ Then for each replicon, the systems detected are listed along with their descrip
     - **loci nb** - the number of different loci constituting this system
     - **score** - the score of the system. See :ref:`here <combinatorial-exploration>` for more details
     - **systems components** - the number of occurrences of each model components
-      in parenthesis the name of the matching profile 
+      in parenthesis the name of the matching profile
       in square brackets the name of other putative systems that would involve this gene
 
 Here is an example of the `all_systems.txt` file:
@@ -204,7 +204,7 @@ all_systems.tsv
 ---------------
 
 
-This corresponds to the tabulated version of the systems listed in `all_systems.txt`. 
+This corresponds to the tabulated version of the systems listed in `all_systems.txt`.
 Each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
     * **replicon** - the name of the replicon it belongs to
@@ -228,7 +228,7 @@ Each line corresponds to a "hit" that has been assigned to a detected system. It
     * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
-    * **counterpart** - the hit id of some other hit which are equivalent. only Loners and multisystems hits have counterpart
+    * **counterpart** - the hit id of some other hit which are equivalent. Only loners and multi-systems hits have counterparts
     * **used_in** - whether the hit could be used in another system's occurrence
 
 This file can be easily parsed using the Python `pandas <https://pandas.pydata.org/>`_ library. ::
@@ -248,7 +248,7 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 .. note::
     If a loner component is not clustered with other genes, it will not be considered as part of a locus.
     Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
-    See above lines for more details. 
+    See above lines for more details.
 
     .. code-block:: text
 
@@ -262,15 +262,15 @@ This file can be easily parsed using the Python `pandas <https://pandas.pydata.o
 best_solution.tsv and all_best_solutions.tsv
 --------------------------------------------
 
-	
+
 Since MacSyFinder 2.0, a combinatorial exploration of solutions using sets of systems found is performed. We call best solution, the combination of systems offering the highest score.
 
 The `best_solution.tsv` and `all_best_solutions.tsv` files have the same structure as the file `all_systems.tsv`, except that there is an extra column **sol_id** which is a
-solution identifier added to the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution. 
+solution identifier added to the file `all_best_solutions.tsv`. The systems that have the same "sol_id" belong to a same solution.
 
-As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above. 
+As the files have the same structure as `all_systems.tsv`, they can also be parsed with pandas as shown above.
 
-For the description of the fields of `best_solution.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file. 
+For the description of the fields of `best_solution.tsv`, see :ref:`above <all_systems_tsv>` those of the `all_systems.tsv` file.
 
 For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been assigned to a detected system. It includes:
 
@@ -285,7 +285,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **locus_num** - the number of the locus where is located this gene. Loners gene have negative locus_num
     * **sys_wholeness** - the wholeness of the system
     * **sys_score** - the system score
-    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence. 
+    * **sys_occ** - the estimated number of system occurrences that could be potentially "filled" with this system's occurrence, based on the average number of each component found. A proxy for the genetic potential ton encode several systems from the set of components found in this one occurrence.
     * **hit_gene_ref** - the gene in the model whose this hit plays the role of
     * **hit_status** - the status of the component in the assigned system's definition
     * **hit_seq_len** - the length of the protein sequence matched by this hit
@@ -295,7 +295,7 @@ For the `all_best_solutions.tsv`, each line corresponds to a "hit" that has been
     * **hit_seq_cov** - the percentage of the sequence covered by the alignment with the profile
     * **hit_begin_match** - the position in the sequence where the profile match begins
     * **hit_end_match** - the position in the sequence where the profile match ends
-    * **counterpart** - the hit id of some other hit which are equivalent. only Loners and multisystems hits have counterpart
+    * **counterpart** - the hit id of some other hit which are equivalent. Only loners and multi-systems hits have counterparts
     * **used_in** - whether the hit could be used in another system's occurrence
 
 .. note::
@@ -317,7 +317,7 @@ Example of `all_best_solutions.tsv files`
 .. note::
     If a loner component is not clustered with other genes, it will not be considered as part of a locus.
     Thus, its locus number will be a negative value (numbered from -1) and will not be counted in the variable `sys_loci` (number of loci for a system).
-    See above lines for more details. 
+    See above lines for more details.
 
 .. note::
     If several systems from same model use a loner (same gene) *msf* check that there is at least one occurrence of
@@ -336,11 +336,11 @@ Example of `all_best_solutions.tsv files`
 
 .. _sort_eqt_best_solution:
 
-.. note:: 
-   In case multiple solutions have the exact same score, a sorting is performed among the best solutions, and the solution ranked 1st 
-   is reported in the `best_solution.tsv` and `best_solution.txt` files. 
+.. note::
+   In case multiple solutions have the exact same score, a sorting is performed among the best solutions, and the solution ranked 1st
+   is reported in the `best_solution.tsv` and `best_solution.txt` files.
    The ranking is performed as follow:
-   
+
    1. by the number of systems' components (hits) constituting the solution (most components first)
    2. by the number of systems (most systems in first)
    3. by the average of systems' wholeness
@@ -353,7 +353,7 @@ Example of `all_best_solutions.tsv files`
 best_solution_summary.tsv
 -------------------------
 
-This file is a concise view of which systems have been found in your replicons and how many per replicon. 
+This file is a concise view of which systems have been found in your replicons and how many per replicon.
 It is based on **best_solution.tsv**.
 The first two lines are comments that indicate the version of MacSyFinder and the command line used to generate the results.
 Then a table represented by tabulated text to separate columns, with the searched models in columns and the replicons scanned for the models in row.
@@ -423,7 +423,7 @@ This file give an overview of all hits identified as Loner in the best_solution
 best_solution_multisystems.tsv
 ------------------------------
 
-This file give an overview of all hits identified as MultiSystems in the best_solution
+This file give an overview of all hits identified as multi-systems in the best_solution
 
     .. literalinclude:: ../_static/best_solution_multisystems.tsv
        :language: text
@@ -495,7 +495,7 @@ As for ordered replicons, several output files are provided.
 .. note::
 
   In this `unordered` search mode, there is no notion of order or distance of the components along the replicon. The clustering step
-  is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition. 
+  is skipped by MacSyFinder, and it is therefore "only" checked for each type of system being searched whether there is the genetic potential to fulfil its model definition.
 
 
 .. _all_systems_txt_unordered:
@@ -503,9 +503,9 @@ As for ordered replicons, several output files are provided.
 all_systems.txt
 ---------------
 
-This file contains potential systems for unordered replicon in human readable format. 
+This file contains potential systems for unordered replicon in human readable format.
 
-In this file, for each component of each searched system's model, we report the number of hits found. For the description of the fields, see :ref:`above <all_systems_txt>`. 
+In this file, for each component of each searched system's model, we report the number of hits found. For the description of the fields, see :ref:`above <all_systems_txt>`.
 
 .. warning::
     In this mode the `forbidden` genes are reported here to the user. As we do not know if they co-localize (cluster) with the other genes they could
@@ -562,7 +562,7 @@ In this file, for each component of each searched system's model, we report the 
 all_systems.tsv
 ---------------
 
-This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields, see :ref:`above <all_systems_tsv>`. 
+This file contains the same information as in `all_systems.txt` but in `tsv` format. For the description of the fields, see :ref:`above <all_systems_tsv>`.
 
 
 .. note::
@@ -610,7 +610,7 @@ uncomplete_systems.txt
 
 This file is created when a search is performed in the `unordered replicon` mode.
 This file list models that probably do not have not full systems in the replicon(s).
-For each model, the reason why it is not fulfilled is reported, 
+For each model, the reason why it is not fulfilled is reported,
 followed by the model description and the components found.
 
 .. code-block:: text
@@ -661,11 +661,11 @@ followed by the model description and the components found.
 
 .. _hmmer-outputs-label:
 
-Hmmer results' output files 
+Hmmer results' output files
 ---------------------------
 Raw Hmmer outputs are provided, as long with processed tabular outputs that include hits filtered as
 specified by the user. For instance, the Hmmer search for SctC homologs with the corresponding profile
-will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and 
+will result in the creation of two output files: "sctC.search_hmm.out" for the raw HMMER output file and
 "sctC.res_hmm_extract" for the output file after processing/filtering of the HMMER results by MacSyFinder.
 
 The processed output file "sctC.res_hmm_extract" recalls on the first lines the parameters used for
@@ -678,15 +678,15 @@ hits filtering and relevant information on the matches, as in this example:
   # profile length= 544
   # i_evalue threshold= 0.001000
   # coverage threshold= 0.500000
-  # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score 
+  # hit_id replicon_name position_hit hit_sequence_length gene_name gene_system i_eval score
         profile_coverage sequence_coverage begin end
-  PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6   
+  PSAE001c01_006940       PSAE001c01      3450    803     sctC    T3SS    1.1e-41 141.6
         0.588235  0.419676        395     731
-  PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7   
+  PSAE001c01_018920       PSAE001c01      4634    776     sctC    T3SS    9.2e-48 161.7
         0.976103  0.724227        35      596
-  PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7   
+  PSAE001c01_031420       PSAE001c01      5870    658     sctC    T3SS    2.7e-52 176.7
         0.963235  0.844985        49      604
-  PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4   
+  PSAE001c01_051090       PSAE001c01      7801    714     sctC    T3SS    1.9e-46 157.4
         0.571691  0.463585        374     704
 
 
@@ -695,8 +695,7 @@ hits filtering and relevant information on the matches, as in this example:
 Logs and configuration files
 ----------------------------
 
-Three specific output files are systematically built, whatever the search mode, to store information on MacSyFinder's execution: 
+Three specific output files are systematically built, whatever the search mode, to store information on MacSyFinder's execution:
 
  * **macsyfinder.conf** - contains the configuration information of the run. It is useful to recover all the parameters used for the run.
- * **macsyfinder.log** - the log file, contains raw information on the run. Please send it to us with any **bug report**. 
-
+ * **macsyfinder.log** - the log file, contains raw information on the run. Please send it to us with any **bug report**.
