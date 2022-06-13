@@ -41,7 +41,7 @@ This mean that
 The workflow use the `nextflow <https://www.nextflow.io/>`_ framework and can be run on a single machine or a cluster.
 
 First, you have to install `nextflow <https://www.nextflow.io/>`_ first, and  :ref:`macsyfinder <installation>`.
-Then we provide 2 files (you need to download them from the IntegronFinder github repo.)
+Then we provide 2 files (you need to download them from the MacSyFinder github repo.)
 
 - `parallel_macsyfinder.nf` which is the workflow itself in nextflow syntax
 - `nextflow.config` which is a configuration file to execute the workflow.
@@ -61,7 +61,7 @@ How to get parallel_macsyfinder
 """""""""""""""""""""""""""""""
 
 The release contains the workflow `parallel_macsyfinder.nf` and the `nextflow.config` at the top level of the archive
-But If you use pip to install Integron_Finder you have not easily access to them.
+But if you use pip to install MacSyFinder you have not easily access to them.
 But they can be downloaded or executed directly by using nextflow.
 
 to download it ::
