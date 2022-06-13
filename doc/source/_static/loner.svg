@@ -7,7 +7,7 @@
    viewBox="0 0 273.84371 264.58256"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
    sodipodi:docname="loner.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -31,13 +31,13 @@
      showgrid="false"
      inkscape:snap-grids="false"
      inkscape:snap-to-guides="false"
-     inkscape:zoom="2.3150307"
-     inkscape:cx="550.74864"
-     inkscape:cy="341.24817"
-     inkscape:window-width="3840"
-     inkscape:window-height="2088"
+     inkscape:zoom="1.1575154"
+     inkscape:cx="511.00834"
+     inkscape:cy="673.85715"
+     inkscape:window-width="2560"
+     inkscape:window-height="1370"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="23"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      height="769px"
@@ -461,60 +461,74 @@
          x="89.31691"
          y="43.654205">System 1</tspan></text>
     <rect
-       style="fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       style="fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.603254;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
        id="rect2351"
-       width="18.658222"
-       height="5.6752853"
-       x="251.89954"
-       y="52.660954"
+       width="16.63476"
+       height="5.7090316"
+       x="252.41182"
+       y="39.414902"
        ry="0"
        inkscape:label="higlight model A " />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:2.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:94.2504;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88056px;line-height:1.45;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:94.2504;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="178.68909"
        y="15.231052"
        id="text147865"
        inkscape:label="xml def model A"><tspan
          x="178.68909"
          y="15.231052"
-         id="tspan53385">&lt;model min_mandatory_genes_required=&quot;1&quot; 
-</tspan><tspan
+         id="tspan15238"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15236">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan></tspan><tspan
          x="178.68909"
-         y="23.574257"
-         id="tspan53387">             min_genes_required=&quot;4&quot;&gt;
-</tspan><tspan
+         y="20.902785"
+         id="tspan15242"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15240">             min_genes_required=&quot;4&quot;&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="31.917461"
-         id="tspan53389">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
+         y="26.574519"
+         id="tspan15246"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15244">    &lt;gene name=&quot;A&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="40.260666"
-         id="tspan53391">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;
-</tspan><tspan
+         y="32.246253"
+         id="tspan15250"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15248">    &lt;gene name=&quot;B&quot; presence=&quot;accessory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="48.60387"
-         id="tspan53393">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;
-</tspan><tspan
+         y="37.917987"
+         id="tspan15254"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15252">    &lt;gene name=&quot;C&quot; presence=&quot;accessory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="56.947075"
-         id="tspan53395">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1&quot;/&gt;
-</tspan><tspan
+         y="43.589721"
+         id="tspan15258"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15256">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="65.290279"
-         id="tspan53397">&lt;/model&gt;</tspan></text>
+         y="49.261455"
+         id="tspan15262"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15260">&lt;/model&gt;</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
        id="text225659"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect225661);fill:#000000;fill-opacity:1;stroke:none" />
     <rect
-       style="display:inline;fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.637;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
+       style="display:inline;fill:#fb5009;fill-opacity:1;stroke:#ffffff;stroke-width:0.618513;stroke-linecap:round;stroke-linejoin:round;paint-order:markers stroke fill"
        id="rect2655"
-       width="18.658222"
-       height="5.6752853"
-       x="251.89954"
-       y="234.04463"
+       width="17.533815"
+       height="5.6937723"
+       x="252.04688"
+       y="221.23499"
        ry="0"
        inkscape:label="higlight model multi_system B" />
     <rect
@@ -522,48 +536,64 @@
        id="rect2653"
        width="30.88385"
        height="5.505125"
-       x="238.09021"
-       y="242.83044"
+       x="237.62929"
+       y="226.91953"
        ry="0"
        inkscape:label="higlight model loner B" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055px;line-height:2.15;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:93.6675;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.88055px;line-height:1.45;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;inline-size:93.6675;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        x="178.68909"
        y="196.73438"
        id="text257358"
        inkscape:label="xml model B"><tspan
          x="178.68909"
          y="196.73438"
-         id="tspan53399">&lt;model min_mandatory_genes_required=&quot;1&quot; 
-</tspan><tspan
+         id="tspan15266"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15264">&lt;model min_mandatory_genes_required=&quot;1&quot; 
+</tspan></tspan><tspan
          x="178.68909"
-         y="205.07756"
-         id="tspan53401">             min_genes_required=&quot;4&quot;&gt;
-</tspan><tspan
+         y="202.40609"
+         id="tspan15270"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15268">             min_genes_required=&quot;4&quot;&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="213.42075"
-         id="tspan53403">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
-</tspan><tspan
+         y="208.07781"
+         id="tspan15274"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15272">    &lt;gene name=&quot;E&quot; presence=&quot;mandatory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="221.76393"
-         id="tspan53405">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
-</tspan><tspan
+         y="213.74953"
+         id="tspan15278"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15276">    &lt;gene name=&quot;F&quot; presence=&quot;accessory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="230.10712"
-         id="tspan53407">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
-</tspan><tspan
+         y="219.42126"
+         id="tspan15282"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15280">    &lt;gene name=&quot;G&quot; presence=&quot;accessory&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="238.4503"
-         id="tspan53409">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1
-</tspan><tspan
+         y="225.09298"
+         id="tspan15286"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15284">    &lt;gene name=&quot;D&quot; presence=&quot;accessory&quot; loner=&quot;1
+</tspan></tspan><tspan
          x="178.68909"
-         y="246.79349"
-         id="tspan53411">                                                        multi_system=&quot;1&quot;/&gt;
-</tspan><tspan
+         y="230.7647"
+         id="tspan15290"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15288">                                                        multi_system=&quot;1&quot;/&gt;
+</tspan></tspan><tspan
          x="178.68909"
-         y="255.13667"
-         id="tspan53413">&lt;/model&gt;</tspan></text>
+         y="236.43642"
+         id="tspan15294"><tspan
+           style="font-family:Arial;-inkscape-font-specification:Arial"
+           id="tspan15292">&lt;/model&gt;</tspan></tspan></text>
     <text
        xml:space="preserve"
        transform="scale(0.26458333)"
