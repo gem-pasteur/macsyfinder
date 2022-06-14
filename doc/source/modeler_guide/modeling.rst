@@ -157,6 +157,9 @@ in terms of Gene content and genomic architecture criteria.
         **B**) The hit encoding for gene D in position 13 does not belong to a system. It cannot be used to fill up other clusters. In this example there is no system that satisfies the rules of model A.
         **C**) The gene D is present in the definition of model A and B. The hit encoding for gene D in position 13 belongs to the system 1 (encoding model A). It cannot be used to fill up the cluster 2 which codes for model B.
 
+
+.. _multi-model-label:
+
    * **multi_model**: a *boolean*. If a gene has the feature "multi_model" (value set to "1", "true" or "True"),
      it means that two systems from different models can coexist in the best solution (they are said "compatible") even if they share a component.
      The gene must be tagged as multi_model in both model definitions.
