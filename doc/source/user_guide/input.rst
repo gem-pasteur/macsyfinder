@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2022 Institut Pasteur (Paris) and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _input:
 
 ********************************
@@ -18,30 +18,30 @@ Input and Options of MacSyFinder
 Input dataset
 =============
 
-The input dataset must be a set of protein sequences in **Fasta format** (see http://en.wikipedia.org/wiki/FASTA_format). 
+The input dataset must be a set of protein sequences in **Fasta format** (see http://en.wikipedia.org/wiki/FASTA_format).
 
 The :ref:`base section<config-base-label>` in the configuration file (see :ref:`config-definition-label`)
 can be used to specify **the path** and the **type of dataset** to deal with,
 as well as the `--sequence_db` and `--db_type` parameters respectively,
 described in the :ref:`command-line-label` (see :ref:`Input options <cmd-input-label>`).
- 
+
   Four types of protein datasets are supported:
-       
+
         * *unordered* : a set of sequences corresponding to a complete genome
           (*e.g.* an unassembled complete genome)
         * *ordered_replicon* : a set of sequences corresponding to an ordered complete replicon
           (*e.g.* an assembled complete genome)
         * *gembase* : a set of multiple ordered replicons, which format follows the convention described
           in :ref:`gembase_convention`.
-      
+
 For "ordered" ("ordered_replicon" or "gembase") datasets only,
 MacSyFinder can take into account the **shape of the genome**: "linear",
 or "circular" for detection. The default is set to "circular".
-  
+
   This can be set with the `--replicon_topology` parameter from :ref:`command-line-label`
   (see :ref:`Input options <cmd-input-label>`),
   or in the configuration in the :ref:`base section<config-base-label>`.
-  
+
   With the "gembase" format, it is possible to specify a topology per replicon with a topology file
   (see :ref:`gembase_convention` and :ref:`topology-files`).
 
@@ -86,7 +86,7 @@ Input dataset options:
                         to a non-assembled genome,
                         "ordered_replicon" to an assembled genome,
                         and "gembase" to a set of replicons where sequence identifiers
-                        follow this convention: ">RepliconName SequenceID".
+                        follow this convention: ">RepliconName_SequenceID".
                         (required unless --previous-run is set)
   --replicon-topology {linear,circular}
                         The topology of the replicons
@@ -186,13 +186,13 @@ Options for clusters and systems' scoring:
                         the weight modifier for the score of a component that is exchangeable
                         (default:0.8)
   --redundancy-penalty REDUNDANCY_PENALTY
-                        the weight modifier for the score of a component that is already present in another cluster 
+                        the weight modifier for the score of a component that is already present in another cluster
 			(default:1.5)
 
   --loner-multi-system-weight LONER_MULTI_SYSTEM_WEIGHT
   			the weight modifier for the score of a component that is `loner` and `multi-system` at the same time
                         (default:0.7)
-  
+
 
 .. _path-options:
 
@@ -255,7 +255,7 @@ General options:
 
 
 
-.. note:: 
+.. note::
   For some command line examples, have a look :ref:`here<cmd-line-examples>`, or at the :ref:`quickstart` section.
 
 
@@ -294,43 +294,43 @@ There kind of locations where to put configuration file:
 
 .. note::
     The precedence rules from the least to the most important priority are:
- 
+
     System wide configuration < user wide configuration < project configuration < command line option
 
 This means that command-line options will always bypass those from the configuration files. In the same flavor,
 options altering the definition of systems found in the command-line or the configuration file will always
 overwhelm values from systems' :ref:`XML definition files <model-definition-grammar-label>`.
- 
+
 The configuration files must follow the Python "ini" file syntax.
 The :ref:`Config object <configuration>` provides some default values and performs some validations of the values.
- 
- 
+
+
 In MacSyFinder, six sections are defined and stored by default in the configuration file:
- 
+
  .. _config-base-label:
- 
+
   * **base** : all information related to the protein dataset under study
-  
+
     * *sequence_db* : the path to the dataset in Fasta format (*no default value*)
     * *db_type* : the type of dataset to handle, four types are supported:
-       
+
         * *unordered* : a set of sequences corresponding to a complete replicon
           (*e.g.* an unassembled complete genome)
         * *ordered_replicon* : a set of sequences corresponding to a complete replicon ordered
           (*e.g.* an assembled complete genome)
         * *gembase* : a set of multiple ordered replicons.
-        
+
       (*no default value*)
-      
+
     * *replicon_topology* : the topology of the replicon under study.
       Two topologies are supported: 'linear' and 'circular' (*default* = 'circular').
-      This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").     
+      This option will be ignored if the dataset type is not ordered (*i.e.* "unordered_replicon" or "unordered").
 
   * **models**
     * list of models to search in replicon
 
   * **models_opt**
-  
+
     * *inter_gene_max_space* = list of models' fully qualified names and integer separated by spaces (see example below).
       These values will supersede the values found in the model definition file.
     * *min_mandatory_genes_required* = list of models' fully qualified name and integer separated by spaces.
@@ -341,7 +341,7 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
       These values will supersede the values found in the model definition file.
 
   * **hmmer**
-    
+
     * *hmmer_exe* (default= *hmmsearch* )
     * *e_value_res* = (default= *1* )
     * *i_evalue_sel* = (default= *0.5* )
@@ -355,9 +355,9 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     * *redundancy_penalty* (default= *1.5*)
     * *out_of_cluster* (default= *0.7*)
 
-  
+
   * **directories**
-    
+
     * *res_search_dir* = (default= *./datatest/res_search* )
     * *res_search_suffix* = (default= *.search_hmm.out* )
     * *system_models_dir* = (default= *./models* )
@@ -365,9 +365,9 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
     * *index_dir* = (default= beside the sequence_db)
 
   * **general**
-    
+
     * *log_level*: (default= *debug* ) This corresponds to an integer code:
-        ========    ========== 
+        ========    ==========
         Level 	    Numeric value
         ========    ==========
         CRITICAL 	50
@@ -378,17 +378,17 @@ In MacSyFinder, six sections are defined and stored by default in the configurat
         NOTSET 	    0
         ========    ==========
     * *log_file* = (default = macsyfinder.log in directory of the run)
- 
+
 Example of a configuration file
 
 .. code-block:: ini
-  
+
     [base]
     prefix = /path/to/macsyfinder/home/
     file = %(prefix)s/data/base/prru_psae.001.c01.fasta
     db_type = gembase
     replicon_topology = circular
-    
+
     [models]
     models_1 = TFF-SF_final all
 
@@ -456,5 +456,4 @@ In-house input files
 .. toctree::
    :maxdepth: 1
 
-   gembase_convention 
-
+   gembase_convention
