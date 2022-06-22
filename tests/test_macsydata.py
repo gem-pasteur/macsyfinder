@@ -557,7 +557,7 @@ add a remote repository to host the models
 for instance if you want to add the models to 'macsy-models'
 \tgit remote add origin https://github.com/macsy-models/
 \tgit tag 0.0b2
-\tgit push --tags"""
+\tgit push origin 0.0b2"""
         self.assertEqual(expected_msg, log_msg)
 
 

@@ -72,6 +72,7 @@ def get_version_message():
 using:
 - Python {py_vers}
 - NetworkX {macsypy.solution.nx.__version__}
+- Pandas {pd.__version__}
 
 MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
 See the COPYING file for details.
