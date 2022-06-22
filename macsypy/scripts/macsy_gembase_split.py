@@ -129,14 +129,14 @@ def parse_args(args):
     :return: the arguments parsed.
     :rtype: a :class:`argparse.Namespace` object.
     """
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     description="Split a gembase protein file in several files, one per replicon." )
     parser.add_argument('genome_path',
                         help='Path to the genomes file (in gembase format), eg : path/to/file.fst or file.fst')
 
     parser.add_argument('-o', '--outdir',
                         default='.',
-                        help='The path to the directory where to write the chunks.\n'
-                             'It must exists.')
+                        help='The path to the directory where to write the chunks.')
     parser.add_argument("--mute",
                         action='store_true',
                         default=False,
