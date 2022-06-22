@@ -125,7 +125,6 @@ class ModelConfParser:
         elements = {'e_value_search': float,
                     'i_evalue_sel': float,
                     'coverage_profile': float,
-                    'accessory': float,
                     'cut_ga': parse_cut_ga,
                     }
         fiter_conf = self._parse_section(filtering_node, elements)

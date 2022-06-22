@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+nextflow.enable.dsl = 2
+
 /*************************
  * Default options
  *************************/
@@ -46,7 +48,7 @@ params.profile = false
 *****************************************/
 
 models = params.models ? " --models ${params['models']}" : ''
-sequence_db = params['sequence-db'] ? " --sequence-db ${params['sequence-db']}": ''
+sequence_db = params['sequence-db'] ? "${params['sequence-db']}": ''
 replicon_topology = params['replicon-topoloy'] ? " --replicon-topology ${params['replicon-topoloy']}" : ''
 topology_file = params['topology-file'] ? " --topology-file ${params['topology-file']}" : ''
 inter_gene_max_space = params['inter-gene-max-space'] ? " --inter-gene-max-space ${params['inter-gene-max-space']}" : ''
@@ -120,32 +122,31 @@ if (! params['models'] and ! params['cfg-file']){
     throw new Exception("The option '--models' is mandatory.")
 }
 
-replicons_file = Channel.fromPath(params['sequence-db'])
+sequence_db = file(sequence_db)
 
 /****************************************
  *           The workflow               *
  ****************************************/
 
+// split the gembase file in replicon files
 process split{
 
     input:
-        file(replicons) from replicons_file
-
+        path gembase
     output:
-        set val("${replicons.baseName}"), stdout, file("*.fasta") into chunk_files mode flatten
+        path "split_gembase/*.fasta"
     script:
         """
-        macsysplit --mute ${replicons} | wc -w
+        macsysplit --mute --outdir split_gembase ${gembase}
         """
 }
 
-
+// execute macsyfinder on each replicon file
 process macsyfinder{
 
     input:
-        set val(id_input), val(nb_chunks), file(one_replicon) from chunk_files
+        path one_replicon
         val models
-        val sequence_db
         val replicon_topology
         val topology_file
         val inter_gene_max_space
@@ -168,11 +169,10 @@ process macsyfinder{
         val res_search_suffix
         val res_extract_suffix
         val profile_suffix
-        val worker
         val cfg_file
         val debug
     output:
-        set val(id_input), file("macsyfinder-${one_replicon.baseName}") into all_replicons_results_dir
+        path("macsyfinder-${one_replicon.baseName}")
 
     script:
         """
@@ -183,29 +183,40 @@ ${index_dir}${res_search_suffix}${res_extract_suffix}${profile_suffix} --worker 
 }
 
 
-grouped_results = all_replicons_results_dir.groupTuple(by:0)
-
-
-process merge{
+// merge the results of macsyfinder on each replicon.
+process merge_results{
+    publishDir "merged_macsyfinder_results_${sequence_db.baseName}", mode: 'copy'
 
     input:
-        set val(input_id), file(all_replicons_results) from grouped_results
+        path all_results_dirs
 
     output:
-        set val(input_id), file ("${result_dir}/*") into final_res mode flatten
+        path "merged_*.tsv"
+        path "merged_*.txt"
+        path "macsy_merge_results.out"
 
     script:
-        result_dir = "merged_macsyfinder_results"
         """
-        macsymerge --out-dir merged_macsyfinder_results ${all_replicons_results}
+        macsymerge --mute ${all_results_dirs}
         """
 }
 
 
-final_res.subscribe{
-    input_id, result ->
-        result_dir = "merged_macsyfinder_results_${input_id}"
-        result.copyTo("${result_dir}/" + result.name);
+
+workflow {
+
+ gembase = Channel.fromPath(sequence_db)
+
+ replicons = split(gembase)
+
+ results_per_replicon = macsyfinder(replicons.flatten(), models, replicon_topology, topology_file,
+ inter_gene_max_space, min_mandatory_genes_required, min_genes_required, max_nb_genes, multi_loci,
+ hmmer, e_value_search, no_cut_ga, i_value_sel, coverage_profile,
+ mandatory_weight, accessory_weight, exchangeable_weight, redundancy_penalty, out_of_cluster,
+ models_dir, index_dir, res_search_suffix, res_extract_suffix,profile_suffix,
+ cfg_file, debug)
+
+ results = merge_results(results_per_replicon.toList())
 }
 
 workflow.onComplete {

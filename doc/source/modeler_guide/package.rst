@@ -192,7 +192,7 @@ The precedence rules between the different levels of configuration are:
 
 The model_conf.xml configuration file is in xml format and must have the following structure: 
 
-.. code-block:: yaml
+.. code-block:: xml
 
     <model_config>
         <weights>
@@ -200,7 +200,7 @@ The model_conf.xml configuration file is in xml format and must have the followi
             <accessory>0.5</accessory>
             <exchangeable>0.8</exchangeable>
             <redundancy_penalty>1.5</redundancy_penalty>
-            <loner_multi_system>0.7</loner_multi_system>
+            <out_of_cluster>0.7</out_of_cluster>
         </weights>
         <filtering>
             <e_value_search>0.1</e_value_search>
