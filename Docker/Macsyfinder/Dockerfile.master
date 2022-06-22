@@ -32,6 +32,11 @@ LABEL license="GPLv3"
 USER root
 ARG DEBIAN_FRONTEND=noninteractive
 
+# disable use of python cache ~/.local https://peps.python.org/pep-0370/
+# for build and run
+# thank's Eric Deveaud https://github.com/EricDeveaud
+ENV PYTHONNOUSERSITE=1
+
 RUN apt-get update -y &&\
     apt-get install -y --no-install-recommends hmmer python3 python3-pip git
 RUN apt-get clean -y
