@@ -76,7 +76,7 @@ class Test(MacsyTest):
         expected_result_dir = self.find_data("functional_test_gembase")
         args = "--db-type=gembase " \
                f"--models-dir={self.find_data('models')} " \
-               "--models  " \
+               "--models functional all " \
                "--out-dir={out_dir} " \
                "--index-dir {out_dir} " \
                f"--previous-run {expected_result_dir} " \

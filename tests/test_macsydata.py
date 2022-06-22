@@ -357,6 +357,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
     def test_cite(self):
         pack_name = "nimportnaoik"
         self.args.package = pack_name
+        self.args.models_dir = None
         with self.catch_log(log_name='macsydata') as log:
             with self.assertRaises(ValueError):
                 macsydata.do_cite(self.args)
@@ -368,7 +369,7 @@ copyright: 2019, Institut Pasteur, CNRS"""
         fake_pack_path = self.create_fake_package(pack_name)
 
         find_local_package = macsydata._find_installed_package
-        macsydata._find_installed_package = lambda x: macsydata.Package(fake_pack_path)
+        macsydata._find_installed_package = lambda x, models_dir: macsydata.Package(fake_pack_path)
         try:
             with self.catch_io(out=True):
                 macsydata.do_cite(self.args)
@@ -884,13 +885,16 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         try:
             with self.catch_log(log_name='macsydata'):
                 macsydata.do_install(self.args)
-            with self.catch_log(log_name='macsydata')as log:
-                with self.assertRaises(RuntimeError):
-                    macsydata.do_install(self.args)
-                msg_log = log.get_value().strip()
-            expected_log = f"""{pack_name} locally installed is corrupted.
+            with self.catch_log(log_name='macsypy'):
+                # macsypy.registry throw a warning if metadata is not found
+                # silenced it
+                with self.catch_log(log_name='macsydata') as log:
+                    with self.assertRaises(RuntimeError):
+                        macsydata.do_install(self.args)
+                    msg_log = log.get_value().strip()
+                expected_log = f"""{pack_name} locally installed is corrupted.
 You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
-            self.assertEqual(msg_log, expected_log)
+                self.assertEqual(msg_log, expected_log)
         finally:
             del macsydata.Config.models_dir
 
