@@ -39,6 +39,18 @@ from macsypy.system import System, AbstractUnordered, RejectedClusters
 
 class Test(MacsyTest):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._index_dir = os.path.join(tempfile.gettempdir(), 'test_macsyfinder_index')
+        if not os.path.exists(cls._index_dir):
+            os.makedirs(cls._index_dir)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        if os.path.exists(cls._index_dir):
+            shutil.rmtree(cls._index_dir)
+            pass
+
     def setUp(self):
         self.tmp_dir = tempfile.gettempdir()
         # reset System, AbstractUnordered internal id to have predictable results (Systems, ...) id
@@ -64,7 +76,6 @@ class Test(MacsyTest):
             pass
             # self.out_dir is set in self._macsyfinder_run
             shutil.rmtree(self.out_dir)
-            pass
         except:
             pass
 
@@ -76,9 +87,9 @@ class Test(MacsyTest):
         expected_result_dir = self.find_data("functional_test_gembase")
         args = "--db-type=gembase " \
                f"--models-dir={self.find_data('models')} " \
-               "--models functional all " \
+               "--models TFF-SF all " \
                "--out-dir={out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -119,7 +130,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m test_loners MOB_cf_T5SS " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -154,7 +165,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -188,7 +199,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -225,7 +236,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -263,7 +274,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -301,7 +312,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -337,7 +348,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -373,7 +384,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -410,7 +421,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-loner-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -447,7 +458,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                "--multi-loci functional/T12SS-simple-exch " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
@@ -484,7 +495,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -526,7 +537,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multisystem " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -564,7 +575,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-multisystem " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -603,7 +614,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  C_multi_model D_multi_model " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -643,7 +654,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  C_no_multi_model D_multi_model " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
 
@@ -679,7 +690,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional degenerated_systems " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -714,7 +725,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  uncomplete_degenerated_systems " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -754,7 +765,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional  A B " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -786,7 +797,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -811,7 +822,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-forbidden " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -837,7 +848,7 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-forbidden " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         self._macsyfinder_run(args)
@@ -866,13 +877,13 @@ class Test(MacsyTest):
                f"--models-dir {self.find_data('models')} " \
                "-m functional T12SS-simple-exch " \
                "-o {out_dir} " \
-               "--index-dir {out_dir} " \
+               f"--index-dir {self._index_dir} " \
                f"--previous-run {expected_result_dir} " \
                "--relative-path"
         sequences_dir = self.find_data('base')
         self._macsyfinder_run(args)
 
-        self.assertTrue(os.path.exists(os.path.join(self.out_dir, "test_3.fasta.idx")))
+        self.assertTrue(os.path.exists(os.path.join(self._index_dir, "test_3.fasta.idx")))
 
 
     def test_working_dir_exists(self):
@@ -994,17 +1005,31 @@ class Test(MacsyTest):
 
 
     def _macsyfinder_run(self, args_tpl):
-        # get the name of the calling function
-        test_name = inspect.stack()[1].function
-        self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_{}'.format(test_name))
-        os.makedirs(self.out_dir)
-        args = args_tpl.format(out_dir=self.out_dir)
-        # print("\n############################################")
-        # print(args)
-        # print("##############################################")
-        System._id = itertools.count(1)
-        RejectedClusters._id = itertools.count(1)
-        macsyfinder.main(args=args.split(),
-                         loglevel='ERROR'
-                         )
-
+        try:
+            # get the name of the calling function
+            test_name = inspect.stack()[1].function
+            self.out_dir = os.path.join(self.tmp_dir, 'macsyfinder_{}'.format(test_name))
+            os.makedirs(self.out_dir)
+            args = args_tpl.format(out_dir=self.out_dir)
+            # print("\n############################################")
+            # print(args)
+            # print("##############################################")
+            System._id = itertools.count(1)
+            RejectedClusters._id = itertools.count(1)
+            macsyfinder.main(args=args.split(),
+                             loglevel='ERROR'
+                             )
+        except Exception as err:
+            import traceback
+            traceback.print_exc()
+            print(err)
+            # keep the directory
+            i = 0
+            new_name = self.out_dir + f'_keep_{err.__class__.__name__}_{i}'
+            while os.path.exists(new_name):
+                i += 1
+                new_name = self.out_dir + f'_keep_{err.__class__.__name__}_{i}'
+                if i > 20:
+                    break
+            shutil.copytree(self.out_dir, new_name)
+            shutil.copytree(self._index_dir, os.path.join(new_name, os.path.basename(self._index_dir)))
