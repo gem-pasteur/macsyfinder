@@ -1,11 +1,11 @@
 .. MacSyFinder - Detection of macromolecular systems in protein datasets
-    using systems modelling and similarity search.            
-    Authors: Sophie Abby, Bertrand Néron                                 
+    using systems modelling and similarity search.
+    Authors: Sophie Abby, Bertrand Néron
     Copyright © 2014-2022  Institut Pasteur (Paris),and CNRS.
-    See the COPYRIGHT file for details                                    
-    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3). 
-    See the COPYING file for details.  
-    
+    See the COPYRIGHT file for details
+    MacsyFinder is distributed under the terms of the GNU General Public License (GPLv3).
+    See the COPYING file for details.
+
 .. _helper_tool:
 
 ***********
@@ -20,7 +20,7 @@ macsyprofile
 To help develop new models we provide the tool `macsyprofile` which is to be used as post treatement.
 
 It is ran over a previous macsyfinder analysis:
- 
+
    * it extracts from raw HMMER output files the hits and computes the profile coverage for each of them.
    * it enables to filter the hits in a user-defined manner, to test other values of filtering parameters than those used with the MacSyFinder run.
    * it writes down the results in a file in `tsv` format `hmm_coverage.tsv`.
@@ -82,27 +82,27 @@ It is ran over a previous macsyfinder analysis:
 
     For more details, visit the MacSyFinder website and see the MacSyFinder documentation.
 
-For instance
+For instance:
 
 .. code-block:: shell
 
-    macsyprofile  macsyfinder-2021XXXX_XX-XX-XX
+    >macsyprofile  macsyfinder-2021XXXX_XX-XX-XX
 
 will analyse the HMMER raw outputs stored in `macsyfinder-2021XXXX_XX-XX-XX/hmmer_results` directory
-and the results wil be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
+and the results will be stored in `macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv` file
 
 
 Setting filtering parameters
 ----------------------------
 
-This helper tool is designed to help the user test the relevance of the HMM profiles used, what filtering parameters for HMMER to be used, and understand why some components might be unexpectedly missing from the MacSyFinder results. 
-This can thus help to improve the models - for instance for the genomic location parameters (is a component not found cause it should be listed as a `loner`?). 
+This helper tool is designed to help the user test the relevance of the HMM profiles used, what filtering parameters for HMMER to be used, and understand why some components might be unexpectedly missing from the MacSyFinder results.
+This can thus help to improve the models - for instance for the genomic location parameters (is a component not found cause it should be listed as a `loner`?).
 
-Therefore by default, the filtering parameters are very loose so that most hits found with HMMER will be reported, even the weakest ones. 
+Therefore by default, the filtering parameters are very loose so that most hits found with HMMER will be reported, even the weakest ones.
 
-However, it is possible to filter hits to be extracted based on the profile coverage with `--coverage-profile` or the i-evalue (`--i-evalue-sel`) to be a bit more stringent. 
+However, it is possible to filter hits to be extracted based on the profile coverage with `--coverage-profile` or the i-evalue (`--i-evalue-sel`) to be a bit more stringent.
 
-Also, it is possible to use the `--best-hits` in order to report only the best hit for a given protein sequence when several profiles were matching hit. 
+Also, it is possible to use the `--best-hits` in order to report only the best hit for a given protein sequence when several profiles were matching hit.
 
 
 Using patterns with "--pattern"
@@ -136,7 +136,7 @@ For instance:
 
 .. code-block:: text
 
-    macsyprofile --pattern 'ComM*'  macsyfinder-2021XXXX_XX-XX-XX
+    >macsyprofile --pattern 'ComM*'  macsyfinder-2021XXXX_XX-XX-XX
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comB.search_hmm.out
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comC.search_hmm.out
     parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEA.search_hmm.out
@@ -156,11 +156,38 @@ For instance:
 
     .. code-block:: text
 
-        macsyprofile --pattern 'ComM_com?C' -f macsyfinder-2021XXXX_XX-XX-XX
+        >macsyprofile --pattern 'ComM_com?C' -f macsyfinder-2021XXXX_XX-XX-XX
         parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comEC.search_hmm.out
         parsing macsyfinder-2021XXXX_XX-XX-XX/hmmer_results/ComM_comGC.search_hmm.out
         found 16 hits
         result is in 'macsyfinder-2021XXXX_XX-XX-XX/hmm_coverage.tsv'
+
+
+A useful example for modellers?
+-------------------------------
+
+.. code-block:: text
+
+    >macsyprofile --best-hits i_eval --i-evalue-sel 0.001 --coverage-profile 0.5 -o msf_GCF_003149495.1_ASM314949v1_tff-sf/hmm_coverage_best-hits_ieval_default_filter_MSF.tsv msf_GCF_003149495.1_ASM314949v1_tff-sf
+    found 221 hits
+    result is in 'msf_GCF_003149495.1_ASM314949v1_tff-sf/hmm_coverage_best-hits_ieval_default_filter_MSF.tsv'
+
+This command line might be useful to macsy-models modellers, as it consists in extracting all relevant hits that are used by
+the MacSyFinder engine to search systems, when using the default parameters:
+
+- the proteins are assigned with their best hits (i-evalue based) when they match several profiles (`--best-hits i_eval` option)
+- the default filtering parameters (i-evalue and profile coverage) are used (`--i-evalue-sel` and `--coverage-profile` options)
+
+By using this command line that lists all hits available for MacSyFinder to search for systems, one could be interested in
+comparing this list to the list of hits that end in being assigned to systems (listed e.g. in best_solution.tsv).
+This can help to determine why a component is missing from a system: is it because there are no good hits for it, or
+is it because it does not comply to the co-localization rules defined in the systems' model?
+
+
+
+
+Parsing macsyprofile outputs
+----------------------------
 
 The `macsyprofile` output is a tabulated separated values (`.tsv`) files
 The first lines which are comments (starting with '#') display the tool version
@@ -185,9 +212,11 @@ The first line of results is a header line.
         systems = pd.read_csv("path/to/hmm_coverage.tsv", sep='\t', comment='#')
 
 
+
+
 .. warning::
 
-    The `macsyprofile` is not compliant with results produced with `macsyfinder v1`.
+    The `macsyprofile` tool is not compliant with results produced with `macsyfinder v1`.
     If you get ``Cannot find models in conf file XXX. May be these results have been generated with an old version of macsyfinder.``
     Check the configuration file, if `[models]` section contains ``models_1 = XXX YYY`` remove the `_1` from models
     ``models = XXX YYY``
