@@ -208,6 +208,17 @@ class TestModelGene(MacsyTest):
         self.assertEqual(sctJ_FLG.model, model_foo)
 
 
+    def test_core_gene(self):
+        """
+        test getter/setter for core_gene property
+        """
+        model_foo = Model("foo", 10)
+        gene_name = 'sctJ_FLG'
+        c_gene = CoreGene(self.model_location, gene_name, self.profile_factory)
+        sctJ_FLG = ModelGene(c_gene, model_foo)
+        self.assertEqual(sctJ_FLG.core_gene, c_gene)
+
+
     def test_loner(self):
         """
         test getter for loner property

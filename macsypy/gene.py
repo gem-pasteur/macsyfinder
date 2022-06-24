@@ -223,6 +223,14 @@ class ModelGene:
         """
         return self._model
 
+    @property
+    def core_gene(self):
+        """
+        :return: The CoreGene associated to this ModelGene
+        :rtype: :class:`macsypy.gene.CoreGene` object
+        """
+        return self._gene
+
 
     @property
     def loner(self):
