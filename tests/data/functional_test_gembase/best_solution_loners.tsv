@@ -1,6 +1,6 @@
-# macsyfinder 20220317.dev
-# models : functional-0.0b2
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/gembase.fasta --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --replicon-topology circular -w 4 --relative-path -o functional_test_gembase
+# macsyfinder 20220624.dev
+# models : TFF-SF-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir /tmp/test_macsyfinder_index --relative-path -w 15
 # Loners found:
 replicon	model_fqn	function	gene_name	hit_id	hit_pos	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match
 GCF_000005845	TFF-SF/T4P	T4P_pilT	T4P_pilT	GCF_000005845_026740	2674	mandatory	326	1.100e-117	393.600	0.944	0.979	3	321

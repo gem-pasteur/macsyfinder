@@ -1,4 +1,4 @@
-# gene: T2SS_gspF extract from functional_test_gembase/hmmer_results/T2SS_gspF.search_hmm.out hmm output
+# gene: T2SS_gspF extract from ./macsyfinder-20220624_11-07-19/hmmer_results/T2SS_gspF.search_hmm.out hmm output
 # profile length= 335
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500

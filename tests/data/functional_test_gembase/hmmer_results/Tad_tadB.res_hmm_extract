@@ -1,4 +1,4 @@
-# gene: Tad_tadB extract from functional_test_gembase/hmmer_results/Tad_tadB.search_hmm.out hmm output
+# gene: Tad_tadB extract from ./macsyfinder-20220624_11-07-19/hmmer_results/Tad_tadB.search_hmm.out hmm output
 # profile length= 160
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500

@@ -1,4 +1,4 @@
-# gene: T4bP_pilT extract from functional_test_gembase/hmmer_results/T4bP_pilT.search_hmm.out hmm output
+# gene: T4bP_pilT extract from ./macsyfinder-20220624_11-07-19/hmmer_results/T4bP_pilT.search_hmm.out hmm output
 # profile length= 334
 # i_evalue threshold= 0.001
 # coverage threshold= 0.500
