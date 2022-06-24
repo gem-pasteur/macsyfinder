@@ -35,6 +35,7 @@ import shutil
 import os.path
 from .report import GembaseHMMReport, GeneralHMMReport, OrderedHMMReport
 from .utils import threads_available
+from .database import Indexes
 
 
 def search_genes(genes, cfg):
@@ -46,7 +47,7 @@ def search_genes(genes, cfg):
     in the command-line with the "-w" option.
 
     :param genes: the genes to search in the input sequence dataset
-    :type genes: list of :class:`macsypy.gene.CoreGene` objects
+    :type genes: list of :class:`macsypy.gene.ModelGene` objects
     :param cfg: the configuration object
     :type cfg: :class:`macsypy.config.Config` object
     """
@@ -116,9 +117,9 @@ def search_genes(genes, cfg):
 
     # there is only one instance of gene per name but the same instance can be
     # in all genes several times
-    # hmmsearch and extract should be execute only once per run
-    # so I uniquify the list of gene
-    genes = set(genes)
+    # hmmsearch and extract should be executed ONLY ONCE per run
+    # so I uniquify the list of gene (use CoreGene and set)
+    genes = {mg.core_gene for mg in genes}
     _log.debug("start searching genes")
 
     hmmer_dir = os.path.join(cfg.working_dir(), cfg.hmmer_dir())
@@ -126,6 +127,10 @@ def search_genes(genes, cfg):
         # it works because mkdir is an atomic operation
         os.mkdir(hmmer_dir)
 
+    # ensure that the indexes is build only once
+    # So threads just have to read
+    idx = Indexes(cfg)
+    idx.build()
     previous_run = cfg.previous_run()
     with concurrent.futures.ThreadPoolExecutor(max_workers=worker_nb) as executor:
         future_search = []

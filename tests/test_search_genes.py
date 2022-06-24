@@ -31,7 +31,8 @@ import argparse
 
 import macsypy
 from macsypy.config import Config, MacsyDefaults
-from macsypy.gene import CoreGene
+from macsypy.model import Model
+from macsypy.gene import CoreGene, ModelGene
 from macsypy.hit import CoreHit
 from macsypy.registries import ModelLocation
 from macsypy.profile import ProfileFactory
@@ -80,11 +81,24 @@ class TestSearchGenes(MacsyTest):
             pass
 
 
+    def test_search_fail(self):
+        gene_name = "abc"
+        c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
+        with self.assertRaises(AttributeError) as ctx:
+            search_genes([c_gene_abc], self.cfg)
+        self.assertEqual(str(ctx.exception),
+                         "'CoreGene' object has no attribute 'core_gene'")
+
+
     @unittest.skipIf(not which('hmmsearch'), 'hmmsearch not found in PATH')
     def test_search(self):
         gene_name = "abc"
+        model_foo = Model("foo", 10)
+        model_bar = Model("bar", 10)
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
-        report = search_genes([c_gene_abc], self.cfg)
+        mg_abc_1 = ModelGene(c_gene_abc, model_foo)
+        mg_abc_2 = ModelGene(c_gene_abc, model_bar)
+        report = search_genes([mg_abc_1, mg_abc_2], self.cfg)
         expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
                                 26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
                                 )]
@@ -96,8 +110,10 @@ class TestSearchGenes(MacsyTest):
     def test_search_recover(self):
         # first job searching using hmmsearch
         gene_name = "abc"
+        model_foo = Model("foo", 10)
         c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
-        report = search_genes([c_gene_abc], self.cfg)
+        mg_abc_1 = ModelGene(c_gene_abc, model_foo)
+        report = search_genes([mg_abc_1], self.cfg)
         expected_hit = [CoreHit(c_gene_abc, "ESCO030p01_000260", 706, "ESCO030p01",
                                 26, float(1.000e-200), float(660.800), float(1.000), float(0.714), 160, 663
                                 )]
@@ -114,7 +130,6 @@ class TestSearchGenes(MacsyTest):
         # rerun with previous run
         # but we have to reset the profile attached to the gene gene._profile._report
         self.profile_factory = ProfileFactory(self.cfg)
-        c_gene_abc = CoreGene(self.model_location, gene_name, self.profile_factory)
-        report = search_genes([c_gene_abc], self.cfg)
+        report = search_genes([mg_abc_1], self.cfg)
         self.assertEqual(len(report), 1)
         self.assertEqual(expected_hit[0], report[0].hits[0])
