@@ -194,7 +194,8 @@ class HMMReport(metaclass=abc.ABCMeta):
         :type db: dict
         """
         idx = Indexes(self.cfg)
-        idx.build()
+        # the indexes are already build
+        # just use them
         for seqid, length, rank in idx:
             if seqid in db:
                 db[seqid] = (int(length), int(rank))
