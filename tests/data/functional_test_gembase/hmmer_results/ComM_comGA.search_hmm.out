@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/ComM_comGA.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         functional_test_gembase/hmmer_results/ComM_comGA.search_hmm.out
+# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/ComM_comGA.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1160,7 +1160,7 @@ Passed Vit filter:                       394  (0.0130775); expected 30.1 (0.001)
 Passed Fwd filter:                        72  (0.0023898); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):              57  [number of targets reported over threshold]
-# CPU time: 0.20u 0.00s 00:00:00.20 Elapsed: 00:00:00.21
-# Mc/sec: 11626.72
+# CPU time: 0.22u 0.00s 00:00:00.22 Elapsed: 00:00:00.22
+# Mc/sec: 11098.23
 //
 [ok]

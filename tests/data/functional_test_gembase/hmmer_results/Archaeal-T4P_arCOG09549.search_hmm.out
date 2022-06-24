@@ -5,7 +5,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # query HMM file:                  tests/data/models/TFF-SF/profiles/Archaeal-T4P_arCOG09549.hmm
 # target sequence database:        tests/data/base/gembase.fasta
-# output directed to file:         functional_test_gembase/hmmer_results/Archaeal-T4P_arCOG09549.search_hmm.out
+# output directed to file:         ./macsyfinder-20220624_11-07-19/hmmer_results/Archaeal-T4P_arCOG09549.search_hmm.out
 # sequence reporting threshold:    E-value <= 0.1
 # number of worker threads:        0
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -71,7 +71,7 @@ Passed Vit filter:                        65  (0.00215746); expected 30.1 (0.001
 Passed Fwd filter:                         2  (6.63834e-05); expected 0.3 (1e-05)
 Initial search space (Z):              30128  [actual number of targets]
 Domain search space  (domZ):               2  [number of targets reported over threshold]
-# CPU time: 0.14u 0.00s 00:00:00.14 Elapsed: 00:00:00.14
-# Mc/sec: 24199.80
+# CPU time: 0.16u 0.00s 00:00:00.16 Elapsed: 00:00:00.17
+# Mc/sec: 19929.24
 //
 [ok]

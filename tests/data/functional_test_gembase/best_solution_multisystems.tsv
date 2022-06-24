@@ -1,4 +1,4 @@
-# macsyfinder 20220317.dev
-# models : functional-0.0b2
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/gembase.fasta --db-type gembase --models-dir tests/data/models/ --models TFF-SF all --replicon-topology circular -w 4 --relative-path -o functional_test_gembase
+# macsyfinder 20220624.dev
+# models : TFF-SF-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type gembase --sequence-db tests/data/base/gembase.fasta --models-dir tests/data/models/ --models TFF-SF all --index-dir /tmp/test_macsyfinder_index --relative-path -w 15
 # No Multisystems found
