@@ -64,7 +64,6 @@ class TestMacsyprofile(MacsyTest):
                 logger.removeHandler(handler)
 
 
-
     def test_pasre_args(self):
         cmd = f"macsyprofile {self.previous_run}"
         args = macsyprofile.parse_args(cmd.split()[1:])
