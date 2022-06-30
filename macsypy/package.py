@@ -28,6 +28,7 @@ This module allow to manage Packages of MacSyFinder models
 
 import os
 import abc
+import ssl
 import tempfile
 import urllib.request
 import urllib.parse
@@ -37,6 +38,7 @@ import tarfile
 import copy
 from typing import List, Dict, Tuple, Optional
 
+import certifi
 import yaml
 import colorlog
 _log = colorlog.getLogger(__name__)
@@ -129,6 +131,7 @@ class RemoteModelIndex(AbstractModelIndex):
         super().__init__(cache=cache)
         self.org_name = urllib.parse.quote(org)
         self.base_url: str = "https://api.github.com"
+        self._context = ssl.create_default_context(cafile=certifi.where())
         if not self.remote_exists():
             raise ValueError(f"the '{self.org_name}' organization does not exist.")
 
@@ -141,7 +144,7 @@ class RemoteModelIndex(AbstractModelIndex):
         :return: the json corresponding to the response url
         """
         try:
-            req = urllib.request.urlopen(url).read()
+            req = urllib.request.urlopen(url, context=self._context).read()
         except urllib.error.HTTPError as err:
             if err.code == 403:
                 raise MacsyDataLimitError("You reach the maximum number of request per hour to github.\n"
