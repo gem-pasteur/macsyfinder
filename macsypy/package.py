@@ -196,7 +196,7 @@ class RemoteModelIndex(AbstractModelIndex):
         vers = urllib.parse.quote(vers)
         metadata_url = f"https://raw.githubusercontent.com/{self.org_name}/{pack_name}/{vers}/metadata.yml"
         try:
-            with urllib.request.urlopen(metadata_url) as response:
+            with urllib.request.urlopen(metadata_url, context=self._context) as response:
                 metadata = response.read().decode("utf-8")
         except urllib.error.HTTPError as err:
             if 400 < err.code < 500:
@@ -267,7 +267,7 @@ class RemoteModelIndex(AbstractModelIndex):
         else:
             tmp_archive_path = os.path.join(dest, f"{pack_name}-{vers}.tar.gz")
         try:
-            with urllib.request.urlopen(url) as response, open(tmp_archive_path, 'wb') as out_file:
+            with urllib.request.urlopen(url, context=self._context) as response, open(tmp_archive_path, 'wb') as out_file:
                 shutil.copyfileobj(response, out_file)
         except urllib.error.HTTPError as err:
             if 400 <= err.code < 500:
