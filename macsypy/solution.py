@@ -89,7 +89,7 @@ class Solution:
 
     @property
     def hits_positions(self):
-        """The list of position of all hits of the soltution"""
+        """The list of position of all hits of the solution"""
         return self._hits_positions
 
     def __len__(self):
