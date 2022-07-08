@@ -364,11 +364,11 @@ class DefinitionParser:
         :rtype: :class:`macsypy.gene.Exchangeable` object
         """
         name = gene_node.get("name")
-        family_name, model_name = split_def_name(curr_model.fqn)
+        family_name = curr_model.family_name
         try:
             attrs = self._parse_gene_attrs(gene_node)
         except SyntaxError as err:
-            msg = f"Invalid model definition '{model_name}': {err}"
+            msg = f"Invalid model definition '{curr_model.fqn}': {err}"
             _log.critical(msg)
             raise SyntaxError(msg)
 
