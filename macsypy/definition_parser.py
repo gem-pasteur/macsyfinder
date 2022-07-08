@@ -327,7 +327,7 @@ class DefinitionParser:
             try:
                 attrs = self._parse_gene_attrs(gene_node)
             except SyntaxError as err:
-                msg = f"Invalid model definition '{model.name}': {err}"
+                msg = f"Invalid model definition '{model.fqn}': {err}"
                 _log.critical(msg)
                 raise SyntaxError(msg)
             new_gene = ModelGene(self.gene_bank[(model.family_name, name)], model, **attrs)
@@ -344,7 +344,7 @@ class DefinitionParser:
             if presence in model.gene_category:
                 getattr(model, f'add_{presence}_gene')(new_gene)
             else:
-                msg = f"Invalid model '{model.name}' definition: presence value must be either: " \
+                msg = f"Invalid model '{model.fqn}' definition: presence value must be either: " \
                       f"""{', '.join(["'{}'".format(c) for c in model.gene_category])} not {presence}"""
                 _log.error(msg)
                 raise SyntaxError(msg)
