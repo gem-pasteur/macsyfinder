@@ -53,7 +53,11 @@ class TestMacsydata(MacsyTest):
         macsydata._log = macsydata.init_logger(20)  # 20 logging.INFO
         self.definition_1 = """<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="flgB" presence="mandatory"/>
-    <gene name="flgC" presence="mandatory" inter_gene_max_space="2"/>
+    <gene name="flgC" presence="mandatory" inter_gene_max_space="2">
+        <exchangeables>
+            <gene name="abc" />
+        </exchangeables>
+    </gene>
 </model>"""
         self.definition_2 = """<model inter_gene_max_space="20" min_mandatory_genes_required="1" min_genes_required="2" vers="2.0">
     <gene name="fliE" presence="mandatory" multi_system="True"/>
@@ -93,7 +97,7 @@ class TestMacsydata(MacsyTest):
         if profiles:
             profile_dir = os.path.join(pack_path, 'profiles')
             os.mkdir(profile_dir)
-            for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC'):
+            for name in ('flgB', 'flgC', 'fliE', 'tadZ', 'sctC', 'abc'):
                 open(os.path.join(profile_dir, f"{name}.hmm"), 'w').close()
         if metadata:
             meta_file = self.find_data('pack_metadata', 'good_metadata.yml')
