@@ -85,9 +85,13 @@ class TestMacsydata(MacsyTest):
         if definitions:
             def_dir = os.path.join(pack_path, 'definitions')
             os.mkdir(def_dir)
-            with open(os.path.join(def_dir, "model_1.xml"), 'w') as f:
+            sub_fam_1 = os.path.join(def_dir, 'sub_fam_1')
+            os.mkdir(sub_fam_1)
+            sub_fam_2 = os.path.join(def_dir, 'sub_fam_2')
+            os.mkdir(sub_fam_2)
+            with open(os.path.join(sub_fam_1, "model_1.xml"), 'w') as f:
                 f.write(self.definition_1)
-            with open(os.path.join(def_dir, "model_2.xml"), 'w') as f:
+            with open(os.path.join(sub_fam_2, "model_2.xml"), 'w') as f:
                 f.write(self.definition_2)
 
         if profiles:
@@ -438,10 +442,10 @@ To cite MacSyFinder:
         finally:
             macsydata._find_installed_package = find_local_package
 
-        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+        expected_output = f"""<!-- fake_1/sub_fam_1/model_1 {fake_pack_path}/definitions/sub_fam_1/model_1.xml -->
 {self.definition_1}
 
-<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+<!-- fake_1/sub_fam_2/model_2 {fake_pack_path}/definitions/sub_fam_2/model_2.xml -->
 {self.definition_2}"""
         self.assertEqual(expected_output,
                          stdout)
@@ -449,7 +453,7 @@ To cite MacSyFinder:
 
     def test_definition_one_def(self):
         pack_name = 'fake_1'
-        self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.model = [pack_name, 'sub_fam_1/model_1', 'sub_fam_2/model_2']
         self.args.models_dir = None
         fake_pack_path = self.create_fake_package(pack_name)
 
@@ -462,10 +466,10 @@ To cite MacSyFinder:
         finally:
             macsydata._find_installed_package = find_local_package
 
-        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+        expected_output = f"""<!-- fake_1/sub_fam_1/model_1 {fake_pack_path}/definitions/sub_fam_1/model_1.xml -->
 {self.definition_1}
 
-<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+<!-- fake_1/sub_fam_2/model_2 {fake_pack_path}/definitions/sub_fam_2/model_2.xml -->
 {self.definition_2}"""
 
         self.assertEqual(expected_output,
@@ -475,19 +479,18 @@ To cite MacSyFinder:
     def test_definition_models_dir(self):
         pack_name = 'fake_1'
         fake_pack_path = self.create_fake_package(pack_name, dest='model_dir')
-        self.args.model = [pack_name, 'model_1', 'model_2']
+        self.args.model = [pack_name, 'sub_fam_1/model_1', 'sub_fam_2/model_2']
         self.args.models_dir = os.path.dirname(fake_pack_path)
 
         with self.catch_io(out=True):
             macsydata.do_show_definition(self.args)
             stdout = sys.stdout.getvalue().strip()
 
-        expected_output = f"""<!-- fake_1/model_1 {fake_pack_path}/definitions/model_1.xml -->
+        expected_output = f"""<!-- fake_1/sub_fam_1/model_1 {fake_pack_path}/definitions/sub_fam_1/model_1.xml -->
 {self.definition_1}
 
-<!-- fake_1/model_2 {fake_pack_path}/definitions/model_2.xml -->
+<!-- fake_1/sub_fam_2/model_2 {fake_pack_path}/definitions/sub_fam_2/model_2.xml -->
 {self.definition_2}"""
-
         self.assertEqual(expected_output,
                          stdout)
 
