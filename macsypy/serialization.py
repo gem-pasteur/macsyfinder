@@ -395,4 +395,5 @@ class TsvRejectedCluster:
                           f"{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
                           f"{reasons}\n"
                     s += row
+                s += '\n'
         return s
