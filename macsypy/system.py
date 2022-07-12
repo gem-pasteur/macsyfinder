@@ -773,7 +773,7 @@ class RejectedClusters(AbstractClusterizedHits):
         """
 
         :return: The list of all hits that compose this system
-        :rtype: [:class:`macsypy.hit.ValidHits` , ... ]
+        :rtype: [:class:`macsypy.hit.ModelHit` , ... ]
         """
         hits = self._sort_hits([h for cluster in self.clusters for h in cluster.hits])
         return hits
