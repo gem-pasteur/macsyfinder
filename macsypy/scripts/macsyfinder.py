@@ -58,7 +58,7 @@ from macsypy.model import ModelBank
 from macsypy.gene import GeneBank
 from macsypy.solution import find_best_solutions, combine_clusters, combine_multisystems
 from macsypy.serialization import TxtSystemSerializer, TxtLikelySystemSerializer, TxtUnikelySystemSerializer, \
-    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer
+    TsvSystemSerializer, TsvSolutionSerializer, TsvLikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCluster
 
 
 def get_version_message():
@@ -914,6 +914,20 @@ def rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, cls
         print("# No Rejected clusters", file=clst_file)
 
 
+def rejected_clst_to_tsv(models_fam_name, models_version, rejected_clusters, clst_file):
+    """
+
+    """
+    print(_outfile_header(models_fam_name, models_version), file=clst_file)
+    if rejected_clusters:
+        serializer = TsvRejectedCluster()
+        rej_clst = serializer.serialize(rejected_clusters)
+        print("# Rejected Clusters found:", file=clst_file)
+        print(rej_clst, file=clst_file)
+    else:
+        print("# No Rejected clusters", file=clst_file)
+
+
 def likely_systems_to_txt(models_fam_name, models_version, likely_systems, hit_system_tracker, sys_file):
     """
     print likely systems occurrences (from unordered replicon)
@@ -1119,6 +1133,10 @@ def main(args=None, loglevel=None):
             rejected_clst_to_txt(models_fam_name, models_version, rejected_clusters, clst_file)
         if not (all_systems or rejected_clusters):
             logger.info("No Systems found in this dataset.")
+
+        cluster_filename = os.path.join(config.working_dir(), "rejected_clusters.tsv")
+        with open(cluster_filename, "w") as clst_file:
+            rejected_clst_to_tsv(models_fam_name, models_version, rejected_clusters, clst_file)
 
         tsv_filename = os.path.join(config.working_dir(), "all_best_solutions.tsv")
         with open(tsv_filename, "w") as tsv_file:
