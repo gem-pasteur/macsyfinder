@@ -93,7 +93,7 @@ class TestRemoteModelIndex(MacsyTest):
         except:
             pass
 
-    def mocked_requests_get(url):
+    def mocked_requests_get(url, context=None):
         class MockResponse:
             def __init__(self, data, status_code):
                 self.data = io.BytesIO(bytes(data.encode("utf-8")))
