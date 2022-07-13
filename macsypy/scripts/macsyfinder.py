@@ -923,7 +923,7 @@ def rejected_clst_to_tsv(models_fam_name, models_version, rejected_clusters, cls
         serializer = TsvRejectedCluster()
         rej_clst = serializer.serialize(rejected_clusters)
         print("# Rejected Clusters found:", file=clst_file)
-        print(rej_clst, file=clst_file)
+        print(rej_clst, file=clst_file, end='')
     else:
         print("# No Rejected clusters", file=clst_file)
 
