@@ -68,8 +68,9 @@ headers are provided with the content of the lines in the file.
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
     under the form of a tabulated file in `all_systems.tsv`.
 
-  * :ref:`rejected_clusters.txt<rejected_clusters_file>` - This file lists candidate clusters of systems' components that were rejected by
-    MacSyFinder during the search process, and were thus not assigned to a candidate system.
+  * :ref:`rejected_clusters.txt<rejected_clusters_txt>` - This file lists candidate clusters of systems' components that were rejected by
+    MacSyFinder during the search process, and were thus not assigned to a candidate system. This set of clusters are also given under the form of tabulated file
+    :ref:`rejected_clusters.tsv<rejected_clusters_tsv>`.
 
   * :ref:`all_best_solutions.tsv<best_solution_tsv>` - This file contains all possible best solutions under the form of a per-component, tabulated report file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
@@ -429,23 +430,28 @@ This file give an overview of all hits identified as multi-systems in the best_s
        :language: text
 
 
-.. _rejected_clusters_file:
+.. _rejected_clusters_txt:
 
 rejected_clusters.txt
 ---------------------
 
-This file records all clusters or cluster combinations (if the "multi_loci" search mode is on) which have been discarded and the reason
-why they were not selected as systems.
+This file records all clusters or cluster combinations (if the "multi_loci" search mode is on)
+which have been discarded and the reason why they were not selected as systems.
 
 The header is composed of the MacSyFinder version and the command line used
 followed by the description of the cluster(s). The list of the hits composing the cluster is presented
 at the end of the cluster or clusters' combination, followed by the reason why it has been discarded.
 
+.. note::
+
+    This file is in human readable format. If you need to parse the information about rejected clusters,
+    use the tsv formatted file rejected_clusters.tsv
+
 .. code-block:: text
 
     # macsyfinder 20200511.dev
     # models : TFF-SF-0.1b
-    # /macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
+    # macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
     # Rejected clusters:
 
     Cluster:
@@ -470,8 +476,39 @@ at the end of the cluster or clusters' combination, followed by the reason why i
     ============================================================
 
 
+.. _rejected_clusters_tsv:
 
+rejected_clusters.tsv
+---------------------
 
+This file contains same information as `rejected_clusters.txt` but in tsv format, so it's more convenient to parse it.
+for instance with python and `pandas <https://pandas.pydata.org/>`_ library.::
+
+    import pandas as pd
+    pd.read_csv("path/to/rejected_clusters.tsv", sep-'\t', comment='#')
+
+As other file the first lines are comments and provides informations to indicate how this file has been produced.
+
+    - the macsyfinder version
+    - the model package and version used
+    - the command line used
+
+then the following information separated by 'tabulation' character '\t'
+
+    * **cluster_id** - An unique identifier of the cluster (for this run)
+    * **replicon** - The name of the replicon
+    * **model_fqn** - The model fully-qualified name
+    * **hit_id** - The identifier of the hit (as indicate in hmmer output)
+    * **hit_pos** - The position of the sequence in the replicon
+    * **gene_name** - The name of the component identified by the hit
+    * **function** - The name of the gene for which it it fulfill the function.
+    * **reasons** - The reasons why this cluster has been discarded. ther can be several reasons, in this case each reason are separated by '/'.
+
+Example of `rejected_clusters.tsv`
+
+.. literalinclude:: ../_static/rejected_clusters.tsv
+   :language: text
+   :lines:  1-15
 
 
 .. _unordered_outputs:
