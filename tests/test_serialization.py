@@ -33,10 +33,10 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered, RejectedClusters
 from macsypy.solution import Solution
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
-    TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer
+    TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCluster
 
 from tests import MacsyTest
 
@@ -516,3 +516,89 @@ Use ordered replicon to have better prediction.
         expected_txt += "\n"
         self.maxDiff = None
         self.assertEqual(txt, expected_txt)
+
+
+    def test_RejectedClusters_tsv(self):
+        args = argparse.Namespace()
+        args.sequence_db = self.find_data("base", "test_1.fasta")
+        args.db_type = 'gembase'
+        args.models_dir = self.find_data('models')
+        args.res_search_dir = "blabla"
+
+        cfg = Config(MacsyDefaults(), args)
+        model_name = 'foo'
+        models_location = ModelLocation(path=os.path.join(args.models_dir, model_name))
+        profile_factory = ProfileFactory(cfg)
+
+        model = Model("foo/T2SS", 11)
+
+        gene_name = "gspD"
+        c_gene_gspd = CoreGene(models_location, gene_name, profile_factory)
+        gene_1 = ModelGene(c_gene_gspd, model)
+        gene_name = "sctC"
+        c_gene_sctc = CoreGene(models_location, gene_name, profile_factory)
+        gene_2 = ModelGene(c_gene_sctc, model)
+        gene_name = 'tadZ'
+        c_gene_tadz = CoreGene(models_location, gene_name, profile_factory)
+        gene_3 = ModelGene(c_gene_tadz, model)
+        gene_name = 'abc'
+        c_gene_abc = CoreGene(models_location, gene_name, profile_factory)
+        gene_4 = Exchangeable(c_gene_abc, gene_3)
+        gene_3.add_exchangeable(gene_4)
+
+        model.add_mandatory_gene(gene_1)
+        model.add_accessory_gene(gene_2)
+        model.add_accessory_gene(gene_3)
+
+        #     CoreHit(gene, hit_id, hit_seq_length, replicon_name, position, i_eval, score,
+        #         profile_coverage, sequence_coverage, begin_match, end_match
+        h10 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 10, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        mh_10 = ModelHit(h10, gene_1, GeneStatus.MANDATORY)
+        h20 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 20, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        mh_20 = ModelHit(h20, gene_2, GeneStatus.ACCESSORY)
+        h40 = CoreHit(c_gene_gspd, "h10", 10, "replicon_1", 40, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        mh_40 = ModelHit(h40, gene_1, GeneStatus.MANDATORY)
+        h50 = CoreHit(c_gene_sctc, "h20", 10, "replicon_1", 50, 1.0, 20.0, 1.0, 1.0, 10, 20)
+        mh_50 = ModelHit(h50, gene_2, GeneStatus.ACCESSORY)
+        h60 = CoreHit(c_gene_gspd, "h60", 10, "replicon_1", 60, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        mh_60 = ModelHit(h60, gene_1, GeneStatus.MANDATORY)
+        h70 = CoreHit(c_gene_abc, "h70", 10, "replicon_1", 70, 1.0, 10.0, 1.0, 1.0, 10, 20)
+        mh_70 = ModelHit(h70, gene_4, GeneStatus.ACCESSORY)
+
+        hit_weights = HitWeight(**cfg.hit_weights())
+        c1 = Cluster([mh_10, mh_20], model, hit_weights)
+        c2 = Cluster([mh_40, mh_50], model, hit_weights)
+        c3 = Cluster([mh_60, mh_70], model, hit_weights)
+
+        r_c1 = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
+
+        r_c2 = RejectedClusters(model, [c2, c3], ["reason One", "reason Two"])
+
+        model_fam_name = 'foo'
+        model_vers = '0.0b2'
+
+        ser = TsvRejectedCluster()
+        tsv = ser.serialize([r_c1, r_c2])
+
+        expected_tsv = '\t'.join(['cluster_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject this clusters'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject this clusters'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject this clusters'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject this clusters'])
+        expected_tsv += '\n'
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'reason One/reason Two'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'reason One/reason Two'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h60', '60', 'gspD', 'gspD', 'reason One/reason Two'])
+        expected_tsv += '\n'
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h70', '70', 'abc', 'tadZ', 'reason One/reason Two'])
+        expected_tsv += '\n'
+        expected_tsv += '\n'
+
+        self.assertEqual(expected_tsv, tsv)
