@@ -735,14 +735,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
                                    help="The name of Model orgagnization"
                                         "(default 'macsy-models'))"
                                    )
-    install_subparser.add_argument('-u', '--user',
-                                   action='store_true',
-                                   default=False,
-                                   help='Install to the MacSYFinder user install directory for your platform. '
-                                        'Typically ~/.macsyfinder/data')
-    install_subparser.add_argument('-t', '--target', '--models-dir',
-                                   dest='target',
-                                   help='Install packages into <TARGET> dir instead in canonical location')
+    install_dest = install_subparser.add_mutually_exclusive_group()
+    install_dest.add_argument('-u', '--user',
+                              action='store_true',
+                              default=False,
+                              help='Install to the MacSYFinder user install directory for your platform. '
+                                   'Typically ~/.macsyfinder/data')
+    install_dest.add_argument('-t', '--target', '--models-dir',
+                              dest='target',
+                              help='Install packages into <TARGET> dir instead in canonical location')
+
     install_subparser.add_argument('-U', '--upgrade',
                                    action='store_true',
                                    default=False,
