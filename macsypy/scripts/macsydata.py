@@ -353,6 +353,8 @@ def do_install(args: argparse.Namespace) -> None:
             os.makedirs(dest)
     elif args.target:
         dest = args.target
+    elif 'VIRTUAL_ENV' in os.environ:
+        dest = os.path.join(os.environ['VIRTUAL_ENV'], 'share', 'macsyfinder', 'models')
     else:
         defaults = MacsyDefaults()
         config = Config(defaults, argparse.Namespace())
@@ -372,6 +374,7 @@ for the system wide models installation please refer to the documentation.
             raise ValueError() from None
         else:
             dest = config.models_dir()[0]
+    
     if inst_pack_loc:
         old_pack_path = f"{inst_pack_loc.path}.old"
         shutil.move(inst_pack_loc.path, old_pack_path)
