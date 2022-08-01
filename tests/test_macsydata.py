@@ -69,7 +69,8 @@ class TestMacsydata(MacsyTest):
     def tearDown(self):
         macsydata.RemoteModelIndex.remote_exists = self._remote_exists
         try:
-            shutil.rmtree(self.tmpdir)
+            #shutil.rmtree(self.tmpdir)
+            pass
         except:
             pass
         # some function in macsydata script suppress the traceback
@@ -174,10 +175,13 @@ class TestMacsydata(MacsyTest):
         pack_name = "nimportnaoik"
         self.args.package = pack_name
         self.args.models_dir = None
-        with self.catch_log(log_name='macsydata') as log:
-            with self.assertRaises(ValueError):
-                macsydata.do_info(self.args)
-            log_msg = log.get_value()
+        with self.catch_log(log_name='macsypy'):
+            # macsypy.registry throw a warning if metadata is not found
+            # silenced it
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_info(self.args)
+                log_msg = log.get_value()
         self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
 
         pack_name = "fake_pack"
@@ -366,11 +370,12 @@ copyright: 2019, Institut Pasteur, CNRS"""
         pack_name = "nimportnaoik"
         self.args.package = pack_name
         self.args.models_dir = None
-        with self.catch_log(log_name='macsydata') as log:
-            with self.assertRaises(ValueError):
-                macsydata.do_cite(self.args)
-            log_msg = log.get_value()
-        self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
+        with self.catch_log(log_name='macsypy'):
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_cite(self.args)
+                log_msg = log.get_value()
+            self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
 
         pack_name = "fake_pack"
         self.args.package = pack_name
@@ -405,10 +410,13 @@ To cite MacSyFinder:
         pack_name = "nimportnaoik"
         self.args.package = pack_name
         self.args.models_dir = None
-        with self.catch_log(log_name='macsydata') as log:
-            with self.assertRaises(ValueError):
-                macsydata.do_help(self.args)
-            log_msg = log.get_value()
+        with self.catch_log(log_name='macsypy'):
+            # macsypy.registry throw a warning if metadata is not found
+            # silenced it
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError):
+                    macsydata.do_help(self.args)
+                log_msg = log.get_value()
         self.assertEqual(log_msg.strip(), f"Models '{pack_name}' not found locally.")
 
         pack_name = "fake_pack"
@@ -520,10 +528,13 @@ To cite MacSyFinder:
         pack_name = 'nimportnaoik'
         self.args.model = [pack_name]
         self.args.models_dir = None
-        with self.catch_log(log_name='macsydata') as log:
-            with self.assertRaises(ValueError) as ctx:
-                macsydata.do_show_definition(self.args)
-            log_msg = log.get_value().strip()
+        with self.catch_log(log_name='macsypy'):
+            # macsypy.registry throw a warning if metadata is not found
+            # silenced it
+            with self.catch_log(log_name='macsydata') as log:
+                with self.assertRaises(ValueError) as ctx:
+                    macsydata.do_show_definition(self.args)
+                log_msg = log.get_value().strip()
 
         self.assertEqual(log_msg, f"Package '{pack_name}' not found.")
 
@@ -691,6 +702,7 @@ Available versions: 1.0"""
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
         arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
@@ -704,7 +716,7 @@ Available versions: 1.0"""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -793,6 +805,7 @@ Available versions: 1.0"""
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
         arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
@@ -806,7 +819,7 @@ Available versions: 1.0"""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -829,6 +842,7 @@ To force installation use option -f --force-reinstall."""
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         unarch_pack_path = self.create_fake_package(pack_name, dest='tmp')
         arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
@@ -842,7 +856,7 @@ To force installation use option -f --force-reinstall."""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -873,10 +887,12 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         unarch_pack_path = self.create_fake_package(pack_name, metadata=False, dest='tmp')
         arch_path = f"{os.path.join(macsydata_tmp, pack_name)}-{pack_vers}.tar.gz"
 
+        # create a archive of the fake pack
         with tarfile.open(arch_path, "w:gz") as arch:
             arch.add(unarch_pack_path, arcname=pack_name)
         shutil.rmtree(unarch_pack_path)
@@ -886,7 +902,7 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
         self.args.user = False
         self.args.upgrade = False
         self.args.force = False
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         macsydata.Config.models_dir = lambda x: self.models_dir
         try:
@@ -897,6 +913,8 @@ The models {pack_name} ({pack_vers}) have been installed successfully."""
                 # silenced it
                 with self.catch_log(log_name='macsydata') as log:
                     with self.assertRaises(RuntimeError):
+                        # try to install again
+                        # but find a corrupted package at the destination
                         macsydata.do_install(self.args)
                     msg_log = log.get_value().strip()
                 expected_log = f"""{pack_name} locally installed is corrupted.
@@ -913,6 +931,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         self.args.package = pack_name
         self.args.cache = macsydata_cache
@@ -920,7 +939,7 @@ You can fix it by removing '{os.path.join(self.models_dir[0], pack_name)}'."""
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         # functions which do net operations
         # so we need to mock them
@@ -1034,6 +1053,7 @@ To force installation use option -f --force-reinstall.""")
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         self.create_fake_package(pack_name, dest='models')
 
@@ -1043,7 +1063,7 @@ To force installation use option -f --force-reinstall.""")
         self.args.upgrade = False
         self.args.force = True
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         # function which doing net operations
         # so we need to mock them
@@ -1161,6 +1181,7 @@ To downgrade to 0.0b1 use option -f --force-reinstall.""")
         os.mkdir(macsydata_cache)
         macsydata_tmp = os.path.join(self.tmpdir, 'tmp')
         os.mkdir(macsydata_tmp)
+        macsydata_dest = os.path.join(self.tmpdir, 'models')
 
         os.chmod(self.models_dir[0], 0o111)
 
@@ -1170,7 +1191,7 @@ To downgrade to 0.0b1 use option -f --force-reinstall.""")
         self.args.upgrade = False
         self.args.force = False
         self.args.org = 'macsy-foo-bar'  # to be sure that the network function are mocked
-        self.args.target = None
+        self.args.target = macsydata_dest
 
         # functions which do net operations
         # so we need to mock them
