@@ -191,17 +191,18 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
                       skip_until=lambda l: l.startswith('sol_id'),
                       comment='#')
 
-    for filename_to_merge, ext, header in [('best_solution', 'tsv', 'Systems'),
-                                           ('all_systems', 'tsv', 'Systems'),
-                                           ('best_solution_multisystems', 'tsv', 'Multisystems'),
-                                           ('best_solution_loners', 'tsv', 'Loners'),
+    for filename_to_merge, ext, header, first_col in [('best_solution', 'tsv', 'Systems', 'replicon'),
+                                           ('all_systems', 'tsv', 'Systems', 'replicon'),
+                                           ('best_solution_multisystems', 'tsv', 'Multisystems', 'replicon'),
+                                           ('best_solution_loners', 'tsv', 'Loners', 'replicon'),
+                                           ('rejected_candidates', 'tsv', 'Rejected', 'candidate_id'),
                                            ]:
         out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
         _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
         best_solution_files = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
         merge_files(best_solution_files, out_file, header,
-                    skip_until=lambda l: l.startswith('replicon'),
-                    keep_first="replicon")
+                    skip_until=lambda l: l.startswith(first_col),
+                    keep_first=first_col)
 
     filename_to_merge = 'all_systems'
     ext = 'txt'
@@ -212,12 +213,12 @@ def merge_results(results_dirs: List[str], out_dir: str = '.') -> None:
                 skip_until=lambda l: l.startswith('system id'),
                 keep_first='system id')
 
-    filename_to_merge = 'rejected_clusters'
+    filename_to_merge = 'rejected_candidates'
     ext = 'txt'
     out_file = os.path.join(out_dir, f'merged_{filename_to_merge}.{ext}')
     _log.info(f"Merging '{filename_to_merge}.{ext}' in to '{out_file}'")
     filename_to_merge = [os.path.join(d, f'{filename_to_merge}.{ext}') for d in results_dirs]
-    merge_files(filename_to_merge, out_file, 'Rejected clusters',
+    merge_files(filename_to_merge, out_file, 'Rejected candidates',
                 skip_until=lambda l: l.startswith('Cluster:'),
                 keep_first='Cluster:')
 
@@ -244,7 +245,7 @@ def parse_args(args:  List[str]) -> argparse.Namespace:
     - merge the 'all_best_solutions.tsv' in to `merged_all_best_solutions'
     - merge the 'all_systems.tsv' in to 'merged_all_systems.tsv'
     - merge the 'all_systems.txt' in to 'merged_all_systems.txt'
-    - merge the 'rejected_clusters.txt' in to 'merged_rejected_clusters.txt'
+    - merge the 'rejected_candidates.txt' in to 'merged_rejected_candidates.txt'
 """
     parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                      description=description)

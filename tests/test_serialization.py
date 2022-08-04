@@ -33,10 +33,10 @@ from macsypy.profile import ProfileFactory
 from macsypy.model import Model
 from macsypy.registries import ModelLocation
 from macsypy.cluster import Cluster
-from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered, RejectedClusters
+from macsypy.system import System, HitSystemTracker, LikelySystem, UnlikelySystem, AbstractUnordered, RejectedCandidate
 from macsypy.solution import Solution
 from macsypy.serialization import TxtSystemSerializer, TsvSystemSerializer, TsvSolutionSerializer, \
-    TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCluster
+    TxtLikelySystemSerializer, TxtUnikelySystemSerializer, TsvSpecialHitSerializer, TsvRejectedCandidatesSerializer
 
 from tests import MacsyTest
 
@@ -570,25 +570,25 @@ Use ordered replicon to have better prediction.
         c2 = Cluster([mh_40, mh_50], model, hit_weights)
         c3 = Cluster([mh_60, mh_70], model, hit_weights)
 
-        r_c1 = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
+        r_c1 = RejectedCandidate(model, [c1, c2], ["The reasons to reject this candidate"])
 
-        r_c2 = RejectedClusters(model, [c2, c3], ["reason One", "reason Two"])
+        r_c2 = RejectedCandidate(model, [c2, c3], ["reason One", "reason Two"])
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
 
-        ser = TsvRejectedCluster()
+        ser = TsvRejectedCandidatesSerializer()
         tsv = ser.serialize([r_c1, r_c2])
 
-        expected_tsv = '\t'.join(['cluster_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        expected_tsv = '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject this clusters'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject this clusters'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject this clusters'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject this clusters'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
         expected_tsv += '\n'
         expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'reason One/reason Two'])
@@ -601,4 +601,5 @@ Use ordered replicon to have better prediction.
         expected_tsv += '\n'
         expected_tsv += '\n'
 
+        self.maxDiff = None
         self.assertEqual(expected_tsv, tsv)

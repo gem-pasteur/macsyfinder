@@ -82,7 +82,7 @@ class TestMerge(MacsyTest):
                          'all_best_solutions.tsv',
                          'all_systems.tsv',
                          'all_systems.txt',
-                         'rejected_clusters.txt')
+                         'rejected_candidates.txt')
 
         for res in results_files:
             with self.subTest(res):
@@ -114,7 +114,8 @@ class TestMerge(MacsyTest):
                          'all_best_solutions.tsv',
                          'all_systems.tsv',
                          'all_systems.txt',
-                         'rejected_clusters.txt')
+                         'rejected_candidates.txt',
+                         'rejected_candidates.tsv')
 
         for res in results_files:
             with self.subTest(res):
@@ -145,7 +146,8 @@ class TestMerge(MacsyTest):
                          'all_best_solutions.tsv',
                          'all_systems.tsv',
                          'all_systems.txt',
-                         'rejected_clusters.txt')
+                         'rejected_candidates.txt',
+                         'rejected_candidates.tsv')
 
         for res in results_files:
             with self.subTest(res):

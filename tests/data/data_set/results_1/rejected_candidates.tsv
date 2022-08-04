@@ -1,0 +1,50 @@
+# macsyfinder 20220804.dev
+# models : set_1-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db tests/data/base/VICH001.B.00001.C001.prt --db-type=gembase --models-dir tests/data/data_set/models/ --models set_1 all -w 4 --relative-path
+# Rejected candidates found:
+candidate_id	replicon	model_fqn	hit_id	hit_pos	gene_name	function	reasons
+VICH001.B.00001.C001_Archaeal-T4P_1	VICH001.B.00001.C001	set_1/Archaeal-T4P	VICH001.B.00001.C001_01967	1882	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG05608	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+VICH001.B.00001.C001_Archaeal-T4P_1	VICH001.B.00001.C001	set_1/Archaeal-T4P	VICH001.B.00001.C001_01973	1888	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG05608	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+
+VICH001.B.00001.C001_ComM_2	VICH001.B.00001.C001	set_1/ComM	VICH001.B.00001.C001_00857	788	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 0/The quorum of genes required (4) is not reached: 1
+
+VICH001.B.00001.C001_ComM_4	VICH001.B.00001.C001	set_1/ComM	VICH001.B.00001.C001_00857	788	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
+VICH001.B.00001.C001_ComM_4	VICH001.B.00001.C001	set_1/ComM	VICH001.B.00001.C001_01796	1714	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
+
+VICH001.B.00001.C001_ComM_3	VICH001.B.00001.C001	set_1/ComM	VICH001.B.00001.C001_01796	1714	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 1
+
+VICH001.B.00001.C001_MSH_5	VICH001.B.00001.C001	set_1/MSH	VICH001.B.00001.C001_00512	463	MSH_mshA	MSH_mshA	The quorum of mandatory genes required (3) is not reached: 1/The quorum of genes required (4) is not reached: 1
+
+VICH001.B.00001.C001_T2SS_6	VICH001.B.00001.C001	set_1/T2SS	VICH001.B.00001.C001_02308	2205	T4P_pilD	T2SS_gspO	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (6) is not reached: 1
+
+VICH001.B.00001.C001_T4P_7	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00476	427	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
+VICH001.B.00001.C001_T4P_7	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00477	428	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
+
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00476	427	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00477	428	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00847	778	T4P_pilO	T4P_pilO	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00850	781	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00851	782	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00852	783	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00853	784	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_11	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00854	785	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 3
+
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00847	778	T4P_pilO	T4P_pilO	The quorum of mandatory genes required (4) is not reached: 2
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00850	781	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 2
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00851	782	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 2
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00852	783	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 2
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00853	784	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 2
+VICH001.B.00001.C001_T4P_8	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_00854	785	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 2
+
+VICH001.B.00001.C001_T4P_9	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02305	2202	T4P_pilA	T4P_pilA	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+VICH001.B.00001.C001_T4P_9	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02306	2203	T4P_pilB	T4P_pilB	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+VICH001.B.00001.C001_T4P_9	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02307	2204	T4P_pilC	T4P_pilC	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+VICH001.B.00001.C001_T4P_9	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02308	2205	T4P_pilD	T4P_pilD	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02502	2391	MSH_mshM	MSH_mshM	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02505	2394	T4P_pilQ	T4P_pilQ	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02506	2395	T4P_pilP	T4P_pilP	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02507	2396	T4P_pilO	T4P_pilO	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02508	2397	T4P_pilN	T4P_pilN	The quorum of mandatory genes required (4) is not reached: 3
+VICH001.B.00001.C001_T4P_10	VICH001.B.00001.C001	set_1/T4P	VICH001.B.00001.C001_02509	2398	T4P_pilM	T4P_pilM	The quorum of mandatory genes required (4) is not reached: 3
+
