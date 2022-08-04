@@ -167,12 +167,12 @@ class OrderedMatchMaker(MatchMaker):
         """
         Check a set of clusters fill model constraints.
         If yes create a :class:`macsypy.system.System` otherwise create
-        a :class:`macsypy.cluster.RejectedClusters`.
+        a :class:`macsypy.cluster.RejectedCandidate`.
 
         :param clusters: The list of cluster to check if fit the model
         :type clusters: list of :class:`macsypy.cluster.Cluster` objects
-        :return: either a System or a RejectedClusters
-        :rtype: :class:`macsypy.system.System` or :class:`macsypy.cluster.RejectedClusters` object
+        :return: either a System or a RejectedCandidates
+        :rtype: :class:`macsypy.system.System` or :class:`macsypy.system.RejectedCandidate` object
         """
         # count the hits
         # and track for each hit for which gene it counts for
@@ -357,7 +357,7 @@ class MetaSetOfHits(abc.ABCMeta):
 
 class AbstractSetOfHits(metaclass=MetaSetOfHits):
     """
-    Is the mother class of  System, RejectedCluster, LikelySystems UnlikelySystem, ...
+    Is the mother class of  System, RejectedCandidates, LikelySystems UnlikelySystem, ...
     """
 
     def __init__(self, model):
@@ -756,7 +756,7 @@ class RejectedCandidate(AbstractClusterizedHits):
     def __str__(self):
         """
 
-        :return: a string representation of this RejectedCluster
+        :return: a string representation of this RejectedCandidates
         """
         s = ''
         for c in self.clusters:

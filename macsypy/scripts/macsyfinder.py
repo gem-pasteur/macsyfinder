@@ -469,7 +469,7 @@ def search_systems(config, model_registry, models_def_to_detect, logger):
                    It must be initialized. see :func:`macsypy.init_logger`
     :type logger: :class:`colorlog.Logger` object
     :return: the systems and rejected clusters found
-    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCluster`, ...])
+    :rtype: ([:class:`macsypy.system.System`, ...], [:class:`macsypy.cluster.RejectedCAndidate`, ...])
     """
     working_dir = config.working_dir()
     config.save(path_or_buf=os.path.join(working_dir, config.cfg_name))
