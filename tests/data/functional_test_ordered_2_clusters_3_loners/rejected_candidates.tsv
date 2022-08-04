@@ -1,0 +1,19 @@
+# macsyfinder 20220804.dev
+# models : functional-0.0b2
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional T12SS-loner --relative-path --sequence-db tests/data/base/test_5.fasta
+# Rejected candidates found:
+candidate_id	replicon	model_fqn	hit_id	hit_pos	gene_name	function	reasons
+UserReplicon_T12SS-loner_3	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01150	55	T1SS_abc	T1SS_abc	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_3	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01361_trunc	56	T1SS_mfp	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_3	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_00409	57	T2SS_gspD	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+
+UserReplicon_T12SS-loner_1	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01360	2	T1SS_omf	T1SS_omf	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_1	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01361	3	T1SS_mfp	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+
+UserReplicon_T12SS-loner_2	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01397	11	T1SS_abc	T1SS_abc	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_2	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01398	12	T1SS_mfp	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_2	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01399	13	T1SS_abc	T1SS_abc	The quorum of genes required (3) is not reached: 2
+UserReplicon_T12SS-loner_2	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01400	14	T2SS_gspD	T1SS_mfp	The quorum of genes required (3) is not reached: 2
+
+UserReplicon_T12SS-loner_4	UserReplicon	functional/T12SS-loner	VICH001.B.00001.C001_01562	46	T1SS_omf	T1SS_omf	The quorum of mandatory genes required (2) is not reached: 1/The quorum of genes required (3) is not reached: 1
+

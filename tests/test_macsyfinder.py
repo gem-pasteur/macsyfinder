@@ -38,14 +38,14 @@ from macsypy.profile import ProfileFactory
 from macsypy.registries import ModelLocation, ModelRegistry, scan_models_dir
 from macsypy.hit import CoreHit, ModelHit, HitWeight, Loner, MultiSystem
 from macsypy.model import Model
-from macsypy.system import System, HitSystemTracker, RejectedClusters, AbstractUnordered, LikelySystem, UnlikelySystem
+from macsypy.system import System, HitSystemTracker, RejectedCandidate, AbstractUnordered, LikelySystem, UnlikelySystem
 from macsypy.solution import Solution
 from macsypy.cluster import Cluster
 from macsypy.utils import get_def_to_detect
 
-from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_clst_to_txt, solutions_to_tsv, \
+from macsypy.scripts.macsyfinder import systems_to_txt, systems_to_tsv, rejected_candidates_to_txt, solutions_to_tsv, \
      summary_best_solution, likely_systems_to_txt, likely_systems_to_tsv, unlikely_systems_to_txt, \
-     loners_to_tsv, multisystems_to_tsv, rejected_clst_to_tsv
+     loners_to_tsv, multisystems_to_tsv, rejected_candidates_to_tsv
 from macsypy.scripts.macsyfinder import list_models, parse_args, search_systems
 
 import macsypy
@@ -83,7 +83,7 @@ class TestMacsyfinder(MacsyTest):
         reset System._id and RejectedCluster._id to get predictable ids
         """
         System._id = itertools.count(1)
-        RejectedClusters._id = itertools.count(1)
+        RejectedCandidate._id = itertools.count(1)
 
 
     def test_list_models(self):
@@ -733,14 +733,14 @@ neutral genes:
         hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([v_h10, v_h20], model, hit_weights)
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
-        r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject this clusters"])
+        r_c = RejectedCandidate(model, [c1, c2], ["The reasons to reject this candidate"])
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# Rejected clusters:
+# Rejected candidates:
 
 Cluster:
 - model = T2SS
@@ -750,24 +750,24 @@ Cluster:
 - model = T2SS
 - replicon = replicon_1
 - hits = (h10, gspD, 40), (h20, sctC, 50)
-These clusters have been rejected because:
-\t- The reasons to reject this clusters
+This candidate has been rejected because:
+\t- The reasons to reject this candidate
 ============================================================
 """
 
         f_out = StringIO()
-        rejected_clst_to_txt(model_fam_name, model_vers, [r_c], f_out)
+        rejected_candidates_to_txt(model_fam_name, model_vers, [r_c], f_out)
         self.maxDiff = None
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# No Rejected clusters
+# No Rejected candidates
 """
         f_out = StringIO()
-        rejected_clst_to_txt(model_fam_name, model_vers, [], f_out)
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+        rejected_candidates_to_txt(model_fam_name, model_vers, [], f_out)
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
 
     def test_rejected_clst_to_tsv(self):
@@ -806,41 +806,40 @@ These clusters have been rejected because:
         hit_weights = HitWeight(**cfg.hit_weights())
         c1 = Cluster([v_h10, v_h20], model, hit_weights)
         c2 = Cluster([v_h40, v_h50], model, hit_weights)
-        r_c = RejectedClusters(model, [c1, c2], ["The reasons to reject these clusters"])
+        r_c = RejectedCandidate(model, [c1, c2], ["The reasons to reject these candidate"])
 
         model_fam_name = 'foo'
         model_vers = '0.0b2'
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# Rejected Clusters found:
+# Rejected candidates found:
 """
-        rej_clst_str += '\t'.join(['cluster_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
-        rej_clst_str += '\n'
-        rej_clst_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject these clusters'])
-        rej_clst_str += '\n'
-        rej_clst_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject these clusters'])
-        rej_clst_str += '\n'
-        rej_clst_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject these clusters'])
-        rej_clst_str += '\n'
-        rej_clst_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject these clusters'])
-        rej_clst_str += '\n'
-        rej_clst_str += '\n'
+        rej_cand_str += '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\n'
+        rej_cand_str += '\n'
 
         f_out = StringIO()
-        rejected_clst_to_tsv(model_fam_name, model_vers, [r_c], f_out)
+        rejected_candidates_to_tsv(model_fam_name, model_vers, [r_c], f_out)
         self.maxDiff = None
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
-        rej_clst_str = f"""# macsyfinder {macsypy.__version__}
+        rej_cand_str = f"""# macsyfinder {macsypy.__version__}
 # models : {model_fam_name}-{model_vers}
 # {' '.join(sys.argv)}
-# No Rejected clusters
+# No Rejected candidates
 """
         f_out = StringIO()
-        rejected_clst_to_tsv(model_fam_name, model_vers, [], f_out)
-        self.assertMultiLineEqual(rej_clst_str, f_out.getvalue())
-
+        rejected_candidates_to_tsv(model_fam_name, model_vers, [], f_out)
+        self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
 
     def test_likely_systems_to_txt(self):

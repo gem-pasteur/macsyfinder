@@ -17,7 +17,7 @@ to serialize the results:
 
    * the Systems found
    * The best solutions (best combination of systems)
-   * The rejected clusters
+   * The rejected candidates
 
 
 .. _serialization_api:
@@ -49,6 +49,14 @@ TsvSolutionSerializer
 TsvLikelySystemSerializer
 =========================
 .. autoclass:: macsypy.serialization.TsvLikelySystemSerializer
+   :members:
+   :private-members:
+   :special-members:
+
+
+TsvRejectedCandidatesSerializer
+===============================
+.. autoclass:: macsypy.serialization.TsvRejectedCandidatesSerializer
    :members:
    :private-members:
    :special-members:

@@ -68,9 +68,9 @@ headers are provided with the content of the lines in the file.
     without processing of the potential overlaps between candidate systems. This set of possible candidate systems are also given
     under the form of a tabulated file in `all_systems.tsv`.
 
-  * :ref:`rejected_clusters.txt<rejected_clusters_txt>` - This file lists candidate clusters of systems' components that were rejected by
+  * :ref:`rejected_candidates.txt<rejected_candidates_txt>` - This file lists candidate clusters (or a combination of clusters) components that were rejected by
     MacSyFinder during the search process, and were thus not assigned to a candidate system. This set of clusters are also given under the form of tabulated file
-    :ref:`rejected_clusters.tsv<rejected_clusters_tsv>`.
+    :ref:`rejected_candidates.tsv<rejected_candidates_tsv>`.
 
   * :ref:`all_best_solutions.tsv<best_solution_tsv>` - This file contains all possible best solutions under the form of a per-component, tabulated report file.
     To retrieve a single best solution as proposed by MacSyFinder, see file `best_solution.tsv`.
@@ -430,10 +430,10 @@ This file give an overview of all hits identified as multi-systems in the best_s
        :language: text
 
 
-.. _rejected_clusters_txt:
+.. _rejected_candidates_txt:
 
-rejected_clusters.txt
----------------------
+rejected_candidates.txt
+-----------------------
 
 This file records all clusters or cluster combinations (if the "multi_loci" search mode is on)
 which have been discarded and the reason why they were not selected as systems.
@@ -444,15 +444,15 @@ at the end of the cluster or clusters' combination, followed by the reason why i
 
 .. note::
 
-    This file is in human readable format. If you need to parse the information about rejected clusters,
-    use the tsv formatted file rejected_clusters.tsv
+    This file is in human readable format. If you need to parse the information about rejected candidates,
+    use the tsv formatted file rejected_candidates.tsv
 
 .. code-block:: text
 
     # macsyfinder 20200511.dev
     # models : TFF-SF-0.1b
     # macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
-    # Rejected clusters:
+    # Rejected candidates:
 
     Cluster:
         - model: T4P
@@ -463,29 +463,29 @@ at the end of the cluster or clusters' combination, followed by the reason why i
     Cluster:
         - model: T4P
         - hits: (GCF_000005845_030080, T2SS_gspO, 3008)
-    These clusters have been rejected because:
+    This candidate has been rejected because:
     The quorum of mandatory genes required (4) is not reached: 1
     The quorum of genes required (5) is not reached: 3
     ============================================================
     Cluster:
         - model: Archaeal-T4P
         - hits: (GCF_000005845_019260, Archaeal-T4P_arCOG00589, 1926), (GCF_000005845_019310, Archaeal-T4P_arCOG02900, 1931)
-    These clusters have been rejected because:
+    This candidate has been rejected because:
     The quorum of mandatory genes required (3) is not reached: 0
     The quorum of genes required (3) is not reached: 2
     ============================================================
 
 
-.. _rejected_clusters_tsv:
+.. _rejected_candidates_tsv:
 
-rejected_clusters.tsv
----------------------
+rejected_candidates.tsv
+-----------------------
 
-This file contains same information as `rejected_clusters.txt` but in tsv format, so it's more convenient to parse it.
+This file contains same information as `rejected_candidates.txt` but in tsv format, so it's more convenient to parse it.
 for instance with python and `pandas <https://pandas.pydata.org/>`_ library.::
 
     import pandas as pd
-    pd.read_csv("path/to/rejected_clusters.tsv", sep-'\t', comment='#')
+    pd.read_csv("path/to/rejected_candidates.tsv", sep-'\t', comment='#')
 
 As other file the first lines are comments and provides informations to indicate how this file has been produced.
 
@@ -495,7 +495,7 @@ As other file the first lines are comments and provides informations to indicate
 
 then the following information separated by 'tabulation' character '\t'
 
-    * **cluster_id** - An unique identifier of the cluster (for this run)
+    * **candidate_id** - An unique identifier of the candidate (for this run)
     * **replicon** - The name of the replicon
     * **model_fqn** - The model fully-qualified name
     * **hit_id** - The identifier of the hit (as indicate in hmmer output)
@@ -504,9 +504,9 @@ then the following information separated by 'tabulation' character '\t'
     * **function** - The name of the gene for which it it fulfill the function.
     * **reasons** - The reasons why this cluster has been discarded. ther can be several reasons, in this case each reason are separated by '/'.
 
-Example of `rejected_clusters.tsv`
+Example of `rejected_candidates.tsv`
 
-.. literalinclude:: ../_static/rejected_clusters.tsv
+.. literalinclude:: ../_static/rejected_candidates.tsv
    :language: text
    :lines:  1-15
 

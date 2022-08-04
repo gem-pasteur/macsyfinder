@@ -227,7 +227,7 @@ class OrderedMatchMaker(MatchMaker):
             res = System(self._model, valid_clusters, self._redundancy_penalty)
             _log.debug("is a system")
         else:
-            res = RejectedClusters(self._model, valid_clusters, reasons)
+            res = RejectedCandidate(self._model, valid_clusters, reasons)
         _log.debug("#" * 50)
         return res
 
@@ -726,7 +726,7 @@ class System(AbstractClusterizedHits):
         return {mh for mh in self.hits if mh.multi_system}
 
 
-class RejectedClusters(AbstractClusterizedHits):
+class RejectedCandidate(AbstractClusterizedHits):
     """
     Handle a set of clusters which has been rejected during the :func:`macsypy.system.match`  step
     This clusters (can be one) does not fill the requirements or contains forbidden genes.
@@ -762,7 +762,7 @@ class RejectedClusters(AbstractClusterizedHits):
         for c in self.clusters:
             s += str(c)
             s += '\n'
-        s += "These clusters have been rejected because:\n"
+        s += "This candidate has been rejected because:\n"
         for r in self.reasons:
             s += f"\t- {r}\n"
         return s

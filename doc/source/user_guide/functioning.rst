@@ -106,7 +106,7 @@ The following two steps are reiterated for each model being searched.
 Once performed for each model searched, the :ref:`next step <combinatorial-exploration>` is performed.
 
 .. note::
-    The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_clusters.txt <rejected_clusters_file>` file.
+    The clusters that do not fulfill the quorum requirements are stored in the :ref:`rejected_candidates.txt <rejected_candidates_file>` file.
 
 
 For *unordered* datasets: 
@@ -156,7 +156,7 @@ this calls for a **combinatorial screening** of the different clusters to assemb
    `all_systems.tsv` output files (see :ref:`outputs`),
    and they obtain a **System's score** (see below).
 
-   The clusters that do not allow to form a candidate System are reported in the `rejected_clusters.txt` output file.
+   The clusters that do not allow to form a candidate System are reported in the `rejected_candidates.txt` and  `rejected_candidates.tsv` output files.
    
 
 *  We introduce a **scoring scheme for candidate Systems**, to easily separate combinations of clusters that are readily

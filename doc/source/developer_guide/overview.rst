@@ -163,7 +163,7 @@ Then we check if each cluster satisfy the quorum described in the model.
 
 If the model is multi_loci we generate a combination of the clusters and check the quorum for each combination.
 If the cluster or combination satisfy the quorum a :class:`macsypy.systems.System` is created otherwise a
-:class:`macsypy.cluster.RejectedCluster`.
+:class:`macsypy.cluster.RejectedCandidate`.
 
 The Systems from the same replicon are sort against their position, score.
 
