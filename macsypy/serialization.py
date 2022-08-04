@@ -381,8 +381,8 @@ class TsvRejectedCandidatesSerializer:
 
     def serialize(self, candidates):
         """
-        :param clusters: list of rejected cluster to serialize
-        :type clusters: [ :class:`macsypy.system.RejectedClusters` object, ...]
+        :param candidates: list of rejected candidates to serialize
+        :type candidates: [ :class:`macsypy.system.RejectedCandidate` object, ...]
         """
         s = ""
         if candidates:
