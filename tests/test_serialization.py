@@ -580,24 +580,24 @@ Use ordered replicon to have better prediction.
         ser = TsvRejectedCandidatesSerializer()
         tsv = ser.serialize([r_c1, r_c2])
 
-        expected_tsv = '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        expected_tsv = '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'cluster_id', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject this candidate'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h10', '10', 'gspD', 'gspD', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject this candidate'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h20', '20', 'sctC', 'sctC', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject this candidate'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h10', '40', 'gspD', 'gspD', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject this candidate'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h20', '50', 'sctC', 'sctC', 'The reasons to reject this candidate'])
         expected_tsv += '\n'
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'reason One/reason Two'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', c2.id, 'h10', '40', 'gspD', 'gspD', 'reason One/reason Two'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'reason One/reason Two'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', c2.id, 'h20', '50', 'sctC', 'sctC', 'reason One/reason Two'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h60', '60', 'gspD', 'gspD', 'reason One/reason Two'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', c3.id, 'h60', '60', 'gspD', 'gspD', 'reason One/reason Two'])
         expected_tsv += '\n'
-        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', 'h70', '70', 'abc', 'tadZ', 'reason One/reason Two'])
+        expected_tsv += '\t'.join(['replicon_1_T2SS_2', 'replicon_1', 'foo/T2SS', c3.id, 'h70', '70', 'abc', 'tadZ', 'reason One/reason Two'])
         expected_tsv += '\n'
         expected_tsv += '\n'
 

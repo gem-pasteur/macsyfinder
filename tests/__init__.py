@@ -162,7 +162,7 @@ class MacsyTest(unittest.TestCase):
         # so we can use the following statement only in python3
         from itertools import zip_longest
         with open(f1) if isinstance(f1, str) else f1 as fh1, open(f2) if isinstance(f2, str) else f2 as fh2:
-            header = True
+            header = None
             for i, grp in enumerate(zip_longest(fh1, fh2), 1):
                 l1, l2 = grp
                 if l1.startswith(comment) and l2.startswith(comment):
@@ -176,29 +176,34 @@ class MacsyTest(unittest.TestCase):
                 # the system_id may change from one run to another
                 # So I have to remove them before to compare each row
                 filename = os.path.basename(fh1.name)
-                if header:
-                    fields_nb = len(fields_1)
-                    header = False
-                if tsv_type in ('all_systems.tsv', 'best_solution.tsv'):
-                    fields_1.pop(5)
-                    fields_2.pop(5)
-                elif tsv_type == 'all_best_solutions.tsv':
-                    fields_1.pop(6)
-                    fields_2.pop(6)
-                elif tsv_type == 'best_solution_summary.tsv':
-                    pass
-                elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv'):
-                    pass
-                elif tsv_type == 'rejected_candidates.tsv':
-                    fields_1.pop(0)
-                    fields_2.pop(0)
-                else:
-                    raise RuntimeError(f"unknown '{tsv_type}' tsv type file in assertTsvEqual")
+                if header is None:
+                    header = fields_1[:]
 
-                if len(fields_1) == fields_nb - 1:
-                    # remove used_in field if present
-                    fields_1.pop(-1)
-                    fields_2.pop(-1)
+                    if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
+                        sys_id_idx = header.index('sys_id')
+                        header.pop(sys_id_idx)
+                    elif tsv_type in ('best_solution_loners.tsv', 'best_solution_multisystems.tsv', 'best_solution_summary.tsv'):
+                        pass
+                    elif tsv_type == 'rejected_candidates.tsv':
+                        candidate_id_idx = header.index('candidate_id')
+                        header.pop(candidate_id_idx)
+                        cluster_id_idx = header.index('cluster_id')
+                        header.pop(cluster_id_idx)
+                    else:
+                        raise RuntimeError(f"unknown '{tsv_type}' tsv type file in assertTsvEqual")
+                else:
+                    if tsv_type in ('all_systems.tsv', 'best_solution.tsv', 'all_best_solutions.tsv'):
+                        fields_1.pop(sys_id_idx)
+                        fields_2.pop(sys_id_idx)
+                        if len(fields_1) == len(header):
+                            # remove used_in field if present
+                            fields_1.pop(-1)
+                            fields_2.pop(-1)
+                    elif tsv_type == 'rejected_candidates.tsv':
+                        fields_1.pop(candidate_id_idx)
+                        fields_1.pop(cluster_id_idx)
+                        fields_2.pop(candidate_id_idx)
+                        fields_2.pop(cluster_id_idx)
 
                 # counterpart order does not matter
                 fields_1[-1] = set(fields_1[-1].split(','))

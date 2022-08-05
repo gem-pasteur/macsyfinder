@@ -386,14 +386,15 @@ class TsvRejectedCandidatesSerializer:
         """
         s = ""
         if candidates:
-            header = "candidate_id\treplicon\tmodel_fqn\thit_id\thit_pos\tgene_name\tfunction\treasons\n"
+            header = "candidate_id\treplicon\tmodel_fqn\tcluster_id\thit_id\thit_pos\tgene_name\tfunction\treasons\n"
             s += header
             for candidate in candidates:
                 reasons = '/'.join(candidate.reasons)
-                for hit in candidate.hits:
-                    row = f"{candidate.id}\t{candidate.replicon_name}\t{candidate.model.fqn}\t" \
-                          f"{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
-                          f"{reasons}\n"
-                    s += row
+                for cluster in candidate.clusters:
+                    for hit in cluster.hits:
+                        row = f"{candidate.id}\t{candidate.replicon_name}\t{candidate.model.fqn}\t" \
+                              f"{cluster.id}\t{hit.id}\t{hit.position}\t{hit.gene_ref.name}\t{hit.gene_ref.alternate_of().name}\t" \
+                              f"{reasons}\n"
+                        s += row
                 s += '\n'
         return s

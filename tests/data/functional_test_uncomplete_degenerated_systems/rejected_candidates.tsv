@@ -1,7 +1,7 @@
-# macsyfinder 20220804.dev
+# macsyfinder 20220805.dev
 # models : functional-0.0b2
 # /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --db-type ordered_replicon --replicon-topology linear --models-dir tests/data/models/ -m functional uncomplete_degenerated_systems --relative-path --sequence-db tests/data/base/test_4.fasta
 # Rejected candidates found:
-candidate_id	replicon	model_fqn	hit_id	hit_pos	gene_name	function	reasons
-UserReplicon_uncomplete_degenerated_systems_1	UserReplicon	functional/uncomplete_degenerated_systems	VICH001.B.00001.C001_01400	15	T2SS_gspD	T2SS_gspD	The quorum of mandatory genes required (1) is not reached: 0
+candidate_id	replicon	model_fqn	cluster_id	hit_id	hit_pos	gene_name	function	reasons
+UserReplicon_uncomplete_degenerated_systems_1	UserReplicon	functional/uncomplete_degenerated_systems	c4	VICH001.B.00001.C001_01400	15	T2SS_gspD	T2SS_gspD	The quorum of mandatory genes required (1) is not reached: 0
 

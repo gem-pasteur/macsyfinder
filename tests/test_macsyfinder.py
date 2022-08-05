@@ -697,7 +697,7 @@ neutral genes:
         self.assertMultiLineEqual(sol_tsv, f_out.getvalue())
 
 
-    def test_rejected_clst_to_txt(self):
+    def test_rejected_candidates_to_txt(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
@@ -770,7 +770,7 @@ This candidate has been rejected because:
         self.assertMultiLineEqual(rej_cand_str, f_out.getvalue())
 
 
-    def test_rejected_clst_to_tsv(self):
+    def test_rejected_candidates_to_tsv(self):
         args = argparse.Namespace()
         args.sequence_db = self.find_data("base", "test_1.fasta")
         args.db_type = 'gembase'
@@ -815,15 +815,15 @@ This candidate has been rejected because:
 # {' '.join(sys.argv)}
 # Rejected candidates found:
 """
-        rej_cand_str += '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
+        rej_cand_str += '\t'.join(['candidate_id', 'replicon', 'model_fqn', 'cluster_id', 'hit_id', 'hit_pos', 'gene_name', 'function', 'reasons'])
         rej_cand_str += '\n'
-        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '10', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h10', '10', 'gspD', 'gspD', 'The reasons to reject these candidate'])
         rej_cand_str += '\n'
-        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '20', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c1.id, 'h20', '20', 'sctC', 'sctC', 'The reasons to reject these candidate'])
         rej_cand_str += '\n'
-        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h10', '40', 'gspD', 'gspD', 'The reasons to reject these candidate'])
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h10', '40', 'gspD', 'gspD', 'The reasons to reject these candidate'])
         rej_cand_str += '\n'
-        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', 'h20', '50', 'sctC', 'sctC', 'The reasons to reject these candidate'])
+        rej_cand_str += '\t'.join(['replicon_1_T2SS_1', 'replicon_1', 'foo/T2SS', c2.id, 'h20', '50', 'sctC', 'sctC', 'The reasons to reject these candidate'])
         rej_cand_str += '\n'
         rej_cand_str += '\n'
 
