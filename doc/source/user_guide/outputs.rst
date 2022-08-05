@@ -498,17 +498,26 @@ then the following information separated by 'tabulation' character '\t'
     * **candidate_id** - An unique identifier of the candidate (for this run)
     * **replicon** - The name of the replicon
     * **model_fqn** - The model fully-qualified name
+    * **cluster_id** - An unique identifier for the cluster constituting the candidate
     * **hit_id** - The identifier of the hit (as indicate in hmmer output)
     * **hit_pos** - The position of the sequence in the replicon
     * **gene_name** - The name of the component identified by the hit
     * **function** - The name of the gene for which it it fulfill the function.
     * **reasons** - The reasons why this cluster has been discarded. ther can be several reasons, in this case each reason are separated by '/'.
 
+.. note::
+
+    A rejected candidate can be constituted of
+
+        * clusters (can have several clusters if the model is multi loci),
+        * loners
+
+
 Example of `rejected_candidates.tsv`
 
 .. literalinclude:: ../_static/rejected_candidates.tsv
    :language: text
-   :lines:  1-15
+   :lines:  1-33
 
 
 .. _unordered_outputs:

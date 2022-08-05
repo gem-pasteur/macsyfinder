@@ -1,51 +1,51 @@
-# macsyfinder 20220729.dev
+# macsyfinder 20220805.dev
 # models : TFF-SF-None
-# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 4
+# /home/bneron/Projects/GEM/MacSyFinder/MacSyFinder/py39/bin/macsyfinder --sequence-db data/base/GCF_000006745.fasta --models TFF-SF all --models-dir data/models/ --db-type gembase -w 15
 # Rejected candidates found:
-candidate_id	replicon	model_fqn	hit_id	hit_pos	gene_name	function	reasons
-GCF_000006745_Archaeal-T4P_1	GCF_000006745	TFF-SF/Archaeal-T4P	GCF_000006745_018740	1874	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG00589	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
-GCF_000006745_Archaeal-T4P_1	GCF_000006745	TFF-SF/Archaeal-T4P	GCF_000006745_018800	1880	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG00589	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+candidate_id	replicon	model_fqn	cluster_id	hit_id	hit_pos	gene_name	function	reasons
+GCF_000006745_Archaeal-T4P_1	GCF_000006745	TFF-SF/Archaeal-T4P	c3	GCF_000006745_018740	1874	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG00589	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+GCF_000006745_Archaeal-T4P_1	GCF_000006745	TFF-SF/Archaeal-T4P	c3	GCF_000006745_018800	1880	Archaeal-T4P_arCOG00589	Archaeal-T4P_arCOG00589	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
 
-GCF_000006745_Archaeal-T4P_2	GCF_000006745	TFF-SF/Archaeal-T4P	GCF_000006745_026670	2667	Archaeal-T4P_arCOG02900	Archaeal-T4P_arCOG02900	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
-GCF_000006745_Archaeal-T4P_2	GCF_000006745	TFF-SF/Archaeal-T4P	GCF_000006745_026680	2668	Archaeal-T4P_arCOG02900	Archaeal-T4P_arCOG02900	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+GCF_000006745_Archaeal-T4P_2	GCF_000006745	TFF-SF/Archaeal-T4P	c4	GCF_000006745_026670	2667	Archaeal-T4P_arCOG02900	Archaeal-T4P_arCOG02900	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
+GCF_000006745_Archaeal-T4P_2	GCF_000006745	TFF-SF/Archaeal-T4P	c4	GCF_000006745_026680	2668	Archaeal-T4P_arCOG02900	Archaeal-T4P_arCOG02900	The quorum of mandatory genes required (3) is not reached: 0/The quorum of genes required (3) is not reached: 1
 
-GCF_000006745_ComM_4	GCF_000006745	TFF-SF/ComM	GCF_000006745_017080	1708	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 1
+GCF_000006745_ComM_4	GCF_000006745	TFF-SF/ComM	c11	GCF_000006745_017080	1708	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 1
 
-GCF_000006745_ComM_5	GCF_000006745	TFF-SF/ComM	GCF_000006745_017080	1708	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
-GCF_000006745_ComM_5	GCF_000006745	TFF-SF/ComM	GCF_000006745_032430	3243	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
+GCF_000006745_ComM_5	GCF_000006745	TFF-SF/ComM	c12	GCF_000006745_032430	3243	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
+GCF_000006745_ComM_5	GCF_000006745	TFF-SF/ComM	c13	GCF_000006745_017080	1708	ComM_comEC	ComM_comEC	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (4) is not reached: 2
 
-GCF_000006745_ComM_3	GCF_000006745	TFF-SF/ComM	GCF_000006745_032430	3243	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 0/The quorum of genes required (4) is not reached: 1
+GCF_000006745_ComM_3	GCF_000006745	TFF-SF/ComM	c10	GCF_000006745_032430	3243	ComM_comEB	ComM_comEB	The quorum of mandatory genes required (4) is not reached: 0/The quorum of genes required (4) is not reached: 1
 
-GCF_000006745_MSH_6	GCF_000006745	TFF-SF/MSH	GCF_000006745_004600	460	MSH_mshA	MSH_mshA	The quorum of mandatory genes required (3) is not reached: 1/The quorum of genes required (4) is not reached: 1
+GCF_000006745_MSH_6	GCF_000006745	TFF-SF/MSH	c18	GCF_000006745_004600	460	MSH_mshA	MSH_mshA	The quorum of mandatory genes required (3) is not reached: 1/The quorum of genes required (4) is not reached: 1
 
-GCF_000006745_T2SS_7	GCF_000006745	TFF-SF/T2SS	GCF_000006745_021980	2198	T4P_pilD	T2SS_gspO	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (6) is not reached: 1
+GCF_000006745_T2SS_7	GCF_000006745	TFF-SF/T2SS	c25	GCF_000006745_021980	2198	T4P_pilD	T2SS_gspO	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (6) is not reached: 1
 
-GCF_000006745_T4P_8	GCF_000006745	TFF-SF/T4P	GCF_000006745_004240	424	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
-GCF_000006745_T4P_8	GCF_000006745	TFF-SF/T4P	GCF_000006745_004250	425	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
+GCF_000006745_T4P_8	GCF_000006745	TFF-SF/T4P	c30	GCF_000006745_004240	424	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
+GCF_000006745_T4P_8	GCF_000006745	TFF-SF/T4P	c30	GCF_000006745_004250	425	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 1/The quorum of genes required (5) is not reached: 2
 
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_004240	424	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_004250	425	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_007820	782	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_007830	783	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_007840	784	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_007850	785	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 2
-GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	GCF_000006745_007860	786	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c34	GCF_000006745_004240	424	T4P_pilT	T4P_pilT	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c34	GCF_000006745_004250	425	T4P_pilU	T4P_pilU	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c35	GCF_000006745_007820	782	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c35	GCF_000006745_007830	783	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c35	GCF_000006745_007840	784	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c35	GCF_000006745_007850	785	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 2
+GCF_000006745_T4P_12	GCF_000006745	TFF-SF/T4P	c35	GCF_000006745_007860	786	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 2
 
-GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	GCF_000006745_007820	782	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 1
-GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	GCF_000006745_007830	783	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 1
-GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	GCF_000006745_007840	784	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 1
-GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	GCF_000006745_007850	785	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 1
-GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	GCF_000006745_007860	786	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 1
+GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	c31	GCF_000006745_007820	782	T4P_pilE	T4P_pilE	The quorum of mandatory genes required (4) is not reached: 1
+GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	c31	GCF_000006745_007830	783	T4P_fimT	T4P_fimT	The quorum of mandatory genes required (4) is not reached: 1
+GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	c31	GCF_000006745_007840	784	T4P_pilW	T4P_pilW	The quorum of mandatory genes required (4) is not reached: 1
+GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	c31	GCF_000006745_007850	785	T4P_pilX	T4P_pilX	The quorum of mandatory genes required (4) is not reached: 1
+GCF_000006745_T4P_9	GCF_000006745	TFF-SF/T4P	c31	GCF_000006745_007860	786	T4P_pilV	T4P_pilV	The quorum of mandatory genes required (4) is not reached: 1
 
-GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	GCF_000006745_021950	2195	T4P_pilA	T4P_pilA	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
-GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	GCF_000006745_021960	2196	T4P_pilB	T4P_pilB	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
-GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	GCF_000006745_021970	2197	T4P_pilC	T4P_pilC	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
-GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	GCF_000006745_021980	2198	T4P_pilD	T4P_pilD	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	c32	GCF_000006745_021950	2195	T4P_pilA	T4P_pilA	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	c32	GCF_000006745_021960	2196	T4P_pilB	T4P_pilB	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	c32	GCF_000006745_021970	2197	T4P_pilC	T4P_pilC	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
+GCF_000006745_T4P_10	GCF_000006745	TFF-SF/T4P	c32	GCF_000006745_021980	2198	T4P_pilD	T4P_pilD	The quorum of mandatory genes required (4) is not reached: 3/The quorum of genes required (5) is not reached: 4
 
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023840	2384	MSH_mshM	MSH_mshM	The quorum of mandatory genes required (4) is not reached: 3
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023870	2387	T4P_pilQ	T4P_pilQ	The quorum of mandatory genes required (4) is not reached: 3
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023880	2388	T4P_pilP	T4P_pilP	The quorum of mandatory genes required (4) is not reached: 3
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023890	2389	T4P_pilO	T4P_pilO	The quorum of mandatory genes required (4) is not reached: 3
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023900	2390	T4P_pilN	T4P_pilN	The quorum of mandatory genes required (4) is not reached: 3
-GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	GCF_000006745_023910	2391	T4P_pilM	T4P_pilM	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023840	2384	MSH_mshM	MSH_mshM	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023870	2387	T4P_pilQ	T4P_pilQ	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023880	2388	T4P_pilP	T4P_pilP	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023890	2389	T4P_pilO	T4P_pilO	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023900	2390	T4P_pilN	T4P_pilN	The quorum of mandatory genes required (4) is not reached: 3
+GCF_000006745_T4P_11	GCF_000006745	TFF-SF/T4P	c33	GCF_000006745_023910	2391	T4P_pilM	T4P_pilM	The quorum of mandatory genes required (4) is not reached: 3
 
