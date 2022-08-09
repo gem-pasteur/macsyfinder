@@ -182,7 +182,7 @@ If the name 'all' is in the list of models, all models from the family will be s
                                 help=f"""The topology of the replicons
 (this option is meaningful only if the db_type is
 'ordered_replicon' or 'gembase'.)
-(default: {msf_def['e_value_search']})
+(default: {msf_def['replicon_topology']})
 """)
 
     genome_options.add_argument("--topology-file",
