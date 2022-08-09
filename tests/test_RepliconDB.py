@@ -170,7 +170,7 @@ class Test(MacsyTest):
         self.assertEqual(DBNC.genes, self.NCDB_genes)
 
 
-    def test_fill_gembase_min_max_oredered_replicon(self):
+    def test_guess_if_really_gembase(self):
         seq_ori = self.find_data("base", "ordered_replicon_base.fasta")
         shutil.copy(seq_ori, self.args.out_dir)
         self.args.sequence_db = os.path.join(self.args.out_dir, os.path.basename(seq_ori))
@@ -180,12 +180,21 @@ class Test(MacsyTest):
         idx.build()
         RepliconDB.__init__ = self.fake_init
         db = RepliconDB(cfg)
-        with self.assertRaises(MacsypyError) as ctx:
-            with self.catch_log() as log:
-                db._fill_gembase_min_max({}, self.cfg.replicon_topology())
-        self.assertEqual(str(ctx.exception),
-                         f"Error during sequence-db '{self.args.sequence_db}' parsing. "
-                         f"Are you sure db-type is 'gembase'?")
+        db._fill_gembase_min_max({}, self.cfg.replicon_topology())
+        self.assertFalse(db.guess_if_really_gembase())
+
+        seq_ori = self.find_data("base", "gembase.fasta")
+        shutil.copy(seq_ori, self.args.out_dir)
+        self.args.sequence_db = os.path.join(self.args.out_dir, os.path.basename(seq_ori))
+        cfg = Config(MacsyDefaults(), self.args)
+
+        idx = Indexes(cfg)
+        idx.build()
+        RepliconDB.__init__ = self.fake_init
+        db = RepliconDB(cfg)
+        db._fill_gembase_min_max({}, self.cfg.replicon_topology())
+        self.assertTrue(db.guess_if_really_gembase())
+
 
     def test_fill_gembase_min_max_with_topology(self):
         self.args.topology_file = self.args.sequence_db + ".topo"
